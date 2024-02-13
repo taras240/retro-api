@@ -1,0 +1,46 @@
+@import url(reset.css);
+* {
+  font-family: Tahoma, Geneva, Verdana, sans-serif;
+}
+body {
+  background-color: black;
+  color: antiquewhite;
+}
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+}
+.achiv-block {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  width: 50vw;
+  height: 86px;
+  background-color: rgb(46, 46, 46);
+}
+.achiv-preview {
+  aspect-ratio: 1/1;
+  /* filter: sepia(); */
+}
+.achiv-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  font-size: 1.2rem;
+}
+.achiv-title {
+  font-weight: 600;
+  line-height: 2rem;
+  /* font-size: inherit; */
+}
+.achiv-description {
+  font-size: 1.1rem;
+  color: rgb(255, 255, 255);
+  flex: 1;
+}
+.collected-date {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
