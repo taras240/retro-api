@@ -6,26 +6,65 @@ body {
   background-color: black;
   color: antiquewhite;
 }
-.wrapper {
+.achivs_section {
+  width: 50vw;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   gap: 10px;
   padding: 10px;
 }
 .achiv-block {
+  position: relative;
   display: flex;
   flex-direction: row;
   gap: 10px;
-  width: 50vw;
+  /* width: 50vw; */
   height: 86px;
   background-color: rgb(46, 46, 46);
+  border-radius: 5px;
+  overflow: hidden;
+}
+.achiv-block.earned {
+  border: 2px solid gold;
+  filter: none;
 }
 .achiv-preview {
   aspect-ratio: 1/1;
-  /* filter: sepia(); */
+  border-radius: 5px;
+  overflow: hidden;
+  /* clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); */
+  filter: sepia(0.8);
+}
+.achiv-block.earned .achiv-preview {
+  filter: none;
+  border-radius: 5px;
+}
+
+.achiv-block.earned::before {
+  content: "";
+  position: absolute;
+  transform: rotateZ(45deg);
+  top: 80%;
+  left: -40%;
+  width: 120%;
+  height: 40%;
+  background-color: gold;
+}
+.achiv-block.earned::after {
+  content: "H";
+  font-size: 1.2rem;
+  color: black;
+  font-weight: 600;
+  position: absolute;
+  /* transform: rotateZ(45deg); */
+  top: 74%;
+  left: 3%;
 }
 .achiv-details {
-  display: flex;
+  position: absolute;
+  display: none;
+  /* display: flex; */
   flex-direction: column;
   justify-content: space-around;
   font-size: 1.2rem;
