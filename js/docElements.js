@@ -22,7 +22,7 @@ class UI {
   }
   addEvents() {
     this.apiKey.addEventListener("change", () => {
-      localStorage.setItem("apiKey", this.apiKey.value);
+      localStorage.setItem("RAApiKey", this.apiKey.value);
       userIdent.API_KEY = this.apiKey.value;
     });
     this.login.addEventListener("change", () => {

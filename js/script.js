@@ -1,5 +1,5 @@
 const userIdent = {
-  API_KEY: localStorage.getItem("apiKey") ?? "",
+  API_KEY: localStorage.getItem("RAApiKey") ?? "",
   USER_NAME: localStorage.getItem("userName") ?? "",
 };
 // userIdent.API_KEY = localStorage.getItem("apiKey");
