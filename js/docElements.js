@@ -26,7 +26,7 @@ class UI {
       userIdent.API_KEY = this.apiKey.value;
     });
     this.login.addEventListener("change", () => {
-      localStorage.setItem("userName", this.login.value);
+      localStorage.setItem("RAUserName", this.login.value);
       userIdent.USER_NAME = this.login.value;
     });
     this.columnsCount.addEventListener("change", () => {
