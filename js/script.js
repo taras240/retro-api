@@ -2,36 +2,25 @@ const userIdent = {
   API_KEY: localStorage.getItem("RAApiKey") ?? "",
   USER_NAME: localStorage.getItem("RAUserName") ?? "",
 };
+// let gameId = localStorage.getItem("gameID");
+let updateRateInSecs = 5;
 // userIdent.API_KEY = localStorage.getItem("apiKey");
 // userIdent.USER_NAME = localStorage.getItem("userName");
 let ui = new UI();
-let gameId = "1458";
-let updateRateInSecs = 5;
-let worker = setInterval(() => {});
-const gameIdElement = document.querySelector("#game-id");
-
-ui.gameID.value = gameId;
+// ui.gameID.value = gameId;
+let apiWorker = new APIWorker({
+  key: userIdent.API_KEY,
+  userName: userIdent.USER_NAME,
+});
 
 const requestGameProgress = "API_GetGameInfoAndUserProgress.php";
 const requestUserRecentAchievements = "API_GetUserRecentAchievements.php";
 const requestGetUserProfile = "API_GetUserProfile.php";
 
-let url = `https://retroachievements.org/API/${requestGameProgress}?g=${gameId}&u=${userIdent.USER_NAME}&z=${userIdent.USER_NAME}&y=${userIdent.API_KEY}`;
-function generateUrl() {
-  // y  =>  Your web API key. // z  =>  Your username.// u  =>  The target username.// g  =>  The target game ID.
-  // let url = "achivs.json";
-  return `https://retroachievements.org/API/${requestGameProgress}?g=${gameId}&u=${userIdent.USER_NAME}&z=${userIdent.USER_NAME}&y=${userIdent.API_KEY}`;
-}
-updateAchivs(() => ui.fitSizeVertically());
-
 function updateAchivs(fun) {
-  fetch(generateUrl())
-    .then((resp) => resp.json())
-    .then((resp) => {
-      ui.parseGameAchievements(resp);
-      fun();
-    });
-  // console.log("tik");
+  apiWorker.getGameProgress({}).then((resp) => {
+    ui.parseGameAchievements(resp);
+  });
 }
 
 function startWatching() {

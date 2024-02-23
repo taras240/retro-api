@@ -12,6 +12,7 @@ class UI {
 
     this.updateInterval = document.querySelector("#update-time");
     this.gameID = document.querySelector("#game-id");
+    this.gameID.value = localStorage.getItem("gameID");
 
     this.gamePreview = document.querySelector("#game-preview");
     this.gameTitle = document.querySelector("#game-title");
@@ -40,7 +41,8 @@ class UI {
       updateRateInSecs = this.updateInterval.value;
     });
     this.gameID.addEventListener("change", () => {
-      gameId = this.gameID.value;
+      apiWorker.gameID = this.gameID.value;
+      localStorage.setItem("gameID", this.gameID.value);
     });
     document
       .querySelector(".fit-width-button")
@@ -48,6 +50,12 @@ class UI {
     document
       .querySelector(".fit-columns-button")
       .addEventListener("click", () => this.fitColumnsVertically());
+    document.querySelector(".get-id-button").addEventListener("click", () => {
+      apiWorker.getProfileInfo({}).then((resp) => {
+        this.gameID.value = resp.LastGameID;
+        apiWorker.gameID = resp.LastGameID;
+      });
+    });
   }
   parseGameAchievements(achivs) {
     // console.log(achivs);

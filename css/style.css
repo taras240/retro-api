@@ -31,8 +31,19 @@ body {
   display: inline-block;
   padding: 5px;
   border: 1px solid red;
+  border-radius: 5px;
   color: red;
   cursor: pointer;
+  transition: 0.2s;
+}
+.close-settings-button:hover {
+  border-color: rgb(255, 70, 70);
+  background-color: darkred;
+  transition: 0.2s;
+}
+.close-settings-button:active {
+  border-color: rgb(65, 0, 0);
+  transition: 0.2s;
 }
 .close-settings-button::before,
 .close-settings-button::after {
@@ -44,6 +55,12 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) rotateZ(45deg);
+  transition: 0.2s;
+}
+.close-settings-button:hover::before,
+.close-settings-button:hover::after {
+  background-color: black;
+  transition: 0.2s;
 }
 .close-settings-button::after {
   transform: translate(-50%, -50%) rotateZ(-45deg);
@@ -91,24 +108,31 @@ body {
 }
 
 .text-input-container {
-  display: grid;
-  grid-template-columns: 4fr 2fr;
-  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid gray;
 }
 .text-input,
 .number-input,
-.apply-settings {
+.apply-settings,
+.setting-button {
   height: 2rem;
-  font-size: 1rem;
+  font-size: 1.1rem;
+  border-radius: 5px;
+  padding: 5px 10px;
   background-color: black;
   color: white;
-  border: 1px solid gold;
+  border: 1px solid gray;
   text-align: center;
+  line-height: 100%;
 }
 .numeric-input-container {
   display: flex;
   gap: 10px;
-  margin-top: 10px;
+  padding: 10px;
+  border-bottom: 1px solid gray;
 }
 .prefs_section label {
   flex: 1;
@@ -121,13 +145,7 @@ body {
   width: 4rem;
   padding: 10px;
 }
-.setting-button {
-  padding: 0 5px;
-  border: 1px solid gold;
-  background-color: black;
-  color: white;
-  transition: 0.2s;
-}
+
 .setting-button:hover {
   border: 1px solid rgb(255, 255, 255);
   transition: 0.2s;
