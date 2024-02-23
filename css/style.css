@@ -1,0 +1,263 @@
+@import url(./reset.css);
+@import url(https://fonts.googleapis.com/css?family=Honk:regular);
+@import url(https://fonts.googleapis.com/css?family=Press+Start+2P:regular);
+* {
+  font-family: "system-ui", "Press Start 2P", Geneva, Verdana, sans-serif;
+}
+body {
+  background-color: black;
+  color: antiquewhite;
+}
+.wrapper {
+  min-height: 100%;
+}
+.prefs-header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid white;
+  padding: 10px;
+}
+.prefs-header {
+  flex: 1;
+  text-align: center;
+  font-size: 1.5rem;
+}
+.close-settings-button {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  align-self: flex-end;
+  display: inline-block;
+  padding: 5px;
+  border: 1px solid red;
+  color: red;
+  cursor: pointer;
+}
+.close-settings-button::before,
+.close-settings-button::after {
+  content: "";
+  position: absolute;
+  width: 70%;
+  height: 10%;
+  background-color: red;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotateZ(45deg);
+}
+.close-settings-button::after {
+  transform: translate(-50%, -50%) rotateZ(-45deg);
+}
+.settings_container {
+  padding: 10px;
+}
+.open-settings-button {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background-color: black;
+  padding: 10px;
+  border: 1px solid white;
+  color: white;
+  transition: 0.3s;
+}
+.open-settings-button:hover {
+  background-color: #11111111;
+  border: 1px solid gold;
+  transition: 0.3s;
+}
+.open-settings-button:active {
+  background-color: #111;
+  border: 1px solid white;
+  transition: 0.3s;
+}
+.prefs_section {
+  display: flex;
+  flex-direction: column;
+  visibility: visible;
+  position: absolute;
+  /* padding: 10px; */
+  border: 1px solid white;
+  border-radius: 10px;
+  overflow: hidden;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  background-color: #111;
+}
+.prefs_section.hidden {
+  visibility: hidden;
+}
+
+.text-input-container {
+  display: grid;
+  grid-template-columns: 4fr 2fr;
+  margin-top: 10px;
+}
+.text-input,
+.number-input,
+.apply-settings {
+  height: 2rem;
+  font-size: 1rem;
+  background-color: black;
+  color: white;
+  border: 1px solid gold;
+  text-align: center;
+}
+.numeric-input-container {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+.prefs_section label {
+  flex: 1;
+  display: block;
+  margin: auto 10px;
+  line-height: 100%;
+  font-size: 1.1rem;
+}
+.number-input {
+  width: 4rem;
+  padding: 10px;
+}
+.setting-button {
+  padding: 0 5px;
+  border: 1px solid gold;
+  background-color: black;
+  color: white;
+  transition: 0.2s;
+}
+.setting-button:hover {
+  border: 1px solid rgb(255, 255, 255);
+  transition: 0.2s;
+}
+.setting-button:active {
+  border: 1px solid rgb(85, 72, 1);
+  transition: 0.2s;
+}
+.apply-settings {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  display: inline;
+  grid-column-end: 2;
+}
+.apply-settings.hidden {
+  display: none;
+}
+.achivs-game {
+  display: grid;
+  grid-template-columns: 100px auto;
+  border: 1px solid gold;
+  margin: 10px 0;
+  align-items: center;
+  justify-content: left;
+  gap: 5px;
+  overflow: hidden;
+}
+.game-preview {
+  grid-row: 1/3;
+  width: 100px;
+  aspect-ratio: 1/1;
+}
+.game-title,
+.platform {
+  align-self: center;
+  margin-left: 5px;
+  font-size: 1.2rem;
+}
+.achivs_section {
+  display: grid;
+  grid-template-columns: repeat(5, 96px);
+  gap: 5px;
+  padding: 10px;
+}
+.achiv-block {
+  aspect-ratio: 1/1;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  /* height: 86px; */
+  background-color: rgb(46, 46, 46);
+  /* overflow: hidden; */
+}
+.achiv-details-block {
+  position: absolute;
+  line-height: 1.5rem;
+  width: 300px;
+  background-color: black;
+  height: auto;
+  z-index: 10;
+  left: 50%;
+  top: 10%;
+  /* right: 0px; */
+  padding: 5px;
+  border: 1px solid white;
+  /* border-left: none; */
+  pointer-events: none;
+  display: none;
+}
+.achiv-block:hover .achiv-details-block {
+  display: block;
+}
+.achiv-block.earned {
+  filter: none;
+}
+.achiv-preview {
+  height: 100%;
+  aspect-ratio: 1/1;
+  border-radius: 5px;
+  overflow: hidden;
+  /* clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); */
+  filter: grayscale();
+  image-rendering: pixelated;
+}
+.achiv-block.earned .achiv-preview {
+  filter: none;
+}
+
+.achiv-block.earned::after,
+.achiv-block.earned.hardcore::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("../assets/img/glass-bg.png");
+  background-size: cover;
+  image-rendering: pixelated;
+}
+.achiv-block.earned.hardcore::after {
+  background-image: url("../assets/img/glass-bg_hard.png");
+}
+.achiv-details {
+  position: absolute;
+  display: none;
+  /* display: flex; */
+  flex-direction: column;
+  justify-content: space-around;
+  font-size: 1.2rem;
+}
+.achiv-title {
+  font-weight: 600;
+  line-height: 2rem;
+  /* font-size: inherit; */
+}
+.achiv-description {
+  font-size: 1.1rem;
+  color: rgb(255, 255, 255);
+  flex: 1;
+}
+.collected-date {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0; /* можливо ви захочете встановити значення margin відповідно до вашого дизайну */
+  appearance: none;
+}
+/* 0961960271 - 100 */

@@ -3,14 +3,112 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="./css/style.css" />
     <title>RAchievements</title>
   </head>
   <body>
     <div class="wrapper">
-      <section class="achivs_section"></section>
-      <section class="prefs_section"></section>
+      <button class="open-settings-button" onclick="openSettings()">
+        Settings
+      </button>
+      <section class="achivs">
+        <div class="achivs_section"></div>
+      </section>
+      <section class="prefs_section">
+        <div class="prefs-header-container">
+          <h2 class="prefs-header">-[ Settings ]-</h2>
+          <div class="close-settings-button" onclick="closeSettings()"></div>
+        </div>
+        <div class="settings_container">
+          <div class="columns-settings text-input-container">
+            <label for="api-key">RetroAchievements API Key:</label>
+            <input
+              type="password"
+              class="text-input"
+              name="api-key"
+              id="api-key"
+            />
+          </div>
+          <div class="update-time-settings text-input-container">
+            <label for="login-input">Login name:</label>
+            <input
+              type="text"
+              class="text-input"
+              name="login-input"
+              id="login-input"
+            />
+          </div>
+          <div class="columns-settings numeric-input-container">
+            <label for="columns">Columns count:</label>
+            <button class="fit-columns-button setting-button">Auto</button>
+            <input
+              type="number"
+              class="number-input"
+              name="columns"
+              id="columns"
+              value="5"
+            />
+          </div>
+          <div class="columns-settings numeric-input-container">
+            <label for="columns">Columns width:</label>
+            <button class="fit-width-button setting-button">Auto</button>
+
+            <input
+              type="number"
+              class="number-input"
+              name="columns-width"
+              id="columns-width"
+              value="98"
+            />
+          </div>
+          <div class="update-time-settings numeric-input-container">
+            <label for="update-time">Update delay(seconds):</label>
+            <input
+              type="number"
+              class="number-input"
+              name="update-time"
+              id="update-time"
+              value="5"
+            />
+          </div>
+          <div class="game-id-settings numeric-input-container">
+            <label for="game-id">Game ID:</label>
+            <input
+              type="number"
+              class="number-input"
+              name="game-id"
+              id="game-id"
+              value="0"
+            />
+          </div>
+          <button
+            id="start-watching"
+            class="apply-settings"
+            onclick="startWatching()"
+          >
+            Start Watching
+          </button>
+          <button
+            id="stop-watching"
+            class="apply-settings hidden"
+            onclick="stopWatching()"
+          >
+            Stop Watching
+          </button>
+          <div class="achivs-game">
+            <img
+              src="https://media.retroachievements.org/Images/039041.png"
+              alt=" "
+              class="game-preview"
+              id="game-preview"
+            />
+            <h2 class="game-title" id="game-title">Batman: The Video Game</h2>
+            <p class="platform" id="game-platform">NES/Famicom</p>
+          </div>
+        </div>
+      </section>
     </div>
-    <script src="script.js"></script>
+    <script src="./js/docElements.js"></script>
+    <script src="./js/script.js"></script>
   </body>
 </html>
