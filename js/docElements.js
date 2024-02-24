@@ -1,4 +1,5 @@
 class UI {
+  RECENT_DELAY_MILISECS = 20 * 60 * 1000; //mins => secs => milisecs
   constructor() {
     this.settings = document.querySelector(".prefs_section");
     this.apiKey = document.querySelector("#api-key");
@@ -12,7 +13,7 @@ class UI {
 
     this.updateInterval = document.querySelector("#update-time");
     this.gameID = document.querySelector("#game-id");
-    this.gameID.value = localStorage.getItem("gameID");
+    this.gameID.value = localStorage.getItem("RAGameID");
 
     this.gamePreview = document.querySelector("#game-preview");
     this.gameTitle = document.querySelector("#game-title");
@@ -23,16 +24,13 @@ class UI {
   }
   addEvents() {
     this.apiKey.addEventListener("change", () => {
-      localStorage.setItem("RAApiKey", this.apiKey.value);
-      userIdent.API_KEY = this.apiKey.value;
+      updateUserIdent({ apiKey: this.apiKey.value });
     });
     this.login.addEventListener("change", () => {
-      localStorage.setItem("RAUserName", this.login.value);
-      userIdent.USER_NAME = this.login.value;
+      updateUserIdent({ loginName: this.login.value });
     });
     this.columnsCount.addEventListener("change", () => {
       this.achivsSection.style.gridTemplateColumns = `repeat(${this.columnsCount.value}, ${this.columnWidth.value}px)`;
-      // this.fitSizeVertically();
     });
     this.columnWidth.addEventListener("change", () => {
       this.achivsSection.style.gridTemplateColumns = `repeat(${this.columnsCount.value}, ${this.columnWidth.value}px)`;
@@ -41,8 +39,7 @@ class UI {
       updateRateInSecs = this.updateInterval.value;
     });
     this.gameID.addEventListener("change", () => {
-      apiWorker.gameID = this.gameID.value;
-      localStorage.setItem("gameID", this.gameID.value);
+      updateGameID(this.gameID.value);
     });
     document
       .querySelector(".fit-width-button")
@@ -53,12 +50,15 @@ class UI {
     document.querySelector(".get-id-button").addEventListener("click", () => {
       apiWorker.getProfileInfo({}).then((resp) => {
         this.gameID.value = resp.LastGameID;
-        apiWorker.gameID = resp.LastGameID;
+        updateGameID(resp.LastGameID);
       });
     });
+    document.querySelector(".check-id-button").addEventListener("click", () => {
+      updateAchivs();
+    });
   }
+
   parseGameAchievements(achivs) {
-    // console.log(achivs);
     this.achivsSection.innerHTML = "";
     this.updateGameInfo({
       title: achivs.Title,
@@ -94,9 +94,24 @@ class UI {
     let achivElement = document.createElement("div");
     let isEarned = dateEarned !== undefined;
     let isHardcoreEarned = dateHardEarned !== undefined;
-    achivElement.className = `achiv-block ${isEarned ? "earned" : ""} ${
-      isHardcoreEarned ? "hardcore" : ""
-    }`;
+    achivElement.classList.add(
+      "achiv-block",
+      isEarned ? "earned" : "o",
+      isHardcoreEarned ? "hardcore" : "o"
+    );
+    if (isHardcoreEarned) {
+      let diffMinutes = new Date() - new Date(dateHardEarned);
+      // console.log(diffMinutes, this.RECENT_DELAY_MILISECS);
+      diffMinutes < this.RECENT_DELAY_MILISECS
+        ? achivElement.classList.add("recent-earned-hard")
+        : "o";
+    } else if (isEarned) {
+      let diffMinutes = new Date() - new Date(dateEarned);
+      diffMinutes < this.RECENT_DELAY_MILISECS
+        ? achivElement.classList.add("recent-earned")
+        : "o";
+    }
+
     achivElement.innerHTML = `
     <div class="preview-container">
         <img
@@ -106,11 +121,7 @@ class UI {
             srcset=""
         />
     </div>
-    <div class="achiv-details">
-        <h2 class="achiv-title">${title}</h2>
-        <p class="achiv-description">${description}</p>
-        <p class="collected-date">${dateEarned}</p>
-    </div>
+   
     `;
     achivElement.appendChild(
       this.generateAchivDetails({
@@ -125,8 +136,9 @@ class UI {
     let detailsElement = document.createElement("div");
     detailsElement.className = "achiv-details-block";
     detailsElement.innerHTML = `
-      <h2>${name}</h2>
+      <h3>${name}</h3>
       <p>${description}</p>
+      <p>${dateEarned ? "Earned " + dateEarned : ""}</p>
     `;
     return detailsElement;
   }
@@ -161,3 +173,7 @@ class UI {
     }
   }
 }
+let dragStartPos = {
+  X: 0,
+  Y: 0,
+};

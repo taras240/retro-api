@@ -7,9 +7,9 @@ class APIWorker {
     extendedGameInfo: "API_GetGameExtended.php",
   };
   baseUrl = `https://retroachievements.org/API/`;
-  constructor({ key, userName }) {
-    this.apiKey = key;
-    this.userName = userName;
+  constructor() {
+    this.apiKey = userIdent.API_KEY;
+    this.userName = userIdent.USER_NAME;
     this.getProfileInfo({}).then((resp) => {
       this.gameID = resp.LastGameID;
     });

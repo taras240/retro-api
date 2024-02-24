@@ -1,24 +1,29 @@
-const userIdent = {
+let userIdent = {
   API_KEY: localStorage.getItem("RAApiKey") ?? "",
   USER_NAME: localStorage.getItem("RAUserName") ?? "",
 };
-// let gameId = localStorage.getItem("gameID");
+let gameID = localStorage.getItem("gameID") ?? "";
 let updateRateInSecs = 5;
-// userIdent.API_KEY = localStorage.getItem("apiKey");
-// userIdent.USER_NAME = localStorage.getItem("userName");
 let ui = new UI();
-// ui.gameID.value = gameId;
-let apiWorker = new APIWorker({
-  key: userIdent.API_KEY,
-  userName: userIdent.USER_NAME,
-});
+let apiWorker = new APIWorker();
 
-const requestGameProgress = "API_GetGameInfoAndUserProgress.php";
-const requestUserRecentAchievements = "API_GetUserRecentAchievements.php";
-const requestGetUserProfile = "API_GetUserProfile.php";
-
-function updateAchivs(fun) {
-  apiWorker.getGameProgress({}).then((resp) => {
+function updateUserIdent({ loginName, apiKey }) {
+  loginName ? localStorage.setItem("RAUserName", loginName) : "";
+  apiKey ? localStorage.setItem("RAApiKey", apiKey) : "";
+  userIdent = {
+    API_KEY: localStorage.getItem("RAApiKey") ?? "",
+    USER_NAME: localStorage.getItem("RAUserName") ?? "",
+  };
+  apiWorker = new APIWorker();
+}
+function updateGameID(id) {
+  gameID = id;
+  localStorage.setItem("RAGameID", id);
+  updateAchivs();
+}
+function updateAchivs() {
+  apiWorker.getGameProgress({ gameID: gameID }).then((resp) => {
+    // console.log(resp);
     ui.parseGameAchievements(resp);
   });
 }
@@ -46,3 +51,8 @@ function openSettings() {
     ? ui.settings.classList.remove("hidden")
     : ui.settings.classList.add("hidden");
 }
+document
+  .querySelector(".settings_container")
+  .addEventListener("click ", (e) => {
+    console.log(e);
+  });
