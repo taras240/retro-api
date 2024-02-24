@@ -28,7 +28,7 @@
       </section>
       <section class="prefs_section">
         <div class="prefs-header-container">
-          <h2 class="prefs-header">-[ Settings ]-</h2>
+          <h2 class="prefs-header">Settings</h2>
           <div class="close-settings-button" onclick="closeSettings()"></div>
         </div>
         <div class="settings_container">
@@ -62,7 +62,7 @@
             />
           </div>
           <div class="columns-settings numeric-input-container">
-            <label for="columns">Columns width:</label>
+            <label for="columns-width">Columns width:</label>
             <button class="fit-width-button setting-button">Auto</button>
 
             <input
@@ -82,6 +82,18 @@
               id="update-time"
               value="5"
             />
+          </div>
+          <div class="game-id-settings numeric-input-container">
+            <label>Sort by: TODO</label>
+            <button class="sort-achivs-button setting-button">default</button>
+
+            <button class="sort-achivs-button setting-button">
+              earned count
+            </button>
+
+            <button class="sort-achivs-button setting-button">hardest</button>
+
+            <button id="sort-achivs-button" class="setting-button">type</button>
           </div>
           <div class="game-id-settings numeric-input-container">
             <label for="game-id">Game ID:</label>

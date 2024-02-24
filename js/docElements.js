@@ -199,13 +199,12 @@ class UI {
   fitColumnsVertically() {
     let windowHeight = window.innerHeight;
     while (this.achivsSection.clientHeight > windowHeight) {
-      console.log(this.columnsCount.value);
       this.achivsSection.style.gridTemplateColumns = `repeat(${++this
         .columnsCount.value}, ${this.columnWidth.value}px)`;
     }
 
     while (
-      this.achivsSection.clientHeight + this.columnWidth.value + 5 <
+      this.achivsSection.clientHeight + Number(this.columnWidth.value) <
       windowHeight
     ) {
       this.achivsSection.style.gridTemplateColumns = `repeat(${--this
