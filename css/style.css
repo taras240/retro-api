@@ -1,5 +1,6 @@
 @import url(./reset.css);
 @import url(./settings.css);
+@import url(./gameCard.css);
 @import url(./achievement.css);
 @import url(https://fonts.googleapis.com/css?family=Honk:regular);
 @import url(https://fonts.googleapis.com/css?family=Press+Start+2P:regular);
@@ -9,6 +10,7 @@
 body {
   background-color: black;
   color: antiquewhite;
+  overflow-x: hidden;
 }
 h3 {
   font-weight: 600;
@@ -17,11 +19,15 @@ h3 {
 .wrapper {
   min-height: 100%;
 }
-
-.open-settings-button {
+.buttons-block {
   position: absolute;
   bottom: 10px;
   right: 10px;
+  padding: 10px;
+  display: flex;
+  gap: 10px;
+}
+.open-settings-button {
   border-radius: 5px;
   background-color: black;
   padding: 10px;

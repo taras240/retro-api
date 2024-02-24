@@ -8,9 +8,21 @@
   </head>
   <body>
     <div class="wrapper">
-      <button class="open-settings-button" onclick="openSettings()">
-        Settings
-      </button>
+      <div class="buttons-block">
+        <button
+          class="open-settings-button game-card-button"
+          onclick="openGameCard()"
+        >
+          GameCard
+        </button>
+        <button
+          class="open-settings-button settings-button"
+          onclick="openSettings()"
+        >
+          Settings
+        </button>
+      </div>
+
       <section class="achivs">
         <div class="achivs_section"></div>
       </section>
@@ -83,21 +95,9 @@
               id="game-id"
               value="0"
             />
+            <button id="watching-button" class="setting-button">Watch</button>
           </div>
-          <button
-            id="start-watching"
-            class="apply-settings"
-            onclick="startWatching()"
-          >
-            Start Watching
-          </button>
-          <button
-            id="stop-watching"
-            class="apply-settings hidden"
-            onclick="stopWatching()"
-          >
-            Stop Watching
-          </button>
+
           <div class="achivs-game">
             <img
               src="https://media.retroachievements.org/Images/039041.png"
@@ -107,6 +107,63 @@
             />
             <h2 class="game-title" id="game-title">Batman: The Video Game</h2>
             <p class="platform" id="game-platform">NES/Famicom</p>
+          </div>
+        </div>
+      </section>
+      <section class="game-card_section">
+        <div class="game-card_container">
+          <div class="game-card-header_container">
+            <h2 class="game-card-header" id="game-card-header">
+              Super Mario Bros. 2
+            </h2>
+            <div class="game-card-close_button" onclick="closeGameCard()"></div>
+          </div>
+          <div class="game-card-info_container">
+            <div class="game-card-image">
+              <img
+                id="game-card-image"
+                src="https://media.retroachievements.org/Images/011643.png"
+                alt=" "
+              />
+            </div>
+            <div class="game-card-description">
+              <div class="game-card-info">
+                <h3 class="game-info-header">Platform</h3>
+                <p class="game-card-text platform" id="game-card-platform">
+                  Nes/Famicom
+                </p>
+              </div>
+              <div class="game-card-info">
+                <h3 class="game-info-header">Developer</h3>
+                <p class="game-card-text developer" id="game-card-developer">
+                  SunSoft
+                </p>
+              </div>
+              <div class="game-card-info">
+                <h3 class="game-info-header">Publisher</h3>
+                <p class="game-card-text publisher" id="game-card-publisher">
+                  SunSoft
+                </p>
+              </div>
+              <div class="game-card-info">
+                <h3 class="game-info-header">Genre</h3>
+                <p class="game-card-text genre" id="game-card-genre">
+                  Platformer
+                </p>
+              </div>
+              <div class="game-card-info">
+                <h3 class="game-info-header">Released</h3>
+                <p class="game-card-text released" id="game-card-released">
+                  December 1989
+                </p>
+              </div>
+              <div class="game-card-info">
+                <h3 class="game-info-header">Completion</h3>
+                <p class="game-card-text completion" id="game-card-completion">
+                  54.45%
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>

@@ -1,6 +1,8 @@
 class UI {
   RECENT_DELAY_MILISECS = 20 * 60 * 1000; //mins => secs => milisecs
   constructor() {
+    this.gameCard = document.querySelector(".game-card_section");
+
     this.settings = document.querySelector(".prefs_section");
     this.apiKey = document.querySelector("#api-key");
     this.apiKey.value = userIdent.API_KEY;
@@ -14,6 +16,8 @@ class UI {
     this.updateInterval = document.querySelector("#update-time");
     this.gameID = document.querySelector("#game-id");
     this.gameID.value = localStorage.getItem("RAGameID");
+
+    this.watchButton = document.querySelector("#watching-button");
 
     this.gamePreview = document.querySelector("#game-preview");
     this.gameTitle = document.querySelector("#game-title");
@@ -41,6 +45,19 @@ class UI {
     this.gameID.addEventListener("change", () => {
       updateGameID(this.gameID.value);
     });
+    this.watchButton.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (this.watchButton.classList.contains("active")) {
+        this.watchButton.classList.remove("active");
+        this.watchButton.innerText = "Watch";
+        stopWatching();
+      } else {
+        this.watchButton.classList.add("active");
+        this.watchButton.innerText = "Watching";
+        startWatching();
+      }
+    });
+
     document
       .querySelector(".fit-width-button")
       .addEventListener("click", () => this.fitSizeVertically());
@@ -84,6 +101,29 @@ class UI {
     this.gameTitle.innerText = title;
     this.gamePlatform.innerText = platform;
   }
+  updateGameCardInfo(gameInfo) {
+    document.querySelector("#game-card-header").innerText = gameInfo.Title;
+    document
+      .querySelector("#game-card-image")
+      .setAttribute(
+        "src",
+        `https://media.retroachievements.org${gameInfo.ImageBoxArt}`
+      );
+    document.querySelector("#game-card-platform").innerText =
+      gameInfo.ConsoleName;
+    document.querySelector("#game-card-developer").innerText =
+      gameInfo.Developer || "-";
+    document.querySelector("#game-card-publisher").innerText =
+      gameInfo.Publisher || "-";
+    document.querySelector("#game-card-genre").innerText =
+      gameInfo.Genre || "-";
+    document.querySelector("#game-card-released").innerText =
+      gameInfo.Released || "-";
+    document.querySelector(
+      "#game-card-completion"
+    ).innerText = `${gameInfo.UserCompletion} [${gameInfo.UserCompletionHardcore}]`;
+  }
+
   generateAchievement({
     badgeName,
     title,
@@ -173,7 +213,3 @@ class UI {
     }
   }
 }
-let dragStartPos = {
-  X: 0,
-  Y: 0,
-};

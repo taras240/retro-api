@@ -3,6 +3,7 @@
   grid-template-columns: repeat(5, 96px);
   gap: 5px;
   padding: 10px;
+  user-select: none;
 }
 .achiv-block {
   aspect-ratio: 1/1;
