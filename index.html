@@ -24,7 +24,9 @@
       </div>
 
       <section class="achivs">
+        <!-- <div class="achivs-resizeble-border"></div> -->
         <div class="achivs_section"></div>
+        <div class="resizer" id="achivs-resizer"></div>
       </section>
       <section class="prefs_section">
         <div class="prefs-header-container">
@@ -50,29 +52,7 @@
               id="login-input"
             />
           </div>
-          <div class="columns-settings numeric-input-container">
-            <label for="columns">Columns count:</label>
-            <button class="fit-columns-button setting-button">Auto</button>
-            <input
-              type="number"
-              class="number-input"
-              name="columns"
-              id="columns"
-              value="5"
-            />
-          </div>
-          <div class="columns-settings numeric-input-container">
-            <label for="columns-width">Columns width:</label>
-            <button class="fit-width-button setting-button">Auto</button>
 
-            <input
-              type="number"
-              class="number-input"
-              name="columns-width"
-              id="columns-width"
-              value="98"
-            />
-          </div>
           <div class="update-time-settings numeric-input-container">
             <label for="update-time">Update delay(seconds):</label>
             <input
@@ -118,6 +98,8 @@
               id="game-preview"
             />
             <h2 class="game-title" id="game-title">Batman: The Video Game</h2>
+            <p class="game-achivs-count" id="game-achivs-count">10</p>
+
             <p class="platform" id="game-platform">NES/Famicom</p>
           </div>
         </div>

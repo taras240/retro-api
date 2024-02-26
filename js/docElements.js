@@ -10,9 +10,6 @@ class UI {
     this.login = document.querySelector("#login-input");
     this.login.value = userIdent.USER_NAME;
 
-    this.columnsCount = document.querySelector("#columns");
-    this.columnWidth = document.querySelector("#columns-width");
-
     this.updateInterval = document.querySelector("#update-time");
     this.gameID = document.querySelector("#game-id");
     this.gameID.value = localStorage.getItem("RAGameID");
@@ -22,6 +19,7 @@ class UI {
     this.gamePreview = document.querySelector("#game-preview");
     this.gameTitle = document.querySelector("#game-title");
     this.gamePlatform = document.querySelector("#game-platform");
+    this.gameAchivsCount = document.querySelector("#game-achivs-count");
 
     this.achivsSection = document.querySelector(".achivs_section");
     this.addEvents();
@@ -33,12 +31,7 @@ class UI {
     this.login.addEventListener("change", () => {
       updateUserIdent({ loginName: this.login.value });
     });
-    this.columnsCount.addEventListener("change", () => {
-      this.achivsSection.style.gridTemplateColumns = `repeat(${this.columnsCount.value}, ${this.columnWidth.value}px)`;
-    });
-    this.columnWidth.addEventListener("change", () => {
-      this.achivsSection.style.gridTemplateColumns = `repeat(${this.columnsCount.value}, ${this.columnWidth.value}px)`;
-    });
+
     this.updateInterval.addEventListener("change", () => {
       updateRateInSecs = this.updateInterval.value;
     });
@@ -57,13 +50,31 @@ class UI {
         startWatching();
       }
     });
+    this.achivsSection.addEventListener("mousedown", (e) => {
+      e.stopPropagation();
+    });
+    let element = document.querySelector("#achivs-resizer");
+    let achivsBlock = document.querySelector("section.achivs");
+    element.addEventListener("mousedown", (event) => {
+      this.resizeValues = {
+        // Зберігаємо початкові розміри елемента
+        startWidth: achivsBlock.clientWidth,
+        startHeight: achivsBlock.clientHeight,
 
-    document
-      .querySelector(".fit-width-button")
-      .addEventListener("click", () => this.fitSizeVertically());
-    document
-      .querySelector(".fit-columns-button")
-      .addEventListener("click", () => this.fitColumnsVertically());
+        // Зберігаємо координати миші
+        startX: event.clientX,
+        startY: event.clientY,
+      };
+
+      // Додаємо подію mousemove до документа
+      document.addEventListener("mousemove", resizeAchivsBlock);
+
+      // Видаляємо подію mousemove з документа, коли користувач відпускає кнопку миші
+      document.addEventListener("mouseup", () => {
+        document.removeEventListener("mousemove", resizeAchivsBlock);
+      });
+    });
+
     document.querySelector(".get-id-button").addEventListener("click", () => {
       apiWorker.getProfileInfo({}).then((resp) => {
         this.gameID.value = resp.LastGameID;
@@ -81,6 +92,7 @@ class UI {
       title: achivs.Title,
       platform: achivs.ConsoleName,
       imageIcon: achivs.ImageIcon,
+      achivsCount: achivs.NumAchievements,
     });
     Object.values(achivs.Achievements).forEach((achiv) => {
       let achivElement = this.generateAchievement({
@@ -93,12 +105,13 @@ class UI {
       this.achivsSection.appendChild(achivElement);
     });
   }
-  updateGameInfo({ title, platform, imageIcon }) {
+  updateGameInfo({ title, platform, imageIcon, achivsCount }) {
     this.gamePreview.setAttribute(
       "src",
       `https://media.retroachievements.org${imageIcon}`
     );
     this.gameTitle.innerText = title;
+    this.gameAchivsCount.innerText = achivsCount;
     this.gamePlatform.innerText = platform;
   }
   updateGameCardInfo(gameInfo) {
@@ -183,32 +196,33 @@ class UI {
     return detailsElement;
   }
   fitSizeVertically() {
-    let windowHeight = window.innerHeight;
-    while (this.achivsSection.clientHeight > windowHeight) {
-      this.achivsSection.style.gridTemplateColumns = `repeat(${
-        this.columnsCount.value
-      }, ${--this.columnWidth.value}px)`;
-    }
+    let rowsCount, colsCount, n;
+    let windowHeight = this.achivsSection.clientHeight;
+    let windowWidth = this.achivsSection.clientWidth;
+    let achivsCount = this.achivsSection.childNodes.length;
 
-    while (this.achivsSection.clientHeight + 10 < windowHeight) {
-      this.achivsSection.style.gridTemplateColumns = `repeat(${
-        this.columnsCount.value
-      }, ${++this.columnWidth.value}px)`;
-    }
+    let achivWidth = ~~(((windowWidth * windowHeight) / achivsCount) ** 0.5);
+    do {
+      achivWidth--;
+      rowsCount = ~~(windowHeight / achivWidth);
+      colsCount = ~~(windowWidth / achivWidth);
+      n = rowsCount * colsCount;
+    } while (n < achivsCount);
+    this.achivsSection.childNodes.forEach(
+      (achiv) => (achiv.style.width = achivWidth + "px")
+    );
   }
-  fitColumnsVertically() {
-    let windowHeight = window.innerHeight;
-    while (this.achivsSection.clientHeight > windowHeight) {
-      this.achivsSection.style.gridTemplateColumns = `repeat(${++this
-        .columnsCount.value}, ${this.columnWidth.value}px)`;
-    }
+}
+function resizeAchivsBlock(event) {
+  let element = document.querySelector("section.achivs");
+  // Розраховуємо нову ширину та висоту елемента
+  let newWidth =
+    ui.resizeValues.startWidth + (event.clientX - ui.resizeValues.startX);
+  let newHeight =
+    ui.resizeValues.startHeight + (event.clientY - ui.resizeValues.startY);
 
-    while (
-      this.achivsSection.clientHeight + Number(this.columnWidth.value) <
-      windowHeight
-    ) {
-      this.achivsSection.style.gridTemplateColumns = `repeat(${--this
-        .columnsCount.value}, ${this.columnWidth.value}px)`;
-    }
-  }
+  // Задаємо нові розміри елементу
+  element.style.width = `${newWidth}px`;
+  element.style.height = `${newHeight}px`;
+  ui.fitSizeVertically();
 }

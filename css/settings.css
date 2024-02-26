@@ -168,15 +168,19 @@
   overflow: hidden;
 }
 .game-preview {
-  grid-row: 1/3;
+  grid-row: 1/4;
   width: 100px;
   aspect-ratio: 1/1;
 }
 .game-title,
-.platform {
+.platform,
+.game-achivs-count {
   align-self: center;
   margin-left: 5px;
   font-size: 1.2rem;
+}
+#game-achivs-count::after {
+  content: " achieves availible";
 }
 
 .collected-date {

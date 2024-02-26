@@ -26,11 +26,13 @@ function updateAchivs() {
     // console.log(resp);
     ui.parseGameAchievements(resp);
     ui.updateGameCardInfo(resp);
+    ui.fitSizeVertically();
   });
 }
 
 function startWatching() {
   updateAchivs();
+
   apiTikInterval = setInterval(() => {
     updateAchivs();
   }, updateRateInSecs * 1000);
