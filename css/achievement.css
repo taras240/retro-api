@@ -67,6 +67,46 @@ section.achivs {
 
 .achiv-block.earned {
   filter: none;
+  animation: achiv-earned-animation 0.6s;
+}
+.achiv-block.earned.hardcore::before {
+  content: "";
+  position: absolute;
+  width: 50%;
+  aspect-ratio: 2/1;
+  /* height: 25%; */
+  top: 20%;
+  right: 20%;
+  transform: translate(50%, -50%) rotate(45deg);
+  background-image: url(../assets/img/S-rank-1.png);
+  image-rendering: pixelated;
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0;
+  animation: hardcore-earned-animation 0.1s linear forwards;
+  animation-delay: 0.6s;
+}
+@keyframes hardcore-earned-animation {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes achiv-earned-animation {
+  0% {
+    padding: 10px;
+  }
+  25% {
+    padding: 20px;
+  }
+  75% {
+    padding: 0px;
+  }
+  100% {
+    padding: 5px;
+  }
 }
 .preview-container {
   width: 100%;
@@ -122,7 +162,7 @@ section.achivs {
 .achiv-details-block {
   position: absolute;
   line-height: 1.5rem;
-  width: 200%;
+  width: 300px;
   background-color: black;
   height: auto;
   z-index: 10;

@@ -2,8 +2,8 @@ let userIdent = {
   API_KEY: localStorage.getItem("RAApiKey") ?? "",
   USER_NAME: localStorage.getItem("RAUserName") ?? "",
 };
+let UPDATE_RATE_IN_SECS = 5;
 let gameID = localStorage.getItem("gameID") ?? "";
-let updateRateInSecs = 5;
 let ui = new UI();
 let apiWorker = new APIWorker();
 let apiTikInterval;
@@ -19,25 +19,47 @@ function updateUserIdent({ loginName, apiKey }) {
 function updateGameID(id) {
   gameID = id;
   localStorage.setItem("RAGameID", id);
-  updateAchivs();
+  getAchivs();
 }
-function updateAchivs() {
-  apiWorker.getGameProgress({ gameID: gameID }).then((resp) => {
-    // console.log(resp);
-    ui.parseGameAchievements(resp);
-    ui.updateGameCardInfo(resp);
-    ui.fitSizeVertically();
-  });
+function getAchivs() {
+  apiWorker
+    .getGameProgress({ gameID: gameID })
+    .then((resp) => {
+      ui.parseGameAchievements(resp);
+      ui.fitSizeVertically();
+      ui.updateGameCardInfo(resp);
+      ui.watchButton.classList.remove("error");
+    })
+    .catch(() => {
+      ui.watchButton.classList.add("error");
+      stopWatching();
+    });
 }
-
+function updateAchievements() {
+  apiWorker.getRecentAchieves({ minutes: 5 }).then((achivs) =>
+    achivs.forEach((achiv) => {
+      ui.achivsSection.childNodes.forEach((achivElement) => {
+        if (achivElement.dataset.achivId == achiv.AchievementID) {
+          achivElement.classList.add("earned");
+          achiv.HardcoreMode == 1 ? achivElement.classList.add("hardcore") : "";
+        }
+      });
+    })
+  );
+}
 function startWatching() {
-  updateAchivs();
-
+  ui.watchButton.classList.add("active");
+  ui.watchButton.innerText = "Watching";
+  getAchivs();
   apiTikInterval = setInterval(() => {
-    updateAchivs();
-  }, updateRateInSecs * 1000);
+    updateAchievements();
+    ui.watchButton.classList.remove("tick");
+    setTimeout(() => ui.watchButton.classList.add("tick"), 500);
+  }, UPDATE_RATE_IN_SECS * 1000);
 }
 function stopWatching() {
+  ui.watchButton.classList.remove("active");
+  ui.watchButton.innerText = "Watch";
   clearInterval(apiTikInterval);
 }
 

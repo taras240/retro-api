@@ -33,7 +33,7 @@ class UI {
     });
 
     this.updateInterval.addEventListener("change", () => {
-      updateRateInSecs = this.updateInterval.value;
+      UPDATE_RATE_IN_SECS = this.updateInterval.value;
     });
     this.gameID.addEventListener("change", () => {
       updateGameID(this.gameID.value);
@@ -41,12 +41,8 @@ class UI {
     this.watchButton.addEventListener("click", (e) => {
       e.stopPropagation();
       if (this.watchButton.classList.contains("active")) {
-        this.watchButton.classList.remove("active");
-        this.watchButton.innerText = "Watch";
         stopWatching();
       } else {
-        this.watchButton.classList.add("active");
-        this.watchButton.innerText = "Watching";
         startWatching();
       }
     });
@@ -82,7 +78,7 @@ class UI {
       });
     });
     document.querySelector(".check-id-button").addEventListener("click", () => {
-      updateAchivs();
+      getAchivs();
     });
   }
 
@@ -101,6 +97,7 @@ class UI {
         description: achiv["Description"],
         dateEarned: achiv["DateEarned"],
         dateHardEarned: achiv["DateEarnedHardcore"],
+        achivID: achiv["ID"],
       });
       this.achivsSection.appendChild(achivElement);
     });
@@ -143,6 +140,7 @@ class UI {
     description,
     dateEarned,
     dateHardEarned,
+    achivID,
   }) {
     let achivElement = document.createElement("div");
     let isEarned = dateEarned !== undefined;
@@ -164,7 +162,7 @@ class UI {
         ? achivElement.classList.add("recent-earned")
         : "o";
     }
-
+    achivElement.dataset.achivId = achivID;
     achivElement.innerHTML = `
     <div class="preview-container">
         <img
