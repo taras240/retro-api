@@ -1,12 +1,23 @@
+// Об'єкт для зберігання інформації про користувача
 let userIdent = {
   API_KEY: localStorage.getItem("RAApiKey") ?? "",
   USER_NAME: localStorage.getItem("RAUserName") ?? "",
 };
-let UPDATE_RATE_IN_SECS = 5;
-let gameID = localStorage.getItem("gameID") ?? "";
+
+// Ініціалізація UI
 let ui = new UI();
-let apiWorker = new APIWorker();
+
+// Ініціалізація APIWorker з ідентифікацією користувача
+let apiWorker = new APIWorker({ identification: userIdent });
 let apiTikInterval;
+
+// Інтервал оновлення даних
+let UPDATE_RATE_IN_SECS = 5;
+
+// Змінна для зберігання ID гри
+let gameID = localStorage.getItem("RAGameID") ?? "";
+
+// Функція для оновлення інформації про користувача
 function updateUserIdent({ loginName, apiKey }) {
   loginName ? localStorage.setItem("RAUserName", loginName) : "";
   apiKey ? localStorage.setItem("RAApiKey", apiKey) : "";
@@ -14,120 +25,79 @@ function updateUserIdent({ loginName, apiKey }) {
     API_KEY: localStorage.getItem("RAApiKey") ?? "",
     USER_NAME: localStorage.getItem("RAUserName") ?? "",
   };
-  apiWorker = new APIWorker();
+  apiWorker = new APIWorker({ identification: userIdent });
 }
+
+// Функція для оновлення ID гри
 function updateGameID(id) {
   gameID = id;
   localStorage.setItem("RAGameID", id);
   getAchivs();
 }
-function getAchivs() {
-  apiWorker
-    .getGameProgress({ gameID: gameID })
-    .then((resp) => {
-      ui.parseGameAchievements(resp);
-      ui.fitSizeVertically();
-      ui.updateGameCardInfo(resp);
-      ui.watchButton.classList.remove("error");
-    })
-    .catch(() => {
-      ui.watchButton.classList.add("error");
-      stopWatching();
-    });
+
+// Функція для отримання досягнень гри
+async function getAchivs() {
+  try {
+    const resp = await apiWorker.getGameProgress({ gameID: gameID });
+    ui.parseGameAchievements(resp);
+    ui.fitSizeVertically();
+    ui.updateGameCardInfo(resp);
+    ui.settings.watchButton.classList.remove("error");
+  } catch (error) {
+    ui.settings.watchButton.classList.add("error");
+    stopWatching();
+  }
 }
-function updateAchievements() {
-  apiWorker.getRecentAchieves({ minutes: 5 }).then((achivs) =>
-    achivs.forEach((achiv) => {
-      ui.achivsSection.childNodes.forEach((achivElement) => {
+// Функція для оновлення досягнень
+async function updateAchievements() {
+  const achivs = await apiWorker.getRecentAchieves({ minutes: 60 * 60 });
+  achivs.forEach((achiv) => {
+    ui.achievementsBlock.achivsSection
+      .querySelectorAll("[data-achiv-id]")
+      .forEach((achivElement) => {
         if (achivElement.dataset.achivId == achiv.AchievementID) {
-          achivElement.classList.add("earned");
-          achiv.HardcoreMode == 1 ? achivElement.classList.add("hardcore") : "";
+          achivElement.classList.toggle("earned", true);
+          achivElement.classList.toggle("hardcore", achiv.HardcoreMode == 1);
         }
       });
-    })
-  );
+  });
 }
+
+// Функція для початку слідкування за досягненнями
 function startWatching() {
-  ui.watchButton.classList.add("active");
-  ui.watchButton.innerText = "Watching";
+  ui.settings.watchButton.classList.add("active");
+  ui.settings.watchButton.innerText = "Watching";
   getAchivs();
   apiTikInterval = setInterval(() => {
     updateAchievements();
-    ui.watchButton.classList.remove("tick");
-    setTimeout(() => ui.watchButton.classList.add("tick"), 500);
+    ui.settings.watchButton.classList.remove("tick");
+    setTimeout(() => ui.settings.watchButton.classList.add("tick"), 500);
   }, UPDATE_RATE_IN_SECS * 1000);
 }
+
+// Функція для зупинки слідкування за досягненнями
 function stopWatching() {
-  ui.watchButton.classList.remove("active");
-  ui.watchButton.innerText = "Watch";
+  ui.settings.watchButton.classList.remove("active");
+  ui.settings.watchButton.innerText = "Watch";
   clearInterval(apiTikInterval);
 }
 
+// Функція для закриття налаштувань
 function closeSettings() {
-  ui.settings.classList.add("hidden");
+  ui.settings.container.classList.add("hidden");
 }
+
+// Функція для відкриття налаштувань
 function openSettings() {
-  ui.settings.classList.contains("hidden")
-    ? ui.settings.classList.remove("hidden")
-    : ui.settings.classList.add("hidden");
+  ui.settings.container.classList.toggle("hidden");
 }
 
+// Функція для закриття картки гри
 function closeGameCard() {
-  ui.gameCard.classList.add("hidden");
+  ui.gameCard.container.classList.add("hidden");
 }
+
+// Функція для відкриття картки гри
 function openGameCard() {
-  ui.gameCard.classList.contains("hidden")
-    ? ui.gameCard.classList.remove("hidden")
-    : ui.gameCard.classList.add("hidden");
-}
-///////////////////////////
-///       MOVE SETTINGS
-///////////////////////////
-let offsetX, offsetY;
-ui.settings.addEventListener("mousedown", (e) => {
-  offsetX = e.clientX - ui.settings.getBoundingClientRect().left;
-  offsetY = e.clientY - ui.settings.getBoundingClientRect().top;
-  ui.settings.classList.add("dragable");
-  ui.settings.addEventListener("mousemove", moveSettingsWindow);
-});
-
-ui.settings.addEventListener("mouseup", (e) => {
-  ui.settings.classList.remove("dragable");
-  ui.settings.removeEventListener("mousemove", moveSettingsWindow);
-  e.preventDefault();
-});
-ui.settings.addEventListener("mouseleave", (e) => {
-  ui.settings.classList.remove("dragable");
-  ui.settings.removeEventListener("mousemove", moveSettingsWindow);
-  e.preventDefault();
-});
-function moveSettingsWindow(e) {
-  e.preventDefault();
-  ui.settings.style.left = e.clientX - offsetX + "px";
-  ui.settings.style.top = e.clientY - offsetY + "px";
-}
-///////////////////////////
-///       MOVE GAME-CARD
-///////////////////////////
-ui.gameCard.addEventListener("mousedown", (e) => {
-  offsetX = e.clientX - ui.gameCard.getBoundingClientRect().left;
-  offsetY = e.clientY - ui.gameCard.getBoundingClientRect().top;
-  ui.gameCard.classList.add("dragable");
-  ui.gameCard.addEventListener("mousemove", moveGameCardWindow);
-});
-
-ui.gameCard.addEventListener("mouseup", (e) => {
-  ui.gameCard.classList.remove("dragable");
-  ui.gameCard.removeEventListener("mousemove", moveGameCardWindow);
-  e.preventDefault();
-});
-ui.gameCard.addEventListener("mouseleave", (e) => {
-  ui.gameCard.classList.remove("dragable");
-  ui.gameCard.removeEventListener("mousemove", moveGameCardWindow);
-  e.preventDefault();
-});
-function moveGameCardWindow(e) {
-  e.preventDefault();
-  ui.gameCard.style.left = e.clientX - offsetX + "px";
-  ui.gameCard.style.top = e.clientY - offsetY + "px";
+  ui.gameCard.container.classList.toggle("hidden");
 }
