@@ -20,7 +20,7 @@ Before using the application, make sure the following software is installed on y
 
 ### Usage Instructions
 
-1. **Launch** the application in your web browser.
+1. **Launch** the application in your web browser (https://taras240.github.io/retro-api).
 2. **Enter** your API_key and username to access your account on RetroAchievements.org.
 3. **Choose** the game for which you want to track achievements.
 4. **View** the list of achievements and track their progress.
