@@ -94,7 +94,7 @@ section.achivs {
 .achiv-block.earned[data-points="reach"]::after {
   content: "";
   position: absolute;
-  height: 10%;
+  height: 15%;
   aspect-ratio: 1 / 1;
   bottom: 10%;
   left: 10%;
@@ -110,6 +110,7 @@ section.achivs {
 .achiv-block.earned[data-points="normal"]::after {
   height: 20%;
   bottom: 5%;
+  transform: rotateY(180deg);
   background-image: url(../assets/img/coins-middle.png);
 }
 .achiv-block.earned[data-points="reach"]::after {

@@ -38,13 +38,21 @@ function updateGameID(id) {
 // Функція для отримання досягнень гри
 async function getAchivs() {
   try {
+    // Отримання інформації про прогрес гри від API
     const resp = await apiWorker.getGameProgress({ gameID: gameID });
+
+    // Парсинг та відображення досягнень гри
     ui.parseGameAchievements(resp);
+
+    // Підгонка розміру досягнень
     ui.fitSizeVertically();
+
+    // Оновлення інформації в картці гри
     ui.updateGameCardInfo(resp);
-    ui.settings.watchButton.classList.remove("error");
   } catch (error) {
-    console.log(error);
+    console.error(error);
+
+    // Додання помилки до кнопки перегляду та зупинка перегляду
     ui.settings.watchButton.classList.add("error");
     stopWatching();
   }
@@ -92,6 +100,7 @@ function switchElementToStart(element) {
 function startWatching() {
   ui.settings.watchButton.classList.add("active");
   ui.settings.watchButton.innerText = "Watching";
+  ui.settings.watchButton.classList.remove("error");
   getAchivs();
   apiTikInterval = setInterval(() => {
     updateAchievements();
