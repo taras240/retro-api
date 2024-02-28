@@ -62,7 +62,7 @@ async function getAchivs() {
 async function updateAchievements() {
   try {
     // Отримання останніх досягнень від API
-    const achivs = await apiWorker.getRecentAchieves({ minutes: 2000 });
+    const achivs = await apiWorker.getRecentAchieves({ minutes: 5 });
 
     // Проходження по кожному досягненню
     achivs.forEach((achiv) => {
