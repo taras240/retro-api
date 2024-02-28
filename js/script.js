@@ -44,25 +44,50 @@ async function getAchivs() {
     ui.updateGameCardInfo(resp);
     ui.settings.watchButton.classList.remove("error");
   } catch (error) {
+    console.log(error);
     ui.settings.watchButton.classList.add("error");
     stopWatching();
   }
 }
+
 // Функція для оновлення досягнень
 async function updateAchievements() {
-  const achivs = await apiWorker.getRecentAchieves({ minutes: 10 });
-  achivs.forEach((achiv) => {
-    ui.achievementsBlock.achivsSection
-      .querySelectorAll("[data-achiv-id]")
-      .forEach((achivElement) => {
-        if (achivElement.dataset.achivId == achiv.AchievementID) {
-          achivElement.classList.toggle("earned", true);
-          achivElement.classList.toggle("hardcore", achiv.HardcoreMode == 1);
+  try {
+    // Отримання останніх досягнень від API
+    const achivs = await apiWorker.getRecentAchieves({ minutes: 2000 });
+
+    // Проходження по кожному досягненню
+    achivs.forEach((achiv) => {
+      // Знаходження елементу досягнення за його ідентифікатором
+      const achivElement = ui.achievementsBlock.achivsSection.querySelector(
+        `[data-achiv-id="${achiv.AchievementID}"]`
+      );
+
+      // Перевірка, чи існує елемент досягнення та чи збігається його тип з налаштованим сортуванням
+      if (achivElement) {
+        const hardcore = achiv.HardcoreMode == 1;
+        if (
+          ui.SORT_METHOD === sortBy.latest &&
+          ((!achivElement.classList.contains("hardcore") && hardcore) ||
+            !achivElement.classList.contains("earned"))
+        ) {
+          // Переміщення елементу до початку списку, якщо він щойно зароблений і сортування за останнім заробленим
+          switchElementToStart(achivElement);
         }
-      });
-  });
+
+        // Додавання класів для відображення зароблених досягнень
+        achivElement.classList.toggle("earned", true);
+        achivElement.classList.toggle("hardcore", hardcore);
+      }
+    });
+  } catch (error) {
+    console.error(error); // Обробка помилок
+  }
 }
 
+function switchElementToStart(element) {
+  element.parentNode.insertBefore(element, element.parentNode.firstChild);
+}
 // Функція для початку слідкування за досягненнями
 function startWatching() {
   ui.settings.watchButton.classList.add("active");

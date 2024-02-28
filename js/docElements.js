@@ -1,5 +1,7 @@
 class UI {
   RECENT_DELAY_MILISECS = 20 * 60 * 1000; //mins => secs => milisecs
+  SORT_METHOD = sortBy.default;
+
   constructor() {
     this.initializeElements();
     this.addEvents();
@@ -36,6 +38,10 @@ class UI {
       apiKey: document.querySelector("#api-key"), // Поле введення ключа API
       login: document.querySelector("#login-input"), // Поле введення логіну
       updateInterval: document.querySelector("#update-time"), // Поле введення інтервалу оновлення
+      sortByLatestButton: document.querySelector("#sort-by-latest"),
+      sortByEarnedButton: document.querySelector("#sort-by-erned"),
+      sortByPointsButton: document.querySelector("#sort-by-points"),
+      sortByDefaultButton: document.querySelector("#sort-by-default"),
       gameID: document.querySelector("#game-id"), // Поле введення ідентифікатора гри
       watchButton: document.querySelector("#watching-button"), // Кнопка спостереження за грою
       getGameIdButton: document.querySelector(".get-id-button"), // Кнопка отримання ідентифікатора гри
@@ -70,6 +76,38 @@ class UI {
     this.settings.gameID.addEventListener("change", () => {
       // Оновлюємо ідентифікатор гри
       updateGameID(this.settings.gameID.value);
+    });
+
+    // Додає подію кліку для сортування за замовчуванням
+    this.settings.sortByDefaultButton.addEventListener("click", () => {
+      // Встановлює метод сортування за замовчуванням
+      this.SORT_METHOD = sortBy.default;
+      // Застосовує сортування та оновлює інтерфейс
+      this.applySorting({ sortButton: this.settings.sortByDefaultButton });
+    });
+
+    // Додає подію кліку для сортування за отриманням досягнення
+    this.settings.sortByEarnedButton.addEventListener("click", () => {
+      // Встановлює метод сортування за отриманням досягнення
+      this.SORT_METHOD = sortBy.earnedCount;
+      // Застосовує сортування та оновлює інтерфейс
+      this.applySorting({ sortButton: this.settings.sortByEarnedButton });
+    });
+
+    // Додає подію кліку для сортування за датою отримання
+    this.settings.sortByLatestButton.addEventListener("click", () => {
+      // Встановлює метод сортування за датою отримання
+      this.SORT_METHOD = sortBy.latest;
+      // Застосовує сортування та оновлює інтерфейс
+      this.applySorting({ sortButton: this.settings.sortByLatestButton });
+    });
+
+    // Додає подію кліку для сортування за кількістю балів
+    this.settings.sortByPointsButton.addEventListener("click", () => {
+      // Встановлює метод сортування за кількістю балів
+      this.SORT_METHOD = sortBy.points;
+      // Застосовує сортування та оновлює інтерфейс
+      this.applySorting({ sortButton: this.settings.sortByPointsButton });
     });
 
     // Додаємо обробник події 'click' для кнопки автооновлення
@@ -199,12 +237,32 @@ class UI {
       });
     });
   }
+  /**
+   * Застосовує вибране сортування та оновлює інтерфейс
+   * @param {HTMLElement} sortButton - кнопка, яка була натиснута для вибору сортування
+   */
+  applySorting({ sortButton }) {
+    // Знімає клас "checked" з усіх кнопок сортування
+    sortButton.parentNode
+      .querySelectorAll(".checked")
+      .forEach((child) => child.classList.remove("checked"));
+    // Додає клас "checked" до обраної кнопки сортування
+    sortButton.classList.add("checked");
+    // Клікає на кнопку перевірки ідентифікатора для виконання сортування
+    this.settings.checkIdButton.click();
+  }
 
+  /**
+   * Розбирає отримані досягнення гри та відображає їх на сторінці
+   * @param {Object} achivs - об'єкт з отриманими досягненнями гри
+   */
   parseGameAchievements(achivs) {
     const { achivsSection } = this.achievementsBlock;
 
+    // Очищаємо вміст розділу досягнень
     achivsSection.innerHTML = "";
 
+    // Оновлюємо інформацію про гру
     this.updateGameInfo({
       title: achivs.Title,
       platform: achivs.ConsoleName,
@@ -212,25 +270,31 @@ class UI {
       achivsCount: achivs.NumAchievements,
     });
 
-    Object.values(achivs.Achievements).forEach((achiv) => {
-      const {
-        BadgeName,
-        Title,
-        Description,
-        DateEarned,
-        DateEarnedHardcore,
-        ID,
-      } = achiv;
-      let achivElement = this.generateAchievement({
-        badgeName: BadgeName,
-        title: Title,
-        description: Description,
-        dateEarned: DateEarned,
-        dateHardEarned: DateEarnedHardcore,
-        achivID: ID,
+    // Сортуємо досягнення за обраним методом сортування та відображаємо їх
+    Object.values(achivs.Achievements)
+      .sort((a, b) => this.SORT_METHOD(a, b))
+      .forEach((achiv) => {
+        const {
+          BadgeName,
+          Title,
+          Description,
+          DateEarned,
+          DateEarnedHardcore,
+          ID,
+          Points,
+        } = achiv;
+        // Генеруємо HTML-елемент досягнення та додаємо його до секції досягнень
+        let achivElement = this.generateAchievement({
+          badgeName: BadgeName,
+          title: Title,
+          description: Description,
+          dateEarned: DateEarned,
+          dateHardEarned: DateEarnedHardcore,
+          achivID: ID,
+          points: Points,
+        });
+        achivsSection.appendChild(achivElement);
       });
-      achivsSection.appendChild(achivElement);
-    });
   }
 
   updateGameInfo({ title, platform, imageIcon, achivsCount }) {
@@ -290,6 +354,7 @@ class UI {
     dateEarned,
     dateHardEarned,
     achivID,
+    points,
   }) {
     // Створення основного елемента досягнення
     let achivElement = document.createElement("div");
@@ -320,6 +385,9 @@ class UI {
 
     // Додавання dataset для ідентифікації досягнення
     achivElement.dataset.achivId = achivID;
+    // Додавання dataset для очок досягнення
+    achivElement.dataset.points =
+      points < 10 ? "poor" : points < 20 ? "normal" : "reach";
 
     // Створення зображення досягнення
     let previewContainer = document.createElement("div");
@@ -335,13 +403,14 @@ class UI {
       name: title,
       description: description,
       dateEarned: dateEarned,
+      points: points,
     });
     achivElement.appendChild(achivDetails);
 
     return achivElement;
   }
 
-  generateAchivDetails({ name, description, dateEarned }) {
+  generateAchivDetails({ name, description, dateEarned, points }) {
     // Створюємо елемент div для деталей досягнення
     let detailsElement = document.createElement("div");
     detailsElement.classList.add("achiv-details-block");
@@ -355,6 +424,12 @@ class UI {
     let descriptionElement = document.createElement("p");
     descriptionElement.textContent = description;
     detailsElement.appendChild(descriptionElement);
+
+    // Додаємо очки до елемента деталей
+    let coinsElement = document.createElement("p");
+    coinsElement.classList.add("points");
+    coinsElement.textContent = points + " points";
+    detailsElement.appendChild(coinsElement);
 
     // Додаємо дату досягнення до елемента деталей, якщо вона існує
     if (dateEarned) {
@@ -397,3 +472,53 @@ class UI {
     achivs.forEach((achiv) => (achiv.style.width = achivWidth + "px"));
   }
 }
+
+/**
+ * Об'єкт з методами сортування для досягнень гри
+ */
+const sortBy = {
+  /**
+   * Сортує за найновішою датою, враховуючи якщо доступні обидві дати
+   * @param {Object} a - перше досягнення
+   * @param {Object} b - друге досягнення
+   * @returns {number} - результат порівняння
+   */
+  latest: (a, b) => {
+    // Перевіряємо, чи існують дати та обираємо найновішу
+    const dateA = a.DateEarnedHardcore
+      ? new Date(a.DateEarnedHardcore)
+      : -Infinity;
+    const dateB = b.DateEarnedHardcore
+      ? new Date(b.DateEarnedHardcore)
+      : -Infinity;
+    const dateA2 = a.DateEarned ? new Date(a.DateEarned) : -Infinity;
+    const dateB2 = b.DateEarned ? new Date(b.DateEarned) : -Infinity;
+    const maxDateA = Math.max(dateA, dateA2);
+    const maxDateB = Math.max(dateB, dateB2);
+    return maxDateB - maxDateA; // Повертає різницю дат
+  },
+
+  /**
+   * Сортує за кількістю зароблених досягнень у хардкорному режимі
+   * @param {Object} a - перше досягнення
+   * @param {Object} b - друге досягнення
+   * @returns {number} - результат порівняння
+   */
+  earnedCount: (a, b) => b.NumAwardedHardcore - a.NumAwardedHardcore,
+
+  /**
+   * Сортує за кількістю очок досягнення
+   * @param {Object} a - перше досягнення
+   * @param {Object} b - друге досягнення
+   * @returns {number} - результат порівняння
+   */
+  points: (a, b) => a.Points - b.Points,
+
+  /**
+   * За замовчуванням не змінює порядок елементів
+   * @param {Object} a - перше досягнення
+   * @param {Object} b - друге досягнення
+   * @returns {number} - результат порівняння
+   */
+  default: (a, b) => 0,
+};

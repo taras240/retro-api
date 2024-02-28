@@ -63,17 +63,32 @@
               value="5"
             />
           </div>
-          <div class="game-id-settings numeric-input-container">
-            <label>Sort by: TODO</label>
-            <button class="sort-achivs-button setting-button">default</button>
-
-            <button class="sort-achivs-button setting-button">
-              earned count
+          <div class="game-id-settings numeric-input-container sort-buttons">
+            <label>Sort:</label>
+            <button
+              id="sort-by-latest"
+              class="sort-achivs-button setting-button"
+            >
+              latest
             </button>
 
-            <button class="sort-achivs-button setting-button">hardest</button>
+            <button
+              id="sort-by-erned"
+              class="sort-achivs-button setting-button"
+            >
+              difficult
+            </button>
 
-            <button id="sort-achivs-button" class="setting-button">type</button>
+            <button
+              id="sort-by-points"
+              class="sort-achivs-button setting-button"
+            >
+              points
+            </button>
+
+            <button id="sort-by-default" class="setting-button checked">
+              default
+            </button>
           </div>
           <div class="game-id-settings numeric-input-container">
             <label for="game-id">Game ID:</label>

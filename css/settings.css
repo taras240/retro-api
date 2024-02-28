@@ -112,6 +112,7 @@
   border: 1px solid gray;
   text-align: center;
   line-height: 100%;
+  transition: 0.2s;
 }
 #start-watching,
 #stop-watching {
@@ -137,27 +138,55 @@
 
 .setting-button:hover {
   border: 1px solid rgb(255, 255, 255);
+  box-shadow: 0px 0px 5px 2px black;
+  transition: 0.2s;
+}
+.setting-button:active {
+  transform: scale(0.95);
+  box-shadow: 1px 0px 5px 4px black;
+
+  transition: 0.2s;
+}
+.setting-button.checked {
+  border-color: green;
+  /* box-shadow: 1px 0px 5px 1px green; */
+}
+#sort-by-latest.checked {
+  color: black;
+  font-weight: 600;
+  background-color: green;
+  box-shadow: 1px 0px 5px 1px green;
+}
+#watching-button {
+  width: 100px;
+  transition: width 0.5s;
   transition: 0.2s;
 }
 #watching-button.active {
+  color: black;
+  font-weight: 600;
+  box-shadow: 1px 0px 5px 1px green;
+  border-color: transparent;
   background-color: green;
 }
 #watching-button.error {
   background-color: red;
+  border-color: transparent;
+
+  color: black;
+  font-weight: 600;
+  box-shadow: 1px 0px 5px 1px red;
 }
 #watching-button.active.tick {
   animation: updateTickAnimation 1s;
 }
 @keyframes updateTickAnimation {
   from {
+    box-shadow: 1px 0px 5px 1px white;
     background-color: white;
   }
 }
 
-.setting-button:active {
-  border: 1px solid rgb(85, 72, 1);
-  transition: 0.2s;
-}
 .apply-settings {
   display: block;
   width: 100%;
@@ -171,13 +200,24 @@
 .achivs-game {
   padding: 10px;
   display: grid;
-  grid-template-columns: 100px auto;
+  grid-template-columns: 100px 1fr;
+  align-items: center;
   border: 1px solid transparent;
-  margin: 10px 0;
   align-items: center;
   justify-content: left;
   gap: 5px;
   overflow: hidden;
+}
+.achivs-game * {
+  border-bottom: 1px solid gray;
+  padding: 0 0 5px;
+}
+.achivs-game *:last-child,
+.achivs-game *:first-child {
+  border-bottom: 1px solid transparent;
+}
+.achivs-game img {
+  padding: 0;
 }
 .game-preview {
   grid-row: 1/4;
@@ -188,7 +228,7 @@
 .platform,
 .game-achivs-count {
   align-self: center;
-  margin-left: 5px;
+  padding-left: 5px;
   font-size: 1.2rem;
 }
 #game-achivs-count::after {

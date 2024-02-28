@@ -1,7 +1,7 @@
 section.achivs {
   position: relative;
-  width: 400px;
-  height: 400px;
+  width: 30vw;
+  height: 98vh;
 }
 .resizer {
   position: absolute;
@@ -81,6 +81,7 @@ section.achivs {
   right: 20%;
   transform: translate(50%, -50%) rotate(45deg);
   background-image: url(../assets/img/S-rank-1.png);
+  filter: drop-shadow(5px 3px 3px black);
   image-rendering: pixelated;
   background-size: contain;
   background-repeat: no-repeat;
@@ -88,6 +89,35 @@ section.achivs {
   animation: hardcore-earned-animation 0.1s linear forwards;
   animation-delay: 0.6s;
 }
+.achiv-block.earned[data-points="poor"]::after,
+.achiv-block.earned[data-points="normal"]::after,
+.achiv-block.earned[data-points="reach"]::after {
+  content: "";
+  position: absolute;
+  height: 10%;
+  aspect-ratio: 1 / 1;
+  bottom: 10%;
+  left: 10%;
+  background-image: url(../assets/img/coins-less.png);
+  filter: drop-shadow(3px 3px 3px black);
+  image-rendering: pixelated;
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0;
+  animation: hardcore-earned-animation 0.1s linear forwards;
+  animation-delay: 0.6s;
+}
+.achiv-block.earned[data-points="normal"]::after {
+  height: 20%;
+  bottom: 5%;
+  background-image: url(../assets/img/coins-middle.png);
+}
+.achiv-block.earned[data-points="reach"]::after {
+  height: 20%;
+  bottom: 10%;
+  background-image: url(../assets/img/coins.png);
+}
+
 @keyframes hardcore-earned-animation {
   0% {
     opacity: 0;
@@ -177,6 +207,25 @@ section.achivs {
   visibility: hidden;
   opacity: 0;
   transition: 0.2s;
+}
+.achiv-details-block .points {
+  position: relative;
+  padding-left: 25px;
+}
+.achiv-details-block .points::before {
+  content: "";
+  position: absolute;
+  height: 20px;
+  aspect-ratio: 1 / 1;
+  bottom: 0;
+  left: 0;
+  background-image: url(../assets/img/coins.png);
+  image-rendering: pixelated;
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0;
+  animation: hardcore-earned-animation 0.1s linear forwards;
+  animation-delay: 0.6s;
 }
 .achiv-block:hover .achiv-details-block {
   visibility: visible;
