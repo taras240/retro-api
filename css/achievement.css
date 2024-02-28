@@ -16,16 +16,18 @@ section.achivs {
 .resizer::before {
   content: "";
   position: absolute;
-  bottom: 5px;
-  right: 5px;
+  bottom: 6px;
+  right: 6px;
   width: 10px;
-  height: 3px;
-  background-color: aqua;
+  height: 10px;
+  transform: rotateZ(-45deg);
+  background-color: gray;
+  clip-path: circle();
 }
-.resizer::before {
+/* .resizer::before {
   width: 3px;
   height: 10px;
-}
+} */
 .achivs_section {
   display: flex;
   flex-wrap: wrap;

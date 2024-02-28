@@ -50,7 +50,7 @@ async function getAchivs() {
 }
 // Функція для оновлення досягнень
 async function updateAchievements() {
-  const achivs = await apiWorker.getRecentAchieves({ minutes: 60 * 60 });
+  const achivs = await apiWorker.getRecentAchieves({ minutes: 10 });
   achivs.forEach((achiv) => {
     ui.achievementsBlock.achivsSection
       .querySelectorAll("[data-achiv-id]")

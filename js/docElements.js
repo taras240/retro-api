@@ -8,6 +8,7 @@ class UI {
     this.settings.login.value = userIdent.USER_NAME;
     this.settings.gameID.value = localStorage.getItem("RAGameID");
   }
+
   initializeElements() {
     // Елементи блока досягнень
     this.achievementsBlock = {
