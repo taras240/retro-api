@@ -18,12 +18,12 @@ class APIWorker {
 
     // Параметри запиту
     let params = {
-      y: this.apiKey,
-      z: this.userName,
-      u: targetUser || this.userName,
-      g: gameID || this.gameID,
+      y: config.API_KEY,
+      z: config.USER_NAME,
+      u: targetUser || config.USER_NAME,
+      g: gameID || config.gameID,
       m: minutes || 2000,
-      i: gameID || this.gameID,
+      i: gameID || config.gameID,
     };
 
     // Додавання параметрів до URL
@@ -32,10 +32,7 @@ class APIWorker {
   }
 
   // Конструктор класу
-  constructor({ identification }) {
-    this.apiKey = identification.API_KEY;
-    this.userName = identification.USER_NAME;
-  }
+  constructor() {}
 
   // Отримання інформації про профіль користувача
   getProfileInfo({ targetUser }) {

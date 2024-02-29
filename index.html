@@ -23,12 +23,12 @@
         </button>
       </div>
 
-      <section class="achivs">
+      <section id="achievements_section" class="achivs">
         <!-- <div class="achivs-resizeble-border"></div> -->
         <div class="achivs_section"></div>
         <div class="resizer" id="achivs-resizer"></div>
       </section>
-      <section class="prefs_section">
+      <section id="settings_section" class="prefs_section">
         <div class="prefs-header-container">
           <h2 class="prefs-header">Settings</h2>
           <div class="close-settings-button" onclick="closeSettings()"></div>
@@ -41,6 +41,7 @@
               class="text-input"
               name="api-key"
               id="api-key"
+              placeholder="Enter API Key"
             />
           </div>
           <div class="update-time-settings text-input-container">
@@ -50,6 +51,7 @@
               class="text-input"
               name="login-input"
               id="login-input"
+              placeholder="Enter login"
             />
           </div>
 
@@ -61,6 +63,7 @@
               name="update-time"
               id="update-time"
               value="5"
+              placeholder="? sec"
             />
           </div>
           <div class="game-id-settings numeric-input-container sort-buttons">
@@ -101,82 +104,28 @@
               name="game-id"
               id="game-id"
               value="0"
+              placeholder="id"
             />
             <button id="watching-button" class="setting-button">Watch</button>
           </div>
 
           <div class="achivs-game">
             <img
-              src="https://media.retroachievements.org/Images/039041.png"
+              src="./assets/img/icon.png"
               alt=" "
               class="game-preview"
               id="game-preview"
             />
-            <h2 class="game-title" id="game-title">Batman: The Video Game</h2>
+            <h2 class="game-title" id="game-title">Some game name</h2>
             <p class="game-achivs-count" id="game-achivs-count">10</p>
 
             <p class="platform" id="game-platform">NES/Famicom</p>
           </div>
         </div>
       </section>
-      <section class="game-card_section">
-        <div class="game-card_container">
-          <div class="game-card-header_container">
-            <h2 class="game-card-header" id="game-card-header">
-              Super Mario Bros. 2
-            </h2>
-            <div class="game-card-close_button" onclick="closeGameCard()"></div>
-          </div>
-          <div class="game-card-info_container">
-            <div class="game-card-image">
-              <img
-                id="game-card-image"
-                src="https://media.retroachievements.org/Images/011643.png"
-                alt=" "
-              />
-            </div>
-            <div class="game-card-description">
-              <div class="game-card-info">
-                <h3 class="game-info-header">Platform</h3>
-                <p class="game-card-text platform" id="game-card-platform">
-                  Nes/Famicom
-                </p>
-              </div>
-              <div class="game-card-info">
-                <h3 class="game-info-header">Developer</h3>
-                <p class="game-card-text developer" id="game-card-developer">
-                  SunSoft
-                </p>
-              </div>
-              <div class="game-card-info">
-                <h3 class="game-info-header">Publisher</h3>
-                <p class="game-card-text publisher" id="game-card-publisher">
-                  SunSoft
-                </p>
-              </div>
-              <div class="game-card-info">
-                <h3 class="game-info-header">Genre</h3>
-                <p class="game-card-text genre" id="game-card-genre">
-                  Platformer
-                </p>
-              </div>
-              <div class="game-card-info">
-                <h3 class="game-info-header">Released</h3>
-                <p class="game-card-text released" id="game-card-released">
-                  December 1989
-                </p>
-              </div>
-              <div class="game-card-info">
-                <h3 class="game-info-header">Completion</h3>
-                <p class="game-card-text completion" id="game-card-completion">
-                  54.45%
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
+    <script src="./js/config.js"></script>
+    <script src="./js/gameCard.js"></script>
     <script src="./js/apiWorker.js"></script>
     <script src="./js/docElements.js"></script>
     <script src="./js/script.js"></script>

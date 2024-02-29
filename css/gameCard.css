@@ -10,6 +10,7 @@
   background-color: rgb(17, 17, 17);
   opacity: 1;
   transition: 0.2s;
+  max-height: 95vh;
 }
 .game-card_section.dragable {
   transition: none;
@@ -40,20 +41,23 @@ div.game-card-close_button {
 .game-card-info_container {
   display: flex;
   flex-direction: column;
-  /* gap: 10px; */
-  /* padding: 10px; */
   width: 100%;
 }
 .game-card-image {
+  width: 100%;
+  max-height: 370px;
+  flex-shrink: 1;
+  overflow: hidden;
 }
 .game-card-image img {
   width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .game-card-description {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* gap: 10px; */
   width: 100%;
 }
 .game-card-info {

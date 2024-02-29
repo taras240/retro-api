@@ -3,12 +3,27 @@ class UI {
   SORT_METHOD = sortBy.default;
 
   constructor() {
+    document.querySelector(".wrapper").appendChild(createGameCard());
+
+    // Ініціалізувати елементи
     this.initializeElements();
+
+    // Додати події
     this.addEvents();
 
-    this.settings.apiKey.value = userIdent.API_KEY;
-    this.settings.login.value = userIdent.USER_NAME;
-    this.settings.gameID.value = localStorage.getItem("RAGameID");
+    //Встановити розміри і розміщення елементів
+    this.setPositions();
+
+    // Встановити ключ API з об'єкта ідентифікації користувача
+    this.settings.apiKey.value = config.API_KEY;
+
+    // Встановити значення логіну з об'єкта ідентифікації користувача
+    this.settings.login.value = config.USER_NAME;
+
+    // Отримати ідентифікатор гри з localStorage та встановити його значення
+    this.settings.gameID.value = config.gameID;
+
+    this.settings.updateInterval.value = config.updateDelay;
   }
 
   initializeElements() {
@@ -52,30 +67,48 @@ class UI {
       gameAchivsCount: document.querySelector("#game-achivs-count"), // Кількість досягнень гри
     };
   }
+  //Встановлення розмірів і розміщення елементів
+  setPositions() {
+    // Проходження по кожному ідентифікатору контейнера в об'єкті config.ui
+    Object.getOwnPropertyNames(config.ui).forEach((containerId) => {
+      // Отримання елемента за його ідентифікатором
+      let element = document.getElementById(containerId);
+
+      // Отримання позиції та розмірів елемента з об'єкта config.ui
+      const { x, y, width, height } = config.ui[containerId];
+
+      // Встановлення нових значень стилів елемента, якщо вони вказані у config.ui
+      // Якщо значення відсутнє (undefined), то стилі не змінюються
+      x ? (element.style.left = x) : "";
+      y ? (element.style.top = y) : "";
+      width ? (element.style.width = width) : "";
+      height ? (element.style.height = height) : "";
+    });
+  }
 
   addEvents() {
     // Додаємо обробник події 'change' для поля введення ключа API
     this.settings.apiKey.addEventListener("change", () => {
       // Оновлюємо ідентифікатор користувача з новим значенням ключа API
-      updateUserIdent({ apiKey: this.settings.apiKey.value });
+      config.API_KEY = this.settings.apiKey.value;
     });
 
     // Додаємо обробник події 'change' для поля введення логіну
     this.settings.login.addEventListener("change", () => {
       // Оновлюємо ідентифікатор користувача з новим значенням логіну
-      updateUserIdent({ loginName: this.settings.login.value });
+      config.USER_NAME = this.settings.login.value;
     });
 
     // Додаємо обробник події 'change' для поля введення інтервалу оновлення
     this.settings.updateInterval.addEventListener("change", () => {
       // Оновлюємо інтервал оновлення
-      UPDATE_RATE_IN_SECS = this.settings.updateInterval.value;
+      config.updateDelay = this.settings.updateInterval.value || 5;
     });
 
     // Додаємо обробник події 'change' для поля введення ідентифікатора гри
     this.settings.gameID.addEventListener("change", () => {
       // Оновлюємо ідентифікатор гри
-      updateGameID(this.settings.gameID.value);
+      config.gameID = this.settings.gameID.value;
     });
 
     // Додає подію кліку для сортування за замовчуванням
@@ -125,13 +158,13 @@ class UI {
     this.settings.getGameIdButton.addEventListener("click", () => {
       apiWorker.getProfileInfo({}).then((resp) => {
         this.settings.gameID.value = resp.LastGameID;
-        updateGameID(resp.LastGameID);
+        config.gameID = resp.LastGameID;
       });
     });
 
     //Додаємо обробник події 'click' для кнопки отримання списку ачівментсів для вибраного id гри
     this.settings.checkIdButton.addEventListener("click", () => {
-      getAchivs();
+      getAchievements();
     });
 
     // Додавання подій для зміни розміру вікна ачівментсів
@@ -150,6 +183,7 @@ class UI {
       // Підігнати розмір досягнень відповідно до нового розміру контейнера
       ui.fitSizeVertically();
     }
+
     // Додавання подій для пересування вікна налаштувань
     this.settings.container.addEventListener("mousedown", (e) => {
       let offsetX =
@@ -171,11 +205,16 @@ class UI {
           handleMouseMove
         );
         this.settings.container.removeEventListener("mouseup", handleMouseUp);
+        config.setNewPosition({
+          id: this.settings.container.id,
+          xPos: this.settings.container.style.left,
+          yPos: this.settings.container.style.top,
+        });
         e.preventDefault();
       };
 
       this.settings.container.addEventListener("mouseup", handleMouseUp);
-      this.settings.container.addEventListener("mouseleave", handleMouseUp);
+      // this.settings.container.addEventListener("mouseleave", handleMouseUp);
     });
 
     // Додавання подій для пересування вікна картки гри
@@ -197,11 +236,17 @@ class UI {
           handleMouseMove
         );
         this.gameCard.container.removeEventListener("mouseup", handleMouseUp);
+
+        config.setNewPosition({
+          id: this.gameCard.container.id,
+          xPos: this.gameCard.container.style.left,
+          yPos: this.gameCard.container.style.top,
+        });
         e.preventDefault();
       };
 
       this.gameCard.container.addEventListener("mouseup", handleMouseUp);
-      this.gameCard.container.addEventListener("mouseleave", handleMouseUp);
+      // this.gameCard.container.addEventListener("mouseleave", handleMouseUp);
     });
 
     // Функція для пересування вікна
@@ -234,6 +279,11 @@ class UI {
       // Видаляємо подію mousemove з документа, коли користувач відпускає кнопку миші
       document.addEventListener("mouseup", () => {
         document.removeEventListener("mousemove", resizeHandler);
+        config.setNewPosition({
+          id: this.achievementsBlock.container.id,
+          width: this.achievementsBlock.container.clientWidth,
+          height: this.achievementsBlock.container.clientHeight,
+        });
       });
     });
   }
@@ -473,52 +523,33 @@ class UI {
   }
 }
 
-/**
- * Об'єкт з методами сортування для досягнень гри
- */
-const sortBy = {
-  /**
-   * Сортує за найновішою датою, враховуючи якщо доступні обидві дати
-   * @param {Object} a - перше досягнення
-   * @param {Object} b - друге досягнення
-   * @returns {number} - результат порівняння
-   */
-  latest: (a, b) => {
-    // Перевіряємо, чи існують дати та обираємо найновішу
-    const dateA = a.DateEarnedHardcore
-      ? new Date(a.DateEarnedHardcore)
-      : -Infinity;
-    const dateB = b.DateEarnedHardcore
-      ? new Date(b.DateEarnedHardcore)
-      : -Infinity;
-    const dateA2 = a.DateEarned ? new Date(a.DateEarned) : -Infinity;
-    const dateB2 = b.DateEarned ? new Date(b.DateEarned) : -Infinity;
-    const maxDateA = Math.max(dateA, dateA2);
-    const maxDateB = Math.max(dateB, dateB2);
-    return maxDateB - maxDateA; // Повертає різницю дат
-  },
+// Збереження розмірів елементів у localStorage
+function saveElementSizes(config) {
+  localStorage.setItem("elementSizes", JSON.stringify(config));
+  for (const [elementId, size] of Object.entries(config)) {
+    document.getElementById(elementId).style.cssText = size;
+  }
+}
 
-  /**
-   * Сортує за кількістю зароблених досягнень у хардкорному режимі
-   * @param {Object} a - перше досягнення
-   * @param {Object} b - друге досягнення
-   * @returns {number} - результат порівняння
-   */
-  earnedCount: (a, b) => b.NumAwardedHardcore - a.NumAwardedHardcore,
+// Застосування збережених розмірів елементів при завантаженні сторінки
+function applySavedElementSizes() {
+  const config = JSON.parse(localStorage.getItem("elementSizes"));
+  if (config) {
+    for (const [elementId, size] of Object.entries(config)) {
+      document.getElementById(elementId).style.cssText = size;
+    }
+  }
+}
 
-  /**
-   * Сортує за кількістю очок досягнення
-   * @param {Object} a - перше досягнення
-   * @param {Object} b - друге досягнення
-   * @returns {number} - результат порівняння
-   */
-  points: (a, b) => a.Points - b.Points,
-
-  /**
-   * За замовчуванням не змінює порядок елементів
-   * @param {Object} a - перше досягнення
-   * @param {Object} b - друге досягнення
-   * @returns {number} - результат порівняння
-   */
-  default: (a, b) => 0,
-};
+class ElementDimensions {
+  constructor({ domElement }) {
+    this.position = {
+      x: element.offsetLeft,
+      y: element.offsetTop,
+    };
+    this.dimensions = {
+      width: element.offsetWidth,
+      height: element.offsetHeight,
+    };
+  }
+}

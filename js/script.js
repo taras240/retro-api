@@ -1,45 +1,16 @@
-// Об'єкт для зберігання інформації про користувача
-let userIdent = {
-  API_KEY: localStorage.getItem("RAApiKey") ?? "",
-  USER_NAME: localStorage.getItem("RAUserName") ?? "",
-};
-
+let config = new Config();
 // Ініціалізація UI
 let ui = new UI();
-
 // Ініціалізація APIWorker з ідентифікацією користувача
-let apiWorker = new APIWorker({ identification: userIdent });
+let apiWorker = new APIWorker();
+//Інтервал автооновлення ачівментсів
 let apiTikInterval;
 
-// Інтервал оновлення даних
-let UPDATE_RATE_IN_SECS = 5;
-
-// Змінна для зберігання ID гри
-let gameID = localStorage.getItem("RAGameID") ?? "";
-
-// Функція для оновлення інформації про користувача
-function updateUserIdent({ loginName, apiKey }) {
-  loginName ? localStorage.setItem("RAUserName", loginName) : "";
-  apiKey ? localStorage.setItem("RAApiKey", apiKey) : "";
-  userIdent = {
-    API_KEY: localStorage.getItem("RAApiKey") ?? "",
-    USER_NAME: localStorage.getItem("RAUserName") ?? "",
-  };
-  apiWorker = new APIWorker({ identification: userIdent });
-}
-
-// Функція для оновлення ID гри
-function updateGameID(id) {
-  gameID = id;
-  localStorage.setItem("RAGameID", id);
-  getAchivs();
-}
-
 // Функція для отримання досягнень гри
-async function getAchivs() {
+async function getAchievements() {
   try {
     // Отримання інформації про прогрес гри від API
-    const resp = await apiWorker.getGameProgress({ gameID: gameID });
+    const resp = await apiWorker.getGameProgress({ gameID: config.gameID });
 
     // Парсинг та відображення досягнень гри
     ui.parseGameAchievements(resp);
@@ -50,42 +21,46 @@ async function getAchivs() {
     // Оновлення інформації в картці гри
     ui.updateGameCardInfo(resp);
   } catch (error) {
-    console.error(error);
-
     // Додання помилки до кнопки перегляду та зупинка перегляду
     ui.settings.watchButton.classList.add("error");
     stopWatching();
+    console.error(error);
   }
 }
 
 // Функція для оновлення досягнень
 async function updateAchievements() {
   try {
-    // Отримання останніх досягнень від API
-    const achivs = await apiWorker.getRecentAchieves({ minutes: 5 });
+    // Отримання недавніх досягнень від API
+    const achievements = await apiWorker.getRecentAchieves({ minutes: 5 });
 
-    // Проходження по кожному досягненню
-    achivs.forEach((achiv) => {
+    // Ітерація через кожне досягнення
+    achievements.forEach((achievement) => {
       // Знаходження елементу досягнення за його ідентифікатором
-      const achivElement = ui.achievementsBlock.achivsSection.querySelector(
-        `[data-achiv-id="${achiv.AchievementID}"]`
-      );
+      const achievementElement =
+        ui.achievementsBlock.achivsSection.querySelector(
+          `[data-achiv-id="${achievement.AchievementID}"]`
+        );
 
-      // Перевірка, чи існує елемент досягнення та чи збігається його тип з налаштованим сортуванням
-      if (achivElement) {
-        const hardcore = achiv.HardcoreMode == 1;
-        if (
-          ui.SORT_METHOD === sortBy.latest &&
-          ((!achivElement.classList.contains("hardcore") && hardcore) ||
-            !achivElement.classList.contains("earned"))
-        ) {
-          // Переміщення елементу до початку списку, якщо він щойно зароблений і сортування за останнім заробленим
-          switchElementToStart(achivElement);
+      if (achievementElement) {
+        const isHardcore = achievement.HardcoreMode === 1;
+        const isLatestSort = ui.SORT_METHOD === sortBy.latest;
+        const isHardcoreMismatch =
+          achievementElement.classList.contains("hardcore") !== isHardcore;
+        const isNotEarned = !achievementElement.classList.contains("earned");
+
+        // Перевірка, чи потрібно перемістити елемент на початок
+        if (isLatestSort && (isHardcoreMismatch || isNotEarned)) {
+          switchElementToStart(achievementElement);
         }
 
         // Додавання класів для відображення зароблених досягнень
-        achivElement.classList.toggle("earned", true);
-        achivElement.classList.toggle("hardcore", hardcore);
+        achievementElement.classList.add("earned");
+        if (isHardcore) {
+          achievementElement.classList.add("hardcore");
+        } else {
+          achievementElement.classList.remove("hardcore");
+        }
       }
     });
   } catch (error) {
@@ -98,15 +73,25 @@ function switchElementToStart(element) {
 }
 // Функція для початку слідкування за досягненнями
 function startWatching() {
+  // Оновлення стану та тексту кнопки слідкування
   ui.settings.watchButton.classList.add("active");
   ui.settings.watchButton.innerText = "Watching";
   ui.settings.watchButton.classList.remove("error");
-  getAchivs();
-  apiTikInterval = setInterval(() => {
+
+  // Отримання початкових досягнень
+  getAchievements();
+
+  // Встановлення інтервалу для оновлення досягнень та зміни стану кнопки
+  apiTickInterval = setInterval(() => {
     updateAchievements();
-    ui.settings.watchButton.classList.remove("tick");
-    setTimeout(() => ui.settings.watchButton.classList.add("tick"), 500);
-  }, UPDATE_RATE_IN_SECS * 1000);
+    toggleTickClass();
+  }, config.updateDelayInMiliSecs);
+}
+
+// Функція для перемикання класу "tick" на кнопці слідкування
+function toggleTickClass() {
+  ui.settings.watchButton.classList.remove("tick");
+  setTimeout(() => ui.settings.watchButton.classList.add("tick"), 500);
 }
 
 // Функція для зупинки слідкування за досягненнями
