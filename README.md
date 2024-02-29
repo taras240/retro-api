@@ -35,4 +35,4 @@ If you wish to join the development of the application or contribute, please ref
 
 ### Feedback
 
-If you have any questions, comments, or suggestions, please contact us me *khomyn@outlook.com* or open a new issue in the Issues section on GitHub.
+If you have any questions, comments, or suggestions, please contact me *khomyn@outlook.com* or open a new issue in the Issues section on GitHub.
