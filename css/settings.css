@@ -1,22 +1,19 @@
 .settings_container {
-  /* padding: 10px; */
   user-select: none;
 }
 .prefs_section {
   position: absolute;
   visibility: visible;
-  overflow: hidden;
-  width: 500px;
-  /* transform: translate(-50%, -50%); */
-  top: 20%;
-  right: 10%;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  width: 500px;
+  top: 20%;
+  right: 10%;
   border: 1px solid white;
   border-radius: 10px;
   background-color: #111;
   opacity: 1;
-  /* transition: 0.2s; */
   z-index: 10;
 }
 .prefs_section.dragable {
@@ -154,13 +151,9 @@
 }
 .setting-button.checked {
   border-color: green;
-  /* box-shadow: 1px 0px 5px 1px green; */
-}
-#sort-by-latest.checked {
-  color: black;
   font-weight: 600;
-  background-color: green;
   box-shadow: 1px 0px 5px 1px green;
+  /* box-shadow: 1px 0px 5px 1px green; */
 }
 #watching-button {
   width: 100px;

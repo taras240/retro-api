@@ -1,7 +1,8 @@
 section.achivs {
-  position: relative;
+  position: absolute;
   width: 30vw;
   height: 98vh;
+  user-select: none;
 }
 .resizer {
   position: absolute;

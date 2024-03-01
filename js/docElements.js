@@ -167,8 +167,90 @@ class UI {
       getAchievements();
     });
 
-    // Додавання подій для зміни розміру вікна ачівментсів
-    function resizeAchivsBlock(event, resizeValues, container) {
+    // Додавання подій для пересування вікна налаштувань
+    this.settings.container.addEventListener("mousedown", (e) => {
+      moveEvent(this.settings.container);
+    });
+    this.achievementsBlock.achivsSection.addEventListener("mousedown", (e) => {
+      moveEvent(this.achievementsBlock.container);
+    });
+    // Додавання подій для пересування вікна картки гри
+    this.gameCard.container.addEventListener("mousedown", (e) => {
+      moveEvent(this.gameCard.container);
+    });
+
+    // Подія для зміни розміру вікна ачівментсів
+    this.achievementsBlock.resizer.addEventListener("mousedown", (event) => {
+      event.stopPropagation();
+      resizeEvent({
+        event: event,
+        container: this.achievementsBlock.container,
+        postFunc: () => this.fitSizeVertically(),
+      });
+    });
+
+    function moveEvent(container) {
+      container.addEventListener("mousedown", (e) => {
+        let offsetX = e.clientX - container.getBoundingClientRect().left;
+        let offsetY = e.clientY - container.getBoundingClientRect().top;
+        container.classList.add("dragable");
+        const handleMouseMove = (e) =>
+          moveWindowFunction(e, offsetX, offsetY, container);
+        container.addEventListener("mousemove", handleMouseMove);
+        const handleMouseUp = (e) => {
+          container.classList.remove("dragable");
+          container.removeEventListener("mousemove", handleMouseMove);
+          container.removeEventListener("mouseup", handleMouseUp);
+
+          config.setNewPosition({
+            id: container.id,
+            xPos: container.style.left,
+            yPos: container.style.top,
+          });
+          e.preventDefault();
+        };
+
+        container.addEventListener("mouseup", handleMouseUp);
+        container.addEventListener("mouseleave", handleMouseUp);
+      });
+    }
+    // Функція для пересування вікна
+    const moveWindowFunction = (e, offsetX, offsetY, container) => {
+      e.preventDefault();
+      container.style.left = e.clientX - offsetX + "px";
+      container.style.top = e.clientY - offsetY + "px";
+    };
+
+    // Функція зміни розміру вікна
+    function resizeEvent({ event, container, postFunc }) {
+      let resizeValues = {
+        // Зберігаємо початкові розміри елемента
+        startWidth: container.clientWidth,
+        startHeight: container.clientHeight,
+
+        // Зберігаємо координати миші
+        startX: event.clientX,
+        startY: event.clientY,
+      };
+      const resizeHandler = (event) => {
+        setNewSize(event, resizeValues, container);
+        // Підігнати розмір досягнень відповідно до нового розміру контейнера
+        postFunc ? postFunc() : "";
+      };
+      // Додаємо подію mousemove до документа
+      document.addEventListener("mousemove", resizeHandler);
+
+      // Видаляємо подію mousemove з документа, коли користувач відпускає кнопку миші
+      document.addEventListener("mouseup", () => {
+        document.removeEventListener("mousemove", resizeHandler);
+        config.setNewPosition({
+          id: container.id,
+          width: container.clientWidth,
+          height: container.clientHeight,
+        });
+      });
+    }
+    function setNewSize(event, resizeValues, container) {
       // Отримуємо дані про розміри і початкові координати зміни розміру
       const { startWidth, startHeight, startX, startY } = resizeValues;
 
@@ -179,118 +261,9 @@ class UI {
       // Оновлюємо ширину та висоту контейнера з урахуванням змін
       container.style.width = `${startWidth + widthChange}px`;
       container.style.height = `${startHeight + heightChange}px`;
-
-      // Підігнати розмір досягнень відповідно до нового розміру контейнера
-      ui.fitSizeVertically();
     }
-
-    // Додавання подій для пересування вікна налаштувань
-    this.settings.container.addEventListener("mousedown", (e) => {
-      let offsetX =
-        e.clientX - this.settings.container.getBoundingClientRect().left;
-      let offsetY =
-        e.clientY - this.settings.container.getBoundingClientRect().top;
-      this.settings.container.classList.add("dragable");
-
-      const handleMouseMove = (e) =>
-        moveWindowFunction(e, offsetX, offsetY, this.settings.container);
-
-      this.settings.container.addEventListener("mousemove", handleMouseMove);
-
-      // Додання події для завершення пересування вікна налаштувань
-      const handleMouseUp = (e) => {
-        this.settings.container.classList.remove("dragable");
-        this.settings.container.removeEventListener(
-          "mousemove",
-          handleMouseMove
-        );
-        this.settings.container.removeEventListener("mouseup", handleMouseUp);
-        config.setNewPosition({
-          id: this.settings.container.id,
-          xPos: this.settings.container.style.left,
-          yPos: this.settings.container.style.top,
-        });
-        e.preventDefault();
-      };
-
-      this.settings.container.addEventListener("mouseup", handleMouseUp);
-      // this.settings.container.addEventListener("mouseleave", handleMouseUp);
-    });
-
-    // Додавання подій для пересування вікна картки гри
-    this.gameCard.container.addEventListener("mousedown", (e) => {
-      let offsetX =
-        e.clientX - this.gameCard.container.getBoundingClientRect().left;
-      let offsetY =
-        e.clientY - this.gameCard.container.getBoundingClientRect().top;
-      this.gameCard.container.classList.add("dragable");
-      const handleMouseMove = (e) =>
-        moveWindowFunction(e, offsetX, offsetY, this.gameCard.container);
-      this.gameCard.container.addEventListener("mousemove", handleMouseMove);
-
-      // Додання події для завершення пересування вікна картки гри
-      const handleMouseUp = (e) => {
-        this.gameCard.container.classList.remove("dragable");
-        this.gameCard.container.removeEventListener(
-          "mousemove",
-          handleMouseMove
-        );
-        this.gameCard.container.removeEventListener("mouseup", handleMouseUp);
-
-        config.setNewPosition({
-          id: this.gameCard.container.id,
-          xPos: this.gameCard.container.style.left,
-          yPos: this.gameCard.container.style.top,
-        });
-        e.preventDefault();
-      };
-
-      this.gameCard.container.addEventListener("mouseup", handleMouseUp);
-      // this.gameCard.container.addEventListener("mouseleave", handleMouseUp);
-    });
-
-    // Функція для пересування вікна
-    const moveWindowFunction = (e, offsetX, offsetY, container) => {
-      e.preventDefault();
-      container.style.left = e.clientX - offsetX + "px";
-      container.style.top = e.clientY - offsetY + "px";
-    };
-
-    // Фуекція для зміни розміру вікна
-    this.achievementsBlock.resizer.addEventListener("mousedown", (event) => {
-      let resizeValues = {
-        // Зберігаємо початкові розміри елемента
-        startWidth: this.achievementsBlock.container.clientWidth,
-        startHeight: this.achievementsBlock.container.clientHeight,
-
-        // Зберігаємо координати миші
-        startX: event.clientX,
-        startY: event.clientY,
-      };
-      const resizeHandler = (event) =>
-        resizeAchivsBlock(
-          event,
-          resizeValues,
-          this.achievementsBlock.container
-        );
-      // Додаємо подію mousemove до документа
-      document.addEventListener("mousemove", resizeHandler);
-
-      // Видаляємо подію mousemove з документа, коли користувач відпускає кнопку миші
-      document.addEventListener("mouseup", () => {
-        document.removeEventListener("mousemove", resizeHandler);
-        config.setNewPosition({
-          id: this.achievementsBlock.container.id,
-          width: this.achievementsBlock.container.clientWidth,
-          height: this.achievementsBlock.container.clientHeight,
-        });
-      });
-    });
   }
-  /**
-   * Застосовує вибране сортування та оновлює інтерфейс
-   * @param {HTMLElement} sortButton - кнопка, яка була натиснута для вибору сортування
-   */
+
   applySorting({ sortButton }) {
     // Знімає клас "checked" з усіх кнопок сортування
     sortButton.parentNode

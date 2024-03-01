@@ -15,10 +15,6 @@ function createGameCard() {
   header.setAttribute("id", "game-card-header");
   header.textContent = "Some Game Name";
 
-  const closeButton = document.createElement("div");
-  closeButton.classList.add("game-card-close_button");
-  closeButton.setAttribute("onclick", "closeGameCard()");
-
   const infoContainer = document.createElement("div");
   infoContainer.classList.add("game-card-info_container");
 
@@ -71,7 +67,6 @@ function createGameCard() {
 
   // Додаємо створені елементи до DOM
   headerContainer.appendChild(header);
-  headerContainer.appendChild(closeButton);
   container.appendChild(headerContainer);
   imageContainer.appendChild(image);
   infoContainer.appendChild(imageContainer);
