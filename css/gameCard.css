@@ -5,7 +5,7 @@
   top: 10px;
   right: 10px;
   width: 300px;
-  max-height: 90vh;
+  max-height: 100vh;
   border-radius: 5px;
   border: 1px solid transparent;
   overflow: hidden;
@@ -44,12 +44,12 @@
   width: auto;
   margin: auto;
   overflow: hidden;
-  user-select: none;
 }
 
 .game-card-image img {
   width: 100%;
   max-height: 90%;
+  user-select: none;
 }
 
 .game-card-info {
