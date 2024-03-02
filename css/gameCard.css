@@ -7,12 +7,14 @@
   width: 300px;
   max-height: 90vh;
   border-radius: 5px;
-  border: 1px solid white;
+  border: 1px solid transparent;
   overflow: hidden;
   opacity: 1;
   user-select: none;
 }
-
+.game-card_section:active {
+  border: 1px solid green;
+}
 .game-card_section.hidden {
   visibility: hidden;
   opacity: 0;
@@ -29,6 +31,7 @@
   padding: 5px;
   font-weight: 600;
   font-size: 1.3rem;
+  border-bottom: 1px solid white;
 }
 
 .game-card-info_container {
@@ -37,9 +40,11 @@
 
 .game-card-image {
   display: block;
-  max-height: 90%;
+  max-height: 450px;
   width: auto;
   margin: auto;
+  overflow: hidden;
+  user-select: none;
 }
 
 .game-card-image img {
@@ -57,4 +62,5 @@
 
 .game-card-info:nth-child(even) {
   background-color: #111;
+  z-index: 2;
 }

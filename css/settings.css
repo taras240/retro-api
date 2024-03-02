@@ -10,11 +10,14 @@
   width: 500px;
   top: 20%;
   right: 10%;
-  border: 1px solid white;
-  border-radius: 10px;
+  border: 1px solid transparent;
+  border-radius: 5px;
   background-color: #111;
   opacity: 1;
   z-index: 2;
+}
+.prefs_section:active {
+  border: 1px solid green;
 }
 .prefs_section.dragable {
   transition: none;
@@ -36,6 +39,7 @@
   flex: 1;
   text-align: center;
   font-size: 1.5rem;
+  user-select: none;
 }
 .close-settings-button,
 .game-card-close_button {
@@ -132,6 +136,7 @@
   margin: auto 0;
   line-height: 100%;
   font-size: 1.1rem;
+  user-select: none;
 }
 .number-input {
   width: 4rem;

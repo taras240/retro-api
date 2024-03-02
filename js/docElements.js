@@ -66,6 +66,10 @@ class UI {
       gamePlatform: document.querySelector("#game-platform"), // Платформа гри
       gameAchivsCount: document.querySelector("#game-achivs-count"), // Кількість досягнень гри
     };
+
+    this.about = {
+      container: document.querySelector("#help_section"),
+    };
   }
   //Встановлення розмірів і розміщення елементів
   setPositions() {

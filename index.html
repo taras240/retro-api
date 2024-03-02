@@ -108,6 +108,24 @@
           </div>
         </div>
       </section>
+      <section id="help_section" class="help_section hidden">
+        <div class="help-container">
+          <h2 class="help-header">About</h2>
+          <div
+            class="close-settings-button close-help"
+            onclick="closeAbout()"
+          ></div>
+
+          <p class="help-content">
+            This program has been created by <b>Taras Khomyn</b> for
+            entertainment purposes. It is intended to provide users with the
+            opportunity to enjoy leisure and entertainment. For any questions,
+            suggestions, or feedback, please contact me at the email address:
+            <a href="mailto:khomyn@outlook.com">khomyn@outlook.com</a>
+            Thank you for using my program!
+          </p>
+        </div>
+      </section>
       <!-- <section
         class="game-card_section"
         id="game_section"
@@ -177,7 +195,7 @@
         >
           Settings
         </button>
-        <button class="open-settings-button help-button" onclick="">
+        <button class="open-settings-button help-button" onclick="closeAbout()">
           About
         </button>
       </div>

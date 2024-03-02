@@ -120,3 +120,7 @@ function closeGameCard() {
 function openGameCard() {
   ui.gameCard.container.classList.toggle("hidden");
 }
+// Функція для закриття About
+function closeAbout() {
+  ui.about.container.classList.toggle("hidden");
+}
