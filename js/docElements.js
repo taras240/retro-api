@@ -171,6 +171,7 @@ class UI {
     this.settings.container.addEventListener("mousedown", (e) => {
       moveEvent(this.settings.container);
     });
+    // Додавання подій для пересування вікна ачівментсів
     this.achievementsBlock.achivsSection.addEventListener("mousedown", (e) => {
       moveEvent(this.achievementsBlock.container);
     });
@@ -189,13 +190,14 @@ class UI {
       });
     });
 
+    // Функція для пересування вікна
     function moveEvent(container) {
       container.addEventListener("mousedown", (e) => {
         let offsetX = e.clientX - container.getBoundingClientRect().left;
         let offsetY = e.clientY - container.getBoundingClientRect().top;
         container.classList.add("dragable");
         const handleMouseMove = (e) =>
-          moveWindowFunction(e, offsetX, offsetY, container);
+          setPosition(e, offsetX, offsetY, container);
         container.addEventListener("mousemove", handleMouseMove);
         const handleMouseUp = (e) => {
           container.classList.remove("dragable");
@@ -214,12 +216,11 @@ class UI {
         container.addEventListener("mouseleave", handleMouseUp);
       });
     }
-    // Функція для пересування вікна
-    const moveWindowFunction = (e, offsetX, offsetY, container) => {
+    function setPosition(e, offsetX, offsetY, container) {
       e.preventDefault();
       container.style.left = e.clientX - offsetX + "px";
       container.style.top = e.clientY - offsetY + "px";
-    };
+    }
 
     // Функція зміни розміру вікна
     function resizeEvent({ event, container, postFunc }) {
@@ -233,7 +234,7 @@ class UI {
         startY: event.clientY,
       };
       const resizeHandler = (event) => {
-        setNewSize(event, resizeValues, container);
+        setSize(event, resizeValues, container);
         // Підігнати розмір досягнень відповідно до нового розміру контейнера
         postFunc ? postFunc() : "";
       };
@@ -250,7 +251,7 @@ class UI {
         });
       });
     }
-    function setNewSize(event, resizeValues, container) {
+    function setSize(event, resizeValues, container) {
       // Отримуємо дані про розміри і початкові координати зміни розміру
       const { startWidth, startHeight, startX, startY } = resizeValues;
 
@@ -493,36 +494,5 @@ class UI {
 
     // Встановлення розміру кожного досягнення в блоку
     achivs.forEach((achiv) => (achiv.style.width = achivWidth + "px"));
-  }
-}
-
-// Збереження розмірів елементів у localStorage
-function saveElementSizes(config) {
-  localStorage.setItem("elementSizes", JSON.stringify(config));
-  for (const [elementId, size] of Object.entries(config)) {
-    document.getElementById(elementId).style.cssText = size;
-  }
-}
-
-// Застосування збережених розмірів елементів при завантаженні сторінки
-function applySavedElementSizes() {
-  const config = JSON.parse(localStorage.getItem("elementSizes"));
-  if (config) {
-    for (const [elementId, size] of Object.entries(config)) {
-      document.getElementById(elementId).style.cssText = size;
-    }
-  }
-}
-
-class ElementDimensions {
-  constructor({ domElement }) {
-    this.position = {
-      x: element.offsetLeft,
-      y: element.offsetTop,
-    };
-    this.dimensions = {
-      width: element.offsetWidth,
-      height: element.offsetHeight,
-    };
   }
 }
