@@ -1,5 +1,4 @@
 class UI {
-  RECENT_DELAY_MILISECS = 20 * 60 * 1000; //mins => secs => milisecs
   SORT_METHOD = sortBy.default;
 
   constructor() {
@@ -29,14 +28,14 @@ class UI {
   initializeElements() {
     // Елементи блока досягнень
     this.achievementsBlock = {
-      container: document.querySelector("section.achivs"), // Контейнер блока досягнень
+      section: document.querySelector("section.achivs"), // Контейнер блока досягнень
       achivsSection: document.querySelector(".achivs_section"), // Секція з досягненнями
       resizer: document.querySelector("#achivs-resizer"), // Ресайзер блока досягнень
     };
 
     // Елементи інформації про гру
     this.gameCard = {
-      container: document.querySelector(".game-card_section"), // Контейнер інформації про гру
+      section: document.querySelector(".game-card_section"), // Контейнер інформації про гру
       header: document.querySelector("#game-card-header"), // Заголовок гри
       preview: document.querySelector("#game-card-image"), // Зображення гри
       platform: document.querySelector("#game-card-platform"), // Платформа гри
@@ -49,7 +48,7 @@ class UI {
 
     // Елементи налаштувань
     this.settings = {
-      container: document.querySelector(".prefs_section"), // Контейнер налаштувань
+      section: document.querySelector(".prefs_section"), // Контейнер налаштувань
       apiKey: document.querySelector("#api-key"), // Поле введення ключа API
       login: document.querySelector("#login-input"), // Поле введення логіну
       updateInterval: document.querySelector("#update-time"), // Поле введення інтервалу оновлення
@@ -68,7 +67,12 @@ class UI {
     };
 
     this.about = {
-      container: document.querySelector("#help_section"),
+      section: document.querySelector("#help_section"),
+    };
+
+    this.target = {
+      section: document.querySelector("#target-section"),
+      container: document.querySelector(".target-container"),
     };
   }
   //Встановлення розмірів і розміщення елементів
@@ -172,73 +176,77 @@ class UI {
     });
 
     // Додавання подій для пересування вікна налаштувань
-    this.settings.container.addEventListener("mousedown", (e) => {
-      moveEvent(this.settings.container);
+    this.settings.section.addEventListener("mousedown", (e) => {
+      moveEvent(this.settings.section);
     });
     // Додавання подій для пересування вікна ачівментсів
     this.achievementsBlock.achivsSection.addEventListener("mousedown", (e) => {
-      moveEvent(this.achievementsBlock.container);
+      moveEvent(this.achievementsBlock.section);
     });
     // Додавання подій для пересування вікна картки гри
-    this.gameCard.container.addEventListener("mousedown", (e) => {
-      moveEvent(this.gameCard.container);
+    this.gameCard.section.addEventListener("mousedown", (e) => {
+      moveEvent(this.gameCard.section);
     });
 
+    // Додавання подій для пересування вікна target
+    this.target.section.addEventListener("mousedown", (e) => {
+      moveEvent(this.target.section);
+    });
     // Подія для зміни розміру вікна ачівментсів
     this.achievementsBlock.resizer.addEventListener("mousedown", (event) => {
       event.stopPropagation();
       resizeEvent({
         event: event,
-        container: this.achievementsBlock.container,
+        section: this.achievementsBlock.section,
         postFunc: () => this.fitSizeVertically(),
       });
     });
 
     // Функція для пересування вікна
-    function moveEvent(container) {
-      container.addEventListener("mousedown", (e) => {
-        let offsetX = e.clientX - container.getBoundingClientRect().left;
-        let offsetY = e.clientY - container.getBoundingClientRect().top;
-        container.classList.add("dragable");
+    function moveEvent(section) {
+      section.addEventListener("mousedown", (e) => {
+        let offsetX = e.clientX - section.getBoundingClientRect().left;
+        let offsetY = e.clientY - section.getBoundingClientRect().top;
+        section.classList.add("dragable");
         const handleMouseMove = (e) =>
-          setPosition(e, offsetX, offsetY, container);
-        container.addEventListener("mousemove", handleMouseMove);
+          setPosition(e, offsetX, offsetY, section);
+        section.addEventListener("mousemove", handleMouseMove);
         const handleMouseUp = (e) => {
-          container.classList.remove("dragable");
-          container.removeEventListener("mousemove", handleMouseMove);
-          container.removeEventListener("mouseup", handleMouseUp);
+          section.classList.remove("dragable");
+          section.removeEventListener("mousemove", handleMouseMove);
+          section.removeEventListener("mouseup", handleMouseUp);
 
           config.setNewPosition({
-            id: container.id,
-            xPos: container.style.left,
-            yPos: container.style.top,
+            id: section.id,
+            xPos: section.style.left,
+            yPos: section.style.top,
           });
           e.preventDefault();
         };
 
-        container.addEventListener("mouseup", handleMouseUp);
-        container.addEventListener("mouseleave", handleMouseUp);
+        section.addEventListener("mouseup", handleMouseUp);
+        section.addEventListener("mouseleave", handleMouseUp);
       });
     }
-    function setPosition(e, offsetX, offsetY, container) {
+    function setPosition(e, offsetX, offsetY, section) {
       e.preventDefault();
-      container.style.left = e.clientX - offsetX + "px";
-      container.style.top = e.clientY - offsetY + "px";
+      section.style.left = e.clientX - offsetX + "px";
+      section.style.top = e.clientY - offsetY + "px";
     }
 
     // Функція зміни розміру вікна
-    function resizeEvent({ event, container, postFunc }) {
+    function resizeEvent({ event, section, postFunc }) {
       let resizeValues = {
         // Зберігаємо початкові розміри елемента
-        startWidth: container.clientWidth,
-        startHeight: container.clientHeight,
+        startWidth: section.clientWidth,
+        startHeight: section.clientHeight,
 
         // Зберігаємо координати миші
         startX: event.clientX,
         startY: event.clientY,
       };
       const resizeHandler = (event) => {
-        setSize(event, resizeValues, container);
+        setSize(event, resizeValues, section);
         // Підігнати розмір досягнень відповідно до нового розміру контейнера
         postFunc ? postFunc() : "";
       };
@@ -249,13 +257,13 @@ class UI {
       document.addEventListener("mouseup", () => {
         document.removeEventListener("mousemove", resizeHandler);
         config.setNewPosition({
-          id: container.id,
-          width: container.clientWidth,
-          height: container.clientHeight,
+          id: section.id,
+          width: section.clientWidth,
+          height: section.clientHeight,
         });
       });
     }
-    function setSize(event, resizeValues, container) {
+    function setSize(event, resizeValues, section) {
       // Отримуємо дані про розміри і початкові координати зміни розміру
       const { startWidth, startHeight, startX, startY } = resizeValues;
 
@@ -264,8 +272,8 @@ class UI {
       const heightChange = event.clientY - startY;
 
       // Оновлюємо ширину та висоту контейнера з урахуванням змін
-      container.style.width = `${startWidth + widthChange}px`;
-      container.style.height = `${startHeight + heightChange}px`;
+      section.style.width = `${startWidth + widthChange}px`;
+      section.style.height = `${startHeight + heightChange}px`;
     }
   }
 
@@ -321,6 +329,7 @@ class UI {
           achivID: ID,
           points: Points,
         });
+
         achivsSection.appendChild(achivElement);
       });
   }
@@ -404,7 +413,7 @@ class UI {
       : 0;
 
     if (isHardcoreEarned || isEarned) {
-      if (diffMinutes < this.RECENT_DELAY_MILISECS) {
+      if (diffMinutes < RECENT_DELAY_MILISECS) {
         achivElement.classList.add(
           isHardcoreEarned ? "recent-earned-hard" : "recent-earned"
         );
@@ -426,6 +435,9 @@ class UI {
     previewContainer.appendChild(achivPreview);
     achivElement.appendChild(previewContainer);
 
+    let toTargetButton = document.createElement("button");
+    toTargetButton.classList.add("add-to-target");
+    previewContainer.appendChild(toTargetButton);
     // Додавання деталей досягнення
     let achivDetails = this.generateAchivDetails({
       name: title,
@@ -434,7 +446,19 @@ class UI {
       points: points,
     });
     achivElement.appendChild(achivDetails);
-
+    toTargetButton.addEventListener("mousedown", (e) => e.stopPropagation());
+    toTargetButton.addEventListener("click", (e) => {
+      e.stopPropagation();
+      this.addAchieveToTarget({
+        name: title,
+        description: description,
+        points: points,
+        prevSrc: `https://media.retroachievements.org/Badge/${badgeName}.png`,
+        isEarned: isEarned,
+        isHardcoreEarned: isHardcoreEarned,
+        achivID: achivID,
+      });
+    });
     return achivElement;
   }
 
@@ -469,6 +493,49 @@ class UI {
     return detailsElement;
   }
 
+  addAchieveToTarget({
+    name,
+    prevSrc,
+    description,
+    points,
+    isEarned,
+    isHardcoreEarned,
+    achivID,
+  }) {
+    if (
+      [...this.target.container.querySelectorAll(".target-achiv")]
+        .map((el) => +el.dataset.achivId)
+        .includes(achivID)
+    ) {
+      return;
+    }
+
+    let targetElement = document.createElement("div");
+    targetElement.classList.add("target-achiv");
+    isEarned ? targetElement.classList.add("earned") : "";
+    isHardcoreEarned ? targetElement.classList.add("hardcore") : "";
+    targetElement.dataset.achivId = achivID;
+    targetElement.innerHTML = `
+    <button class="delete-from-target" onclick="ui.deleteFromTarget(this)"></button>
+    <div class="prev">
+              <img
+                class="prev-img"
+                src="${prevSrc}"
+                alt=" "
+              />
+            </div>
+            <div class="target-achiv-details">
+              <h3 class="achiv-name">${name}</h3>
+              <p class="achiv-description">${description}</p>
+              <p class="points">${points} points</p>
+            </div>
+    `;
+    this.target.container.appendChild(targetElement);
+  }
+
+  deleteFromTarget(button) {
+    button.parentNode.remove();
+  }
   // Автопідбір розміру значків ачівментсів
   fitSizeVertically() {
     // Отримання посилання на блок досягнень та його дочірні елементи

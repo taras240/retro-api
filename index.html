@@ -182,7 +182,13 @@
           </div>
         </div>
       </section> -->
-      <div class="buttons-block">
+      <section class="buttons-block">
+        <button
+          class="open-settings-button target-button"
+          onclick="openTarget()"
+        >
+          Target
+        </button>
         <button
           class="open-settings-button game-card-button"
           onclick="openGameCard()"
@@ -198,7 +204,27 @@
         <button class="open-settings-button help-button" onclick="closeAbout()">
           About
         </button>
-      </div>
+      </section>
+      <section id="target-section">
+        <div class="target-container">
+          <!-- <div class="target-achiv">
+            <button class="delete-from-target"></button>
+            <div class="prev">
+              <img
+                class="prev-img"
+                src="https://media.retroachievements.org/Badge/376490.png"
+                alt=""
+                srcset=""
+              />
+            </div>
+            <div class="target-achiv-details">
+              <h3 class="achiv-name">Doves</h3>
+              <p class="achiv-description">Clear B-Type Level 1 Height 1</p>
+              <p class="points">2 points</p>
+            </div>
+          </div>
+        </div> -->
+      </section>
     </div>
     <script src="./js/config.js"></script>
     <script src="./js/gameCard.js"></script>

@@ -1,0 +1,124 @@
+#target-section {
+  visibility: visible;
+  position: absolute;
+  min-height: 100px;
+  z-index: 1;
+  top: 80px;
+  left: 50%;
+  /* transform: translateX(-50%); */
+  width: 400px;
+  max-height: 90vh;
+  padding: 10px 10px 0;
+  border-radius: 5px;
+  overflow-y: scroll;
+  border: 1px solid transparent;
+  user-select: none;
+  opacity: 1;
+  transition: 0.2s;
+}
+#target-section.hidden {
+  visibility: hidden;
+  opacity: 0;
+  transition: 0.2s;
+}
+#target-section:hover {
+  background-color: #171717;
+  transition: 0.2s;
+}
+#target-section:hover.dragable {
+  z-index: 100;
+  border-color: green;
+  transition: none;
+}
+.target-container {
+}
+.target-achiv {
+  position: relative;
+  display: flex;
+  gap: 10px;
+  color: white;
+  background-color: #111;
+  border-radius: 5px;
+  overflow: hidden;
+  padding: 10px;
+  width: 100%;
+  margin-bottom: 10px;
+}
+.prev {
+}
+.prev-img {
+  height: 80px;
+  aspect-ratio: 1;
+  filter: grayscale(1);
+  transition: 0.2s;
+}
+.target-achiv.earned .prev-img {
+  filter: grayscale(0);
+  transition: 0.2s;
+}
+
+.target-achiv.earned.hardcore::after {
+  content: "";
+  position: absolute;
+  height: 80%;
+  aspect-ratio: 2 / 1;
+  top: 40%;
+  right: 10%;
+  transform: translate(50%, -50%) rotate(45deg);
+  background-image: url(../assets/img/S-rank-1.png);
+  filter: drop-shadow(5px 3px 3px black);
+  image-rendering: pixelated;
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0;
+  animation: hardcore-earned-animation 0.1s linear forwards;
+  animation-delay: 0.6s;
+}
+
+.target-achiv-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.achiv-description {
+  font-size: 1rem;
+  flex: 1;
+}
+.delete-from-target {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  height: 20px;
+  aspect-ratio: 1;
+  background-image: url(../assets/img/minus.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-color: #171717;
+  border-radius: 50%;
+  overflow: hidden;
+  z-index: 10;
+  opacity: 0;
+  transition: 0.2s;
+}
+.target-achiv:hover .delete-from-target {
+  opacity: 0.8;
+  transition: 0.2s;
+}
+.target-achiv:hover .delete-from-target:hover {
+  opacity: 1;
+  transition: 0.2s;
+}
+.target-achiv:hover .delete-from-target:active {
+  transform: scale(0.9);
+  opacity: 0.9;
+  transition: 0.2s;
+}
+.delete-from-target:hover {
+  opacity: 1;
+  transition: 0.2s;
+}
+.delete-from-target:active {
+  opacity: 0.8;
+  transform: scale(0.9);
+  transition: 0.2s;
+}

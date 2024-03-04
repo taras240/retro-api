@@ -1,4 +1,6 @@
 let config = new Config();
+RECENT_DELAY_MILISECS = 20 * 60 * 1000; //mins => secs => milisecs
+
 // Ініціалізація UI
 let ui = new UI();
 // Ініціалізація APIWorker з ідентифікацією користувача
@@ -32,7 +34,9 @@ async function getAchievements() {
 async function updateAchievements() {
   try {
     // Отримання недавніх досягнень від API
-    const achievements = await apiWorker.getRecentAchieves({ minutes: 5 });
+    const achievements = await apiWorker.getRecentAchieves({
+      minutes: 60 * 60,
+    });
 
     // Ітерація через кожне досягнення
     achievements.forEach((achievement) => {
@@ -41,7 +45,9 @@ async function updateAchievements() {
         ui.achievementsBlock.achivsSection.querySelector(
           `[data-achiv-id="${achievement.AchievementID}"]`
         );
-
+      const targetElement = ui.target.container.querySelector(
+        `[data-achiv-id="${achievement.AchievementID}"]`
+      );
       if (achievementElement) {
         const isHardcore = achievement.HardcoreMode === 1;
         const isLatestSort = ui.SORT_METHOD === sortBy.latest;
@@ -56,10 +62,10 @@ async function updateAchievements() {
 
         // Додавання класів для відображення зароблених досягнень
         achievementElement.classList.add("earned");
+        targetElement.classList.add("earned");
         if (isHardcore) {
           achievementElement.classList.add("hardcore");
-        } else {
-          achievementElement.classList.remove("hardcore");
+          targetElement.classList.add("hardcore");
         }
       }
     });
@@ -103,24 +109,27 @@ function stopWatching() {
 
 // Функція для закриття налаштувань
 function closeSettings() {
-  ui.settings.container.classList.add("hidden");
+  ui.settings.section.classList.add("hidden");
 }
 
 // Функція для відкриття налаштувань
 function openSettings() {
-  ui.settings.container.classList.toggle("hidden");
+  ui.settings.section.classList.toggle("hidden");
 }
 
 // Функція для закриття картки гри
 function closeGameCard() {
-  ui.gameCard.container.classList.add("hidden");
+  ui.gameCard.section.classList.add("hidden");
 }
 
 // Функція для відкриття картки гри
 function openGameCard() {
-  ui.gameCard.container.classList.toggle("hidden");
+  ui.gameCard.section.classList.toggle("hidden");
 }
 // Функція для закриття About
 function closeAbout() {
-  ui.about.container.classList.toggle("hidden");
+  ui.about.section.classList.toggle("hidden");
+}
+function openTarget() {
+  ui.target.section.classList.toggle("hidden");
 }

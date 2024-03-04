@@ -12,7 +12,8 @@
   opacity: 1;
   user-select: none;
 }
-.game-card_section:active {
+.game-card_section.dragable {
+  z-index: 100;
   border: 1px solid green;
 }
 .game-card_section.hidden {

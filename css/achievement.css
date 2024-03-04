@@ -53,7 +53,7 @@ section.achivs:hover .resizer::after {
   height: 100%;
   border: 1px solid transparent;
   border-radius: 5px;
-  background-color: transparent;
+  background-color: #171717;
   cursor: default;
   overflow: visible;
 }
@@ -168,6 +168,42 @@ section.achivs:hover .resizer::after {
   filter: none;
 }
 
+.achiv-block .add-to-target {
+  position: absolute;
+  width: 24px;
+  aspect-ratio: 1;
+  background-color: #171717a1;
+  border-radius: 50%;
+  overflow: hidden;
+  top: 5px;
+  left: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.achiv-block:hover .add-to-target {
+  opacity: 1;
+  transition: 0.2s;
+}
+.achiv-block:hover .add-to-target:hover {
+  background-color: #171717;
+
+  transform: scale(1.1);
+  opacity: 1;
+  transition: 0.2s;
+}
+.achiv-block:hover .add-to-target::before {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  content: "";
+  position: absolute;
+  width: 80%;
+  aspect-ratio: 1;
+  background-image: url(../assets/img/add.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
 /* .achiv-block.earned::after,
 .achiv-block.earned.hardcore::after {
   content: "";
@@ -196,7 +232,7 @@ section.achivs:hover .resizer::after {
 .achiv-details-block {
   position: absolute;
   width: 300px;
-  left: 50%;
+  left: 100%;
   top: 10%;
   padding: 5px;
   background-color: black;
