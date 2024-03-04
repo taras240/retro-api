@@ -2,14 +2,19 @@
 **RetroAPI Tracker**
 
 *This web application is designed to track achievements obtained in retro games using the open API from retroachievements.org.*
+![image](https://github.com/taras240/retro-api/assets/41308277/8e1d89a6-d6ca-4bed-a608-193ab8bac0e8)
+
+
+
 
 ### Features
 
 - Retrieval of game progress and user achievements information via the API.
+- Main information about game.
 - Viewing the list of game achievements.
 - Automatic updating of achievements and game progress.
-- Ability to configure notifications for new achievements.
-- Flexible sorting and filtering options for achievements.
+- Custom achievement targets section.
+- Flexible sorting for achievements.
 
 ### Requirements
 
