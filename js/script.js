@@ -133,3 +133,9 @@ function closeAbout() {
 function openTarget() {
   ui.target.section.classList.toggle("hidden");
 }
+function clearTarget() {
+  ui.target.container.innerHTML = "";
+}
+function openAllAchivs() {
+  ui.achievementsBlock.section.classList.toggle("hidden");
+}

@@ -1,32 +1,15 @@
-.settings_container {
-  user-select: none;
-}
 .prefs_section {
   position: absolute;
-  visibility: visible;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   width: 500px;
   top: 20%;
   right: 10%;
-  border: 1px solid transparent;
-  border-radius: 5px;
   background-color: #111;
-  opacity: 1;
   z-index: 2;
 }
-.prefs_section:active {
-  border: 1px solid green;
-}
-.prefs_section.dragable {
-  transition: none;
-}
-.prefs_section.hidden {
-  visibility: hidden;
-  opacity: 0;
-  transition: 0.2s;
-}
+
 .prefs-header-container {
   display: flex;
   align-items: center;
@@ -34,12 +17,9 @@
   border-bottom: 1px solid white;
   padding: 10px;
 }
-.prefs-header,
-.game-card-header {
+.prefs-header {
   flex: 1;
-  text-align: center;
-  font-size: 1.5rem;
-  user-select: none;
+  border-bottom: none;
 }
 .close-settings-button,
 .game-card-close_button {

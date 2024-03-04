@@ -74,6 +74,9 @@ class UI {
       section: document.querySelector("#target-section"),
       container: document.querySelector(".target-container"),
     };
+    this.buttons = {
+      section: document.querySelector("#buttons-block"),
+    };
   }
   //Встановлення розмірів і розміщення елементів
   setPositions() {
@@ -191,6 +194,10 @@ class UI {
     // Додавання подій для пересування вікна target
     this.target.section.addEventListener("mousedown", (e) => {
       moveEvent(this.target.section);
+    });
+
+    this.buttons.section.addEventListener("mousedown", (e) => {
+      moveEvent(this.buttons.section);
     });
     // Подія для зміни розміру вікна ачівментсів
     this.achievementsBlock.resizer.addEventListener("mousedown", (event) => {

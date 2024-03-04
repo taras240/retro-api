@@ -1,26 +1,15 @@
 #target-section {
-  visibility: visible;
   position: absolute;
   min-height: 100px;
   z-index: 1;
   top: 80px;
   left: 50%;
-  /* transform: translateX(-50%); */
+  background-color: #171717;
   width: 400px;
   max-height: 90vh;
-  padding: 10px 10px 0;
-  border-radius: 5px;
   overflow-y: scroll;
-  border: 1px solid transparent;
-  user-select: none;
-  opacity: 1;
-  transition: 0.2s;
 }
-#target-section.hidden {
-  visibility: hidden;
-  opacity: 0;
-  transition: 0.2s;
-}
+
 #target-section:hover {
   background-color: #171717;
   transition: 0.2s;
@@ -30,8 +19,15 @@
   border-color: green;
   transition: none;
 }
+
 .target-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 5px;
+  padding: 10px;
 }
+
 .target-achiv {
   position: relative;
   display: flex;
@@ -42,9 +38,6 @@
   overflow: hidden;
   padding: 10px;
   width: 100%;
-  margin-bottom: 10px;
-}
-.prev {
 }
 .prev-img {
   height: 80px;
@@ -111,6 +104,35 @@
 .target-achiv:hover .delete-from-target:active {
   transform: scale(0.9);
   opacity: 0.9;
+  transition: 0.2s;
+}
+#target-section .clear-all-target {
+  position: absolute;
+  z-index: 10;
+  top: 8px;
+  right: 5px;
+  width: 20px;
+  aspect-ratio: 1;
+  background-image: url(../assets/img/delete.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-color: transparent;
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.2s;
+}
+#target-section:hover .clear-all-target {
+  opacity: 0.5;
+  visibility: visible;
+  transition: 0.2s;
+}
+#target-section:hover .clear-all-target:hover {
+  opacity: 1;
+  transition: 0.2s;
+}
+#target-section:hover .clear-all-target:active {
+  opacity: 0.9;
+  transform: scale(0.9);
   transition: 0.2s;
 }
 .delete-from-target:hover {

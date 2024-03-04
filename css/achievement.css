@@ -2,9 +2,10 @@ section.achivs {
   position: absolute;
   width: 30vw;
   height: 98vh;
-  user-select: none;
 }
-
+section.achivs:hover {
+  transition: none;
+}
 .resizer {
   position: absolute;
   bottom: 0;
@@ -67,10 +68,10 @@ section.achivs:hover .resizer::after {
   border-color: green;
 }
 .achiv-block {
+  position: relative;
   padding: 3px;
   width: auto;
-  aspect-ratio: 1/1;
-  position: relative;
+  aspect-ratio: 1;
   /* background-color: rgb(46, 46, 46); */
 }
 .achiv-block.recent-earned {
@@ -202,6 +203,11 @@ section.achivs:hover .resizer::after {
   background-image: url(../assets/img/add.png);
   background-size: cover;
   background-repeat: no-repeat;
+  transition: 0.2s;
+}
+.achiv-block:hover .add-to-target:active::before {
+  transform: translate(-50%, -50%) scale(0.9);
+  transition: 0.2s;
 }
 
 /* .achiv-block.earned::after,

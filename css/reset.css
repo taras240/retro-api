@@ -81,3 +81,7 @@ strong {
   font-style: normal;
   font-weight: 400;
 }
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
