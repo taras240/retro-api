@@ -6,7 +6,7 @@
   left: 50%;
   background-color: #171717;
   width: 400px;
-  max-height: 90vh;
+  max-height: 100vh;
   overflow-y: scroll;
 }
 
