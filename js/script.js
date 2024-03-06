@@ -90,7 +90,6 @@ function startWatching() {
   apiTikInterval = setInterval(() => {
     updateAchievements();
     toggleTickClass();
-    console.log("tik");
   }, config.updateDelayInMiliSecs);
 }
 
