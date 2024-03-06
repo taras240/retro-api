@@ -109,7 +109,7 @@
 #target-section .clear-all-target {
   position: absolute;
   z-index: 10;
-  top: 8px;
+  bottom: 8px;
   right: 5px;
   width: 20px;
   aspect-ratio: 1;

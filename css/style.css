@@ -58,9 +58,9 @@ h2 {
   /* transform: translate(-50%, 0); */
   padding: 10px;
   display: flex;
+  align-items: center;
   gap: 10px;
   padding: 10px;
-
   border-radius: 5px;
   background-color: #171717;
   opacity: 0.2;
@@ -96,4 +96,7 @@ h2 {
   background-color: #111;
   border: 1px solid white;
   transition: 0.3s;
+}
+.TODO {
+  opacity: 0.1;
 }

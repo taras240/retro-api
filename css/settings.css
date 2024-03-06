@@ -142,7 +142,7 @@
 }
 #watching-button {
   width: 100px;
-  transition: width 0.5s;
+  height: 3rem;
   transition: 0.2s;
 }
 #watching-button.active {
@@ -165,8 +165,8 @@
 }
 @keyframes updateTickAnimation {
   from {
-    box-shadow: 1px 0px 5px 1px white;
-    background-color: white;
+    box-shadow: 1px 0px 5px 1px rgb(0, 255, 98);
+    background-color: rgb(0, 255, 98);
   }
 }
 

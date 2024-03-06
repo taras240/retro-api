@@ -46,27 +46,19 @@ section.achivs:hover .resizer::after {
   width: 3px;
   height: 10px;
 } */
-.achivs_section {
+.achievements-container {
   display: flex;
   flex-wrap: wrap;
   align-items: start;
   justify-content: center;
+  height: 100%;
   max-width: 100%;
   max-height: 100%;
-  border: 1px solid transparent;
   border-radius: 5px;
   /* background-color: #171717; */
   overflow: visible;
 }
 
-.achivs_section:hover {
-  /* border: 1px solid white; */
-  /* background-color: #171717; */
-  transition: 0.2s;
-}
-.achivs_section:active {
-  border-color: green;
-}
 .achiv-block {
   position: relative;
   padding: 3px;

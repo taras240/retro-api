@@ -22,8 +22,8 @@ class UI {
   initializeElements() {
     // Елементи блока досягнень
     this.achievementsBlock = {
-      section: document.querySelector("section.achivs"), // Контейнер блока досягнень
-      achivsSection: document.querySelector(".achivs_section"), // Секція з досягненнями
+      section: document.querySelector("section.achivs"), // Секція блока досягнень
+      container: document.querySelector(".achievements-container"), //Контейнер  з досягненнями
       resizer: document.querySelector("#achivs-resizer"), // Ресайзер блока досягнень
     };
 
@@ -212,7 +212,7 @@ class UI {
       moveEvent(this.settings.section, e);
     });
     // Додавання подій для пересування вікна ачівментсів
-    this.achievementsBlock.achivsSection.addEventListener("mousedown", (e) => {
+    this.achievementsBlock.section.addEventListener("mousedown", (e) => {
       moveEvent(this.achievementsBlock.section, e);
     });
     // Додавання подій для пересування вікна картки гри
@@ -341,8 +341,8 @@ class UI {
   }
 
   clearAchievementsSection() {
-    const { achivsSection } = this.achievementsBlock;
-    achivsSection.innerHTML = "";
+    const { container } = this.achievementsBlock;
+    container.innerHTML = "";
   }
 
   displaySortedAchievements(achievementsObject) {
@@ -357,9 +357,9 @@ class UI {
   }
 
   displayAchievement(achievement) {
-    const { achivsSection } = this.achievementsBlock;
+    const { container } = this.achievementsBlock;
     const achivElement = this.generateAchievement(achievement);
-    achivsSection.appendChild(achivElement);
+    container.appendChild(achivElement);
   }
 
   updateGameInfo({ Title, ConsoleName, ImageIcon, NumAchievements }) {
@@ -375,41 +375,28 @@ class UI {
     gamePlatform.innerText = ConsoleName;
   }
 
-  updateGameCardInfo(gameInfo) {
-    const {
-      Title,
-      ImageBoxArt,
-      ConsoleName,
-      Developer,
-      Publisher,
-      Genre,
-      Released,
-      UserCompletion,
-      UserCompletionHardcore,
-    } = gameInfo;
-
-    const {
-      header,
-      preview,
-      platform,
-      developer,
-      publisher,
-      genre,
-      released,
-      completion,
-    } = this.gameCard;
-
-    header.innerText = Title;
-    preview.setAttribute(
+  updateGameCardInfo({
+    Title,
+    ImageBoxArt,
+    ConsoleName,
+    Developer,
+    Publisher,
+    Genre,
+    Released,
+    UserCompletion,
+    UserCompletionHardcore,
+  }) {
+    this.gameCard.header.innerText = Title;
+    this.gameCard.preview.setAttribute(
       "src",
       `https://media.retroachievements.org${ImageBoxArt}`
     );
-    platform.innerText = ConsoleName;
-    developer.innerText = Developer || "-";
-    publisher.innerText = Publisher || "-";
-    genre.innerText = Genre || "-";
-    released.innerText = Released || "-";
-    completion.innerText = `${UserCompletion} [${UserCompletionHardcore}]`;
+    this.gameCard.platform.innerText = ConsoleName;
+    this.gameCard.developer.innerText = Developer || "-";
+    this.gameCard.publisher.innerText = Publisher || "-";
+    this.gameCard.genre.innerText = Genre || "-";
+    this.gameCard.released.innerText = Released || "-";
+    this.gameCard.completion.innerText = `${UserCompletion} [${UserCompletionHardcore}]`;
   }
 
   //Додавання відсутніх властивостей
@@ -552,11 +539,12 @@ class UI {
   deleteFromTarget(button) {
     button.parentNode.remove();
   }
+
   // Автопідбір розміру значків ачівментсів
   fitSizeVertically() {
     // Отримання посилання на блок досягнень та його дочірні елементи
-    const { section, achivsSection } = this.achievementsBlock;
-    const achivs = Array.from(achivsSection.children);
+    const { section, container } = this.achievementsBlock;
+    const achivs = Array.from(container.children);
     const achivsCount = achivs.length;
 
     // Перевірка, чи є елементи в блоці досягнень
@@ -578,17 +566,16 @@ class UI {
       rowsCount = Math.floor(windowHeight / achivWidth);
       colsCount = Math.floor(windowWidth / achivWidth);
     } while (rowsCount * colsCount < achivsCount && achivWidth > 0);
-    console.log(achivWidth);
     achivWidth =
       achivWidth < this.ACHIV_MIN_SIZE
         ? this.ACHIV_MIN_SIZE
         : achivWidth > this.ACHIV_MAX_SIZE
         ? this.ACHIV_MAX_SIZE
         : achivWidth;
-    console.log(achivWidth);
     // Встановлення розміру кожного досягнення в блоку
     achivs.forEach((achiv) => (achiv.style.width = achivWidth + "px"));
   }
+
   switchSectionVisibility(section) {
     section.classList.toggle("hidden");
     config.setNewPosition({
@@ -598,7 +585,7 @@ class UI {
   }
 }
 
-//! Методи сортування для досягнень гри
+//* Методи сортування для досягнень гри
 const sortBy = {
   latest: (a, b) => {
     // Перевіряємо, чи існують дати та обираємо найновішу
@@ -622,7 +609,7 @@ const sortBy = {
   default: (a, b) => 0,
 };
 
-//! Методи фільтрування для досягнень гри
+//* Методи фільтрування для досягнень гри
 const filterBy = {
   earned: (achievement) => achievement.DateEarned,
   notEarned: (achievement) => !achievement.DateEarned,

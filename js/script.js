@@ -1,6 +1,6 @@
 let config = new Config();
-RECENT_DELAY_MILISECS = 20 * 60 * 1000; //mins => secs => milisecs
-
+const RECENT_DELAY_MILISECS = 20 * 60 * 1000; //mins * secs * milisecs
+const RECENT_ACHIVES_RANGE_MINUTES = 50;
 // Ініціалізація UI
 let ui = new UI();
 // Ініціалізація APIWorker з ідентифікацією користувача
@@ -12,16 +12,16 @@ let apiTikInterval;
 async function getAchievements() {
   try {
     // Отримання інформації про прогрес гри від API
-    const resp = await apiWorker.getGameProgress({ gameID: config.gameID });
+    const response = await apiWorker.getGameProgress(config);
 
     // Парсинг та відображення досягнень гри
-    ui.parseGameAchievements(resp);
+    ui.parseGameAchievements(response);
 
     // Підгонка розміру досягнень
     ui.fitSizeVertically();
 
     // Оновлення інформації в картці гри
-    ui.updateGameCardInfo(resp);
+    ui.updateGameCardInfo(response);
   } catch (error) {
     // Додання помилки до кнопки перегляду та зупинка перегляду
     ui.settings.watchButton.classList.add("error");
@@ -33,18 +33,17 @@ async function getAchievements() {
 // Функція для оновлення досягнень
 async function updateAchievements() {
   try {
-    // Отримання недавніх досягнень від API
+    // Отримання недавніх досягнень від API //* 5 minutes recomend
     const achievements = await apiWorker.getRecentAchieves({
-      minutes: 60 * 60,
+      minutes: RECENT_ACHIVES_RANGE_MINUTES,
     });
 
     // Ітерація через кожне досягнення
     achievements.forEach((achievement) => {
       // Знаходження елементу досягнення за його ідентифікатором
-      const achievementElement =
-        ui.achievementsBlock.achivsSection.querySelector(
-          `[data-achiv-id="${achievement.AchievementID}"]`
-        );
+      const achievementElement = ui.achievementsBlock.container.querySelector(
+        `[data-achiv-id="${achievement.AchievementID}"]`
+      );
       const targetElement = ui.target.container.querySelector(
         `[data-achiv-id="${achievement.AchievementID}"]`
       );
@@ -62,10 +61,10 @@ async function updateAchievements() {
 
         // Додавання класів для відображення зароблених досягнень
         achievementElement.classList.add("earned");
-        targetElement.classList.add("earned");
+        targetElement?.classList.add("earned");
         if (isHardcore) {
           achievementElement.classList.add("hardcore");
-          targetElement.classList.add("hardcore");
+          targetElement?.classList.add("hardcore");
         }
       }
     });
@@ -88,9 +87,10 @@ function startWatching() {
   getAchievements();
 
   // Встановлення інтервалу для оновлення досягнень та зміни стану кнопки
-  apiTickInterval = setInterval(() => {
+  apiTikInterval = setInterval(() => {
     updateAchievements();
     toggleTickClass();
+    console.log("tik");
   }, config.updateDelayInMiliSecs);
 }
 
