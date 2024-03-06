@@ -55,7 +55,6 @@ section.achivs:hover .resizer::after {
   border: 1px solid transparent;
   border-radius: 5px;
   background-color: #171717;
-  cursor: default;
   overflow: visible;
 }
 

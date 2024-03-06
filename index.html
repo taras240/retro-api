@@ -16,7 +16,7 @@
       <section id="settings_section" class="prefs_section">
         <div class="prefs-header-container">
           <h2 class="prefs-header">Settings</h2>
-          <div class="close-settings-button" onclick="closeSettings()"></div>
+          <div class="close-settings-button" onclick="openSettings()"></div>
         </div>
         <div class="settings_container">
           <div class="columns-settings text-input-container">
@@ -51,7 +51,7 @@
               placeholder="? sec"
             />
           </div>
-          <div class="game-id-settings numeric-input-container sort-buttons">
+          <div class="sort-settings numeric-input-container sort-buttons">
             <label>Sort:</label>
             <button
               id="sort-by-latest"
@@ -61,7 +61,7 @@
             </button>
 
             <button
-              id="sort-by-erned"
+              id="sort-by-earned"
               class="sort-achivs-button setting-button"
             >
               difficult
@@ -76,6 +76,27 @@
 
             <button id="sort-by-default" class="setting-button checked">
               default
+            </button>
+          </div>
+          <div class="filter-settings numeric-input-container sort-buttons">
+            <label>Filter:</label>
+            <button
+              id="filter-by-earned"
+              class="filter-achivs-button setting-button"
+            >
+              earned
+            </button>
+            <button
+              id="filter-by-not-earned"
+              class="filter-achivs-button setting-button"
+            >
+              not earned
+            </button>
+            <button
+              id="filter-by-all"
+              class="filter-achivs-button setting-button"
+            >
+              all
             </button>
           </div>
           <div class="game-id-settings numeric-input-container">
@@ -113,7 +134,7 @@
           <h2 class="help-header">About</h2>
           <div
             class="close-settings-button close-help"
-            onclick="closeAbout()"
+            onclick="openAbout()"
           ></div>
 
           <p class="help-content">
@@ -129,19 +150,16 @@
       <section id="target-section">
         <h2 class="target-header">Target</h2>
         <button class="clear-all-target" onclick="clearTarget()"></button>
-        <div class="target-container">
+        <div class="target-container"></div>
       </section>
       <section id="buttons-block" class="buttons-block">
         <button
-        class="setting-button all-achivs-button"
-        onclick="openAllAchivs()"
-      >
-        Achivs
-      </button>
-        <button
-          class="setting-button target-button"
-          onclick="openTarget()"
+          class="setting-button all-achivs-button"
+          onclick="openAllAchivs()"
         >
+          Achivs
+        </button>
+        <button class="setting-button target-button" onclick="openTarget()">
           Target
         </button>
         <button
@@ -150,13 +168,10 @@
         >
           GameCard
         </button>
-        <button
-          class="setting-button settings-button"
-          onclick="openSettings()"
-        >
+        <button class="setting-button settings-button" onclick="openSettings()">
           Settings
         </button>
-        <button class="setting-button help-button" onclick="closeAbout()">
+        <button class="setting-button help-button" onclick="openAbout()">
           About
         </button>
       </section>

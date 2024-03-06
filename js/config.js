@@ -38,12 +38,13 @@ class Config {
   constructor() {
     this.readConfiguration();
   }
-  setNewPosition({ id, xPos, yPos, width, height }) {
+  setNewPosition({ id, xPos, yPos, width, height, hidden }) {
     if (this._cfg.ui.hasOwnProperty(id)) {
       xPos ? (this._cfg.ui[id].x = xPos) : "";
       yPos ? (this._cfg.ui[id].y = yPos) : "";
       width ? (this._cfg.ui[id].width = width + "px") : "";
       height ? (this._cfg.ui[id].height = height + "px") : "";
+      this._cfg.ui[id].hidden = hidden;
     } else {
       this._cfg.ui[id] = {
         id: id,
@@ -51,6 +52,7 @@ class Config {
         y: yPos,
         width: width,
         height: height,
+        hidden: hidden,
       };
     }
     this.writeConfiguration();
@@ -78,53 +80,3 @@ class Config {
     localStorage.setItem(CONFIG_FILE_NAME, JSON.stringify(this._cfg));
   }
 }
-
-/**
- * Об'єкт з методами сортування для досягнень гри
- */
-const sortBy = {
-  /**
-   * Сортує за найновішою датою, враховуючи якщо доступні обидві дати
-   * @param {Object} a - перше досягнення
-   * @param {Object} b - друге досягнення
-   * @returns {number} - результат порівняння
-   */
-  latest: (a, b) => {
-    // Перевіряємо, чи існують дати та обираємо найновішу
-    const dateA = a.DateEarnedHardcore
-      ? new Date(a.DateEarnedHardcore)
-      : -Infinity;
-    const dateB = b.DateEarnedHardcore
-      ? new Date(b.DateEarnedHardcore)
-      : -Infinity;
-    const dateA2 = a.DateEarned ? new Date(a.DateEarned) : -Infinity;
-    const dateB2 = b.DateEarned ? new Date(b.DateEarned) : -Infinity;
-    const maxDateA = Math.max(dateA, dateA2);
-    const maxDateB = Math.max(dateB, dateB2);
-    return maxDateB - maxDateA; // Повертає різницю дат
-  },
-
-  /**
-   * Сортує за кількістю зароблених досягнень у хардкорному режимі
-   * @param {Object} a - перше досягнення
-   * @param {Object} b - друге досягнення
-   * @returns {number} - результат порівняння
-   */
-  earnedCount: (a, b) => b.NumAwardedHardcore - a.NumAwardedHardcore,
-
-  /**
-   * Сортує за кількістю очок досягнення
-   * @param {Object} a - перше досягнення
-   * @param {Object} b - друге досягнення
-   * @returns {number} - результат порівняння
-   */
-  points: (a, b) => a.Points - b.Points,
-
-  /**
-   * За замовчуванням не змінює порядок елементів
-   * @param {Object} a - перше досягнення
-   * @param {Object} b - друге досягнення
-   * @returns {number} - результат порівняння
-   */
-  default: (a, b) => 0,
-};

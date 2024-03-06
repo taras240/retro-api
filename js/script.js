@@ -107,35 +107,24 @@ function stopWatching() {
   clearInterval(apiTikInterval);
 }
 
-// Функція для закриття налаштувань
-function closeSettings() {
-  ui.settings.section.classList.add("hidden");
-}
-
 // Функція для відкриття налаштувань
 function openSettings() {
-  ui.settings.section.classList.toggle("hidden");
+  ui.switchSectionVisibility(ui.settings.section);
 }
-
-// Функція для закриття картки гри
-function closeGameCard() {
-  ui.gameCard.section.classList.add("hidden");
-}
-
-// Функція для відкриття картки гри
+// Функція для відкриття/закриття картки гри
 function openGameCard() {
-  ui.gameCard.section.classList.toggle("hidden");
+  ui.switchSectionVisibility(ui.gameCard.section);
 }
 // Функція для закриття About
-function closeAbout() {
-  ui.about.section.classList.toggle("hidden");
+function openAbout() {
+  ui.switchSectionVisibility(ui.about.section);
 }
 function openTarget() {
-  ui.target.section.classList.toggle("hidden");
+  ui.switchSectionVisibility(ui.target.section);
+}
+function openAllAchivs() {
+  ui.switchSectionVisibility(ui.achievementsBlock.section);
 }
 function clearTarget() {
   ui.target.container.innerHTML = "";
-}
-function openAllAchivs() {
-  ui.achievementsBlock.section.classList.toggle("hidden");
 }

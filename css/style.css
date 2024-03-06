@@ -19,7 +19,7 @@ section {
   visibility: visible;
   border-radius: 5px;
   border: 1px solid transparent;
-  cursor: move;
+  cursor: grab;
   user-select: none;
   opacity: 1;
   transition: 0.2s;

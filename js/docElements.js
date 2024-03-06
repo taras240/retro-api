@@ -1,6 +1,6 @@
 class UI {
   SORT_METHOD = sortBy.default;
-
+  FILTER_METHOD = filterBy.all;
   constructor() {
     document.querySelector(".wrapper").appendChild(createGameCard());
 
@@ -48,14 +48,17 @@ class UI {
 
     // Елементи налаштувань
     this.settings = {
-      section: document.querySelector(".prefs_section"), // Контейнер налаштувань
+      section: document.querySelector(".prefs_section"), //* Контейнер налаштувань
       apiKey: document.querySelector("#api-key"), // Поле введення ключа API
       login: document.querySelector("#login-input"), // Поле введення логіну
       updateInterval: document.querySelector("#update-time"), // Поле введення інтервалу оновлення
-      sortByLatestButton: document.querySelector("#sort-by-latest"),
-      sortByEarnedButton: document.querySelector("#sort-by-erned"),
-      sortByPointsButton: document.querySelector("#sort-by-points"),
-      sortByDefaultButton: document.querySelector("#sort-by-default"),
+      sortByLatestButton: document.querySelector("#sort-by-latest"), // Кнопка сортування за останніми
+      sortByEarnedButton: document.querySelector("#sort-by-earned"), // Кнопка сортування за заробленими
+      sortByPointsButton: document.querySelector("#sort-by-points"), // Кнопка сортування за балами
+      sortByDefaultButton: document.querySelector("#sort-by-default"), // Кнопка сортування за замовчуванням
+      filterByAll: document.querySelector("#filter-by-all"), // Фільтр за всіма
+      filterByEarned: document.querySelector("#filter-by-earned"), // Фільтр за заробленими
+      filterByNotEarned: document.querySelector("#filter-by-not-earned"), // Фільтр за не заробленими
       gameID: document.querySelector("#game-id"), // Поле введення ідентифікатора гри
       watchButton: document.querySelector("#watching-button"), // Кнопка спостереження за грою
       getGameIdButton: document.querySelector(".get-id-button"), // Кнопка отримання ідентифікатора гри
@@ -86,7 +89,7 @@ class UI {
       let element = document.getElementById(containerId);
 
       // Отримання позиції та розмірів елемента з об'єкта config.ui
-      const { x, y, width, height } = config.ui[containerId];
+      const { x, y, width, height, hidden } = config.ui[containerId];
 
       // Встановлення нових значень стилів елемента, якщо вони вказані у config.ui
       // Якщо значення відсутнє (undefined), то стилі не змінюються
@@ -94,6 +97,7 @@ class UI {
       y ? (element.style.top = y) : "";
       width ? (element.style.width = width) : "";
       height ? (element.style.height = height) : "";
+      hidden ? element.classList.add("hidden") : "";
     });
   }
 
@@ -154,6 +158,19 @@ class UI {
       this.applySorting({ sortButton: this.settings.sortByPointsButton });
     });
 
+    this.settings.filterByEarned.addEventListener("click", (e) => {
+      this.FILTER_METHOD = filterBy.earned;
+      this.applyFilter({ filterButton: this.settings.filterByEarned });
+    });
+    this.settings.filterByNotEarned.addEventListener("click", (e) => {
+      this.FILTER_METHOD = filterBy.notEarned;
+      this.applyFilter({ filterButton: this.settings.filterByNotEarned });
+    });
+    this.settings.filterByAll.addEventListener("click", (e) => {
+      this.FILTER_METHOD = filterBy.all;
+      this.applyFilter({ filterButton: this.settings.filterByAll });
+    });
+
     // Додаємо обробник події 'click' для кнопки автооновлення
     this.settings.watchButton.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -180,24 +197,24 @@ class UI {
 
     // Додавання подій для пересування вікна налаштувань
     this.settings.section.addEventListener("mousedown", (e) => {
-      moveEvent(this.settings.section);
+      moveEvent(this.settings.section, e);
     });
     // Додавання подій для пересування вікна ачівментсів
     this.achievementsBlock.achivsSection.addEventListener("mousedown", (e) => {
-      moveEvent(this.achievementsBlock.section);
+      moveEvent(this.achievementsBlock.section, e);
     });
     // Додавання подій для пересування вікна картки гри
     this.gameCard.section.addEventListener("mousedown", (e) => {
-      moveEvent(this.gameCard.section);
+      moveEvent(this.gameCard.section, e);
     });
 
     // Додавання подій для пересування вікна target
     this.target.section.addEventListener("mousedown", (e) => {
-      moveEvent(this.target.section);
+      moveEvent(this.target.section, e);
     });
 
     this.buttons.section.addEventListener("mousedown", (e) => {
-      moveEvent(this.buttons.section);
+      moveEvent(this.buttons.section, e);
     });
     // Подія для зміни розміру вікна ачівментсів
     this.achievementsBlock.resizer.addEventListener("mousedown", (event) => {
@@ -210,30 +227,27 @@ class UI {
     });
 
     // Функція для пересування вікна
-    function moveEvent(section) {
-      section.addEventListener("mousedown", (e) => {
-        let offsetX = e.clientX - section.getBoundingClientRect().left;
-        let offsetY = e.clientY - section.getBoundingClientRect().top;
-        section.classList.add("dragable");
-        const handleMouseMove = (e) =>
-          setPosition(e, offsetX, offsetY, section);
-        section.addEventListener("mousemove", handleMouseMove);
-        const handleMouseUp = (e) => {
-          section.classList.remove("dragable");
-          section.removeEventListener("mousemove", handleMouseMove);
-          section.removeEventListener("mouseup", handleMouseUp);
+    function moveEvent(section, e) {
+      let offsetX = e.clientX - section.getBoundingClientRect().left;
+      let offsetY = e.clientY - section.getBoundingClientRect().top;
+      section.classList.add("dragable");
+      const handleMouseMove = (e) => setPosition(e, offsetX, offsetY, section);
+      section.addEventListener("mousemove", handleMouseMove);
+      const handleMouseUp = (e) => {
+        section.classList.remove("dragable");
+        section.removeEventListener("mousemove", handleMouseMove);
+        section.removeEventListener("mouseup", handleMouseUp);
 
-          config.setNewPosition({
-            id: section.id,
-            xPos: section.style.left,
-            yPos: section.style.top,
-          });
-          e.preventDefault();
-        };
+        config.setNewPosition({
+          id: section.id,
+          xPos: section.style.left,
+          yPos: section.style.top,
+        });
+        e.preventDefault();
+      };
 
-        section.addEventListener("mouseup", handleMouseUp);
-        section.addEventListener("mouseleave", handleMouseUp);
-      });
+      section.addEventListener("mouseup", handleMouseUp);
+      section.addEventListener("mouseleave", handleMouseUp);
     }
     function setPosition(e, offsetX, offsetY, section) {
       e.preventDefault();
@@ -288,70 +302,65 @@ class UI {
     // Знімає клас "checked" з усіх кнопок сортування
     sortButton.parentNode
       .querySelectorAll(".checked")
-      .forEach((child) => child.classList.remove("checked"));
+      ?.forEach((child) => child.classList.remove("checked"));
     // Додає клас "checked" до обраної кнопки сортування
     sortButton.classList.add("checked");
     // Клікає на кнопку перевірки ідентифікатора для виконання сортування
     this.settings.checkIdButton.click();
   }
-
-  /**
-   * Розбирає отримані досягнення гри та відображає їх на сторінці
-   * @param {Object} achivs - об'єкт з отриманими досягненнями гри
-   */
+  applyFilter({ filterButton }) {
+    filterButton.parentNode
+      .querySelectorAll(".checked")
+      .forEach((child) => child.classList.remove("checked"));
+    filterButton.classList.add("checked");
+    // Клікає на кнопку перевірки ідентифікатора для виконання сортування
+    this.settings.checkIdButton.click();
+  }
+  // Розбирає отримані досягнення гри та відображає їх на сторінці
   parseGameAchievements(achivs) {
+    // Очистити вміст розділу досягнень
+    this.clearAchievementsSection();
+
+    // Оновити інформацію про гру
+    this.updateGameInfo(achivs);
+
+    // Відсортувати досягнення та відобразити їх
+    this.displaySortedAchievements(achivs);
+  }
+
+  clearAchievementsSection() {
     const { achivsSection } = this.achievementsBlock;
-
-    // Очищаємо вміст розділу досягнень
     achivsSection.innerHTML = "";
+  }
 
-    // Оновлюємо інформацію про гру
-    this.updateGameInfo({
-      title: achivs.Title,
-      platform: achivs.ConsoleName,
-      imageIcon: achivs.ImageIcon,
-      achivsCount: achivs.NumAchievements,
-    });
-
-    // Сортуємо досягнення за обраним методом сортування та відображаємо їх
-    Object.values(achivs.Achievements)
+  displaySortedAchievements(achievementsObject) {
+    Object.values(achievementsObject.Achievements)
+      .filter((a) => this.FILTER_METHOD(a))
       .sort((a, b) => this.SORT_METHOD(a, b))
-      .forEach((achiv) => {
-        const {
-          BadgeName,
-          Title,
-          Description,
-          DateEarned,
-          DateEarnedHardcore,
-          ID,
-          Points,
-        } = achiv;
-        // Генеруємо HTML-елемент досягнення та додаємо його до секції досягнень
-        let achivElement = this.generateAchievement({
-          badgeName: BadgeName,
-          title: Title,
-          description: Description,
-          dateEarned: DateEarned,
-          dateHardEarned: DateEarnedHardcore,
-          achivID: ID,
-          points: Points,
-        });
-
-        achivsSection.appendChild(achivElement);
+      .forEach((achievement) => {
+        this.displayAchievement(
+          this.fixAchievement(achievement, achievementsObject)
+        );
       });
   }
 
-  updateGameInfo({ title, platform, imageIcon, achivsCount }) {
+  displayAchievement(achievement) {
+    const { achivsSection } = this.achievementsBlock;
+    const achivElement = this.generateAchievement(achievement);
+    achivsSection.appendChild(achivElement);
+  }
+
+  updateGameInfo({ Title, ConsoleName, ImageIcon, NumAchievements }) {
     const { gamePreview, gameTitle, gamePlatform, gameAchivsCount } =
       this.settings;
 
     gamePreview.setAttribute(
       "src",
-      `https://media.retroachievements.org${imageIcon}`
+      `https://media.retroachievements.org${ImageIcon}`
     );
-    gameTitle.innerText = title;
-    gameAchivsCount.innerText = achivsCount;
-    gamePlatform.innerText = platform;
+    gameTitle.innerText = Title;
+    gameAchivsCount.innerText = NumAchievements;
+    gamePlatform.innerText = ConsoleName;
   }
 
   updateGameCardInfo(gameInfo) {
@@ -391,137 +400,117 @@ class UI {
     completion.innerText = `${UserCompletion} [${UserCompletionHardcore}]`;
   }
 
-  generateAchievement({
-    badgeName,
-    title,
-    description,
-    dateEarned,
-    dateHardEarned,
-    achivID,
-    points,
-  }) {
-    // Створення основного елемента досягнення
+  //Додавання відсутніх властивостей
+  fixAchievement(achievement, achievements) {
+    const { BadgeName, DateEarned, DateEarnedHardcore } = achievement;
+
+    //Додаєм кількість гравців
+    achievement.totalPlayers = achievements.NumDistinctPlayers;
+
+    // Визначаєм, чи отримано досягнення та чи є воно хардкорним
+    achievement.isEarned = DateEarned !== undefined;
+    achievement.isHardcoreEarned = DateEarnedHardcore !== undefined;
+
+    // Додаєм адресу зображення для досягнення
+    achievement.prevSrc = `https://media.retroachievements.org/Badge/${BadgeName}.png`;
+
+    //Повертаємо виправлений об'єкт
+    return achievement;
+  }
+
+  generateAchievement(achievement) {
+    const { ID, Points, isEarned, isHardcoreEarned, prevSrc } = achievement;
+
     let achivElement = document.createElement("div");
     achivElement.classList.add("achiv-block");
 
-    // Визначення, чи отримано досягнення та чи є воно хардкорним
-    let isEarned = dateEarned !== undefined;
-    let isHardcoreEarned = dateHardEarned !== undefined;
-
-    // Додавання відповідних класів в залежності від умов
-    isEarned ? achivElement.classList.add("earned") : "";
-    isHardcoreEarned ? achivElement.classList.add("hardcore") : "";
-
-    // Перевірка на недавно отримані досягнення
-    let diffMinutes = isHardcoreEarned
-      ? new Date() - new Date(dateHardEarned)
-      : isEarned
-      ? new Date() - new Date(dateEarned)
-      : 0;
-
-    if (isHardcoreEarned || isEarned) {
-      if (diffMinutes < RECENT_DELAY_MILISECS) {
-        achivElement.classList.add(
-          isHardcoreEarned ? "recent-earned-hard" : "recent-earned"
-        );
+    if (isEarned) {
+      achivElement.classList.add("earned");
+      if (isHardcoreEarned) {
+        achivElement.classList.add("hardcore");
       }
     }
 
-    // Додавання dataset для ідентифікації досягнення
-    achivElement.dataset.achivId = achivID;
-    // Додавання dataset для очок досягнення
+    achivElement.dataset.achivId = ID;
     achivElement.dataset.points =
-      points < 10 ? "poor" : points < 20 ? "normal" : "reach";
+      Points < 10 ? "poor" : Points < 20 ? "normal" : "reach";
 
-    // Створення зображення досягнення
     let previewContainer = document.createElement("div");
     previewContainer.classList.add("preview-container");
+
     let achivPreview = document.createElement("img");
     achivPreview.classList.add("achiv-preview");
-    achivPreview.src = `https://media.retroachievements.org/Badge/${badgeName}.png`;
+    achivPreview.src = prevSrc;
+
     previewContainer.appendChild(achivPreview);
     achivElement.appendChild(previewContainer);
 
     let toTargetButton = document.createElement("button");
     toTargetButton.classList.add("add-to-target");
     previewContainer.appendChild(toTargetButton);
-    // Додавання деталей досягнення
-    let achivDetails = this.generateAchivDetails({
-      name: title,
-      description: description,
-      dateEarned: dateEarned,
-      points: points,
-    });
+
+    let achivDetails = this.generateAchivDetails(achievement);
     achivElement.appendChild(achivDetails);
+
     toTargetButton.addEventListener("mousedown", (e) => e.stopPropagation());
-    toTargetButton.addEventListener("click", (e) => {
-      e.stopPropagation();
-      this.addAchieveToTarget({
-        name: title,
-        description: description,
-        points: points,
-        prevSrc: `https://media.retroachievements.org/Badge/${badgeName}.png`,
-        isEarned: isEarned,
-        isHardcoreEarned: isHardcoreEarned,
-        achivID: achivID,
-      });
-    });
+    toTargetButton.addEventListener("click", () =>
+      this.addAchieveToTarget(achievement)
+    );
+
     return achivElement;
   }
 
-  generateAchivDetails({ name, description, dateEarned, points }) {
-    // Створюємо елемент div для деталей досягнення
+  generateAchivDetails({
+    Title,
+    Description,
+    DateEarned,
+    Points,
+    NumAwardedHardcore,
+    totalPlayers,
+  }) {
     let detailsElement = document.createElement("div");
     detailsElement.classList.add("achiv-details-block");
-
-    // Додаємо заголовок до елемента деталей
-    let titleElement = document.createElement("h3");
-    titleElement.textContent = name;
-    detailsElement.appendChild(titleElement);
-
-    // Додаємо опис до елемента деталей
-    let descriptionElement = document.createElement("p");
-    descriptionElement.textContent = description;
-    detailsElement.appendChild(descriptionElement);
-
-    // Додаємо очки до елемента деталей
-    let coinsElement = document.createElement("p");
-    coinsElement.classList.add("points");
-    coinsElement.textContent = points + " points";
-    detailsElement.appendChild(coinsElement);
-
-    // Додаємо дату досягнення до елемента деталей, якщо вона існує
-    if (dateEarned) {
-      let dateElement = document.createElement("p");
-      dateElement.textContent = "Earned " + dateEarned;
-      detailsElement.appendChild(dateElement);
-    }
-
+    detailsElement.innerHTML = `
+              <h3>${Title}</h3>
+              <p>${Description}</p>
+              <p>Earned by ${NumAwardedHardcore} of ${totalPlayers} players</p>
+              <p class="points">${Points} points</p>
+              ${DateEarned ? "<p>Earned " + DateEarned + "</p>" : ""}
+      `;
     return detailsElement;
   }
 
   addAchieveToTarget({
-    name,
+    Title,
     prevSrc,
-    description,
-    points,
+    Description,
+    Points,
     isEarned,
     isHardcoreEarned,
-    achivID,
+    ID,
   }) {
+    // Перевіряємо чи ачівки нема в секції тарґет
     if (
-      [...this.target.container.querySelectorAll(".target-achiv")]
-        .map((el) => +el.dataset.achivId)
-        .includes(achivID)
+      this.isAchievementInTargetSection({
+        ID: ID,
+        targetContainer: this.target.container,
+      })
     ) {
       return;
     }
 
     let targetElement = document.createElement("div");
     targetElement.classList.add("target-achiv");
-    isEarned ? targetElement.classList.add("earned") : "";
-    isHardcoreEarned ? targetElement.classList.add("hardcore") : "";
-    targetElement.dataset.achivId = achivID;
+
+    if (isEarned) {
+      targetElement.classList.add("earned");
+      if (isHardcoreEarned) {
+        targetElement.classList.add("hardcore");
+      }
+    }
+
+    targetElement.dataset.achivId = ID;
+
     targetElement.innerHTML = `
     <button class="delete-from-target" onclick="ui.deleteFromTarget(this)"></button>
     <div class="prev">
@@ -532,12 +521,20 @@ class UI {
               />
             </div>
             <div class="target-achiv-details">
-              <h3 class="achiv-name">${name}</h3>
-              <p class="achiv-description">${description}</p>
-              <p class="points">${points} points</p>
+              <h3 class="achiv-name">${Title}</h3>
+              <p class="achiv-description">${Description}</p>
+              <p class="points">${Points} points</p>
             </div>
     `;
     this.target.container.appendChild(targetElement);
+  }
+
+  isAchievementInTargetSection({ ID, targetContainer }) {
+    const targetAchievements = [
+      ...targetContainer.querySelectorAll(".target-achiv"),
+    ].map((el) => +el.dataset.achivId);
+
+    return targetAchievements.includes(ID);
   }
 
   deleteFromTarget(button) {
@@ -573,4 +570,42 @@ class UI {
     // Встановлення розміру кожного досягнення в блоку
     achivs.forEach((achiv) => (achiv.style.width = achivWidth + "px"));
   }
+  switchSectionVisibility(section) {
+    section.classList.toggle("hidden");
+    config.setNewPosition({
+      id: section.id,
+      hidden: section.classList.contains("hidden"),
+    });
+  }
 }
+
+//! Методи сортування для досягнень гри
+const sortBy = {
+  latest: (a, b) => {
+    // Перевіряємо, чи існують дати та обираємо найновішу
+    const dateA = a.DateEarnedHardcore
+      ? new Date(a.DateEarnedHardcore)
+      : -Infinity;
+    const dateB = b.DateEarnedHardcore
+      ? new Date(b.DateEarnedHardcore)
+      : -Infinity;
+    const dateA2 = a.DateEarned ? new Date(a.DateEarned) : -Infinity;
+    const dateB2 = b.DateEarned ? new Date(b.DateEarned) : -Infinity;
+    const maxDateA = Math.max(dateA, dateA2);
+    const maxDateB = Math.max(dateB, dateB2);
+    return maxDateB - maxDateA; // Повертає різницю дат
+  },
+
+  earnedCount: (a, b) => b.NumAwardedHardcore - a.NumAwardedHardcore,
+
+  points: (a, b) => a.Points - b.Points,
+
+  default: (a, b) => 0,
+};
+
+//! Методи фільтрування для досягнень гри
+const filterBy = {
+  earned: (achievement) => achievement.DateEarned,
+  notEarned: (achievement) => !achievement.DateEarned,
+  all: () => true,
+};
