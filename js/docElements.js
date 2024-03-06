@@ -1,6 +1,8 @@
 class UI {
   SORT_METHOD = sortBy.default;
   FILTER_METHOD = filterBy.all;
+  ACHIV_MAX_SIZE = 150;
+  ACHIV_MIN_SIZE = 50;
   constructor() {
     document.querySelector(".wrapper").appendChild(createGameCard());
 
@@ -13,16 +15,8 @@ class UI {
     //Встановити розміри і розміщення елементів
     this.setPositions();
 
-    // Встановити ключ API з об'єкта ідентифікації користувача
-    this.settings.apiKey.value = config.API_KEY;
-
-    // Встановити значення логіну з об'єкта ідентифікації користувача
-    this.settings.login.value = config.USER_NAME;
-
-    // Отримати ідентифікатор гри з localStorage та встановити його значення
-    this.settings.gameID.value = config.gameID;
-
-    this.settings.updateInterval.value = config.updateDelay;
+    //Встановлення збережених значень для полів вводу
+    this.setValues();
   }
 
   initializeElements() {
@@ -100,7 +94,18 @@ class UI {
       hidden ? element.classList.add("hidden") : "";
     });
   }
+  setValues() {
+    // Встановити ключ API з об'єкта ідентифікації користувача
+    this.settings.apiKey.value = config.API_KEY;
 
+    // Встановити значення логіну з об'єкта ідентифікації користувача
+    this.settings.login.value = config.USER_NAME;
+
+    // Отримати ідентифікатор гри з localStorage та встановити його значення
+    this.settings.gameID.value = config.gameID;
+
+    this.settings.updateInterval.value = config.updateDelay;
+  }
   addEvents() {
     // Додаємо обробник події 'change' для поля введення ключа API
     this.settings.apiKey.addEventListener("change", () => {
@@ -127,7 +132,8 @@ class UI {
     });
 
     // Додає подію кліку для сортування за замовчуванням
-    this.settings.sortByDefaultButton.addEventListener("click", () => {
+    this.settings.sortByDefaultButton.addEventListener("click", (e) => {
+      e.stopPropagation();
       // Встановлює метод сортування за замовчуванням
       this.SORT_METHOD = sortBy.default;
       // Застосовує сортування та оновлює інтерфейс
@@ -135,7 +141,8 @@ class UI {
     });
 
     // Додає подію кліку для сортування за отриманням досягнення
-    this.settings.sortByEarnedButton.addEventListener("click", () => {
+    this.settings.sortByEarnedButton.addEventListener("click", (e) => {
+      e.stopPropagation();
       // Встановлює метод сортування за отриманням досягнення
       this.SORT_METHOD = sortBy.earnedCount;
       // Застосовує сортування та оновлює інтерфейс
@@ -143,7 +150,8 @@ class UI {
     });
 
     // Додає подію кліку для сортування за датою отримання
-    this.settings.sortByLatestButton.addEventListener("click", () => {
+    this.settings.sortByLatestButton.addEventListener("click", (e) => {
+      e.stopPropagation();
       // Встановлює метод сортування за датою отримання
       this.SORT_METHOD = sortBy.latest;
       // Застосовує сортування та оновлює інтерфейс
@@ -151,7 +159,8 @@ class UI {
     });
 
     // Додає подію кліку для сортування за кількістю балів
-    this.settings.sortByPointsButton.addEventListener("click", () => {
+    this.settings.sortByPointsButton.addEventListener("click", (e) => {
+      e.stopPropagation();
       // Встановлює метод сортування за кількістю балів
       this.SORT_METHOD = sortBy.points;
       // Застосовує сортування та оновлює інтерфейс
@@ -159,14 +168,17 @@ class UI {
     });
 
     this.settings.filterByEarned.addEventListener("click", (e) => {
+      e.stopPropagation();
       this.FILTER_METHOD = filterBy.earned;
       this.applyFilter({ filterButton: this.settings.filterByEarned });
     });
     this.settings.filterByNotEarned.addEventListener("click", (e) => {
+      e.stopPropagation();
       this.FILTER_METHOD = filterBy.notEarned;
       this.applyFilter({ filterButton: this.settings.filterByNotEarned });
     });
     this.settings.filterByAll.addEventListener("click", (e) => {
+      e.stopPropagation();
       this.FILTER_METHOD = filterBy.all;
       this.applyFilter({ filterButton: this.settings.filterByAll });
     });
@@ -543,7 +555,7 @@ class UI {
   // Автопідбір розміру значків ачівментсів
   fitSizeVertically() {
     // Отримання посилання на блок досягнень та його дочірні елементи
-    const { achivsSection } = this.achievementsBlock;
+    const { section, achivsSection } = this.achievementsBlock;
     const achivs = Array.from(achivsSection.children);
     const achivsCount = achivs.length;
 
@@ -551,8 +563,8 @@ class UI {
     if (achivsCount === 0) return;
 
     // Отримання розмірів вікна блоку досягнень
-    const windowHeight = achivsSection.clientHeight;
-    const windowWidth = achivsSection.clientWidth;
+    const windowHeight = section.clientHeight - 2;
+    const windowWidth = section.clientWidth - 2;
 
     // Початкова ширина досягнення для розрахунку
     let achivWidth = Math.floor(
@@ -566,7 +578,14 @@ class UI {
       rowsCount = Math.floor(windowHeight / achivWidth);
       colsCount = Math.floor(windowWidth / achivWidth);
     } while (rowsCount * colsCount < achivsCount && achivWidth > 0);
-
+    console.log(achivWidth);
+    achivWidth =
+      achivWidth < this.ACHIV_MIN_SIZE
+        ? this.ACHIV_MIN_SIZE
+        : achivWidth > this.ACHIV_MAX_SIZE
+        ? this.ACHIV_MAX_SIZE
+        : achivWidth;
+    console.log(achivWidth);
     // Встановлення розміру кожного досягнення в блоку
     achivs.forEach((achiv) => (achiv.style.width = achivWidth + "px"));
   }

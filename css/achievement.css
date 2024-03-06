@@ -2,6 +2,7 @@ section.achivs {
   position: absolute;
   width: 30vw;
   height: 98vh;
+  background-color: #171717;
 }
 section.achivs:hover {
   transition: none;
@@ -48,19 +49,19 @@ section.achivs:hover .resizer::after {
 .achivs_section {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: start;
   justify-content: center;
-  width: 100%;
-  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
   border: 1px solid transparent;
   border-radius: 5px;
-  background-color: #171717;
+  /* background-color: #171717; */
   overflow: visible;
 }
 
 .achivs_section:hover {
   /* border: 1px solid white; */
-  background-color: #171717;
+  /* background-color: #171717; */
   transition: 0.2s;
 }
 .achivs_section:active {
@@ -71,6 +72,7 @@ section.achivs:hover .resizer::after {
   padding: 3px;
   width: auto;
   aspect-ratio: 1;
+  flex-shrink: 0;
   /* background-color: rgb(46, 46, 46); */
 }
 .achiv-block.recent-earned {
