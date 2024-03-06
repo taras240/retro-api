@@ -60,10 +60,10 @@ async function updateAchievements() {
         }
 
         // Додавання класів для відображення зароблених досягнень
-        achievementElement.classList.add("earned");
+        achievementElement?.classList.add("earned");
         targetElement?.classList.add("earned");
         if (isHardcore) {
-          achievementElement.classList.add("hardcore");
+          achievementElement?.classList.add("hardcore");
           targetElement?.classList.add("hardcore");
         }
       }
