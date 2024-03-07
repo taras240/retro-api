@@ -1,8 +1,8 @@
 class UI {
   SORT_METHOD = sortBy.default;
   FILTER_METHOD = filterBy.all;
-  ACHIV_MAX_SIZE = 150;
-  ACHIV_MIN_SIZE = 50;
+  // ACHIV_MAX_SIZE = 150;
+  // ACHIV_MIN_SIZE = 50;
   constructor() {
     document.querySelector(".wrapper").appendChild(createGameCard());
 
@@ -53,6 +53,9 @@ class UI {
       filterByAll: document.querySelector("#filter-by-all"), // Фільтр за всіма
       filterByEarned: document.querySelector("#filter-by-earned"), // Фільтр за заробленими
       filterByNotEarned: document.querySelector("#filter-by-not-earned"), // Фільтр за не заробленими
+      stretchButton: document.querySelector("#stretch-achivs"),
+      minimumWidthInput: document.querySelector("#achiv-min-width"),
+      maximumWidthInput: document.querySelector("#achiv-max-width"),
       gameID: document.querySelector("#game-id"), // Поле введення ідентифікатора гри
       watchButton: document.querySelector("#watching-button"), // Кнопка спостереження за грою
       getGameIdButton: document.querySelector(".get-id-button"), // Кнопка отримання ідентифікатора гри
@@ -105,6 +108,9 @@ class UI {
     this.settings.gameID.value = config.gameID;
 
     this.settings.updateInterval.value = config.updateDelay;
+
+    this.settings.maximumWidthInput.value = config.ACHIV_MAX_SIZE;
+    this.settings.minimumWidthInput.value = config.ACHIV_MIN_SIZE;
   }
   addEvents() {
     // Додаємо обробник події 'change' для поля введення ключа API
@@ -183,6 +189,28 @@ class UI {
       this.applyFilter({ filterButton: this.settings.filterByAll });
     });
 
+    this.settings.stretchButton.addEventListener("click", (e) => {
+      const { stretchButton } = this.settings;
+      if (stretchButton.classList.contains("checked")) {
+        stretchButton.classList.remove("checked");
+        this.achievementsBlock.container.style.height = "auto";
+      } else {
+        stretchButton.classList.add("checked");
+        this.achievementsBlock.container.style.height = "100%";
+      }
+    });
+    this.settings.minimumWidthInput.addEventListener("change", (e) => {
+      const { minimumWidthInput } = this.settings;
+      if (minimumWidthInput.value)
+        config.ACHIV_MIN_SIZE = minimumWidthInput.value;
+      this.fitSizeVertically();
+    });
+    this.settings.maximumWidthInput.addEventListener("change", (e) => {
+      const { maximumWidthInput } = this.settings;
+      if (maximumWidthInput.value)
+        config.ACHIV_MAX_SIZE = maximumWidthInput.value;
+      this.fitSizeVertically();
+    });
     // Додаємо обробник події 'click' для кнопки автооновлення
     this.settings.watchButton.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -567,10 +595,10 @@ class UI {
       colsCount = Math.floor(windowWidth / achivWidth);
     } while (rowsCount * colsCount < achivsCount && achivWidth > 0);
     achivWidth =
-      achivWidth < this.ACHIV_MIN_SIZE
-        ? this.ACHIV_MIN_SIZE
-        : achivWidth > this.ACHIV_MAX_SIZE
-        ? this.ACHIV_MAX_SIZE
+      achivWidth < config.ACHIV_MIN_SIZE
+        ? config.ACHIV_MIN_SIZE
+        : achivWidth > config.ACHIV_MAX_SIZE
+        ? config.ACHIV_MAX_SIZE
         : achivWidth;
     // Встановлення розміру кожного досягнення в блоку
     achivs.forEach((achiv) => (achiv.style.width = achivWidth + "px"));

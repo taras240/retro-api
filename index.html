@@ -100,16 +100,9 @@
               all
             </button>
           </div>
-          <!--!+++++++++++++++++++++++++++++++++++-->
-          <div class="TODO achivs-style numeric-input-container sort-buttons">
-            <label>Achivs style: TODO</label>
-            <button
-              id="stretch-achivs"
-              class="stretch-achivs-button setting-button"
-            >
-              stretch vertically
-            </button>
 
+          <div class="achivs-style numeric-input-container sort-buttons">
+            <label>Achivs style:</label>
             <input
               type="number"
               class="number-input"
@@ -117,6 +110,7 @@
               id="achiv-min-width"
               value="30"
               placeholder="min"
+              title="minimum width in px"
             />
             <input
               type="number"
@@ -125,9 +119,15 @@
               id="achiv-max-width"
               value="150"
               placeholder="max"
+              title="maximum width in px"
             />
+            <button
+              id="stretch-achivs"
+              class="stretch-achivs-button setting-button checked"
+            >
+              stretch vertically
+            </button>
           </div>
-          <!--!+++++++++++++++++++++++++++++++++++-->
 
           <div class="game-id-settings numeric-input-container">
             <label for="game-id">Game ID:</label>

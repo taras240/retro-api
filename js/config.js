@@ -35,6 +35,20 @@ class Config {
   get ui() {
     return this._cfg.ui;
   }
+  get ACHIV_MIN_SIZE() {
+    return this._cfg.settings.ACHIV_MIN_SIZE ?? 30;
+  }
+  set ACHIV_MIN_SIZE(value) {
+    this._cfg.settings.ACHIV_MIN_SIZE = value;
+    this.writeConfiguration();
+  }
+  get ACHIV_MAX_SIZE() {
+    return this._cfg.settings.ACHIV_MAX_SIZE ?? 150;
+  }
+  set ACHIV_MAX_SIZE(value) {
+    this._cfg.settings.ACHIV_MAX_SIZE = value;
+    this.writeConfiguration();
+  }
   constructor() {
     this.readConfiguration();
   }
@@ -69,6 +83,8 @@ class Config {
           updateDelay: 5,
           sort: "default",
           gameID: 1,
+          ACHIV_MAX_SIZE: 150,
+          ACHIV_MIN_SIZE: 30,
         },
         ui: { some: 1 },
       };
