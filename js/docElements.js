@@ -398,9 +398,8 @@ class UI {
       "src",
       `https://media.retroachievements.org${ImageIcon}`
     );
-    gameTitle.innerText = Title;
-    gameAchivsCount.innerText = NumAchievements;
-    gamePlatform.innerText = ConsoleName;
+    gameTitle.innerText = Title || "Some game name";
+    gameAchivsCount.innerText = NumAchievements || 0;
   }
 
   updateGameCardInfo({
