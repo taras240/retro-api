@@ -164,42 +164,25 @@ section.achivs:hover .resizer::after {
 
 .achiv-block .add-to-target {
   position: absolute;
-  width: 24px;
-  aspect-ratio: 1;
-  background-color: #171717a1;
-  border-radius: 50%;
-  overflow: hidden;
   top: 5px;
   left: 5px;
+  width: 25%;
+  min-width: 15px;
+  aspect-ratio: 1;
+  background-color: #000000da;
+  border-radius: 50%;
+  overflow: hidden;
   opacity: 0;
   transition: 0.2s;
 }
+.achiv-block .add-to-target svg {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  fill: white;
+}
 .achiv-block:hover .add-to-target {
   opacity: 1;
-  transition: 0.2s;
-}
-.achiv-block:hover .add-to-target:hover {
-  background-color: #171717;
-
-  transform: scale(1.1);
-  opacity: 1;
-  transition: 0.2s;
-}
-.achiv-block:hover .add-to-target::before {
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  content: "";
-  position: absolute;
-  width: 80%;
-  aspect-ratio: 1;
-  background-image: url(../assets/img/add.png);
-  background-size: cover;
-  background-repeat: no-repeat;
-  transition: 0.2s;
-}
-.achiv-block:hover .add-to-target:active::before {
-  transform: translate(-50%, -50%) scale(0.9);
   transition: 0.2s;
 }
 

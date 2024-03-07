@@ -9,6 +9,7 @@ class APIWorker {
     recentAchieves: "API_GetUserRecentAchievements.php",
     gameInfo: "API_GetGame.php",
     extendedGameInfo: "API_GetGameExtended.php",
+    recentlyPlayedGames: "API_GetUserRecentlyPlayedGames.php",
   };
 
   // Генерує URL для запиту до API
@@ -65,6 +66,14 @@ class APIWorker {
     let url = this.getUrl({
       endpoint: this.endpoints[extended ? "extendedGameInfo" : "gameInfo"],
       gameID: gameID,
+    });
+    return fetch(url).then((resp) => resp.json());
+  }
+
+  getRecentlyPlayedGames({ targetUser }) {
+    let url = this.getUrl({
+      endpoint: this.endpoints.recentlyPlayedGames,
+      targetUser: targetUser,
     });
     return fetch(url).then((resp) => resp.json());
   }

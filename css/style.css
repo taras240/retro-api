@@ -13,7 +13,7 @@
 body {
   background-color: black;
   color: antiquewhite;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 section {
   visibility: visible;
@@ -46,28 +46,58 @@ h2 {
   padding: 5px;
   font-weight: 600;
   font-size: 1.3rem;
-  border-bottom: 1px solid white;
 }
 .wrapper {
   min-height: 100%;
 }
 .buttons-block {
   position: absolute;
-  top: 80%;
-  left: 30%;
-  /* transform: translate(-50%, 0); */
-  padding: 10px;
+  top: auto !important;
+  bottom: -50px !important;
+  left: 50% !important;
+  transform: translate(-50%, 0);
+  padding: 10px 20px;
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px;
-  border-radius: 5px;
+  border-radius: 15px 15px 0 0;
+
   background-color: #171717;
-  opacity: 0.2;
+  /* opacity: 0.2; */
+  transition: 0.2s;
+}
+.buttons-block::before,
+.buttons-block::after {
+  content: "";
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  bottom: 50%;
+  left: 50%;
+  border-radius: 50% 50% 0 0;
+  background-color: #171717;
+  transform: translate(-50%, 0);
+  z-index: -1;
+}
+.buttons-block::after {
+  background-image: url(../assets/img/expand_more.svg);
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-position: 50% 90%;
+  transform: translate(-50%, 0) rotate(180deg);
+  transition: 0.2s;
+}
+.buttons-block:hover::after {
+  background-image: url(../assets/img/expand_more.svg);
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-position: 50% 90%;
+  transform: translate(-50%, -35%) rotate(0deg);
   transition: 0.2s;
 }
 .buttons-block:hover {
   visibility: visible;
+  bottom: 0 !important;
   opacity: 1;
   transition: 0.2s;
 }

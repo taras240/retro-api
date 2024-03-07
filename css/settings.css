@@ -14,63 +14,54 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid white;
+  border-bottom: 1px solid gray;
   padding: 10px;
 }
 .prefs-header {
+  display: flex;
+  align-items: end;
+  gap: 10px;
   flex: 1;
   border-bottom: none;
+  font-size: 1.5rem;
+}
+.prefs-header svg {
+  fill: white;
+  padding: 2px;
 }
 .close-settings-button,
-.game-card-close_button {
+.game-card-close_button,
+.clear-all-target {
   position: relative;
-  width: 25px;
-  height: 25px;
-  /* align-self: flex-end; */
-  display: inline-block;
-  padding: 5px;
-  border: 1px solid red;
-  border-radius: 5px;
-  color: red;
   cursor: pointer;
-  transition: 0.2s;
 }
 
-.close-settings-button:hover,
-.game-card-close_button:hover {
-  border-color: rgb(255, 70, 70);
-  background-color: darkred;
+.close-settings-button svg,
+.clear-all-target svg,
+.paste-api-key svg,
+svg {
+  fill: white;
+  opacity: 0.5;
+  padding: 1px;
   transition: 0.2s;
 }
-.close-settings-button:active,
-.game-card-close_button:active {
-  border-color: rgb(65, 0, 0);
+.close-settings-button:hover svg,
+.clear-all-target:hover svg,
+.achiv-block .add-to-target:hover svg,
+.paste-api-key:hover svg {
+  fill: white;
+  opacity: 1;
+  padding: 0;
   transition: 0.2s;
 }
-.close-settings-button::before,
-.close-settings-button::after,
-.game-card-close_button::before,
-.game-card-close_button::after {
-  content: "";
-  position: absolute;
-  width: 70%;
-  height: 10%;
-  background-color: red;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) rotateZ(45deg);
+.close-settings-button:active svg,
+.clear-all-target:active svg,
+.achiv-block .add-to-target:active svg,
+.paste-api-key:active svg {
+  fill: white;
+  opacity: 1;
+  padding: 2px;
   transition: 0.2s;
-}
-.close-settings-button:hover::before,
-.close-settings-button:hover::after,
-.game-card-close_button:hover::before,
-.game-card-close_button:hover::after {
-  background-color: black;
-  transition: 0.2s;
-}
-.close-settings-button::after,
-.game-card-close_button::after {
-  transform: translate(-50%, -50%) rotateZ(-45deg);
 }
 
 .text-input-container {
@@ -103,7 +94,10 @@
 .number-input:placeholder-shown {
   border-color: red;
 }
-
+.paste-api-key {
+  width: auto;
+  background-color: transparent;
+}
 #start-watching,
 #stop-watching {
   display: none;
@@ -146,7 +140,11 @@
 }
 #watching-button {
   width: 100px;
-  height: 3rem;
+  height: 2rem;
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
   transition: 0.2s;
 }
 #watching-button.active {
@@ -156,21 +154,32 @@
   border-color: transparent;
   background-color: green;
 }
+#watching-button.active svg {
+  fill: black;
+  opacity: 1;
+  animation: updateTickAnimation 2s linear infinite;
+  /* stroke: 2px solid black; */
+}
 #watching-button.error {
   background-color: red;
   border-color: transparent;
-
   color: black;
   font-weight: 600;
   box-shadow: 1px 0px 5px 1px red;
 }
-#watching-button.active.tick {
-  animation: updateTickAnimation 1s;
+#watching-button.active.tick svg {
+  opacity: 1;
 }
 @keyframes updateTickAnimation {
-  from {
+  /* from {
     box-shadow: 1px 0px 5px 1px rgb(0, 255, 98);
     background-color: rgb(0, 255, 98);
+  } */
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
 

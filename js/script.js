@@ -80,7 +80,7 @@ function switchElementToStart(element) {
 function startWatching() {
   // Оновлення стану та тексту кнопки слідкування
   ui.settings.watchButton.classList.add("active");
-  ui.settings.watchButton.innerText = "Watching";
+  // ui.settings.watchButton.innerText = "Watching";
   ui.settings.watchButton.classList.remove("error");
 
   // Отримання початкових досягнень
@@ -102,7 +102,7 @@ function toggleTickClass() {
 // Функція для зупинки слідкування за досягненнями
 function stopWatching() {
   ui.settings.watchButton.classList.remove("active");
-  ui.settings.watchButton.innerText = "Watch";
+  // ui.settings.watchButton.innerText = "Watch";
   clearInterval(apiTikInterval);
 }
 
@@ -126,4 +126,16 @@ function openAllAchivs() {
 }
 function clearTarget() {
   ui.target.container.innerHTML = "";
+}
+function pasteApiKeyFromClipboard() {
+  navigator.clipboard
+    .readText()
+    .then((clipboardText) => {
+      // Вставити значення з буферу обміну в поле вводу або куди-небудь інде
+      ui.settings.apiKey.value = clipboardText;
+      config.API_KEY = ui.settings.apiKey.value;
+    })
+    .catch((err) => {
+      console.error("Не вдалося отримати доступ до буферу обміну:", err);
+    });
 }
