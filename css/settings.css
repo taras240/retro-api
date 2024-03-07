@@ -30,9 +30,7 @@
   fill: white;
   padding: 2px;
 }
-.close-settings-button {
-  display: flex;
-}
+
 .close-settings-button,
 .game-card-close_button,
 .clear-all-target {
