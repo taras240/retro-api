@@ -103,7 +103,7 @@ h2 {
   display: flex;
   align-items: center;
   gap: 10px;
-  border-radius: 15px 15px 0 0;
+  border-radius: 10px 10px 0 0;
 
   background-color: #171717;
   /* opacity: 0.2; */
@@ -117,9 +117,9 @@ h2 {
 }
 .buttons-block::before {
   bottom: 100%;
-  width: 50px;
-  height: 30px;
-  border-radius: 25px 25px 0 0;
+  width: 100px;
+  height: 25px;
+  border-radius: 10px 10px 0 0;
   border: 1px solid transparent;
   border-bottom: none;
   background-color: #171717;
@@ -129,7 +129,7 @@ h2 {
 .buttons-block::after {
   bottom: 70%;
   width: 25px;
-  height: 25px;
+  height: 27px;
   background-image: url(../assets/img/expand_more.svg);
   background-color: transparent;
   background-repeat: no-repeat;

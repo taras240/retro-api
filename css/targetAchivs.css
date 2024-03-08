@@ -24,7 +24,21 @@
   padding: 10px;
 }
 .target-header {
+  position: relative;
   flex: 1;
+  margin-left: 20px;
+}
+.target-header:before {
+  content: "";
+  position: absolute;
+  right: 100%;
+  top: 8px;
+  width: 20px;
+  aspect-ratio: 1;
+  background-image: url('data:image/svg+xml, <svg xmlns="http://www.w3.org/2000/svg" height="24" fill="white" viewBox="0 -960 960 960" width="24"> <path d="M480-400q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm-40-240v-200h80v200h-80Zm0 520v-200h80v200h-80Zm200-320v-80h200v80H640Zm-520 0v-80h200v80H120Z"/></svg>');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .target-achiv {

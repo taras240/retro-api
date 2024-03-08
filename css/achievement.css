@@ -95,35 +95,6 @@ section.achivs:hover .resizer::after {
   animation: hardcore-earned-animation 0.1s linear forwards;
   animation-delay: 0.6s;
 }
-.achiv-block.earned[data-points="poor"]::after,
-.achiv-block.earned[data-points="normal"]::after,
-.achiv-block.earned[data-points="reach"]::after {
-  content: "";
-  position: absolute;
-  height: 15%;
-  aspect-ratio: 1 / 1;
-  bottom: 10%;
-  left: 10%;
-  background-image: url(../assets/img/coins-less.png);
-  filter: drop-shadow(3px 3px 3px black);
-  image-rendering: pixelated;
-  background-size: contain;
-  background-repeat: no-repeat;
-  opacity: 0;
-  animation: hardcore-earned-animation 0.1s linear forwards;
-  animation-delay: 0.6s;
-}
-.achiv-block.earned[data-points="normal"]::after {
-  height: 20%;
-  bottom: 5%;
-  transform: rotateY(180deg);
-  background-image: url(../assets/img/coins-middle.png);
-}
-.achiv-block.earned[data-points="reach"]::after {
-  height: 20%;
-  bottom: 10%;
-  background-image: url(../assets/img/coins.png);
-}
 
 @keyframes hardcore-earned-animation {
   0% {
@@ -215,14 +186,22 @@ section.achivs:hover .resizer::after {
   position: relative;
   padding-left: 25px;
 }
-.achiv-details-block .points::before {
+
+.achiv-block:hover .achiv-details-block {
+  visibility: visible;
+  opacity: 1;
+  transition: 0.2s;
+}
+.achiv-block[data-points="poor"] .achiv-details-block .points::before,
+.achiv-block[data-points="normal"] .achiv-details-block .points::before,
+.achiv-block[data-points="reach"] .achiv-details-block .points::before {
   content: "";
   position: absolute;
-  height: 20px;
+  height: 15px;
   aspect-ratio: 1 / 1;
-  bottom: 0;
   left: 0;
-  background-image: url(../assets/img/coins.png);
+  bottom: 0;
+  filter: drop-shadow(3px 3px 3px black);
   image-rendering: pixelated;
   background-size: contain;
   background-repeat: no-repeat;
@@ -230,8 +209,18 @@ section.achivs:hover .resizer::after {
   animation: hardcore-earned-animation 0.1s linear forwards;
   animation-delay: 0.6s;
 }
-.achiv-block:hover .achiv-details-block {
-  visibility: visible;
-  opacity: 1;
-  transition: 0.2s;
+.achiv-block[data-points="poor"] .achiv-details-block .points::before {
+  left: 5px;
+  background-image: url(../assets/img/coins-less.png);
+}
+.achiv-block[data-points="normal"] .achiv-details-block .points::before {
+  transform: rotateY(180deg);
+  bottom: -2px;
+  left: 5px;
+  height: 20px;
+  background-image: url(../assets/img/coins-middle.png);
+}
+.achiv-block[data-points="reach"] .achiv-details-block .points::before {
+  height: 20px;
+  background-image: url(../assets/img/coins.png);
 }
