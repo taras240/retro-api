@@ -42,11 +42,54 @@ h3 {
   font-size: 1.1rem;
 }
 h2 {
-  text-align: center;
+  text-align: left;
   padding: 5px;
   font-weight: 600;
   font-size: 1.3rem;
 }
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+  width: 100%;
+  border-bottom: 1px solid gray;
+}
+.header-icon {
+  display: flex;
+  padding: 2px;
+}
+.header-button {
+  cursor: pointer;
+}
+.header-icon svg,
+.svg-icon svg {
+  fill: white;
+  padding: 1px;
+}
+.header-button svg,
+.svg-button svg {
+  fill: white;
+  aspect-ratio: 1;
+  opacity: 0.5;
+  padding: 1px;
+  transition: 0.2s;
+}
+.header-button:hover svg,
+.paste-api-key:hover svg {
+  fill: white;
+  opacity: 1;
+  padding: 0;
+  transition: 0.2s;
+}
+.header-button:active svg,
+.paste-api-key:active svg {
+  fill: white;
+  opacity: 1;
+  padding: 2px;
+  transition: 0.2s;
+}
+
 .wrapper {
   min-height: 100%;
 }
@@ -70,29 +113,36 @@ h2 {
 .buttons-block::after {
   content: "";
   position: absolute;
-  width: 50px;
-  height: 50px;
-  bottom: 50%;
   left: 50%;
-  border-radius: 50% 50% 0 0;
+}
+.buttons-block::before {
+  bottom: 100%;
+  width: 50px;
+  height: 30px;
+  border-radius: 25px 25px 0 0;
+  border: 1px solid transparent;
+  border-bottom: none;
   background-color: #171717;
   transform: translate(-50%, 0);
   z-index: -1;
 }
 .buttons-block::after {
+  bottom: 70%;
+  width: 25px;
+  height: 25px;
   background-image: url(../assets/img/expand_more.svg);
   background-color: transparent;
   background-repeat: no-repeat;
-  background-position: 50% 90%;
-  transform: translate(-50%, 0) rotate(180deg);
+  background-position: center;
+  background-size: cover;
+  transform: translate(-50%, -50%) scaleY(-1);
   transition: 0.2s;
 }
+.buttons-block:active::before {
+  border-color: green;
+}
 .buttons-block:hover::after {
-  background-image: url(../assets/img/expand_more.svg);
-  background-color: transparent;
-  background-repeat: no-repeat;
-  background-position: 50% 90%;
-  transform: translate(-50%, -35%) rotate(0deg);
+  transform: translate(-50%, -50%) scaleY(1);
   transition: 0.2s;
 }
 .buttons-block:hover {

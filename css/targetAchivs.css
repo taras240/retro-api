@@ -10,23 +10,12 @@
   overflow-y: scroll;
 }
 
-#target-section:hover {
-  background-color: #171717;
-  transition: 0.2s;
-}
 #target-section:hover.dragable {
   z-index: 100;
   border-color: green;
   transition: none;
 }
-.target-header-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  padding: 0 10px;
-  width: 100%;
-  border-bottom: 1px solid gray;
-}
+
 .target-container {
   display: flex;
   flex-direction: column;
@@ -36,14 +25,8 @@
 }
 .target-header {
   flex: 1;
-  text-align: left;
-  display: flex;
-  align-items: end;
-  gap: 10px;
 }
-.target-header svg {
-  fill: white;
-}
+
 .target-achiv {
   position: relative;
   display: flex;

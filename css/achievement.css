@@ -186,22 +186,6 @@ section.achivs:hover .resizer::after {
   transition: 0.2s;
 }
 
-/* .achiv-block.earned::after,
-.achiv-block.earned.hardcore::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url("../assets/img/glass-bg.png");
-  background-size: cover;
-  image-rendering: pixelated;
-}
-.achiv-block.earned.hardcore::after {
-  background-image: url("../assets/img/glass-bg_hard.png");
-} */
-
 .achiv-title {
   font-weight: 600;
   line-height: 2rem;

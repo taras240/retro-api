@@ -9,73 +9,31 @@
   background-color: #111;
   z-index: 2;
 }
-
-.prefs-header-container {
-  display: flex;
-  align-items: center;
-  padding: 0 10px;
-  justify-content: space-between;
-  border-bottom: 1px solid gray;
-  /* padding: 5px; */
-}
 .prefs-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
   flex: 1;
-  border-bottom: none;
   font-size: 1.5rem;
 }
-.prefs-header svg {
-  fill: white;
-  padding: 2px;
-}
-
-.close-settings-button,
-.game-card-close_button,
-.clear-all-target {
-  position: relative;
-  cursor: pointer;
-}
-
-.close-settings-button svg,
-.clear-all-target svg,
-.paste-api-key svg,
-svg {
-  fill: white;
-  opacity: 0.5;
-  padding: 1px;
-  transition: 0.2s;
-}
-.close-settings-button:hover svg,
-.clear-all-target:hover svg,
-.achiv-block .add-to-target:hover svg,
-.paste-api-key:hover svg {
-  fill: white;
-  opacity: 1;
-  padding: 0;
-  transition: 0.2s;
-}
-.close-settings-button:active svg,
-.clear-all-target:active svg,
-.achiv-block .add-to-target:active svg,
-.paste-api-key:active svg {
-  fill: white;
-  opacity: 1;
-  padding: 2px;
-  transition: 0.2s;
-}
-
-.text-input-container {
+.input-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px;
-  /* border-bottom: 1px solid gray; */
+  padding: 5px;
+  gap: 5px;
 }
-.text-input,
-.number-input,
-.apply-settings,
+.prefs_section label {
+  flex: 1;
+  display: block;
+  margin: auto 0;
+  line-height: 100%;
+  font-size: 1.1rem;
+  user-select: none;
+}
+
+.paste-api-key {
+  align-self: flex-end;
+  background-color: transparent;
+}
+.prefs_section input,
 .setting-button {
   height: 2rem;
   font-size: 1.1rem;
@@ -88,36 +46,14 @@ svg {
   line-height: 100%;
   transition: 0.2s;
 }
-.text-input:focus,
-.number-input:focus {
+
+.prefs_section input:focus {
   border-color: green;
 }
-.text-input:placeholder-shown,
-.number-input:placeholder-shown {
+.prefs_section input:placeholder-shown {
   border-color: red;
 }
-.paste-api-key {
-  width: auto;
-  background-color: transparent;
-}
-#start-watching,
-#stop-watching {
-  display: none;
-}
-.numeric-input-container {
-  display: flex;
-  gap: 10px;
-  padding: 10px;
-  /* border-bottom: 1px solid gray; */
-}
-.prefs_section label {
-  flex: 1;
-  display: block;
-  margin: auto 0;
-  line-height: 100%;
-  font-size: 1.1rem;
-  user-select: none;
-}
+
 .number-input {
   width: 4rem;
   padding: 10px;
@@ -137,9 +73,8 @@ svg {
 .setting-button.checked {
   border-color: green;
   font-weight: 600;
-  /* box-shadow: 1px 0px 5px 1px green; */
-  /* box-shadow: 1px 0px 5px 1px green; */
 }
+
 #watching-button {
   width: 100px;
   height: 2rem;
@@ -159,6 +94,7 @@ svg {
 #watching-button.active svg {
   fill: black;
   opacity: 1;
+  padding: 1px;
   animation: updateTickAnimation 2s linear infinite;
   /* stroke: 2px solid black; */
 }
@@ -169,9 +105,7 @@ svg {
   font-weight: 600;
   box-shadow: 1px 0px 5px 1px red;
 }
-#watching-button.active.tick svg {
-  opacity: 1;
-}
+
 @keyframes updateTickAnimation {
   /* from {
     box-shadow: 1px 0px 5px 1px rgb(0, 255, 98);
@@ -185,25 +119,14 @@ svg {
   }
 }
 
-.apply-settings {
-  display: block;
-  width: 100%;
-  margin-top: 10px;
-  display: inline;
-  grid-column-end: 2;
-}
-.apply-settings.hidden {
-  display: none;
-}
 .achivs-game {
   padding: 10px;
   display: grid;
   grid-template-columns: 70px 1fr;
   align-items: center;
-  border: 1px solid transparent;
-  align-items: center;
   justify-content: left;
   gap: 5px;
+  border: 1px solid transparent;
   overflow: hidden;
   /* display: none; */
 }
@@ -211,10 +134,7 @@ svg {
   /* border-bottom: 1px solid gray; */
   padding: 0 0 5px;
 }
-.achivs-game *:last-child,
-.achivs-game *:first-child {
-  border-bottom: 1px solid transparent;
-}
+
 .achivs-game img {
   padding: 0;
 }
@@ -235,10 +155,6 @@ svg {
   content: " achieves availible";
 }
 
-.collected-date {
-  font-size: 1rem;
-  line-height: 1.5rem;
-}
 input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0; /* можливо ви захочете встановити значення margin відповідно до вашого дизайну */
