@@ -98,6 +98,13 @@
   animation: updateTickAnimation 2s linear infinite;
   /* stroke: 2px solid black; */
 }
+#watching-button:not(.active) svg {
+  fill: white;
+  opacity: 1;
+  padding: 1px;
+  animation: endTickAnimation 0.5s linear forwards;
+  /* stroke: 2px solid black; */
+}
 #watching-button.error {
   background-color: red;
   border-color: transparent;
@@ -118,7 +125,11 @@
     transform: rotate(360deg);
   }
 }
-
+@keyframes endTickAnimation {
+  to {
+    transform: rotate(90deg);
+  }
+}
 .achivs-game {
   padding: 10px;
   display: grid;
