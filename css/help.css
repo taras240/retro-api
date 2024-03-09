@@ -5,7 +5,7 @@
   transform: translate(-50%, -100%);
   width: 500px;
   overflow: hidden;
-  background-color: #171717;
+  background-color: var(--main-color);
   box-shadow: 0 0 20px 20px black;
   z-index: 100;
 }

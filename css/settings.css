@@ -4,9 +4,9 @@
   flex-direction: column;
   overflow: hidden;
   width: 500px;
-  top: 20%;
-  right: 10%;
-  background-color: #111;
+  top: 31%;
+  left: 1%;
+  background-color: var(--main-color);
   z-index: 2;
 }
 .prefs-header {
@@ -190,5 +190,5 @@ input[type="number"]::-webkit-inner-spin-button {
   padding: 7px 20px;
 }
 .settings_container div:nth-child(even) {
-  background-color: #171717;
+  background-color: var(--secondary-color);
 }

@@ -20,6 +20,12 @@ class UI {
   }
 
   initializeElements() {
+    this.loginCard = {
+      section: document.querySelector("#login_section"),
+      userName: document.querySelector("#login-user-name"),
+      apiKey: document.querySelector("#login-api-key"),
+      userImage: document.querySelector(".login-user-image"),
+    };
     // Елементи блока досягнень
     this.achievementsBlock = {
       section: document.querySelector("section.achivs"), // Секція блока досягнень
@@ -43,8 +49,8 @@ class UI {
     // Елементи налаштувань
     this.settings = {
       section: document.querySelector(".prefs_section"), //* Контейнер налаштувань
-      apiKey: document.querySelector("#api-key"), // Поле введення ключа API
-      login: document.querySelector("#login-input"), // Поле введення логіну
+      // apiKey: document.querySelector("#api-key"), // Поле введення ключа API
+      // login: document.querySelector("#login-input"), // Поле введення логіну
       updateInterval: document.querySelector("#update-time"), // Поле введення інтервалу оновлення
       sortByLatestButton: document.querySelector("#sort-by-latest"), // Кнопка сортування за останніми
       sortByEarnedButton: document.querySelector("#sort-by-earned"), // Кнопка сортування за заробленими
@@ -99,11 +105,11 @@ class UI {
   }
   setValues() {
     // Встановити ключ API з об'єкта ідентифікації користувача
-    this.settings.apiKey.value = config.API_KEY;
+    this.loginCard.apiKey.value = config.API_KEY;
 
     // Встановити значення логіну з об'єкта ідентифікації користувача
-    this.settings.login.value = config.USER_NAME;
-
+    this.loginCard.userName.value = config.USER_NAME;
+    this.loginCard.userImage.src = config.userImageSrc;
     // Отримати ідентифікатор гри з localStorage та встановити його значення
     this.settings.gameID.value = config.gameID;
 
@@ -114,17 +120,17 @@ class UI {
   }
   addEvents() {
     // Додаємо обробник події 'change' для поля введення ключа API
-    this.settings.apiKey.addEventListener("change", () => {
-      // Оновлюємо ідентифікатор користувача з новим значенням ключа API
-      console.log("change");
-      config.API_KEY = this.settings.apiKey.value;
-    });
+    // this.settings.apiKey.addEventListener("change", () => {
+    //   // Оновлюємо ідентифікатор користувача з новим значенням ключа API
+    //   console.log("change");
+    //   config.API_KEY = this.settings.apiKey.value;
+    // });
 
-    // Додаємо обробник події 'change' для поля введення логіну
-    this.settings.login.addEventListener("change", () => {
-      // Оновлюємо ідентифікатор користувача з новим значенням логіну
-      config.USER_NAME = this.settings.login.value;
-    });
+    // // Додаємо обробник події 'change' для поля введення логіну
+    // this.settings.login.addEventListener("change", () => {
+    //   // Оновлюємо ідентифікатор користувача з новим значенням логіну
+    //   config.USER_NAME = this.settings.login.value;
+    // });
 
     // Додаємо обробник події 'change' для поля введення інтервалу оновлення
     this.settings.updateInterval.addEventListener("change", () => {
@@ -252,6 +258,9 @@ class UI {
     // Додавання подій для пересування вікна target
     this.target.section.addEventListener("mousedown", (e) => {
       moveEvent(this.target.section, e);
+    });
+    this.loginCard.section.addEventListener("mousedown", (e) => {
+      moveEvent(this.loginCard.section, e);
     });
 
     this.buttons.section.addEventListener("mousedown", (e) => {
@@ -483,11 +492,10 @@ class UI {
 
     let achivDetails = this.generateAchivDetails(achievement);
     achivElement.appendChild(achivDetails);
-
-    toTargetButton.addEventListener("mousedown", (e) => e.stopPropagation());
-    toTargetButton.addEventListener("click", () =>
-      this.addAchieveToTarget(achievement)
-    );
+    achivElement.addEventListener("mousedown", (e) => e.stopPropagation());
+    toTargetButton.addEventListener("click", () => {
+      this.addAchieveToTarget(achievement);
+    });
 
     return achivElement;
   }
@@ -562,9 +570,20 @@ class UI {
               <p class="points">${Points} points</p>
             </div>
     `;
+    targetElement.addEventListener("mousedown", (e) => e.stopPropagation());
     this.target.container.appendChild(targetElement);
-  }
 
+    this.addDraggingEventForElements(this.target.container);
+  }
+  addDraggingEventForElements(container) {
+    const dragAndDropItems = container;
+
+    new Sortable(dragAndDropItems, {
+      animation: 150,
+      // chosenClass: "target-achiv-chosen",
+      // dragClass: "target-achiv-drag",
+    });
+  }
   isAchievementInTargetSection({ ID, targetContainer }) {
     const targetAchievements = [
       ...targetContainer.querySelectorAll(".target-achiv"),
@@ -615,6 +634,7 @@ class UI {
 
   switchSectionVisibility(section) {
     section.classList.toggle("hidden");
+    console.log(section.classList.contains("hidden"));
     config.setNewPosition({
       id: section.id,
       hidden: section.classList.contains("hidden"),

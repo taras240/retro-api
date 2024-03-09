@@ -17,6 +17,9 @@ async function getAchievements() {
     // Парсинг та відображення досягнень гри
     ui.parseGameAchievements(response);
 
+    //Додаєм можливість перетягування елементів
+    ui.addDraggingEventForElements(ui.achievementsBlock.container);
+
     // Підгонка розміру досягнень
     ui.fitSizeVertically();
 
@@ -124,18 +127,51 @@ function openTarget() {
 function openAllAchivs() {
   ui.switchSectionVisibility(ui.achievementsBlock.section);
 }
+function openLogin() {
+  ui.switchSectionVisibility(ui.loginCard.section);
+}
 function clearTarget() {
   ui.target.container.innerHTML = "";
 }
+
+// ! MOVE TO LOGIN WINDOW
 function pasteApiKeyFromClipboard() {
   navigator.clipboard
     .readText()
     .then((clipboardText) => {
       // Вставити значення з буферу обміну в поле вводу або куди-небудь інде
-      ui.settings.apiKey.value = clipboardText;
+      ui.loginCard.apiKey.value = clipboardText;
       config.API_KEY = ui.settings.apiKey.value;
     })
     .catch((err) => {
       console.error("Не вдалося отримати доступ до буферу обміну:", err);
     });
+}
+
+function submitLogin() {
+  let userName = ui.loginCard.userName.value;
+  let apiKey = ui.loginCard.apiKey.value;
+  apiWorker
+    .verifyUserIdent({ userName: userName, apiKey: apiKey })
+    .then((userObj) => {
+      if (!userObj.ID) errorLogin();
+      else {
+        updateLogin({ userName: userName, apiKey: apiKey, userObj: userObj });
+      }
+      console.log(userObj);
+    });
+}
+function updateLogin({ userName, apiKey, userObj }) {
+  config.USER_NAME = userName;
+  config.API_KEY = apiKey;
+  config.userImageSrc = `https://media.retroachievements.org${userObj?.UserPic}`;
+  ui.loginCard.userImage.src = config.userImageSrc;
+  document.querySelector("#submit-login").classList.remove("error");
+  document.querySelector("#submit-login").classList.add("verified");
+}
+
+function errorLogin() {
+  ui.setValues();
+  document.querySelector("#submit-login").classList.remove("verified");
+  document.querySelector("#submit-login").classList.add("error");
 }

@@ -14,6 +14,13 @@ class Config {
     this._cfg.identification.RAApi_login = value;
     this.writeConfiguration();
   }
+  get userImageSrc() {
+    return this._cfg.identification.userImageSrc || "";
+  }
+  set userImageSrc(value) {
+    this._cfg.identification.userImageSrc = value;
+    this.writeConfiguration();
+  }
   get gameID() {
     return this._cfg.settings.gameID;
   }
@@ -53,12 +60,13 @@ class Config {
     this.readConfiguration();
   }
   setNewPosition({ id, xPos, yPos, width, height, hidden }) {
+    console.log(id, hidden);
     if (this._cfg.ui.hasOwnProperty(id)) {
       xPos ? (this._cfg.ui[id].x = xPos) : "";
       yPos ? (this._cfg.ui[id].y = yPos) : "";
       width ? (this._cfg.ui[id].width = width + "px") : "";
       height ? (this._cfg.ui[id].height = height + "px") : "";
-      this._cfg.ui[id].hidden = hidden;
+      hidden !== undefined ? (this._cfg.ui[id].hidden = hidden) : "";
     } else {
       this._cfg.ui[id] = {
         id: id,

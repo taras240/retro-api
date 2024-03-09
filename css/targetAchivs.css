@@ -2,17 +2,18 @@
   position: absolute;
   min-height: 100px;
   z-index: 1;
-  top: 80px;
-  left: 50%;
-  background-color: #171717;
+  top: 10px;
+  left: 31%;
+  background-color: var(--main-color);
   width: 400px;
-  max-height: 100vh;
+  max-height: 99vh;
   overflow-y: scroll;
 }
 
-#target-section:hover.dragable {
+section:hover.dragable {
   z-index: 100;
-  border-color: green;
+  box-shadow: 0 0 10px 4px var(--main-color);
+  /* border-color: green; */
   transition: none;
 }
 
@@ -46,7 +47,7 @@
   display: flex;
   gap: 10px;
   color: white;
-  background-color: #111;
+  background-color: var(--secondary-color);
   border-radius: 5px;
   overflow: hidden;
   padding: 10px;

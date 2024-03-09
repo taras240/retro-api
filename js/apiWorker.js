@@ -13,14 +13,14 @@ class APIWorker {
   };
 
   // Генерує URL для запиту до API
-  getUrl({ endpoint, targetUser, gameID, minutes }) {
+  getUrl({ endpoint, targetUser, gameID, minutes, apiKey, userName }) {
     // Створення нового об'єкту URL з вказаною кінцевою точкою та базовим URL
     let url = new URL(endpoint, this.baseUrl);
 
     // Параметри запиту
     let params = {
-      y: config.API_KEY,
-      z: config.USER_NAME,
+      y: apiKey || config.API_KEY,
+      z: userName || config.USER_NAME,
       u: targetUser || config.USER_NAME,
       g: gameID || config.gameID,
       m: minutes || 2000,
@@ -29,6 +29,8 @@ class APIWorker {
 
     // Додавання параметрів до URL
     url.search = new URLSearchParams(params);
+    console.log("u:", url, params.z, params.y);
+
     return url;
   }
 
@@ -74,6 +76,17 @@ class APIWorker {
     let url = this.getUrl({
       endpoint: this.endpoints.recentlyPlayedGames,
       targetUser: targetUser,
+    });
+    return fetch(url).then((resp) => resp.json());
+  }
+  verifyUserIdent({ userName, apiKey }) {
+    console.log("u:", userName, apiKey);
+
+    let url = this.getUrl({
+      targetUser: userName,
+      userName: userName,
+      apiKey: apiKey,
+      endpoint: this.endpoints.userProfile,
     });
     return fetch(url).then((resp) => resp.json());
   }

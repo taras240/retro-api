@@ -27,7 +27,7 @@
           </div>
         </div>
         <div class="settings_container">
-          <div class="columns-settings input-container">
+          <!-- <div class="columns-settings input-container">
             <label for="api-key">RetroAchievements API Key:</label>
             <button
               class="paste-api-key svg-button"
@@ -63,7 +63,7 @@
               id="login-input"
               placeholder="Enter login"
             />
-          </div>
+          </div> -->
 
           <div class="update-time-settings input-container">
             <label for="update-time">Update delay(seconds):</label>
@@ -273,6 +273,9 @@
         <div class="target-container"></div>
       </section>
       <section id="buttons-block" class="buttons-block">
+        <button class="setting-button all-achivs-button" onclick="openLogin()">
+          Login
+        </button>
         <button
           class="setting-button all-achivs-button"
           onclick="openAllAchivs()"
@@ -295,7 +298,95 @@
           About
         </button>
       </section>
+
+      <section id="login_section">
+        <div class="header-container">
+          <div class="header-icon">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="24"
+              viewBox="0 -960 960 960"
+              width="24"
+            >
+              <path
+                d="M480-120v-80h280v-560H480v-80h280q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H480Zm-80-160-55-58 102-102H120v-80h327L345-622l55-58 200 200-200 200Z"
+              />
+            </svg>
+          </div>
+          <h2 class="login-header">RA Login</h2>
+          <div class="header-icon header-button" onclick="openLogin()">
+            <svg height="24" viewBox="0 -960 960 960" width="24">
+              <path
+                d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
+              />
+            </svg>
+          </div>
+        </div>
+        <div class="login-container">
+          <div class="login-form-container">
+            <img
+              class="login-user-image"
+              src=""
+              onerror="this.src='../assets/img/account.svg';"
+              alt=" "
+              srcset=""
+            />
+            <div class="user-ident-input">
+              <div class="form-input-container">
+                <label for="login-input">User name:</label>
+                <input
+                  type="text"
+                  class="text-input"
+                  name="login-input"
+                  id="login-user-name"
+                  placeholder="Enter user name"
+                />
+              </div>
+              <div class="form-input-container">
+                <label for="api-key">API Key:</label>
+                <div class="login-api-container">
+                  <input
+                    type="password"
+                    class="text-input"
+                    name="api-key"
+                    id="login-api-key"
+                    placeholder="Enter API Key"
+                  />
+                  <button
+                    class="paste-api-key svg-button"
+                    title="paste from clipboard"
+                    onclick="pasteApiKeyFromClipboard()"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      height="24"
+                      viewBox="0 -960 960 960"
+                      width="24"
+                    >
+                      <path
+                        d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h167q11-35 43-57.5t70-22.5q40 0 71.5 22.5T594-840h166q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560h-80v120H280v-120h-80v560Zm280-560q17 0 28.5-11.5T520-800q0-17-11.5-28.5T480-840q-17 0-28.5 11.5T440-800q0 17 11.5 28.5T480-760Z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-button-container">
+              <button
+                id="submit-login"
+                class="submit-login verified"
+                onclick="submitLogin()"
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+          <!-- <div class="login-information-container">ewrwerwerr</div> -->
+        </div>
+      </section>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <script src="./js/config.js"></script>
     <script src="./js/gameCard.js"></script>
     <script src="./js/apiWorker.js"></script>
