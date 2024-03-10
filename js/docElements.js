@@ -90,7 +90,7 @@ class UI {
     Object.getOwnPropertyNames(config.ui).forEach((containerId) => {
       // Отримання елемента за його ідентифікатором
       let element = document.getElementById(containerId);
-
+      if (!element) return;
       // Отримання позиції та розмірів елемента з об'єкта config.ui
       const { x, y, width, height, hidden } = config.ui[containerId];
 
