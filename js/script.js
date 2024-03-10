@@ -158,7 +158,6 @@ function submitLogin() {
       else {
         updateLogin({ userName: userName, apiKey: apiKey, userObj: userObj });
       }
-      console.log(userObj);
     });
 }
 function updateLogin({ userName, apiKey, userObj }) {

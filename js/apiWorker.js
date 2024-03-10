@@ -29,7 +29,6 @@ class APIWorker {
 
     // Додавання параметрів до URL
     url.search = new URLSearchParams(params);
-    console.log("u:", url, params.z, params.y);
 
     return url;
   }
@@ -80,8 +79,6 @@ class APIWorker {
     return fetch(url).then((resp) => resp.json());
   }
   verifyUserIdent({ userName, apiKey }) {
-    console.log("u:", userName, apiKey);
-
     let url = this.getUrl({
       targetUser: userName,
       userName: userName,

@@ -1,20 +1,13 @@
-#target-section {
+.target_section {
   position: absolute;
   min-height: 100px;
-  z-index: 1;
+  width: 400px;
+  max-height: 99vh;
   top: 10px;
   left: 31%;
   background-color: var(--main-color);
-  width: 400px;
-  max-height: 99vh;
   overflow-y: scroll;
-}
-
-section:hover.dragable {
-  z-index: 100;
-  box-shadow: 0 0 10px 4px var(--main-color);
-  /* border-color: green; */
-  transition: none;
+  overflow-x: hidden;
 }
 
 .target-container {

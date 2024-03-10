@@ -28,7 +28,7 @@ class UI {
     };
     // Елементи блока досягнень
     this.achievementsBlock = {
-      section: document.querySelector("section.achivs"), // Секція блока досягнень
+      section: document.querySelector("#achievements_section"), // Секція блока досягнень
       container: document.querySelector(".achievements-container"), //Контейнер  з досягненнями
       resizer: document.querySelector("#achivs-resizer"), // Ресайзер блока досягнень
     };
@@ -77,11 +77,11 @@ class UI {
     };
 
     this.target = {
-      section: document.querySelector("#target-section"),
+      section: document.querySelector("#target_section"),
       container: document.querySelector(".target-container"),
     };
     this.buttons = {
-      section: document.querySelector("#buttons-block"),
+      section: document.querySelector("#buttons_section"),
     };
   }
   //Встановлення розмірів і розміщення елементів
@@ -119,19 +119,6 @@ class UI {
     this.settings.minimumWidthInput.value = config.ACHIV_MIN_SIZE;
   }
   addEvents() {
-    // Додаємо обробник події 'change' для поля введення ключа API
-    // this.settings.apiKey.addEventListener("change", () => {
-    //   // Оновлюємо ідентифікатор користувача з новим значенням ключа API
-    //   console.log("change");
-    //   config.API_KEY = this.settings.apiKey.value;
-    // });
-
-    // // Додаємо обробник події 'change' для поля введення логіну
-    // this.settings.login.addEventListener("change", () => {
-    //   // Оновлюємо ідентифікатор користувача з новим значенням логіну
-    //   config.USER_NAME = this.settings.login.value;
-    // });
-
     // Додаємо обробник події 'change' для поля введення інтервалу оновлення
     this.settings.updateInterval.addEventListener("change", () => {
       // Оновлюємо інтервал оновлення
@@ -278,24 +265,32 @@ class UI {
 
     // Функція для пересування вікна
     function moveEvent(section, e) {
-      let offsetX = e.clientX - section.getBoundingClientRect().left;
-      let offsetY = e.clientY - section.getBoundingClientRect().top;
       section.classList.add("dragable");
+
+      const rect = section.getBoundingClientRect(); // Отримуємо розміри та позицію вікна
+      const offsetX = e.clientX - rect.left;
+      const offsetY = e.clientY - rect.top;
+
       const handleMouseMove = (e) => setPosition(e, offsetX, offsetY, section);
-      section.addEventListener("mousemove", handleMouseMove);
+
       const handleMouseUp = (e) => {
         section.classList.remove("dragable");
         section.removeEventListener("mousemove", handleMouseMove);
         section.removeEventListener("mouseup", handleMouseUp);
+        section.removeEventListener("mouseleave", handleMouseUp);
 
+        // Здійснюємо збереження позиції після закінчення перетягування
         config.setNewPosition({
           id: section.id,
           xPos: section.style.left,
           yPos: section.style.top,
         });
+
         e.preventDefault();
       };
 
+      // Додаємо обробники подій
+      section.addEventListener("mousemove", handleMouseMove);
       section.addEventListener("mouseup", handleMouseUp);
       section.addEventListener("mouseleave", handleMouseUp);
     }
@@ -634,7 +629,6 @@ class UI {
 
   switchSectionVisibility(section) {
     section.classList.toggle("hidden");
-    console.log(section.classList.contains("hidden"));
     config.setNewPosition({
       id: section.id,
       hidden: section.classList.contains("hidden"),

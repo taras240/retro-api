@@ -54,9 +54,9 @@
   font-size: 1.1rem;
   border-radius: 5px;
   padding: 5px 10px;
-  background-color: black;
+  background-color: transparent;
   color: white;
-  border: 1px solid #222;
+  border: 1px solid rgb(71, 71, 71);
   text-align: center;
   line-height: 100%;
   transition: 0.2s;
@@ -64,6 +64,7 @@
 
 .prefs_section input:focus {
   border-color: green;
+  background-color: black;
 }
 .prefs_section input:placeholder-shown {
   border-color: red;
@@ -87,6 +88,7 @@
 }
 .setting-button.checked {
   border-color: green;
+  background-color: black;
   font-weight: 600;
 }
 

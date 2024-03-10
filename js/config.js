@@ -60,7 +60,7 @@ class Config {
     this.readConfiguration();
   }
   setNewPosition({ id, xPos, yPos, width, height, hidden }) {
-    console.log(id, hidden);
+    // console.log(id, hidden);
     if (this._cfg.ui.hasOwnProperty(id)) {
       xPos ? (this._cfg.ui[id].x = xPos) : "";
       yPos ? (this._cfg.ui[id].y = yPos) : "";
