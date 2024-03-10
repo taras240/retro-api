@@ -256,6 +256,7 @@ class UI {
     // Подія для зміни розміру вікна ачівментсів
     this.achievementsBlock.resizer.addEventListener("mousedown", (event) => {
       event.stopPropagation();
+      this.achievementsBlock.section.classList.add("resized");
       resizeEvent({
         event: event,
         section: this.achievementsBlock.section,
@@ -313,6 +314,7 @@ class UI {
       };
       const resizeHandler = (event) => {
         setSize(event, resizeValues, section);
+
         // Підігнати розмір досягнень відповідно до нового розміру контейнера
         postFunc ? postFunc() : "";
       };
@@ -322,6 +324,7 @@ class UI {
       // Видаляємо подію mousemove з документа, коли користувач відпускає кнопку миші
       document.addEventListener("mouseup", () => {
         document.removeEventListener("mousemove", resizeHandler);
+        section.classList.remove("resized");
         config.setNewPosition({
           id: section.id,
           width: section.clientWidth,
@@ -452,7 +455,7 @@ class UI {
   generateAchievement(achievement) {
     const { ID, Points, isEarned, isHardcoreEarned, prevSrc } = achievement;
 
-    let achivElement = document.createElement("div");
+    let achivElement = document.createElement("li");
     achivElement.classList.add("achiv-block");
 
     if (isEarned) {
@@ -534,7 +537,7 @@ class UI {
       return;
     }
 
-    let targetElement = document.createElement("div");
+    let targetElement = document.createElement("li");
     targetElement.classList.add("target-achiv");
 
     if (isEarned) {

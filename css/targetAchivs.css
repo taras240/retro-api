@@ -50,9 +50,14 @@
   height: 80px;
   aspect-ratio: 1;
   filter: grayscale(1);
+  image-rendering: pixelated;
   transition: 0.2s;
 }
 .target-achiv.earned .prev-img {
+  filter: grayscale(0.8);
+  transition: 0.2s;
+}
+.target-achiv.earned.hardcore .prev-img {
   filter: grayscale(0);
   transition: 0.2s;
 }
