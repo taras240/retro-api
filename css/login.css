@@ -58,7 +58,7 @@
   display: flex;
   gap: 5px;
   flex-direction: column;
-  padding: 20px;
+  padding: 15px 20px;
 }
 .form-button-container {
   width: 100%;
@@ -69,9 +69,9 @@
 
 .login-user-image {
   width: 100px;
-  height: 100px;
+  aspect-ratio: 1;
+  margin: auto;
   border-radius: 50%;
-  /* box-shadow: 1px 1px 4px 5px rgba(0, 0, 0, 0.596); */
   overflow: hidden;
   image-rendering: pixelated;
 }
@@ -94,7 +94,7 @@
   border-color: white;
   transition: 0.2s;
 }
-.login-api-container {
+.api-input {
   position: relative;
 }
 #login-api-key {
@@ -103,9 +103,33 @@
 }
 .paste-api-key {
   position: absolute;
-  top: 50%;
+  top: 55%;
   right: 5px;
   transform: translateY(-50%);
+}
+.ra-settings-link {
+  color: gray;
+  text-align: right;
+}
+.ra-settings-link:hover {
+  color: white;
+  /* text-decoration: underline; */
+  border-bottom: 1px solid white;
+}
+.ra-settings-link:active {
+  color: darkred;
+  text-decoration: underline;
+}
+.link-icon {
+  fill: gray;
+  height: 1rem;
+  vertical-align: middle;
+  margin-bottom: 2px;
+  width: 1rem;
+}
+
+.ra-settings-link:hover .link-icon {
+  fill: white;
 }
 .submit-login {
   position: relative;
