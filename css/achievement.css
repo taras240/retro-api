@@ -178,7 +178,7 @@
 }
 .achiv-description {
   font-size: 1.1rem;
-  color: rgb(255, 255, 255);
+  color: var(--font-color);
   flex: 1;
 }
 .achiv-details-block {

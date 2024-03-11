@@ -107,9 +107,16 @@ class UI {
     // Встановити ключ API з об'єкта ідентифікації користувача
     this.loginCard.apiKey.value = config.API_KEY;
 
-    // Встановити значення логіну з об'єкта ідентифікації користувача
+    // Встановити значення логіну та API з об'єкта ідентифікації користувача
     this.loginCard.userName.value = config.USER_NAME;
     this.loginCard.userImage.src = config.userImageSrc;
+
+    if (config.identConfirmed) {
+      this.loginCard.section
+        .querySelector(".submit-login")
+        .classList.add("verified");
+    }
+
     // Отримати ідентифікатор гри з localStorage та встановити його значення
     this.settings.gameID.value = config.gameID;
 
@@ -653,7 +660,7 @@ const sortBy = {
     const dateB2 = b.DateEarned ? new Date(b.DateEarned) : -Infinity;
     const maxDateA = Math.max(dateA, dateA2);
     const maxDateB = Math.max(dateB, dateB2);
-    return maxDateB - maxDateA; // Повертає різницю дат
+    return dateB - dateA; // Повертає різницю дат
   },
 
   earnedCount: (a, b) => b.NumAwardedHardcore - a.NumAwardedHardcore,
@@ -665,7 +672,7 @@ const sortBy = {
 
 //* Методи фільтрування для досягнень гри
 const filterBy = {
-  earned: (achievement) => achievement.DateEarned,
-  notEarned: (achievement) => !achievement.DateEarned,
+  earned: (achievement) => achievement.DateEarnedHardcore,
+  notEarned: (achievement) => !achievement.DateEarnedHardcore,
   all: () => true,
 };

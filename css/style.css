@@ -15,38 +15,6 @@ button,
 div {
   font-family: "system-ui", sans-serif;
 }
-:root {
-  --main-color: #201221;
-  --secondary-color: #181118;
-}
-body {
-  background-color: black;
-  color: antiquewhite;
-  overflow: hidden;
-}
-section {
-  visibility: visible;
-  border-radius: 5px;
-  /* border: 1px solid transparent; */
-  cursor: grab;
-  user-select: none;
-  opacity: 1;
-  transition: 0.2s;
-}
-section.dragable {
-  z-index: 101;
-  /* box-shadow: 0 0 10px 4px var(--main-color); */
-  transition: none;
-}
-section.hidden {
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity 0.2s ease-in-out;
-}
-section:hover {
-  z-index: 101;
-}
-
 h3 {
   font-weight: 600;
   font-size: 1.1rem;
@@ -57,6 +25,43 @@ h2 {
   font-weight: 600;
   font-size: 1.3rem;
 }
+input[type="number"]::-webkit-inner-spin-button {
+  margin: 0;
+  appearance: none;
+}
+:root {
+  --main-color: #201221;
+  --secondary-color: #181118;
+  --font-color: #eee;
+}
+body {
+  background-color: black;
+  color: var(--font-color);
+  overflow: hidden;
+}
+.section {
+  visibility: visible;
+  border-radius: 5px;
+  /* border: 1px solid transparent; */
+  cursor: grab;
+  user-select: none;
+  opacity: 1;
+  transition: 0.2s;
+}
+.section.dragable {
+  z-index: 101;
+  /* box-shadow: 0 0 10px 4px var(--main-color); */
+  transition: none;
+}
+.section.hidden {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+.section:hover {
+  z-index: 101;
+}
+
 .header-container {
   display: flex;
   justify-content: space-between;
@@ -148,9 +153,7 @@ h2 {
   transform: translate(-50%, -50%) scaleY(-1);
   transition: 0.2s;
 }
-.buttons-block:active::before {
-  border-color: green;
-}
+
 .buttons-block:hover::after {
   transform: translate(-50%, -50%) scaleY(1);
   transition: 0.2s;
@@ -164,29 +167,19 @@ h2 {
 .buttons-block:active {
   transition: none;
 }
-.buttons-block:hover .open-settings-button {
-}
+
 .open-settings-button {
   border-radius: 5px;
   background-color: black;
   padding: 10px;
   border: 1px solid white;
-  color: white;
+  color: var(--font-color);
   z-index: 20;
   /* visibility: hidden; */
 
   transition: 0.2s;
 }
-.open-settings-button:hover {
-  background-color: #11111111;
-  border: 1px solid gold;
-  transition: 0.3s;
-}
-.open-settings-button:active {
-  background-color: #111;
-  border: 1px solid white;
-  transition: 0.3s;
-}
+
 .TODO {
   opacity: 0.3;
 }

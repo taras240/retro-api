@@ -39,7 +39,7 @@
   position: relative;
   display: flex;
   gap: 10px;
-  color: white;
+  color: var(--font-color);
   background-color: var(--secondary-color);
   border-radius: 5px;
   overflow: hidden;

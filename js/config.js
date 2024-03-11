@@ -7,11 +7,19 @@ class Config {
     this._cfg.identification.RAApi_key = value;
     this.writeConfiguration();
   }
+
   get USER_NAME() {
     return this._cfg.identification.RAApi_login;
   }
   set USER_NAME(value) {
     this._cfg.identification.RAApi_login = value;
+    this.writeConfiguration();
+  }
+  get identConfirmed() {
+    return this._cfg.identification.identConfirmed ?? false;
+  }
+  set identConfirmed(value) {
+    this._cfg.identification.identConfirmed = value;
     this.writeConfiguration();
   }
   get userImageSrc() {

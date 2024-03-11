@@ -55,7 +55,7 @@
   border-radius: 5px;
   padding: 5px 10px;
   background-color: transparent;
-  color: white;
+  color: var(--font-color);
   border: 1px solid rgb(71, 71, 71);
   text-align: center;
   line-height: 100%;
@@ -92,7 +92,7 @@
   font-weight: 600;
 }
 
-#watching-button {
+.watching-button {
   width: 100px;
   height: 2rem;
   transition: 0.2s;
@@ -101,28 +101,28 @@
   gap: 5px;
   transition: 0.2s;
 }
-#watching-button.active {
+.watching-button.active {
   color: black;
   font-weight: 600;
   box-shadow: 1px 0px 5px 1px green;
   border-color: transparent;
   background-color: green;
 }
-#watching-button.active svg {
+.watching-button.active svg {
   fill: black;
   opacity: 1;
   padding: 1px;
   animation: updateTickAnimation 2s linear infinite;
   /* stroke: 2px solid black; */
 }
-#watching-button:not(.active) svg {
+.watching-button:not(.active) svg {
   fill: white;
   opacity: 1;
   padding: 1px;
   animation: endTickAnimation 0.5s linear forwards;
   /* stroke: 2px solid black; */
 }
-#watching-button.error {
+.watching-button.error {
   background-color: red;
   border-color: transparent;
   color: black;
@@ -183,11 +183,6 @@
   content: " achieves availible";
 }
 
-input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0; /* можливо ви захочете встановити значення margin відповідно до вашого дизайну */
-  appearance: none;
-}
 .settings_container div {
   padding: 7px 20px;
 }

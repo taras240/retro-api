@@ -8,6 +8,10 @@ let apiWorker = new APIWorker();
 //Інтервал автооновлення ачівментсів
 let apiTikInterval;
 
+if (config.identConfirmed) {
+  getAchievements();
+}
+
 // Функція для отримання досягнень гри
 async function getAchievements() {
   try {
@@ -134,7 +138,7 @@ function clearTarget() {
   ui.target.container.innerHTML = "";
 }
 
-// ! MOVE TO LOGIN WINDOW
+//* -------------- LOGIN WINDOW -------------------
 function pasteApiKeyFromClipboard() {
   navigator.clipboard
     .readText()
@@ -163,6 +167,7 @@ function submitLogin() {
 function updateLogin({ userName, apiKey, userObj }) {
   config.USER_NAME = userName;
   config.API_KEY = apiKey;
+  config.identConfirmed = true;
   config.userImageSrc = `https://media.retroachievements.org${userObj?.UserPic}`;
   ui.loginCard.userImage.src = config.userImageSrc;
   document.querySelector("#submit-login").classList.remove("error");
@@ -170,6 +175,7 @@ function updateLogin({ userName, apiKey, userObj }) {
 }
 
 function errorLogin() {
+  config.identConfirmed = false;
   ui.setValues();
   document.querySelector("#submit-login").classList.remove("verified");
   document.querySelector("#submit-login").classList.add("error");
