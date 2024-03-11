@@ -115,23 +115,61 @@ function stopWatching() {
 
 // Функція для відкриття налаштувань
 function openSettings() {
+  const button = document.querySelector("#open-settings-button");
+  if (ui.settings.section.classList.contains("hidden")) {
+    button.classList.add("checked");
+  } else {
+    button.classList.remove("checked");
+  }
   ui.switchSectionVisibility(ui.settings.section);
 }
 // Функція для відкриття/закриття картки гри
 function openGameCard() {
+  const button = document.querySelector("#open-game-card-button");
+  if (ui.gameCard.section.classList.contains("hidden")) {
+    button.classList.add("checked");
+  } else {
+    button.classList.remove("checked");
+  }
   ui.switchSectionVisibility(ui.gameCard.section);
 }
 // Функція для закриття About
 function openAbout() {
+  const button = document.querySelector("#open-about-button");
+  if (ui.about.section.classList.contains("hidden")) {
+    button.classList.add("checked");
+  } else {
+    button.classList.remove("checked");
+  }
   ui.switchSectionVisibility(ui.about.section);
 }
 function openTarget() {
+  const button = document.querySelector("#open-target-button");
+  if (ui.target.section.classList.contains("hidden")) {
+    button.classList.add("checked");
+  } else {
+    button.classList.remove("checked");
+  }
   ui.switchSectionVisibility(ui.target.section);
 }
+
 function openAllAchivs() {
+  const button = document.querySelector("#open-achivs-button");
+
+  if (ui.achievementsBlock.section.classList.contains("hidden")) {
+    button.classList.add("checked");
+  } else {
+    button.classList.remove("checked");
+  }
   ui.switchSectionVisibility(ui.achievementsBlock.section);
 }
 function openLogin() {
+  const button = document.querySelector("#open-login-button");
+  if (ui.loginCard.section.classList.contains("hidden")) {
+    document.querySelector("#open-login-button").classList.toggle("checked");
+  } else {
+    button.classList.remove("checked");
+  }
   ui.switchSectionVisibility(ui.loginCard.section);
 }
 function clearTarget() {

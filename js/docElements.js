@@ -82,6 +82,12 @@ class UI {
     };
     this.buttons = {
       section: document.querySelector("#buttons_section"),
+      settings: document.querySelector("#open-settings-button"),
+      achievements: document.querySelector("#open-achivs-button"),
+      login: document.querySelector("#open-login-button"),
+      about: document.querySelector("#open-about-button"),
+      gameCard: document.querySelector("#open-game-card-button"),
+      target: document.querySelector("#open-target-button"),
     };
   }
   //Встановлення розмірів і розміщення елементів
@@ -124,6 +130,22 @@ class UI {
 
     this.settings.maximumWidthInput.value = config.ACHIV_MAX_SIZE;
     this.settings.minimumWidthInput.value = config.ACHIV_MIN_SIZE;
+
+    if (!this.achievementsBlock.section.classList.contains("hidden")) {
+      this.buttons.achievements.classList.add("checked");
+    }
+    if (!this.settings.section.classList.contains("hidden")) {
+      this.buttons.settings.classList.add("checked");
+    }
+    if (!this.loginCard.section.classList.contains("hidden")) {
+      this.buttons.login.classList.add("checked");
+    }
+    if (!this.target.section.classList.contains("hidden")) {
+      this.buttons.target.classList.add("checked");
+    }
+    if (!this.gameCard.section.classList.contains("hidden")) {
+      this.buttons.gameCard.classList.add("checked");
+    }
   }
   addEvents() {
     // Додаємо обробник події 'change' для поля введення інтервалу оновлення
@@ -257,9 +279,9 @@ class UI {
       moveEvent(this.loginCard.section, e);
     });
 
-    this.buttons.section.addEventListener("mousedown", (e) => {
-      moveEvent(this.buttons.section, e);
-    });
+    // this.buttons.section.addEventListener("mousedown", (e) => {
+    //   moveEvent(this.buttons.section, e);
+    // });
     // Подія для зміни розміру вікна ачівментсів
     this.achievementsBlock.resizer.addEventListener("mousedown", (event) => {
       event.stopPropagation();

@@ -1,7 +1,7 @@
 function createGameCard() {
   // Створюємо елементи
   const section = document.createElement("section");
-  section.classList.add("game-card_section");
+  section.classList.add("game-card_section", "section");
   section.id = "game_section";
 
   const container = document.createElement("div");

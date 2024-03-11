@@ -36,6 +36,12 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 body {
   background-color: black;
+  /* background-image: url(../assets/img/pixelart.png); */
+  background-size: cover;
+  image-rendering: pixelated;
+  background-repeat: no-repeat;
+  background-position: center;
+  backdrop-filter: brightness(0.1);
   color: var(--font-color);
   overflow: hidden;
 }
@@ -119,9 +125,8 @@ body {
   align-items: center;
   gap: 10px;
   border-radius: 10px 10px 0 0;
-
   background-color: var(--secondary-color);
-  /* opacity: 0.2; */
+  cursor: default;
   transition: 0.2s;
 }
 .buttons-block::before,
@@ -167,19 +172,16 @@ body {
 .buttons-block:active {
   transition: none;
 }
-
-.open-settings-button {
-  border-radius: 5px;
-  background-color: black;
-  padding: 10px;
-  border: 1px solid white;
-  color: var(--font-color);
-  z-index: 20;
-  /* visibility: hidden; */
-
-  transition: 0.2s;
+/* .window-button {
+  position: relative;
 }
-
-.TODO {
-  opacity: 0.3;
-}
+.window-button::after {
+  content: "";
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: green;
+  top: 4px;
+  right: 4px;
+} */

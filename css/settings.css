@@ -50,6 +50,7 @@
 }
 .prefs_section input,
 .setting-button {
+  position: relative;
   height: 2rem;
   font-size: 1.1rem;
   border-radius: 5px;
@@ -87,9 +88,17 @@
   transition: 0.2s;
 }
 .setting-button.checked {
-  border-color: green;
   background-color: black;
-  font-weight: 600;
+}
+.setting-button.checked::after {
+  content: "";
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: green;
+  top: 2px;
+  right: 2px;
 }
 
 .watching-button {

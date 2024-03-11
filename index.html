@@ -241,28 +241,46 @@
         <ul class="target-container"></ul>
       </section>
       <section id="buttons_section" class="buttons-block section">
-        <button class="setting-button all-achivs-button" onclick="openLogin()">
+        <button
+          id="open-login-button"
+          class="setting-button all-achivs-button window-button"
+          onclick="openLogin()"
+        >
           Login
         </button>
         <button
-          class="setting-button all-achivs-button"
+          id="open-achivs-button"
+          class="setting-button all-achivs-button window-button"
           onclick="openAllAchivs()"
         >
           Achivs
         </button>
-        <button class="setting-button target-button" onclick="openTarget()">
+        <button
+          id="open-target-button"
+          class="setting-button target-button window-button"
+          onclick="openTarget()"
+        >
           Target
         </button>
         <button
-          class="setting-button game-card-button"
+          id="open-game-card-button"
+          class="setting-button game-card-button window-button"
           onclick="openGameCard()"
         >
           GameCard
         </button>
-        <button class="setting-button settings-button" onclick="openSettings()">
+        <button
+          id="open-settings-button"
+          class="setting-button settings-button window-button"
+          onclick="openSettings()"
+        >
           Settings
         </button>
-        <button class="setting-button help-button" onclick="openAbout()">
+        <button
+          id="open-about-button"
+          class="setting-button help-button window-button"
+          onclick="openAbout()"
+        >
           About
         </button>
       </section>
@@ -290,15 +308,14 @@
             </svg>
           </div>
         </div>
+        <img
+          class="login-user-image"
+          title="ra account image"
+          onerror="this.src='./assets/img/account.svg';"
+          alt="ra account image"
+        />
         <div class="login-container">
           <div class="login-form-container">
-            <img
-              class="login-user-image"
-              src=""
-              onerror="this.src='./assets/img/account.svg';"
-              alt=" "
-              srcset=""
-            />
             <div class="user-ident-input">
               <div class="form-input-container">
                 <label for="login-input">User name:</label>
@@ -316,7 +333,7 @@
                   <div class="api-input">
                     <input
                       type="password"
-                      class="text-input"
+                      class="text-input login-api-key"
                       name="api-key"
                       id="login-api-key"
                       placeholder="Enter API Key"

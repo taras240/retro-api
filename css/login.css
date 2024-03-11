@@ -5,8 +5,8 @@
   top: 20%;
   left: 45%;
   background-color: var(--main-color);
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  align-content: space-between;
   overflow: hidden;
   z-index: 100;
 }
@@ -97,9 +97,10 @@
 .api-input {
   position: relative;
 }
-#login-api-key {
+.text-input.login-api-key {
   flex-grow: 1;
   width: 100%;
+  padding-right: 35px;
 }
 .paste-api-key {
   position: absolute;
