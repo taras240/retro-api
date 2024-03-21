@@ -181,6 +181,10 @@
   color: var(--font-color);
   flex: 1;
 }
+/*! ---------------------- */
+/*! ---- TOOLTIP --------- */
+/*! ---------------------- */
+
 .achiv-details-block {
   position: absolute;
   width: 300px;
@@ -197,11 +201,23 @@
   opacity: 0;
   transition: 0.2s;
 }
+.achiv-details-block.left-side {
+  left: auto;
+  right: 100%;
+}
+.achiv-details-block.top-side {
+  top: auto;
+  bottom: 80%;
+}
 .achiv-details-block .points {
   position: relative;
   padding-left: 25px;
 }
-
+.achiv-block:hover {
+  transform: scale(1.05);
+  z-index: 2;
+  transition: 0.2s;
+}
 .achiv-block:hover .achiv-details-block {
   visibility: visible;
   opacity: 1;

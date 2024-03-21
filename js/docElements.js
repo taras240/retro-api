@@ -519,6 +519,18 @@ class UI {
 
     let achivDetails = this.generateAchivDetails(achievement);
     achivElement.appendChild(achivDetails);
+
+    //* fix details popup position
+    achivElement.addEventListener("mouseenter", (e) => {
+      this.fixDetailsPosition(achivDetails);
+      achivElement.addEventListener("mouseleave", (e) => {
+        setTimeout(
+          () => achivDetails.classList.remove("left-side", "top-side"),
+          200
+        );
+      });
+    });
+
     achivElement.addEventListener("mousedown", (e) => e.stopPropagation());
     toTargetButton.addEventListener("click", () => {
       this.addAchieveToTarget(achievement);
@@ -526,7 +538,20 @@ class UI {
 
     return achivElement;
   }
-
+  fixDetailsPosition(achivDetails) {
+    let { left, right, top, bottom } = achivDetails.getBoundingClientRect();
+    if (left < 0) {
+      achivDetails.classList.remove("left-side");
+    }
+    if (right > window.innerWidth) {
+      achivDetails.classList.add("left-side");
+    }
+    if (top < 0) {
+      achivDetails.classList.remove("top-side");
+    } else if (bottom > window.innerHeight) {
+      achivDetails.classList.add("top-side");
+    }
+  }
   generateAchivDetails({
     Title,
     Description,
