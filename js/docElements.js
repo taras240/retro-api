@@ -1,8 +1,6 @@
 class UI {
   SORT_METHOD = sortBy.default;
   FILTER_METHOD = filterBy.all;
-  // ACHIV_MAX_SIZE = 150;
-  // ACHIV_MIN_SIZE = 50;
   constructor() {
     document.querySelector(".wrapper").appendChild(createGameCard());
 
@@ -62,6 +60,7 @@ class UI {
       stretchButton: document.querySelector("#stretch-achivs"),
       minimumWidthInput: document.querySelector("#achiv-min-width"),
       maximumWidthInput: document.querySelector("#achiv-max-width"),
+      targetUserInput: document.querySelector("#target-user"),
       gameID: document.querySelector("#game-id"), // Поле введення ідентифікатора гри
       watchButton: document.querySelector("#watching-button"), // Кнопка спостереження за грою
       getGameIdButton: document.querySelector(".get-id-button"), // Кнопка отримання ідентифікатора гри
@@ -126,6 +125,11 @@ class UI {
     // Отримати ідентифікатор гри з localStorage та встановити його значення
     this.settings.gameID.value = config.gameID;
 
+    this.settings.targetUserInput.value = config.targetUser ?? config.USER_NAME;
+    this.settings.targetUserInput.setAttribute(
+      "placeholder",
+      config.USER_NAME || "your username if empty"
+    );
     this.settings.updateInterval.value = config.updateDelay;
 
     this.settings.maximumWidthInput.value = config.ACHIV_MAX_SIZE;
@@ -233,6 +237,11 @@ class UI {
       if (maximumWidthInput.value)
         config.ACHIV_MAX_SIZE = maximumWidthInput.value;
       this.fitSizeVertically();
+    });
+
+    this.settings.targetUserInput.addEventListener("change", (e) => {
+      e.stopPropagation();
+      config.targetUser = this.settings.targetUserInput.value;
     });
     // Додаємо обробник події 'click' для кнопки автооновлення
     this.settings.watchButton.addEventListener("click", (e) => {

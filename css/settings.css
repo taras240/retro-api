@@ -48,7 +48,7 @@
   align-self: flex-end;
   background-color: transparent;
 }
-.prefs_section input,
+.prefs_section .input,
 .setting-button {
   position: relative;
   height: 2rem;
@@ -63,11 +63,11 @@
   transition: 0.2s;
 }
 
-.prefs_section input:focus {
+.prefs_section .input:focus {
   border-color: green;
   background-color: black;
 }
-.prefs_section input:placeholder-shown {
+.prefs_section .input:not(.target-user):placeholder-shown {
   border-color: red;
 }
 

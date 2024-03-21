@@ -21,7 +21,7 @@ class APIWorker {
     let params = {
       y: apiKey || config.API_KEY,
       z: userName || config.USER_NAME,
-      u: targetUser || config.USER_NAME,
+      u: targetUser || config.targetUser,
       g: gameID || config.gameID,
       m: minutes || 2000,
       i: gameID || config.gameID,

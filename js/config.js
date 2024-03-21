@@ -29,6 +29,14 @@ class Config {
     this._cfg.identification.userImageSrc = value;
     this.writeConfiguration();
   }
+  get targetUser() {
+    return this._cfg.settings.targetUser || this.USER_NAME;
+  }
+  set targetUser(value) {
+    this._cfg.settings.targetUser = value;
+    this.writeConfiguration();
+    ui.settings.getGameIdButton.click();
+  }
   get gameID() {
     return this._cfg.settings.gameID;
   }
