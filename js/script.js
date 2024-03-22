@@ -29,7 +29,10 @@ async function getAchievements() {
     console.error(error);
   }
 }
-
+async function getAwards() {
+  const response = await apiWorker.getUserAwards({});
+  ui.parseAwards(response);
+}
 // Функція для оновлення досягнень
 async function updateAchievements() {
   try {
@@ -126,6 +129,17 @@ function openGameCard() {
   }
   ui.switchSectionVisibility(ui.gameCard.section);
 }
+// Функція для відкриття/закриття досягнень
+function openAwards() {
+  console.log("open");
+  const button = document.querySelector("#open-awards-button");
+  if (ui.awards.section.classList.contains("hidden")) {
+    button.classList.add("checked");
+  } else {
+    button.classList.remove("checked");
+  }
+  ui.switchSectionVisibility(ui.awards.section);
+}
 // Функція для закриття About
 function openAbout() {
   const button = document.querySelector("#open-about-button");
@@ -210,4 +224,9 @@ function errorLogin() {
   ui.setValues();
   document.querySelector("#submit-login").classList.remove("verified");
   document.querySelector("#submit-login").classList.add("error");
+}
+//!! -------- AWARDS -------------------
+function expandAwards(button) {
+  const accordionContent = button.nextElementSibling;
+  accordionContent.classList.toggle("hidden");
 }

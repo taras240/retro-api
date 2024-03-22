@@ -11,6 +11,9 @@
     <button id="open-game-card-button" class="setting-button game-card-button window-button" onclick="openGameCard()">
         GameCard
     </button>
+    <button id="open-awards-button" class="setting-button game-card-button window-button" onclick="openAwards()">
+        Awards
+    </button>
     <button id="open-settings-button" class="setting-button settings-button window-button" onclick="openSettings()">
         Settings
     </button>

@@ -1,0 +1,155 @@
+.awards_section {
+  position: absolute;
+  top: 30px;
+  left: 20%;
+  max-width: 400px;
+  height: 600px;
+  max-height: 80vh;
+  background-color: var(--main-color);
+  overflow: scroll;
+  visibility: visible;
+  opacity: 1;
+  transition: 0.2s;
+}
+.awards_section.hidden {
+  visibility: hidden;
+  opacity: 0;
+  transition: 0.2s;
+}
+.awards-container {
+  width: 300px;
+
+  display: flex;
+  flex-direction: column;
+}
+.awards-header_container {
+  position: sticky;
+  top: 0;
+  background-color: var(--main-color);
+  z-index: 2;
+}
+.get-awards_button {
+  background-color: transparent;
+  background-image: url("../assets/img/autorenew.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  filter: invert();
+  width: 20px;
+  aspect-ratio: 1;
+  opacity: 0.5;
+  transition: 0.2s;
+}
+.get-awards_button:hover {
+  opacity: 1;
+  transition: 0.2s;
+}
+.get-awards_button:active {
+  opacity: 0.8;
+  transform: scale(0.9);
+  transition: 0.2s;
+}
+.awards-content_container {
+  flex: 1;
+}
+.console-awards {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  column-gap: 10px;
+  padding: 10px 5px 10px 15px;
+}
+.console-awards:nth-child(even) {
+  background-color: var(--secondary-color);
+}
+.awards-console_header {
+  padding: 5px 0;
+}
+.console-awards-values {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+.awarded-games:not(:last-child)::after {
+  /* content: " /"; */
+}
+.awarded-games {
+  position: relative;
+}
+.awarded-games:before {
+  --dot-fill-color: transparent;
+  --dot-border-color: transparent;
+  content: "";
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  top: 55%;
+  left: -10px;
+  transform: translate(0, -50%);
+  background-color: var(--dot-fill-color);
+  border-radius: 50%;
+  border: 1px solid var(--dot-border-color);
+}
+.awarded-games.beaten-softcore:before,
+.awarded-games.beaten:before {
+  --dot-border-color: gray;
+}
+.awarded-games.beaten:before {
+  --dot-fill-color: gray;
+}
+.awarded-games.completed:before,
+.awarded-games.mastered:before {
+  --dot-border-color: gold;
+}
+.awarded-games.mastered:before {
+  --dot-fill-color: gold;
+}
+.awarded-games_list {
+  grid-column: 1 / 5;
+  visibility: visible;
+  overflow: scroll;
+  width: 100%;
+  max-height: 100vh;
+  transition: 0.5s ease-in-out;
+}
+.awarded-games_list.hidden {
+  /* visibility: hidden; */
+  max-height: 0;
+  overflow: hidden;
+  transition: 0.5s ease-in-out;
+}
+.awarded-game {
+  padding: 10px 15px;
+  display: grid;
+  column-gap: 10px;
+  grid-template-columns: auto 1fr;
+}
+.awarded-game:not(:last-child) {
+  border-bottom: 1px solid rgba(128, 128, 128, 0.253);
+}
+.game-title {
+  padding: 0;
+}
+.awarded-game-preview {
+  width: 60px;
+  border-radius: 5px;
+  overflow: hidden;
+  aspect-ratio: 1;
+  grid-row: 1 / 5;
+  align-self: center;
+}
+.expand-awards_button {
+  background-color: transparent;
+  background-image: url("../assets/img/expand_more.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 20px;
+  align-self: center;
+  aspect-ratio: 1;
+  opacity: 0.5;
+  transition: 0.2s;
+}
+.expand-awards_button:hover {
+  opacity: 1;
+  transition: 0.2s;
+}

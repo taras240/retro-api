@@ -2,20 +2,21 @@ class UI {
   SORT_METHOD = sortBy.default;
   FILTER_METHOD = filterBy.all;
   constructor() {
-    // document.querySelector(".wrapper").appendChild(createGameCard());
+    //Завантаження секцій з jsx файлів
     loadSections().then(() => {
-      // Ініціалізувати елементи
+      // Ініціалізація елементів
       this.initializeElements();
 
-      // Додати події
+      // Додавання подій
       this.addEvents();
 
-      //Встановити розміри і розміщення елементів
+      //Встановлення розмірів і розміщення елементів
       this.setPositions();
 
       //Встановлення збережених значень для полів вводу
       this.setValues();
 
+      //Оновлення ачівментсів
       if (config.identConfirmed) {
         this.settings.checkIdButton.click();
       }
@@ -52,8 +53,6 @@ class UI {
     // Елементи налаштувань
     this.settings = {
       section: document.querySelector(".prefs_section"), //* Контейнер налаштувань
-      // apiKey: document.querySelector("#api-key"), // Поле введення ключа API
-      // login: document.querySelector("#login-input"), // Поле введення логіну
       updateInterval: document.querySelector("#update-time"), // Поле введення інтервалу оновлення
       sortByLatestButton: document.querySelector("#sort-by-latest"), // Кнопка сортування за останніми
       sortByEarnedButton: document.querySelector("#sort-by-earned"), // Кнопка сортування за заробленими
@@ -92,6 +91,11 @@ class UI {
       about: document.querySelector("#open-about-button"),
       gameCard: document.querySelector("#open-game-card-button"),
       target: document.querySelector("#open-target-button"),
+    };
+
+    this.awards = {
+      section: document.querySelector(".awards_section"), // Контейнер інформації про гру
+      container: document.querySelector(".awards-content_container"),
     };
   }
   //Встановлення розмірів і розміщення елементів
@@ -276,6 +280,10 @@ class UI {
     this.settings.section.addEventListener("mousedown", (e) => {
       moveEvent(this.settings.section, e);
     });
+    // Додавання подій для пересування вікна досягнень
+    this.awards.section.addEventListener("mousedown", (e) => {
+      moveEvent(this.awards.section, e);
+    });
     // Додавання подій для пересування вікна ачівментсів
     this.achievementsBlock.section.addEventListener("mousedown", (e) => {
       moveEvent(this.achievementsBlock.section, e);
@@ -338,6 +346,7 @@ class UI {
       section.addEventListener("mouseup", handleMouseUp);
       section.addEventListener("mouseleave", handleMouseUp);
     }
+
     function setPosition(e, offsetX, offsetY, section) {
       e.preventDefault();
       section.style.left = e.clientX - offsetX + "px";
@@ -407,6 +416,107 @@ class UI {
     // Клікає на кнопку перевірки ідентифікатора для виконання сортування
     this.settings.checkIdButton.click();
   }
+  //!----- AWARDS -----------------------------
+  parseAwards(userAwards) {
+    this.awards.container.innerHTML = `
+    <li class="console-awards all-consoles">
+    <h3 class="awards-console_header">Total</h3>
+    <ul class="console-awards-values ">
+      <li class="awarded-games total">${userAwards.TotalAwardsCount}</li>
+      <li class="awarded-games beaten-softcore">${userAwards.BeatenSoftcoreAwardsCount}</li>
+      <li class="awarded-games beaten">${userAwards.BeatenHardcoreAwardsCount}</li>
+      <li class="awarded-games completed">${userAwards.CompletionAwardsCount}</li>
+      <li class="awarded-games mastered">${userAwards.MasteryAwardsCount}</li>
+    </ul>
+    <button class="expand-awards_button" onclick="expandAwards(this)"> </button>
+    <ul class="awarded-games_list total hidden">
+    </ul>
+  </li>
+    `;
+    //*------------------------------------------
+    let gamesArray = [...userAwards.VisibleUserAwards];
+    gamesArray = gamesArray.sort((a, b) => {
+      let dateA = new Date(b.AwardedAt);
+      let dateB = new Date(a.AwardedAt);
+      return dateA - dateB;
+    });
+
+    gamesArray.forEach((game) => {
+      let gameElement = document.createElement("li");
+      gameElement.classList.add("awarded-game");
+      gameElement.innerHTML = `
+          <img class="awarded-game-preview" src="https://media.retroachievements.org${game.ImageIcon}" alt=" ">
+          <h3 class="game-title">${game.Title}</h3>
+          <p class="console-name">${game.ConsoleName}</p>
+          <p class="awarded-date">${game.AwardedAt}</p>
+      `;
+      this.awards.container
+        .querySelector(".awarded-games_list.total")
+        .appendChild(gameElement);
+    });
+    const sortedGames = this.generateAwardsGroups(gamesArray);
+    this.generateConsolesAwards(sortedGames);
+  }
+  generateAwardsGroups(gamesArray) {
+    console.log(gamesArray);
+    return gamesArray.reduce((sortedGames, game) => {
+      if (!sortedGames.hasOwnProperty(game.ConsoleName)) {
+        sortedGames[game.ConsoleName] = [];
+      }
+      sortedGames[game.ConsoleName].push(game);
+      return sortedGames;
+    }, {});
+  }
+  generateConsolesAwards(sortedGames) {
+    Object.getOwnPropertyNames(sortedGames).forEach((consoleName) => {
+      let consoleListItem = document.createElement("li");
+      consoleListItem.classList.add("console-awards");
+      consoleListItem.dataset.consoleName = consoleName;
+      let total = sortedGames[consoleName].length;
+      let beatenSoftcore = sortedGames[consoleName].filter(
+        (game) => game.AwardType === "Game Beaten" && game.AwardDataExtra === 0
+      ).length;
+      let beaten = sortedGames[consoleName].filter(
+        (game) => game.AwardType === "Game Beaten" && game.AwardDataExtra === 1
+      ).length;
+      let compleated = sortedGames[consoleName].filter(
+        (game) =>
+          game.AwardType === "Mastery/Completion" && game.AwardDataExtra === 0
+      ).length;
+      let mastered = sortedGames[consoleName].filter(
+        (game) =>
+          game.AwardType === "Mastery/Completion" && game.AwardDataExtra === 1
+      ).length;
+      consoleListItem.innerHTML = `
+      <h3 class="awards-console_header">${consoleName}</h3>
+      <ul class="console-awards-values">      
+        <li class="awarded-games total">${total}</li>
+        <li class="awarded-games beaten-softcore">${beatenSoftcore}</li>
+        <li class="awarded-games beaten">${beaten}</li>
+        <li class="awarded-games completed">${compleated}</li>
+        <li class="awarded-games mastered">${mastered}</li>
+      </ul>
+      <button class="expand-awards_button" onclick="expandAwards(this)"> </button>
+      <ul class="awarded-games_list hidden total">
+      </ul>
+      `;
+      this.awards.container.appendChild(consoleListItem);
+      let gamesList = consoleListItem.querySelector(".awarded-games_list");
+      sortedGames[consoleName].forEach((game) => {
+        let gameElement = document.createElement("li");
+        gameElement.classList.add("awarded-game");
+        gameElement.innerHTML = `
+            <img class="awarded-game-preview" src="https://media.retroachievements.org${game.ImageIcon}" alt=" ">
+            <h3 class="game-title">${game.Title}</h3>
+            <p class="console-name">${game.ConsoleName}</p>
+            <p class="awarded-date">${game.AwardedAt}</p>
+        `;
+        gamesList.appendChild(gameElement);
+      });
+    });
+  }
+  //!----- AWARDS -----------------------------
+
   // Розбирає отримані досягнення гри та відображає їх на сторінці
   parseGameAchievements(achivs) {
     // Очистити вміст розділу досягнень
