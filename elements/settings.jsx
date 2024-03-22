@@ -1,0 +1,93 @@
+<section id="settings_section" class="prefs_section section">
+  <div class="header-container prefs-header-container">
+    <div class="header-icon settings-icon"></div>
+    <h2 class="prefs-header">Settings</h2>
+    <div class="header-button header-icon" onclick="openSettings()">
+      <svg height="24" viewBox="0 -960 960 960" width="24">
+        <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+      </svg>
+    </div>
+  </div>
+  <div class="settings_container">
+    <div class="sort-settings input-container sort-buttons">
+      <label>Sort:</label>
+      <button id="sort-by-latest" class="sort-achivs-button setting-button" title="not hard - not earn">
+        latest
+      </button>
+
+      <button id="sort-by-earned" class="sort-achivs-button setting-button">
+        rarest
+      </button>
+
+      <button id="sort-by-points" class="sort-achivs-button setting-button">
+        points
+      </button>
+
+      <button id="sort-by-default" class="setting-button checked">
+        default
+      </button>
+    </div>
+
+    <div class="filter-settings input-container sort-buttons" title="not hard - not earn">
+      <label>Filter:</label>
+      <button id="filter-by-earned" class="filter-achivs-button setting-button">
+        earned
+      </button>
+      <button id="filter-by-not-earned" class="filter-achivs-button setting-button">
+        not earned
+      </button>
+      <button id="filter-by-all" class="filter-achivs-button setting-button checked">
+        all
+      </button>
+    </div>
+
+    <div class="achivs-style input-container sort-buttons">
+      <label>Achivs style:</label>
+      <input type="number" class="number-input input" name="min-width" id="achiv-min-width" value="30" placeholder="min"
+        title="minimum width in px" />
+      <input type="number" class="number-input input" name="max-width" id="achiv-max-width" value="150"
+        placeholder="max" title="maximum width in px" />
+      <button id="stretch-achivs" class="stretch-achivs-button setting-button checked">
+        stretch vertically
+      </button>
+    </div>
+    <div class="update-time-settings input-container">
+      <label for="update-time">Update delay (seconds):</label>
+      <input type="number" class="number-input input" name="update-time" id="update-time" value="5"
+        placeholder="? sec" />
+    </div>
+    <div class="target-user-settings input-container">
+      <label for="target-user">Target user:</label>
+      <input type="search" class="text-input target-user input" name="target-user" id="target-user" value=""
+        placeholder="your username if empty" />
+    </div>
+    <div class="game-id-settings input-container">
+      <label for="game-id">Game ID:</label>
+      <button class="check-id-button setting-button" title="check entered gameID">
+        Check
+      </button>
+
+      <button class="get-id-button setting-button" title="get your last played gameID">
+        Auto
+      </button>
+      <input type="number" class="number-input input" name="game-id" id="game-id" value="0" placeholder="id" />
+      <button id="watching-button" class="setting-button watching-button svg-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+          <path
+            d="M204-318q-22-38-33-78t-11-82q0-134 93-228t227-94h7l-64-64 56-56 160 160-160 160-56-56 64-64h-7q-100 0-170 70.5T240-478q0 26 6 51t18 49l-60 60ZM481-40 321-200l160-160 56 56-64 64h7q100 0 170-70.5T720-482q0-26-6-51t-18-49l60-60q22 38 33 78t11 82q0 134-93 228t-227 94h-7l64 64-56 56Z" />
+        </svg>
+        Watch
+      </button>
+    </div>
+
+    <div class="achivs-game">
+      <img src="./assets/img/icon.png" alt=" " class="game-preview" id="game-preview" />
+      <h3 class="game-title" id="game-title">
+        Some game name
+      </h3>
+      <p class="game-achivs-count" id="game-achivs-count">
+        10
+      </p>
+    </div>
+  </div>
+</section>

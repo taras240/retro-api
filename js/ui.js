@@ -2,19 +2,24 @@ class UI {
   SORT_METHOD = sortBy.default;
   FILTER_METHOD = filterBy.all;
   constructor() {
-    document.querySelector(".wrapper").appendChild(createGameCard());
+    // document.querySelector(".wrapper").appendChild(createGameCard());
+    loadSections().then(() => {
+      // Ініціалізувати елементи
+      this.initializeElements();
 
-    // Ініціалізувати елементи
-    this.initializeElements();
+      // Додати події
+      this.addEvents();
 
-    // Додати події
-    this.addEvents();
+      //Встановити розміри і розміщення елементів
+      this.setPositions();
 
-    //Встановити розміри і розміщення елементів
-    this.setPositions();
+      //Встановлення збережених значень для полів вводу
+      this.setValues();
 
-    //Встановлення збережених значень для полів вводу
-    this.setValues();
+      if (config.identConfirmed) {
+        this.settings.checkIdButton.click();
+      }
+    });
   }
 
   initializeElements() {
@@ -412,6 +417,9 @@ class UI {
 
     // Відсортувати досягнення та відобразити їх
     this.displaySortedAchievements(achivs);
+
+    // Підгонка розміру досягнень
+    this.fitSizeVertically();
   }
 
   clearAchievementsSection() {

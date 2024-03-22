@@ -1,0 +1,38 @@
+<section class="game-card_section section" id="game_section">
+  <div class="game-card_container">
+    <div class="game-card-header_container">
+      <h2 class="game-card-header" id="game-card-header">Some Game Name</h2>
+    </div>
+    <div class="game-card-info_container">
+      <div class="game-card-image">
+        <img id="game-card-image" src="./assets/img/prev.png" alt=" ">
+      </div>
+      <div class="game-card-description">
+        <div class="game-card-info">
+          <h3 class="game-info-header">Platform</h3>
+          <p class="game-card-text nes/famicom" id="game-card-platform">Nes/Famicom</p>
+        </div>
+        <div class="game-card-info">
+          <h3 class="game-info-header">Developer</h3>
+          <p class="game-card-text sunsoft" id="game-card-developer">SunSoft</p>
+        </div>
+        <div class="game-card-info">
+          <h3 class="game-info-header">Publisher</h3>
+          <p class="game-card-text sunsoft" id="game-card-publisher">SunSoft</p>
+        </div>
+        <div class="game-card-info">
+          <h3 class="game-info-header">Genre</h3>
+          <p class="game-card-text platformer" id="game-card-genre">Platformer</p>
+        </div>
+        <div class="game-card-info">
+          <h3 class="game-info-header">Released</h3>
+          <p class="game-card-text december-1989" id="game-card-released">December 1989</p>
+        </div>
+        <div class="game-card-info">
+          <h3 class="game-info-header">Completion</h3>
+          <p class="game-card-text 54-45" id="game-card-completion">54.45%</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

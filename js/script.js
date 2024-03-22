@@ -8,10 +8,6 @@ let apiWorker = new APIWorker();
 //Інтервал автооновлення ачівментсів
 let apiTikInterval;
 
-if (config.identConfirmed) {
-  getAchievements();
-}
-
 // Функція для отримання досягнень гри
 async function getAchievements() {
   try {
@@ -23,9 +19,6 @@ async function getAchievements() {
 
     //Додаєм можливість перетягування елементів
     ui.addDraggingEventForElements(ui.achievementsBlock.container);
-
-    // Підгонка розміру досягнень
-    ui.fitSizeVertically();
 
     // Оновлення інформації в картці гри
     ui.updateGameCardInfo(response);

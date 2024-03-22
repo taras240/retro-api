@@ -1,0 +1,18 @@
+<section id="target_section" class="target_section section">
+  <div class="header-container">
+    <div class="header-icon"></div>
+    <h2 class="target-header">Target</h2>
+    <div class="header-icon header-button" title="clear all" onclick="clearTarget()">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+        <path d="M120-280v-80h560v80H120Zm80-160v-80h560v80H200Zm80-160v-80h560v80H280Z" />
+      </svg>
+    </div>
+    <div class="header-icon header-button" onclick="openTarget()">
+      <svg height="24" viewBox="0 -960 960 960" width="24">
+        <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+      </svg>
+    </div>
+  </div>
+  <div class="target-empty-list">Target is empty</div>
+  <ul class="target-container"></ul>
+</section>

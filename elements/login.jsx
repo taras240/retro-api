@@ -1,0 +1,59 @@
+<section id="login_section" class="login_section section">
+  <div class="header-container">
+    <div class="header-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+        <path
+          d="M480-120v-80h280v-560H480v-80h280q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H480Zm-80-160-55-58 102-102H120v-80h327L345-622l55-58 200 200-200 200Z" />
+      </svg>
+    </div>
+    <h2 class="login-header">RA Login</h2>
+    <div class="header-icon header-button" onclick="openLogin()">
+      <svg height="24" viewBox="0 -960 960 960" width="24">
+        <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+      </svg>
+    </div>
+  </div>
+  <img class="login-user-image" title="ra account image" onerror="this.src='./assets/img/account.svg';"
+    alt="ra account image" />
+  <div class="login-container">
+    <div class="login-form-container">
+      <div class="user-ident-input">
+        <div class="form-input-container">
+          <label for="login-input">User name:</label>
+          <input type="text" class="text-input input" name="login-input" id="login-user-name"
+            placeholder="Enter user name" />
+        </div>
+        <div class="form-input-container">
+          <label for="api-key">API Key:</label>
+          <div class="login-api-container">
+            <div class="api-input">
+              <input type="password" class="text-input login-api-key input" name="api-key" id="login-api-key"
+                placeholder="Enter API Key" />
+              <button class="paste-api-key svg-button" title="paste from clipboard"
+                onclick="pasteApiKeyFromClipboard()">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                  <path
+                    d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h167q11-35 43-57.5t70-22.5q40 0 71.5 22.5T594-840h166q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560h-80v120H280v-120h-80v560Zm280-560q17 0 28.5-11.5T520-800q0-17-11.5-28.5T480-840q-17 0-28.5 11.5T440-800q0 17 11.5 28.5T480-760Z" />
+                </svg>
+              </button>
+            </div>
+
+            <a class="ra-settings-link" title="go to retroachievements settings"
+              href="https://retroachievements.org/controlpanel.php" target="_blank">
+              Where is the API key located?
+              <svg class="link-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                <path d="m216-160-56-56 464-464H360v-80h400v400h-80v-264L216-160Z" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-button-container">
+        <button id="submit-login" class="submit-login" onclick="submitLogin()">
+          Сonfirm
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
