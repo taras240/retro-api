@@ -16,13 +16,13 @@ async function getAchievements() {
     const response = await apiWorker.getGameProgress(config);
 
     // Парсинг та відображення досягнень гри
-    ui.parseGameAchievements(response);
+    ui.achievementsBlock.parseGameAchievements(response);
 
     //Додаєм можливість перетягування елементів
-    ui.addDraggingEventForElements(ui.achievementsBlock.container);
+    UI.addDraggingEventForElements(ui.achievementsBlock.container);
 
     // Оновлення інформації в картці гри
-    ui.updateGameCardInfo(response);
+    ui.gameCard.updateGameCardInfo(response);
   } catch (error) {
     // Додання помилки до кнопки перегляду та зупинка перегляду
     ui.settings.watchButton.classList.add("error");
@@ -128,7 +128,7 @@ function openSettings() {
   } else {
     button.classList.remove("checked");
   }
-  ui.switchSectionVisibility(ui.settings.section);
+  UI.switchSectionVisibility(ui.settings.section);
 }
 // Функція для відкриття/закриття картки гри
 function openGameCard() {
@@ -138,18 +138,17 @@ function openGameCard() {
   } else {
     button.classList.remove("checked");
   }
-  ui.switchSectionVisibility(ui.gameCard.section);
+  UI.switchSectionVisibility(ui.gameCard.section);
 }
 // Функція для відкриття/закриття досягнень
 function openAwards() {
-  console.log("open");
   const button = document.querySelector("#open-awards-button");
   if (ui.awards.section.classList.contains("hidden")) {
     button.classList.add("checked");
   } else {
     button.classList.remove("checked");
   }
-  ui.switchSectionVisibility(ui.awards.section);
+  UI.switchSectionVisibility(ui.awards.section);
 }
 // Функція для закриття About
 function openAbout() {
@@ -159,7 +158,7 @@ function openAbout() {
   } else {
     button.classList.remove("checked");
   }
-  ui.switchSectionVisibility(ui.about.section);
+  UI.switchSectionVisibility(ui.about.section);
 }
 function openTarget() {
   const button = document.querySelector("#open-target-button");
@@ -168,7 +167,7 @@ function openTarget() {
   } else {
     button.classList.remove("checked");
   }
-  ui.switchSectionVisibility(ui.target.section);
+  UI.switchSectionVisibility(ui.target.section);
 }
 
 function openAllAchivs() {
@@ -179,7 +178,7 @@ function openAllAchivs() {
   } else {
     button.classList.remove("checked");
   }
-  ui.switchSectionVisibility(ui.achievementsBlock.section);
+  UI.switchSectionVisibility(ui.achievementsBlock.section);
 }
 function openLogin() {
   const button = document.querySelector("#open-login-button");
@@ -188,7 +187,7 @@ function openLogin() {
   } else {
     button.classList.remove("checked");
   }
-  ui.switchSectionVisibility(ui.loginCard.section);
+  UI.switchSectionVisibility(ui.loginCard.section);
 }
 function clearTarget() {
   ui.target.container.innerHTML = "";
@@ -235,9 +234,4 @@ function errorLogin() {
   ui.setValues();
   document.querySelector("#submit-login").classList.remove("verified");
   document.querySelector("#submit-login").classList.add("error");
-}
-//!! -------- AWARDS -------------------
-function expandAwards(button) {
-  const accordionContent = button.nextElementSibling;
-  accordionContent.classList.toggle("hidden");
 }

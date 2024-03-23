@@ -24,76 +24,17 @@ class UI {
   }
 
   initializeElements() {
-    this.loginCard = {
-      section: document.querySelector("#login_section"),
-      userName: document.querySelector("#login-user-name"),
-      apiKey: document.querySelector("#login-api-key"),
-      userImage: document.querySelector(".login-user-image"),
-    };
-    // Елементи блока досягнень
-    this.achievementsBlock = {
-      section: document.querySelector("#achievements_section"), // Секція блока досягнень
-      container: document.querySelector(".achievements-container"), //Контейнер  з досягненнями
-      resizer: document.querySelector("#achivs-resizer"), // Ресайзер блока досягнень
-    };
-
-    // Елементи інформації про гру
-    this.gameCard = {
-      section: document.querySelector(".game-card_section"), // Контейнер інформації про гру
-      header: document.querySelector("#game-card-header"), // Заголовок гри
-      preview: document.querySelector("#game-card-image"), // Зображення гри
-      platform: document.querySelector("#game-card-platform"), // Платформа гри
-      developer: document.querySelector("#game-card-developer"), // Розробник гри
-      publisher: document.querySelector("#game-card-publisher"), // Видавець гри
-      genre: document.querySelector("#game-card-genre"), // Жанр гри
-      released: document.querySelector("#game-card-released"), // Дата випуску гри
-      completion: document.querySelector("#game-card-completion"), // Статус завершення гри
-    };
-
-    // Елементи налаштувань
-    this.settings = {
-      section: document.querySelector(".prefs_section"), //* Контейнер налаштувань
-      updateInterval: document.querySelector("#update-time"), // Поле введення інтервалу оновлення
-      sortByLatestButton: document.querySelector("#sort-by-latest"), // Кнопка сортування за останніми
-      sortByEarnedButton: document.querySelector("#sort-by-earned"), // Кнопка сортування за заробленими
-      sortByPointsButton: document.querySelector("#sort-by-points"), // Кнопка сортування за балами
-      sortByDefaultButton: document.querySelector("#sort-by-default"), // Кнопка сортування за замовчуванням
-      filterByAll: document.querySelector("#filter-by-all"), // Фільтр за всіма
-      filterByEarned: document.querySelector("#filter-by-earned"), // Фільтр за заробленими
-      filterByNotEarned: document.querySelector("#filter-by-not-earned"), // Фільтр за не заробленими
-      stretchButton: document.querySelector("#stretch-achivs"),
-      minimumWidthInput: document.querySelector("#achiv-min-width"),
-      maximumWidthInput: document.querySelector("#achiv-max-width"),
-      targetUserInput: document.querySelector("#target-user"),
-      gameID: document.querySelector("#game-id"), // Поле введення ідентифікатора гри
-      watchButton: document.querySelector("#watching-button"), // Кнопка спостереження за грою
-      getGameIdButton: document.querySelector(".get-id-button"), // Кнопка отримання ідентифікатора гри
-      checkIdButton: document.querySelector(".check-id-button"), // Кнопка перевірки ідентифікатора гри
-      gamePreview: document.querySelector("#game-preview"), // Іконка гри
-      gameTitle: document.querySelector("#game-title"), // Заголовок гри
-      gamePlatform: document.querySelector("#game-platform"), // Платформа гри
-      gameAchivsCount: document.querySelector("#game-achivs-count"), // Кількість досягнень гри
-    };
-
     this.about = {
       section: document.querySelector("#help_section"),
     };
 
-    this.target = {
-      section: document.querySelector("#target_section"),
-      container: document.querySelector(".target-container"),
-    };
-    this.buttons = {
-      section: document.querySelector("#buttons_section"),
-      settings: document.querySelector("#open-settings-button"),
-      achievements: document.querySelector("#open-achivs-button"),
-      login: document.querySelector("#open-login-button"),
-      about: document.querySelector("#open-about-button"),
-      gameCard: document.querySelector("#open-game-card-button"),
-      target: document.querySelector("#open-target-button"),
-    };
-
+    this.loginCard = new LoginCard();
+    this.target = new Target();
+    this.achievementsBlock = new AchievementsBlock();
+    this.buttons = new ButtonPanel();
+    this.settings = new Settings();
     this.awards = new Awards();
+    this.gameCard = new GameCard();
   }
   //Встановлення розмірів і розміщення елементів
   setPositions() {
@@ -104,7 +45,6 @@ class UI {
       if (!element) return;
       // Отримання позиції та розмірів елемента з об'єкта config.ui
       const { x, y, width, height, hidden } = config.ui[containerId];
-
       // Встановлення нових значень стилів елемента, якщо вони вказані у config.ui
       // Якщо значення відсутнє (undefined), то стилі не змінюються
       x ? (element.style.left = x) : "";
@@ -157,201 +97,61 @@ class UI {
       this.buttons.gameCard.classList.add("checked");
     }
   }
-  addEvents() {
-    // Додаємо обробник події 'change' для поля введення інтервалу оновлення
-    this.settings.updateInterval.addEventListener("change", () => {
-      // Оновлюємо інтервал оновлення
-      config.updateDelay = this.settings.updateInterval.value || 5;
-    });
+  addEvents() {}
+  updateGameInfo({ Title, ConsoleName, ImageIcon, NumAchievements }) {
+    const { gamePreview, gameTitle, gamePlatform, gameAchivsCount } =
+      this.settings;
 
-    // Додаємо обробник події 'change' для поля введення ідентифікатора гри
-    this.settings.gameID.addEventListener("change", () => {
-      // Оновлюємо ідентифікатор гри
-      config.gameID = this.settings.gameID.value;
-    });
+    gamePreview.setAttribute(
+      "src",
+      `https://media.retroachievements.org${ImageIcon}`
+    );
+    gameTitle.innerText = Title || "Some game name";
+    gameAchivsCount.innerText = NumAchievements || 0;
+  }
 
-    // Додає подію кліку для сортування за замовчуванням
-    this.settings.sortByDefaultButton.addEventListener("click", (e) => {
-      e.stopPropagation();
-      // Встановлює метод сортування за замовчуванням
-      this.SORT_METHOD = sortBy.default;
-      // Застосовує сортування та оновлює інтерфейс
-      this.applySorting({ sortButton: this.settings.sortByDefaultButton });
-    });
+  // Функція зміни розміру вікна
+  static resizeEvent({ event, section, postFunc }) {
+    let resizeValues = {
+      // Зберігаємо початкові розміри елемента
+      startWidth: section.clientWidth,
+      startHeight: section.clientHeight,
 
-    // Додає подію кліку для сортування за отриманням досягнення
-    this.settings.sortByEarnedButton.addEventListener("click", (e) => {
-      e.stopPropagation();
-      // Встановлює метод сортування за отриманням досягнення
-      this.SORT_METHOD = sortBy.earnedCount;
-      // Застосовує сортування та оновлює інтерфейс
-      this.applySorting({ sortButton: this.settings.sortByEarnedButton });
-    });
+      // Зберігаємо координати миші
+      startX: event.clientX,
+      startY: event.clientY,
+    };
+    const resizeHandler = (event) => {
+      UI.setSize(event, resizeValues, section);
 
-    // Додає подію кліку для сортування за датою отримання
-    this.settings.sortByLatestButton.addEventListener("click", (e) => {
-      e.stopPropagation();
-      // Встановлює метод сортування за датою отримання
-      this.SORT_METHOD = sortBy.latest;
-      // Застосовує сортування та оновлює інтерфейс
-      this.applySorting({ sortButton: this.settings.sortByLatestButton });
-    });
+      // Підігнати розмір досягнень відповідно до нового розміру контейнера
+      postFunc ? postFunc() : "";
+    };
+    // Додаємо подію mousemove до документа
+    document.addEventListener("mousemove", resizeHandler);
 
-    // Додає подію кліку для сортування за кількістю балів
-    this.settings.sortByPointsButton.addEventListener("click", (e) => {
-      e.stopPropagation();
-      // Встановлює метод сортування за кількістю балів
-      this.SORT_METHOD = sortBy.points;
-      // Застосовує сортування та оновлює інтерфейс
-      this.applySorting({ sortButton: this.settings.sortByPointsButton });
-    });
-
-    this.settings.filterByEarned.addEventListener("click", (e) => {
-      e.stopPropagation();
-      this.FILTER_METHOD = filterBy.earned;
-      this.applyFilter({ filterButton: this.settings.filterByEarned });
-    });
-    this.settings.filterByNotEarned.addEventListener("click", (e) => {
-      e.stopPropagation();
-      this.FILTER_METHOD = filterBy.notEarned;
-      this.applyFilter({ filterButton: this.settings.filterByNotEarned });
-    });
-    this.settings.filterByAll.addEventListener("click", (e) => {
-      e.stopPropagation();
-      this.FILTER_METHOD = filterBy.all;
-      this.applyFilter({ filterButton: this.settings.filterByAll });
-    });
-
-    this.settings.stretchButton.addEventListener("click", (e) => {
-      const { stretchButton } = this.settings;
-      if (stretchButton.classList.contains("checked")) {
-        stretchButton.classList.remove("checked");
-        this.achievementsBlock.container.style.height = "auto";
-      } else {
-        stretchButton.classList.add("checked");
-        this.achievementsBlock.container.style.height = "100%";
-      }
-    });
-    this.settings.minimumWidthInput.addEventListener("change", (e) => {
-      const { minimumWidthInput } = this.settings;
-      if (minimumWidthInput.value)
-        config.ACHIV_MIN_SIZE = minimumWidthInput.value;
-      this.fitSizeVertically();
-    });
-    this.settings.maximumWidthInput.addEventListener("change", (e) => {
-      const { maximumWidthInput } = this.settings;
-      if (maximumWidthInput.value)
-        config.ACHIV_MAX_SIZE = maximumWidthInput.value;
-      this.fitSizeVertically();
-    });
-
-    this.settings.targetUserInput.addEventListener("change", (e) => {
-      e.stopPropagation();
-      config.targetUser = this.settings.targetUserInput.value;
-    });
-    // Додаємо обробник події 'click' для кнопки автооновлення
-    this.settings.watchButton.addEventListener("click", (e) => {
-      e.stopPropagation();
-      // Перевіряємо стан кнопки та відповідно запускаємо або припиняємо автооновлення
-      if (this.settings.watchButton.classList.contains("active")) {
-        stopWatching();
-      } else {
-        startWatching();
-      }
-    });
-
-    //Додаємо обробник події 'click' для кнопки отримання id останньої гри
-    this.settings.getGameIdButton.addEventListener("click", () => {
-      apiWorker.getProfileInfo({}).then((resp) => {
-        this.settings.gameID.value = resp.LastGameID;
-        config.gameID = resp.LastGameID;
+    // Видаляємо подію mousemove з документа, коли користувач відпускає кнопку миші
+    document.addEventListener("mouseup", () => {
+      document.removeEventListener("mousemove", resizeHandler);
+      section.classList.remove("resized");
+      config.setNewPosition({
+        id: section.id,
+        width: section.clientWidth,
+        height: section.clientHeight,
       });
     });
+  }
+  static setSize(event, resizeValues, section) {
+    // Отримуємо дані про розміри і початкові координати зміни розміру
+    const { startWidth, startHeight, startX, startY } = resizeValues;
 
-    //Додаємо обробник події 'click' для кнопки отримання списку ачівментсів для вибраного id гри
-    this.settings.checkIdButton.addEventListener("click", () => {
-      getAchievements();
-    });
+    // Обчислюємо зміни в розмірах з урахуванням переміщення миші
+    const widthChange = event.clientX - startX;
+    const heightChange = event.clientY - startY;
 
-    // Додавання подій для пересування вікна налаштувань
-    this.settings.section.addEventListener("mousedown", (e) => {
-      UI.moveEvent(this.settings.section, e);
-    });
-
-    // Додавання подій для пересування вікна ачівментсів
-    this.achievementsBlock.section.addEventListener("mousedown", (e) => {
-      UI.moveEvent(this.achievementsBlock.section, e);
-    });
-    // Додавання подій для пересування вікна картки гри
-    this.gameCard.section.addEventListener("mousedown", (e) => {
-      UI.moveEvent(this.gameCard.section, e);
-    });
-
-    // Додавання подій для пересування вікна target
-    this.target.section.addEventListener("mousedown", (e) => {
-      UI.moveEvent(this.target.section, e);
-    });
-    this.loginCard.section.addEventListener("mousedown", (e) => {
-      UI.moveEvent(this.loginCard.section, e);
-    });
-
-    // this.buttons.section.addEventListener("mousedown", (e) => {
-    //   moveEvent(this.buttons.section, e);
-    // });
-    // Подія для зміни розміру вікна ачівментсів
-    this.achievementsBlock.resizer.addEventListener("mousedown", (event) => {
-      event.stopPropagation();
-      this.achievementsBlock.section.classList.add("resized");
-      resizeEvent({
-        event: event,
-        section: this.achievementsBlock.section,
-        postFunc: () => this.fitSizeVertically(),
-      });
-    });
-
-    // Функція зміни розміру вікна
-    function resizeEvent({ event, section, postFunc }) {
-      let resizeValues = {
-        // Зберігаємо початкові розміри елемента
-        startWidth: section.clientWidth,
-        startHeight: section.clientHeight,
-
-        // Зберігаємо координати миші
-        startX: event.clientX,
-        startY: event.clientY,
-      };
-      const resizeHandler = (event) => {
-        setSize(event, resizeValues, section);
-
-        // Підігнати розмір досягнень відповідно до нового розміру контейнера
-        postFunc ? postFunc() : "";
-      };
-      // Додаємо подію mousemove до документа
-      document.addEventListener("mousemove", resizeHandler);
-
-      // Видаляємо подію mousemove з документа, коли користувач відпускає кнопку миші
-      document.addEventListener("mouseup", () => {
-        document.removeEventListener("mousemove", resizeHandler);
-        section.classList.remove("resized");
-        config.setNewPosition({
-          id: section.id,
-          width: section.clientWidth,
-          height: section.clientHeight,
-        });
-      });
-    }
-    function setSize(event, resizeValues, section) {
-      // Отримуємо дані про розміри і початкові координати зміни розміру
-      const { startWidth, startHeight, startX, startY } = resizeValues;
-
-      // Обчислюємо зміни в розмірах з урахуванням переміщення миші
-      const widthChange = event.clientX - startX;
-      const heightChange = event.clientY - startY;
-
-      // Оновлюємо ширину та висоту контейнера з урахуванням змін
-      section.style.width = `${startWidth + widthChange}px`;
-      section.style.height = `${startHeight + heightChange}px`;
-    }
+    // Оновлюємо ширину та висоту контейнера з урахуванням змін
+    section.style.width = `${startWidth + widthChange}px`;
+    section.style.height = `${startHeight + heightChange}px`;
   }
   static moveEvent(section, e) {
     section.classList.add("dragable");
@@ -388,49 +188,69 @@ class UI {
     section.style.left = e.clientX - offsetX + "px";
     section.style.top = e.clientY - offsetY + "px";
   }
-  applySorting({ sortButton }) {
-    // Знімає клас "checked" з усіх кнопок сортування
-    sortButton.parentNode
-      .querySelectorAll(".checked")
-      ?.forEach((child) => child.classList.remove("checked"));
-    // Додає клас "checked" до обраної кнопки сортування
-    sortButton.classList.add("checked");
-    // Клікає на кнопку перевірки ідентифікатора для виконання сортування
-    this.settings.checkIdButton.click();
-  }
-  applyFilter({ filterButton }) {
-    filterButton.parentNode
-      .querySelectorAll(".checked")
-      .forEach((child) => child.classList.remove("checked"));
-    filterButton.classList.add("checked");
-    // Клікає на кнопку перевірки ідентифікатора для виконання сортування
-    this.settings.checkIdButton.click();
+
+  static addDraggingEventForElements(container) {
+    const dragAndDropItems = container;
+
+    new Sortable(dragAndDropItems, {
+      animation: 150,
+      // chosenClass: "target-achiv-chosen",
+      // dragClass: "target-achiv-drag",
+    });
   }
 
+  static switchSectionVisibility(section) {
+    section.classList.toggle("hidden");
+    config.setNewPosition({
+      id: section.id,
+      hidden: section.classList.contains("hidden"),
+    });
+  }
+}
+
+class AchievementsBlock {
+  constructor() {
+    // Елементи блока досягнень
+    this.section = document.querySelector("#achievements_section"); // Секція блока досягнень
+    this.container = document.querySelector(".achievements-container"); //Контейнер  з досягненнями
+    this.resizer = document.querySelector("#achivs-resizer"); // Ресайзер блока досягнень
+    // Додавання подій для пересування вікна ачівментсів
+    this.section.addEventListener("mousedown", (e) => {
+      UI.moveEvent(this.section, e);
+    });
+    this.resizer.addEventListener("mousedown", (event) => {
+      event.stopPropagation();
+      this.section.classList.add("resized");
+      UI.resizeEvent({
+        event: event,
+        section: this.section,
+        postFunc: () => ui.settings.fitSizeVertically(),
+      });
+    });
+  }
+  clearAchievementsSection() {
+    const { container } = this;
+    container.innerHTML = "";
+  }
   // Розбирає отримані досягнення гри та відображає їх на сторінці
   parseGameAchievements(achivs) {
     // Очистити вміст розділу досягнень
     this.clearAchievementsSection();
 
     // Оновити інформацію про гру
-    this.updateGameInfo(achivs);
+    ui.updateGameInfo(achivs);
 
     // Відсортувати досягнення та відобразити їх
     this.displaySortedAchievements(achivs);
 
     // Підгонка розміру досягнень
-    this.fitSizeVertically();
-  }
-
-  clearAchievementsSection() {
-    const { container } = this.achievementsBlock;
-    container.innerHTML = "";
+    ui.settings.fitSizeVertically();
   }
 
   displaySortedAchievements(achievementsObject) {
     Object.values(achievementsObject.Achievements)
-      .filter((a) => this.FILTER_METHOD(a))
-      .sort((a, b) => this.SORT_METHOD(a, b))
+      .filter((a) => ui.FILTER_METHOD(a))
+      .sort((a, b) => ui.SORT_METHOD(a, b))
       .forEach((achievement) => {
         this.displayAchievement(
           this.fixAchievement(achievement, achievementsObject)
@@ -439,47 +259,10 @@ class UI {
   }
 
   displayAchievement(achievement) {
-    const { container } = this.achievementsBlock;
+    const { container } = this;
     const achivElement = this.generateAchievement(achievement);
     container.appendChild(achivElement);
   }
-
-  updateGameInfo({ Title, ConsoleName, ImageIcon, NumAchievements }) {
-    const { gamePreview, gameTitle, gamePlatform, gameAchivsCount } =
-      this.settings;
-
-    gamePreview.setAttribute(
-      "src",
-      `https://media.retroachievements.org${ImageIcon}`
-    );
-    gameTitle.innerText = Title || "Some game name";
-    gameAchivsCount.innerText = NumAchievements || 0;
-  }
-
-  updateGameCardInfo({
-    Title,
-    ImageBoxArt,
-    ConsoleName,
-    Developer,
-    Publisher,
-    Genre,
-    Released,
-    UserCompletion,
-    UserCompletionHardcore,
-  }) {
-    this.gameCard.header.innerText = Title;
-    this.gameCard.preview.setAttribute(
-      "src",
-      `https://media.retroachievements.org${ImageBoxArt}`
-    );
-    this.gameCard.platform.innerText = ConsoleName;
-    this.gameCard.developer.innerText = Developer || "-";
-    this.gameCard.publisher.innerText = Publisher || "-";
-    this.gameCard.genre.innerText = Genre || "-";
-    this.gameCard.released.innerText = Released || "-";
-    this.gameCard.completion.innerText = `${UserCompletion} [${UserCompletionHardcore}]`;
-  }
-
   //Додавання відсутніх властивостей
   fixAchievement(achievement, achievements) {
     const { BadgeName, DateEarned, DateEarnedHardcore } = achievement;
@@ -550,24 +333,10 @@ class UI {
 
     achivElement.addEventListener("mousedown", (e) => e.stopPropagation());
     toTargetButton.addEventListener("click", () => {
-      this.addAchieveToTarget(achievement);
+      ui.target.addAchieveToTarget(achievement);
     });
 
     return achivElement;
-  }
-  fixDetailsPosition(achivDetails) {
-    let { left, right, top, bottom } = achivDetails.getBoundingClientRect();
-    if (left < 0) {
-      achivDetails.classList.remove("left-side");
-    }
-    if (right > window.innerWidth) {
-      achivDetails.classList.add("left-side");
-    }
-    if (top < 0) {
-      achivDetails.classList.remove("top-side");
-    } else if (bottom > window.innerHeight) {
-      achivDetails.classList.add("top-side");
-    }
   }
   generateAchivDetails({
     Title,
@@ -588,87 +357,205 @@ class UI {
       `;
     return detailsElement;
   }
-
-  addAchieveToTarget({
-    Title,
-    prevSrc,
-    Description,
-    Points,
-    isEarned,
-    isHardcoreEarned,
-    ID,
-  }) {
-    // Перевіряємо чи ачівки нема в секції тарґет
-    if (
-      this.isAchievementInTargetSection({
-        ID: ID,
-        targetContainer: this.target.container,
-      })
-    ) {
-      return;
+  fixDetailsPosition(achivDetails) {
+    let { left, right, top, bottom } = achivDetails.getBoundingClientRect();
+    if (left < 0) {
+      achivDetails.classList.remove("left-side");
     }
-
-    let targetElement = document.createElement("li");
-    targetElement.classList.add("target-achiv");
-
-    if (isEarned) {
-      targetElement.classList.add("earned");
-      if (isHardcoreEarned) {
-        targetElement.classList.add("hardcore");
-      }
+    if (right > window.innerWidth) {
+      achivDetails.classList.add("left-side");
     }
-
-    targetElement.dataset.achivId = ID;
-
-    targetElement.innerHTML = `
-    <button class="delete-from-target" title="remove from target" onclick="ui.deleteFromTarget(this)">
-      <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-        <path d="M280-440h400v-80H280v80ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
-      </svg>
-    </button>
-    <div class="prev">
-              <img
-                class="prev-img"
-                src="${prevSrc}"
-                alt=" "
-              />
-            </div>
-            <div class="target-achiv-details">
-              <h3 class="achiv-name">${Title}</h3>
-              <p class="achiv-description">${Description}</p>
-              <p class="points">${Points} points</p>
-            </div>
-    `;
-    targetElement.addEventListener("mousedown", (e) => e.stopPropagation());
-    this.target.container.appendChild(targetElement);
-
-    this.addDraggingEventForElements(this.target.container);
+    if (top < 0) {
+      achivDetails.classList.remove("top-side");
+    } else if (bottom > window.innerHeight) {
+      achivDetails.classList.add("top-side");
+    }
   }
-  addDraggingEventForElements(container) {
-    const dragAndDropItems = container;
+}
 
-    new Sortable(dragAndDropItems, {
-      animation: 150,
-      // chosenClass: "target-achiv-chosen",
-      // dragClass: "target-achiv-drag",
+class ButtonPanel {
+  constructor() {
+    this.section = document.querySelector("#buttons_section");
+    this.settings = document.querySelector("#open-settings-button");
+    this.achievements = document.querySelector("#open-achivs-button");
+    this.login = document.querySelector("#open-login-button");
+    this.about = document.querySelector("#open-about-button");
+    this.gameCard = document.querySelector("#open-game-card-button");
+    this.target = document.querySelector("#open-target-button");
+  }
+}
+
+class Settings {
+  constructor() {
+    // Елементи налаштувань
+    this.section = document.querySelector(".prefs_section"); //* Контейнер налаштувань
+    this.header = document.querySelector(".prefs-header-container");
+    this.updateInterval = document.querySelector("#update-time"); // Поле введення інтервалу оновлення
+    this.sortByLatestButton = document.querySelector("#sort-by-latest"); // Кнопка сортування за останніми
+    this.sortByEarnedButton = document.querySelector("#sort-by-earned"); // Кнопка сортування за заробленими
+    this.sortByPointsButton = document.querySelector("#sort-by-points"); // Кнопка сортування за балами
+    this.sortByDefaultButton = document.querySelector("#sort-by-default"); // Кнопка сортування за замовчуванням
+    this.filterByAll = document.querySelector("#filter-by-all"); // Фільтр за всіма
+    this.filterByEarned = document.querySelector("#filter-by-earned"); // Фільтр за заробленими
+    this.filterByNotEarned = document.querySelector("#filter-by-not-earned"); // Фільтр за не заробленими
+    this.stretchButton = document.querySelector("#stretch-achivs");
+    this.minimumWidthInput = document.querySelector("#achiv-min-width");
+    this.maximumWidthInput = document.querySelector("#achiv-max-width");
+    this.targetUserInput = document.querySelector("#target-user");
+    this.gameID = document.querySelector("#game-id"); // Поле введення ідентифікатора гри
+    this.watchButton = document.querySelector("#watching-button"); // Кнопка спостереження за грою
+    this.getGameIdButton = document.querySelector(".get-id-button"); // Кнопка отримання ідентифікатора гри
+    this.checkIdButton = document.querySelector(".check-id-button"); // Кнопка перевірки ідентифікатора гри
+    this.gamePreview = document.querySelector("#game-preview"); // Іконка гри
+    this.gameTitle = document.querySelector("#game-title"); // Заголовок гри
+    this.gamePlatform = document.querySelector("#game-platform"); // Платформа гри
+    this.gameAchivsCount = document.querySelector("#game-achivs-count"); // Кількість досягнень гри
+    //
+    this.addEvents();
+  }
+  addEvents() {
+    // Додаємо обробник події 'change' для поля введення інтервалу оновлення
+    this.updateInterval.addEventListener("change", () => {
+      // Оновлюємо інтервал оновлення
+      config.updateDelay = this.updateInterval.value || 5;
+    });
+
+    // Додаємо обробник події 'change' для поля введення ідентифікатора гри
+    this.gameID.addEventListener("change", () => {
+      // Оновлюємо ідентифікатор гри
+      config.gameID = this.gameID.value;
+    });
+
+    // Додає подію кліку для сортування за замовчуванням
+    this.sortByDefaultButton.addEventListener("click", (e) => {
+      e.stopPropagation();
+      // Встановлює метод сортування за замовчуванням
+      ui.SORT_METHOD = sortBy.default;
+      // Застосовує сортування та оновлює інтерфейс
+      this.applySorting({ sortButton: this.sortByDefaultButton });
+    });
+
+    // Додає подію кліку для сортування за отриманням досягнення
+    this.sortByEarnedButton.addEventListener("click", (e) => {
+      e.stopPropagation();
+      // Встановлює метод сортування за отриманням досягнення
+      ui.SORT_METHOD = sortBy.earnedCount;
+      // Застосовує сортування та оновлює інтерфейс
+      this.applySorting({ sortButton: this.sortByEarnedButton });
+    });
+
+    // Додає подію кліку для сортування за датою отримання
+    this.sortByLatestButton.addEventListener("click", (e) => {
+      e.stopPropagation();
+      // Встановлює метод сортування за датою отримання
+      ui.SORT_METHOD = sortBy.latest;
+      // Застосовує сортування та оновлює інтерфейс
+      this.applySorting({ sortButton: this.sortByLatestButton });
+    });
+
+    // Додає подію кліку для сортування за кількістю балів
+    this.sortByPointsButton.addEventListener("click", (e) => {
+      e.stopPropagation();
+      // Встановлює метод сортування за кількістю балів
+      ui.SORT_METHOD = sortBy.points;
+      // Застосовує сортування та оновлює інтерфейс
+      this.applySorting({ sortButton: this.sortByPointsButton });
+    });
+    // Додає подію кліку для фільтрування
+    this.filterByEarned.addEventListener("click", (e) => {
+      e.stopPropagation();
+      ui.FILTER_METHOD = filterBy.earned;
+      this.applyFilter({ filterButton: this.filterByEarned });
+    });
+    this.filterByNotEarned.addEventListener("click", (e) => {
+      e.stopPropagation();
+      ui.FILTER_METHOD = filterBy.notEarned;
+      this.applyFilter({ filterButton: this.filterByNotEarned });
+    });
+    this.filterByAll.addEventListener("click", (e) => {
+      e.stopPropagation();
+      ui.FILTER_METHOD = filterBy.all;
+      this.applyFilter({ filterButton: this.filterByAll });
+    });
+
+    this.stretchButton.addEventListener("click", (e) => {
+      const { stretchButton } = this;
+      if (stretchButton.classList.contains("checked")) {
+        stretchButton.classList.remove("checked");
+        ui.achievementsBlock.container.style.height = "auto";
+      } else {
+        stretchButton.classList.add("checked");
+        ui.achievementsBlock.container.style.height = "100%";
+      }
+    });
+    this.minimumWidthInput.addEventListener("change", (e) => {
+      const { minimumWidthInput } = this;
+      if (minimumWidthInput.value)
+        config.ACHIV_MIN_SIZE = minimumWidthInput.value;
+      this.fitSizeVertically();
+    });
+    this.maximumWidthInput.addEventListener("change", (e) => {
+      const { maximumWidthInput } = this;
+      if (maximumWidthInput.value)
+        config.ACHIV_MAX_SIZE = maximumWidthInput.value;
+      this.fitSizeVertically();
+    });
+
+    this.targetUserInput.addEventListener("change", (e) => {
+      e.stopPropagation();
+      config.targetUser = this.targetUserInput.value;
+    });
+    // Додаємо обробник події 'click' для кнопки автооновлення
+    this.watchButton.addEventListener("click", (e) => {
+      e.stopPropagation();
+      // Перевіряємо стан кнопки та відповідно запускаємо або припиняємо автооновлення
+      if (this.watchButton.classList.contains("active")) {
+        stopWatching();
+      } else {
+        startWatching();
+      }
+    });
+
+    //Додаємо обробник події 'click' для кнопки отримання id останньої гри
+    this.getGameIdButton.addEventListener("click", () => {
+      apiWorker.getProfileInfo({}).then((resp) => {
+        this.gameID.value = resp.LastGameID;
+        config.gameID = resp.LastGameID;
+      });
+    });
+
+    //Додаємо обробник події 'click' для кнопки отримання списку ачівментсів для вибраного id гри
+    this.checkIdButton.addEventListener("click", () => {
+      getAchievements();
+    });
+
+    // Додавання подій для пересування вікна налаштувань
+    this.header.addEventListener("mousedown", (e) => {
+      UI.moveEvent(this.section, e);
     });
   }
-  isAchievementInTargetSection({ ID, targetContainer }) {
-    const targetAchievements = [
-      ...targetContainer.querySelectorAll(".target-achiv"),
-    ].map((el) => +el.dataset.achivId);
-
-    return targetAchievements.includes(ID);
+  applySorting({ sortButton }) {
+    // Знімає клас "checked" з усіх кнопок сортування
+    sortButton.parentNode
+      .querySelectorAll(".checked")
+      ?.forEach((child) => child.classList.remove("checked"));
+    // Додає клас "checked" до обраної кнопки сортування
+    sortButton.classList.add("checked");
+    // Клікає на кнопку перевірки ідентифікатора для виконання сортування
+    this.checkIdButton.click();
   }
-
-  deleteFromTarget(button) {
-    button.parentNode.remove();
+  applyFilter({ filterButton }) {
+    filterButton.parentNode
+      .querySelectorAll(".checked")
+      .forEach((child) => child.classList.remove("checked"));
+    filterButton.classList.add("checked");
+    // Клікає на кнопку перевірки ідентифікатора для виконання сортування
+    this.checkIdButton.click();
   }
-
   // Автопідбір розміру значків ачівментсів
   fitSizeVertically() {
     // Отримання посилання на блок досягнень та його дочірні елементи
-    const { section, container } = this.achievementsBlock;
+    const { section, container } = ui.achievementsBlock;
     const achivs = Array.from(container.children);
     const achivsCount = achivs.length;
 
@@ -700,53 +587,59 @@ class UI {
     // Встановлення розміру кожного досягнення в блоку
     achivs.forEach((achiv) => (achiv.style.width = achivWidth + "px"));
   }
-
-  switchSectionVisibility(section) {
-    section.classList.toggle("hidden");
-    config.setNewPosition({
-      id: section.id,
-      hidden: section.classList.contains("hidden"),
-    });
-  }
 }
 
-//* Методи сортування для досягнень гри
-const sortBy = {
-  latest: (a, b) => {
-    // Перевіряємо, чи існують дати та обираємо найновішу
-    const dateA = a.DateEarnedHardcore
-      ? new Date(a.DateEarnedHardcore)
-      : -Infinity;
-    const dateB = b.DateEarnedHardcore
-      ? new Date(b.DateEarnedHardcore)
-      : -Infinity;
-    const dateA2 = a.DateEarned ? new Date(a.DateEarned) : -Infinity;
-    const dateB2 = b.DateEarned ? new Date(b.DateEarned) : -Infinity;
-    const maxDateA = Math.max(dateA, dateA2);
-    const maxDateB = Math.max(dateB, dateB2);
-    return dateB - dateA; // Повертає різницю дат
-  },
+class GameCard {
+  constructor() {
+    // Елементи інформації про гру
+    this.section = document.querySelector(".game-card_section"); // Контейнер інформації про гру
+    this.header = document.querySelector("#game-card-header"); // Заголовок гри
+    this.preview = document.querySelector("#game-card-image"); // Зображення гри
+    this.platform = document.querySelector("#game-card-platform"); // Платформа гри
+    this.developer = document.querySelector("#game-card-developer"); // Розробник гри
+    this.publisher = document.querySelector("#game-card-publisher"); // Видавець гри
+    this.genre = document.querySelector("#game-card-genre"); // Жанр гри
+    this.released = document.querySelector("#game-card-released"); // Дата випуску гри
+    this.completion = document.querySelector("#game-card-completion"); // Статус завершення гри
+    //-----------
 
-  earnedCount: (a, b) => b.NumAwardedHardcore - a.NumAwardedHardcore,
-
-  points: (a, b) => a.Points - b.Points,
-
-  default: (a, b) => 0,
-};
-
-//* Методи фільтрування для досягнень гри
-const filterBy = {
-  earned: (achievement) => achievement.DateEarnedHardcore,
-  notEarned: (achievement) => !achievement.DateEarnedHardcore,
-  all: () => true,
-};
+    // Додавання подій для пересування вікна картки гри
+    this.section.addEventListener("mousedown", (e) => {
+      UI.moveEvent(this.section, e);
+    });
+  }
+  updateGameCardInfo({
+    Title,
+    ImageBoxArt,
+    ConsoleName,
+    Developer,
+    Publisher,
+    Genre,
+    Released,
+    UserCompletion,
+    UserCompletionHardcore,
+  }) {
+    this.header.innerText = Title;
+    this.preview.setAttribute(
+      "src",
+      `https://media.retroachievements.org${ImageBoxArt}`
+    );
+    this.platform.innerText = ConsoleName;
+    this.developer.innerText = Developer || "-";
+    this.publisher.innerText = Publisher || "-";
+    this.genre.innerText = Genre || "-";
+    this.released.innerText = Released || "-";
+    this.completion.innerText = `${UserCompletion} [${UserCompletionHardcore}]`;
+  }
+}
 
 class Awards {
   constructor() {
     this.section = document.querySelector(".awards_section"); // Контейнер інформації про гру
+    this.header = document.querySelector(".awards-header_container");
     this.container = document.querySelector(".awards-content_container");
     // Додавання подій для пересування вікна досягнень
-    this.section.addEventListener("mousedown", (e) => {
+    this.header.addEventListener("mousedown", (e) => {
       UI.moveEvent(this.section, e);
     });
     this.section.querySelector("#awards-button").click();
@@ -762,7 +655,7 @@ class Awards {
         <li class="awarded-games completed">${userAwards.CompletionAwardsCount}</li>
         <li class="awarded-games mastered">${userAwards.MasteryAwardsCount}</li>
       </ul>
-      <button class="expand-awards_button" onclick="expandAwards(this)"> </button>
+      <button class="expand-awards_button" onclick="ui.awards.expandAwards(this)"> </button>
       <ul class="awarded-games_list total hidden">
       </ul>
     </li>
@@ -816,9 +709,15 @@ class Awards {
     // Перебираємо масив ігор для оновлення даних та вставки нових нагород
     gamesArray.forEach((game) => {
       // Отримуємо контейнер нагород для конкретної консолі
-      const consoleAwardsContainer = this.container.querySelector(
+      let consoleAwardsContainer = this.container.querySelector(
         `.console-awards[data-console-name="${game.ConsoleName}"]`
       );
+      if (!consoleAwardsContainer) {
+        consoleAwardsContainer = this.makeConsoleListElement({
+          consoleName: game.ConsoleName,
+        });
+        this.container.appendChild(consoleAwardsContainer);
+      }
       // Отримуємо список нагород для конкретної консолі
       const consoleAwardsList = consoleAwardsContainer.querySelector(
         ".awarded-games_list"
@@ -912,7 +811,7 @@ class Awards {
           <li class="awarded-games completed">${compleated}</li>
           <li class="awarded-games mastered">${mastered}</li>
         </ul>
-        <button class="expand-awards_button" onclick="expandAwards(this)"> </button>
+        <button class="expand-awards_button" onclick="ui.awards.expandAwards(this)"> </button>
         <ul class="awarded-games_list hidden total">
         </ul>
         `;
@@ -922,6 +821,25 @@ class Awards {
         gamesList.appendChild(this.makeGameAwardsElement(game));
       });
     });
+  }
+  makeConsoleListElement({ consoleName }) {
+    let consoleListItem = document.createElement("li");
+    consoleListItem.classList.add("console-awards");
+    consoleListItem.dataset.consoleName = consoleName;
+    consoleListItem.innerHTML = `
+        <h3 class="awards-console_header">${consoleName}</h3>
+        <ul class="console-awards-values">      
+          <li class="awarded-games total">0</li>
+          <li class="awarded-games beaten-softcore">0</li>
+          <li class="awarded-games beaten">0</li>
+          <li class="awarded-games completed">0</li>
+          <li class="awarded-games mastered">0</li>
+        </ul>
+        <button class="expand-awards_button" onclick="ui.awards.expandAwards(this)"> </button>
+        <ul class="awarded-games_list hidden total">
+        </ul>
+        `;
+    return consoleListItem;
   }
   makeGameAwardsElement(game) {
     let gameElement = document.createElement("li");
@@ -938,4 +856,132 @@ class Awards {
       `;
     return gameElement;
   }
+
+  expandAwards(button) {
+    const expandContent = button.nextElementSibling;
+    expandContent.classList.toggle("hidden");
+  }
 }
+
+class Target {
+  constructor() {
+    this.section = document.querySelector("#target_section");
+    this.header = document.querySelector(".target-header_container");
+    this.container = document.querySelector(".target-container");
+
+    // Додавання подій для пересування вікна target
+    this.header.addEventListener("mousedown", (e) => {
+      UI.moveEvent(this.section, e);
+    });
+  }
+  isAchievementInTargetSection({ ID, targetContainer }) {
+    const targetAchievements = [
+      ...targetContainer.querySelectorAll(".target-achiv"),
+    ].map((el) => +el.dataset.achivId);
+
+    return targetAchievements.includes(ID);
+  }
+  addAchieveToTarget({
+    Title,
+    prevSrc,
+    Description,
+    Points,
+    isEarned,
+    isHardcoreEarned,
+    ID,
+  }) {
+    // Перевіряємо чи ачівки нема в секції тарґет
+    if (
+      this.isAchievementInTargetSection({
+        ID: ID,
+        targetContainer: this.container,
+      })
+    ) {
+      return;
+    }
+
+    let targetElement = document.createElement("li");
+    targetElement.classList.add("target-achiv");
+
+    if (isEarned) {
+      targetElement.classList.add("earned");
+      if (isHardcoreEarned) {
+        targetElement.classList.add("hardcore");
+      }
+    }
+
+    targetElement.dataset.achivId = ID;
+
+    targetElement.innerHTML = `
+    <button class="delete-from-target" title="remove from target" onclick="ui.target.deleteFromTarget(this)">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+        <path d="M280-440h400v-80H280v80ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+      </svg>
+    </button>
+    <div class="prev">
+              <img
+                class="prev-img"
+                src="${prevSrc}"
+                alt=" "
+              />
+            </div>
+            <div class="target-achiv-details">
+              <h3 class="achiv-name">${Title}</h3>
+              <p class="achiv-description">${Description}</p>
+              <p class="points">${Points} points</p>
+            </div>
+    `;
+    targetElement.addEventListener("mousedown", (e) => e.stopPropagation());
+    this.container.appendChild(targetElement);
+
+    UI.addDraggingEventForElements(this.container);
+  }
+  deleteFromTarget(button) {
+    button.parentNode.remove();
+  }
+}
+
+class LoginCard {
+  constructor() {
+    this.section = document.querySelector("#login_section");
+    this.header = document.querySelector(".login-header_container");
+    this.userName = document.querySelector("#login-user-name");
+    this.apiKey = document.querySelector("#login-api-key");
+    this.userImage = document.querySelector(".login-user-image");
+    //
+    this.header.addEventListener("mousedown", (e) => {
+      UI.moveEvent(this.section, e);
+    });
+  }
+}
+
+//* Методи сортування для досягнень гри
+const sortBy = {
+  latest: (a, b) => {
+    // Перевіряємо, чи існують дати та обираємо найновішу
+    const dateA = a.DateEarnedHardcore
+      ? new Date(a.DateEarnedHardcore)
+      : -Infinity;
+    const dateB = b.DateEarnedHardcore
+      ? new Date(b.DateEarnedHardcore)
+      : -Infinity;
+    const dateA2 = a.DateEarned ? new Date(a.DateEarned) : -Infinity;
+    const dateB2 = b.DateEarned ? new Date(b.DateEarned) : -Infinity;
+    const maxDateA = Math.max(dateA, dateA2);
+    const maxDateB = Math.max(dateB, dateB2);
+    return dateB - dateA; // Повертає різницю дат
+  },
+
+  earnedCount: (a, b) => b.NumAwardedHardcore - a.NumAwardedHardcore,
+
+  points: (a, b) => a.Points - b.Points,
+
+  default: (a, b) => 0,
+};
+
+//* Методи фільтрування для досягнень гри
+const filterBy = {
+  earned: (achievement) => achievement.DateEarnedHardcore,
+  notEarned: (achievement) => !achievement.DateEarnedHardcore,
+  all: () => true,
+};

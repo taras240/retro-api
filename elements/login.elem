@@ -1,5 +1,5 @@
 <section id="login_section" class="login_section section">
-  <div class="header-container">
+  <div class="header-container login-header_container">
     <div class="header-icon">
       <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
         <path

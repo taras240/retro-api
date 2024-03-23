@@ -1,5 +1,5 @@
 <section id="target_section" class="target_section section">
-  <div class="header-container">
+  <div class="header-container target-header_container">
     <div class="header-icon"></div>
     <h2 class="target-header">Target</h2>
     <div class="header-icon header-button" title="clear all" onclick="clearTarget()">

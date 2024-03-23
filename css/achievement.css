@@ -1,4 +1,4 @@
-.achivs {
+.section.achivs {
   position: absolute;
   width: 30vw;
   height: 30vh;
@@ -6,6 +6,9 @@
 }
 .achivs.resized {
   transition: none;
+}
+.achivs:not(:hover) {
+  box-shadow: 0 0 5px 2px transparent;
 }
 .achivs:hover {
   background-color: var(--secondary-color);

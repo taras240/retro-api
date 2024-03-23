@@ -7,7 +7,7 @@
   top: 31%;
   left: 1%;
   background-color: var(--main-color);
-  z-index: 2;
+  z-index: 5;
 }
 .prefs-header {
   position: relative;

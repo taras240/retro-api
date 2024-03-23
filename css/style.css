@@ -53,11 +53,10 @@ body {
   visibility: visible;
   border-radius: 5px;
   /* border: 1px solid transparent; */
-  cursor: grab;
   user-select: none;
   opacity: 1;
   box-shadow: 0 0 5px 2px black;
-  transition: 0.2s;
+  /* transition: 0.2s; */
 }
 .section.dragable {
   z-index: 101;
@@ -67,6 +66,7 @@ body {
 .section.hidden {
   visibility: hidden;
   opacity: 0;
+  pointer-events: none;
   transition: opacity 0.2s ease-in-out;
 }
 .section:hover {
@@ -74,6 +74,7 @@ body {
 }
 
 .header-container {
+  cursor: grab;
   display: flex;
   justify-content: space-between;
   align-items: center;

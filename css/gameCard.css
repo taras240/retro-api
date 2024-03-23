@@ -6,6 +6,7 @@
   width: 300px;
   max-height: 100vh;
   overflow: hidden;
+  cursor: grab;
 }
 .game-card_section.hidden {
 }
