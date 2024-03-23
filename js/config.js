@@ -36,6 +36,7 @@ class Config {
     this._cfg.settings.targetUser = value;
     this.writeConfiguration();
     ui.settings.getGameIdButton.click();
+    getAwards();
   }
   get gameID() {
     return this._cfg.settings.gameID;

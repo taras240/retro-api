@@ -1,6 +1,6 @@
 let config = new Config();
 const RECENT_DELAY_MILISECS = 20 * 60 * 1000; //mins * secs * milisecs
-const RECENT_ACHIVES_RANGE_MINUTES = 50;
+const RECENT_ACHIVES_RANGE_MINUTES = 20000;
 // Ініціалізація UI
 let ui = new UI();
 // Ініціалізація APIWorker з ідентифікацією користувача
@@ -11,6 +11,7 @@ let apiTikInterval;
 // Функція для отримання досягнень гри
 async function getAchievements() {
   try {
+    ui.settings.watchButton.classList.remove("error");
     // Отримання інформації про прогрес гри від API
     const response = await apiWorker.getGameProgress(config);
 
@@ -31,7 +32,16 @@ async function getAchievements() {
 }
 async function getAwards() {
   const response = await apiWorker.getUserAwards({});
-  ui.parseAwards(response);
+  ui.awards.parseAwards(response);
+}
+async function updateAwards() {
+  const response = await apiWorker.getUserAwards({});
+  if (
+    response.TotalAwardsCount !=
+    ui.awards.container.querySelector(".awarded-games.total").innerText
+  ) {
+    ui.awards.parseNewAwards({ userAwards: response });
+  }
 }
 // Функція для оновлення досягнень
 async function updateAchievements() {
@@ -56,12 +66,14 @@ async function updateAchievements() {
         const isHardcoreMismatch =
           achievementElement.classList.contains("hardcore") !== isHardcore;
         const isNotEarned = !achievementElement.classList.contains("earned");
-
+        const isAchieved = isNotEarned || isHardcoreMismatch;
         // Перевірка, чи потрібно перемістити елемент на початок
-        if (isLatestSort && (isHardcoreMismatch || isNotEarned)) {
+        if (isLatestSort && isAchieved) {
           switchElementToStart(achievementElement);
         }
-
+        if (isAchieved) {
+          updateAwards();
+        }
         // Додавання класів для відображення зароблених досягнень
         achievementElement?.classList.add("earned");
         targetElement?.classList.add("earned");
@@ -84,7 +96,6 @@ function startWatching() {
   // Оновлення стану та тексту кнопки слідкування
   ui.settings.watchButton.classList.add("active");
   // ui.settings.watchButton.innerText = "Watching";
-  ui.settings.watchButton.classList.remove("error");
 
   // Отримання початкових досягнень
   getAchievements();

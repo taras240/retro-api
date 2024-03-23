@@ -1,12 +1,13 @@
 // Об'єкт, що містить імена розділів і шляхи до них
 const sections = {
-  gameCard: "./elements/gameCard.jsx",
-  about: "./elements/about.jsx",
-  target: "./elements/target.jsx",
-  achievements: "./elements/achievements.jsx",
-  login: "./elements/login.jsx",
-  panel: "./elements/panel.jsx",
-  settings: "./elements/settings.jsx",
+  gameCard: "./elements/gameCard.elem",
+  about: "./elements/about.elem",
+  target: "./elements/target.elem",
+  achievements: "./elements/achievements.elem",
+  login: "./elements/login.elem",
+  panel: "./elements/panel.elem",
+  settings: "./elements/settings.elem",
+  awards: "./elements/awards.elem",
 };
 
 // Функція для завантаження розділів

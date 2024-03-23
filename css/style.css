@@ -56,6 +56,7 @@ body {
   cursor: grab;
   user-select: none;
   opacity: 1;
+  box-shadow: 0 0 5px 2px black;
   transition: 0.2s;
 }
 .section.dragable {
