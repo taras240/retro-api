@@ -3,7 +3,7 @@
   top: 30px;
   left: 20%;
   min-width: 350px;
-  width: 400px;
+  width: 390px;
   height: 600px;
   max-height: 80vh;
   background-color: var(--main-color);
@@ -58,8 +58,8 @@
 .console-awards {
   display: grid;
   grid-template-columns: 1fr auto auto;
-  column-gap: 10px;
-  padding: 10px 5px 10px 15px;
+  /* column-gap: 10px; */
+  padding: 10px 15px 10px 15px;
   overflow: visible;
 }
 .console-awards:nth-child(even) {
@@ -123,11 +123,26 @@
   /* transition: 0.2s ease-in-out; */
 }
 .awarded-game {
+  margin: 10px 0;
+  /* border: 1px solid black; */
+  border-radius: 5px;
+  overflow: hidden;
   position: relative;
   padding: 10px 15px;
   display: grid;
   column-gap: 10px;
   grid-template-columns: auto 1fr;
+  transition: 0.2s;
+}
+.console-awards:nth-child(odd) .awarded-game {
+  background-color: var(--secondary-color);
+}
+.console-awards:nth-child(even) .awarded-game {
+  background-color: var(--main-color);
+}
+.awarded-game:hover {
+  transform: scale(1.05);
+  transition: 0.2s;
 }
 .awarded-game::after {
   --dot-fill-to-color: transparent;
@@ -142,7 +157,7 @@
   aspect-ratio: 1;
   border-radius: 50%;
   overflow: hidden;
-  opacity: 0.7;
+  opacity: 0.5;
   /* background-image: linear-gradient(to bottom right, var(--dot-fill-color)); */
   background-image: radial-gradient(
     circle,
@@ -153,6 +168,11 @@
   background-color: var(--dot-fill-to-color);
   box-shadow: 0 0 10px 1px var(--dot-fill-to-color) inset;
   box-shadow: 0 0 5px 2px var(--dot-fill-to-color);
+  transition: 0.2s;
+}
+.awarded-game:hover::after {
+  opacity: 1;
+  transition: 0.2s;
 }
 .awarded-game.beatenSoftcore::after {
   --dot-border-color: gray;
@@ -170,9 +190,9 @@
   --dot-fill-to-color: gold;
   filter: blur(0.5px);
 }
-.awarded-game:not(:last-child) {
+/* .awarded-game:not(:last-child) {
   border-bottom: 1px solid rgba(128, 128, 128, 0.253);
-}
+} */
 .game-title {
   padding: 0;
 }
@@ -194,6 +214,7 @@
   align-self: center;
   aspect-ratio: 1;
   opacity: 0.5;
+  margin-left: 15px;
   /* transition: 0.2s; */
 }
 .expand-awards_button:hover {

@@ -46,12 +46,20 @@
   padding: 10px;
   width: 100%;
 }
+.target-achiv:hover {
+  transform: scale(1.02);
+
+  transition: 0.2s;
+}
 .prev-img {
   height: 80px;
   aspect-ratio: 1;
   filter: grayscale(1);
   image-rendering: pixelated;
   transition: 0.2s;
+  border-radius: 4px;
+
+  overflow: hidden;
 }
 .target-achiv.earned .prev-img {
   filter: grayscale(0.8);
@@ -119,7 +127,7 @@
   transition: 0.2s;
 }
 .target-achiv .prev {
-  margin: auto 0;
+  align-self: center;
 }
 .delete-from-target:hover {
   opacity: 1;
