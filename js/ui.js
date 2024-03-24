@@ -645,6 +645,8 @@ class Awards {
     this.section.querySelector("#awards-button").click();
   }
   parseAwards(userAwards) {
+    if (!userAwards?.TotalAwardsCount) return;
+    console.log(userAwards);
     this.container.innerHTML = `
       <li class="console-awards all-consoles">
       <h3 class="awards-console_header">Total</h3>

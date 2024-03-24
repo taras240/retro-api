@@ -35,8 +35,10 @@ class Config {
   set targetUser(value) {
     this._cfg.settings.targetUser = value;
     this.writeConfiguration();
-    ui.settings.getGameIdButton.click();
-    getAwards();
+    if (this.identConfirmed) {
+      ui.settings.getGameIdButton.click();
+      getAwards();
+    }
   }
   get gameID() {
     return this._cfg.settings.gameID;
@@ -44,7 +46,9 @@ class Config {
   set gameID(value) {
     this._cfg.settings.gameID = value;
     this.writeConfiguration();
-    getAchievements();
+    if (this.identConfirmed) {
+      getAchievements();
+    }
   }
   get updateDelay() {
     return this._cfg.settings.updateDelay;
