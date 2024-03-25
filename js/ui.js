@@ -638,15 +638,25 @@ class Awards {
     this.section = document.querySelector(".awards_section"); // Контейнер інформації про гру
     this.header = document.querySelector(".awards-header_container");
     this.container = document.querySelector(".awards-content_container");
+    this.resizer = document.querySelector("#awards-resizer");
     // Додавання подій для пересування вікна досягнень
     this.header.addEventListener("mousedown", (e) => {
       UI.moveEvent(this.section, e);
     });
     this.section.querySelector("#awards-button").click();
+    this.resizer.addEventListener("mousedown", (event) => {
+      event.stopPropagation();
+      this.section.classList.add("resized");
+      UI.resizeEvent({
+        event: event,
+        section: this.section,
+        postFunc: () => "",
+      });
+    });
   }
   parseAwards(userAwards) {
     if (!userAwards?.TotalAwardsCount) return;
-    console.log(userAwards);
+    // console.log(userAwards);
     this.container.innerHTML = `
       <li class="console-awards all-consoles">
       <h3 class="awards-console_header">Total</h3>

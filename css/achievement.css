@@ -14,7 +14,7 @@
   background-color: var(--secondary-color);
   transition: none;
 }
-.resizer {
+.section .resizer {
   position: absolute;
   bottom: 0;
   right: 0;
@@ -23,20 +23,21 @@
   background-color: transparent;
   cursor: nwse-resize;
 }
-.achivs:hover .resizer:hover::after {
+.section:hover .resizer::after {
+  background-color: green;
+}
+.resizer:hover::after {
   width: 15px;
   height: 15px;
   transition: 0.2s;
 }
-.achivs:hover .resizer:active::after {
+.section .resizer:active::after {
   width: 10px;
   height: 10px;
   background-color: red;
   transition: 0.2s;
 }
-.achivs:hover .resizer::after {
-  background-color: green;
-}
+
 .resizer::after {
   content: "";
   position: absolute;

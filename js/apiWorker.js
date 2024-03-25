@@ -11,6 +11,7 @@ class APIWorker {
     extendedGameInfo: "API_GetGameExtended.php",
     recentlyPlayedGames: "API_GetUserRecentlyPlayedGames.php",
     userAwards: "API_GetUserAwards.php",
+    completionProgress: "API_GetUserCompletionProgress.php",
   };
 
   // Генерує URL для запиту до API
@@ -40,6 +41,14 @@ class APIWorker {
   // Отримання інформації про профіль користувача
   getProfileInfo({ targetUser }) {
     let url = this.getUrl({ endpoint: this.endpoints.userProfile });
+    return fetch(url).then((resp) => resp.json());
+  }
+  //Отримати прогрес завершення користувача
+  getUserCompelitionProgress({ targetUser }) {
+    let url = this.getUrl({
+      targetUser: targetUser || config.targetUser,
+      endpoint: this.endpoints.completionProgress,
+    });
     return fetch(url).then((resp) => resp.json());
   }
   //Отримати нагороди користувача
