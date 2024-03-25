@@ -3,6 +3,7 @@
   width: 30vw;
   height: 30vh;
   background-color: transparent;
+  cursor: grab;
 }
 .achivs.resized {
   transition: none;
@@ -38,6 +39,7 @@
   width: auto;
   aspect-ratio: 1;
   flex-shrink: 0;
+  cursor: default;
   /* background-color: rgb(46, 46, 46); */
 }
 .achiv-block.recent-earned {
