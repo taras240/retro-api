@@ -191,3 +191,39 @@ body {
   top: 4px;
   right: 4px;
 } */
+.section .resizer {
+  position: absolute;
+  top: 100%;
+  left: 100%;
+  transform: translate(-55%, -100%);
+  width: 40px;
+  aspect-ratio: 1.5;
+  background-color: transparent;
+  cursor: nwse-resize;
+  z-index: 1;
+}
+.resizer::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 15px;
+  aspect-ratio: 1;
+  transform: translate(-100%, -50%);
+  background-color: transparent;
+  border-radius: 50%;
+  overflow: hidden;
+  transition: 0.2s;
+}
+.section:hover .resizer::after {
+  background-color: green;
+}
+.resizer:hover::after {
+  width: 20px;
+  transition: 0.2s;
+}
+.section .resizer:active::after {
+  width: 15px;
+  background-color: red;
+  transition: 0.2s;
+}
