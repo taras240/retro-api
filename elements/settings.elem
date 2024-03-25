@@ -11,34 +11,51 @@
   <div class="settings_container">
     <div class="sort-settings input-container sort-buttons">
       <label>Sort:</label>
-      <button id="sort-by-latest" class="sort-achivs-button setting-button" title="not hard - not earn">
-        latest
-      </button>
+      <div class="setting-radio-group">
+        <input type="radio" name="sort" id="sort-by-latest" class="sort-achivs-button setting-button"
+          title="not hard - not earn">
+        </input>
+        <label class="radio-button" for="sort-by-latest">latest</label>
+      </div>
+      <div class="setting-radio-group">
+        <input type="radio" name="sort" id="sort-by-earned" class="sort-achivs-button setting-button">
+        </input>
+        <label class="radio-button" for="sort-by-earned">rarest</label>
+      </div>
+      <div class="setting-radio-group">
+        <input type="radio" name="sort" id="sort-by-points" class="sort-achivs-button setting-button">
+        </input>
+        <label class="radio-button" for="sort-by-points">points</label>
+      </div>
+      <div class="setting-radio-group">
+        <input type="radio" name="sort" id="sort-by-default" class="sort-achivs-button setting-button">
+        </input>
+        <label class="radio-button" for="sort-by-default">default</label>
+      </div>
 
-      <button id="sort-by-earned" class="sort-achivs-button setting-button">
-        rarest
-      </button>
-
-      <button id="sort-by-points" class="sort-achivs-button setting-button">
-        points
-      </button>
-
-      <button id="sort-by-default" class="setting-button checked">
-        default
-      </button>
     </div>
 
     <div class="filter-settings input-container sort-buttons" title="not hard - not earn">
       <label>Filter:</label>
-      <button id="filter-by-earned" class="filter-achivs-button setting-button">
-        earned
-      </button>
-      <button id="filter-by-not-earned" class="filter-achivs-button setting-button">
-        not earned
-      </button>
-      <button id="filter-by-all" class="filter-achivs-button setting-button checked">
-        all
-      </button>
+      <div class="setting-radio-group">
+        <input type="radio" name="filter" id="filter-by-earned" class="filter-achivs-radio ">
+        </input>
+        <label class="radio-button" for="filter-by-earned">earned</label>
+
+      </div>
+      <div class="setting-radio-group">
+        <input type="radio" name="filter" id="filter-by-not-earned" class="filter-achivs-radio ">
+        </input>
+        <label class="radio-button" for="filter-by-not-earned">not earned</label>
+
+      </div>
+      <div class="setting-radio-group">
+        <input checked type="radio" name="filter" id="filter-by-all" class="filter-achivs-radio ">
+        </input>
+        <label class="radio-button" for="filter-by-all">all</label>
+
+      </div>
+
     </div>
 
     <div class="achivs-style input-container sort-buttons">
@@ -47,9 +64,13 @@
         title="minimum width in px" />
       <input type="number" class="number-input input" name="max-width" id="achiv-max-width" value="150"
         placeholder="max" title="maximum width in px" />
-      <button id="stretch-achivs" class="stretch-achivs-button setting-button checked">
-        stretch vertically
-      </button>
+
+      <div class="setting-radio-group">
+        <input type="checkbox" name="stretch" id="stretch-achivs">
+        </input>
+        <label class="check-button" for="stretch-achivs">stretch vertically</label>
+      </div>
+
     </div>
     <div class="update-time-settings input-container">
       <label>Update delay (seconds):</label>

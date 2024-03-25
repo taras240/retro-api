@@ -214,6 +214,7 @@ body {
   border-radius: 50%;
   overflow: hidden;
   transition: 0.2s;
+  opacity: 0.5;
 }
 .section:hover .resizer::after {
   background-color: green;
@@ -221,9 +222,59 @@ body {
 .resizer:hover::after {
   width: 20px;
   transition: 0.2s;
+  opacity: 1;
 }
 .section .resizer:active::after {
   width: 15px;
   background-color: red;
   transition: 0.2s;
+  opacity: 1;
+}
+.setting-radio-group input[type="radio"],
+.setting-radio-group input[type="checkbox"] {
+  display: none;
+}
+.setting-radio-group {
+}
+.radio-button,
+.check-button {
+  position: relative;
+  height: 2rem;
+  font-size: 1.1rem;
+  border-radius: 5px;
+  background-color: transparent;
+  color: var(--font-color);
+  border: 1px solid rgb(71, 71, 71);
+  text-align: center;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.radio-button:hover,
+.check-button:hover {
+  border: 1px solid rgb(255, 255, 255);
+  box-shadow: 0px 0px 5px 2px black;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.radio-button:active,
+.check-button:active {
+  transform: scale(0.95);
+  box-shadow: 1px 0px 5px 4px black;
+  transition: 0.2s;
+}
+input[type="radio"]:checked + .radio-button,
+input[type="checkbox"]:checked + .check-button {
+  background-color: black;
+}
+input[type="radio"]:checked + .radio-button::after,
+input[type="checkbox"]:checked + .check-button::after {
+  content: "";
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: green;
+  top: 2px;
+  right: 2px;
 }

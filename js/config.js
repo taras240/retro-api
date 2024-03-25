@@ -50,6 +50,27 @@ class Config {
       getAchievements();
     }
   }
+  get filterAchievementsBy() {
+    return this._cfg.settings.filterBy || "all";
+  }
+  set filterAchievementsBy(value) {
+    this._cfg.settings.filterBy = value;
+    this.writeConfiguration();
+  }
+  get sortAchievementsBy() {
+    return this._cfg.settings.sortBy || "default";
+  }
+  set sortAchievementsBy(value) {
+    this._cfg.settings.sortBy = value;
+    this.writeConfiguration();
+  }
+  get stretchAchievements() {
+    return this._cfg.settings.stretchAchievements !== "0";
+  }
+  set stretchAchievements(value) {
+    this._cfg.settings.stretchAchievements = value ? "1" : "0";
+    this.writeConfiguration();
+  }
   get updateDelay() {
     return this._cfg.settings.updateDelay;
   }

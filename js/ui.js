@@ -1,6 +1,28 @@
 class UI {
-  SORT_METHOD = sortBy.default;
-  FILTER_METHOD = filterBy.all;
+  static set SORT_METHOD(value) {
+    config.sortAchievementsBy = value;
+  }
+  static get SORT_METHOD() {
+    return sortBy[config.sortAchievementsBy];
+  }
+  // filterBy.all;
+  static set FILTER_METHOD(value) {
+    config.filterAchievementsBy = value;
+  }
+  static get FILTER_METHOD() {
+    return filterBy[config.filterAchievementsBy];
+  }
+  static filterMethods = {
+    all: "all",
+    earned: "earned",
+    notEarned: "notEarned",
+  };
+  static sortMethods = {
+    latest: "latest",
+    earnedCount: "earnedCount",
+    points: "points",
+    default: "default",
+  };
   constructor() {
     //Завантаження секцій з jsx файлів
     loadSections().then(() => {
@@ -67,7 +89,44 @@ class UI {
         .querySelector(".submit-login")
         .classList.add("verified");
     }
+    switch (config.filterAchievementsBy) {
+      case UI.filterMethods.all:
+        this.settings.filterByAllRadio.checked = true;
+        break;
+      case UI.filterMethods.earned:
+        this.settings.filterByEarnedRadio.checked = true;
+        break;
+      case UI.filterMethods.notEarned:
+        this.settings.filterByNotEarnedRadio.checked = true;
+        break;
+      default:
+        this.settings.filterByAllRadio.checked = true;
+        break;
+    }
+    switch (config.sortAchievementsBy) {
+      case UI.sortMethods.default:
+        this.settings.sortByDefaultButton.checked = true;
+        break;
+      case UI.sortMethods.earnedCount:
+        this.settings.sortByEarnedButton.checked = true;
+        break;
+      case UI.sortMethods.latest:
+        this.settings.sortByLatestButton.checked = true;
+        break;
+      case UI.sortMethods.points:
+        this.settings.sortByPointsButton.checked = true;
+        break;
+      default:
+      case UI.sortMethods.default:
+        this.settings.sortByDefaultButton.checked = true;
+        break;
+    }
+    this.settings.stretchButton.checked = config.stretchAchievements;
+    this.achievementsBlock.container.style.height = config.stretchAchievements
+      ? "100%"
+      : "auto";
 
+    // this.settings.stretchButton.classList
     // Отримати ідентифікатор гри з localStorage та встановити його значення
     this.settings.gameID.value = config.gameID;
 
@@ -249,8 +308,8 @@ class AchievementsBlock {
 
   displaySortedAchievements(achievementsObject) {
     Object.values(achievementsObject.Achievements)
-      .filter((a) => ui.FILTER_METHOD(a))
-      .sort((a, b) => ui.SORT_METHOD(a, b))
+      .filter((a) => UI.FILTER_METHOD(a))
+      .sort((a, b) => UI.SORT_METHOD(a, b))
       .forEach((achievement) => {
         this.displayAchievement(
           this.fixAchievement(achievement, achievementsObject)
@@ -395,9 +454,11 @@ class Settings {
     this.sortByEarnedButton = document.querySelector("#sort-by-earned"); // Кнопка сортування за заробленими
     this.sortByPointsButton = document.querySelector("#sort-by-points"); // Кнопка сортування за балами
     this.sortByDefaultButton = document.querySelector("#sort-by-default"); // Кнопка сортування за замовчуванням
-    this.filterByAll = document.querySelector("#filter-by-all"); // Фільтр за всіма
-    this.filterByEarned = document.querySelector("#filter-by-earned"); // Фільтр за заробленими
-    this.filterByNotEarned = document.querySelector("#filter-by-not-earned"); // Фільтр за не заробленими
+    this.filterByAllRadio = document.querySelector("#filter-by-all"); // Фільтр за всіма
+    this.filterByEarnedRadio = document.querySelector("#filter-by-earned"); // Фільтр за заробленими
+    this.filterByNotEarnedRadio = document.querySelector(
+      "#filter-by-not-earned"
+    ); // Фільтр за не заробленими
     this.stretchButton = document.querySelector("#stretch-achivs");
     this.minimumWidthInput = document.querySelector("#achiv-min-width");
     this.maximumWidthInput = document.querySelector("#achiv-max-width");
@@ -430,63 +491,59 @@ class Settings {
     this.sortByDefaultButton.addEventListener("click", (e) => {
       e.stopPropagation();
       // Встановлює метод сортування за замовчуванням
-      ui.SORT_METHOD = sortBy.default;
+      UI.SORT_METHOD = UI.sortMethods.default;
       // Застосовує сортування та оновлює інтерфейс
-      this.applySorting({ sortButton: this.sortByDefaultButton });
+      this.applySorting();
     });
 
     // Додає подію кліку для сортування за отриманням досягнення
     this.sortByEarnedButton.addEventListener("click", (e) => {
       e.stopPropagation();
       // Встановлює метод сортування за отриманням досягнення
-      ui.SORT_METHOD = sortBy.earnedCount;
+      UI.SORT_METHOD = UI.sortMethods.earnedCount;
       // Застосовує сортування та оновлює інтерфейс
-      this.applySorting({ sortButton: this.sortByEarnedButton });
+      this.applySorting();
     });
 
     // Додає подію кліку для сортування за датою отримання
     this.sortByLatestButton.addEventListener("click", (e) => {
       e.stopPropagation();
       // Встановлює метод сортування за датою отримання
-      ui.SORT_METHOD = sortBy.latest;
+      UI.SORT_METHOD = UI.sortMethods.latest;
       // Застосовує сортування та оновлює інтерфейс
-      this.applySorting({ sortButton: this.sortByLatestButton });
+      this.applySorting();
     });
 
     // Додає подію кліку для сортування за кількістю балів
     this.sortByPointsButton.addEventListener("click", (e) => {
       e.stopPropagation();
       // Встановлює метод сортування за кількістю балів
-      ui.SORT_METHOD = sortBy.points;
+      UI.SORT_METHOD = UI.sortMethods.points;
       // Застосовує сортування та оновлює інтерфейс
-      this.applySorting({ sortButton: this.sortByPointsButton });
+      this.applySorting();
     });
     // Додає подію кліку для фільтрування
-    this.filterByEarned.addEventListener("click", (e) => {
+    this.filterByEarnedRadio.addEventListener("click", (e) => {
       e.stopPropagation();
-      ui.FILTER_METHOD = filterBy.earned;
-      this.applyFilter({ filterButton: this.filterByEarned });
+      UI.FILTER_METHOD = UI.filterMethods.earned;
+      this.applyFilter();
     });
-    this.filterByNotEarned.addEventListener("click", (e) => {
+    this.filterByNotEarnedRadio.addEventListener("click", (e) => {
       e.stopPropagation();
-      ui.FILTER_METHOD = filterBy.notEarned;
-      this.applyFilter({ filterButton: this.filterByNotEarned });
+      UI.FILTER_METHOD = UI.filterMethods.notEarned;
+      this.applyFilter();
     });
-    this.filterByAll.addEventListener("click", (e) => {
+    this.filterByAllRadio.addEventListener("click", (e) => {
       e.stopPropagation();
-      ui.FILTER_METHOD = filterBy.all;
-      this.applyFilter({ filterButton: this.filterByAll });
+      UI.FILTER_METHOD = UI.filterMethods.all;
+      this.applyFilter();
     });
 
     this.stretchButton.addEventListener("click", (e) => {
-      const { stretchButton } = this;
-      if (stretchButton.classList.contains("checked")) {
-        stretchButton.classList.remove("checked");
-        ui.achievementsBlock.container.style.height = "auto";
-      } else {
-        stretchButton.classList.add("checked");
-        ui.achievementsBlock.container.style.height = "100%";
-      }
+      config.stretchAchievements = this.stretchButton.checked;
+      ui.achievementsBlock.container.style.height = config.stretchAchievements
+        ? "100%"
+        : "auto";
     });
     this.minimumWidthInput.addEventListener("change", (e) => {
       const { minimumWidthInput } = this;
@@ -534,24 +591,19 @@ class Settings {
       UI.moveEvent(this.section, e);
     });
   }
-  applySorting({ sortButton }) {
-    // Знімає клас "checked" з усіх кнопок сортування
-    sortButton.parentNode
-      .querySelectorAll(".checked")
-      ?.forEach((child) => child.classList.remove("checked"));
-    // Додає клас "checked" до обраної кнопки сортування
-    sortButton.classList.add("checked");
+  applySorting() {
     // Клікає на кнопку перевірки ідентифікатора для виконання сортування
     this.checkIdButton.click();
   }
-  applyFilter({ filterButton }) {
-    filterButton.parentNode
-      .querySelectorAll(".checked")
-      .forEach((child) => child.classList.remove("checked"));
-    filterButton.classList.add("checked");
+  applyFilter() {
+    // filterButton.parentNode
+    //   .querySelectorAll(".checked")
+    //   .forEach((child) => child.classList.remove("checked"));
+    // filterButton.classList.add("checked");
     // Клікає на кнопку перевірки ідентифікатора для виконання сортування
     this.checkIdButton.click();
   }
+
   // Автопідбір розміру значків ачівментсів
   fitSizeVertically() {
     // Отримання посилання на блок досягнень та його дочірні елементи
