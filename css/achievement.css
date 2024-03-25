@@ -15,41 +15,37 @@
   transition: none;
 }
 .section .resizer {
-  position: absolute;
+  position: sticky;
   bottom: 0;
-  right: 0;
-  width: 20px;
-  height: 20px;
+  left: 20px;
   background-color: transparent;
   cursor: nwse-resize;
 }
-.section:hover .resizer::after {
-  background-color: green;
-}
-.resizer:hover::after {
-  width: 15px;
-  height: 15px;
-  transition: 0.2s;
-}
-.section .resizer:active::after {
-  width: 10px;
-  height: 10px;
-  background-color: red;
-  transition: 0.2s;
-}
-
 .resizer::after {
   content: "";
   position: absolute;
   bottom: 6px;
   right: 6px;
-  width: 10px;
-  height: 10px;
+  width: 15px;
+  aspect-ratio: 1;
   transform: rotateZ(-45deg);
   background-color: transparent;
   clip-path: circle();
   transition: 0.2s;
 }
+.section:hover .resizer::after {
+  background-color: green;
+}
+.resizer:hover::after {
+  width: 20px;
+  transition: 0.2s;
+}
+.section .resizer:active::after {
+  width: 15px;
+  background-color: red;
+  transition: 0.2s;
+}
+
 /* .resizer::before {
   width: 3px;
   height: 10px;
