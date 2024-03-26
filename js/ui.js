@@ -55,6 +55,7 @@ class UI {
     this.achievementsBlock = new AchievementsBlock();
     this.buttons = new ButtonPanel();
     this.settings = new Settings();
+    this.statusPanel = new StatusPanel();
     this.awards = new Awards();
     this.gameCard = new GameCard();
   }
@@ -159,14 +160,14 @@ class UI {
   addEvents() {}
   updateGameInfo({ Title, ConsoleName, ImageIcon, NumAchievements }) {
     const { gamePreview, gameTitle, gamePlatform, gameAchivsCount } =
-      this.settings;
+      ui.statusPanel;
 
     gamePreview.setAttribute(
       "src",
       `https://media.retroachievements.org${ImageIcon}`
     );
     gameTitle.innerText = Title || "Some game name";
-    gameAchivsCount.innerText = NumAchievements || 0;
+    gamePlatform.innerText = ConsoleName || "";
   }
 
   // Функція зміни розміру вікна
@@ -443,7 +444,34 @@ class ButtonPanel {
     this.target = document.querySelector("#open-target-button");
   }
 }
-
+class StatusPanel {
+  constructor() {
+    this.section = document.querySelector("#update-section");
+    this.gamePreview = document.querySelector("#game-preview"); // Іконка гри
+    this.gameTitle = document.querySelector("#game-title"); // Заголовок гри
+    this.gamePlatform = document.querySelector("#game-platform"); // Платформа гри
+    this.watchButton = document.querySelector("#watching-button"); // Кнопка спостереження за грою
+    // Додаємо обробник події 'click' для кнопки автооновлення
+    this.watchButton.addEventListener("click", (e) => {
+      e.stopPropagation();
+      // Перевіряємо стан кнопки та відповідно запускаємо або припиняємо автооновлення
+      if (this.watchButton.classList.contains("active")) {
+        stopWatching();
+      } else {
+        apiWorker
+          .getProfileInfo({})
+          .then((resp) => {
+            ui.settings.gameID.value = resp.LastGameID;
+            config.gameID = resp.LastGameID;
+          })
+          .then(() => startWatching());
+      }
+    });
+    this.section.addEventListener("mousedown", (e) => {
+      UI.moveEvent(this.section, e);
+    });
+  }
+}
 class Settings {
   constructor() {
     // Елементи налаштувань
@@ -464,13 +492,9 @@ class Settings {
     this.maximumWidthInput = document.querySelector("#achiv-max-width");
     this.targetUserInput = document.querySelector("#target-user");
     this.gameID = document.querySelector("#game-id"); // Поле введення ідентифікатора гри
-    this.watchButton = document.querySelector("#watching-button"); // Кнопка спостереження за грою
     this.getGameIdButton = document.querySelector(".get-id-button"); // Кнопка отримання ідентифікатора гри
     this.checkIdButton = document.querySelector(".check-id-button"); // Кнопка перевірки ідентифікатора гри
-    this.gamePreview = document.querySelector("#game-preview"); // Іконка гри
-    this.gameTitle = document.querySelector("#game-title"); // Заголовок гри
-    this.gamePlatform = document.querySelector("#game-platform"); // Платформа гри
-    this.gameAchivsCount = document.querySelector("#game-achivs-count"); // Кількість досягнень гри
+    // this.gameAchivsCount = document.querySelector("#game-achivs-count"); // Кількість досягнень гри
     //
     this.addEvents();
   }
@@ -561,16 +585,6 @@ class Settings {
     this.targetUserInput.addEventListener("change", (e) => {
       e.stopPropagation();
       config.targetUser = this.targetUserInput.value;
-    });
-    // Додаємо обробник події 'click' для кнопки автооновлення
-    this.watchButton.addEventListener("click", (e) => {
-      e.stopPropagation();
-      // Перевіряємо стан кнопки та відповідно запускаємо або припиняємо автооновлення
-      if (this.watchButton.classList.contains("active")) {
-        stopWatching();
-      } else {
-        startWatching();
-      }
     });
 
     //Додаємо обробник події 'click' для кнопки отримання id останньої гри

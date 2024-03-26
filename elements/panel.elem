@@ -2,6 +2,9 @@
     <button id="open-login-button" class="setting-button all-achivs-button window-button" onclick="openLogin()">
         Login
     </button>
+    <button id="open-status-button" class="setting-button game-card-button window-button" onclick="openStatusPanel()">
+        Status
+    </button>
     <button id="open-achivs-button" class="setting-button all-achivs-button window-button" onclick="openAllAchivs()">
         Achivs
     </button>

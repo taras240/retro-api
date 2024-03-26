@@ -15,6 +15,7 @@ class Config {
     this._cfg.identification.RAApi_login = value;
     this.writeConfiguration();
   }
+
   get identConfirmed() {
     return this._cfg.identification.identConfirmed ?? false;
   }
@@ -22,6 +23,7 @@ class Config {
     this._cfg.identification.identConfirmed = value;
     this.writeConfiguration();
   }
+
   get userImageSrc() {
     return this._cfg.identification.userImageSrc || "";
   }
@@ -29,6 +31,7 @@ class Config {
     this._cfg.identification.userImageSrc = value;
     this.writeConfiguration();
   }
+
   get targetUser() {
     return this._cfg.settings.targetUser || this.USER_NAME;
   }
@@ -40,6 +43,7 @@ class Config {
       getAwards();
     }
   }
+
   get gameID() {
     return this._cfg.settings.gameID;
   }
@@ -50,6 +54,7 @@ class Config {
       getAchievements();
     }
   }
+
   get filterAchievementsBy() {
     return this._cfg.settings.filterBy || "all";
   }
@@ -57,6 +62,7 @@ class Config {
     this._cfg.settings.filterBy = value;
     this.writeConfiguration();
   }
+
   get sortAchievementsBy() {
     return this._cfg.settings.sortBy || "default";
   }
@@ -64,6 +70,7 @@ class Config {
     this._cfg.settings.sortBy = value;
     this.writeConfiguration();
   }
+
   get stretchAchievements() {
     return this._cfg.settings.stretchAchievements !== "0";
   }
@@ -71,6 +78,7 @@ class Config {
     this._cfg.settings.stretchAchievements = value ? "1" : "0";
     this.writeConfiguration();
   }
+
   get updateDelay() {
     return this._cfg.settings.updateDelay;
   }
@@ -81,9 +89,11 @@ class Config {
     this._cfg.settings.updateDelay = value;
     this.writeConfiguration();
   }
+
   get ui() {
     return this._cfg.ui;
   }
+
   get ACHIV_MIN_SIZE() {
     return this._cfg.settings.ACHIV_MIN_SIZE ?? 30;
   }
@@ -98,9 +108,11 @@ class Config {
     this._cfg.settings.ACHIV_MAX_SIZE = value;
     this.writeConfiguration();
   }
+
   constructor() {
     this.readConfiguration();
   }
+
   setNewPosition({ id, xPos, yPos, width, height, hidden }) {
     // console.log(id, hidden);
     if (this._cfg.ui.hasOwnProperty(id)) {

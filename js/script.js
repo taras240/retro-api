@@ -11,7 +11,7 @@ let apiTikInterval;
 // Функція для отримання досягнень гри
 async function getAchievements() {
   try {
-    ui.settings.watchButton.classList.remove("error");
+    ui.statusPanel.watchButton.classList.remove("error");
     // Отримання інформації про прогрес гри від API
     const response = await apiWorker.getGameProgress(config);
 
@@ -25,7 +25,7 @@ async function getAchievements() {
     ui.gameCard.updateGameCardInfo(response);
   } catch (error) {
     // Додання помилки до кнопки перегляду та зупинка перегляду
-    ui.settings.watchButton.classList.add("error");
+    ui.statusPanel.watchButton.classList.add("error");
     stopWatching();
     console.error(error);
   }
@@ -94,7 +94,7 @@ function switchElementToStart(element) {
 // Функція для початку слідкування за досягненнями
 function startWatching() {
   // Оновлення стану та тексту кнопки слідкування
-  ui.settings.watchButton.classList.add("active");
+  ui.statusPanel.watchButton.classList.add("active");
   // ui.settings.watchButton.innerText = "Watching";
 
   // Отримання початкових досягнень
@@ -109,14 +109,13 @@ function startWatching() {
 
 // Функція для перемикання класу "tick" на кнопці слідкування
 function toggleTickClass() {
-  ui.settings.watchButton.classList.remove("tick");
-  setTimeout(() => ui.settings.watchButton.classList.add("tick"), 500);
+  ui.statusPanel.watchButton.classList.remove("tick");
+  setTimeout(() => ui.statusPanel.watchButton.classList.add("tick"), 500);
 }
 
 // Функція для зупинки слідкування за досягненнями
 function stopWatching() {
-  ui.settings.watchButton.classList.remove("active");
-  // ui.settings.watchButton.innerText = "Watch";
+  ui.statusPanel.watchButton.classList.remove("active");
   clearInterval(apiTikInterval);
 }
 
@@ -179,6 +178,16 @@ function openAllAchivs() {
     button.classList.remove("checked");
   }
   UI.switchSectionVisibility(ui.achievementsBlock.section);
+}
+function openStatusPanel() {
+  const button = document.querySelector("#open-status-button");
+
+  if (ui.statusPanel.section.classList.contains("hidden")) {
+    button.classList.add("checked");
+  } else {
+    button.classList.remove("checked");
+  }
+  UI.switchSectionVisibility(ui.statusPanel.section);
 }
 function openLogin() {
   const button = document.querySelector("#open-login-button");

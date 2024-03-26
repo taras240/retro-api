@@ -6,6 +6,7 @@
 @import url(./help.css);
 @import url(./targetAchivs.css);
 @import url(./awards.css);
+@import url(./update.css);
 /* @import url(https://fonts.googleapis.com/css?family=Honk:regular);
 @import url(https://fonts.googleapis.com/css?family=Press+Start+2P:regular); */
 p,
@@ -61,7 +62,7 @@ body {
 .section.dragable {
   z-index: 101;
   /* box-shadow: 0 0 10px 4px var(--main-color); */
-  transition: none;
+  transition: none !important;
 }
 .section.hidden {
   visibility: hidden;
@@ -133,7 +134,7 @@ body {
   border-radius: 10px 10px 0 0;
   background-color: var(--secondary-color);
   cursor: default;
-  transition: 0.2s;
+  transition: 0.5s ease-in;
 }
 .buttons-block::before,
 .buttons-block::after {
@@ -193,10 +194,10 @@ body {
 } */
 .section .resizer {
   position: absolute;
-  top: 100%;
-  left: 100%;
-  transform: translate(-55%, -100%);
-  width: 40px;
+  bottom: 0;
+  right: 0;
+  transform: translate(50%, 0);
+  width: 30px;
   aspect-ratio: 1.5;
   background-color: transparent;
   cursor: nwse-resize;
