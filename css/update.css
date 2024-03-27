@@ -3,20 +3,23 @@
   background-color: var(--secondary-color);
   border-radius: 50px 10px 10px 50px !important;
   overflow: hidden;
-  padding: 10px;
+  /* padding: 10px; */
   top: calc(100vh - 100px);
   left: 40%;
-  min-width: 300px;
+  width: 300px;
   cursor: grab;
   z-index: 110;
   transition: 0.2s !important;
 }
 .update_container {
+  padding: 10px;
+  position: relative;
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 10px;
   justify-content: space-between;
+  z-index: 2;
 }
 .update-section-text {
   text-align: right;
@@ -33,7 +36,7 @@
   aspect-ratio: 1;
   border-radius: 50%;
   overflow: hidden;
-  background-color: var(--secondary-color);
+  background-color: transparent;
   border: 1px solid gray;
   color: white;
   display: flex;
@@ -98,8 +101,28 @@
 }
 .update-text-block {
   flex: 1;
+  overflow: hidden;
 }
 .update-game-preview {
   width: 40px;
   aspect-ratio: 1;
+}
+.progress-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: var(--progress-points, 0%);
+  background-color: var(--accent-color);
+}
+.progress-bar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: var(--progress-count, 0%);
+  background-color: var(--accent-color);
+  opacity: 0.36;
+  z-index: -1;
 }

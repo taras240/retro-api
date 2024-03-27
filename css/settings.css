@@ -101,61 +101,6 @@
   right: 2px;
 }
 
-.watching-button {
-  width: 100px;
-  height: 2rem;
-  transition: 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  transition: 0.2s;
-}
-.watching-button.active {
-  color: black;
-  font-weight: 600;
-  box-shadow: 1px 0px 5px 1px green;
-  border-color: transparent;
-  background-color: green;
-}
-.watching-button.active svg {
-  fill: black;
-  opacity: 1;
-  padding: 1px;
-  animation: updateTickAnimation 2s linear infinite;
-  /* stroke: 2px solid black; */
-}
-.watching-button:not(.active) svg {
-  fill: white;
-  opacity: 1;
-  padding: 1px;
-  animation: endTickAnimation 0.5s linear forwards;
-  /* stroke: 2px solid black; */
-}
-.watching-button.error {
-  background-color: red;
-  border-color: transparent;
-  color: black;
-  font-weight: 600;
-  box-shadow: 1px 0px 5px 1px red;
-}
-
-@keyframes updateTickAnimation {
-  /* from {
-    box-shadow: 1px 0px 5px 1px rgb(0, 255, 98);
-    background-color: rgb(0, 255, 98);
-  } */
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-@keyframes endTickAnimation {
-  to {
-    transform: rotate(90deg);
-  }
-}
 .achivs-game {
   padding: 10px;
   display: grid;

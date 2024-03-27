@@ -158,7 +158,15 @@ class UI {
     }
   }
   addEvents() {}
-  updateGameInfo({ Title, ConsoleName, ImageIcon, NumAchievements }) {
+  updateGameInfo({
+    Title,
+    ConsoleName,
+    ImageIcon,
+    NumAchievements,
+    UserCompletionHardcore,
+    points_total,
+    Achievements,
+  }) {
     const { gamePreview, gameTitle, gamePlatform, gameAchivsCount } =
       ui.statusPanel;
 
@@ -168,6 +176,11 @@ class UI {
     );
     gameTitle.innerText = Title || "Some game name";
     gamePlatform.innerText = ConsoleName || "";
+    ui.statusPanel.updateProgress({
+      totalPoints: points_total,
+      completion: UserCompletionHardcore,
+      achievements: Achievements,
+    });
   }
 
   // Функція зміни розміру вікна
@@ -451,6 +464,8 @@ class StatusPanel {
     this.gameTitle = document.querySelector("#game-title"); // Заголовок гри
     this.gamePlatform = document.querySelector("#game-platform"); // Платформа гри
     this.watchButton = document.querySelector("#watching-button"); // Кнопка спостереження за грою
+    this.progresBar = document.querySelector("#status-progress-bar");
+
     // Додаємо обробник події 'click' для кнопки автооновлення
     this.watchButton.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -470,6 +485,44 @@ class StatusPanel {
     this.section.addEventListener("mousedown", (e) => {
       UI.moveEvent(this.section, e);
     });
+  }
+  updateProgress({ points = 0, totalPoints, achievements }) {
+    // points;
+    let achievedCount, totalCount;
+    if (achievements) {
+      achievedCount = 0;
+      totalCount = 0;
+      if (achievements) {
+        Object.values(achievements).forEach((achievement) => {
+          totalCount++;
+          if (achievement.DateEarnedHardcore) {
+            points += achievement.Points;
+            achievedCount++;
+          }
+        });
+      }
+      this.progresBar.dataset.totalCount = totalCount;
+      this.progresBar.dataset.totalPoints = totalPoints;
+    } else {
+      achievedCount = ~~this.progresBar.dataset.achievedCount + 1;
+      totalCount = ~~this.progresBar.dataset.totalCount;
+      points = points ? ~~this.progresBar.dataset.points + ~~points : 0;
+      totalPoints = ~~this.progresBar.dataset.totalPoints;
+    }
+    this.progresBar.dataset.achievedCount = achievedCount;
+    this.progresBar.dataset.points = points;
+    let width = ~~this.section.clientWidth;
+    let completionByPoints = (width * points) / totalPoints;
+    let completionByCount = (width * achievedCount) / totalCount;
+
+    this.progresBar.style.setProperty(
+      "--progress-points",
+      completionByPoints + "px"
+    );
+    this.progresBar.style.setProperty(
+      "--progress-count",
+      completionByCount + "px"
+    );
   }
 }
 class Settings {

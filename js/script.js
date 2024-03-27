@@ -1,6 +1,6 @@
 let config = new Config();
 const RECENT_DELAY_MILISECS = 20 * 60 * 1000; //mins * secs * milisecs
-const RECENT_ACHIVES_RANGE_MINUTES = 20000;
+const RECENT_ACHIVES_RANGE_MINUTES = 5000; // for auto update
 // Ініціалізація UI
 let ui = new UI();
 // Ініціалізація APIWorker з ідентифікацією користувача
@@ -73,6 +73,9 @@ async function updateAchievements() {
         }
         if (isAchieved) {
           updateAwards();
+        }
+        if (isHardcoreMismatch) {
+          ui.statusPanel.updateProgress({ points: achievement.Points });
         }
         // Додавання класів для відображення зароблених досягнень
         achievementElement?.classList.add("earned");
