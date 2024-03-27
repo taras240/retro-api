@@ -487,34 +487,42 @@ class StatusPanel {
     });
   }
   updateProgress({ points = 0, totalPoints, achievements }) {
-    // points;
-    let achievedCount, totalCount;
+    let achievedCount = 0; // Лічильник досягнень
+    let totalCount = 0; // Загальна кількість досягнень
+    const width = this.section.clientWidth || 0; // Отримання ширини блока
+
+    // Перевірка наявності досягнень
     if (achievements) {
-      achievedCount = 0;
-      totalCount = 0;
-      if (achievements) {
-        Object.values(achievements).forEach((achievement) => {
-          totalCount++;
-          if (achievement.DateEarnedHardcore) {
-            points += achievement.Points;
-            achievedCount++;
-          }
-        });
-      }
+      // Підрахунок кількості досягнень та набраних балів
+      Object.values(achievements).forEach((achievement) => {
+        totalCount++; // Збільшення загальної кількості досягнень
+        if (achievement.DateEarnedHardcore) {
+          points += achievement.Points; // Додавання балів
+          achievedCount++; // Збільшення кількості досягнень
+        }
+      });
+      // Збереження загальної кількості досягнень та балів у датасет
       this.progresBar.dataset.totalCount = totalCount;
       this.progresBar.dataset.totalPoints = totalPoints;
     } else {
-      achievedCount = ~~this.progresBar.dataset.achievedCount + 1;
-      totalCount = ~~this.progresBar.dataset.totalCount;
-      points = points ? ~~this.progresBar.dataset.points + ~~points : 0;
-      totalPoints = ~~this.progresBar.dataset.totalPoints;
+      // Оновлення значень у випадку відсутності досягнень
+      achievedCount = parseInt(this.progresBar.dataset.achievedCount) + 1 || 0;
+      totalCount = parseInt(this.progresBar.dataset.totalCount) || 0;
+      points = points
+        ? parseInt(this.progresBar.dataset.points) + parseInt(points)
+        : 0;
+      totalPoints = parseInt(this.progresBar.dataset.totalPoints) || 0;
     }
+
+    // Оновлення даних про досягнення та бали у датасет
     this.progresBar.dataset.achievedCount = achievedCount;
     this.progresBar.dataset.points = points;
-    let width = ~~this.section.clientWidth;
-    let completionByPoints = (width * points) / totalPoints;
-    let completionByCount = (width * achievedCount) / totalCount;
 
+    // Обчислення прогресу за балами та за кількістю досягнень
+    const completionByPoints = (width * points) / totalPoints || 0;
+    const completionByCount = (width * achievedCount) / totalCount || 0;
+
+    // Встановлення стилів прогресу
     this.progresBar.style.setProperty(
       "--progress-points",
       completionByPoints + "px"
