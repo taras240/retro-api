@@ -2,6 +2,7 @@
 # RetroAPI Tracker
 
 *This web application is designed to track achievements obtained in retro games using the open API from retroachievements.org.*
+
 ![image](https://github.com/taras240/retro-api/assets/41308277/9b6c2d5c-a6df-4ac5-b13c-220e34c4f18d)
 ![image](https://github.com/taras240/retro-api/assets/41308277/6bf392a9-6bd8-4adf-b5ec-f139294cdcb8)
 ![image](https://github.com/taras240/retro-api/assets/41308277/153021c3-7602-46d5-82eb-e4c6993bd0bf)
