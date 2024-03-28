@@ -70,7 +70,14 @@ class Config {
     this._cfg.settings.sortBy = value;
     this.writeConfiguration();
   }
-
+  get reverseSort() {
+    return this._cfg.settings.reverseSort || "1";
+  }
+  set reverseSort(value) {
+    console.log(value);
+    this._cfg.settings.reverseSort = value ? "-1" : "1";
+    this.writeConfiguration();
+  }
   get stretchAchievements() {
     return this._cfg.settings.stretchAchievements !== "0";
   }

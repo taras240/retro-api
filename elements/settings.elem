@@ -32,6 +32,11 @@
         </input>
         <label class="radio-button" for="sort-by-default">default</label>
       </div>
+      <div class="setting-radio-group">
+        <input type="checkbox" name="reverse" id="reverse-sort">
+        </input>
+        <label class="check-button" for="reverse-sort">reverse</label>
+      </div>
 
     </div>
 

@@ -1,4 +1,10 @@
 class UI {
+  static set REVERSE_SORT(value) {
+    config.reverseSort = value;
+  }
+  static get REVERSE_SORT() {
+    return config.reverseSort;
+  }
   static set SORT_METHOD(value) {
     config.sortAchievementsBy = value;
   }
@@ -122,6 +128,8 @@ class UI {
         this.settings.sortByDefaultButton.checked = true;
         break;
     }
+    console.log(config.reverseSort, config.reverseSort == 1);
+    this.settings.reverseSortButton.checked = config.reverseSort == -1;
     this.settings.stretchButton.checked = config.stretchAchievements;
     this.achievementsBlock.container.style.height = config.stretchAchievements
       ? "100%"
@@ -323,7 +331,7 @@ class AchievementsBlock {
   displaySortedAchievements(achievementsObject) {
     Object.values(achievementsObject.Achievements)
       .filter((a) => UI.FILTER_METHOD(a))
-      .sort((a, b) => UI.SORT_METHOD(a, b))
+      .sort((a, b) => UI.SORT_METHOD(a, b) * UI.REVERSE_SORT)
       .forEach((achievement) => {
         this.displayAchievement(
           this.fixAchievement(achievement, achievementsObject)
@@ -543,6 +551,7 @@ class Settings {
     this.sortByEarnedButton = document.querySelector("#sort-by-earned"); // Кнопка сортування за заробленими
     this.sortByPointsButton = document.querySelector("#sort-by-points"); // Кнопка сортування за балами
     this.sortByDefaultButton = document.querySelector("#sort-by-default"); // Кнопка сортування за замовчуванням
+    this.reverseSortButton = document.querySelector("#reverse-sort"); // Чекбокс сортування по зворотньому порядку
     this.filterByAllRadio = document.querySelector("#filter-by-all"); // Фільтр за всіма
     this.filterByEarnedRadio = document.querySelector("#filter-by-earned"); // Фільтр за заробленими
     this.filterByNotEarnedRadio = document.querySelector(
@@ -604,6 +613,13 @@ class Settings {
       e.stopPropagation();
       // Встановлює метод сортування за кількістю балів
       UI.SORT_METHOD = UI.sortMethods.points;
+      // Застосовує сортування та оновлює інтерфейс
+      this.applySorting();
+    });
+    this.reverseSortButton.addEventListener("click", (e) => {
+      e.stopPropagation();
+      // Встановлює reverse сортування
+      UI.REVERSE_SORT = this.reverseSortButton.checked;
       // Застосовує сортування та оновлює інтерфейс
       this.applySorting();
     });
