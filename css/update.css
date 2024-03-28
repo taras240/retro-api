@@ -1,9 +1,8 @@
 .update_section {
   position: absolute;
-  background-color: var(--secondary-color);
-  border-radius: 50px 10px 10px 50px !important;
   overflow: hidden;
-  /* padding: 10px; */
+  background-color: var(--secondary-color);
+  border-radius: 100px 10px 10px 100px !important;
   top: calc(100vh - 100px);
   left: 40%;
   width: 300px;

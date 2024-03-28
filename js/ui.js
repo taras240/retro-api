@@ -128,7 +128,7 @@ class UI {
         this.settings.sortByDefaultButton.checked = true;
         break;
     }
-    console.log(config.reverseSort, config.reverseSort == 1);
+
     this.settings.reverseSortButton.checked = config.reverseSort == -1;
     this.settings.stretchButton.checked = config.stretchAchievements;
     this.achievementsBlock.container.style.height = config.stretchAchievements
