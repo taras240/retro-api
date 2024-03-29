@@ -69,7 +69,7 @@
 
   transition: 0.2s;
 }
-.setting-button.checked {
+.setting-input.checked {
   border-color: var(--selection-color);
 }
 .setting-button.checked::after {
@@ -82,7 +82,9 @@
   top: 2px;
   right: 2px;
 }
-
+.setting-button.checked {
+  border-color: var(--selection-color);
+}
 #game-achivs-count::after {
   content: " achieves availible";
 }
@@ -93,9 +95,77 @@
 .settings_container > div:nth-child(even) {
   background-color: var(--secondary-color);
 }
+.colors-block {
+  display: flex;
+  visibility: visible;
+  opacity: 1;
+  transition: 0.2s;
+}
+.colors-block.hidden {
+  visibility: hidden;
+  opacity: 0;
+}
 .color-input {
   background-color: transparent;
   cursor: pointer;
   overflow: hidden;
   width: 3rem;
+  transition: 0.2s;
+}
+.color-input:hover {
+  transform: scale(1.05);
+}
+.color-input:active {
+  transform: scale(0.95);
+}
+
+.settings-input {
+  display: flex;
+  align-items: center;
+  position: relative;
+  height: 2rem;
+  font-size: 1rem;
+  border-radius: 5px;
+  background-color: transparent;
+  color: var(--font-color);
+  border: 1px solid rgb(71, 71, 71);
+  text-align: center;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.settings-input:hover {
+  border: 1px solid rgb(255, 255, 255);
+  box-shadow: 0px 0px 5px 2px black;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.settings-input:active {
+  transform: scale(0.95);
+  box-shadow: 1px 0px 5px 4px black;
+  transition: 0.2s;
+}
+input[type="radio"]:checked + .settings-input::after,
+input[type="checkbox"]:checked + .settings-input::after {
+  content: "";
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--selection-color);
+  top: 2px;
+  right: 2px;
+}
+input:checked + .settings-input {
+  border-color: var(--selection-color);
+}
+.svg-button {
+  background-color: transparent;
+}
+
+#color-preset-selection option {
+  background-color: var(--secondary-color);
+  color: var(--font-color);
+  padding: 5px;
+  height: 10px;
 }

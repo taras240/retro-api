@@ -183,9 +183,7 @@
   --dot-fill-to-color: gold;
   filter: blur(0.5px);
 }
-/* .awarded-game:not(:last-child) {
-  border-bottom: 1px solid rgba(128, 128, 128, 0.253);
-} */
+
 .game-title {
   padding: 0;
 }

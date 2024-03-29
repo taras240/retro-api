@@ -83,7 +83,7 @@ body {
   align-items: center;
   padding: 0 10px;
   width: 100%;
-  border-bottom: 1px solid gray;
+  border-bottom: 1px solid var(--font-color);
 }
 .header-icon {
   display: flex;
@@ -134,7 +134,7 @@ body {
   align-items: center;
   gap: 10px;
   border-radius: 10px 10px 0 0;
-  background-color: var(--secondary-color);
+  background-color: var(--main-color);
   cursor: default;
   transition: 0.5s ease-in;
 }
@@ -151,7 +151,7 @@ body {
   border-radius: 10px 10px 0 0;
   border: 1px solid transparent;
   border-bottom: none;
-  background-color: var(--secondary-color);
+  background-color: inherit;
   transform: translate(-50%, 0);
   z-index: -1;
 }
@@ -237,51 +237,11 @@ body {
 .setting-radio-group input[type="checkbox"] {
   display: none;
 }
-.setting-radio-group {
-}
-.radio-button,
-.check-button {
-  position: relative;
-  height: 2rem;
-  font-size: 1.1rem;
-  border-radius: 5px;
-  background-color: transparent;
-  color: var(--font-color);
-  border: 1px solid rgb(71, 71, 71);
-  text-align: center;
-  padding: 5px 10px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-.radio-button:hover,
-.check-button:hover {
-  border: 1px solid rgb(255, 255, 255);
-  box-shadow: 0px 0px 5px 2px black;
-  cursor: pointer;
-  transition: 0.2s;
-}
-.radio-button:active,
-.check-button:active {
-  transform: scale(0.95);
-  box-shadow: 1px 0px 5px 4px black;
-  transition: 0.2s;
-}
-input[type="radio"]:checked + .radio-button::after,
-input[type="checkbox"]:checked + .check-button::after {
-  content: "";
-  position: absolute;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
+
+#color-preset-selection option:checked {
   background-color: var(--selection-color);
-  border-color: var(--selection-color);
-  top: 2px;
-  right: 2px;
 }
-input[type="radio"]:checked + .radio-button,
-input[type="checkbox"]:checked + .check-button {
-  border-color: var(--selection-color);
-}
-.svg-button {
-  background-color: transparent;
+
+#color-preset-selection option:active {
+  background-color: var(--selection-color);
 }

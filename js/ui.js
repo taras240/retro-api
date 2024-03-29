@@ -29,22 +29,22 @@ class UI {
     points: "points",
     default: "default",
   };
-  static updateColors() {
+  static updateColors(preset) {
     const { style } = document.body;
-    style.setProperty("--main-color", config.mainColor);
-    style.setProperty("--secondary-color", config.secondaryColor);
-    style.setProperty("--accent-color", config.accentColor);
-    style.setProperty("--font-color", config.fontColor);
-    style.setProperty("--selection-color", config.selectionColor);
+    const {
+      mainColor,
+      secondaryColor,
+      accentColor,
+      fontColor,
+      selectionColor,
+    } = config.getColors(preset || config.colorsPreset);
+    style.setProperty("--main-color", mainColor);
+    style.setProperty("--secondary-color", secondaryColor);
+    style.setProperty("--accent-color", accentColor);
+    style.setProperty("--font-color", fontColor);
+    style.setProperty("--selection-color", selectionColor);
   }
-  resetColors() {
-    config.mainColor = this.settings.mainColorInput.value = "#201221";
-    config.secondaryColor = this.settings.secondaryColorInput.value = "#181118";
-    config.accentColor = this.settings.accentColorInput.value = "#57125c";
-    config.fontColor = this.settings.fontColorInput.value = "#eeeeee";
-    config.selectionColor = this.settings.selectionColorInput.value = "#008000";
-    UI.updateColors();
-  }
+
   constructor() {
     //Завантаження секцій з jsx файлів
     loadSections().then(() => {
@@ -60,7 +60,7 @@ class UI {
       //Встановлення збережених значень для полів вводу
       this.setValues();
 
-      //оновлення кольорів
+      //Оновлення кольорів
       UI.updateColors();
 
       //Оновлення ачівментсів
@@ -174,6 +174,8 @@ class UI {
     this.settings.accentColorInput.value = config.accentColor;
     this.settings.fontColorInput.value = config.fontColor;
     this.settings.selectionColorInput.value = config.selectionColor;
+    this.settings.colorPresetSelector.value = config.colorsPreset;
+    this.settings.colorPresetSelector.dispatchEvent(new Event("change"));
 
     if (!this.achievementsBlock.section.classList.contains("hidden")) {
       this.buttons.achievements.classList.add("checked");
@@ -589,6 +591,11 @@ class Settings {
     this.accentColorInput = document.querySelector("#accent-color-input");
     this.fontColorInput = document.querySelector("#font-color-input");
     this.selectionColorInput = document.querySelector("#selection-color-input"); //
+    this.colorPresetSelector = document.querySelector(
+      "#color-preset-selection"
+    );
+    //!-----------------------------------------
+
     this.stretchButton = document.querySelector("#stretch-achivs");
     this.minimumWidthInput = document.querySelector("#achiv-min-width");
     this.maximumWidthInput = document.querySelector("#achiv-max-width");
@@ -693,28 +700,37 @@ class Settings {
     this.mainColorInput.addEventListener("change", (e) => {
       e.stopPropagation();
       config.mainColor = this.mainColorInput.value;
-      UI.updateColors();
+      UI.updateColors("custom");
     });
     this.secondaryColorInput.addEventListener("change", (e) => {
       e.stopPropagation();
       config.secondaryColor = this.secondaryColorInput.value;
-      UI.updateColors();
+      UI.updateColors("custom");
     });
     this.accentColorInput.addEventListener("change", (e) => {
       e.stopPropagation();
       config.accentColor = this.accentColorInput.value;
-      UI.updateColors();
+      UI.updateColors("custom");
     });
     this.fontColorInput.addEventListener("change", (e) => {
       e.stopPropagation();
+      const preset = (this.colorPresetSelector.value = "custom");
       config.fontColor = this.fontColorInput.value;
-      UI.updateColors();
+      UI.updateColors("custom");
     });
     this.selectionColorInput.addEventListener("change", (e) => {
       e.stopPropagation();
       config.selectionColor = this.selectionColorInput.value;
-      UI.updateColors();
+      UI.updateColors("custom");
     });
+    this.colorPresetSelector.addEventListener("change", (e) => {
+      const preset = this.colorPresetSelector.value;
+      document
+        .querySelector(".colors-block")
+        .classList.toggle("hidden", preset !== "custom");
+      UI.updateColors(preset);
+    });
+
     this.targetUserInput.addEventListener("change", (e) => {
       e.stopPropagation();
       config.targetUser = this.targetUserInput.value;

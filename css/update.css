@@ -2,7 +2,7 @@
   position: absolute;
   overflow: hidden;
   background-color: var(--secondary-color);
-  border-radius: 100px 10px 10px 100px !important;
+  /* border -radius: 100px 10px 10px 100px !important; */
   top: calc(100vh - 100px);
   left: 40%;
   width: 300px;

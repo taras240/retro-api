@@ -16,10 +16,6 @@
   transition: none;
 }
 
-/* .resizer::before {
-  width: 3px;
-  height: 10px;
-} */
 .achievements-container {
   display: flex;
   flex-wrap: wrap;
@@ -29,9 +25,10 @@
   max-width: 100%;
   max-height: 100%;
   border-radius: 5px;
-  /* background-color: #171717; */
   overflow: visible;
 }
+
+/*! ------------[ ACHIEVEMENT ]------------*/
 
 .achiv-block {
   position: relative;
@@ -40,7 +37,6 @@
   aspect-ratio: 1;
   flex-shrink: 0;
   cursor: default;
-  /* background-color: rgb(46, 46, 46); */
 }
 .achiv-block.recent-earned {
   box-shadow: 0px 0px 5px 3px rgba(255, 238, 140, 0.568);
@@ -143,18 +139,7 @@
   transition: 0.2s;
 }
 
-.achiv-title {
-  font-weight: 600;
-  line-height: 2rem;
-}
-.achiv-description {
-  font-size: 1.1rem;
-  color: var(--font-color);
-  flex: 1;
-}
-/*! ---------------------- */
-/*! ---- TOOLTIP --------- */
-/*! ---------------------- */
+/*! ----[ TOOLTIP ]--------- */
 
 .achiv-details-block {
   position: absolute;
@@ -162,8 +147,8 @@
   left: 100%;
   top: 10%;
   padding: 5px;
-  background-color: black;
-  border: 1px solid gray;
+  background-color: var(--secondary-color);
+  border: 1px solid var(--font-color);
   border-radius: 5px;
   line-height: 1.5rem;
   pointer-events: none;
@@ -180,6 +165,17 @@
   top: auto;
   bottom: 80%;
 }
+
+.achiv-title {
+  font-weight: 600;
+  line-height: 2rem;
+}
+.achiv-description {
+  font-size: 1.1rem;
+  color: var(--font-color);
+  flex: 1;
+}
+
 .achiv-details-block .points {
   position: relative;
   padding-left: 25px;
