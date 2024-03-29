@@ -280,3 +280,6 @@ input[type="checkbox"]:checked + .check-button::after {
   top: 2px;
   right: 2px;
 }
+.svg-button {
+  background-color: transparent;
+}
