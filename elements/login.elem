@@ -19,12 +19,12 @@
     <div class="login-form-container">
       <div class="user-ident-input">
         <div class="form-input-container">
-          <label for="login-input">User name:</label>
+          <label for="login-user-name">User name:</label>
           <input type="text" class="text-input input" name="login-input" id="login-user-name"
             placeholder="Enter user name" />
         </div>
         <div class="form-input-container">
-          <label for="api-key">API Key:</label>
+          <label for="login-api-key">API Key:</label>
           <div class="login-api-container">
             <div class="api-input">
               <input type="password" class="text-input login-api-key input" name="api-key" id="login-api-key"

@@ -29,6 +29,20 @@ class UI {
     points: "points",
     default: "default",
   };
+  static updateColors() {
+    const { style } = document.body;
+    style.setProperty("--main-color", config.mainColor);
+    style.setProperty("--secondary-color", config.secondaryColor);
+    style.setProperty("--accent-color", config.accentColor);
+    style.setProperty("--font-color", config.fontColor);
+  }
+  resetColors() {
+    config.mainColor = this.settings.mainColorInput.value = "#201221";
+    config.secondaryColor = this.settings.secondaryColorInput.value = "#181118";
+    config.accentColor = this.settings.accentColorInput.value = "#57125c";
+    config.fontColor = this.settings.fontColorInput.value = "#eeeeee";
+    UI.updateColors();
+  }
   constructor() {
     //Завантаження секцій з jsx файлів
     loadSections().then(() => {
@@ -43,6 +57,9 @@ class UI {
 
       //Встановлення збережених значень для полів вводу
       this.setValues();
+
+      //оновлення кольорів
+      UI.updateColors();
 
       //Оновлення ачівментсів
       if (config.identConfirmed) {
@@ -83,6 +100,7 @@ class UI {
       hidden ? element.classList.add("hidden") : "";
     });
   }
+
   setValues() {
     // Встановити ключ API з об'єкта ідентифікації користувача
     this.loginCard.apiKey.value = config.API_KEY;
@@ -148,6 +166,11 @@ class UI {
 
     this.settings.maximumWidthInput.value = config.ACHIV_MAX_SIZE;
     this.settings.minimumWidthInput.value = config.ACHIV_MIN_SIZE;
+
+    this.settings.mainColorInput.value = config.mainColor;
+    this.settings.secondaryColorInput.value = config.secondaryColor;
+    this.settings.accentColorInput.value = config.accentColor;
+    this.settings.fontColorInput.value = config.fontColor;
 
     if (!this.achievementsBlock.section.classList.contains("hidden")) {
       this.buttons.achievements.classList.add("checked");
@@ -557,6 +580,12 @@ class Settings {
     this.filterByNotEarnedRadio = document.querySelector(
       "#filter-by-not-earned"
     ); // Фільтр за не заробленими
+    //!-------------------------------[ COLORS ]-----------------------------
+    this.mainColorInput = document.querySelector("#main-color-input");
+    this.secondaryColorInput = document.querySelector("#secondary-color-input");
+    this.accentColorInput = document.querySelector("#accent-color-input");
+    this.fontColorInput = document.querySelector("#font-color-input");
+
     this.stretchButton = document.querySelector("#stretch-achivs");
     this.minimumWidthInput = document.querySelector("#achiv-min-width");
     this.maximumWidthInput = document.querySelector("#achiv-max-width");
@@ -657,6 +686,26 @@ class Settings {
       if (maximumWidthInput.value)
         config.ACHIV_MAX_SIZE = maximumWidthInput.value;
       this.fitSizeVertically();
+    });
+    this.mainColorInput.addEventListener("change", (e) => {
+      e.stopPropagation();
+      config.mainColor = this.mainColorInput.value;
+      UI.updateColors();
+    });
+    this.secondaryColorInput.addEventListener("change", (e) => {
+      e.stopPropagation();
+      config.secondaryColor = this.secondaryColorInput.value;
+      UI.updateColors();
+    });
+    this.accentColorInput.addEventListener("change", (e) => {
+      e.stopPropagation();
+      config.accentColor = this.accentColorInput.value;
+      UI.updateColors();
+    });
+    this.fontColorInput.addEventListener("change", (e) => {
+      e.stopPropagation();
+      config.fontColor = this.fontColorInput.value;
+      UI.updateColors();
     });
 
     this.targetUserInput.addEventListener("change", (e) => {

@@ -114,7 +114,34 @@ class Config {
     this._cfg.settings.ACHIV_MAX_SIZE = value;
     this.writeConfiguration();
   }
-
+  get mainColor() {
+    return this._cfg.settings.mainColor ?? "#201221";
+  }
+  get secondaryColor() {
+    return this._cfg.settings.secondaryColor ?? "#181118";
+  }
+  get accentColor() {
+    return this._cfg.settings.accentColor ?? "#57125c";
+  }
+  get fontColor() {
+    return this._cfg.settings.fontColor ?? "#eeeeee";
+  }
+  set mainColor(value) {
+    this._cfg.settings.mainColor = value;
+    this.writeConfiguration();
+  }
+  set secondaryColor(value) {
+    this._cfg.settings.secondaryColor = value;
+    this.writeConfiguration();
+  }
+  set accentColor(value) {
+    this._cfg.settings.accentColor = value;
+    this.writeConfiguration();
+  }
+  set fontColor(value) {
+    this._cfg.settings.fontColor = value;
+    this.writeConfiguration();
+  }
   constructor() {
     this.readConfiguration();
   }

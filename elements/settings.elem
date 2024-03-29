@@ -77,6 +77,15 @@
       </div>
 
     </div>
+    <div class="achivs-style input-container sort-buttons">
+      <label>Colors:</label>
+      <input type="color" class="color-input " id="main-color-input" title="main color" />
+      <input type="color" class="color-input " id="secondary-color-input" title="secondary color" />
+      <input type="color" class="color-input " id="accent-color-input" title="accent color" />
+      <input type="color" class="color-input " id="font-color-input" title="font color" />
+      <button class="setting-button" onclick="ui.resetColors()">reset</button>
+
+    </div>
     <div class="update-time-settings input-container">
       <label>Update delay (seconds):</label>
       <input type="number" class="number-input input" name="update-time" id="update-time" value="5"

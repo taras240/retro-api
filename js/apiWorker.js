@@ -11,6 +11,7 @@ class APIWorker {
     extendedGameInfo: "API_GetGameExtended.php",
     recentlyPlayedGames: "API_GetUserRecentlyPlayedGames.php",
     userAwards: "API_GetUserAwards.php",
+    userGameRankAndScore: "API_GetUserGameRankAndScore.php",
     completionProgress: "API_GetUserCompletionProgress.php",
   };
 
@@ -37,7 +38,10 @@ class APIWorker {
 
   // Конструктор класу
   constructor() {}
-
+  getUserGameRank({ targetUser, gameID }) {
+    let url = this.getUrl({ endpoint: this.endpoints.userRankAndScore });
+    return fetch(url).then((resp) => resp.json());
+  }
   // Отримання інформації про профіль користувача
   getProfileInfo({ targetUser }) {
     let url = this.getUrl({ endpoint: this.endpoints.userProfile });
