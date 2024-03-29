@@ -126,6 +126,9 @@ class Config {
   get fontColor() {
     return this._cfg.settings.fontColor ?? "#eeeeee";
   }
+  get selectionColor() {
+    return this._cfg.settings.selectionColor ?? "#008000";
+  }
   set mainColor(value) {
     this._cfg.settings.mainColor = value;
     this.writeConfiguration();
@@ -140,6 +143,10 @@ class Config {
   }
   set fontColor(value) {
     this._cfg.settings.fontColor = value;
+    this.writeConfiguration();
+  }
+  set selectionColor(value) {
+    this._cfg.settings.selectionColor = value;
     this.writeConfiguration();
   }
   constructor() {

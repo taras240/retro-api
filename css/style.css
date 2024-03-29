@@ -39,6 +39,7 @@ input[type="number"]::-webkit-inner-spin-button {
   --secondary-color: #181118;
   --accent-color: #57125c;
   --font-color: #eee;
+  --selection-color: #008000;
 }
 body {
   background-color: black;
@@ -93,12 +94,12 @@ body {
 }
 .header-icon svg,
 .svg-icon svg {
-  fill: white;
+  fill: var(--font-color);
   padding: 1px;
 }
 .header-button svg,
 .svg-button svg {
-  fill: white;
+  fill: var(--font-color);
   aspect-ratio: 1;
   opacity: 0.5;
   padding: 1px;
@@ -106,14 +107,14 @@ body {
 }
 .header-button:hover svg,
 .paste-api-key:hover svg {
-  fill: white;
+  /* fill: white; */
   opacity: 1;
   padding: 0;
   transition: 0.2s;
 }
 .header-button:active svg,
 .paste-api-key:active svg {
-  fill: white;
+  /* fill: white; */
   opacity: 1;
   padding: 2px;
   transition: 0.2s;
@@ -189,7 +190,7 @@ body {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background-color: green;
+  background-color: var(--selection-color);
   top: 4px;
   right: 4px;
 } */
@@ -219,7 +220,7 @@ body {
   opacity: 0.5;
 }
 .section:hover .resizer::after {
-  background-color: green;
+  background-color: var(--selection-color);
 }
 .resizer:hover::after {
   width: 20px;
@@ -265,10 +266,6 @@ body {
   box-shadow: 1px 0px 5px 4px black;
   transition: 0.2s;
 }
-input[type="radio"]:checked + .radio-button,
-input[type="checkbox"]:checked + .check-button {
-  background-color: black;
-}
 input[type="radio"]:checked + .radio-button::after,
 input[type="checkbox"]:checked + .check-button::after {
   content: "";
@@ -276,9 +273,14 @@ input[type="checkbox"]:checked + .check-button::after {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background-color: green;
+  background-color: var(--selection-color);
+  border-color: var(--selection-color);
   top: 2px;
   right: 2px;
+}
+input[type="radio"]:checked + .radio-button,
+input[type="checkbox"]:checked + .check-button {
+  border-color: var(--selection-color);
 }
 .svg-button {
   background-color: transparent;

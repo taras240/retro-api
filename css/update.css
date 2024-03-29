@@ -37,14 +37,14 @@
   overflow: hidden;
   background-color: transparent;
   border: 1px solid gray;
-  color: white;
+  color: var(--font-color);
   display: flex;
   align-items: center;
   justify-content: center;
   transition: 0.2s;
 }
 .round-button:hover {
-  border-color: white;
+  border-color: var(--font-color);
   box-shadow: 0 0 3px 3px black;
   transform: scale(1.05);
   transition: 0.2s;
@@ -54,14 +54,14 @@
   transition: 0.2s;
 }
 .update-button svg {
-  fill: white;
+  fill: var(--font-color);
   width: 26px;
   height: 26px;
 }
 .update-button.active {
   border-color: transparent;
-  background-color: green;
-  box-shadow: 0 0 3px 3px green;
+  background-color: var(--selection-color);
+  box-shadow: 0 0 3px 3px var(--selection-color);
 }
 .update-button.active svg,
 .update-button.error svg {

@@ -35,12 +35,14 @@ class UI {
     style.setProperty("--secondary-color", config.secondaryColor);
     style.setProperty("--accent-color", config.accentColor);
     style.setProperty("--font-color", config.fontColor);
+    style.setProperty("--selection-color", config.selectionColor);
   }
   resetColors() {
     config.mainColor = this.settings.mainColorInput.value = "#201221";
     config.secondaryColor = this.settings.secondaryColorInput.value = "#181118";
     config.accentColor = this.settings.accentColorInput.value = "#57125c";
     config.fontColor = this.settings.fontColorInput.value = "#eeeeee";
+    config.selectionColor = this.settings.selectionColorInput.value = "#008000";
     UI.updateColors();
   }
   constructor() {
@@ -171,6 +173,7 @@ class UI {
     this.settings.secondaryColorInput.value = config.secondaryColor;
     this.settings.accentColorInput.value = config.accentColor;
     this.settings.fontColorInput.value = config.fontColor;
+    this.settings.selectionColorInput.value = config.selectionColor;
 
     if (!this.achievementsBlock.section.classList.contains("hidden")) {
       this.buttons.achievements.classList.add("checked");
@@ -585,7 +588,7 @@ class Settings {
     this.secondaryColorInput = document.querySelector("#secondary-color-input");
     this.accentColorInput = document.querySelector("#accent-color-input");
     this.fontColorInput = document.querySelector("#font-color-input");
-
+    this.selectionColorInput = document.querySelector("#selection-color-input"); //
     this.stretchButton = document.querySelector("#stretch-achivs");
     this.minimumWidthInput = document.querySelector("#achiv-min-width");
     this.maximumWidthInput = document.querySelector("#achiv-max-width");
@@ -707,7 +710,11 @@ class Settings {
       config.fontColor = this.fontColorInput.value;
       UI.updateColors();
     });
-
+    this.selectionColorInput.addEventListener("change", (e) => {
+      e.stopPropagation();
+      config.selectionColor = this.selectionColorInput.value;
+      UI.updateColors();
+    });
     this.targetUserInput.addEventListener("change", (e) => {
       e.stopPropagation();
       config.targetUser = this.targetUserInput.value;
