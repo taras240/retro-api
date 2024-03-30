@@ -1116,6 +1116,17 @@ class Target {
     this.header = document.querySelector(".target-header_container");
     this.container = document.querySelector(".target-container");
 
+    this.resizer = document.querySelector("#target-resizer");
+    // Додавання подій для пересування вікна досягнень
+    this.resizer.addEventListener("mousedown", (event) => {
+      event.stopPropagation();
+      this.section.classList.add("resized");
+      UI.resizeEvent({
+        event: event,
+        section: this.section,
+        postFunc: () => "",
+      });
+    });
     // Додавання подій для пересування вікна target
     this.header.addEventListener("mousedown", (e) => {
       UI.moveEvent(this.section, e);

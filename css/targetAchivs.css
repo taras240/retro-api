@@ -1,27 +1,28 @@
 .target_section {
   position: absolute;
-  min-height: 100px;
+  min-height: 150px;
+  min-width: 300px;
   width: 400px;
   max-height: 99vh;
   top: 10px;
   left: 31%;
   background-color: var(--main-color);
-  overflow-y: scroll;
-  overflow-x: hidden;
 }
 
-.target-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 5px;
-  padding: 10px;
-}
 .target-header {
-  position: relative;
   flex: 1;
 }
-
+.target-header_container {
+  position: sticky;
+  top: 0;
+  height: auto;
+}
+.target-container {
+  width: 100%;
+  height: calc(100% - 35px);
+  padding: 10px;
+  overflow: scroll;
+}
 .target-achiv {
   position: relative;
   display: flex;
@@ -32,6 +33,7 @@
   overflow: hidden;
   padding: 10px;
   width: 100%;
+  margin: 0 0 10px;
 }
 .target-achiv:hover {
   transform: scale(1.02);
@@ -132,4 +134,5 @@
   opacity: 0.7;
   font-weight: 600;
   font-size: 2.1rem;
+  padding: 10px;
 }

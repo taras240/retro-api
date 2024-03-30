@@ -18,6 +18,8 @@
       </svg>
     </div>
   </div>
-  <div class="target-empty-list">Target is empty</div>
+  <!-- <div class="target-empty-list">Target is empty</div> -->
+
   <ul class="target-container"></ul>
+  <div class="resizer" id="target-resizer"></div>
 </section>
