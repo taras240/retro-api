@@ -9,11 +9,11 @@
   <title>RAchievements</title>
 </head>
 
-<body>
+<body data-color-preset="default">
   <div class="wrapper">
     <section id="update-section" class="update_section section">
 
-      <div class="update_container">
+      <div class="update_container " id="update-text-block">
         <button title="autoupdate achievements" id="watching-button" class="round-button update-button checked"><svg
             xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
             <path
@@ -29,8 +29,10 @@
         </div>
         <img src="./assets/img/icon.png" alt=" " class="update-game-preview" id="game-preview" />
       </div>
-      <div class="progress-bar" id="status-progress-bar"></div>
-
+      <div class="progress-bar" id="status-progress-bar">
+        <div class="progress-percent" id="status-progress-text">10%</div>
+      </div>
+      <div class="resizer" id="status-resizer"></div>
     </section>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>

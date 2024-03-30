@@ -41,6 +41,13 @@ input[type="number"]::-webkit-inner-spin-button {
   --font-color: #eee;
   --selection-color: #008000;
 }
+[data-color-preset="default"] {
+  --main-color: #201221;
+  --secondary-color: #181118;
+  --accent-color: #57125c;
+  --font-color: #eee;
+  --selection-color: #008000;
+}
 body {
   background-color: black;
   /* background-image: url(../assets/img/pixelart.png); */

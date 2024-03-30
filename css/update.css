@@ -1,30 +1,47 @@
 .update_section {
   position: absolute;
-  overflow: hidden;
+  /* overflow: hidden; */
   background-color: var(--secondary-color);
   /* border -radius: 100px 10px 10px 100px !important; */
   top: calc(100vh - 100px);
   left: 40%;
-  width: 300px;
-  cursor: grab;
-  z-index: 110;
-  transition: 0.2s !important;
+  height: 70px;
+  min-width: 300px;
+  min-height: 60px;
+  max-height: 120px;
+
+  z-index: 100;
+  /* transition: 0.2s !important; */
 }
 .update_container {
   padding: 10px;
+  height: 100%;
   position: relative;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
+  display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   justify-content: space-between;
   z-index: 2;
+  cursor: grab;
 }
 .update-section-text {
   text-align: right;
   text-wrap: nowrap;
   overflow: hidden;
-  max-width: 500px;
+}
+.progress-percent {
+  position: absolute;
+  bottom: 0;
+  left: 60px;
+  transform: translate(0, 0);
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--font-color);
+  opacity: 0.5;
+}
+.progress-percent.hidden {
+  visibility: hidden;
 }
 .update-button {
   width: auto;
@@ -32,8 +49,8 @@
 }
 .round-button {
   width: 40px;
-  aspect-ratio: 1;
-  border-radius: 50%;
+  height: 100%;
+  border-radius: 5px;
   overflow: hidden;
   background-color: transparent;
   border: 1px solid gray;
@@ -103,9 +120,10 @@
   overflow: hidden;
 }
 .update-game-preview {
-  width: 40px;
+  height: 100%;
+  max-height: 100%;
   aspect-ratio: 1;
-  object-fit: scale-down;
+  object-fit: fill;
 }
 .progress-bar {
   position: absolute;

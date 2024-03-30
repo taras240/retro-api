@@ -77,7 +77,7 @@
       <div class="setting-radio-group">
         <input type="checkbox" name="stretch" id="stretch-achivs">
         </input>
-        <label class="settings-input" for="stretch-achivs">stretch vertically</label>
+        <label class="settings-input" for="stretch-achivs">stretch</label>
       </div>
 
     </div>

@@ -497,11 +497,13 @@ class StatusPanel {
   constructor() {
     this.section = document.querySelector("#update-section");
     this.gamePreview = document.querySelector("#game-preview"); // Іконка гри
+    this.textBlock = document.querySelector("#update-text-block");
     this.gameTitle = document.querySelector("#game-title"); // Заголовок гри
     this.gamePlatform = document.querySelector("#game-platform"); // Платформа гри
     this.watchButton = document.querySelector("#watching-button"); // Кнопка спостереження за грою
     this.progresBar = document.querySelector("#status-progress-bar");
-
+    this.progressStatusText = document.querySelector("#status-progress-text");
+    this.resizer = document.querySelector("#status-resizer");
     // Додаємо обробник події 'click' для кнопки автооновлення
     this.watchButton.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -518,8 +520,17 @@ class StatusPanel {
           .then(() => startWatching());
       }
     });
-    this.section.addEventListener("mousedown", (e) => {
+    this.textBlock.addEventListener("mousedown", (e) => {
       UI.moveEvent(this.section, e);
+    });
+    this.resizer.addEventListener("mousedown", (event) => {
+      event.stopPropagation();
+      this.section.classList.add("resized");
+      UI.resizeEvent({
+        event: event,
+        section: this.section,
+        postFunc: () => "",
+      });
     });
   }
   updateProgress({ points = 0, totalPoints, achievements }) {
@@ -555,18 +566,23 @@ class StatusPanel {
     this.progresBar.dataset.points = points;
 
     // Обчислення прогресу за балами та за кількістю досягнень
-    const completionByPoints = (width * points) / totalPoints || 0;
-    const completionByCount = (width * achievedCount) / totalCount || 0;
+    const completionByPoints = points / totalPoints || 0;
+
+    //*Потрібно перевести ширину у відсотки від ширини прогресу по поінтах
+    let completionByPointsInPixels = completionByPoints * width;
+    const completionByCount =
+      (width * achievedCount) / (totalCount * completionByPointsInPixels) || 0;
 
     // Встановлення стилів прогресу
     this.progresBar.style.setProperty(
       "--progress-points",
-      completionByPoints + "px"
+      completionByPoints * 100 + "%"
     );
     this.progresBar.style.setProperty(
       "--progress-count",
-      completionByCount + "px"
+      completionByCount * 100 + "%"
     );
+    this.progressStatusText.innerText = ~~(completionByPoints * 100) + "%";
   }
 }
 class Settings {
@@ -684,6 +700,8 @@ class Settings {
       ui.achievementsBlock.container.style.height = config.stretchAchievements
         ? "100%"
         : "auto";
+      ui.achievementsBlock.container.style.justifyContent =
+        config.stretchAchievements ? "space-between" : "start";
     });
     this.minimumWidthInput.addEventListener("change", (e) => {
       const { minimumWidthInput } = this;
