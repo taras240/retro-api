@@ -2,14 +2,12 @@
   position: absolute;
   overflow: hidden;
   background-color: var(--secondary-color);
-  /* border -radius: 100px 10px 10px 100px !important; */
   top: calc(100vh - 100px);
   left: 40%;
   height: 70px;
   min-width: 300px;
   min-height: 60px;
   max-height: 120px;
-
   z-index: 100;
   /* transition: 0.2s !important; */
 }
@@ -127,7 +125,6 @@
 }
 .progress-bar {
   position: absolute;
-  border-radius: 5px;
   top: 0;
   left: 0;
   height: 100%;

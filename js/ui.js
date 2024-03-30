@@ -587,8 +587,12 @@ class StatusPanel {
 }
 class Settings {
   constructor() {
+    this.initializeElements();
+    this.addEvents();
+  }
+  initializeElements() {
     // Елементи налаштувань
-    this.section = document.querySelector(".prefs_section"); //* Контейнер налаштувань
+    this.section = document.querySelector("#settings_section"); //* Контейнер налаштувань
     this.header = document.querySelector(".prefs-header-container");
     this.updateInterval = document.querySelector("#update-time"); // Поле введення інтервалу оновлення
     this.sortByLatestButton = document.querySelector("#sort-by-latest"); // Кнопка сортування за останніми
@@ -619,10 +623,8 @@ class Settings {
     this.gameID = document.querySelector("#game-id"); // Поле введення ідентифікатора гри
     this.getGameIdButton = document.querySelector(".get-id-button"); // Кнопка отримання ідентифікатора гри
     this.checkIdButton = document.querySelector(".check-id-button"); // Кнопка перевірки ідентифікатора гри
-    // this.gameAchivsCount = document.querySelector("#game-achivs-count"); // Кількість досягнень гри
-    //
-    this.addEvents();
   }
+
   addEvents() {
     // Додаємо обробник події 'change' для поля введення інтервалу оновлення
     this.updateInterval.addEventListener("change", () => {

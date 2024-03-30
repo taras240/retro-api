@@ -20,6 +20,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 5px;
+  height: 50px;
   gap: 5px;
 }
 .prefs_section label {
@@ -29,25 +30,24 @@
   font-size: 1.1rem;
   user-select: none;
 }
-
-.prefs_section .input,
-.setting-button {
+/* 
+.prefs_section .input {
   position: relative;
   height: 2rem;
   font-size: 1.1rem;
   border-radius: 5px;
-  padding: 5px 10px;
+  padding: 0px 10px;
   background-color: transparent;
   color: var(--font-color);
-  border: 1px solid rgb(71, 71, 71);
+  border: 1px solid black;
   text-align: center;
   line-height: 100%;
   transition: 0.2s;
-}
+} */
 
-.prefs_section .input:focus {
+/* .prefs_section .input:focus {
   border-color: var(--selection-color);
-}
+} */
 .prefs_section .input:not(.target-user):placeholder-shown {
   border-color: red;
 }
@@ -57,7 +57,7 @@
   padding: 10px;
 }
 
-.setting-button:hover {
+/* .setting-button:hover {
   border: 1px solid rgb(255, 255, 255);
   box-shadow: 0px 0px 5px 2px black;
   cursor: pointer;
@@ -84,7 +84,72 @@
 }
 .setting-button.checked {
   border-color: var(--selection-color);
+} */
+
+.setting-button,
+.settings-input,
+.prefs_section .input {
+  --bg-color: var(--main-color);
+  --border-color: black;
+  --shadow-color: black;
+  --font-color: var(--font-color);
+  top: 0px;
+  left: 0px;
+  position: relative;
+  padding: 2px 15px;
+  background-color: var(--bg-color);
+  border: 1px solid var(--border-color);
+  color: var(--font-color);
+  font-size: 1rem;
+  text-align: center;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 1px 1px 0 var(--shadow-color), 2px 2px 0 var(--shadow-color),
+    3px 3px 0 var(--shadow-color);
+  user-select: none;
+  transition: 0.1s;
 }
+.prefs_section .input {
+  min-width: 70px;
+}
+.settings-input {
+  padding: 4px 15px;
+}
+.setting-button.checked::after,
+input[type="radio"]:checked + .settings-input::after,
+input[type="checkbox"]:checked + .settings-input::after {
+  content: "";
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--selection-color);
+  box-shadow: 0 0 3px 2px var(--selection-color);
+  top: 2px;
+  right: 2px;
+}
+
+.setting-button:hover,
+.settings-input:hover,
+.prefs_section .input:hover {
+  top: 1px;
+  left: 1px;
+  box-shadow: 1px 1px 0 var(--shadow-color), 2px 2px 0 var(--shadow-color);
+}
+.setting-button.checked,
+input:checked + .settings-input,
+.prefs_section .input:focus {
+  top: 2px;
+  left: 2px;
+  box-shadow: 0 0 0;
+}
+.setting-button:active,
+.settings-input:active {
+  top: 2px;
+  left: 2px;
+  box-shadow: 0px 0px 0 var(--shadow-color);
+}
+
 #game-achivs-count::after {
   content: " achieves availible";
 }
@@ -119,46 +184,6 @@
   transform: scale(0.95);
 }
 
-.settings-input {
-  display: flex;
-  align-items: center;
-  position: relative;
-  height: 2rem;
-  font-size: 1rem;
-  border-radius: 5px;
-  background-color: transparent;
-  color: var(--font-color);
-  border: 1px solid rgb(71, 71, 71);
-  text-align: center;
-  padding: 5px 10px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-.settings-input:hover {
-  border: 1px solid rgb(255, 255, 255);
-  box-shadow: 0px 0px 5px 2px black;
-  cursor: pointer;
-  transition: 0.2s;
-}
-.settings-input:active {
-  transform: scale(0.95);
-  box-shadow: 1px 0px 5px 4px black;
-  transition: 0.2s;
-}
-input[type="radio"]:checked + .settings-input::after,
-input[type="checkbox"]:checked + .settings-input::after {
-  content: "";
-  position: absolute;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background-color: var(--selection-color);
-  top: 2px;
-  right: 2px;
-}
-input:checked + .settings-input {
-  border-color: var(--selection-color);
-}
 .svg-button {
   background-color: transparent;
 }

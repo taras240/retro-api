@@ -90,7 +90,7 @@ body {
   align-items: center;
   padding: 0 10px;
   width: 100%;
-  border-bottom: 1px solid var(--font-color);
+  border-bottom: 0px solid var(--font-color);
 }
 .header-icon {
   display: flex;

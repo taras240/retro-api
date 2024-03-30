@@ -117,19 +117,23 @@ class Config {
   }
   //!---------------[ COLORS ]-----
   get mainColor() {
-    return this._cfg.settings.mainColor ?? "#201221";
+    return this._cfg.settings.mainColor ?? colorPresets.default.mainColor;
   }
   get secondaryColor() {
-    return this._cfg.settings.secondaryColor ?? "#181118";
+    return (
+      this._cfg.settings.secondaryColor ?? colorPresets.default.secondaryColor
+    );
   }
   get accentColor() {
-    return this._cfg.settings.accentColor ?? "#57125c";
+    return this._cfg.settings.accentColor ?? colorPresets.default.accentColor;
   }
   get fontColor() {
-    return this._cfg.settings.fontColor ?? "#eeeeee";
+    return this._cfg.settings.fontColor ?? colorPresets.default.fontColor;
   }
   get selectionColor() {
-    return this._cfg.settings.selectionColor ?? "#008000";
+    return (
+      this._cfg.settings.selectionColor ?? colorPresets.default.selectionColor
+    );
   }
   set mainColor(value) {
     this._cfg.settings.mainColor = value;
@@ -162,115 +166,21 @@ class Config {
   constructor() {
     this.readConfiguration();
   }
+
   getColors(preset) {
     this.colorsPreset = preset;
-    switch (preset) {
-      case "pink":
-        return {
-          mainColor: "#F2BED1",
-          secondaryColor: "#FDCEDF",
-          accentColor: "#F8E8EE",
-          fontColor: "#000000",
-          selectionColor: "#FF5BAE",
-        };
-      case "lightgreen":
-        return {
-          mainColor: "#A5DD9B",
-          secondaryColor: "#C5EBAA",
-          accentColor: "#F2C18D",
-          fontColor: "#000000",
-          selectionColor: "#F6F193",
-        };
-      case "lightblue":
-        return {
-          mainColor: "#89CFF3",
-          secondaryColor: "#A0E9FF",
-          accentColor: "#00A9FF",
-          fontColor: "#000000",
-          selectionColor: "#CDF5FD",
-        };
-      case "blue":
-        return {
-          mainColor: "#008DDA",
-          secondaryColor: "#41C9E2",
-          accentColor: "#ACE2E1",
-          fontColor: "#000000",
-          selectionColor: "#F7EEDD",
-        };
-      case "synthwave":
-        return {
-          mainColor: "#A0153E",
-          secondaryColor: "#FF204E",
-          accentColor: "#5D0E41",
-          fontColor: "#000000",
-          selectionColor: "#00224D",
-        };
-      case "darkblue":
-        return {
-          mainColor: "#222831",
-          secondaryColor: "#393E46",
-          accentColor: "#00ADB5",
-          fontColor: "#eeeeee",
-          selectionColor: "#EEEEEE",
-        };
-      case "brown":
-        return {
-          mainColor: "#481E14",
-          secondaryColor: "#9B3922",
-          accentColor: "#0C0C0C",
-          fontColor: "#eeeeee",
-          selectionColor: "#F2613F",
-        };
-      case "midnight":
-        return {
-          mainColor: "#35374B",
-          secondaryColor: "#344955",
-          accentColor: "#78A083",
-          fontColor: "#eeeeee",
-          selectionColor: "#50727B",
-        };
-      case "retro":
-        return {
-          mainColor: "#333A73",
-          secondaryColor: "#387ADF",
-          accentColor: "#FBA834",
-          fontColor: "#000000",
-          selectionColor: "#1D2B53",
-        };
-      case "vintage":
-        return {
-          mainColor: "#222831",
-          secondaryColor: "#31363F",
-          accentColor: "#76ABAE",
-          fontColor: "#eeeeee",
-          selectionColor: "#EEEEEE",
-        };
-      case "neon":
-        return {
-          mainColor: "#7E2553",
-          secondaryColor: "#FF004D",
-          accentColor: "#FAEF5D",
-          fontColor: "#000000",
-          selectionColor: "#50C4ED",
-        };
-      case "custom":
-        return {
-          mainColor: this.mainColor,
-          secondaryColor: this.secondaryColor,
-          accentColor: this.accentColor,
-          fontColor: this.fontColor,
-          selectionColor: this.selectionColor,
-        };
-      default:
-        return {
-          mainColor: "#201221",
-          secondaryColor: "#181118",
-          accentColor: "#57125c",
-          fontColor: "#eeeeee",
-          selectionColor: "#008000",
-        };
+    if (preset === "custom") {
+      return {
+        mainColor: this.mainColor,
+        secondaryColor: this.secondaryColor,
+        accentColor: this.accentColor,
+        fontColor: this.fontColor,
+        selectionColor: this.selectionColor,
+      };
     }
+    return colorPresets[preset] || colorPresets.default;
   }
+
   setNewPosition({ id, xPos, yPos, width, height, hidden }) {
     // console.log(id, hidden);
     if (this._cfg.ui.hasOwnProperty(id)) {
@@ -316,3 +226,89 @@ class Config {
     localStorage.setItem(CONFIG_FILE_NAME, JSON.stringify(this._cfg));
   }
 }
+const colorPresets = {
+  pink: {
+    mainColor: "#F2BED1",
+    secondaryColor: "#FDCEDF",
+    accentColor: "#F8E8EE",
+    fontColor: "#000000",
+    selectionColor: "#FF5BAE",
+  },
+  lightgreen: {
+    mainColor: "#A5DD9B",
+    secondaryColor: "#C5EBAA",
+    accentColor: "#F2C18D",
+    fontColor: "#000000",
+    selectionColor: "#F6F193",
+  },
+  lightblue: {
+    mainColor: "#89CFF3",
+    secondaryColor: "#A0E9FF",
+    accentColor: "#00A9FF",
+    fontColor: "#000000",
+    selectionColor: "#CDF5FD",
+  },
+  blue: {
+    mainColor: "#008DDA",
+    secondaryColor: "#41C9E2",
+    accentColor: "#ACE2E1",
+    fontColor: "#000000",
+    selectionColor: "#F7EEDD",
+  },
+  synthwave: {
+    mainColor: "#A0153E",
+    secondaryColor: "#FF204E",
+    accentColor: "#5D0E41",
+    fontColor: "#000000",
+    selectionColor: "#00224D",
+  },
+  darkblue: {
+    mainColor: "#222831",
+    secondaryColor: "#393E46",
+    accentColor: "#00ADB5",
+    fontColor: "#eeeeee",
+    selectionColor: "#EEEEEE",
+  },
+  brown: {
+    mainColor: "#481E14",
+    secondaryColor: "#9B3922",
+    accentColor: "#0C0C0C",
+    fontColor: "#eeeeee",
+    selectionColor: "#F2613F",
+  },
+  midnight: {
+    mainColor: "#35374B",
+    secondaryColor: "#344955",
+    accentColor: "#78A083",
+    fontColor: "#eeeeee",
+    selectionColor: "#50727B",
+  },
+  retro: {
+    mainColor: "#333A73",
+    secondaryColor: "#387ADF",
+    accentColor: "#FBA834",
+    fontColor: "#000000",
+    selectionColor: "#1D2B53",
+  },
+  vintage: {
+    mainColor: "#222831",
+    secondaryColor: "#31363F",
+    accentColor: "#76ABAE",
+    fontColor: "#eeeeee",
+    selectionColor: "#EEEEEE",
+  },
+  neon: {
+    mainColor: "#7E2553",
+    secondaryColor: "#FF004D",
+    accentColor: "#FAEF5D",
+    fontColor: "#000000",
+    selectionColor: "#50C4ED",
+  },
+  default: {
+    mainColor: "#201221",
+    secondaryColor: "#181118",
+    accentColor: "#57125c",
+    fontColor: "#eeeeee",
+    selectionColor: "#008000",
+  },
+};
