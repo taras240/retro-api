@@ -1,6 +1,6 @@
 .update_section {
   position: absolute;
-  /* overflow: hidden; */
+  overflow: hidden;
   background-color: var(--secondary-color);
   /* border -radius: 100px 10px 10px 100px !important; */
   top: calc(100vh - 100px);
@@ -127,6 +127,7 @@
 }
 .progress-bar {
   position: absolute;
+  border-radius: 5px;
   top: 0;
   left: 0;
   height: 100%;

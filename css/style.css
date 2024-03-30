@@ -210,7 +210,7 @@ body {
   aspect-ratio: 1.5;
   background-color: transparent;
   cursor: nwse-resize;
-  z-index: 1;
+  z-index: 1100;
 }
 .resizer::after {
   content: "";
