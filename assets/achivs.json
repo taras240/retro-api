@@ -1,6 +1,23 @@
 {
     "Achievements": {
-        "27338": {}
+        "9": {
+            "ID": 9,
+            "NumAwarded": 24273,
+            "NumAwardedHardcore": 10831,
+            "Title": "That Was Easy",
+            "Description": "Complete the first act in Green Hill Zone",
+            "Points": 3,
+            "TrueRatio": 3,
+            "Author": "Scott",
+            "DateModified": "2023-08-08 00:36:59",
+            "DateCreated": "2012-11-02 00:03:12",
+            "BadgeName": "250336",
+            "DisplayOrder": 1,
+            "MemAddr": "22c9d5e2cd7571df18a1a1b43dfe1fea",
+            "type": "progression",
+            "DateEarnedHardcore": "2016-03-12 17:47:29",
+            "DateEarned": "2016-03-12 17:47:29"
+        }
     },
     "ConsoleID": 7,
     "ConsoleName": "NES/Famicom",

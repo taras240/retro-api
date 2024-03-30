@@ -46,27 +46,35 @@
   margin-right: 20px;
 }
 .round-button {
+  --shadow-color: black;
   width: 40px;
   height: 100%;
   border-radius: 5px;
   overflow: hidden;
   background-color: transparent;
-  border: 1px solid gray;
+  border: 1px solid var(--shadow-color);
+  border-right: none;
+  border-bottom: none;
   color: var(--font-color);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: 0.2s;
+  margin-top: 0px;
+  margin-left: 0px;
+  box-shadow: 1px 1px 0 var(--shadow-color), 2px 2px 0 var(--shadow-color),
+    3px 3px 0 var(--shadow-color), 4px 4px 0 var(--shadow-color);
+  transition: 0.1s;
 }
 .round-button:hover {
-  border-color: var(--font-color);
-  box-shadow: 0 0 3px 3px black;
-  transform: scale(1.05);
-  transition: 0.2s;
+  margin-top: 2px;
+  margin-left: 2px;
+  box-shadow: 1px 1px 0 var(--shadow-color), 2px 2px 0 var(--shadow-color);
 }
 .round-button:active {
-  transform: scale(0.95);
-  transition: 0.2s;
+  margin-top: 4px;
+  margin-left: 4px;
+  box-shadow: 0 0 0;
+  background-color: var(--selection-color);
 }
 .update-button svg {
   fill: var(--font-color);
@@ -74,9 +82,11 @@
   height: 26px;
 }
 .update-button.active {
-  border-color: transparent;
+  /* border-color: transparent; */
+  margin-top: 3px;
+  margin-left: 3px;
+  box-shadow: 0 0 0;
   background-color: var(--selection-color);
-  box-shadow: 0 0 3px 3px var(--selection-color);
 }
 .update-button.active svg,
 .update-button.error svg {
@@ -93,7 +103,6 @@
 .update-button.error {
   background-color: red;
   border-color: transparent;
-  box-shadow: 1px 0px 5px 1px red;
 }
 
 @keyframes updateTickAnimation {

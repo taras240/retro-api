@@ -37,10 +37,11 @@ async function getAwards() {
 async function updateAwards() {
   const response = await apiWorker.getUserAwards({});
   if (
-    response.TotalAwardsCount !=
-    ui.awards.container.querySelector(".awarded-games.total").innerText
+    response.TotalAwardsCount != ui.awards.container.dataset.total ||
+    response.MasteryAwardsCount != ui.awards.container.dataset.mastery ||
+    response.BeatenHardcoreAwardsCount != ui.awards.container.dataset.beatenHard
   ) {
-    ui.awards.parseNewAwards({ userAwards: response });
+    ui.awards.parseAwards(response);
   }
 }
 // Функція для оновлення досягнень

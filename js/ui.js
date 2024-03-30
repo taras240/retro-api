@@ -80,9 +80,9 @@ class UI {
     this.achievementsBlock = new AchievementsBlock();
     this.buttons = new ButtonPanel();
     this.settings = new Settings();
-    this.statusPanel = new StatusPanel();
     this.awards = new Awards();
     this.gameCard = new GameCard();
+    this.statusPanel = new StatusPanel();
   }
   //Встановлення розмірів і розміщення елементів
   setPositions() {
@@ -191,6 +191,9 @@ class UI {
     }
     if (!this.gameCard.section.classList.contains("hidden")) {
       this.buttons.gameCard.classList.add("checked");
+    }
+    if (!this.statusPanel.section.classList.contains("hidden")) {
+      this.buttons.status.classList.add("checked");
     }
   }
   addEvents() {}
@@ -451,6 +454,7 @@ class AchievementsBlock {
     Title,
     Description,
     DateEarned,
+    DateEarnedHardcore,
     Points,
     NumAwardedHardcore,
     totalPlayers,
@@ -458,11 +462,17 @@ class AchievementsBlock {
     let detailsElement = document.createElement("div");
     detailsElement.classList.add("achiv-details-block");
     detailsElement.innerHTML = `
-              <h3>${Title}</h3>
-              <p>${Description}</p>
-              <p>Earned by ${NumAwardedHardcore} of ${totalPlayers} players</p>
-              <p class="points">${Points} points</p>
-              ${DateEarned ? "<p>Earned " + DateEarned + "</p>" : ""}
+    <h3>${Title}</h3>
+    <p>${Description}</p>
+    <p>Earned by ${NumAwardedHardcore} of ${totalPlayers} players</p>
+    <p class="points">${Points} points</p>
+    ${
+      DateEarnedHardcore
+        ? "<p>Earned hardcore: " + fixTimeString(DateEarnedHardcore) + "</p>"
+        : DateEarned
+        ? "<p>Earned softcore: " + fixTimeString(DateEarned) + "</p>"
+        : ""
+    }
       `;
     return detailsElement;
   }
@@ -491,6 +501,7 @@ class ButtonPanel {
     this.about = document.querySelector("#open-about-button");
     this.gameCard = document.querySelector("#open-game-card-button");
     this.target = document.querySelector("#open-target-button");
+    this.status = document.querySelector("#open-status-button");
   }
 }
 class StatusPanel {
@@ -567,12 +578,13 @@ class StatusPanel {
 
     // Обчислення прогресу за балами та за кількістю досягнень
     const completionByPoints = points / totalPoints || 0;
-
+    const completionByPointsPercents = ~~(completionByPoints * 100) + "%";
     //*Потрібно перевести ширину у відсотки від ширини прогресу по поінтах
-    let completionByPointsInPixels = completionByPoints * width;
+    const completionByPointsInPixels = completionByPoints * width;
     const completionByCount =
       (width * achievedCount) / (totalCount * completionByPointsInPixels) || 0;
-
+    const completionByCountPercent =
+      ~~((100 * achievedCount) / totalCount) + "%";
     // Встановлення стилів прогресу
     this.progresBar.style.setProperty(
       "--progress-points",
@@ -582,7 +594,8 @@ class StatusPanel {
       "--progress-count",
       completionByCount * 100 + "%"
     );
-    this.progressStatusText.innerText = ~~(completionByPoints * 100) + "%";
+    this.progressStatusText.innerText = completionByPointsPercents;
+    ui.gameCard.completion.innerText = `${completionByPointsPercents} of points [${completionByCountPercent}]`;
   }
 }
 class Settings {
@@ -864,7 +877,7 @@ class GameCard {
     this.publisher.innerText = Publisher || "-";
     this.genre.innerText = Genre || "-";
     this.released.innerText = Released || "-";
-    this.completion.innerText = `${UserCompletion} [${UserCompletionHardcore}]`;
+    // this.completion.innerText = `${UserCompletion} [${UserCompletionHardcore}]`;
   }
 }
 
@@ -891,7 +904,13 @@ class Awards {
   }
   parseAwards(userAwards) {
     if (!userAwards?.TotalAwardsCount) return;
-    // console.log(userAwards);
+
+    this.container.dataset.total = userAwards.TotalAwardsCount;
+    this.container.dataset.beatenSoftcore =
+      userAwards.BeatenSoftcoreAwardsCount;
+    this.container.dataset.beatenHard = userAwards.BeatenHardcoreAwardsCount;
+    this.container.dataset.completion = userAwards.CompletionAwardsCount;
+    this.container.dataset.mastery = userAwards.MasteryAwardsCount;
     this.container.innerHTML = `
       <li class="console-awards all-consoles">
       <h3 class="awards-console_header">Total</h3>
@@ -903,7 +922,7 @@ class Awards {
         <li class="awarded-games mastered">${userAwards.MasteryAwardsCount}</li>
       </ul>
       <button class="expand-awards_button" onclick="ui.awards.expandAwards(this)"> </button>
-      <ul class="awarded-games_list total hidden">
+      <ul class="awarded-games_list total">
       </ul>
     </li>
       `;
@@ -919,89 +938,11 @@ class Awards {
     this.generateConsolesAwards(sortedGames);
   }
 
-  parseNewAwards({ userAwards }) {
-    // Отримуємо загальний контейнер нагород
-    const totalAwardsContainer = this.container.querySelector(
-      ".console-awards.all-consoles"
-    );
-
-    // Визначаємо кількість нових нагород
-    const newAwardsCount =
-      userAwards.TotalAwardsCount -
-      totalAwardsContainer.querySelector(".awarded-games.total").innerText;
-    // Якщо немає нових нагород, виходимо з функції
-    if (newAwardsCount < 1) return;
-
-    // Функція для інкрементування текстових елементів
-    const incrementElementsText = (args) => {
-      args.forEach((element) => {
-        element.innerText = Number(element.innerText) + 1;
-      });
-    };
-
-    // Селектори для різних типів нагород
-    const awardTypeSelectors = {
-      beatenSoftcore: ".awarded-games.beaten-softcore",
-      beatenHardcore: ".awarded-games.beaten",
-      completion: ".awarded-games.completed",
-      mastery: ".awarded-games.mastered",
-      total: ".awarded-games.total",
-    };
-
-    // Фіксуємо властивості ігор і обрізаємо масив до кількості нових нагород
-    const gamesArray = this.fixGamesProperties([
-      ...userAwards.VisibleUserAwards,
-    ]).slice(0, newAwardsCount);
-
-    // Перебираємо масив ігор для оновлення даних та вставки нових нагород
-    gamesArray.forEach((game) => {
-      // Отримуємо контейнер нагород для конкретної консолі
-      let consoleAwardsContainer = this.container.querySelector(
-        `.console-awards[data-console-name="${game.ConsoleName}"]`
-      );
-      if (!consoleAwardsContainer) {
-        consoleAwardsContainer = this.makeConsoleListElement({
-          consoleName: game.ConsoleName,
-        });
-        this.container.appendChild(consoleAwardsContainer);
-      }
-      // Отримуємо список нагород для конкретної консолі
-      const consoleAwardsList = consoleAwardsContainer.querySelector(
-        ".awarded-games_list"
-      );
-      // Отримуємо список загальних нагород
-      const totalAwardsList = totalAwardsContainer.querySelector(
-        ".awarded-games_list"
-      );
-
-      // Інкрементуємо кількість нагород для кожного типу та загальну кількість нагород
-      incrementElementsText([
-        totalAwardsContainer.querySelector(
-          awardTypeSelectors[game.awardeTypeFixed]
-        ),
-        consoleAwardsContainer.querySelector(
-          awardTypeSelectors[game.awardeTypeFixed]
-        ),
-        totalAwardsContainer.querySelector(awardTypeSelectors.total),
-        consoleAwardsContainer.querySelector(awardTypeSelectors.total),
-      ]);
-
-      // Вставляємо нову нагороду до списків нагород
-      totalAwardsList.insertBefore(
-        this.makeGameAwardsElement(game),
-        totalAwardsList.firstChild
-      );
-      consoleAwardsList.insertBefore(
-        this.makeGameAwardsElement(game),
-        consoleAwardsList.firstChild
-      );
-    });
-  }
-
   fixGamesProperties(gamesArray) {
     return gamesArray
       .map((game) => {
         game.awardedDate = new Date(game.AwardedAt);
+        game.timeString = fixTimeString(game.AwardedAt);
         game.awardeTypeFixed =
           game.AwardType === "Game Beaten"
             ? game.AwardDataExtra === 1
@@ -1083,7 +1024,7 @@ class Awards {
           <li class="awarded-games mastered">0</li>
         </ul>
         <button class="expand-awards_button" onclick="ui.awards.expandAwards(this)"> </button>
-        <ul class="awarded-games_list hidden total">
+        <ul class="awarded-games_list total">
         </ul>
         `;
     return consoleListItem;
@@ -1092,14 +1033,10 @@ class Awards {
     let gameElement = document.createElement("li");
     gameElement.classList.add("awarded-game", game.awardeTypeFixed);
     gameElement.innerHTML = `
-          <img class="awarded-game-preview" src="https://media.retroachievements.org${
-            game.ImageIcon
-          }" alt=" ">
+          <img class="awarded-game-preview" src="https://media.retroachievements.org${game.ImageIcon}" alt=" ">
           <h3 class="game-title">${game.Title}</h3>
           <p class="console-name">${game.ConsoleName}</p>
-          <p class="awarded-date">${game.awardedDate.toLocaleDateString(
-            "uk-UA"
-          )}</p>
+          <p class="awarded-date">${game.timeString}</p>
       `;
     return gameElement;
   }
@@ -1243,3 +1180,16 @@ const filterBy = {
   notEarned: (achievement) => !achievement.DateEarnedHardcore,
   all: () => true,
 };
+
+function fixTimeString(dateString) {
+  const date = new Date(dateString);
+  const options = {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  };
+  return date.toLocaleDateString("uk-UA", options);
+}

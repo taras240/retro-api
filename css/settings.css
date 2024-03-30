@@ -30,24 +30,7 @@
   font-size: 1.1rem;
   user-select: none;
 }
-/* 
-.prefs_section .input {
-  position: relative;
-  height: 2rem;
-  font-size: 1.1rem;
-  border-radius: 5px;
-  padding: 0px 10px;
-  background-color: transparent;
-  color: var(--font-color);
-  border: 1px solid black;
-  text-align: center;
-  line-height: 100%;
-  transition: 0.2s;
-} */
 
-/* .prefs_section .input:focus {
-  border-color: var(--selection-color);
-} */
 .prefs_section .input:not(.target-user):placeholder-shown {
   border-color: red;
 }
@@ -56,36 +39,6 @@
   width: 4rem;
   padding: 10px;
 }
-
-/* .setting-button:hover {
-  border: 1px solid rgb(255, 255, 255);
-  box-shadow: 0px 0px 5px 2px black;
-  cursor: pointer;
-  transition: 0.2s;
-}
-.setting-button:active {
-  transform: scale(0.95);
-  box-shadow: 1px 0px 5px 4px black;
-
-  transition: 0.2s;
-}
-.setting-input.checked {
-  border-color: var(--selection-color);
-}
-.setting-button.checked::after {
-  content: "";
-  position: absolute;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background-color: var(--selection-color);
-  top: 2px;
-  right: 2px;
-}
-.setting-button.checked {
-  border-color: var(--selection-color);
-} */
-
 .setting-button,
 .settings-input,
 .prefs_section .input {
@@ -99,6 +52,8 @@
   padding: 2px 15px;
   background-color: var(--bg-color);
   border: 1px solid var(--border-color);
+  border-right: none;
+  border-bottom: none;
   color: var(--font-color);
   font-size: 1rem;
   text-align: center;

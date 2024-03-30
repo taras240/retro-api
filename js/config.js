@@ -256,10 +256,10 @@ const colorPresets = {
     selectionColor: "#F7EEDD",
   },
   synthwave: {
-    mainColor: "#A0153E",
-    secondaryColor: "#FF204E",
-    accentColor: "#5D0E41",
-    fontColor: "#000000",
+    mainColor: "#5D0E41",
+    secondaryColor: "#A0153E",
+    accentColor: "#FF204E",
+    fontColor: "#dedede",
     selectionColor: "#00224D",
   },
   darkblue: {
@@ -284,11 +284,11 @@ const colorPresets = {
     selectionColor: "#50727B",
   },
   retro: {
-    mainColor: "#333A73",
-    secondaryColor: "#387ADF",
-    accentColor: "#FBA834",
-    fontColor: "#000000",
-    selectionColor: "#1D2B53",
+    mainColor: "#1D2B53",
+    secondaryColor: "#333A73",
+    accentColor: "#387ADF",
+    fontColor: "#cdcdcd",
+    selectionColor: "#FBA834",
   },
   vintage: {
     mainColor: "#222831",

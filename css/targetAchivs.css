@@ -6,9 +6,12 @@
   max-height: 99vh;
   top: 10px;
   left: 31%;
+  background-color: transparent;
   background-color: var(--main-color);
 }
-
+.target_section:hover {
+  background-color: var(--main-color);
+}
 .target-header {
   flex: 1;
 }
