@@ -206,7 +206,8 @@
 }
 .console-awards .expand-awards_button {
   background-color: transparent;
-  background-image: url("../assets/img/expand_more.svg");
+  mask-image: url("../assets/img/expand_more.svg");
+  background-color: var(--font-color);
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -223,5 +224,4 @@
 }
 .expand-awards_button:hover {
   opacity: 1;
-  /* transition: 0.2s; */
 }
