@@ -63,7 +63,9 @@ async function updateAchievements() {
       );
       if (achievementElement) {
         const isHardcore = achievement.HardcoreMode === 1;
-        const isLatestSort = ui.SORT_METHOD === sortBy.latest;
+        const isLatestSort =
+          config.sortAchievementsBy === UI.sortMethods.latest;
+
         const isHardcoreMismatch =
           achievementElement.classList.contains("hardcore") !== isHardcore;
         const isNotEarned = !achievementElement.classList.contains("earned");
