@@ -65,6 +65,20 @@
     3px 3px 0 var(--shadow-color), 4px 4px 0 var(--shadow-color);
   transition: 0.1s;
 }
+.round-button.tick {
+  animation: tickAnimation 0.5s;
+}
+@keyframes tickAnimation {
+  0% {
+    background-color: var(--selection-color);
+  }
+  50% {
+    background-color: var(--accent-color);
+  }
+  100% {
+    background-color: var(--selection-color);
+  }
+}
 .round-button:hover {
   margin-top: 2px;
   margin-left: 2px;
@@ -98,7 +112,7 @@
 
 .update-button:not(.active) svg {
   opacity: 0.8;
-  animation: endTickAnimation 0.5s linear forwards;
+  animation: endTickAnimation 0.5s ease-in-out;
 }
 .update-button.error {
   background-color: red;

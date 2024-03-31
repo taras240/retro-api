@@ -206,8 +206,13 @@ class UI {
     points_total,
     Achievements,
   }) {
-    const { gamePreview, gameTitle, gamePlatform, gameAchivsCount } =
-      ui.statusPanel;
+    const {
+      gamePreview,
+      gameTitle,
+      gamePlatform,
+      gameAchivsCount,
+      richPresence,
+    } = ui.statusPanel;
 
     gamePreview.setAttribute(
       "src",
@@ -215,6 +220,7 @@ class UI {
     );
     gameTitle.innerText = Title || "Some game name";
     gamePlatform.innerText = ConsoleName || "";
+    richPresence.innerText = "";
     ui.statusPanel.updateProgress({
       totalPoints: points_total,
       completion: UserCompletionHardcore,

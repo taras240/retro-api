@@ -10,7 +10,9 @@
 }
 .game-card_section.hidden {
 }
-
+.game-card-header {
+  text-align: center;
+}
 .game-card_container {
   width: 100%;
   height: auto;
@@ -42,7 +44,12 @@
   padding: 10px;
   /* border-top: 1px solid white; */
 }
-
+.game-info-header {
+  margin-right: 10px;
+}
+.game-card-text {
+  text-align: end;
+}
 .game-card-info:nth-child(even) {
   background-color: var(--secondary-color);
   z-index: 2;

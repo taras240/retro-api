@@ -105,7 +105,7 @@ function startWatching() {
 
   // Отримання початкових досягнень
   getAchievements();
-
+  checkUpdates();
   // Встановлення інтервалу для оновлення досягнень та зміни стану кнопки
   apiTikInterval = setInterval(() => {
     checkUpdates();
