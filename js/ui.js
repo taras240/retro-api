@@ -219,6 +219,10 @@ class UI {
       `https://media.retroachievements.org${ImageIcon}`
     );
     gameTitle.innerText = Title || "Some game name";
+    gameTitle.setAttribute(
+      "href",
+      "https://retroachievements.org/game/" + config.gameID
+    );
     gamePlatform.innerText = ConsoleName || "";
     richPresence.innerText = "";
     ui.statusPanel.updateProgress({
