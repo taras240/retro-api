@@ -715,8 +715,8 @@ class Settings {
       ui.achievementsBlock.container.style.height = config.stretchAchievements
         ? "100%"
         : "auto";
-      ui.achievementsBlock.container.style.justifyContent =
-        config.stretchAchievements ? "space-between" : "start";
+      // ui.achievementsBlock.container.style.justifyContent =
+      //   config.stretchAchievements ? "space-between" : "start";
     });
     this.minimumWidthInput.addEventListener("change", (e) => {
       const { minimumWidthInput } = this;
@@ -823,8 +823,8 @@ class Settings {
     // Цикл для знаходження оптимального розміру досягнень
     do {
       achivWidth--;
-      rowsCount = Math.floor(windowHeight / achivWidth);
-      colsCount = Math.floor(windowWidth / achivWidth);
+      rowsCount = Math.floor(windowHeight / (achivWidth + 2));
+      colsCount = Math.floor(windowWidth / (achivWidth + 2));
     } while (rowsCount * colsCount < achivsCount && achivWidth > 0);
     achivWidth =
       achivWidth < config.ACHIV_MIN_SIZE

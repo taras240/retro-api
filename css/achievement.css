@@ -20,11 +20,12 @@
   display: flex;
   flex-wrap: wrap;
   align-items: start;
-  justify-content: space-between;
+  justify-content: center;
   height: 100%;
   max-width: 100%;
   max-height: 100%;
   border-radius: 5px;
+  gap: 1px;
   overflow: visible;
 }
 
@@ -32,12 +33,17 @@
 
 .achiv-block {
   position: relative;
-  padding: 1px;
+  margin: 1px;
   width: auto;
   aspect-ratio: 1;
   flex-shrink: 0;
   cursor: default;
+  box-shadow: 0 0 0;
+  transition: 0.2s;
+  left: 0;
+  top: 0;
 }
+
 .achiv-block.recent-earned {
   box-shadow: 0px 0px 5px 3px rgba(255, 238, 140, 0.568);
 }
@@ -57,13 +63,12 @@
 .achiv-block.earned.hardcore::after {
   content: "";
   position: absolute;
-  width: 50%;
-  aspect-ratio: 2/1;
-  top: 20%;
-  right: 20%;
-  transform: translate(50%, -50%) rotate(45deg);
-  /* background-image: url(../assets/img/S-rank-1.png); */
-  filter: drop-shadow(5px 3px 3px black);
+  width: calc(100%);
+  aspect-ratio: 1/1;
+  left: 0;
+  top: 0;
+  background-image: url(../assets/img/glass-bg_hard.png);
+  filter: drop-shadow(0px 0px 3px black);
   image-rendering: pixelated;
   background-size: contain;
   background-repeat: no-repeat;
@@ -143,6 +148,7 @@
 
 .achiv-details-block {
   position: absolute;
+  margin: 1px;
   width: 300px;
   left: 100%;
   top: 10%;
@@ -181,9 +187,15 @@
   padding-left: 25px;
 }
 .achiv-block:hover {
-  transform: scale(1.05);
+  --shadow-color: black;
+  transform: scale(1);
   z-index: 2;
   transition: 0.2s;
+  left: 5px;
+  top: -5px;
+  box-shadow: -1px 1px 0 var(--shadow-color), -2px 2px 0 var(--shadow-color),
+    -3px 3px 0 var(--shadow-color), -4px 4px 0 var(--shadow-color),
+    -5px 5px 0 var(--shadow-color), -6px 6px 0 var(--shadow-color);
 }
 .achiv-block:hover .achiv-details-block {
   visibility: visible;
