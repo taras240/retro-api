@@ -23,19 +23,6 @@
             </div>
         </div>
         <ul class="awards-content_container">
-            <li class="console-awards all-consoles">
-                <h3 class="awards-console_header">Total</h3>
-                <ul class="console-awards-values ">
-                    <li class="awarded-games total">0</li>
-                    <li class="awarded-games beaten-softcore">0</li>
-                    <li class="awarded-games beaten">0</li>
-                    <li class="awarded-games completed">0</li>
-                    <li class="awarded-games mastered">0</li>
-                </ul>
-                <button class="expand-awards_button" onclick="expandAwards(this)"> </button>
-                <ul class="awarded-games_list total hidden">
-                </ul>
-            </li>
         </ul>
     </div>
     <div class="resizer" id="awards-resizer"></div>

@@ -59,17 +59,28 @@
 }
 .awards-console_header {
   padding: 5px 0;
+  cursor: pointer;
 }
 .console-awards-values {
   display: flex;
   align-items: center;
-  gap: 25px;
+  gap: 15px;
 }
 .awarded-games:not(:last-child)::after {
   /* content: " /"; */
 }
 .awarded-games {
   position: relative;
+  padding: 0 0 0 10px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: 0.1s;
+}
+.awarded-games:hover {
+  transform: scale(1.05);
+}
+.awarded-games:active {
+  transform: scale(0.95);
 }
 .awarded-games:before {
   --dot-fill-to-color: transparent;
@@ -79,7 +90,7 @@
   width: 7px;
   height: 7px;
   top: 55%;
-  left: -10px;
+  left: 0px;
   transform: translate(0, -50%);
   background-color: var(--dot-fill-to-color);
   border-radius: 50%;
@@ -107,16 +118,13 @@
   transition: 0.2s ease-in-out;
 }
 .awarded-games_list.hidden {
-  /* visibility: hidden; */
   max-height: 0;
   visibility: hidden;
   opacity: 0;
   overflow: hidden;
-  /* transition: 0.2s ease-in-out; */
 }
 .awarded-game {
   margin: 10px 0;
-  /* border: 1px solid black; */
   border-radius: 5px;
   overflow: hidden;
   position: relative;
@@ -125,6 +133,9 @@
   column-gap: 10px;
   grid-template-columns: auto 1fr;
   transition: 0.2s;
+}
+.awarded-game.hidden {
+  display: none;
 }
 .console-awards:nth-child(odd) .awarded-game {
   background-color: var(--secondary-color);
@@ -150,7 +161,6 @@
   border-radius: 50%;
   overflow: hidden;
   opacity: 0.5;
-  /* background-image: linear-gradient(to bottom right, var(--dot-fill-color)); */
   background-image: radial-gradient(
     circle,
     var(--dot-fill-from-color),
@@ -194,7 +204,7 @@
   grid-row: 1 / 5;
   align-self: center;
 }
-.expand-awards_button {
+.console-awards .expand-awards_button {
   background-color: transparent;
   background-image: url("../assets/img/expand_more.svg");
   background-position: center;
@@ -205,7 +215,11 @@
   aspect-ratio: 1;
   opacity: 0.5;
   margin-left: 15px;
-  /* transition: 0.2s; */
+  transform: scaleY(-1);
+  transition: 0.2s;
+}
+.console-awards.collapsed .expand-awards_button {
+  transform: scaleY(1);
 }
 .expand-awards_button:hover {
   opacity: 1;

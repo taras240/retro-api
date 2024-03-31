@@ -883,6 +883,12 @@ class GameCard {
 }
 
 class Awards {
+  awardTypes = {
+    mastery: "mastery",
+    completion: "completion",
+    beatenSoftcore: "beatenSoftcore",
+    beatenHardcore: "beatenHardcore",
+  };
   constructor() {
     this.section = document.querySelector(".awards_section"); // Контейнер інформації про гру
     this.header = document.querySelector(".awards-header_container");
@@ -905,103 +911,115 @@ class Awards {
   }
   parseAwards(userAwards) {
     if (!userAwards?.TotalAwardsCount) return;
+    this.container.innerHTML = "";
 
-    this.container.dataset.total = userAwards.TotalAwardsCount;
-    this.container.dataset.beatenSoftcore =
-      userAwards.BeatenSoftcoreAwardsCount;
-    this.container.dataset.beatenHard = userAwards.BeatenHardcoreAwardsCount;
-    this.container.dataset.completion = userAwards.CompletionAwardsCount;
-    this.container.dataset.mastery = userAwards.MasteryAwardsCount;
-    this.container.innerHTML = `
-      <li class="console-awards all-consoles">
-      <h3 class="awards-console_header">Total</h3>
-      <ul class="console-awards-values ">
-        <li class="awarded-games total">${userAwards.TotalAwardsCount}</li>
-        <li class="awarded-games beaten-softcore">${userAwards.BeatenSoftcoreAwardsCount}</li>
-        <li class="awarded-games beaten">${userAwards.BeatenHardcoreAwardsCount}</li>
-        <li class="awarded-games completed">${userAwards.CompletionAwardsCount}</li>
-        <li class="awarded-games mastered">${userAwards.MasteryAwardsCount}</li>
-      </ul>
-      <button class="expand-awards_button" onclick="ui.awards.expandAwards(this)"> </button>
-      <ul class="awarded-games_list total">
-      </ul>
-    </li>
-      `;
+    // Отримуємо доступ до об'єкту dataset з контейнера
+    const { dataset } = this.container;
+    // Присвоюємо значення полям об'єкту dataset на основі даних з userAwards
+    dataset.total = userAwards.TotalAwardsCount;
+    dataset.beatenSoftcore = userAwards.BeatenSoftcoreAwardsCount;
+    dataset.beatenHard = userAwards.BeatenHardcoreAwardsCount;
+    dataset.completion = userAwards.CompletionAwardsCount;
+    dataset.mastery = userAwards.MasteryAwardsCount;
+
+    // Створюємо копію масиву нагород користувача
     let gamesArray = [...userAwards.VisibleUserAwards];
+
+    // Викликаємо метод fixGamesProperties для виправлення властивостей ігор
     gamesArray = this.fixGamesProperties(gamesArray);
 
-    gamesArray.forEach((game) => {
-      this.container
-        .querySelector(".awarded-games_list.total")
-        .appendChild(this.makeGameAwardsElement(game));
-    });
+    // Генеруємо відсортований масив груп нагород з відсортованих ігор
     const sortedGames = this.generateAwardsGroupsArray(gamesArray);
+
+    // Генеруємо нагороди для консолей
     this.generateConsolesAwards(sortedGames);
   }
 
   fixGamesProperties(gamesArray) {
-    return gamesArray
-      .map((game) => {
-        game.awardedDate = new Date(game.AwardedAt);
-        game.timeString = fixTimeString(game.AwardedAt);
-        game.awardeTypeFixed =
-          game.AwardType === "Game Beaten"
-            ? game.AwardDataExtra === 1
-              ? "beatenHardcore"
-              : "beatenSoftcore"
-            : game.AwardDataExtra === 1
-            ? "mastery"
-            : "completion";
-        return game;
-      })
-      .sort((a, b) => {
-        return b.awardedDate - a.awardedDate;
-      });
+    return (
+      gamesArray
+        .map((game) => {
+          // Перетворюємо строку дати на об'єкт Date
+          game.awardedDate = new Date(game.AwardedAt);
+          // Генеруємо рядок часу на основі дати нагородження за допомогою функції fixTimeString
+          game.timeString = fixTimeString(game.AwardedAt);
+          // Встановлюємо правильний тип нагороди для гри на основі додаткових даних
+          game.awardeTypeFixed =
+            game.AwardType === "Game Beaten"
+              ? game.AwardDataExtra === 1
+                ? this.awardTypes.beatenHardcore
+                : this.awardTypes.beatenSoftcore
+              : game.AwardDataExtra === 1
+              ? this.awardTypes.mastery
+              : this.awardTypes.completion;
+          return game;
+        })
+        // Сортуємо ігри за датою нагородження в спадаючому порядку
+        .sort((a, b) => {
+          return b.awardedDate - a.awardedDate;
+        })
+    );
   }
+  //Групуємо нагороди по консолям
   generateAwardsGroupsArray(gamesArray) {
-    return gamesArray.reduce((sortedGames, game) => {
-      if (!sortedGames.hasOwnProperty(game.ConsoleName)) {
-        sortedGames[game.ConsoleName] = [];
-      }
-      sortedGames[game.ConsoleName].push(game);
-      return sortedGames;
-    }, {});
+    return gamesArray.reduce(
+      (sortedGames, game) => {
+        if (!sortedGames.hasOwnProperty(game.ConsoleName)) {
+          sortedGames[game.ConsoleName] = [];
+        }
+        sortedGames[game.ConsoleName].push(game);
+        sortedGames["Total"].push(game);
+        return sortedGames;
+      },
+      { Total: [] }
+    );
   }
   generateConsolesAwards(sortedGames) {
     Object.getOwnPropertyNames(sortedGames).forEach((consoleName) => {
       let consoleListItem = document.createElement("li");
       consoleListItem.classList.add("console-awards");
+      consoleName !== "Total" ? consoleListItem.classList.add("collapsed") : "";
       consoleListItem.dataset.consoleName = consoleName;
       let total = sortedGames[consoleName].length;
       const awardsCount = ({ awardType, gamesArray }) =>
         gamesArray.filter((game) => game.awardeTypeFixed === awardType).length;
       let beatenSoftcore = awardsCount({
-        awardType: "beatenSoftcore",
+        awardType: this.awardTypes.beatenSoftcore,
         gamesArray: sortedGames[consoleName],
       });
       let beaten = awardsCount({
-        awardType: "beatenHardcore",
+        awardType: this.awardTypes.beatenHardcore,
         gamesArray: sortedGames[consoleName],
       });
       let compleated = awardsCount({
-        awardType: "completion",
+        awardType: this.awardTypes.completion,
         gamesArray: sortedGames[consoleName],
       });
       let mastered = awardsCount({
-        awardType: "mastery",
+        awardType: this.awardTypes.mastery,
         gamesArray: sortedGames[consoleName],
       });
       consoleListItem.innerHTML = `
-        <h3 class="awards-console_header">${consoleName}</h3>
+        <h3 class="awards-console_header" onclick="ui.awards.expandAwards(this)">${consoleName}</h3>
         <ul class="console-awards-values">      
-          <li class="awarded-games total">${total}</li>
-          <li class="awarded-games beaten-softcore">${beatenSoftcore}</li>
-          <li class="awarded-games beaten">${beaten}</li>
-          <li class="awarded-games completed">${compleated}</li>
-          <li class="awarded-games mastered">${mastered}</li>
+          <li class="awarded-games total" title="total awards" onclick="ui.awards.filterAwards('all')">${total}</li>
+          <li class="awarded-games beaten-softcore" title="beaten softcore" onclick="ui.awards.filterAwards('${
+            this.awardTypes.beatenSoftcore
+          }')">${beatenSoftcore}</li>
+          <li class="awarded-games beaten"  title="beaten"  onclick="ui.awards.filterAwards('${
+            this.awardTypes.beatenHardcore
+          }')">${beaten}</li>
+          <li class="awarded-games completed"  title="completed" onclick="ui.awards.filterAwards('${
+            this.awardTypes.completion
+          }')">${compleated}</li>
+          <li class="awarded-games mastered"  title="mastered" onclick="ui.awards.filterAwards('${
+            this.awardTypes.mastery
+          }')">${mastered}</li>
         </ul>
         <button class="expand-awards_button" onclick="ui.awards.expandAwards(this)"> </button>
-        <ul class="awarded-games_list hidden total">
+        <ul class="awarded-games_list  ${
+          consoleName == "Total" ? "" : "hidden"
+        } total">
         </ul>
         `;
       this.container.appendChild(consoleListItem);
@@ -1011,25 +1029,7 @@ class Awards {
       });
     });
   }
-  makeConsoleListElement({ consoleName }) {
-    let consoleListItem = document.createElement("li");
-    consoleListItem.classList.add("console-awards");
-    consoleListItem.dataset.consoleName = consoleName;
-    consoleListItem.innerHTML = `
-        <h3 class="awards-console_header">${consoleName}</h3>
-        <ul class="console-awards-values">      
-          <li class="awarded-games total">0</li>
-          <li class="awarded-games beaten-softcore">0</li>
-          <li class="awarded-games beaten">0</li>
-          <li class="awarded-games completed">0</li>
-          <li class="awarded-games mastered">0</li>
-        </ul>
-        <button class="expand-awards_button" onclick="ui.awards.expandAwards(this)"> </button>
-        <ul class="awarded-games_list total">
-        </ul>
-        `;
-    return consoleListItem;
-  }
+
   makeGameAwardsElement(game) {
     let gameElement = document.createElement("li");
     gameElement.classList.add("awarded-game", game.awardeTypeFixed);
@@ -1042,9 +1042,25 @@ class Awards {
     return gameElement;
   }
 
-  expandAwards(button) {
-    const expandContent = button.nextElementSibling;
-    expandContent.classList.toggle("hidden");
+  expandAwards(element) {
+    const consoleElement = element.parentNode;
+    const expandContent = consoleElement.querySelector(".awarded-games_list");
+    if (expandContent.classList.contains("hidden")) {
+      consoleElement.classList.remove("collapsed");
+      expandContent.classList.remove("hidden");
+    } else {
+      consoleElement.classList.add("collapsed");
+      expandContent.classList.add("hidden");
+    }
+  }
+  filterAwards(awardType) {
+    let awards = this.container.querySelectorAll(".awarded-game");
+    awards.forEach((award) => {
+      award.classList.remove("hidden");
+      if (!award.classList.contains(awardType) && awardType !== "all") {
+        award.classList.add("hidden");
+      }
+    });
   }
 }
 
