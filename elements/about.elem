@@ -17,12 +17,11 @@
     </div>
 
     <p class="help-content">
-      This program has been created by <b>Taras Khomyn</b> for entertainment
-      purposes. It is intended to provide users with the opportunity to enjoy
-      leisure and entertainment. For any questions, suggestions, or feedback,
+      For any questions, suggestions, or feedback,
       please contact me at the email address:
-      <a href="mailto:khomyn@outlook.com">khomyn@outlook.com</a>
-      Thank you for using my program!
+      <a class="text" href="mailto:khomyn@outlook.com">khomyn@outlook.com</a>
     </p>
+    <p class="help-content">If you want to help me: <a target="_blank"
+        href="https://savelife.in.ua/donate/#donate-army-card-monthly"> support Ukrainiam Army</a></p>
   </div>
 </section>
