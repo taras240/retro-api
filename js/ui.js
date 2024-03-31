@@ -511,6 +511,7 @@ class StatusPanel {
     this.textBlock = document.querySelector("#update-text-block");
     this.gameTitle = document.querySelector("#game-title"); // Заголовок гри
     this.gamePlatform = document.querySelector("#game-platform"); // Платформа гри
+    this.richPresence = document.querySelector("#rich-presence");
     this.watchButton = document.querySelector("#watching-button"); // Кнопка спостереження за грою
     this.progresBar = document.querySelector("#status-progress-bar");
     this.progressStatusText = document.querySelector("#status-progress-text");

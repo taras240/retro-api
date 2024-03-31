@@ -1,6 +1,6 @@
 let config = new Config();
 const RECENT_DELAY_MILISECS = 20 * 60 * 1000; //mins * secs * milisecs
-const RECENT_ACHIVES_RANGE_MINUTES = 5000; // for auto update
+const RECENT_ACHIVES_RANGE_MINUTES = 5; // for auto update
 // Ініціалізація UI
 let ui = new UI();
 // Ініціалізація APIWorker з ідентифікацією користувача
@@ -108,11 +108,22 @@ function startWatching() {
 
   // Встановлення інтервалу для оновлення досягнень та зміни стану кнопки
   apiTikInterval = setInterval(() => {
-    updateAchievements();
+    checkUpdates();
     toggleTickClass();
   }, config.updateDelayInMiliSecs);
 }
-
+let TOTAL_POINTS = 0;
+async function checkUpdates() {
+  const responce = await apiWorker.getProfileInfo({});
+  if (responce.LastGameID != config.gameID) {
+    config.gameID = responce.LastGameID;
+  }
+  if (responce.TotalPoints != TOTAL_POINTS) {
+    updateAchievements();
+    TOTAL_POINTS = responce.TotalPoints;
+  }
+  ui.statusPanel.richPresence.innerText = responce.RichPresenceMsg;
+}
 // Функція для перемикання класу "tick" на кнопці слідкування
 function toggleTickClass() {
   ui.statusPanel.watchButton.classList.remove("tick");
