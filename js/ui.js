@@ -101,6 +101,8 @@ class UI {
       height ? (element.style.height = height) : "";
       hidden ? element.classList.add("hidden") : "";
     });
+    document.querySelector("#background-animation").style.display =
+      config.bgVisibility ? "display" : "none";
   }
 
   setValues() {
@@ -176,7 +178,7 @@ class UI {
     this.settings.selectionColorInput.value = config.selectionColor;
     this.settings.colorPresetSelector.value = config.colorsPreset;
     this.settings.colorPresetSelector.dispatchEvent(new Event("change"));
-
+    this.settings.showBackgroundCheckbox.checked = config.bgVisibility;
     if (!this.achievementsBlock.section.classList.contains("hidden")) {
       this.buttons.achievements.classList.add("checked");
     }
@@ -224,7 +226,6 @@ class UI {
       "https://retroachievements.org/game/" + config.gameID
     );
     gamePlatform.innerText = ConsoleName || "";
-    richPresence.innerText = "";
     ui.statusPanel.updateProgress({
       totalPoints: points_total,
       completion: UserCompletionHardcore,
@@ -526,6 +527,9 @@ class StatusPanel {
     this.progresBar = document.querySelector("#status-progress-bar");
     this.progressStatusText = document.querySelector("#status-progress-text");
     this.resizer = document.querySelector("#status-resizer");
+    this.watchButton.addEventListener("mousedown", (e) => {
+      e.stopPropagation();
+    });
     // Додаємо обробник події 'click' для кнопки автооновлення
     this.watchButton.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -638,6 +642,9 @@ class Settings {
     this.colorPresetSelector = document.querySelector(
       "#color-preset-selection"
     );
+    this.showBackgroundCheckbox = document.querySelector(
+      "#show-background_button"
+    );
     //!-----------------------------------------
 
     this.stretchButton = document.querySelector("#stretch-achivs");
@@ -720,7 +727,12 @@ class Settings {
       UI.FILTER_METHOD = UI.filterMethods.all;
       this.applyFilter();
     });
-
+    this.showBackgroundCheckbox.addEventListener("change", (e) => {
+      console.log("bg");
+      config.bgVisibility = this.showBackgroundCheckbox.checked;
+      document.querySelector("#background-animation").style.display =
+        config.bgVisibility ? "block" : "none";
+    });
     this.stretchButton.addEventListener("click", (e) => {
       config.stretchAchievements = this.stretchButton.checked;
       ui.achievementsBlock.container.style.height = config.stretchAchievements

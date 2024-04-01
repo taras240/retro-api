@@ -81,7 +81,8 @@
       </div>
 
     </div>
-    <div class="achivs-style input-container sort-buttons">
+
+    <div class="achivs-style input-container">
       <label>Colors:</label>
       <div class="colors-block hidden">
         <input type="color" class="color-input " id="main-color-input" title="main color" />
@@ -91,7 +92,7 @@
         <input type="color" class="color-input " id="font-color-input" title="font color" />
 
       </div>
-      <select class="setting-select settings-input" name="color-preset" id="color-preset-selection">
+      <select class="setting-select settings-input settings-select" name="color-preset" id="color-preset-selection">
         <option value="default">default</option>
         <option value="pink">pink</option>
         <option value="lightgreen">lightgreen</option>
@@ -107,8 +108,14 @@
 
         <option value="custom">custom</option>
       </select>
+      <div class="setting-radio-group">
+        <input type="checkbox" name="show-background" id="show-background_button" checked>
+        </input>
+        <label class="settings-input" for="show-background_button">bg</label>
+      </div>
       <!-- <button class="setting-button" onclick="ui.resetColors()">reset</button> -->
     </div>
+
     <div class="update-time-settings input-container">
       <label>Update delay (seconds):</label>
       <input type="number" class="number-input input" name="update-time" id="update-time" value="5"

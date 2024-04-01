@@ -162,6 +162,14 @@ class Config {
     this._cfg.settings.preset = value;
     this.writeConfiguration();
   }
+
+  get bgVisibility() {
+    return this._cfg.settings.bgVisibility;
+  }
+  set bgVisibility(value) {
+    this._cfg.settings.bgVisibility = value;
+    this.writeConfiguration();
+  }
   //!---------------[ COLORS ]-----
   constructor() {
     this.readConfiguration();

@@ -149,3 +149,6 @@ input:checked + .settings-input,
   padding: 5px;
   height: 10px;
 }
+.settings-select {
+  padding: 2.5px 4px;
+}

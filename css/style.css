@@ -1,4 +1,5 @@
 @import url(./reset.css);
+@import url(./background.css);
 @import url(./settings.css);
 @import url(./login.css);
 @import url(./gameCard.css);
@@ -58,6 +59,8 @@ body {
   backdrop-filter: brightness(0.1);
   color: var(--font-color);
   overflow: hidden;
+  max-height: 100vh;
+  max-width: 100vw;
 }
 .section {
   visibility: visible;
@@ -251,4 +254,22 @@ body {
 
 #color-preset-selection option:active {
   background-color: var(--selection-color);
+}
+.box-3d {
+  margin-top: 0px;
+  margin-left: 0px;
+  --shadow-color: black;
+  box-shadow: 1px 1px 0 var(--shadow-color), 2px 2px 0 var(--shadow-color),
+    3px 3px 0 var(--shadow-color), 4px 4px 0 var(--shadow-color);
+}
+.box-3d:hover {
+  margin-top: 2px;
+  margin-left: 2px;
+  box-shadow: 1px 1px 0 var(--shadow-color), 2px 2px 0 var(--shadow-color),
+    3px 3px 0 var(--shadow-color);
+}
+.box-3d:active {
+  margin-top: 4px;
+  margin-left: 4px;
+  box-shadow: 0 0 0;
 }
