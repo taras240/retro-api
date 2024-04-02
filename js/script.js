@@ -138,47 +138,77 @@ function stopWatching() {
 
 // Функція для відкриття налаштувань
 function openSettings() {
-  const button = document.querySelector("#open-settings-button");
-  button.checked = !ui.settings.section.classList.contains("hidden");
+  const checkbox = document.querySelector("#open-settings-button");
   UI.switchSectionVisibility(ui.settings.section);
+  setTimeout(
+    () =>
+      (checkbox.checked = !ui.settings.section.classList.contains("hidden")),
+    10
+  );
 }
 // Функція для відкриття/закриття картки гри
 function openGameCard() {
-  const button = document.querySelector("#open-game-card-button");
-  button.checked = !ui.gameCard.section.classList.contains("hidden");
+  const checkbox = document.querySelector("#open-game-card-button");
+  setTimeout(
+    () =>
+      (checkbox.checked = !ui.gameCard.section.classList.contains("hidden")),
+    10
+  );
   UI.switchSectionVisibility(ui.gameCard.section);
 }
 // Функція для відкриття/закриття досягнень
 function openAwards() {
-  const button = document.querySelector("#open-awards-button");
-  button.checked = !ui.awards.section.classList.contains("hidden");
+  const checkbox = document.querySelector("#open-awards-button");
+  setTimeout(
+    () => (checkbox.checked = !ui.awards.section.classList.contains("hidden")),
+    10
+  );
   UI.switchSectionVisibility(ui.awards.section);
 }
 // Функція для закриття About
 function openAbout() {
-  const button = document.querySelector("#open-about-button");
-  button.checked = !ui.about.section.classList.contains("hidden");
+  const checkbox = document.querySelector("#open-about-button");
+  setTimeout(
+    () => (checkbox.checked = !ui.about.section.classList.contains("hidden")),
+    10
+  );
   UI.switchSectionVisibility(ui.about.section);
 }
 function openTarget() {
-  const button = document.querySelector("#open-target-button");
-  button.checked = !ui.target.section.classList.contains("hidden");
+  const checkbox = document.querySelector("#open-target-button");
+  setTimeout(
+    () => (checkbox.checked = !ui.target.section.classList.contains("hidden")),
+    10
+  );
   UI.switchSectionVisibility(ui.target.section);
 }
 
 function openAllAchivs() {
-  const button = document.querySelector("#open-achivs-button");
-  button.checked = !ui.achievementsBlock.section.classList.contains("hidden");
+  const checkbox = document.querySelector("#open-achivs-button");
+  setTimeout(
+    () =>
+      (checkbox.checked =
+        !ui.achievementsBlock.section.classList.contains("hidden")),
+    10
+  );
   UI.switchSectionVisibility(ui.achievementsBlock.section);
 }
 function openStatusPanel() {
-  const button = document.querySelector("#open-status-button");
-  button.checked = !ui.statusPanel.section.classList.contains("hidden");
+  const checkbox = document.querySelector("#open-status-button");
+  setTimeout(
+    () =>
+      (checkbox.checked = !ui.statusPanel.section.classList.contains("hidden")),
+    10
+  );
   UI.switchSectionVisibility(ui.statusPanel.section);
 }
 function openLogin() {
-  const button = document.querySelector("#open-login-button");
-  button.checked = !ui.loginCard.section.classList.contains("hidden");
+  const checkbox = document.querySelector("#open-login-button");
+  setTimeout(
+    () =>
+      (checkbox.checked = !ui.loginCard.section.classList.contains("hidden")),
+    10
+  );
   UI.switchSectionVisibility(ui.loginCard.section);
 }
 function clearTarget() {
