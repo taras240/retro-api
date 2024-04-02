@@ -143,15 +143,20 @@ body {
   transition: 0.5s ease-in;
   z-index: 1000;
 }
+.buttons-header {
+  flex: 1;
+}
 .buttons-block_container {
-  padding: 10px 14px 10px 10px;
+  width: 300px;
+  padding: 10px 14px 15px 10px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
   gap: 10px;
 }
 .buttons-block_container > button {
-  width: 100%;
+  width: calc(50% - 5px);
 }
 /* .buttons-block::before,
 .buttons-block::after {
