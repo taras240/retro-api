@@ -513,6 +513,10 @@ class ButtonPanel {
     this.gameCard = document.querySelector("#open-game-card-button");
     this.target = document.querySelector("#open-target-button");
     this.status = document.querySelector("#open-status-button");
+
+    this.section.addEventListener("mousedown", (e) => {
+      UI.moveEvent(this.section, e);
+    });
   }
 }
 class StatusPanel {
@@ -728,7 +732,6 @@ class Settings {
       this.applyFilter();
     });
     this.showBackgroundCheckbox.addEventListener("change", (e) => {
-      console.log("bg");
       config.bgVisibility = this.showBackgroundCheckbox.checked;
       document.querySelector("#background-animation").style.display =
         config.bgVisibility ? "block" : "none";

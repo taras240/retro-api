@@ -207,6 +207,7 @@
 .console-awards .expand-awards_button {
   background-color: transparent;
   mask-image: url("../assets/img/expand_more.svg");
+  -webkit-mask-image: url("../assets/img/expand_more.svg");
   background-color: var(--font-color);
   background-position: center;
   background-repeat: no-repeat;

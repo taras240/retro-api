@@ -135,20 +135,25 @@ body {
 }
 .buttons-block {
   position: absolute;
-  top: auto !important;
-  bottom: -50px !important;
-  left: 50% !important;
-  transform: translate(-50%, 0);
-  padding: 10px 20px;
+  top: 30%;
+  left: 60%;
+  border-radius: 10px;
+  background-color: var(--main-color);
+  cursor: grab;
+  transition: 0.5s ease-in;
+  z-index: 1000;
+}
+.buttons-block_container {
+  padding: 10px 14px 10px 10px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 10px;
-  border-radius: 10px 10px 0 0;
-  background-color: var(--main-color);
-  cursor: default;
-  transition: 0.5s ease-in;
 }
-.buttons-block::before,
+.buttons-block_container > button {
+  width: 100%;
+}
+/* .buttons-block::before,
 .buttons-block::after {
   content: "";
   position: absolute;
@@ -181,13 +186,13 @@ body {
 .buttons-block:hover::after {
   transform: translate(-50%, -50%) scaleY(1);
   transition: 0.2s;
-}
-.buttons-block:hover {
+} */
+/* .buttons-block:hover {
   visibility: visible;
   bottom: 0 !important;
   opacity: 1;
   transition: 0.2s;
-}
+} */
 .buttons-block:active {
   transition: none;
 }

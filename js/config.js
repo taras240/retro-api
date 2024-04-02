@@ -313,10 +313,10 @@ const colorPresets = {
     selectionColor: "#50C4ED",
   },
   default: {
-    mainColor: "#201221",
-    secondaryColor: "#181118",
-    accentColor: "#57125c",
+    mainColor: "#2f2187",
+    secondaryColor: "#2c2079",
+    accentColor: "#464a36",
     fontColor: "#eeeeee",
-    selectionColor: "#008000",
+    selectionColor: "#978aff",
   },
 };
