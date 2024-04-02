@@ -6,7 +6,7 @@
           d="M480-400q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm-40-240v-200h80v200h-80Zm0 520v-200h80v200h-80Zm200-320v-80h200v80H640Zm-520 0v-80h200v80H120Z" />
       </svg>
     </div>
-    <h2 class="target-header">Target</h2>
+    <h2 class="widget-header-text">Target</h2>
     <div class="header-icon header-button" title="clear all" onclick="clearTarget()">
       <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
         <path d="M120-280v-80h560v80H120Zm80-160v-80h560v80H200Zm80-160v-80h560v80H280Z" />
@@ -18,8 +18,9 @@
       </svg>
     </div>
   </div>
-  <!-- <div class="target-empty-list">Target is empty</div> -->
+
 
   <ul class="target-container"></ul>
+  <!-- <div class="target-empty-list">Target is empty</div> -->
   <div class="resizer" id="target-resizer"></div>
 </section>

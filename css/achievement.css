@@ -1,13 +1,10 @@
 .section.achivs {
-  position: absolute;
   width: 30vw;
   height: 30vh;
   background-color: transparent;
   cursor: grab;
 }
-.achivs.resized {
-  transition: none;
-}
+
 .achivs:not(:hover) {
   box-shadow: 0 0 5px 2px transparent;
 }
@@ -15,7 +12,6 @@
   background-color: var(--secondary-color);
   transition: none;
 }
-
 .achievements-container {
   display: flex;
   flex-wrap: wrap;
@@ -24,66 +20,25 @@
   height: 100%;
   max-width: 100%;
   max-height: 100%;
-  border-radius: 5px;
   gap: 1px;
   overflow: visible;
 }
 
-/*! ------------[ ACHIEVEMENT ]------------*/
+/** ------------[ ACHIEVEMENT ]------------*/
 
 .achiv-block {
   position: relative;
-  margin: 1px;
+  left: 0;
+  top: 0;
   width: auto;
   aspect-ratio: 1;
   flex-shrink: 0;
   cursor: default;
   box-shadow: 0 0 0;
-  transition: 0.2s;
-  left: 0;
-  top: 0;
-}
-
-.achiv-block.recent-earned {
-  box-shadow: 0px 0px 5px 3px rgba(255, 238, 140, 0.568);
-}
-.achiv-block.recent-earned-hard {
-  box-shadow: 0px 0px 5px 3px rgb(255 237 140);
 }
 
 .achiv-block.earned {
   animation: achiv-earned-animation 0.6s;
-}
-.achiv-block.earned .achiv-preview {
-  filter: grayscale(0.8);
-}
-.achiv-block.hardcore .achiv-preview {
-  filter: grayscale(0);
-}
-.achiv-block.earned.hardcore::after {
-  content: "";
-  position: absolute;
-  width: calc(100%);
-  aspect-ratio: 1/1;
-  left: 0;
-  top: 0;
-  background-image: url(../assets/img/glass-bg_hard.png);
-  filter: drop-shadow(0px 0px 3px black);
-  image-rendering: pixelated;
-  background-size: contain;
-  background-repeat: no-repeat;
-  opacity: 0;
-  animation: hardcore-earned-animation 0.1s linear forwards;
-  animation-delay: 0.6s;
-}
-
-@keyframes hardcore-earned-animation {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
 }
 @keyframes achiv-earned-animation {
   0% {
@@ -99,9 +54,37 @@
     padding: 5px;
   }
 }
-.preview-container {
-  width: 100%;
+.achiv-block.earned .achiv-preview {
+  filter: grayscale(0.8);
 }
+.achiv-block.hardcore .achiv-preview {
+  filter: grayscale(0);
+}
+.achiv-block.earned.hardcore::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(100%);
+  aspect-ratio: 1/1;
+  background-image: url(../assets/img/glass-bg_hard.png);
+  filter: drop-shadow(0px 0px 3px black);
+  image-rendering: pixelated;
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0;
+  animation: hardcore-earned-animation 0.1s linear forwards;
+  animation-delay: 0.6s;
+}
+@keyframes hardcore-earned-animation {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 .achiv-preview {
   width: 100%;
   aspect-ratio: 1;
@@ -118,7 +101,7 @@
   min-width: 20px;
   width: 25%;
   aspect-ratio: 1;
-  background-color: #000000da;
+  background-color: var(--main-color);
   border-radius: 50%;
   overflow: hidden;
   visibility: hidden;
@@ -128,7 +111,7 @@
 .add-to-target svg {
   width: 100%;
   height: 100%;
-  fill: white;
+  fill: var(--font-color);
 }
 .achiv-block:not(.hardcore):hover .add-to-target {
   visibility: visible;
@@ -143,8 +126,18 @@
   transform: scale(0.9);
   transition: 0.2s;
 }
-
-/*! ----[ TOOLTIP ]--------- */
+.achiv-block:hover {
+  --shadow-color: black;
+  transform: scale(1);
+  z-index: 2;
+  transition: 0.2s;
+  left: 5px;
+  top: -5px;
+  box-shadow: -1px 1px 0 var(--shadow-color), -2px 2px 0 var(--shadow-color),
+    -3px 3px 0 var(--shadow-color), -4px 4px 0 var(--shadow-color),
+    -5px 5px 0 var(--shadow-color), -6px 6px 0 var(--shadow-color);
+}
+/** ----[ TOOLTIP ]--------- */
 
 .achiv-details-block {
   position: absolute;
@@ -186,17 +179,7 @@
   position: relative;
   padding-left: 25px;
 }
-.achiv-block:hover {
-  --shadow-color: black;
-  transform: scale(1);
-  z-index: 2;
-  transition: 0.2s;
-  left: 5px;
-  top: -5px;
-  box-shadow: -1px 1px 0 var(--shadow-color), -2px 2px 0 var(--shadow-color),
-    -3px 3px 0 var(--shadow-color), -4px 4px 0 var(--shadow-color),
-    -5px 5px 0 var(--shadow-color), -6px 6px 0 var(--shadow-color);
-}
+
 .achiv-block:hover .achiv-details-block {
   visibility: visible;
   opacity: 1;

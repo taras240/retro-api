@@ -1,19 +1,10 @@
 .target_section {
-  position: absolute;
-  min-height: 150px;
-  min-width: 300px;
-  width: 400px;
-  max-height: 99vh;
   top: 10px;
   left: 31%;
-  background-color: transparent;
-  background-color: var(--main-color);
-}
-.target_section:hover {
-  background-color: var(--main-color);
-}
-.target-header {
-  flex: 1;
+  width: 400px;
+  max-height: 99vh;
+  min-height: 150px;
+  min-width: 300px;
 }
 .target-header_container {
   position: sticky;
@@ -25,22 +16,23 @@
   height: calc(100% - 35px);
   padding: 10px;
   overflow: scroll;
+  background-color: var(--secondary-color);
+  z-index: 20;
 }
 .target-achiv {
   position: relative;
+  margin: 0 0 10px;
+  width: 100%;
+  padding: 10px;
   display: flex;
   gap: 10px;
   color: var(--font-color);
   background-color: var(--secondary-color);
   border-radius: 5px;
   overflow: hidden;
-  padding: 10px;
-  width: 100%;
-  margin: 0 0 10px;
 }
 .target-achiv:hover {
   transform: scale(1.02);
-
   transition: 0.2s;
 }
 .prev-img {
@@ -48,18 +40,15 @@
   aspect-ratio: 1;
   filter: grayscale(1);
   image-rendering: pixelated;
-  transition: 0.2s;
   border-radius: 4px;
-
   overflow: hidden;
+  transition: 0.2s;
 }
 .target-achiv.earned .prev-img {
   filter: grayscale(0.8);
-  transition: 0.2s;
 }
 .target-achiv.earned.hardcore .prev-img {
   filter: grayscale(0);
-  transition: 0.2s;
 }
 
 .target-achiv.earned.hardcore::after {
@@ -136,6 +125,7 @@
   right: 30px;
   opacity: 0.7;
   font-weight: 600;
-  font-size: 2.1rem;
+  font-size: 3.1rem;
   padding: 10px;
+  z-index: 0;
 }

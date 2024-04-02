@@ -8,7 +8,7 @@
         </svg>
       </div>
 
-      <h2 class="help-header">About</h2>
+      <h2 class="widget-header-text">About</h2>
       <div class="header-button header-icon" onclick="openAbout()">
         <svg height="24" viewBox="0 -960 960 960" width="24">
           <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
