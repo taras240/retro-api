@@ -6,7 +6,7 @@
   left: 40%;
   height: 70px;
   min-width: 300px;
-  min-height: 60px;
+  min-height: 75px;
   max-height: 120px;
   z-index: 100;
   /* transition: 0.2s !important; */
@@ -169,6 +169,10 @@
 }
 
 .update-text-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 100%;
   flex: 1;
   overflow: hidden;
 }

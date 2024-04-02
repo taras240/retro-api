@@ -33,6 +33,13 @@ class Config {
     this.writeConfiguration();
   }
   //!-----------------[ Settings data ]--------------------
+  get startOnLoad() {
+    return this._cfg.settings.startOnLoad;
+  }
+  set startOnLoad(value) {
+    this._cfg.settings.startOnLoad = value;
+    this.writeConfiguration();
+  }
   get targetUser() {
     return this._cfg.settings.targetUser || this.USER_NAME;
   }

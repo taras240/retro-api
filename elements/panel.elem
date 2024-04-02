@@ -9,33 +9,49 @@
         <h2 class="buttons-header">Widgets</h2>
     </div>
     <div class="buttons-block_container">
-        <button id="open-login-button" class="setting-button all-achivs-button window-button" onclick="openLogin()">
-            Login
-        </button>
-        <button id="open-status-button" class="setting-button game-card-button window-button"
-            onclick="openStatusPanel()">
-            Status
-        </button>
-        <button id="open-achivs-button" class="setting-button all-achivs-button window-button"
-            onclick="openAllAchivs()">
-            Achivs
-        </button>
-        <button id="open-target-button" class="setting-button target-button window-button" onclick="openTarget()">
-            Target
-        </button>
-        <button id="open-game-card-button" class="setting-button game-card-button window-button"
-            onclick="openGameCard()">
-            GameCard
-        </button>
-        <button id="open-awards-button" class="setting-button game-card-button window-button" onclick="openAwards()">
-            Awards
-        </button>
-        <button id="open-settings-button" class="setting-button settings-button window-button" onclick="openSettings()">
-            Settings
-        </button>
-        <button id="open-about-button" class="setting-button help-button window-button" onclick="openAbout()">
-            About
-        </button>
+
+        <div class="setting-radio-group">
+            <input type="checkbox" name="open-login-button" id="open-login-button">
+            </input>
+            <label class="settings-input" for="open-login-button" onclick="openLogin()">Login</label>
+        </div>
+        <div class="setting-radio-group">
+            <input type="checkbox" name="open-status-button" id="open-status-button">
+            </input>
+            <label class="settings-input" for="open-status-button" onclick="openStatusPanel()">Status</label>
+        </div>
+        <div class="setting-radio-group">
+            <input type="checkbox" name="open-achivs-button" id="open-achivs-button">
+            </input>
+            <label class="settings-input" for="open-achivs-button" onclick="openAllAchivs()">Achivs</label>
+        </div>
+        <div class="setting-radio-group">
+            <input type="checkbox" name="open-target-button" id="open-target-button">
+            </input>
+            <label class="settings-input" for="open-target-button" onclick="openTarget()">Target</label>
+        </div>
+        <div class="setting-radio-group">
+            <input type="checkbox" name="open-game-card-button" id="open-game-card-button">
+            </input>
+            <label class="settings-input" for="open-game-card-button" onclick="openGameCard()">GameCard</label>
+        </div>
+        <div class="setting-radio-group">
+            <input type="checkbox" name="open-awards-button" id="open-awards-button">
+            </input>
+            <label class="settings-input" for="open-awards-button" onclick="openAwards()">Awards</label>
+        </div>
+        <div class="setting-radio-group">
+            <input type="checkbox" name="open-settings-button" id="open-settings-button">
+            </input>
+            <label class="settings-input" for="open-settings-button" onclick="openSettings()">Settings</label>
+        </div>
+
+        <div class="setting-radio-group">
+            <input type="checkbox" name="open-about-button" id="open-about-button">
+            </input>
+            <label class="settings-input" for="open-about-button" onclick="openAbout()">About</label>
+        </div>
+
     </div>
 
 </section>

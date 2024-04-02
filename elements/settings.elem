@@ -144,6 +144,14 @@
         Watch
       </button> -->
     </div>
+    <div class=" input-container">
+      <label>Start autoupdate on load:</label>
+      <div class="setting-radio-group">
+        <input type="checkbox" name="update-on-load" id="update-on-load">
+        </input>
+        <label class="settings-input" for="update-on-load">start on load</label>
+      </div>
+    </div>
 
   </div>
 </section>

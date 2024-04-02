@@ -155,7 +155,7 @@ body {
   align-items: center;
   gap: 10px;
 }
-.buttons-block_container > button {
+.buttons-block_container > div {
   width: calc(50% - 5px);
 }
 /* .buttons-block::before,

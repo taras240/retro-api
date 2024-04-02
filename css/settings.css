@@ -20,7 +20,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 5px;
-  height: 50px;
+  height: 40px;
   gap: 5px;
 }
 .prefs_section label {
@@ -68,22 +68,35 @@
   min-width: 70px;
 }
 .settings-input {
+  display: block;
   padding: 4px 15px;
 }
-.setting-button.checked::after,
-input[type="radio"]:checked + .settings-input::after,
-input[type="checkbox"]:checked + .settings-input::after {
+
+.setting-button::after,
+input[type="radio"] + .settings-input::after,
+input[type="checkbox"] + .settings-input::after {
   content: "";
   position: absolute;
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background-color: var(--selection-color);
-  box-shadow: 0 0 3px 2px var(--selection-color);
+  background-color: transparent;
+  box-shadow: 0 0 3px 2px transparent;
   top: 2px;
   right: 2px;
 }
+input[type="radio"]:not(:checked) + .settings-input::after,
+input[type="checkbox"]:not(:checked) + .settings-input::after {
+  background-color: black;
+  box-shadow: 0 0 3px 2px transparent;
+}
 
+.setting-button.checked::after,
+input[type="radio"]:checked + .settings-input::after,
+input[type="checkbox"]:checked + .settings-input::after {
+  background-color: var(--selection-color);
+  box-shadow: 0 0 3px 2px var(--selection-color);
+}
 .setting-button:hover,
 .settings-input:hover,
 .prefs_section .input:hover {

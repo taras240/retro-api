@@ -65,7 +65,9 @@ class UI {
 
       //Оновлення ачівментсів
       if (config.identConfirmed) {
-        this.settings.checkIdButton.click();
+        config.startOnLoad
+          ? this.statusPanel.watchButton.click()
+          : this.settings.checkIdButton.click();
       }
     });
   }
@@ -179,24 +181,28 @@ class UI {
     this.settings.colorPresetSelector.value = config.colorsPreset;
     this.settings.colorPresetSelector.dispatchEvent(new Event("change"));
     this.settings.showBackgroundCheckbox.checked = config.bgVisibility;
-    if (!this.achievementsBlock.section.classList.contains("hidden")) {
-      this.buttons.achievements.classList.add("checked");
-    }
-    if (!this.settings.section.classList.contains("hidden")) {
-      this.buttons.settings.classList.add("checked");
-    }
-    if (!this.loginCard.section.classList.contains("hidden")) {
-      this.buttons.login.classList.add("checked");
-    }
-    if (!this.target.section.classList.contains("hidden")) {
-      this.buttons.target.classList.add("checked");
-    }
-    if (!this.gameCard.section.classList.contains("hidden")) {
-      this.buttons.gameCard.classList.add("checked");
-    }
-    if (!this.statusPanel.section.classList.contains("hidden")) {
-      this.buttons.status.classList.add("checked");
-    }
+    this.settings.startOnLoadCheckbox.checked = config.startOnLoad;
+
+    this.buttons.achievements.checked =
+      !this.achievementsBlock.section.classList.contains("hidden");
+
+    this.buttons.settings.checked =
+      !this.settings.section.classList.contains("hidden");
+
+    this.buttons.login.checked =
+      !this.loginCard.section.classList.contains("hidden");
+
+    this.buttons.target.checked =
+      !this.target.section.classList.contains("hidden");
+
+    this.buttons.gameCard.checked =
+      !this.gameCard.section.classList.contains("hidden");
+
+    this.buttons.status.checked =
+      !this.statusPanel.section.classList.contains("hidden");
+
+    this.buttons.awards.checked =
+      !this.awards.section.classList.contains("hidden");
   }
   addEvents() {}
   updateGameInfo({
@@ -513,7 +519,7 @@ class ButtonPanel {
     this.gameCard = document.querySelector("#open-game-card-button");
     this.target = document.querySelector("#open-target-button");
     this.status = document.querySelector("#open-status-button");
-
+    this.awards = document.querySelector("#open-awards-button");
     this.section.addEventListener("mousedown", (e) => {
       UI.moveEvent(this.section, e);
     });
@@ -658,6 +664,7 @@ class Settings {
     this.gameID = document.querySelector("#game-id"); // Поле введення ідентифікатора гри
     this.getGameIdButton = document.querySelector(".get-id-button"); // Кнопка отримання ідентифікатора гри
     this.checkIdButton = document.querySelector(".check-id-button"); // Кнопка перевірки ідентифікатора гри
+    this.startOnLoadCheckbox = document.querySelector("#update-on-load");
   }
 
   addEvents() {
@@ -806,6 +813,11 @@ class Settings {
     //Додаємо обробник події 'click' для кнопки отримання списку ачівментсів для вибраного id гри
     this.checkIdButton.addEventListener("click", () => {
       getAchievements();
+    });
+
+    this.startOnLoadCheckbox.addEventListener("change", (e) => {
+      e.stopPropagation();
+      config.startOnLoad = this.startOnLoadCheckbox.checked;
     });
 
     // Додавання подій для пересування вікна налаштувань
