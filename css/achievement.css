@@ -15,7 +15,7 @@
 .achievements-container {
   display: flex;
   flex-wrap: wrap;
-  align-items: start;
+  align-items: center;
   justify-content: center;
   height: 100%;
   max-width: 100%;
@@ -30,9 +30,7 @@
   position: relative;
   left: 0;
   top: 0;
-  width: auto;
   aspect-ratio: 1;
-  flex-shrink: 0;
   cursor: default;
   box-shadow: 0 0 0;
 }

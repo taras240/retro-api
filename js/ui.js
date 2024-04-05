@@ -849,8 +849,8 @@ class Settings {
     if (achivsCount === 0) return;
 
     // Отримання розмірів вікна блоку досягнень
-    const windowHeight = section.clientHeight - 2;
-    const windowWidth = section.clientWidth - 2;
+    const windowHeight = section.clientHeight;
+    const windowWidth = section.clientWidth;
 
     // Початкова ширина досягнення для розрахунку
     let achivWidth = Math.floor(
@@ -863,7 +863,11 @@ class Settings {
       achivWidth--;
       rowsCount = Math.floor(windowHeight / (achivWidth + 2));
       colsCount = Math.floor(windowWidth / (achivWidth + 2));
-    } while (rowsCount * colsCount < achivsCount && achivWidth > 0);
+    } while (
+      rowsCount * colsCount < achivsCount &&
+      achivWidth > config.ACHIV_MIN_SIZE
+    );
+
     achivWidth =
       achivWidth < config.ACHIV_MIN_SIZE
         ? config.ACHIV_MIN_SIZE
@@ -871,6 +875,7 @@ class Settings {
         ? config.ACHIV_MAX_SIZE
         : achivWidth;
     // Встановлення розміру кожного досягнення в блоку
+    // container.style.gridTemplateColumns = `repeat(${colsCount}, ${achivWidth}px)`;
     achivs.forEach((achiv) => (achiv.style.width = achivWidth + "px"));
   }
 }

@@ -61,6 +61,7 @@
     3px 3px 0 var(--shadow-color);
   user-select: none;
   transition: 0.1s;
+  color: var(--input-color);
 }
 .prefs_section .input {
   min-width: 70px;

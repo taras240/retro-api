@@ -16,8 +16,6 @@
   height: calc(100% - 35px);
   padding: 10px;
   overflow: scroll;
-  background-color: var(--main-color);
-  z-index: 20;
 }
 .target-achiv {
   position: relative;
