@@ -465,7 +465,8 @@ class AchievementsBlock {
       });
       achivElement.classList.toggle("expanded");
     });
-    toTargetButton.addEventListener("click", () => {
+    toTargetButton.addEventListener("click", (e) => {
+      e.stopPropagation();
       ui.target.addAchieveToTarget(achievement);
     });
 
