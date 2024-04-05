@@ -3,14 +3,8 @@
 
 *This web application is designed to track achievements obtained in retro games using the open API from retroachievements.org.*
 
-![image](https://github.com/taras240/retro-api/assets/41308277/9b6c2d5c-a6df-4ac5-b13c-220e34c4f18d)
-![image](https://github.com/taras240/retro-api/assets/41308277/6bf392a9-6bd8-4adf-b5ec-f139294cdcb8)
-![image](https://github.com/taras240/retro-api/assets/41308277/153021c3-7602-46d5-82eb-e4c6993bd0bf)
-![image](https://github.com/taras240/retro-api/assets/41308277/9db05d3f-a8d8-41c8-b988-bb56f86f63ff)
-![image](https://github.com/taras240/retro-api/assets/41308277/19ee0343-4cfc-48a2-a695-423147e15196)
-![image](https://github.com/taras240/retro-api/assets/41308277/169dd30f-cac1-4cb0-86df-0aa92b6e5bb4)
-![image](https://github.com/taras240/retro-api/assets/41308277/f32bfaf0-0b27-48c5-a078-d570f26f588f)
-![image](https://github.com/taras240/retro-api/assets/41308277/57cce62b-5c95-489d-87e1-e5b830d79617)
+
+![HkrzWPi - Imgur](https://github.com/taras240/retro-api/assets/41308277/b064d525-46b6-426d-a2c0-08f33d3181a3)
 
 ### How it works
 
