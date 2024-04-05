@@ -451,16 +451,20 @@ class AchievementsBlock {
 
     //* fix details popup position
     achivElement.addEventListener("mouseenter", (e) => {
+      achivDetails.classList.remove("left-side", "top-side");
       this.fixDetailsPosition(achivDetails);
-      achivElement.addEventListener("mouseleave", (e) => {
-        setTimeout(
-          () => achivDetails.classList.remove("left-side", "top-side"),
-          200
-        );
-      });
     });
 
-    achivElement.addEventListener("mousedown", (e) => e.stopPropagation());
+    achivElement.addEventListener("mousedown", (e) => {
+      e.stopPropagation();
+    });
+    achivElement.addEventListener("click", (e) => {
+      e.stopPropagation();
+      this.container.querySelectorAll(".achiv-block").forEach((achiv) => {
+        if (achiv !== achivElement) achiv.classList.remove("expanded");
+      });
+      achivElement.classList.toggle("expanded");
+    });
     toTargetButton.addEventListener("click", () => {
       ui.target.addAchieveToTarget(achievement);
     });
@@ -867,7 +871,6 @@ class Settings {
       rowsCount * colsCount < achivsCount &&
       achivWidth > config.ACHIV_MIN_SIZE
     );
-
     achivWidth =
       achivWidth < config.ACHIV_MIN_SIZE
         ? config.ACHIV_MIN_SIZE
@@ -876,7 +879,8 @@ class Settings {
         : achivWidth;
     // Встановлення розміру кожного досягнення в блоку
     // container.style.gridTemplateColumns = `repeat(${colsCount}, ${achivWidth}px)`;
-    achivs.forEach((achiv) => (achiv.style.width = achivWidth + "px"));
+    achivs.forEach((achiv) => (achiv.style.height = achivWidth + "px"));
+    container.style.setProperty("--achiv-height", achivWidth + "px");
   }
 }
 

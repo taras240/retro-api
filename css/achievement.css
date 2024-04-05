@@ -27,12 +27,56 @@
 /** ------------[ ACHIEVEMENT ]------------*/
 
 .achiv-block {
+  --height: 104px;
   position: relative;
   left: 0;
   top: 0;
   aspect-ratio: 1;
   cursor: default;
   box-shadow: 0 0 0;
+}
+/**---------[ EXPANDED ACHIEVEMENT ]--------*/
+
+.achiv-block.expanded {
+  padding: 5px;
+  /* background-color: var(--main-color); */
+  display: flex;
+  aspect-ratio: auto;
+  align-items: center;
+  border-radius: 5px;
+}
+.achiv-block.expanded .achiv-details-block {
+  width: calc(300px + var(--achiv-height));
+  min-height: calc(var(--achiv-height));
+  background-color: var(--main-color);
+  top: 50%;
+  left: 0px;
+  margin: 0;
+  transform: translateY(-50%);
+  padding-left: calc(5px + var(--achiv-height));
+  padding-right: 5px;
+  visibility: visible;
+  opacity: 1;
+  border: transparent;
+}
+.achiv-block.expanded .achiv-details-block.left-side {
+  left: auto;
+  right: 0;
+  padding-left: 5px;
+  padding-right: var(--achiv-height);
+}
+
+.achiv-block.expanded:hover {
+  box-shadow: 0 0 0;
+}
+.achiv-block.expanded .preview-container {
+  position: relative;
+  height: 100%;
+  aspect-ratio: 1;
+  flex-shrink: 0;
+  flex-grow: 1;
+  z-index: 2;
+  box-shadow: 0 0 5px 2px black;
 }
 
 .achiv-block.earned {
@@ -58,7 +102,11 @@
 .achiv-block.hardcore .achiv-preview {
   filter: grayscale(0);
 }
-.achiv-block.earned.hardcore::after {
+
+.preview-container {
+  position: relative;
+}
+.achiv-block.earned.hardcore .preview-container::after {
   content: "";
   position: absolute;
   left: 0;
@@ -82,8 +130,8 @@
     opacity: 1;
   }
 }
-
 .achiv-preview {
+  position: relative;
   width: 100%;
   aspect-ratio: 1;
   filter: grayscale(1);
@@ -138,6 +186,9 @@
 /** ----[ TOOLTIP ]--------- */
 
 .achiv-details-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   position: absolute;
   margin: 1px;
   width: 300px;
