@@ -183,7 +183,8 @@ function openTarget() {
   UI.switchSectionVisibility(ui.target.section);
 }
 
-function openAllAchivs() {
+function openAllAchivs(e) {
+  e?.stopPropagation();
   const checkbox = document.querySelector("#open-achivs-button");
   setTimeout(
     () =>

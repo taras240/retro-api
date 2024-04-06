@@ -283,6 +283,7 @@ class UI {
     section.style.height = `${startHeight + heightChange}px`;
   }
   static moveEvent(section, e) {
+    document.querySelector("#background-animation").style.display = "none";
     section.classList.add("dragable");
 
     const rect = section.getBoundingClientRect(); // Отримуємо розміри та позицію вікна
@@ -296,7 +297,8 @@ class UI {
       section.removeEventListener("mousemove", handleMouseMove);
       section.removeEventListener("mouseup", handleMouseUp);
       section.removeEventListener("mouseleave", handleMouseUp);
-
+      document.querySelector("#background-animation").style.display =
+        config.bgVisibility ? "block" : "none";
       // Здійснюємо збереження позиції після закінчення перетягування
       config.setNewPosition({
         id: section.id,
@@ -517,6 +519,7 @@ class AchievementsBlock {
 class ButtonPanel {
   constructor() {
     this.section = document.querySelector("#buttons_section");
+    this.header = document.querySelector("#buttons-header_container");
     this.settings = document.querySelector("#open-settings-button");
     this.achievements = document.querySelector("#open-achivs-button");
     this.login = document.querySelector("#open-login-button");
@@ -525,7 +528,7 @@ class ButtonPanel {
     this.target = document.querySelector("#open-target-button");
     this.status = document.querySelector("#open-status-button");
     this.awards = document.querySelector("#open-awards-button");
-    this.section.addEventListener("mousedown", (e) => {
+    this.header.addEventListener("mousedown", (e) => {
       UI.moveEvent(this.section, e);
     });
   }
@@ -854,8 +857,8 @@ class Settings {
     if (achivsCount === 0) return;
 
     // Отримання розмірів вікна блоку досягнень
-    const windowHeight = section.clientHeight;
-    const windowWidth = section.clientWidth;
+    const windowHeight = container.clientHeight;
+    const windowWidth = container.clientWidth;
 
     // Початкова ширина досягнення для розрахунку
     let achivWidth = Math.floor(
