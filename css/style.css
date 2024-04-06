@@ -61,6 +61,7 @@ body {
   opacity: 1;
   background-color: var(--main-color);
   box-shadow: 0 0 5px 2px black;
+  transition: 0.2s ease-out;
 }
 .section.dragable {
   z-index: 101;
@@ -70,7 +71,6 @@ body {
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s ease-in-out;
 }
 .section:hover {
   z-index: 101;
