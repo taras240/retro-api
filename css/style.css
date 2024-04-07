@@ -100,6 +100,7 @@ body {
   padding: 2px;
 }
 .header-button {
+  background-color: transparent;
   cursor: pointer;
 }
 .header-icon svg,

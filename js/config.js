@@ -33,6 +33,27 @@ class Config {
     this.writeConfiguration();
   }
   //!-----------------[ Settings data ]--------------------
+  get autoClearTarget() {
+    return this._cfg.settings.autoClearTarget;
+  }
+  set autoClearTarget(value) {
+    this._cfg.settings.autoClearTarget = value;
+    this.writeConfiguration();
+  }
+  get autoClearTargetTime() {
+    return Number(this._cfg.settings.autoClearTargetTime ?? 5);
+  }
+  set autoClearTargetTime(value) {
+    this._cfg.settings.autoClearTargetTime = value >= 0 ? value : 0;
+    this.writeConfiguration();
+  }
+  get autoFillTarget() {
+    return this._cfg.settings.autoFillTarget;
+  }
+  set autoFillTarget(value) {
+    this._cfg.settings.autoFillTarget = value;
+    this.writeConfiguration();
+  }
   get startOnLoad() {
     return this._cfg.settings.startOnLoad;
   }
@@ -58,9 +79,6 @@ class Config {
   set gameID(value) {
     this._cfg.settings.gameID = value;
     this.writeConfiguration();
-    if (this.identConfirmed) {
-      getAchievements();
-    }
   }
 
   get filterAchievementsBy() {

@@ -857,8 +857,8 @@ class Settings {
     if (achivsCount === 0) return;
 
     // Отримання розмірів вікна блоку досягнень
-    const windowHeight = container.clientHeight;
-    const windowWidth = container.clientWidth;
+    const windowHeight = section.clientHeight - 35;
+    const windowWidth = section.clientWidth;
 
     // Початкова ширина досягнення для розрахунку
     let achivWidth = Math.floor(
@@ -883,7 +883,7 @@ class Settings {
         : achivWidth;
     // Встановлення розміру кожного досягнення в блоку
     // container.style.gridTemplateColumns = `repeat(${colsCount}, ${achivWidth}px)`;
-    achivs.forEach((achiv) => (achiv.style.height = achivWidth + "px"));
+    // achivs.forEach((achiv) => (achiv.style.height = achivWidth + "px"));
     container.style.setProperty("--achiv-height", achivWidth + "px");
   }
 }
@@ -1120,7 +1120,33 @@ class Target {
     this.header = document.querySelector(".target-header_container");
     this.container = document.querySelector(".target-container");
 
+    this.autoclearCheckbox = document.querySelector("#auto-clear-target");
+    this.autoClearInput = document.querySelector("#auto-clear-target-time");
+
+    this.autofillCheckbox = document.querySelector("#auto-fill-target");
+
     this.resizer = document.querySelector("#target-resizer");
+    this.setValues();
+    this.addEvents();
+  }
+  setValues() {
+    this.autoClearInput.value = config.autoClearTargetTime;
+    this.autoclearCheckbox.checked = config.autoClearTarget;
+    this.autofillCheckbox.checked = config.autoFillTarget;
+  }
+  addEvents() {
+    this.autoclearCheckbox.addEventListener("change", (e) => {
+      e.stopPropagation();
+      config.autoClearTarget = this.autoclearCheckbox.checked;
+    });
+    this.autoClearInput.addEventListener("change", (e) => {
+      e.stopPropagation();
+      config.autoClearTargetTime = this.autoClearInput.value;
+    });
+    this.autofillCheckbox.addEventListener("change", (e) => {
+      e.stopPropagation();
+      config.autoFillTarget = this.autofillCheckbox.checked;
+    });
     // Додавання подій для пересування вікна досягнень
     this.resizer.addEventListener("mousedown", (event) => {
       event.stopPropagation();
@@ -1200,6 +1226,27 @@ class Target {
   }
   deleteFromTarget(button) {
     button.parentNode.remove();
+  }
+  clearEarned() {
+    this.container.querySelectorAll(".target-achiv").forEach((achievement) => {
+      if (achievement.classList.contains("hardcore")) {
+        achievement.remove();
+      }
+    });
+  }
+  clearAllAchivements() {
+    this.container.querySelectorAll(".target-achiv").forEach((achievement) => {
+      achievement.remove();
+    });
+  }
+  fillItems() {
+    ui.achievementsBlock.container
+      .querySelectorAll(".achiv-block")
+      .forEach((achievement) => {
+        if (!achievement.classList.contains("hardcore")) {
+          achievement.querySelector(".add-to-target").click();
+        }
+      });
   }
 }
 

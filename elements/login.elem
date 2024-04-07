@@ -20,14 +20,14 @@
       <div class="user-ident-input">
         <div class="form-input-container">
           <label for="login-user-name">User name:</label>
-          <input type="text" class="text-input input" name="login-input" id="login-user-name"
+          <input type="text" class="text-input login-input" name="login-input" id="login-user-name"
             placeholder="Enter user name" />
         </div>
         <div class="form-input-container">
           <label for="login-api-key">API Key:</label>
           <div class="login-api-container">
             <div class="api-input">
-              <input type="password" class="text-input login-api-key input" name="api-key" id="login-api-key"
+              <input type="password" class="text-input login-api-key login-input" name="api-key" id="login-api-key"
                 placeholder="Enter API Key" />
               <button class="paste-api-key svg-button" title="paste from clipboard"
                 onclick="pasteApiKeyFromClipboard()">

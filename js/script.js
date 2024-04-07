@@ -1,6 +1,6 @@
 let config = new Config();
 const RECENT_DELAY_MILISECS = 20 * 60 * 1000; //mins * secs * milisecs
-const RECENT_ACHIVES_RANGE_MINUTES = 5; // for auto update
+const RECENT_ACHIVES_RANGE_MINUTES = 10000; // for auto update
 // Ініціалізація UI
 let ui = new UI();
 // Ініціалізація APIWorker з ідентифікацією користувача
@@ -23,6 +23,10 @@ async function getAchievements() {
 
     // Оновлення інформації в картці гри
     ui.gameCard.updateGameCardInfo(response);
+
+    if (config.autoFillTarget) {
+      ui.target.fillItems();
+    }
   } catch (error) {
     // Додання помилки до кнопки перегляду та зупинка перегляду
     ui.statusPanel.watchButton.classList.add("error");
@@ -51,7 +55,6 @@ async function updateAchievements() {
     const achievements = await apiWorker.getRecentAchieves({
       minutes: RECENT_ACHIVES_RANGE_MINUTES,
     });
-
     // Ітерація через кожне досягнення
     achievements.forEach((achievement) => {
       // Знаходження елементу досягнення за його ідентифікатором
@@ -83,9 +86,16 @@ async function updateAchievements() {
         // Додавання класів для відображення зароблених досягнень
         achievementElement?.classList.add("earned");
         targetElement?.classList.add("earned");
+
         if (isHardcore) {
           achievementElement?.classList.add("hardcore");
           targetElement?.classList.add("hardcore");
+          if (targetElement && config.autoClearTarget) {
+            setTimeout(
+              () => targetElement.remove(),
+              config.autoClearTargetTime * 1000
+            );
+          }
         }
       }
     });
@@ -106,6 +116,10 @@ function startWatching() {
   // Отримання початкових досягнень
   getAchievements();
   checkUpdates();
+  if (config.autoClearTarget) {
+    ui.target.clearEarned();
+  }
+
   // Встановлення інтервалу для оновлення досягнень та зміни стану кнопки
   apiTikInterval = setInterval(() => {
     checkUpdates();
@@ -117,6 +131,10 @@ async function checkUpdates() {
   const responce = await apiWorker.getProfileInfo({});
   if (responce.LastGameID != config.gameID) {
     config.gameID = responce.LastGameID;
+    if (config.identConfirmed) {
+      ui.target.clearAllAchivements();
+      getAchievements();
+    }
   }
   if (responce.TotalPoints != TOTAL_POINTS) {
     updateAchievements();

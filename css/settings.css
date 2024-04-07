@@ -42,7 +42,7 @@
 }
 
 .settings-input,
-.prefs_section .input {
+.input {
   position: relative;
   display: block;
   top: 0px;
@@ -63,7 +63,7 @@
   transition: 0.1s;
   color: var(--input-color);
 }
-.prefs_section .input {
+.input {
   min-width: 70px;
 }
 
@@ -94,14 +94,14 @@ input[type="checkbox"]:checked + .settings-input::after {
 }
 .setting-button:hover,
 .settings-input:hover,
-.prefs_section .input:hover {
+.input:hover {
   top: 1px;
   left: 1px;
   box-shadow: 1px 1px 0 var(--shadow-color), 2px 2px 0 var(--shadow-color);
 }
 .setting-button.checked,
 input:checked + .settings-input,
-.prefs_section .input:focus {
+.input:focus {
   top: 2px;
   left: 2px;
   box-shadow: 0 0 0;
