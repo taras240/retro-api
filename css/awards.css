@@ -144,6 +144,7 @@
   background-color: var(--main-color);
 }
 .awarded-game:hover {
+  box-shadow: 0 2px 7px 0px #000000a1;
   transform: scale(1.05);
   transition: 0.2s;
 }

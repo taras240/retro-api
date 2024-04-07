@@ -20,13 +20,18 @@
   width: 100%;
   z-index: 20;
   box-shadow: 0px 4px 9px 0px black;
-  display: none;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.2s ease-in;
 }
 #achivs-settings-button svg {
   padding: 3px;
 }
 .checked .header-settings-container {
-  display: block;
+  visibility: visible;
+  opacity: 1;
+  pointer-events: all;
 }
 .header-settings-item {
   padding: 10px;
@@ -158,20 +163,21 @@
   aspect-ratio: 1;
   height: 1.1rem;
   background-color: var(--font-color);
-  mask-repeat: no-repeat;
-  mask-position: right;
 }
 .condition.none {
   display: none;
 }
 .win_condition {
   mask-image: url(../assets/img/win-condition.svg);
+  -webkit-mask-image: url(../assets/img/win-condition.svg);
 }
 .missable {
   mask-image: url(../assets/img/missable.svg);
+  -webkit-mask-image: url(../assets/img/missable.svg);
 }
 .progression {
   mask-image: url(../assets/img/progression.svg);
+  -webkit-mask-image: url(../assets/img/progression.svg);
 }
 .delete-from-target:hover {
   opacity: 1;
