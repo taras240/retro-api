@@ -22,9 +22,11 @@ h3 {
 }
 a {
   color: inherit;
+  transition: 0.2s;
 }
 a:hover {
   color: var(--accent-color);
+  background-color: var(--font-color);
   text-decoration: underline;
 }
 input[type="number"] {

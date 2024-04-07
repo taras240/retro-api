@@ -109,27 +109,29 @@
   transform: translateY(-50%);
 }
 .ra-settings-link {
-  color: gray;
+  color: var(--font-color);
+  opacity: 0.5;
   text-align: right;
 }
 .ra-settings-link:hover {
-  color: var(--font-color); /* text-decoration: underline; */
-  border-bottom: 1px solid white;
+  color: var(--font-color);
+  background-color: var(--accent-color);
+  opacity: 1;
 }
 .ra-settings-link:active {
   color: darkred;
   text-decoration: underline;
 }
 .link-icon {
-  fill: gray;
-  height: 1rem;
+  fill: var(--font-color);
+  height: 100%;
+  width: 1rem;
   vertical-align: middle;
   margin-bottom: 2px;
-  width: 1rem;
 }
 
 .ra-settings-link:hover .link-icon {
-  fill: white;
+  opacity: 1;
 }
 .submit-login {
   position: relative;
