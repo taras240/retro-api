@@ -20,7 +20,13 @@ h3 {
   font-weight: 600;
   font-size: 1.1rem;
 }
-
+a {
+  color: inherit;
+}
+a:hover {
+  color: var(--accent-color);
+  text-decoration: underline;
+}
 input[type="number"] {
   -moz-appearance: textfield;
 }

@@ -85,10 +85,10 @@
 .target-achiv.earned.hardcore::after {
   content: "";
   position: absolute;
-  height: 80%;
+  height: 100%;
   aspect-ratio: 2 / 1;
-  top: 40%;
-  right: 10%;
+  top: 50%;
+  right: 12%;
   transform: translate(50%, -50%) rotate(45deg);
   background-image: url(../assets/img/S-rank-1.png);
   filter: drop-shadow(5px 3px 3px black);
@@ -97,7 +97,6 @@
   background-repeat: no-repeat;
   opacity: 0;
   animation: hardcore-earned-animation 0.1s linear forwards;
-  animation-delay: 0.6s;
 }
 
 .target-achiv-details {

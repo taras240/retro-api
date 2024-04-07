@@ -57,27 +57,18 @@
 }
 
 .achiv-block.earned {
-  animation: achiv-earned-animation 0.6s;
-}
-@keyframes achiv-earned-animation {
-  0% {
-    padding: 10px;
-  }
-  25% {
-    padding: 20px;
-  }
-  75% {
-    padding: 0px;
-  }
-  100% {
-    padding: 5px;
-  }
+  /* animation: achiv-earned-animation 0.6s; */
 }
 .achiv-block.earned .achiv-preview {
   filter: grayscale(0.8);
 }
 .achiv-block.hardcore .achiv-preview {
-  filter: grayscale(0);
+  animation: achiv-earned-animation 0.6s linear forwards;
+}
+@keyframes achiv-earned-animation {
+  to {
+    filter: grayscale(0);
+  }
 }
 
 .preview-container {
@@ -98,8 +89,8 @@
   background-size: contain;
   background-repeat: no-repeat;
   opacity: 0;
-  animation: hardcore-earned-animation 0.1s linear forwards;
-  animation-delay: 0.6s;
+  animation: hardcore-earned-animation 0.6s linear forwards;
+  /* animation-delay: 0.6s; */
 }
 @keyframes hardcore-earned-animation {
   0% {

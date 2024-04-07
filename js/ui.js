@@ -909,6 +909,7 @@ class GameCard {
   }
   updateGameCardInfo({
     Title,
+    ID,
     ImageBoxArt,
     ConsoleName,
     Developer,
@@ -919,6 +920,10 @@ class GameCard {
     UserCompletionHardcore,
   }) {
     this.header.innerText = Title;
+    this.header.setAttribute(
+      "href",
+      `https://retroachievements.org/game/${ID}`
+    );
     this.preview.setAttribute(
       "src",
       `https://media.retroachievements.org${ImageBoxArt}`
@@ -1214,7 +1219,7 @@ class Target {
               />
             </div>
             <div class="target-achiv-details">
-              <h3 class="achiv-name">${Title}</h3>
+              <h3 class="achiv-name"><a target="_blanc" href="https://retroachievements.org/achievement/${ID}">${Title}</a></h3>
               <p class="achiv-description">${Description}</p>
               <p class="points">${Points} points</p>
             </div>
