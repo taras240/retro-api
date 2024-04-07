@@ -47,6 +47,13 @@
     <div class="filter-settings input-container sort-buttons" title="not hard - not earn">
       <label class="setting-label">Filter:</label>
       <div class="setting-radio-group">
+        <input type="radio" name="filter" id="filter-by-missable" class="filter-achivs-radio ">
+        </input>
+
+        <label class="settings-input" for="filter-by-missable">missable</label>
+
+      </div>
+      <div class="setting-radio-group">
         <input type="radio" name="filter" id="filter-by-earned" class="filter-achivs-radio ">
         </input>
 

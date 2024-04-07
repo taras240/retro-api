@@ -22,6 +22,7 @@ class UI {
     all: "all",
     earned: "earned",
     notEarned: "notEarned",
+    missable: "missable",
   };
   static sortMethods = {
     latest: "latest",
@@ -552,17 +553,9 @@ class StatusPanel {
     this.watchButton.addEventListener("click", (e) => {
       e.stopPropagation();
       // Перевіряємо стан кнопки та відповідно запускаємо або припиняємо автооновлення
-      if (this.watchButton.classList.contains("active")) {
-        stopWatching();
-      } else {
-        apiWorker
-          .getProfileInfo({})
-          .then((resp) => {
-            ui.settings.gameID.value = resp.LastGameID;
-            config.gameID = resp.LastGameID;
-          })
-          .then(() => startWatching());
-      }
+      this.watchButton.classList.contains("active")
+        ? stopWatching()
+        : startWatching();
     });
     this.textBlock.addEventListener("mousedown", (e) => {
       UI.moveEvent(this.section, e);
@@ -646,8 +639,10 @@ class Settings {
     this.sortByPointsButton = document.querySelector("#sort-by-points"); // Кнопка сортування за балами
     this.sortByDefaultButton = document.querySelector("#sort-by-default"); // Кнопка сортування за замовчуванням
     this.reverseSortButton = document.querySelector("#reverse-sort"); // Чекбокс сортування по зворотньому порядку
+
     this.filterByAllRadio = document.querySelector("#filter-by-all"); // Фільтр за всіма
     this.filterByEarnedRadio = document.querySelector("#filter-by-earned"); // Фільтр за заробленими
+    this.filterByMissableRadio = document.querySelector("#filter-by-missable"); // Фільтр за всіма
     this.filterByNotEarnedRadio = document.querySelector(
       "#filter-by-not-earned"
     ); // Фільтр за не заробленими
@@ -744,6 +739,11 @@ class Settings {
     this.filterByAllRadio.addEventListener("click", (e) => {
       e.stopPropagation();
       UI.FILTER_METHOD = UI.filterMethods.all;
+      this.applyFilter();
+    });
+    this.filterByMissableRadio.addEventListener("click", (e) => {
+      e.stopPropagation();
+      UI.FILTER_METHOD = UI.filterMethods.missable;
       this.applyFilter();
     });
     this.showBackgroundCheckbox.addEventListener("change", (e) => {
@@ -1120,6 +1120,7 @@ class Awards {
 }
 
 class Target {
+  filterMethod = UI.filterMethods.all;
   constructor() {
     this.section = document.querySelector("#target_section");
     this.header = document.querySelector(".target-header_container");
@@ -1127,9 +1128,12 @@ class Target {
 
     this.autoclearCheckbox = document.querySelector("#auto-clear-target");
     this.autoClearInput = document.querySelector("#auto-clear-target-time");
-
     this.autofillCheckbox = document.querySelector("#auto-fill-target");
 
+    this.filterByMissableRadio = document.querySelector(
+      "#target-filter-missable"
+    );
+    this.filterByAllRadio = document.querySelector("#target-filter-all");
     this.resizer = document.querySelector("#target-resizer");
     this.setValues();
     this.addEvents();
@@ -1166,6 +1170,16 @@ class Target {
     this.header.addEventListener("mousedown", (e) => {
       UI.moveEvent(this.section, e);
     });
+    this.filterByMissableRadio.addEventListener("change", (e) => {
+      e.stopPropagation();
+      this.filterMethod = UI.filterMethods.missable;
+      this.applyFilter();
+    });
+    this.filterByAllRadio.addEventListener("change", (e) => {
+      e.stopPropagation();
+      this.filterMethod = UI.filterMethods.all;
+      this.applyFilter();
+    });
   }
   isAchievementInTargetSection({ ID, targetContainer }) {
     const targetAchievements = [
@@ -1182,6 +1196,9 @@ class Target {
     isEarned,
     isHardcoreEarned,
     ID,
+    type,
+    NumAwardedHardcore,
+    totalPlayers,
   }) {
     // Перевіряємо чи ачівки нема в секції тарґет
     if (
@@ -1195,7 +1212,7 @@ class Target {
 
     let targetElement = document.createElement("li");
     targetElement.classList.add("target-achiv");
-
+    targetElement.dataset.type = type;
     if (isEarned) {
       targetElement.classList.add("earned");
       if (isHardcoreEarned) {
@@ -1221,13 +1238,43 @@ class Target {
             <div class="target-achiv-details">
               <h3 class="achiv-name"><a target="_blanc" href="https://retroachievements.org/achievement/${ID}">${Title}</a></h3>
               <p class="achiv-description">${Description}</p>
-              <p class="points">${Points} points</p>
+              <div class="target-other-descriptions">
+                <div class=" condition ${
+                  type ?? "none"
+                }" title="achievement type"></div>
+                <p class="target-description-text" title="points">${Points} points</p>
+                <p class="target-description-text" title="earned by">${~~(
+                  (100 * NumAwardedHardcore) /
+                  totalPlayers
+                )}%</p>
+              </div>
+             
             </div>
     `;
     targetElement.addEventListener("mousedown", (e) => e.stopPropagation());
     this.container.appendChild(targetElement);
 
     UI.addDraggingEventForElements(this.container);
+
+    const conditions = {
+      progression: "progression",
+      win_condition: "win_condition",
+      missable: "missable",
+    };
+  }
+  applyFilter() {
+    const elements = this.container.querySelectorAll(".target-achiv");
+    elements.forEach((element) => {
+      switch (this.filterMethod) {
+        case UI.filterMethods.missable:
+          element.dataset.type !== "missable"
+            ? element.classList.add("hidden")
+            : element.classList.remove("hidden");
+          break;
+        default:
+          element.classList.remove("hidden");
+      }
+    });
   }
   deleteFromTarget(button) {
     button.parentNode.remove();
@@ -1297,6 +1344,7 @@ const sortBy = {
 const filterBy = {
   earned: (achievement) => achievement.DateEarnedHardcore,
   notEarned: (achievement) => !achievement.DateEarnedHardcore,
+  missable: (achievement) => achievement.type === "missable",
   all: () => true,
 };
 

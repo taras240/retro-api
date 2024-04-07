@@ -25,6 +25,7 @@ async function getAchievements() {
     ui.gameCard.updateGameCardInfo(response);
 
     if (config.autoFillTarget) {
+      ui.target.clearAllAchivements();
       ui.target.fillItems();
     }
   } catch (error) {
@@ -131,6 +132,7 @@ async function checkUpdates() {
   const responce = await apiWorker.getProfileInfo({});
   if (responce.LastGameID != config.gameID) {
     config.gameID = responce.LastGameID;
+    ui.settings.gameID.value = config.gameID;
     if (config.identConfirmed) {
       ui.target.clearAllAchivements();
       getAchievements();

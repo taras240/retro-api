@@ -45,6 +45,23 @@
             <label class="settings-input " for="auto-fill-target">autofill</label>
           </div>
         </li>
+        <li class="header-settings-item">
+          <label class="header-setting-label" title="filter methods">Filter:</label>
+          <div class="setting-radio-group">
+            <input type="radio" name="target-filter" id="target-filter-missable" class="filter-achivs-radio ">
+            </input>
+
+            <label class="settings-input" for="target-filter-missable">missable</label>
+
+          </div>
+          <div class="setting-radio-group">
+            <input type="radio" name="target-filter" id="target-filter-all" checked="true" class="filter-achivs-radio ">
+            </input>
+
+            <label class="settings-input" for="target-filter-all">all</label>
+
+          </div>
+        </li>
       </ul>
     </div>
     <button class="header-icon header-button" onclick="openTarget()">
