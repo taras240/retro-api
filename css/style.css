@@ -140,41 +140,30 @@ body {
 /**---------[ Resizer ]---------------------------- */
 .resizer {
   position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 30px;
-  aspect-ratio: 3/2;
-  transform: translate(50%, 0);
+  bottom: -5px;
+  right: -5px;
+  width: 0px;
+  aspect-ratio: 1;
+  border-radius: 0 0 5px 0;
   background-color: transparent;
   cursor: nwse-resize;
-  z-index: 1100;
+  transition: 0.1s;
 }
-.resizer::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
+
+.section:hover .resizer {
   width: 15px;
-  aspect-ratio: 1;
-  transform: translate(-100%, -50%);
-  background-color: transparent;
-  opacity: 0.5;
-  border-radius: 50%;
-  overflow: hidden;
-  transition: 0.2s;
+  border: 2px solid var(--main-color);
+  border-top: none;
+  border-left: none;
 }
-.section:hover .resizer::after {
-  background-color: var(--selection-color);
+
+.section:hover .resizer:hover {
+  width: 25px;
 }
-.resizer:hover::after {
-  width: 20px;
-  opacity: 1;
-  transition: 0.2s;
-}
-.resizer:active::after {
-  width: 15px;
-  opacity: 1;
-  transition: 0.2s;
+
+.section:hover .resizer:active {
+  width: 25px;
+  border-color: var(--accent-color);
 }
 /**---------[ Input Styles ]-----------------------*/
 
