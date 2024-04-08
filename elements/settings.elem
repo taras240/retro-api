@@ -113,7 +113,7 @@
         <option value="retro">retro</option>
         <option value="vintage">vintage</option>
         <option value="neon">neon</option>
-
+        <option value="gray">gray</option>
         <option value="custom">custom</option>
       </select>
       <div class="setting-radio-group">

@@ -346,6 +346,13 @@ const colorPresets = {
     fontColor: "#000000",
     selectionColor: "#50C4ED",
   },
+  gray:{
+    mainColor: "#808080",
+    secondaryColor: "#757575",
+    accentColor: "#cfcfcf",
+    fontColor: "#000000",
+    selectionColor: "#2ab754"
+  },
   default: {
     mainColor: "#2f2187",
     secondaryColor: "#2c2079",

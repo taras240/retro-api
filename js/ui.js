@@ -48,29 +48,45 @@ class UI {
 
   constructor() {
     //Завантаження секцій з jsx файлів
-    loadSections().then(() => {
-      // Ініціалізація елементів
-      this.initializeElements();
+    loadSections()
+      .then(() => {
+        // Ініціалізація елементів
+        this.initializeElements();
 
-      // Додавання подій
-      this.addEvents();
+        // Додавання подій
+        this.addEvents();
 
-      //Встановлення розмірів і розміщення елементів
-      this.setPositions();
+        //Встановлення розмірів і розміщення елементів
+        this.setPositions();
 
-      //Встановлення збережених значень для полів вводу
-      this.setValues();
+        //Встановлення збережених значень для полів вводу
+        this.setValues();
 
-      //Оновлення кольорів
-      UI.updateColors();
+        //Оновлення кольорів
+        UI.updateColors();
 
-      //Оновлення ачівментсів
-      if (config.identConfirmed) {
-        config.startOnLoad
-          ? this.statusPanel.watchButton.click()
-          : this.settings.checkIdButton.click();
-      }
-    });
+        //Оновлення ачівментсів
+        if (config.identConfirmed) {
+          config.startOnLoad
+            ? this.statusPanel.watchButton.click()
+            : this.settings.checkIdButton.click();
+        }
+      })
+      .then(() => {
+        setTimeout(
+          () =>
+            document.querySelector(".loading-section").classList.add("hidden"),
+          1000
+        );
+      })
+      .catch((err) => {
+        setTimeout(
+          () =>
+            document.querySelector(".loading-section").classList.add("hidden"),
+          1000
+        );
+        console.log(err);
+      });
   }
 
   initializeElements() {
