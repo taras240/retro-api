@@ -1,6 +1,5 @@
 .update_section {
   position: absolute;
-  overflow: hidden;
   background-color: var(--secondary-color);
   top: calc(100vh - 100px);
   left: 40%;
@@ -11,6 +10,9 @@
   z-index: 100;
   /* transition: 0.2s !important; */
 }
+.update_section .resizer {
+  z-index: 11;
+}
 .update_container {
   padding: 10px;
   height: 100%;
@@ -18,6 +20,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 5px;
+  overflow: hidden;
   gap: 10px;
   justify-content: space-between;
   z-index: 2;
@@ -190,6 +194,7 @@
   top: 0;
   left: 0;
   height: 100%;
+  z-index: -1;
   width: var(--progress-points, 0%);
   background-color: var(--accent-color);
 }
