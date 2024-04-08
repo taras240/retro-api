@@ -5,12 +5,12 @@
   background-color: transparent;
   cursor: grab;
 }
-
 .achivs:not(:hover) {
   box-shadow: 0 0 5px 2px transparent;
 }
-.achivs:hover {
-  background-color: var(--secondary-color);
+.achivs:hover,
+.achivs.bg-visible {
+  background-color: var(--main-color);
 }
 .achievements-container {
   display: flex;
@@ -23,6 +23,7 @@
   gap: 1px;
   overflow: visible;
 }
+.achivs.bg-visible .achievements-header_container,
 .achivs:hover .achievements-header_container {
   opacity: 1;
   visibility: visible;

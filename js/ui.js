@@ -344,11 +344,23 @@ class AchievementsBlock {
   constructor() {
     // Елементи блока досягнень
     this.section = document.querySelector("#achievements_section"); // Секція блока досягнень
+    this.bgVisibilityCheckbox = document.querySelector("#show-achivs-bg");
     this.container = document.querySelector(".achievements-container"); //Контейнер  з досягненнями
     this.resizer = document.querySelector("#achivs-resizer"); // Ресайзер блока досягнень
+
+    this.addEvents();
+    this.setValues();
+  }
+  addEvents() {
     // Додавання подій для пересування вікна ачівментсів
     this.section.addEventListener("mousedown", (e) => {
       UI.moveEvent(this.section, e);
+    });
+    this.bgVisibilityCheckbox.addEventListener("change", (e) => {
+      config.achivsBgVisibility = this.bgVisibilityCheckbox.checked;
+      this.bgVisibilityCheckbox.checked
+        ? this.section.classList.add("bg-visible")
+        : this.section.classList.remove("bg-visible");
     });
     this.resizer.addEventListener("mousedown", (event) => {
       event.stopPropagation();
@@ -359,6 +371,10 @@ class AchievementsBlock {
         postFunc: () => ui.settings.fitSizeVertically(),
       });
     });
+  }
+  setValues() {
+    this.bgVisibilityCheckbox.checked = config.achivsBgVisibility;
+    config.achivsBgVisibility ? this.section.classList.add("bg-visible") : "";
   }
   clearAchievementsSection() {
     const { container } = this;

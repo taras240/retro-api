@@ -25,8 +25,7 @@
       <ul class="header-settings-container">
         <li class="header-settings-item">
           <label class="header-setting-label"
-            title="removes earned achivs when watching is enabled, you also can set delay for it">Autoclear earned
-            achivs after (seconds):</label>
+            title="removes earned achivs when watching is enabled, you also can set delay for it">Autoclear:</label>
           <input type="number" class="number-input input free-width" title="delay in seconds"
             id="auto-clear-target-time" value="10" placeholder="sec" />
           <div class="setting-radio-group">
@@ -37,8 +36,7 @@
         </li>
         <li class="header-settings-item">
           <label class="header-setting-label"
-            title="when watching and game changes, it will replace current target achivs with new ones">Auto add all
-            unearned achieves:</label>
+            title="when watching and game changes, it will replace current target achivs with new ones">Autofill:</label>
           <div class="setting-radio-group">
             <input type="checkbox" name="auto-fill-target" id="auto-fill-target">
             </input>

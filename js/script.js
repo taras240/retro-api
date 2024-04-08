@@ -1,5 +1,5 @@
 let config = new Config();
-const RECENT_DELAY_MILISECS = 20 * 60 * 1000; //mins * secs * milisecs
+const RECENT_DELAY_MILISECS = 20 * 60 * 1000; //maybe don't need
 const RECENT_ACHIVES_RANGE_MINUTES = 5; // for auto update
 // Ініціалізація UI
 let ui = new UI();

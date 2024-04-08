@@ -33,6 +33,15 @@ class Config {
     this.writeConfiguration();
   }
   //!-----------------[ Settings data ]--------------------
+  //*-----------------[ Achieves ]-----------------
+  get achivsBgVisibility() {
+    return this._cfg.settings.achivsBgVisibility ?? false;
+  }
+  set achivsBgVisibility(value) {
+    this._cfg.settings.achivsBgVisibility = value;
+    this.writeConfiguration();
+  }
+  //*-----------------[ Target ]-----------------
   get autoClearTarget() {
     return this._cfg.settings.autoClearTarget;
   }
