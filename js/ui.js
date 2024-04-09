@@ -30,37 +30,15 @@ class UI {
     points: "points",
     default: "default",
   };
-  static updateColors(preset) {
-    const { style } = document.body;
-    const {
-      mainColor,
-      secondaryColor,
-      accentColor,
-      fontColor,
-      selectionColor,
-    } = config.getColors(preset || config.colorsPreset);
-    style.setProperty("--main-color", mainColor);
-    style.setProperty("--secondary-color", secondaryColor);
-    style.setProperty("--accent-color", accentColor);
-    style.setProperty("--font-color", fontColor);
-    style.setProperty("--selection-color", selectionColor);
-  }
 
   constructor() {
-    //Завантаження секцій з jsx файлів
     loadSections()
       .then(() => {
         // Ініціалізація елементів
         this.initializeElements();
 
-        // Додавання подій
-        this.addEvents();
-
         //Встановлення розмірів і розміщення елементів
         this.setPositions();
-
-        //Встановлення збережених значень для полів вводу
-        this.setValues();
 
         //Оновлення кольорів
         UI.updateColors();
@@ -71,8 +49,12 @@ class UI {
             ? this.statusPanel.watchButton.click()
             : this.settings.checkIdButton.click();
         }
-      })
-      .then(() => {
+        document
+          .querySelectorAll(".header-settings-container")
+          .forEach((el) => {
+            el.addEventListener("mousedown", (e) => e.stopPropagation());
+          });
+        //Вимкнення вікна завантаження
         setTimeout(
           () =>
             document.querySelector(".loading-section").classList.add("hidden"),
@@ -97,11 +79,11 @@ class UI {
     this.loginCard = new LoginCard();
     this.target = new Target();
     this.achievementsBlock = new AchievementsBlock();
-    this.buttons = new ButtonPanel();
     this.settings = new Settings();
     this.awards = new Awards();
     this.gameCard = new GameCard();
     this.statusPanel = new StatusPanel();
+    this.buttons = new ButtonPanel();
   }
   //Встановлення розмірів і розміщення елементів
   setPositions() {
@@ -124,104 +106,6 @@ class UI {
       config.bgVisibility ? "display" : "none";
   }
 
-  setValues() {
-    // Встановити ключ API з об'єкта ідентифікації користувача
-    this.loginCard.apiKey.value = config.API_KEY;
-
-    // Встановити значення логіну та API з об'єкта ідентифікації користувача
-    this.loginCard.userName.value = config.USER_NAME;
-    this.loginCard.userImage.src = config.userImageSrc;
-
-    if (config.identConfirmed) {
-      this.loginCard.section
-        .querySelector(".submit-login")
-        .classList.add("verified");
-    }
-    switch (config.filterAchievementsBy) {
-      case UI.filterMethods.all:
-        this.settings.filterByAllRadio.checked = true;
-        break;
-      case UI.filterMethods.earned:
-        this.settings.filterByEarnedRadio.checked = true;
-        break;
-      case UI.filterMethods.notEarned:
-        this.settings.filterByNotEarnedRadio.checked = true;
-        break;
-      default:
-        this.settings.filterByAllRadio.checked = true;
-        break;
-    }
-    switch (config.sortAchievementsBy) {
-      case UI.sortMethods.default:
-        this.settings.sortByDefaultButton.checked = true;
-        break;
-      case UI.sortMethods.earnedCount:
-        this.settings.sortByEarnedButton.checked = true;
-        break;
-      case UI.sortMethods.latest:
-        this.settings.sortByLatestButton.checked = true;
-        break;
-      case UI.sortMethods.points:
-        this.settings.sortByPointsButton.checked = true;
-        break;
-      default:
-      case UI.sortMethods.default:
-        this.settings.sortByDefaultButton.checked = true;
-        break;
-    }
-
-    this.settings.reverseSortButton.checked = config.reverseSort == -1;
-    this.settings.stretchButton.checked = config.stretchAchievements;
-    this.achievementsBlock.container.style.height = config.stretchAchievements
-      ? "100%"
-      : "auto";
-
-    // this.settings.stretchButton.classList
-    // Отримати ідентифікатор гри з localStorage та встановити його значення
-    this.settings.gameID.value = config.gameID;
-
-    this.settings.targetUserInput.value = config.targetUser ?? config.USER_NAME;
-    this.settings.targetUserInput.setAttribute(
-      "placeholder",
-      config.USER_NAME || "your username if empty"
-    );
-    this.settings.updateInterval.value = config.updateDelay;
-
-    this.settings.maximumWidthInput.value = config.ACHIV_MAX_SIZE;
-    this.settings.minimumWidthInput.value = config.ACHIV_MIN_SIZE;
-
-    this.settings.mainColorInput.value = config.mainColor;
-    this.settings.secondaryColorInput.value = config.secondaryColor;
-    this.settings.accentColorInput.value = config.accentColor;
-    this.settings.fontColorInput.value = config.fontColor;
-    this.settings.selectionColorInput.value = config.selectionColor;
-    this.settings.colorPresetSelector.value = config.colorsPreset;
-    this.settings.colorPresetSelector.dispatchEvent(new Event("change"));
-    this.settings.showBackgroundCheckbox.checked = config.bgVisibility;
-    this.settings.startOnLoadCheckbox.checked = config.startOnLoad;
-
-    this.buttons.achievements.checked =
-      !this.achievementsBlock.section.classList.contains("hidden");
-
-    this.buttons.settings.checked =
-      !this.settings.section.classList.contains("hidden");
-
-    this.buttons.login.checked =
-      !this.loginCard.section.classList.contains("hidden");
-
-    this.buttons.target.checked =
-      !this.target.section.classList.contains("hidden");
-
-    this.buttons.gameCard.checked =
-      !this.gameCard.section.classList.contains("hidden");
-
-    this.buttons.status.checked =
-      !this.statusPanel.section.classList.contains("hidden");
-
-    this.buttons.awards.checked =
-      !this.awards.section.classList.contains("hidden");
-  }
-  addEvents() {}
   updateGameInfo({
     Title,
     ConsoleName,
@@ -256,6 +140,21 @@ class UI {
     });
   }
 
+  static updateColors(preset) {
+    const { style } = document.body;
+    const {
+      mainColor,
+      secondaryColor,
+      accentColor,
+      fontColor,
+      selectionColor,
+    } = config.getColors(preset || config.colorsPreset);
+    style.setProperty("--main-color", mainColor);
+    style.setProperty("--secondary-color", secondaryColor);
+    style.setProperty("--accent-color", accentColor);
+    style.setProperty("--font-color", fontColor);
+    style.setProperty("--selection-color", selectionColor);
+  }
   // Функція зміни розміру вікна
   static resizeEvent({ event, section, postFunc }) {
     let resizeValues = {
@@ -358,14 +257,33 @@ class UI {
 
 class AchievementsBlock {
   constructor() {
+    this.initializeElements();
+    this.addEvents();
+    this.setValues();
+  }
+  initializeElements() {
     // Елементи блока досягнень
     this.section = document.querySelector("#achievements_section"); // Секція блока досягнень
     this.bgVisibilityCheckbox = document.querySelector("#show-achivs-bg");
+    this.stretchButton = document.querySelector("#stretch-achivs");
+    this.minimumWidthInput = document.querySelector("#achiv-min-width");
+    this.maximumWidthInput = document.querySelector("#achiv-max-width");
+
+    this.sortByLatestButton = document.querySelector("#sort-by-latest"); // Кнопка сортування за останніми
+    this.sortByEarnedButton = document.querySelector("#sort-by-earned"); // Кнопка сортування за заробленими
+    this.sortByPointsButton = document.querySelector("#sort-by-points"); // Кнопка сортування за балами
+    this.sortByDefaultButton = document.querySelector("#sort-by-default"); // Кнопка сортування за замовчуванням
+    this.reverseSortButton = document.querySelector("#reverse-sort"); // Чекбокс сортування по зворотньому порядку
+
+    this.filterByAllRadio = document.querySelector("#filter-by-all"); // Фільтр за всіма
+    this.filterByEarnedRadio = document.querySelector("#filter-by-earned"); // Фільтр за заробленими
+    this.filterByMissableRadio = document.querySelector("#filter-by-missable"); // Фільтр за всіма
+    this.filterByNotEarnedRadio = document.querySelector(
+      "#filter-by-not-earned"
+    ); // Фільтр за не заробленими
+
     this.container = document.querySelector(".achievements-container"); //Контейнер  з досягненнями
     this.resizer = document.querySelector("#achivs-resizer"); // Ресайзер блока досягнень
-
-    this.addEvents();
-    this.setValues();
   }
   addEvents() {
     // Додавання подій для пересування вікна ачівментсів
@@ -378,18 +296,146 @@ class AchievementsBlock {
         ? this.section.classList.add("bg-visible")
         : this.section.classList.remove("bg-visible");
     });
+    // Додає подію кліку для сортування за замовчуванням
+    this.sortByDefaultButton.addEventListener("click", (e) => {
+      e.stopPropagation();
+      // Встановлює метод сортування за замовчуванням
+      UI.SORT_METHOD = UI.sortMethods.default;
+      // Застосовує сортування та оновлює інтерфейс
+      this.applySorting();
+    });
+
+    // Додає подію кліку для сортування за отриманням досягнення
+    this.sortByEarnedButton.addEventListener("click", (e) => {
+      e.stopPropagation();
+      // Встановлює метод сортування за отриманням досягнення
+      UI.SORT_METHOD = UI.sortMethods.earnedCount;
+      // Застосовує сортування та оновлює інтерфейс
+      this.applySorting();
+    });
+
+    // Додає подію кліку для сортування за датою отримання
+    this.sortByLatestButton.addEventListener("click", (e) => {
+      e.stopPropagation();
+      // Встановлює метод сортування за датою отримання
+      UI.SORT_METHOD = UI.sortMethods.latest;
+      // Застосовує сортування та оновлює інтерфейс
+      this.applySorting();
+    });
+
+    // Додає подію кліку для сортування за кількістю балів
+    this.sortByPointsButton.addEventListener("click", (e) => {
+      e.stopPropagation();
+      // Встановлює метод сортування за кількістю балів
+      UI.SORT_METHOD = UI.sortMethods.points;
+      // Застосовує сортування та оновлює інтерфейс
+      this.applySorting();
+    });
+    this.reverseSortButton.addEventListener("click", (e) => {
+      e.stopPropagation();
+      // Встановлює reverse сортування
+      UI.REVERSE_SORT = this.reverseSortButton.checked;
+      // Застосовує сортування та оновлює інтерфейс
+      this.applySorting();
+    });
+    // Додає подію кліку для фільтрування
+    this.filterByEarnedRadio.addEventListener("click", (e) => {
+      e.stopPropagation();
+      UI.FILTER_METHOD = UI.filterMethods.earned;
+      this.applyFilter();
+    });
+    this.filterByNotEarnedRadio.addEventListener("click", (e) => {
+      e.stopPropagation();
+      UI.FILTER_METHOD = UI.filterMethods.notEarned;
+      this.applyFilter();
+    });
+    this.filterByAllRadio.addEventListener("click", (e) => {
+      e.stopPropagation();
+      UI.FILTER_METHOD = UI.filterMethods.all;
+      this.applyFilter();
+    });
+    this.filterByMissableRadio.addEventListener("click", (e) => {
+      e.stopPropagation();
+      UI.FILTER_METHOD = UI.filterMethods.missable;
+      this.applyFilter();
+    });
+
+    this.stretchButton.addEventListener("click", (e) => {
+      config.stretchAchievements = this.stretchButton.checked;
+      this.container.style.height = config.stretchAchievements
+        ? "100%"
+        : "auto";
+      // ui.achievementsBlock.container.style.justifyContent =
+      //   config.stretchAchievements ? "space-between" : "start";
+    });
+    this.minimumWidthInput.addEventListener("change", (e) => {
+      const { minimumWidthInput } = this;
+      if (minimumWidthInput.value)
+        config.ACHIV_MIN_SIZE = minimumWidthInput.value;
+      this.fitSizeVertically();
+    });
+    this.maximumWidthInput.addEventListener("change", (e) => {
+      const { maximumWidthInput } = this;
+      if (maximumWidthInput.value)
+        config.ACHIV_MAX_SIZE = maximumWidthInput.value;
+      this.fitSizeVertically();
+    });
     this.resizer.addEventListener("mousedown", (event) => {
       event.stopPropagation();
       this.section.classList.add("resized");
       UI.resizeEvent({
         event: event,
         section: this.section,
-        postFunc: () => ui.settings.fitSizeVertically(),
+        postFunc: () => this.fitSizeVertically(true),
       });
     });
   }
   setValues() {
+    this.container.style.height = config.stretchAchievements ? "100%" : "auto";
+
     this.bgVisibilityCheckbox.checked = config.achivsBgVisibility;
+
+    switch (config.filterAchievementsBy) {
+      case UI.filterMethods.all:
+        this.filterByAllRadio.checked = true;
+        break;
+      case UI.filterMethods.earned:
+        this.filterByEarnedRadio.checked = true;
+        break;
+      case UI.filterMethods.notEarned:
+        this.filterByNotEarnedRadio.checked = true;
+        break;
+      case UI.filterMethods.missable:
+        this.filterByMissableRadio.checked = true;
+        break;
+      default:
+        this.filterByAllRadio.checked = true;
+        break;
+    }
+    switch (config.sortAchievementsBy) {
+      case UI.sortMethods.default:
+        this.sortByDefaultButton.checked = true;
+        break;
+      case UI.sortMethods.earnedCount:
+        this.sortByEarnedButton.checked = true;
+        break;
+      case UI.sortMethods.latest:
+        this.sortByLatestButton.checked = true;
+        break;
+      case UI.sortMethods.points:
+        this.sortByPointsButton.checked = true;
+        break;
+      default:
+      case UI.sortMethods.default:
+        this.sortByDefaultButton.checked = true;
+        break;
+    }
+
+    this.maximumWidthInput.value = config.ACHIV_MAX_SIZE;
+    this.minimumWidthInput.value = config.ACHIV_MIN_SIZE;
+    this.reverseSortButton.checked = config.reverseSort == -1;
+    this.stretchButton.checked = config.stretchAchievements;
+
     config.achivsBgVisibility ? this.section.classList.add("bg-visible") : "";
   }
   clearAchievementsSection() {
@@ -408,7 +454,7 @@ class AchievementsBlock {
     this.displaySortedAchievements(achivs);
 
     // Підгонка розміру досягнень
-    ui.settings.fitSizeVertically();
+    this.fitSizeVertically();
   }
 
   displaySortedAchievements(achievementsObject) {
@@ -547,10 +593,71 @@ class AchievementsBlock {
       achivDetails.classList.add("top-side");
     }
   }
+  // Автопідбір розміру значків ачівментсів
+  fitSizeVertically(isLoadDynamic = false) {
+    // Отримання посилання на блок досягнень та його дочірні елементи
+    const { section, container } = this;
+    // Отримання розмірів вікна блоку досягнень
+    let windowHeight, windowWidth;
+    if (isLoadDynamic) {
+      windowHeight = section.clientHeight - 35;
+      windowWidth = section.clientWidth;
+    } else {
+      windowHeight = parseInt(config.ui.achievements_section.height) - 35;
+      windowWidth = parseInt(config.ui.achievements_section.width);
+    }
+
+    const achivs = Array.from(container.children);
+    const achivsCount = achivs.length;
+    // Перевірка, чи є елементи в блоці досягнень
+    if (achivsCount === 0) return;
+    // Початкова ширина досягнення для розрахунку
+    let achivWidth = Math.floor(
+      Math.sqrt((windowWidth * windowHeight) / achivsCount)
+    );
+
+    let rowsCount, colsCount;
+    // Цикл для знаходження оптимального розміру досягнень
+    do {
+      achivWidth--;
+      rowsCount = Math.floor(windowHeight / (achivWidth + 2));
+      colsCount = Math.floor(windowWidth / (achivWidth + 2));
+    } while (
+      rowsCount * colsCount < achivsCount &&
+      achivWidth > config.ACHIV_MIN_SIZE
+    );
+    achivWidth =
+      achivWidth < config.ACHIV_MIN_SIZE
+        ? config.ACHIV_MIN_SIZE
+        : achivWidth > config.ACHIV_MAX_SIZE
+        ? config.ACHIV_MAX_SIZE
+        : achivWidth;
+    // Встановлення розміру кожного досягнення в блоку
+    // container.style.gridTemplateColumns = `repeat(${colsCount}, ${achivWidth}px)`;
+    // achivs.forEach((achiv) => (achiv.style.height = achivWidth + "px"));
+    container.style.setProperty("--achiv-height", achivWidth + "px");
+  }
+  applySorting() {
+    // Клікає на кнопку перевірки ідентифікатора для виконання сортування
+    ui.settings.checkIdButton.click();
+  }
+  applyFilter() {
+    // filterButton.parentNode
+    //   .querySelectorAll(".checked")
+    //   .forEach((child) => child.classList.remove("checked"));
+    // filterButton.classList.add("checked");
+    // Клікає на кнопку перевірки ідентифікатора для виконання сортування
+    ui.settings.checkIdButton.click();
+  }
 }
 
 class ButtonPanel {
   constructor() {
+    this.initializeElements();
+    this.addEvents();
+    this.setValues();
+  }
+  initializeElements() {
     this.section = document.querySelector("#buttons_section");
     this.header = document.querySelector("#buttons-header_container");
     this.settings = document.querySelector("#open-settings-button");
@@ -561,13 +668,36 @@ class ButtonPanel {
     this.target = document.querySelector("#open-target-button");
     this.status = document.querySelector("#open-status-button");
     this.awards = document.querySelector("#open-awards-button");
+  }
+  addEvents() {
     this.header.addEventListener("mousedown", (e) => {
       UI.moveEvent(this.section, e);
     });
   }
+  setValues() {
+    // Встановлення початкових індикаторів віджетів
+    this.achievements.checked =
+      !config.ui?.achievements_section?.hidden ?? true;
+
+    this.settings.checked = !config.ui?.settings_section?.hidden ?? true;
+
+    this.login.checked = !config.ui?.login_section?.hidden ?? true;
+
+    this.target.checked = !config.ui?.target_section?.hidden ?? true;
+
+    this.gameCard.checked = !config.ui?.game_section?.hidden ?? true;
+
+    this.status.checked = !config.ui?.["update-section"]?.hidden ?? true;
+
+    this.awards.checked = !config.ui?.awards_section?.hidden ?? true;
+  }
 }
 class StatusPanel {
   constructor() {
+    this.initializeElements();
+    this.addEvents();
+  }
+  initializeElements() {
     this.section = document.querySelector("#update-section");
     this.gamePreview = document.querySelector("#game-preview"); // Іконка гри
     this.textBlock = document.querySelector("#update-text-block");
@@ -578,6 +708,8 @@ class StatusPanel {
     this.progresBar = document.querySelector("#status-progress-bar");
     this.progressStatusText = document.querySelector("#status-progress-text");
     this.resizer = document.querySelector("#status-resizer");
+  }
+  addEvents() {
     this.watchButton.addEventListener("mousedown", (e) => {
       e.stopPropagation();
     });
@@ -660,24 +792,14 @@ class Settings {
   constructor() {
     this.initializeElements();
     this.addEvents();
+    this.setValues();
   }
   initializeElements() {
     // Елементи налаштувань
     this.section = document.querySelector("#settings_section"); //* Контейнер налаштувань
     this.header = document.querySelector(".prefs-header-container");
     this.updateInterval = document.querySelector("#update-time"); // Поле введення інтервалу оновлення
-    this.sortByLatestButton = document.querySelector("#sort-by-latest"); // Кнопка сортування за останніми
-    this.sortByEarnedButton = document.querySelector("#sort-by-earned"); // Кнопка сортування за заробленими
-    this.sortByPointsButton = document.querySelector("#sort-by-points"); // Кнопка сортування за балами
-    this.sortByDefaultButton = document.querySelector("#sort-by-default"); // Кнопка сортування за замовчуванням
-    this.reverseSortButton = document.querySelector("#reverse-sort"); // Чекбокс сортування по зворотньому порядку
 
-    this.filterByAllRadio = document.querySelector("#filter-by-all"); // Фільтр за всіма
-    this.filterByEarnedRadio = document.querySelector("#filter-by-earned"); // Фільтр за заробленими
-    this.filterByMissableRadio = document.querySelector("#filter-by-missable"); // Фільтр за всіма
-    this.filterByNotEarnedRadio = document.querySelector(
-      "#filter-by-not-earned"
-    ); // Фільтр за не заробленими
     //!-------------------------------[ COLORS ]-----------------------------
     this.mainColorInput = document.querySelector("#main-color-input");
     this.secondaryColorInput = document.querySelector("#secondary-color-input");
@@ -692,117 +814,51 @@ class Settings {
     );
     //!-----------------------------------------
 
-    this.stretchButton = document.querySelector("#stretch-achivs");
-    this.minimumWidthInput = document.querySelector("#achiv-min-width");
-    this.maximumWidthInput = document.querySelector("#achiv-max-width");
     this.targetUserInput = document.querySelector("#target-user");
     this.gameID = document.querySelector("#game-id"); // Поле введення ідентифікатора гри
     this.getGameIdButton = document.querySelector(".get-id-button"); // Кнопка отримання ідентифікатора гри
     this.checkIdButton = document.querySelector(".check-id-button"); // Кнопка перевірки ідентифікатора гри
     this.startOnLoadCheckbox = document.querySelector("#update-on-load");
   }
+  setValues() {
+    // this.settings.stretchButton.classList
+    // Отримати ідентифікатор гри з localStorage та встановити його значення
+    this.gameID.value = config.gameID;
 
+    this.targetUserInput.value = config.targetUser ?? config.USER_NAME;
+    this.targetUserInput.setAttribute(
+      "placeholder",
+      config.USER_NAME || "your username if empty"
+    );
+    this.updateInterval.value = config.updateDelay;
+
+    this.mainColorInput.value = config.mainColor;
+    this.secondaryColorInput.value = config.secondaryColor;
+    this.accentColorInput.value = config.accentColor;
+    this.fontColorInput.value = config.fontColor;
+    this.selectionColorInput.value = config.selectionColor;
+    this.colorPresetSelector.value = config.colorsPreset;
+    this.colorPresetSelector.dispatchEvent(new Event("change"));
+    this.showBackgroundCheckbox.checked = config.bgVisibility;
+    this.startOnLoadCheckbox.checked = config.startOnLoad;
+  }
   addEvents() {
     // Додаємо обробник події 'change' для поля введення інтервалу оновлення
     this.updateInterval.addEventListener("change", () => {
       // Оновлюємо інтервал оновлення
       config.updateDelay = this.updateInterval.value || 5;
     });
-
+    this.showBackgroundCheckbox.addEventListener("change", (e) => {
+      config.bgVisibility = this.showBackgroundCheckbox.checked;
+      document.querySelector("#background-animation").style.display =
+        config.bgVisibility ? "block" : "none";
+    });
     // Додаємо обробник події 'change' для поля введення ідентифікатора гри
     this.gameID.addEventListener("change", () => {
       // Оновлюємо ідентифікатор гри
       config.gameID = this.gameID.value;
     });
 
-    // Додає подію кліку для сортування за замовчуванням
-    this.sortByDefaultButton.addEventListener("click", (e) => {
-      e.stopPropagation();
-      // Встановлює метод сортування за замовчуванням
-      UI.SORT_METHOD = UI.sortMethods.default;
-      // Застосовує сортування та оновлює інтерфейс
-      this.applySorting();
-    });
-
-    // Додає подію кліку для сортування за отриманням досягнення
-    this.sortByEarnedButton.addEventListener("click", (e) => {
-      e.stopPropagation();
-      // Встановлює метод сортування за отриманням досягнення
-      UI.SORT_METHOD = UI.sortMethods.earnedCount;
-      // Застосовує сортування та оновлює інтерфейс
-      this.applySorting();
-    });
-
-    // Додає подію кліку для сортування за датою отримання
-    this.sortByLatestButton.addEventListener("click", (e) => {
-      e.stopPropagation();
-      // Встановлює метод сортування за датою отримання
-      UI.SORT_METHOD = UI.sortMethods.latest;
-      // Застосовує сортування та оновлює інтерфейс
-      this.applySorting();
-    });
-
-    // Додає подію кліку для сортування за кількістю балів
-    this.sortByPointsButton.addEventListener("click", (e) => {
-      e.stopPropagation();
-      // Встановлює метод сортування за кількістю балів
-      UI.SORT_METHOD = UI.sortMethods.points;
-      // Застосовує сортування та оновлює інтерфейс
-      this.applySorting();
-    });
-    this.reverseSortButton.addEventListener("click", (e) => {
-      e.stopPropagation();
-      // Встановлює reverse сортування
-      UI.REVERSE_SORT = this.reverseSortButton.checked;
-      // Застосовує сортування та оновлює інтерфейс
-      this.applySorting();
-    });
-    // Додає подію кліку для фільтрування
-    this.filterByEarnedRadio.addEventListener("click", (e) => {
-      e.stopPropagation();
-      UI.FILTER_METHOD = UI.filterMethods.earned;
-      this.applyFilter();
-    });
-    this.filterByNotEarnedRadio.addEventListener("click", (e) => {
-      e.stopPropagation();
-      UI.FILTER_METHOD = UI.filterMethods.notEarned;
-      this.applyFilter();
-    });
-    this.filterByAllRadio.addEventListener("click", (e) => {
-      e.stopPropagation();
-      UI.FILTER_METHOD = UI.filterMethods.all;
-      this.applyFilter();
-    });
-    this.filterByMissableRadio.addEventListener("click", (e) => {
-      e.stopPropagation();
-      UI.FILTER_METHOD = UI.filterMethods.missable;
-      this.applyFilter();
-    });
-    this.showBackgroundCheckbox.addEventListener("change", (e) => {
-      config.bgVisibility = this.showBackgroundCheckbox.checked;
-      document.querySelector("#background-animation").style.display =
-        config.bgVisibility ? "block" : "none";
-    });
-    this.stretchButton.addEventListener("click", (e) => {
-      config.stretchAchievements = this.stretchButton.checked;
-      ui.achievementsBlock.container.style.height = config.stretchAchievements
-        ? "100%"
-        : "auto";
-      // ui.achievementsBlock.container.style.justifyContent =
-      //   config.stretchAchievements ? "space-between" : "start";
-    });
-    this.minimumWidthInput.addEventListener("change", (e) => {
-      const { minimumWidthInput } = this;
-      if (minimumWidthInput.value)
-        config.ACHIV_MIN_SIZE = minimumWidthInput.value;
-      this.fitSizeVertically();
-    });
-    this.maximumWidthInput.addEventListener("change", (e) => {
-      const { maximumWidthInput } = this;
-      if (maximumWidthInput.value)
-        config.ACHIV_MAX_SIZE = maximumWidthInput.value;
-      this.fitSizeVertically();
-    });
     this.mainColorInput.addEventListener("change", (e) => {
       e.stopPropagation();
       config.mainColor = this.mainColorInput.value;
@@ -865,63 +921,17 @@ class Settings {
       UI.moveEvent(this.section, e);
     });
   }
-  applySorting() {
-    // Клікає на кнопку перевірки ідентифікатора для виконання сортування
-    this.checkIdButton.click();
-  }
-  applyFilter() {
-    // filterButton.parentNode
-    //   .querySelectorAll(".checked")
-    //   .forEach((child) => child.classList.remove("checked"));
-    // filterButton.classList.add("checked");
-    // Клікає на кнопку перевірки ідентифікатора для виконання сортування
-    this.checkIdButton.click();
-  }
-
-  // Автопідбір розміру значків ачівментсів
-  fitSizeVertically() {
-    // Отримання посилання на блок досягнень та його дочірні елементи
-    const { section, container } = ui.achievementsBlock;
-    const achivs = Array.from(container.children);
-    const achivsCount = achivs.length;
-
-    // Перевірка, чи є елементи в блоці досягнень
-    if (achivsCount === 0) return;
-
-    // Отримання розмірів вікна блоку досягнень
-    const windowHeight = section.clientHeight - 35;
-    const windowWidth = section.clientWidth;
-
-    // Початкова ширина досягнення для розрахунку
-    let achivWidth = Math.floor(
-      Math.sqrt((windowWidth * windowHeight) / achivsCount)
-    );
-
-    let rowsCount, colsCount;
-    // Цикл для знаходження оптимального розміру досягнень
-    do {
-      achivWidth--;
-      rowsCount = Math.floor(windowHeight / (achivWidth + 2));
-      colsCount = Math.floor(windowWidth / (achivWidth + 2));
-    } while (
-      rowsCount * colsCount < achivsCount &&
-      achivWidth > config.ACHIV_MIN_SIZE
-    );
-    achivWidth =
-      achivWidth < config.ACHIV_MIN_SIZE
-        ? config.ACHIV_MIN_SIZE
-        : achivWidth > config.ACHIV_MAX_SIZE
-        ? config.ACHIV_MAX_SIZE
-        : achivWidth;
-    // Встановлення розміру кожного досягнення в блоку
-    // container.style.gridTemplateColumns = `repeat(${colsCount}, ${achivWidth}px)`;
-    // achivs.forEach((achiv) => (achiv.style.height = achivWidth + "px"));
-    container.style.setProperty("--achiv-height", achivWidth + "px");
-  }
 }
 
 class GameCard {
   constructor() {
+    this.initializeElements();
+    this.addEvents();
+    //-----------
+
+    // Додавання подій для пересування вікна картки гри
+  }
+  initializeElements() {
     // Елементи інформації про гру
     this.section = document.querySelector(".game-card_section"); // Контейнер інформації про гру
     this.header = document.querySelector("#game-card-header"); // Заголовок гри
@@ -932,9 +942,8 @@ class GameCard {
     this.genre = document.querySelector("#game-card-genre"); // Жанр гри
     this.released = document.querySelector("#game-card-released"); // Дата випуску гри
     this.completion = document.querySelector("#game-card-completion"); // Статус завершення гри
-    //-----------
-
-    // Додавання подій для пересування вікна картки гри
+  }
+  addEvents() {
     this.section.addEventListener("mousedown", (e) => {
       UI.moveEvent(this.section, e);
     });
@@ -977,10 +986,16 @@ class Awards {
     beatenHardcore: "beatenHardcore",
   };
   constructor() {
+    this.initializeElements();
+    this.addEvents();
+  }
+  initializeElements() {
     this.section = document.querySelector(".awards_section"); // Контейнер інформації про гру
     this.header = document.querySelector(".awards-header_container");
     this.container = document.querySelector(".awards-content_container");
     this.resizer = document.querySelector("#awards-resizer");
+  }
+  addEvents() {
     // Додавання подій для пересування вікна досягнень
     this.header.addEventListener("mousedown", (e) => {
       UI.moveEvent(this.section, e);
@@ -1154,6 +1169,11 @@ class Awards {
 class Target {
   filterMethod = UI.filterMethods.all;
   constructor() {
+    this.initializeElements();
+    this.setValues();
+    this.addEvents();
+  }
+  initializeElements() {
     this.section = document.querySelector("#target_section");
     this.header = document.querySelector(".target-header_container");
     this.container = document.querySelector(".target-container");
@@ -1167,8 +1187,6 @@ class Target {
     );
     this.filterByAllRadio = document.querySelector("#target-filter-all");
     this.resizer = document.querySelector("#target-resizer");
-    this.setValues();
-    this.addEvents();
   }
   setValues() {
     this.autoClearInput.value = config.autoClearTargetTime;
@@ -1336,15 +1354,33 @@ class Target {
 
 class LoginCard {
   constructor() {
+    this.initializeElements();
+    this.addEvents();
+    this.setValues();
+  }
+  initializeElements() {
     this.section = document.querySelector("#login_section");
     this.header = document.querySelector(".login-header_container");
     this.userName = document.querySelector("#login-user-name");
     this.apiKey = document.querySelector("#login-api-key");
     this.userImage = document.querySelector(".login-user-image");
-    //
+  }
+  addEvents() {
     this.header.addEventListener("mousedown", (e) => {
       UI.moveEvent(this.section, e);
     });
+  }
+  setValues() {
+    // Встановити ключ API з об'єкта ідентифікації користувача
+    this.apiKey.value = config.API_KEY;
+
+    // Встановити значення логіну та API з об'єкта ідентифікації користувача
+    this.userName.value = config.USER_NAME;
+    this.userImage.src = config.userImageSrc;
+
+    if (config.identConfirmed) {
+      this.section.querySelector(".submit-login").classList.add("verified");
+    }
   }
 }
 

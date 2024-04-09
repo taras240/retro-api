@@ -8,10 +8,12 @@ const sections = {
   panel: "./elements/panel.elem",
   settings: "./elements/settings.elem",
   awards: "./elements/awards.elem",
+  status: "./elements/status.elem",
 };
 
 // Функція для завантаження розділів
 async function loadSections() {
+  return;
   try {
     // Проходимося по кожному імені розділу в об'єкті sections
     for (const sectionName in sections) {

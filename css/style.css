@@ -20,15 +20,6 @@ h3 {
   font-weight: 600;
   font-size: 1.1rem;
 }
-a {
-  color: inherit;
-  transition: 0.2s;
-}
-a:hover {
-  color: var(--accent-color);
-  background-color: var(--font-color);
-  text-decoration: underline;
-}
 input[type="number"] {
   -moz-appearance: textfield;
 }
@@ -55,7 +46,15 @@ body {
   max-height: 100vh;
   max-width: 100vw;
 }
-
+a {
+  color: inherit;
+  transition: 0.2s;
+}
+a:hover {
+  color: var(--accent-color);
+  background-color: var(--font-color);
+  text-decoration: underline;
+}
 .wrapper {
   height: 100%;
 }
@@ -126,6 +125,7 @@ body {
   transition: 0.2s;
 }
 .header-button:hover svg,
+.checked .header-settings_button svg,
 .paste-api-key:hover svg {
   opacity: 1;
   padding: 0;
@@ -137,7 +137,67 @@ body {
   padding: 2px;
   transition: 0.2s;
 }
+.header-settings_button svg {
+  padding: 3px;
+}
+.achivs-settings-block.checked {
+}
+.header-settings-container {
+  display: none;
+}
+.widget-settings_header-container {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+}
+.checked .header-settings-container {
+  display: block;
+  position: fixed;
+  top: 50vh;
+  left: 50vw;
+  transform: translate(-50%, -50%);
+  background-color: var(--main-color);
+  min-width: 350px;
+  border-radius: 5px;
+  overflow: hidden;
+  z-index: 2000;
+  box-shadow: 0px 4px 9px 0px black;
+  visibility: hidden;
+  opacity: 0;
+  transition: 0.2s ease-in;
+}
 
+.checked .header-settings-container {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: all;
+}
+.header-settings-item {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+.header-settings-item:nth-child(even) {
+  background-color: var(--secondary-color);
+}
+.header-setting-label {
+  flex: 1;
+  text-align: left;
+  font-weight: 600;
+  font-size: 1rem;
+}
+.number-input.free-width {
+  min-width: auto;
+}
+.setting-input-values {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: end;
+  gap: 10px;
+}
 /**---------[ Resizer ]---------------------------- */
 .resizer {
   position: absolute;

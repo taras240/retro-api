@@ -251,7 +251,7 @@
 .achiv-block.expanded .achiv-details-block {
   width: calc(300px + var(--achiv-height));
   min-height: calc(var(--achiv-height));
-  background-color: var(--main-color);
+  background-color: var(--secondary-color);
   top: 50%;
   left: 0px;
   margin: 0;
