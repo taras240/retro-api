@@ -1433,8 +1433,8 @@ const sortBy = {
 
 //* Методи фільтрування для досягнень гри
 const filterBy = {
-  earned: (achievement) => achievement.DateEarnedHardcore !== "undefined",
-  notEarned: (achievement) => achievement.DateEarnedHardcore == "undefined",
+  earned: (achievement) => achievement.DateEarnedHardcore,
+  notEarned: (achievement) => !achievement.DateEarnedHardcore,
   missable: (achievement) => achievement.type === "missable",
   all: () => true,
 };
