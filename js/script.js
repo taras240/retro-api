@@ -129,6 +129,7 @@ function startWatching() {
   }, config.updateDelayInMiliSecs);
 }
 let TOTAL_POINTS = 0;
+let SOFTCORE_POINTS = 0;
 async function checkUpdates() {
   const responce = await apiWorker.getProfileInfo({});
   if (responce.LastGameID != config.gameID) {
@@ -139,9 +140,13 @@ async function checkUpdates() {
       getAchievements();
     }
   }
-  if (responce.TotalPoints != TOTAL_POINTS) {
+  if (
+    responce.TotalPoints != TOTAL_POINTS ||
+    responce.TotalSoftcorePoints != SOFTCORE_POINTS
+  ) {
     updateAchievements();
     TOTAL_POINTS = responce.TotalPoints;
+    SOFTCORE_POINTS = responce.TotalSoftcorePoints;
   }
   ui.statusPanel.richPresence.innerText = responce.RichPresenceMsg;
 }
