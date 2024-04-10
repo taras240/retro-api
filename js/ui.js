@@ -519,7 +519,9 @@ class AchievementsBlock {
     achivElement.dataset.achivId = ID;
     achivElement.dataset.Points = Points;
     achivElement.dataset.NumAwardedHardcore = NumAwardedHardcore;
-    achivElement.dataset.DateEarnedHardcore = DateEarnedHardcore;
+    DateEarnedHardcore
+      ? (achivElement.dataset.DateEarnedHardcore = DateEarnedHardcore)
+      : "";
     achivElement.dataset.type = type;
     achivElement.dataset.pointStyle =
       Points < 10 ? "poor" : Points < 20 ? "normal" : "reach";

@@ -89,7 +89,9 @@ async function updateAchievements() {
         targetElement?.classList.add("earned");
 
         if (isHardcore) {
-          achievementElement?.classList.add("hardcore");
+          achievementElement.classList.add("hardcore");
+          achievementElement.dataset.DateEarnedHardcore =
+            achievement?.DateEarnedHardcore;
           targetElement?.classList.add("hardcore");
           if (targetElement && config.autoClearTarget) {
             setTimeout(
@@ -107,7 +109,11 @@ async function updateAchievements() {
 }
 
 function switchElementToStart(element) {
-  element.parentNode.insertBefore(element, element.parentNode.firstChild);
+  if (UI.REVERSE_SORT == -1) {
+    ui.achievementsBlock.container.appendChild(element);
+  } else {
+    element.parentNode.insertBefore(element, element.parentNode.firstChild);
+  }
 }
 // Функція для початку слідкування за досягненнями
 function startWatching() {
