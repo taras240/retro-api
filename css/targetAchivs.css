@@ -85,23 +85,24 @@
   position: absolute;
   bottom: 10px;
   right: 10px;
-  height: 24px;
-  background-color: rgb(0, 0, 0);
-  border-radius: 50%;
-  overflow: hidden;
-  z-index: 10;
+  height: 20px;
+  aspect-ratio: 1;
+  background-color: transparent;
+  z-index: 2;
   opacity: 0;
   transition: 0.2s;
 }
 .delete-from-target svg {
   padding: 1px;
-  fill: white;
+  fill: var(--font-color);
+  height: 100%;
 }
 .target-achiv:hover .delete-from-target {
   opacity: 0.8;
   transition: 0.2s;
 }
 .target-achiv:hover .delete-from-target:hover {
+  transform: scale(1.1);
   opacity: 1;
   transition: 0.2s;
 }
