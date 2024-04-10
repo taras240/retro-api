@@ -18,6 +18,12 @@ class UI {
   static get FILTER_METHOD() {
     return filterBy[config.filterAchievementsBy];
   }
+  static set REVERSE_FILTER(value) {
+    config.reverseFilter = value;
+  }
+  static get REVERSE_FILTER() {
+    return config.reverseFilter;
+  }
   static filterMethods = {
     all: "all",
     earned: "earned",
@@ -280,7 +286,8 @@ class AchievementsBlock {
     this.filterByMissableRadio = document.querySelector("#filter-by-missable"); // Фільтр за всіма
     this.filterByNotEarnedRadio = document.querySelector(
       "#filter-by-not-earned"
-    ); // Фільтр за не заробленими
+    );
+    this.reverseFilterCheckbox = document.querySelector("#reverse-filter"); // Фільтр за не заробленими
 
     this.container = document.querySelector(".achievements-container"); //Контейнер  з досягненнями
     this.resizer = document.querySelector("#achivs-resizer"); // Ресайзер блока досягнень
@@ -344,11 +351,11 @@ class AchievementsBlock {
       UI.FILTER_METHOD = UI.filterMethods.earned;
       this.applyFilter();
     });
-    this.filterByNotEarnedRadio.addEventListener("click", (e) => {
-      e.stopPropagation();
-      UI.FILTER_METHOD = UI.filterMethods.notEarned;
+    this.reverseFilterCheckbox.addEventListener("change", (e) => {
+      UI.REVERSE_FILTER = this.reverseFilterCheckbox.checked;
       this.applyFilter();
     });
+
     this.filterByAllRadio.addEventListener("click", (e) => {
       e.stopPropagation();
       UI.FILTER_METHOD = UI.filterMethods.all;
@@ -365,8 +372,6 @@ class AchievementsBlock {
       this.container.style.height = config.stretchAchievements
         ? "100%"
         : "auto";
-      // ui.achievementsBlock.container.style.justifyContent =
-      //   config.stretchAchievements ? "space-between" : "start";
     });
     this.minimumWidthInput.addEventListener("change", (e) => {
       const { minimumWidthInput } = this;
@@ -402,9 +407,6 @@ class AchievementsBlock {
       case UI.filterMethods.earned:
         this.filterByEarnedRadio.checked = true;
         break;
-      case UI.filterMethods.notEarned:
-        this.filterByNotEarnedRadio.checked = true;
-        break;
       case UI.filterMethods.missable:
         this.filterByMissableRadio.checked = true;
         break;
@@ -412,6 +414,7 @@ class AchievementsBlock {
         this.filterByAllRadio.checked = true;
         break;
     }
+    this.reverseFilterCheckbox.checked = UI.REVERSE_FILTER;
     switch (config.sortAchievementsBy) {
       case UI.sortMethods.default:
         this.sortByDefaultButton.checked = true;
@@ -451,21 +454,21 @@ class AchievementsBlock {
     ui.updateGameInfo(achivs);
 
     // Відсортувати досягнення та відобразити їх
-    this.displaySortedAchievements(achivs);
+    this.displayAchievements(achivs);
 
     // Підгонка розміру досягнень
     this.fitSizeVertically();
+
+    this.applyFilter();
+    this.applySorting();
   }
 
-  displaySortedAchievements(achievementsObject) {
-    Object.values(achievementsObject.Achievements)
-      .filter((a) => UI.FILTER_METHOD(a))
-      .sort((a, b) => UI.SORT_METHOD(a, b) * UI.REVERSE_SORT)
-      .forEach((achievement) => {
-        this.displayAchievement(
-          this.fixAchievement(achievement, achievementsObject)
-        );
-      });
+  displayAchievements(achievementsObject) {
+    Object.values(achievementsObject.Achievements).forEach((achievement) => {
+      this.displayAchievement(
+        this.fixAchievement(achievement, achievementsObject)
+      );
+    });
   }
 
   displayAchievement(achievement) {
@@ -492,7 +495,16 @@ class AchievementsBlock {
   }
 
   generateAchievement(achievement) {
-    const { ID, Points, isEarned, isHardcoreEarned, prevSrc } = achievement;
+    const {
+      ID,
+      Points,
+      isEarned,
+      isHardcoreEarned,
+      prevSrc,
+      NumAwardedHardcore,
+      DateEarnedHardcore,
+      type,
+    } = achievement;
 
     let achivElement = document.createElement("li");
     achivElement.classList.add("achiv-block");
@@ -505,7 +517,11 @@ class AchievementsBlock {
     }
 
     achivElement.dataset.achivId = ID;
-    achivElement.dataset.points =
+    achivElement.dataset.Points = Points;
+    achivElement.dataset.NumAwardedHardcore = NumAwardedHardcore;
+    achivElement.dataset.DateEarnedHardcore = DateEarnedHardcore;
+    achivElement.dataset.type = type;
+    achivElement.dataset.pointStyle =
       Points < 10 ? "poor" : Points < 20 ? "normal" : "reach";
 
     let previewContainer = document.createElement("div");
@@ -638,16 +654,21 @@ class AchievementsBlock {
     container.style.setProperty("--achiv-height", achivWidth + "px");
   }
   applySorting() {
-    // Клікає на кнопку перевірки ідентифікатора для виконання сортування
-    ui.settings.checkIdButton.click();
+    let achivsArray = [...this.container.querySelectorAll(".achiv-block")];
+    achivsArray.sort(
+      (a, b) => UI.SORT_METHOD(a.dataset, b.dataset) * UI.REVERSE_SORT
+    );
+    this.container.innerHTML = "";
+    achivsArray.forEach((achiv) => this.container.appendChild(achiv));
   }
   applyFilter() {
-    // filterButton.parentNode
-    //   .querySelectorAll(".checked")
-    //   .forEach((child) => child.classList.remove("checked"));
-    // filterButton.classList.add("checked");
-    // Клікає на кнопку перевірки ідентифікатора для виконання сортування
-    ui.settings.checkIdButton.click();
+    let achivsArray = [...this.container.querySelectorAll(".achiv-block")];
+    achivsArray.forEach((a) => {
+      a.classList.toggle(
+        "hidden",
+        !UI.FILTER_METHOD(a.dataset) ^ UI.REVERSE_FILTER
+      );
+    });
   }
 }
 
@@ -1405,13 +1426,13 @@ const sortBy = {
 
   points: (a, b) => a.Points - b.Points,
 
-  default: (a, b) => 0,
+  default: (a, b) => a.achivId - b.achivId,
 };
 
 //* Методи фільтрування для досягнень гри
 const filterBy = {
-  earned: (achievement) => achievement.DateEarnedHardcore,
-  notEarned: (achievement) => !achievement.DateEarnedHardcore,
+  earned: (achievement) => achievement.DateEarnedHardcore !== "undefined",
+  notEarned: (achievement) => achievement.DateEarnedHardcore == "undefined",
   missable: (achievement) => achievement.type === "missable",
   all: () => true,
 };

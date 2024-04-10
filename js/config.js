@@ -97,7 +97,13 @@ class Config {
     this._cfg.settings.filterBy = value;
     this.writeConfiguration();
   }
-
+  get reverseFilter() {
+    return this._cfg.settings.reverseFilter ?? false;
+  }
+  set reverseFilter(value) {
+    this._cfg.settings.reverseFilter = value;
+    this.writeConfiguration();
+  }
   get sortAchievementsBy() {
     return this._cfg.settings.sortBy || "default";
   }
@@ -346,12 +352,12 @@ const colorPresets = {
     fontColor: "#000000",
     selectionColor: "#50C4ED",
   },
-  gray:{
+  gray: {
     mainColor: "#808080",
     secondaryColor: "#757575",
     accentColor: "#cfcfcf",
     fontColor: "#000000",
-    selectionColor: "#2ab754"
+    selectionColor: "#2ab754",
   },
   default: {
     mainColor: "#2f2187",

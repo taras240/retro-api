@@ -53,17 +53,17 @@
                 <label class="settings-input" for="filter-by-earned">earned</label>
 
               </div>
-              <div class="setting-radio-group">
-                <input type="radio" name="filter" id="filter-by-not-earned" class="filter-achivs-radio ">
-                </input>
-                <label class="settings-input" for="filter-by-not-earned">not earned</label>
 
-              </div>
               <div class="setting-radio-group">
                 <input checked type="radio" name="filter" id="filter-by-all" class="filter-achivs-radio ">
                 </input>
                 <label class="settings-input" for="filter-by-all">all</label>
 
+              </div>
+              <div class="setting-radio-group">
+                <input type="checkbox" name="reverse" id="reverse-filter">
+                </input>
+                <label class="settings-input" for="reverse-filter">reverse</label>
               </div>
             </div>
 
