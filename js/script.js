@@ -90,8 +90,7 @@ async function updateAchievements() {
 
         if (isHardcore) {
           achievementElement.classList.add("hardcore");
-          achievementElement.dataset.DateEarnedHardcore =
-            achievement?.DateEarnedHardcore;
+          achievementElement.dataset.DateEarnedHardcore = achievement?.Date;
           targetElement?.classList.add("hardcore");
           if (targetElement && config.autoClearTarget) {
             setTimeout(
