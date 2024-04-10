@@ -98,6 +98,7 @@ async function updateAchievements() {
             );
           }
         }
+        ui.achievementsBlock.applyFilter();
       }
     });
   } catch (error) {
