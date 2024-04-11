@@ -111,6 +111,34 @@ class Config {
     this._cfg.settings.sortBy = value;
     this.writeConfiguration();
   }
+  get sortTargetBy() {
+    return this._cfg.settings.sortTargetBy || "points";
+  }
+  set sortTargetBy(value) {
+    this._cfg.settings.sortTargetBy = value;
+    this.writeConfiguration();
+  }
+  get reverseSortTarget() {
+    return this._cfg.settings.reverseSortTarget || "1";
+  }
+  set reverseSortTarget(value) {
+    this._cfg.settings.reverseSortTarget = value ? "-1" : "1";
+    this.writeConfiguration();
+  }
+  get filterTargetBy() {
+    return this._cfg.settings.filterTargetBy || "all";
+  }
+  set filterTargetBy(value) {
+    this._cfg.settings.filterTargetBy = value;
+    this.writeConfiguration();
+  }
+  get targetMoveToTop() {
+    return this._cfg.settings.targetMoveToTop;
+  }
+  set targetMoveToTop(value) {
+    this._cfg.settings.targetMoveToTop = value;
+    this.writeConfiguration();
+  }
   get reverseSort() {
     return this._cfg.settings.reverseSort || "1";
   }

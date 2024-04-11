@@ -157,7 +157,7 @@ a:hover {
   left: 50vw;
   transform: translate(-50%, -50%);
   background-color: var(--main-color);
-  min-width: 350px;
+  width: 350px;
   border-radius: 5px;
   overflow: hidden;
   z-index: 2000;
@@ -198,6 +198,7 @@ a:hover {
   justify-content: end;
   gap: 10px;
 }
+
 /**---------[ Resizer ]---------------------------- */
 .resizer {
   position: absolute;

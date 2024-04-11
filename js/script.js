@@ -74,7 +74,8 @@ async function updateAchievements() {
         const isAchieved = isNotEarned || isHardcoreMismatch;
         // Перевірка, чи потрібно перемістити елемент на початок
         if (isLatestSort && isAchieved) {
-          switchElementToStart(achievementElement);
+          ui.achievementsBlock.moveToTop(achievementElement);
+          ui.target.moveToTop(targetElement);
         }
         if (isAchieved) {
           updateAwards();
@@ -97,6 +98,7 @@ async function updateAchievements() {
             );
           }
         }
+
         ui.achievementsBlock.applyFilter();
       }
     });
@@ -105,13 +107,6 @@ async function updateAchievements() {
   }
 }
 
-function switchElementToStart(element) {
-  if (config.reverseSort == -1) {
-    ui.achievementsBlock.container.appendChild(element);
-  } else {
-    element.parentNode.insertBefore(element, element.parentNode.firstChild);
-  }
-}
 // Функція для початку слідкування за досягненнями
 function startWatching() {
   // Оновлення стану та тексту кнопки слідкування

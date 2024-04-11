@@ -55,6 +55,46 @@
             </div>
           </li>
           <li class="header-settings-item">
+            <label class="header-setting-label" title="sort methods">Sort:</label>
+            <div class="setting-input-values">
+              <div class="setting-radio-group">
+                <input type="radio" name="target-sort" id="target-sort-rarest" class="filter-achivs-radio ">
+                </input>
+
+                <label class="settings-input" for="target-sort-rarest">rarest</label>
+
+              </div>
+              <div class="setting-radio-group">
+                <input type="radio" name="target-sort" id="target-sort-truepoints" class="filter-achivs-radio ">
+                </input>
+
+                <label class="settings-input" for="target-sort-truepoints">retropoints</label>
+
+              </div>
+              <div class="setting-radio-group">
+                <input type="radio" name="target-sort" id="target-sort-points" class="filter-achivs-radio ">
+                </input>
+
+                <label class="settings-input" for="target-sort-points">points</label>
+
+              </div>
+              <div class="setting-radio-group">
+                <input type="radio" name="target-sort" id="target-sort-default" checked="true"
+                  class="filter-achivs-radio ">
+                </input>
+
+                <label class="settings-input" for="target-sort-default">default</label>
+
+              </div>
+              <div class="setting-radio-group">
+                <input type="checkbox" name="reverse" id="target-reverse-sort">
+                </input>
+                <label class="settings-input" for="target-reverse-sort">reverse</label>
+              </div>
+            </div>
+
+          </li>
+          <li class="header-settings-item">
             <label class="header-setting-label" title="filter methods">Filter:</label>
             <div class="setting-radio-group">
               <input type="radio" name="target-filter" id="target-filter-missable" class="filter-achivs-radio ">
@@ -70,6 +110,15 @@
 
               <label class="settings-input" for="target-filter-all">all</label>
 
+            </div>
+          </li>
+          <li class="header-settings-item">
+            <label class="header-setting-label" title="move your last earned achievement to top">Move new to
+              top:</label>
+            <div class="setting-radio-group">
+              <input type="checkbox" name="target-move-to-top" id="target-move-to-top">
+              </input>
+              <label class="settings-input " for="target-move-to-top">move</label>
             </div>
           </li>
         </ul>

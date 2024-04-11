@@ -1,18 +1,4 @@
 class UI {
-  static set SORT_METHOD(value) {
-    config.sortAchievementsBy = value;
-  }
-  static get SORT_METHOD() {
-    return sortBy[config.sortAchievementsBy];
-  }
-  // filterBy.all;
-  static set FILTER_METHOD(value) {
-    config.filterAchievementsBy = value;
-  }
-  static get FILTER_METHOD() {
-    return filterBy[config.filterAchievementsBy];
-  }
-
   static filterMethods = {
     all: "all",
     earned: "earned",
@@ -23,6 +9,7 @@ class UI {
     latest: "latest",
     earnedCount: "earnedCount",
     points: "points",
+    truepoints: "truepoints",
     default: "default",
   };
 
@@ -251,6 +238,19 @@ class UI {
 }
 
 class AchievementsBlock {
+  set SORT_METHOD(value) {
+    config.sortAchievementsBy = value;
+  }
+  get SORT_METHOD() {
+    return sortBy[config.sortAchievementsBy];
+  }
+  // filterBy.all;
+  set FILTER_METHOD(value) {
+    config.filterAchievementsBy = value;
+  }
+  get FILTER_METHOD() {
+    return filterBy[config.filterAchievementsBy];
+  }
   constructor() {
     this.initializeElements();
     this.addEvents();
@@ -267,6 +267,8 @@ class AchievementsBlock {
     this.sortByLatestButton = document.querySelector("#sort-by-latest"); // Кнопка сортування за останніми
     this.sortByEarnedButton = document.querySelector("#sort-by-earned"); // Кнопка сортування за заробленими
     this.sortByPointsButton = document.querySelector("#sort-by-points"); // Кнопка сортування за балами
+    this.sortByTruepointsButton = document.querySelector("#sort-by-truepoints");
+
     this.sortByDefaultButton = document.querySelector("#sort-by-default"); // Кнопка сортування за замовчуванням
     this.reverseSortButton = document.querySelector("#reverse-sort"); // Чекбокс сортування по зворотньому порядку
 
@@ -296,7 +298,7 @@ class AchievementsBlock {
     this.sortByDefaultButton.addEventListener("click", (e) => {
       e.stopPropagation();
       // Встановлює метод сортування за замовчуванням
-      UI.SORT_METHOD = UI.sortMethods.default;
+      this.SORT_METHOD = UI.sortMethods.default;
       // Застосовує сортування та оновлює інтерфейс
       this.applySorting();
     });
@@ -305,7 +307,7 @@ class AchievementsBlock {
     this.sortByEarnedButton.addEventListener("click", (e) => {
       e.stopPropagation();
       // Встановлює метод сортування за отриманням досягнення
-      UI.SORT_METHOD = UI.sortMethods.earnedCount;
+      this.SORT_METHOD = UI.sortMethods.earnedCount;
       // Застосовує сортування та оновлює інтерфейс
       this.applySorting();
     });
@@ -314,7 +316,7 @@ class AchievementsBlock {
     this.sortByLatestButton.addEventListener("click", (e) => {
       e.stopPropagation();
       // Встановлює метод сортування за датою отримання
-      UI.SORT_METHOD = UI.sortMethods.latest;
+      this.SORT_METHOD = UI.sortMethods.latest;
       // Застосовує сортування та оновлює інтерфейс
       this.applySorting();
     });
@@ -323,7 +325,14 @@ class AchievementsBlock {
     this.sortByPointsButton.addEventListener("click", (e) => {
       e.stopPropagation();
       // Встановлює метод сортування за кількістю балів
-      UI.SORT_METHOD = UI.sortMethods.points;
+      this.SORT_METHOD = UI.sortMethods.points;
+      // Застосовує сортування та оновлює інтерфейс
+      this.applySorting();
+    });
+    this.sortByTruepointsButton.addEventListener("click", (e) => {
+      e.stopPropagation();
+      // Встановлює метод сортування за кількістю балів
+      this.SORT_METHOD = UI.sortMethods.truepoints;
       // Застосовує сортування та оновлює інтерфейс
       this.applySorting();
     });
@@ -337,7 +346,7 @@ class AchievementsBlock {
     // Додає подію кліку для фільтрування
     this.filterByEarnedRadio.addEventListener("click", (e) => {
       e.stopPropagation();
-      UI.FILTER_METHOD = UI.filterMethods.earned;
+      this.FILTER_METHOD = UI.filterMethods.earned;
       this.applyFilter();
     });
     this.reverseFilterCheckbox.addEventListener("change", (e) => {
@@ -347,12 +356,12 @@ class AchievementsBlock {
 
     this.filterByAllRadio.addEventListener("click", (e) => {
       e.stopPropagation();
-      UI.FILTER_METHOD = UI.filterMethods.all;
+      this.FILTER_METHOD = UI.filterMethods.all;
       this.applyFilter();
     });
     this.filterByMissableRadio.addEventListener("click", (e) => {
       e.stopPropagation();
-      UI.FILTER_METHOD = UI.filterMethods.missable;
+      this.FILTER_METHOD = UI.filterMethods.missable;
       this.applyFilter();
     });
 
@@ -492,6 +501,7 @@ class AchievementsBlock {
     const {
       ID,
       Points,
+      TrueRatio,
       isEarned,
       isHardcoreEarned,
       prevSrc,
@@ -512,6 +522,7 @@ class AchievementsBlock {
 
     achivElement.dataset.achivId = ID;
     achivElement.dataset.Points = Points;
+    achivElement.dataset.TrueRatio = TrueRatio;
     achivElement.dataset.NumAwardedHardcore = NumAwardedHardcore;
     DateEarnedHardcore
       ? (achivElement.dataset.DateEarnedHardcore = DateEarnedHardcore)
@@ -571,6 +582,7 @@ class AchievementsBlock {
     DateEarned,
     DateEarnedHardcore,
     Points,
+    TrueRatio,
     NumAwardedHardcore,
     totalPlayers,
   }) {
@@ -580,7 +592,7 @@ class AchievementsBlock {
     <h3>${Title}</h3>
     <p>${Description}</p>
     <p>Earned by ${NumAwardedHardcore} of ${totalPlayers} players</p>
-    <p class="points">${Points} points</p>
+    <p class="points">${Points} [${TrueRatio}] points</p>
     ${
       DateEarnedHardcore
         ? "<p>Earned hardcore: " + fixTimeString(DateEarnedHardcore) + "</p>"
@@ -603,6 +615,13 @@ class AchievementsBlock {
       achivDetails.classList.remove("top-side");
     } else if (bottom > window.innerHeight) {
       achivDetails.classList.add("top-side");
+    }
+  }
+  moveToTop(element) {
+    if (config.reverseSort == -1) {
+      this.container.appendChild(element);
+    } else {
+      this.container.insertBefore(element, this.container.firstChild);
     }
   }
   // Автопідбір розміру значків ачівментсів
@@ -652,7 +671,7 @@ class AchievementsBlock {
   applySorting() {
     let achivsArray = [...this.container.querySelectorAll(".achiv-block")];
     achivsArray.sort(
-      (a, b) => UI.SORT_METHOD(a.dataset, b.dataset) * config.reverseSort
+      (a, b) => this.SORT_METHOD(a.dataset, b.dataset) * config.reverseSort
     );
     this.container.innerHTML = "";
     achivsArray.forEach((achiv) => this.container.appendChild(achiv));
@@ -662,7 +681,7 @@ class AchievementsBlock {
     achivsArray.forEach((a) => {
       a.classList.toggle(
         "hidden",
-        !UI.FILTER_METHOD(a.dataset) ^ config.reverseFilter
+        !this.FILTER_METHOD(a.dataset) ^ config.reverseFilter
       );
     });
   }
@@ -1230,7 +1249,19 @@ class Awards {
 }
 
 class Target {
-  filterMethod = UI.filterMethods.all;
+  set SORT_METHOD(value) {
+    config.sortTargetBy = value;
+  }
+  get SORT_METHOD() {
+    return sortBy[config.sortTargetBy];
+  }
+  // filterBy.all;
+  set FILTER_METHOD(value) {
+    config.filterTargetBy = value;
+  }
+  get FILTER_METHOD() {
+    return filterBy[config.filterTargetBy];
+  }
   constructor() {
     this.initializeElements();
     this.setValues();
@@ -1245,10 +1276,20 @@ class Target {
     this.autoClearInput = document.querySelector("#auto-clear-target-time");
     this.autofillCheckbox = document.querySelector("#auto-fill-target");
 
+    this.sortByPointsRadio = document.querySelector("#target-sort-points");
+    this.sortByTruepointsRadio = document.querySelector(
+      "#target-sort-truepoints"
+    );
+    this.sortByRarestRadio = document.querySelector("#target-sort-rarest");
+    this.sortByDefaultRadio = document.querySelector("#target-sort-default");
+    this.sortReverseCheckbox = document.querySelector("#target-reverse-sort");
+
     this.filterByMissableRadio = document.querySelector(
       "#target-filter-missable"
     );
     this.filterByAllRadio = document.querySelector("#target-filter-all");
+    this.moveToTopCheckbox = document.querySelector("#target-move-to-top");
+
     this.resizer = document.querySelector("#target-resizer");
   }
   setValues() {
@@ -1258,6 +1299,29 @@ class Target {
     this.autoClearInput.value = config.autoClearTargetTime;
     this.autoclearCheckbox.checked = config.autoClearTarget;
     this.autofillCheckbox.checked = config.autoFillTarget;
+
+    switch (config.filterTargetBy) {
+      case UI.filterMethods.missable:
+        this.filterByMissableRadio.checked = true;
+        break;
+      default:
+        this.filterByAllRadio.checked = true;
+    }
+    switch (config.sortTargetBy) {
+      case UI.sortMethods.earnedCount:
+        this.sortByRarestRadio.checked = true;
+        break;
+      case UI.sortMethods.points:
+        this.sortByPointsRadio.checked = true;
+        break;
+      case UI.sortMethods.truepoints:
+        this.sortByTruepointsRadio.checked = true;
+        break;
+      default:
+        this.filterByAllRadio.checked = true;
+    }
+    this.sortReverseCheckbox.checked = config.reverseSortTarget;
+    this.moveToTopCheckbox.checked = config.targetMoveToTop;
   }
   addEvents() {
     this.autoclearCheckbox.addEventListener("change", (e) => {
@@ -1286,15 +1350,37 @@ class Target {
     this.header.addEventListener("mousedown", (e) => {
       UI.moveEvent(this.section, e);
     });
+    this.sortByDefaultRadio.addEventListener("change", (e) => {
+      this.SORT_METHOD = UI.sortMethods.default;
+      this.applySort();
+    });
+    this.sortByRarestRadio.addEventListener("change", (e) => {
+      this.SORT_METHOD = UI.sortMethods.earnedCount;
+      this.applySort();
+    });
+    this.sortByPointsRadio.addEventListener("change", (e) => {
+      this.SORT_METHOD = UI.sortMethods.points;
+      this.applySort();
+    });
+    this.sortByTruepointsRadio.addEventListener("change", (e) => {
+      this.SORT_METHOD = UI.sortMethods.truepoints;
+      this.applySort();
+    });
+    this.sortReverseCheckbox.addEventListener("change", (e) => {
+      config.reverseSortTarget = this.sortReverseCheckbox.checked;
+      this.applySort();
+    });
     this.filterByMissableRadio.addEventListener("change", (e) => {
-      e.stopPropagation();
-      this.filterMethod = UI.filterMethods.missable;
+      this.FILTER_METHOD = UI.filterMethods.missable;
       this.applyFilter();
     });
     this.filterByAllRadio.addEventListener("change", (e) => {
       e.stopPropagation();
-      this.filterMethod = UI.filterMethods.all;
+      this.FILTER_METHOD = UI.filterMethods.all;
       this.applyFilter();
+    });
+    this.moveToTopCheckbox.addEventListener("change", (e) => {
+      config.targetMoveToTop = this.moveToTopCheckbox.checked;
     });
   }
   isAchievementInTargetSection({ ID, targetContainer }) {
@@ -1309,6 +1395,7 @@ class Target {
     prevSrc,
     Description,
     Points,
+    TrueRatio,
     isEarned,
     isHardcoreEarned,
     ID,
@@ -1329,6 +1416,9 @@ class Target {
     let targetElement = document.createElement("li");
     targetElement.classList.add("target-achiv");
     targetElement.dataset.type = type;
+    targetElement.dataset.Points = Points;
+    targetElement.dataset.TrueRatio = TrueRatio;
+    targetElement.dataset.NumAwardedHardcore = NumAwardedHardcore;
     if (isEarned) {
       targetElement.classList.add("earned");
       if (isHardcoreEarned) {
@@ -1358,7 +1448,7 @@ class Target {
                 <div class=" condition ${
                   type ?? "none"
                 }" title="achievement type"></div>
-                <p class="target-description-text" title="points">${Points} points</p>
+                <p class="target-description-text" title="points">${Points} [${TrueRatio}] points</p>
                 <p class="target-description-text" title="earned by">${~~(
                   (100 * NumAwardedHardcore) /
                   totalPlayers
@@ -1377,20 +1467,29 @@ class Target {
       win_condition: "win_condition",
       missable: "missable",
     };
+    this.applyFilter();
+    this.applySort();
+  }
+  moveToTop(element) {
+    element && config.targetMoveToTop ? this.container.prepend(element) : "";
   }
   applyFilter() {
     const elements = this.container.querySelectorAll(".target-achiv");
     elements.forEach((element) => {
-      switch (this.filterMethod) {
-        case UI.filterMethods.missable:
-          element.dataset.type !== "missable"
-            ? element.classList.add("hidden")
-            : element.classList.remove("hidden");
-          break;
-        default:
-          element.classList.remove("hidden");
-      }
+      element.classList.toggle("hidden", !this.FILTER_METHOD(element.dataset));
     });
+  }
+  applySort() {
+    const elements = [...this.container.querySelectorAll(".target-achiv")];
+    this.container.innerHTML = "";
+    elements
+      .sort(
+        (a, b) =>
+          this.SORT_METHOD(a.dataset, b.dataset) * config.reverseSortTarget
+      )
+      .forEach((element) => {
+        this.container.appendChild(element);
+      });
   }
   deleteFromTarget(button) {
     button.parentNode.remove();
@@ -1527,6 +1626,8 @@ const sortBy = {
   earnedCount: (a, b) => b.NumAwardedHardcore - a.NumAwardedHardcore,
 
   points: (a, b) => a.Points - b.Points,
+
+  truepoints: (a, b) => a.TrueRatio - b.TrueRatio,
 
   default: (a, b) => a.achivId - b.achivId,
 };
