@@ -1,4 +1,4 @@
-<section id="achievements_section" class="achivs section">
+<section id="achievements_section" class="achivs section ">
   <div class="header-container achievements-header_container">
     <div class="header-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
         <path
@@ -122,7 +122,7 @@
 
 
     </div>
-    <button class="header-button header-icon" onclick="openAllAchivs(event)">
+    <button class="header-button header-icon" onclick="ui.achievementsBlock.close()">
       <svg height="24" viewBox="0 -960 960 960" width="24">
         <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
       </svg>

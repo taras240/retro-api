@@ -1,4 +1,4 @@
-<section class="game-card_section section" id="game_section">
+<section class="game-card_section section " id="game_section">
   <div class="game-card_container">
     <div class="game-card-header_container">
       <h2 class="widget-header-text"><a id="game-card-header" href="#" target="_blank"> Some Game Name</a></h2>

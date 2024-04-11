@@ -1,4 +1,4 @@
-<section id="target_section" class="target_section section">
+<section id="target_section" class="target_section section ">
   <div class="header-container target-header_container">
     <div class="header-icon">
       <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
@@ -9,7 +9,7 @@
     <h2 class="widget-header-text">Target</h2>
 
 
-    <button class="header-icon header-button" title="clear all" onclick="clearTarget()">
+    <button class="header-icon header-button" title="clear all" onclick="ui.target.clearAllAchivements()">
       <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
         <path d="M120-280v-80h560v80H120Zm80-160v-80h560v80H200Zm80-160v-80h560v80H280Z" />
       </svg>
@@ -75,7 +75,7 @@
         </ul>
       </div>
     </div>
-    <button class="header-icon header-button" onclick="openTarget()">
+    <button class="header-icon header-button" onclick="ui.target.close()">
       <svg height="24" viewBox="0 -960 960 960" width="24">
         <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
       </svg>

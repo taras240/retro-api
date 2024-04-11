@@ -13,37 +13,37 @@
         <div class="setting-radio-group">
             <input type="checkbox" name="open-login-button" id="open-login-button">
             </input>
-            <label class="settings-input" for="open-login-button" onclick="openLogin()">Login</label>
+            <label class="settings-input" for="open-login-button">Login</label>
         </div>
         <div class="setting-radio-group">
             <input type="checkbox" name="open-status-button" id="open-status-button">
             </input>
-            <label class="settings-input" for="open-status-button" onclick="openStatusPanel()">Status</label>
+            <label class="settings-input" for="open-status-button">Status</label>
         </div>
         <div class="setting-radio-group">
             <input type="checkbox" name="open-achivs-button" id="open-achivs-button">
             </input>
-            <label class="settings-input" for="open-achivs-button" onclick="openAllAchivs()">Achivs</label>
+            <label class="settings-input" for="open-achivs-button">Achivs</label>
         </div>
         <div class="setting-radio-group">
             <input type="checkbox" name="open-target-button" id="open-target-button">
             </input>
-            <label class="settings-input" for="open-target-button" onclick="openTarget()">Target</label>
+            <label class="settings-input" for="open-target-button">Target</label>
         </div>
         <div class="setting-radio-group">
             <input type="checkbox" name="open-game-card-button" id="open-game-card-button">
             </input>
-            <label class="settings-input" for="open-game-card-button" onclick="openGameCard()">GameCard</label>
+            <label class="settings-input" for="open-game-card-button">GameCard</label>
         </div>
         <div class="setting-radio-group">
             <input type="checkbox" name="open-awards-button" id="open-awards-button">
             </input>
-            <label class="settings-input" for="open-awards-button" onclick="openAwards()">Awards</label>
+            <label class="settings-input" for="open-awards-button">Awards</label>
         </div>
         <div class="setting-radio-group">
             <input type="checkbox" name="open-settings-button" id="open-settings-button">
             </input>
-            <label class="settings-input" for="open-settings-button" onclick="openSettings()">Settings</label>
+            <label class="settings-input" for="open-settings-button">Settings</label>
         </div>
 
         <div class="setting-radio-group">

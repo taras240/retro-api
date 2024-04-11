@@ -231,13 +231,7 @@ class Config {
 
   setNewPosition({ id, xPos, yPos, width, height, hidden }) {
     // console.log(id, hidden);
-    if (this._cfg.ui.hasOwnProperty(id)) {
-      xPos ? (this._cfg.ui[id].x = xPos) : "";
-      yPos ? (this._cfg.ui[id].y = yPos) : "";
-      width ? (this._cfg.ui[id].width = width + "px") : "";
-      height ? (this._cfg.ui[id].height = height + "px") : "";
-      hidden !== undefined ? (this._cfg.ui[id].hidden = hidden) : "";
-    } else {
+    if (!this._cfg.ui.hasOwnProperty(id)) {
       this._cfg.ui[id] = {
         id: id,
         x: xPos,
@@ -247,6 +241,11 @@ class Config {
         hidden: hidden,
       };
     }
+    xPos ? (this._cfg.ui[id].x = xPos) : "";
+    yPos ? (this._cfg.ui[id].y = yPos) : "";
+    width ? (this._cfg.ui[id].width = width + "px") : "";
+    height ? (this._cfg.ui[id].height = height + "px") : "";
+    hidden !== undefined ? (this._cfg.ui[id].hidden = hidden) : "";
     this.writeConfiguration();
   }
   readConfiguration() {

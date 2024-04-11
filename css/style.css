@@ -260,8 +260,8 @@ a:hover {
 /** -------[ WIDGETS SECTION ]----------------------*/
 
 .buttons-block {
-  top: 30%;
-  left: 60%;
+  top: calc(100% - 200px);
+  left: calc(100% - 320px);
   cursor: grab;
   transition: 0.5s ease-in;
   z-index: 1000;
@@ -284,3 +284,4 @@ a:hover {
 .buttons-block:active {
   transition: none;
 }
+/* !!!!       hidden style in sections on load fix*/

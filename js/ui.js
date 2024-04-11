@@ -1,10 +1,4 @@
 class UI {
-  static set REVERSE_SORT(value) {
-    config.reverseSort = value;
-  }
-  static get REVERSE_SORT() {
-    return config.reverseSort;
-  }
   static set SORT_METHOD(value) {
     config.sortAchievementsBy = value;
   }
@@ -18,12 +12,7 @@ class UI {
   static get FILTER_METHOD() {
     return filterBy[config.filterAchievementsBy];
   }
-  static set REVERSE_FILTER(value) {
-    config.reverseFilter = value;
-  }
-  static get REVERSE_FILTER() {
-    return config.reverseFilter;
-  }
+
   static filterMethods = {
     all: "all",
     earned: "earned",
@@ -252,7 +241,7 @@ class UI {
     });
   }
 
-  static switchSectionVisibility(section) {
+  static switchSectionVisibility({ section }) {
     section.classList.toggle("hidden");
     config.setNewPosition({
       id: section.id,
@@ -341,7 +330,7 @@ class AchievementsBlock {
     this.reverseSortButton.addEventListener("click", (e) => {
       e.stopPropagation();
       // Встановлює reverse сортування
-      UI.REVERSE_SORT = this.reverseSortButton.checked;
+      config.reverseSort = this.reverseSortButton.checked;
       // Застосовує сортування та оновлює інтерфейс
       this.applySorting();
     });
@@ -352,7 +341,7 @@ class AchievementsBlock {
       this.applyFilter();
     });
     this.reverseFilterCheckbox.addEventListener("change", (e) => {
-      UI.REVERSE_FILTER = this.reverseFilterCheckbox.checked;
+      config.reverseFilter = this.reverseFilterCheckbox.checked;
       this.applyFilter();
     });
 
@@ -396,6 +385,9 @@ class AchievementsBlock {
     });
   }
   setValues() {
+    if (!config.ui.achievements_section) {
+      UI.switchSectionVisibility(this);
+    }
     this.container.style.height = config.stretchAchievements ? "100%" : "auto";
 
     this.bgVisibilityCheckbox.checked = config.achivsBgVisibility;
@@ -414,7 +406,7 @@ class AchievementsBlock {
         this.filterByAllRadio.checked = true;
         break;
     }
-    this.reverseFilterCheckbox.checked = UI.REVERSE_FILTER;
+    this.reverseFilterCheckbox.checked = config.reverseFilter;
     switch (config.sortAchievementsBy) {
       case UI.sortMethods.default:
         this.sortByDefaultButton.checked = true;
@@ -461,6 +453,8 @@ class AchievementsBlock {
 
     this.applyFilter();
     this.applySorting();
+    //Додаєм можливість перетягування елементів
+    UI.addDraggingEventForElements(this.container);
   }
 
   displayAchievements(achievementsObject) {
@@ -617,7 +611,7 @@ class AchievementsBlock {
     const { section, container } = this;
     // Отримання розмірів вікна блоку досягнень
     let windowHeight, windowWidth;
-    if (isLoadDynamic) {
+    if (isLoadDynamic || !config.ui.achievements_section?.height) {
       windowHeight = section.clientHeight - 35;
       windowWidth = section.clientWidth;
     } else {
@@ -658,7 +652,7 @@ class AchievementsBlock {
   applySorting() {
     let achivsArray = [...this.container.querySelectorAll(".achiv-block")];
     achivsArray.sort(
-      (a, b) => UI.SORT_METHOD(a.dataset, b.dataset) * UI.REVERSE_SORT
+      (a, b) => UI.SORT_METHOD(a.dataset, b.dataset) * config.reverseSort
     );
     this.container.innerHTML = "";
     achivsArray.forEach((achiv) => this.container.appendChild(achiv));
@@ -668,9 +662,12 @@ class AchievementsBlock {
     achivsArray.forEach((a) => {
       a.classList.toggle(
         "hidden",
-        !UI.FILTER_METHOD(a.dataset) ^ UI.REVERSE_FILTER
+        !UI.FILTER_METHOD(a.dataset) ^ config.reverseFilter
       );
     });
+  }
+  close() {
+    ui.buttons.achievements.click();
   }
 }
 
@@ -696,7 +693,29 @@ class ButtonPanel {
     this.header.addEventListener("mousedown", (e) => {
       UI.moveEvent(this.section, e);
     });
+    this.login.addEventListener("change", (e) => {
+      UI.switchSectionVisibility(ui.loginCard);
+    });
+    this.achievements.addEventListener("change", (e) => {
+      UI.switchSectionVisibility(ui.achievementsBlock);
+    });
+    this.status.addEventListener("change", (e) => {
+      UI.switchSectionVisibility(ui.statusPanel);
+    });
+    this.settings.addEventListener("change", (e) => {
+      UI.switchSectionVisibility(ui.settings);
+    });
+    this.awards.addEventListener("change", (e) => {
+      UI.switchSectionVisibility(ui.awards);
+    });
+    this.target.addEventListener("change", (e) => {
+      UI.switchSectionVisibility(ui.target);
+    });
+    this.gameCard.addEventListener("change", (e) => {
+      UI.switchSectionVisibility(ui.gameCard);
+    });
   }
+
   setValues() {
     // Встановлення початкових індикаторів віджетів
     this.achievements.checked =
@@ -719,6 +738,9 @@ class StatusPanel {
   constructor() {
     this.initializeElements();
     this.addEvents();
+    if (!config.ui["update-section"]) {
+      UI.switchSectionVisibility(this);
+    }
   }
   initializeElements() {
     this.section = document.querySelector("#update-section");
@@ -844,6 +866,9 @@ class Settings {
     this.startOnLoadCheckbox = document.querySelector("#update-on-load");
   }
   setValues() {
+    if (!config.ui.settings_section) {
+      UI.switchSectionVisibility(this);
+    }
     // this.settings.stretchButton.classList
     // Отримати ідентифікатор гри з localStorage та встановити його значення
     this.gameID.value = config.gameID;
@@ -944,12 +969,18 @@ class Settings {
       UI.moveEvent(this.section, e);
     });
   }
+  close() {
+    ui.buttons.settings.click();
+  }
 }
 
 class GameCard {
   constructor() {
     this.initializeElements();
     this.addEvents();
+    if (!config.ui.game_section) {
+      UI.switchSectionVisibility(this);
+    }
     //-----------
 
     // Додавання подій для пересування вікна картки гри
@@ -999,6 +1030,9 @@ class GameCard {
     this.released.innerText = Released || "-";
     // this.completion.innerText = `${UserCompletion} [${UserCompletionHardcore}]`;
   }
+  close() {
+    ui.buttons.gameCard.click();
+  }
 }
 
 class Awards {
@@ -1011,6 +1045,9 @@ class Awards {
   constructor() {
     this.initializeElements();
     this.addEvents();
+    if (!config.ui.awards_section) {
+      UI.switchSectionVisibility(this);
+    }
   }
   initializeElements() {
     this.section = document.querySelector(".awards_section"); // Контейнер інформації про гру
@@ -1187,6 +1224,9 @@ class Awards {
       }
     });
   }
+  close() {
+    ui.buttons.awards.click();
+  }
 }
 
 class Target {
@@ -1212,6 +1252,9 @@ class Target {
     this.resizer = document.querySelector("#target-resizer");
   }
   setValues() {
+    if (!config.ui.target_section) {
+      UI.switchSectionVisibility(this);
+    }
     this.autoClearInput.value = config.autoClearTargetTime;
     this.autoclearCheckbox.checked = config.autoClearTarget;
     this.autofillCheckbox.checked = config.autoFillTarget;
@@ -1360,9 +1403,7 @@ class Target {
     });
   }
   clearAllAchivements() {
-    this.container.querySelectorAll(".target-achiv").forEach((achievement) => {
-      achievement.remove();
-    });
+    this.container.innerHTML = "";
   }
   fillItems() {
     ui.achievementsBlock.container
@@ -1372,6 +1413,10 @@ class Target {
           achievement.querySelector(".add-to-target").click();
         }
       });
+  }
+
+  close() {
+    ui.buttons.target.click();
   }
 }
 
@@ -1388,6 +1433,7 @@ class LoginCard {
     this.apiKey = document.querySelector("#login-api-key");
     this.userImage = document.querySelector(".login-user-image");
   }
+
   addEvents() {
     this.header.addEventListener("mousedown", (e) => {
       UI.moveEvent(this.section, e);
@@ -1404,6 +1450,60 @@ class LoginCard {
     if (config.identConfirmed) {
       this.section.querySelector(".submit-login").classList.add("verified");
     }
+  }
+  pasteApiKeyFromClipboard() {
+    navigator.clipboard
+      .readText()
+      .then((clipboardText) => {
+        // Вставити значення з буферу обміну в поле вводу або куди-небудь інде
+        this.apiKey.value = clipboardText;
+        config.API_KEY = this.apiKey.value;
+      })
+      .catch((err) => {
+        console.error("Не вдалося отримати доступ до буферу обміну:", err);
+      });
+  }
+
+  submitLogin() {
+    let userName = this.userName.value;
+    let apiKey = this.apiKey.value;
+    apiWorker
+      .verifyUserIdent({ userName: userName, apiKey: apiKey })
+      .then((userObj) => {
+        if (!userObj.ID) this.errorLogin();
+        else {
+          this.updateLogin({
+            userName: userName,
+            apiKey: apiKey,
+            userObj: userObj,
+          });
+          apiWorker
+            .getProfileInfo({ targetUser: userName })
+            .then((resp) => {
+              config.gameID = resp.LastGameID;
+            })
+            .then(() => getAchievements({}));
+          // ui.statusPanel.watchButton.click();
+        }
+      });
+  }
+  updateLogin({ userName, apiKey, userObj }) {
+    config.USER_NAME = userName;
+    config.API_KEY = apiKey;
+    config.identConfirmed = true;
+    config.userImageSrc = `https://media.retroachievements.org${userObj?.UserPic}`;
+    this.userImage.src = config.userImageSrc;
+    document.querySelector("#submit-login").classList.remove("error");
+    document.querySelector("#submit-login").classList.add("verified");
+  }
+
+  errorLogin() {
+    config.identConfirmed = false;
+    document.querySelector("#submit-login").classList.remove("verified");
+    document.querySelector("#submit-login").classList.add("error");
+  }
+  close() {
+    ui.buttons.login.click();
   }
 }
 

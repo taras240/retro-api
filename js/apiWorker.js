@@ -44,7 +44,10 @@ class APIWorker {
   }
   // Отримання інформації про профіль користувача
   getProfileInfo({ targetUser }) {
-    let url = this.getUrl({ endpoint: this.endpoints.userProfile });
+    let url = this.getUrl({
+      targetUser: targetUser,
+      endpoint: this.endpoints.userProfile,
+    });
     return fetch(url).then((resp) => resp.json());
   }
   //Отримати прогрес завершення користувача
@@ -67,8 +70,8 @@ class APIWorker {
   getGameProgress({ targetUser, gameID }) {
     let url = this.getUrl({
       endpoint: this.endpoints.gameProgress,
-      targetUser: targetUser,
-      gameID: gameID,
+      targetUser: targetUser || config.targetUser,
+      gameID: gameID || config.gameID,
     });
     return fetch(url).then((resp) => resp.json());
   }
