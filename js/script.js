@@ -75,12 +75,12 @@ async function updateAchievements() {
         // Перевірка, чи потрібно перемістити елемент на початок
         if (isLatestSort && isAchieved) {
           ui.achievementsBlock.moveToTop(achievementElement);
-          ui.target.moveToTop(targetElement);
         }
         if (isAchieved) {
           updateAwards();
         }
         if (isHardcoreMismatch) {
+          ui.target.moveToTop(targetElement);
           ui.statusPanel.updateProgress({ points: achievement.Points });
         }
         // Додавання класів для відображення зароблених досягнень
