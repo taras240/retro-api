@@ -16,7 +16,6 @@
 .game-card_container {
   width: 100%;
   height: auto;
-  background-color: var(--main-color);
 }
 
 .game-card-info_container {

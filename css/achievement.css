@@ -3,6 +3,7 @@
   height: 30vh;
   min-height: 60px;
   min-width: 90px;
+  background: none;
   background-color: transparent;
   cursor: grab;
 }
@@ -11,7 +12,8 @@
 }
 .achivs:hover,
 .achivs.bg-visible {
-  background-color: var(--main-color);
+  background: var(--background-gradient);
+  /* background-color: var(--main-color); */
 }
 .achievements-container {
   display: flex;
@@ -37,7 +39,7 @@
   width: 100%;
   height: 35px;
   z-index: 10;
-  background-color: var(--main-color);
+  /* background-color: var(--main-color); */
   border-radius: 5px 5px 0 0;
   overflow: hidden;
 }

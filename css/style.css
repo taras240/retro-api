@@ -34,6 +34,7 @@ input[type="number"]::-webkit-inner-spin-button {
   --font-color: #eee;
   --selection-color: #008000;
   --shadow-color: #000000;
+
   --box-shadows: 1px 1px 0 var(--shadow-color), 2px 2px 0 var(--shadow-color),
     3px 3px 0 var(--shadow-color), 4px 4px 0 var(--shadow-color);
   --box-shadow-hover: 1px 1px 0 var(--shadow-color),
@@ -62,12 +63,19 @@ a:hover {
 /**---------[ Section Style ]--------------*/
 
 .section {
+  --background-gradient: linear-gradient(
+    to right,
+    var(--main-color),
+    var(--main-color)
+  );
   position: absolute;
   visibility: visible;
   border-radius: 5px;
   user-select: none;
   opacity: 1;
-  background-color: var(--main-color);
+  /* background-color: var(--main-color); */
+  background: var(--background-gradient);
+
   box-shadow: 0 0 5px 2px black;
   transition: 0.2s ease-out;
 }

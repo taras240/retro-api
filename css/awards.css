@@ -60,6 +60,7 @@
 .awards-console_header {
   padding: 5px 0;
   cursor: pointer;
+  overflow: hidden;
 }
 .console-awards-values {
   display: flex;
@@ -138,10 +139,10 @@
   display: none;
 }
 .console-awards:nth-child(odd) .awarded-game {
-  background-color: var(--secondary-color);
+  background: linear-gradient(to right, var(--secondary-color), transparent);
 }
 .console-awards:nth-child(even) .awarded-game {
-  background-color: var(--main-color);
+  background: linear-gradient(to right, var(--main-color), transparent);
 }
 .awarded-game:hover {
   box-shadow: 0 2px 7px 0px #000000a1;
