@@ -36,6 +36,7 @@ class UI {
           .forEach((el) => {
             el.addEventListener("mousedown", (e) => e.stopPropagation());
           });
+
         //Вимкнення вікна завантаження
         setTimeout(
           () =>
@@ -697,7 +698,7 @@ class ButtonPanel {
     this.setValues();
   }
   initializeElements() {
-    this.section = document.querySelector("#buttons_section");
+    this.section = document.querySelector("#side_panel");
     this.header = document.querySelector("#buttons-header_container");
     this.settings = document.querySelector("#open-settings-button");
     this.achievements = document.querySelector("#open-achivs-button");
@@ -707,11 +708,29 @@ class ButtonPanel {
     this.target = document.querySelector("#open-target-button");
     this.status = document.querySelector("#open-status-button");
     this.awards = document.querySelector("#open-awards-button");
+    this.userImage = document.querySelector("#side-panel-user-image");
   }
   addEvents() {
-    this.header.addEventListener("mousedown", (e) => {
-      UI.moveEvent(this.section, e);
+    // Отримуємо посилання на панель
+    this.sidePanel = document.querySelector("#side_panel");
+    setTimeout(() => ui.buttons.section.classList.remove("expanded"), 5000);
+    // Додаємо подію для відслідковування руху миші
+    document.addEventListener("mousemove", (e) => {
+      // Перевіряємо, чи миша знаходиться біля правого краю екрану
+      if (e.clientX < 10) {
+        // Якщо так, показуємо панель
+        this.section.classList.add("expanded");
+        this.section.addEventListener("mouseleave", (e) => {
+          setTimeout(
+            () => ui.buttons.section.classList.remove("expanded"),
+            200
+          );
+        });
+      }
     });
+    // this.header.addEventListener("mousedown", (e) => {
+    //   UI.moveEvent(this.section, e);
+    // });
     this.login.addEventListener("change", (e) => {
       UI.switchSectionVisibility(ui.loginCard);
     });
@@ -751,6 +770,7 @@ class ButtonPanel {
     this.status.checked = !config.ui?.["update-section"]?.hidden ?? true;
 
     this.awards.checked = !config.ui?.awards_section?.hidden ?? true;
+    this.userImage.src = config.userImageSrc;
   }
 }
 class StatusPanel {

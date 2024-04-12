@@ -2,11 +2,12 @@
   position: absolute;
   background-color: var(--secondary-color);
   top: calc(100vh - 100px);
-  left: 40%;
+  left: 30%;
   height: 70px;
   min-width: 300px;
   min-height: 75px;
   max-height: 120px;
+  width: 500px;
   z-index: 100;
   /* transition: 0.2s !important; */
 }

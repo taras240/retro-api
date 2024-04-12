@@ -5,6 +5,7 @@
   top: calc(50% - 250px);
   left: calc(50% - 150px);
   background-color: var(--main-color);
+
   display: grid;
   align-content: space-between;
   overflow: hidden;
@@ -17,13 +18,19 @@
   width: 200%;
   z-index: -1;
   background-color: var(--secondary-color);
+  background: linear-gradient(
+    to right,
+    var(--main-color),
+    var(--accent-color),
+    var(--main-color)
+  );
   transform: translate(-50%, -50%) rotate(30deg);
 }
 .login_section::before {
   top: 90%;
   left: 50%;
   height: 200px;
-  opacity: 0.5;
+  opacity: 0.6;
 }
 .login_section::after {
   z-index: -1;

@@ -136,20 +136,19 @@
           d="M480-400q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm-40-240v-200h80v200h-80Zm0 520v-200h80v200h-80Zm200-320v-80h200v80H640Zm-520 0v-80h200v80H120Z" />
       </svg>
     </div>
+
     <h2 class="widget-header-text">Target</h2>
 
 
-    <button class="header-icon header-button" title="clear all" onclick="ui.target.clearAllAchivements()">
-      <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-        <path d="M120-280v-80h560v80H120Zm80-160v-80h560v80H200Zm80-160v-80h560v80H280Z" />
-      </svg>
-    </button>
+
+
+
     <div class="target-settings-block">
       <button class="header-settings_button header-button header-icon" title="settings"
         onclick="this.parentNode.classList.toggle('checked')">
         <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
           <path
-            d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm70-80h79l14-106q31-8 57.5-23.5T639-327l99 41 39-68-86-65q5-14 7-29.5t2-31.5q0-16-2-31.5t-7-29.5l86-65-39-68-99 42q-22-23-48.5-38.5T533-694l-13-106h-79l-14 106q-31 8-57.5 23.5T321-633l-99-41-39 68 86 64q-5 15-7 30t-2 32q0 16 2 31t7 30l-86 65 39 68 99-42q22 23 48.5 38.5T427-266l13 106Zm42-180q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Zm-2-140Z" />
+            d="M686-132 444-376q-20 8-40.5 12t-43.5 4q-100 0-170-70t-70-170q0-36 10-68.5t28-61.5l146 146 72-72-146-146q29-18 61.5-28t68.5-10q100 0 170 70t70 170q0 23-4 43.5T584-516l244 242q12 12 12 29t-12 29l-84 84q-12 12-29 12t-29-12Zm29-85 27-27-256-256q18-20 26-46.5t8-53.5q0-60-38.5-104.5T386-758l74 74q12 12 12 28t-12 28L332-500q-12 12-28 12t-28-12l-74-74q9 57 53.5 95.5T360-440q26 0 52-8t47-25l256 256ZM472-488Z" />
         </svg>
       </button>
       <div class="header-settings-container">
@@ -254,6 +253,11 @@
         </ul>
       </div>
     </div>
+    <button class="header-icon header-button" title="clear all" onclick="ui.target.clearAllAchivements()">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+        <path d="M120-280v-80h560v80H120Zm80-160v-80h560v80H200Zm80-160v-80h560v80H280Z" />
+      </svg>
+    </button>
     <button class="header-icon header-button" onclick="ui.target.close()">
       <svg height="24" viewBox="0 -960 960 960" width="24">
         <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
@@ -280,7 +284,7 @@
         onclick="this.parentNode.classList.toggle('checked')">
         <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
           <path
-            d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm70-80h79l14-106q31-8 57.5-23.5T639-327l99 41 39-68-86-65q5-14 7-29.5t2-31.5q0-16-2-31.5t-7-29.5l86-65-39-68-99 42q-22-23-48.5-38.5T533-694l-13-106h-79l-14 106q-31 8-57.5 23.5T321-633l-99-41-39 68 86 64q-5 15-7 30t-2 32q0 16 2 31t7 30l-86 65 39 68 99-42q22 23 48.5 38.5T427-266l13 106Zm42-180q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Zm-2-140Z" />
+            d="M686-132 444-376q-20 8-40.5 12t-43.5 4q-100 0-170-70t-70-170q0-36 10-68.5t28-61.5l146 146 72-72-146-146q29-18 61.5-28t68.5-10q100 0 170 70t70 170q0 23-4 43.5T584-516l244 242q12 12 12 29t-12 29l-84 84q-12 12-29 12t-29-12Zm29-85 27-27-256-256q18-20 26-46.5t8-53.5q0-60-38.5-104.5T386-758l74 74q12 12 12 28t-12 28L332-500q-12 12-28 12t-28-12l-74-74q9 57 53.5 95.5T360-440q26 0 52-8t47-25l256 256ZM472-488Z" />
         </svg>
       </button>
       <div class="header-settings-container">
@@ -462,59 +466,87 @@
       </div>
     </div>
   </div>
-</section><section id="buttons_section" class="buttons-block  section">
+</section><section id="side_panel" class="buttons-block  section expanded">
     <div id="buttons-header_container" class="header-container widget-header_container buttons-header_container">
-        <div class="header-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                <path
-                    d="M666-440 440-666l226-226 226 226-226 226Zm-546-80v-320h320v320H120Zm400 400v-320h320v320H520Zm-400 0v-320h320v320H120Zm80-480h160v-160H200v160Zm467 48 113-113-113-113-113 113 113 113Zm-67 352h160v-160H600v160Zm-400 0h160v-160H200v160Zm160-400Zm194-65ZM360-360Zm240 0Z" />
-            </svg>
-        </div>
-        <h2 class="widget-header-text">Widgets</h2>
+
+    </div>
+    <div class="setting-radio-group">
+        <input type="checkbox" name="open-login-button" id="open-login-button">
+        </input>
+        <label class="side-panel_login login-icon" title="login" for="open-login-button"> <img
+                id="side-panel-user-image" src="" onerror="this.src='./assets/img/account.svg';" alt=""></label>
     </div>
     <div class="buttons-block_container">
+        <div class="buttons-block_widgets">
+            <div class="setting-radio-group">
+                <input type="checkbox" name="open-status-button" id="open-status-button">
+                </input>
+                <label class="side-panel_input" title="status widget" for="open-status-button"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                        <path
+                            d="M300-840q52 0 99 22t81 62q34-40 81-62t99-22q94 0 157 63t63 157q0 5-.5 10t-.5 10h-80q1-5 1-10v-10q0-60-40-100t-100-40q-47 0-87 26.5T518-666h-76q-15-41-55-67.5T300-760q-60 0-100 40t-40 100v10q0 5 1 10H81q0-5-.5-10t-.5-10q0-94 63-157t157-63Zm-88 480h112q32 31 70 67t86 79q48-43 86-79t70-67h113q-38 42-90 91T538-158l-58 52-58-52q-69-62-120.5-111T212-360Zm230 40q13 0 22.5-7.5T478-347l54-163 35 52q5 8 14 13t19 5h320v-80H623l-69-102q-6-9-15.5-13.5T518-640q-13 0-22.5 7.5T482-613l-54 162-34-51q-5-8-14-13t-19-5H40v80h297l69 102q6 9 15.5 13.5T442-320Zm38-167Z" />
+                    </svg></label>
+            </div>
+            <div class="setting-radio-group">
+                <input type="checkbox" name="open-achivs-button" id="open-achivs-button">
+                </input>
+                <label class="side-panel_input" title="achieves widget" for="open-achivs-button"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                        <path
+                            d="m668-380 152-130 120 10-176 153 52 227-102-62-46-198Zm-94-292-42-98 46-110 92 217-96-9ZM294-287l126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM173-120l65-281L20-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Zm247-340Z" />
+                    </svg></label>
+            </div>
+            <div class="setting-radio-group">
+                <input type="checkbox" name="open-target-button" id="open-target-button">
+                </input>
+                <label class="side-panel_input" title="target widget" for="open-target-button"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                        <path
+                            d="M480-400q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm-40-240v-200h80v200h-80Zm0 520v-200h80v200h-80Zm200-320v-80h200v80H640Zm-520 0v-80h200v80H120Z">
+                        </path>
+                    </svg></label>
+            </div>
+            <div class="setting-radio-group">
+                <input type="checkbox" name="open-game-card-button" id="open-game-card-button">
+                </input>
+                <label class="side-panel_input" title="game-card widget" for="open-game-card-button"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                        <path
+                            d="M280-280h280v-80H280v80Zm0-160h400v-80H280v80Zm0-160h400v-80H280v80Zm-80 480q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
+                    </svg></label>
+            </div>
+            <div class="setting-radio-group">
+                <input type="checkbox" name="open-awards-button" id="open-awards-button">
+                </input>
+                <label class="side-panel_input" title="awards widget" for="open-awards-button"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                        <path
+                            d="M280-120v-80h160v-124q-49-11-87.5-41.5T296-442q-75-9-125.5-65.5T120-640v-40q0-33 23.5-56.5T200-760h80v-80h400v80h80q33 0 56.5 23.5T840-680v40q0 76-50.5 132.5T664-442q-18 46-56.5 76.5T520-324v124h160v80H280Zm0-408v-152h-80v40q0 38 22 68.5t58 43.5Zm200 128q50 0 85-35t35-85v-240H360v240q0 50 35 85t85 35Zm200-128q36-13 58-43.5t22-68.5v-40h-80v152Zm-200-52Z" />
+                    </svg></label>
+            </div>
+            <div class="setting-radio-group">
+                <input type="checkbox" name="open-about-button" id="open-about-button">
+                </input>
+                <label class="side-panel_input" title="about widget" for="open-about-button" onclick="openAbout()"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                        <path
+                            d="M424-320q0-81 14.5-116.5T500-514q41-36 62.5-62.5T584-637q0-41-27.5-68T480-732q-51 0-77.5 31T365-638l-103-44q21-64 77-111t141-47q105 0 161.5 58.5T698-641q0 50-21.5 85.5T609-475q-49 47-59.5 71.5T539-320H424Zm56 240q-33 0-56.5-23.5T400-160q0-33 23.5-56.5T480-240q33 0 56.5 23.5T560-160q0 33-23.5 56.5T480-80Z" />
+                    </svg></label>
+            </div>
+        </div>
 
-        <div class="setting-radio-group">
-            <input type="checkbox" name="open-login-button" id="open-login-button">
-            </input>
-            <label class="settings-input" for="open-login-button">Login</label>
-        </div>
-        <div class="setting-radio-group">
-            <input type="checkbox" name="open-status-button" id="open-status-button">
-            </input>
-            <label class="settings-input" for="open-status-button">Status</label>
-        </div>
-        <div class="setting-radio-group">
-            <input type="checkbox" name="open-achivs-button" id="open-achivs-button">
-            </input>
-            <label class="settings-input" for="open-achivs-button">Achivs</label>
-        </div>
-        <div class="setting-radio-group">
-            <input type="checkbox" name="open-target-button" id="open-target-button">
-            </input>
-            <label class="settings-input" for="open-target-button">Target</label>
-        </div>
-        <div class="setting-radio-group">
-            <input type="checkbox" name="open-game-card-button" id="open-game-card-button">
-            </input>
-            <label class="settings-input" for="open-game-card-button">GameCard</label>
-        </div>
-        <div class="setting-radio-group">
-            <input type="checkbox" name="open-awards-button" id="open-awards-button">
-            </input>
-            <label class="settings-input" for="open-awards-button">Awards</label>
-        </div>
-        <div class="setting-radio-group">
+
+        <div class="setting-radio-group side-panel_settings">
             <input type="checkbox" name="open-settings-button" id="open-settings-button">
             </input>
-            <label class="settings-input" for="open-settings-button">Settings</label>
+            <label class="side-panel_input " title="settings widget" for="open-settings-button"><svg
+                    xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                    <path
+                        d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm70-80h79l14-106q31-8 57.5-23.5T639-327l99 41 39-68-86-65q5-14 7-29.5t2-31.5q0-16-2-31.5t-7-29.5l86-65-39-68-99 42q-22-23-48.5-38.5T533-694l-13-106h-79l-14 106q-31 8-57.5 23.5T321-633l-99-41-39 68 86 64q-5 15-7 30t-2 32q0 16 2 31t7 30l-86 65 39 68 99-42q22 23 48.5 38.5T427-266l13 106Zm42-180q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Zm-2-140Z" />
+                </svg></label>
         </div>
 
-        <div class="setting-radio-group">
-            <input type="checkbox" name="open-about-button" id="open-about-button">
-            </input>
-            <label class="settings-input" for="open-about-button" onclick="openAbout()">About</label>
-        </div>
+
 
     </div>
 
@@ -554,7 +586,7 @@
         <option value="synthwave">synthwave</option>
         <option value="darkblue">darkblue</option>
         <option value="brown">brown</option>
-        <option value="midnight">midnight</option>
+        <option value="pastel">pastel</option>
         <option value="retro">retro</option>
         <option value="vintage">vintage</option>
         <option value="neon">neon</option>

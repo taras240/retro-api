@@ -30,6 +30,7 @@ class Config {
   }
   set userImageSrc(value) {
     this._cfg.identification.userImageSrc = value;
+    ui.buttons.userImage.src = value;
     this.writeConfiguration();
   }
   //!-----------------[ Settings data ]--------------------
@@ -351,12 +352,12 @@ const colorPresets = {
     fontColor: "#eeeeee",
     selectionColor: "#F2613F",
   },
-  midnight: {
-    mainColor: "#35374B",
-    secondaryColor: "#344955",
-    accentColor: "#78A083",
-    fontColor: "#eeeeee",
-    selectionColor: "#50727B",
+  pastel: {
+    mainColor: "#51829B",
+    secondaryColor: "#9BB0C1",
+    accentColor: "#F6995C",
+    fontColor: "#000",
+    selectionColor: "#EADFB4",
   },
   retro: {
     mainColor: "#1D2B53",
@@ -387,10 +388,17 @@ const colorPresets = {
     selectionColor: "#2ab754",
   },
   default: {
-    mainColor: "#3a037c",
-    secondaryColor: "#121212",
-    accentColor: "#058509",
-    fontColor: "#d6d6d6",
-    selectionColor: "#ffffff",
+    mainColor: "#070F2B",
+    secondaryColor: "#1B1A55",
+    accentColor: "#535C91",
+    fontColor: "#eeeeee",
+    selectionColor: "#9290C3",
   },
+  // default: {
+  //   mainColor: "#3a037c",
+  //   secondaryColor: "#121212",
+  //   accentColor: "#058509",
+  //   fontColor: "#d6d6d6",
+  //   selectionColor: "#ffffff",
+  // },
 };

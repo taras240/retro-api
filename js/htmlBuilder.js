@@ -9,6 +9,7 @@ const sections = {
   settings: "./elements/settings.elem",
   awards: "./elements/awards.elem",
   status: "./elements/status.elem",
+  tutor: "./elements/tutor.elem",
 };
 
 // Функція для завантаження розділів

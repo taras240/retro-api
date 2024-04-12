@@ -259,8 +259,139 @@ a:hover {
 
 /** ------------------------------------------------*/
 /** -------[ WIDGETS SECTION ]----------------------*/
+#side_panel {
+  --side-panel-width: 90px;
+  position: fixed;
+  top: 50%;
+  left: calc(0px - var(--side-panel-width));
+  transform: translateY(-50%);
+  width: 90px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0 10px 10px 0;
+  padding: 0px;
+  height: 90vh;
+  background: linear-gradient(
+    to bottom,
+    var(--accent-color),
+    var(--main-color),
+    var(--secondary-color)
+  );
+  z-index: 1000;
+  transition: 0.2s;
+}
+#side_panel:hover,
+#side_panel.expanded {
+  left: 0;
+}
+.buttons-block_container,
+.buttons-block_widgets {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  gap: 20px;
+  width: 100%;
+}
+.buttons-block_container {
+  flex: 1;
+  justify-content: space-between;
+  padding: 15px 0;
+}
+.buttons-block_container .setting-radio-group {
+  width: 100%;
+}
+.side-panel_input,
+.side-panel_login {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 30px;
 
-.buttons-block {
+  transition: 0.2s;
+  cursor: pointer;
+  opacity: 0.5;
+}
+.side-panel_login:hover > img {
+  transform: scale(1.05);
+}
+.side-panel_input:hover > svg {
+  transform: scale(1.25);
+}
+.side-panel_input:active > svg {
+  transform: scale(1.1);
+}
+.side-panel_login:active > img {
+  transform: scale(1);
+}
+input[type="checkbox"]:checked + .side-panel_input {
+  opacity: 1;
+}
+input[type="checkbox"]:checked + .side-panel_login > img {
+  border: 4px solid var(--font-color);
+}
+.side-panel_input::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 0;
+  height: 120%;
+  transform: translateX(-50%);
+  border-bottom: 2px solid var(--font-color);
+  transition: 0.2s;
+}
+input[type="checkbox"]:checked + .side-panel_input::after {
+  width: 50%;
+}
+.login-icon {
+  position: relative;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  padding: 10px;
+  opacity: 1;
+}
+.login-icon::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 5%;
+  width: 90%;
+  height: 1px;
+  background-color: var(--font-color);
+  opacity: 0.15;
+}
+.side-panel_settings {
+  padding: 15px 0 0;
+  position: relative;
+}
+.side-panel_settings::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 5%;
+  width: 90%;
+  height: 1px;
+  background-color: var(--font-color);
+  opacity: 0.15;
+}
+.side-panel_login img,
+.side-panel_input svg {
+  width: 100%;
+  aspect-ratio: 1;
+  /* height: 100%; */
+  fill: var(--font-color);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: 0.2s;
+}
+.side-panel_settings {
+}
+/*!-------------------------------------------------*/
+/* .buttons-block {
   top: calc(100% - 200px);
   left: calc(100% - 320px);
   cursor: grab;
@@ -284,5 +415,4 @@ a:hover {
 
 .buttons-block:active {
   transition: none;
-}
-/* !!!!       hidden style in sections on load fix*/
+} */
