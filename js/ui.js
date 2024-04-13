@@ -177,38 +177,161 @@ class UI {
     const widthChange = event.clientX - startX;
     const heightChange = event.clientY - startY;
 
-    let newWidth = startWidth + widthChange;
-    let newHeight = startHeight + heightChange;
-
+    //Залипанн до інших віджентів
+    let width = startWidth + widthChange;
+    let height = startHeight + heightChange;
+    let { newHeight, newWidth } = UI.stickResizingSection({
+      width: width,
+      height: height,
+      stickySection: section,
+    });
+    //Залипання до країв екрана
+    const TOLERANCE = 10;
     const { offsetTop, offsetLeft } = section;
     //Перевірка залипання до правого краю
     newWidth =
-      newWidth + offsetLeft > window.innerWidth - 10
+      Math.abs(window.innerWidth - offsetLeft - newWidth) < TOLERANCE
         ? window.innerWidth - offsetLeft
         : newWidth;
 
-    //Перевірка залипання до правого краю
+    //Перевірка залипання до нижнього краю
     newHeight =
-      newHeight + offsetTop > window.innerHeight - 15
+      Math.abs(window.innerHeight - newHeight - offsetTop) < TOLERANCE
         ? window.innerHeight - offsetTop
         : newHeight;
-
-    // //Перевірка залипання до лівого краю
-    // newXPos = newXPos < 5 && newXPos > -20 ? 0 : newXPos;
-
-    // //Перевірка залипання до нижнього краю
-    // newYPos =
-    //   newYPos + clientHeight > window.innerHeight - 10 &&
-    //   newYPos + clientHeight < window.innerHeight + 20
-    //     ? window.innerHeight - clientHeight
-    //     : newYPos;
-
-    // //Перевірка залипання до верхнього краю
-    // newYPos = newYPos < 10 && newYPos > -10 ? 0 : newYPos;
 
     // Оновлюємо ширину та висоту контейнера з урахуванням змін
     section.style.width = `${newWidth}px`;
     section.style.height = `${newHeight}px`;
+  }
+  static stickMovingSection({ x, y, stickySection }) {
+    const { clientHeight, clientWidth } = stickySection;
+    let newYPos = y;
+    let newXPos = x;
+    const TOLERANCE = 10;
+    const MARGIN = 5;
+    const conditions = [
+      // bottom-bottom
+      {
+        check: (section) =>
+          Math.abs(
+            y + clientHeight - section.offsetTop - section.clientHeight
+          ) < TOLERANCE,
+        action: (section) =>
+          (newYPos = section.offsetTop + section.clientHeight - clientHeight),
+      },
+      // top-top
+      {
+        check: (section) => Math.abs(y - section.offsetTop) < TOLERANCE,
+        action: (section) => (newYPos = section.offsetTop),
+      },
+      // top - bottom
+      {
+        check: (section) =>
+          Math.abs(y - section.offsetTop - section.clientHeight) < TOLERANCE,
+        action: (section) =>
+          (newYPos = section.offsetTop + section.clientHeight + MARGIN),
+      },
+      // bottom - top
+      {
+        check: (section) =>
+          Math.abs(y + clientHeight - section.offsetTop) < TOLERANCE,
+        action: (section) =>
+          (newYPos = section.offsetTop - clientHeight - MARGIN),
+      },
+      // right - right
+      {
+        check: (section) =>
+          Math.abs(x + clientWidth - section.offsetLeft - section.clientWidth) <
+          TOLERANCE,
+        action: (section) =>
+          (newXPos = section.offsetLeft + section.clientWidth - clientWidth),
+      },
+      // left - left
+      {
+        check: (section) => Math.abs(x - section.offsetLeft) < TOLERANCE,
+        action: (section) => (newXPos = section.offsetLeft),
+      },
+      // right - left
+      {
+        check: (section) =>
+          Math.abs(x + clientWidth - section.offsetLeft) < TOLERANCE,
+        action: (section) =>
+          (newXPos = section.offsetLeft - clientWidth - MARGIN),
+      },
+      // left - right
+      {
+        check: (section) =>
+          Math.abs(x - section.offsetLeft - section.clientWidth) < TOLERANCE,
+        action: (section) =>
+          (newXPos = section.offsetLeft + section.clientWidth + MARGIN),
+      },
+    ];
+
+    document.querySelectorAll(".section").forEach((section) => {
+      if (stickySection != section) {
+        conditions.forEach(({ check, action }) => {
+          if (check(section)) {
+            action(section);
+          }
+        });
+      }
+    });
+
+    return { newXPos, newYPos };
+  }
+  static stickResizingSection({ width, height, stickySection }) {
+    const { offsetTop, offsetLeft } = stickySection;
+    let newWidth = width;
+    let newHeight = height;
+    const TOLERANCE = 10;
+    const MARGIN = 5;
+    const conditions = [
+      // bottom-bottom
+      {
+        check: (section) =>
+          Math.abs(
+            offsetTop + height - section.offsetTop - section.clientHeight
+          ) < TOLERANCE,
+        action: (section) =>
+          (newHeight = section.offsetTop + section.clientHeight - offsetTop),
+      },
+      // bottom - top
+      {
+        check: (section) =>
+          Math.abs(offsetTop + height - section.offsetTop) < TOLERANCE,
+        action: (section) =>
+          (newHeight = section.offsetTop - offsetTop - MARGIN),
+      },
+      // right - right
+      {
+        check: (section) =>
+          Math.abs(
+            offsetLeft + width - section.offsetLeft - section.clientWidth
+          ) < TOLERANCE,
+        action: (section) =>
+          (newWidth = section.offsetLeft + section.clientWidth - offsetLeft),
+      },
+      // right - left
+      {
+        check: (section) =>
+          Math.abs(offsetLeft + width - section.offsetLeft) < TOLERANCE,
+        action: (section) =>
+          (newWidth = section.offsetLeft - offsetLeft - MARGIN),
+      },
+    ];
+
+    document.querySelectorAll(".section").forEach((section) => {
+      if (stickySection != section) {
+        conditions.forEach(({ check, action }) => {
+          if (check(section)) {
+            action(section);
+          }
+        });
+      }
+    });
+
+    return { newWidth, newHeight };
   }
   static moveEvent(section, e) {
     document.querySelector("#background-animation").style.display = "none";
@@ -244,28 +367,35 @@ class UI {
   }
   static setPosition(e, offsetX, offsetY, section) {
     e.preventDefault();
-    let newXPos = e.clientX - offsetX;
-    let newYPos = e.clientY - offsetY;
+    let XPos = e.clientX - offsetX;
+    let YPos = e.clientY - offsetY;
     const { clientHeight, clientWidth } = section;
+
+    //Перевірка залипань до інших віджетів
+    let { newXPos, newYPos } = UI.stickMovingSection({
+      x: XPos,
+      y: YPos,
+      stickySection: section,
+    });
+
     //Перевірка залипання до правого краю
+    const TOLERANCE = 10;
     newXPos =
-      newXPos + clientWidth > window.innerWidth - 10 &&
-      newXPos + clientWidth < window.innerWidth + 20
+      Math.abs(window.innerWidth - newXPos - clientWidth) < TOLERANCE
         ? window.innerWidth - clientWidth
         : newXPos;
 
     //Перевірка залипання до лівого краю
-    newXPos = newXPos < 5 && newXPos > -20 ? 0 : newXPos;
+    newXPos = Math.abs(newXPos) < TOLERANCE ? 0 : newXPos;
 
     //Перевірка залипання до нижнього краю
     newYPos =
-      newYPos + clientHeight > window.innerHeight - 10 &&
-      newYPos + clientHeight < window.innerHeight + 20
+      Math.abs(window.innerHeight - newYPos - clientHeight) < TOLERANCE
         ? window.innerHeight - clientHeight
         : newYPos;
 
     //Перевірка залипання до верхнього краю
-    newYPos = newYPos < 10 && newYPos > -10 ? 0 : newYPos;
+    newYPos = Math.abs(newYPos) < TOLERANCE ? 0 : newYPos;
 
     //Встановлення нових позицій
     section.style.left = newXPos + "px";

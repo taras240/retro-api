@@ -271,9 +271,9 @@ a:hover {
   --side-panel-width: 90px;
   position: fixed;
   top: 50%;
+  width: var(--side-panel-width);
   left: calc(0px - var(--side-panel-width) - 5px);
   transform: translateY(-50%);
-  width: 90px;
   display: flex;
   flex-direction: column;
   border-radius: 0 10px 10px 0;
