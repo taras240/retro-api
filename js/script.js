@@ -18,7 +18,9 @@ async function getAchievements() {
 
     // Парсинг та відображення досягнень гри
     ui.achievementsBlock.parseGameAchievements(response);
-
+    ui.achievementsBlockTemplates.forEach((template) =>
+      template.cloneAchieves()
+    );
     // Оновлення інформації в картці гри
     ui.gameCard.updateGameCardInfo(response);
 
@@ -71,32 +73,52 @@ async function updateAchievements() {
         const isHardcoreMismatch =
           achievementElement.classList.contains("hardcore") !== isHardcore;
         const isNotEarned = !achievementElement.classList.contains("earned");
+
         const isAchieved = isNotEarned || isHardcoreMismatch;
+
         // Перевірка, чи потрібно перемістити елемент на початок
         if (isLatestSort && isAchieved) {
           ui.achievementsBlock.moveToTop(achievementElement);
         }
         if (isAchieved) {
+          // Додавання класів для відображення зароблених досягнень
+          achievementElement?.classList.add("earned");
+          targetElement?.classList.add("earned");
+          ui.achievementsBlockTemplates.forEach((template) => {
+            let element = template?.container?.querySelector(
+              `[data-achiv-id="${achievement.AchievementID}"]`
+            );
+            element.classList?.add("earned");
+            template.applyFilter();
+          });
           updateAwards();
         }
         if (isHardcoreMismatch) {
           ui.target.moveToTop(targetElement);
           ui.statusPanel.updateProgress({ points: achievement.Points });
-        }
-        // Додавання класів для відображення зароблених досягнень
-        achievementElement?.classList.add("earned");
-        targetElement?.classList.add("earned");
-
-        if (isHardcore) {
           achievementElement.classList.add("hardcore");
           achievementElement.dataset.DateEarnedHardcore = achievement?.Date;
           targetElement?.classList.add("hardcore");
+          ui.achievementsBlockTemplates.forEach((template) => {
+            let element = template?.container?.querySelector(
+              `[data-achiv-id="${achievement.AchievementID}"]`
+            );
+            if (template.sortAchievementsBy === UI.sortMethods.latest) {
+              template.moveToTop(element);
+            }
+            element.classList?.add("hardcore");
+            element.dataset.DateEarnedHardcore = achievement?.Date;
+            template.applyFilter();
+          });
           if (targetElement && config.autoClearTarget) {
             setTimeout(
               () => targetElement.remove(),
               config.autoClearTargetTime * 1000
             );
           }
+        }
+
+        if (isHardcore) {
         }
 
         ui.achievementsBlock.applyFilter();

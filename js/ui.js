@@ -12,7 +12,7 @@ class UI {
     truepoints: "truepoints",
     default: "default",
   };
-
+  achievementsBlockTemplates = [];
   constructor() {
     loadSections()
       .then(() => {
@@ -88,7 +88,11 @@ class UI {
     document.querySelector("#background-animation").style.display =
       config.bgVisibility ? "display" : "none";
   }
-
+  createAchievementsTemplate() {
+    this.achievementsBlockTemplates.push(
+      new AchievementsBlockTemplate(this.achievementsBlockTemplates.length + 1)
+    );
+  }
   updateGameInfo({
     Title,
     ConsoleName,
@@ -435,37 +439,81 @@ class AchievementsBlock {
   get FILTER_METHOD() {
     return filterBy[config.filterAchievementsBy];
   }
-  constructor() {
-    this.initializeElements();
-    this.addEvents();
-    this.setValues();
+  get REVERSE_SORT() {
+    return config.reverseSort;
+  }
+  set REVERSE_SORT(value) {
+    config.reverseSort = value;
+  }
+  get REVERSE_FILTER() {
+    return config.reverseFilter;
+  }
+  constructor(isTemplate = false) {
+    this.sectionCode = "";
+    if (!isTemplate) {
+      this.initializeElements();
+      this.addEvents();
+      this.setValues();
+    }
   }
   initializeElements() {
     // Елементи блока досягнень
-    this.section = document.querySelector("#achievements_section"); // Секція блока досягнень
-    this.bgVisibilityCheckbox = document.querySelector("#show-achivs-bg");
-    this.stretchButton = document.querySelector("#stretch-achivs");
-    this.minimumWidthInput = document.querySelector("#achiv-min-width");
-    this.maximumWidthInput = document.querySelector("#achiv-max-width");
-
-    this.sortByLatestButton = document.querySelector("#sort-by-latest"); // Кнопка сортування за останніми
-    this.sortByEarnedButton = document.querySelector("#sort-by-earned"); // Кнопка сортування за заробленими
-    this.sortByPointsButton = document.querySelector("#sort-by-points"); // Кнопка сортування за балами
-    this.sortByTruepointsButton = document.querySelector("#sort-by-truepoints");
-
-    this.sortByDefaultButton = document.querySelector("#sort-by-default"); // Кнопка сортування за замовчуванням
-    this.reverseSortButton = document.querySelector("#reverse-sort"); // Чекбокс сортування по зворотньому порядку
-
-    this.filterByAllRadio = document.querySelector("#filter-by-all"); // Фільтр за всіма
-    this.filterByEarnedRadio = document.querySelector("#filter-by-earned"); // Фільтр за заробленими
-    this.filterByMissableRadio = document.querySelector("#filter-by-missable"); // Фільтр за всіма
-    this.filterByNotEarnedRadio = document.querySelector(
-      "#filter-by-not-earned"
+    this.section = document.querySelector(
+      `#achievements_section${this.sectionCode}`
+    ); // Секція блока досягнень
+    this.bgVisibilityCheckbox = this.section.querySelector(
+      `#show-achivs-bg${this.sectionCode}`
     );
-    this.reverseFilterCheckbox = document.querySelector("#reverse-filter"); // Фільтр за не заробленими
+    this.stretchButton = this.section.querySelector(
+      `#stretch-achivs${this.sectionCode}`
+    );
+    this.minimumWidthInput = this.section.querySelector(
+      `#achiv-min-width${this.sectionCode}`
+    );
+    this.maximumWidthInput = this.section.querySelector(
+      `#achiv-max-width${this.sectionCode}`
+    );
 
-    this.container = document.querySelector(".achievements-container"); //Контейнер  з досягненнями
-    this.resizer = document.querySelector("#achivs-resizer"); // Ресайзер блока досягнень
+    this.sortByLatestButton = this.section.querySelector(
+      `#sort-by-latest${this.sectionCode}`
+    ); // Кнопка сортування за останніми
+    this.sortByEarnedButton = this.section.querySelector(
+      `#sort-by-earned${this.sectionCode}`
+    ); // Кнопка сортування за заробленими
+    this.sortByPointsButton = this.section.querySelector(
+      `#sort-by-points${this.sectionCode}`
+    ); // Кнопка сортування за балами
+    this.sortByTruepointsButton = this.section.querySelector(
+      `#sort-by-truepoints${this.sectionCode}`
+    );
+
+    this.sortByDefaultButton = this.section.querySelector(
+      `#sort-by-default${this.sectionCode}`
+    ); // Кнопка сортування за замовчуванням
+    this.reverseSortButton = this.section.querySelector(
+      `#reverse-sort${this.sectionCode}`
+    ); // Чекбокс сортування по зворотньому порядку
+
+    this.filterByAllRadio = this.section.querySelector(
+      `#filter-by-all${this.sectionCode}`
+    ); // Фільтр за всіма
+    this.filterByEarnedRadio = this.section.querySelector(
+      `#filter-by-earned${this.sectionCode}`
+    ); // Фільтр за заробленими
+    this.filterByMissableRadio = this.section.querySelector(
+      `#filter-by-missable${this.sectionCode}`
+    ); // Фільтр за всіма
+    this.filterByNotEarnedRadio = this.section.querySelector(
+      `#filter-by-not-earned${this.sectionCode}`
+    );
+    this.reverseFilterCheckbox = this.section.querySelector(
+      `#reverse-filter${this.sectionCode}`
+    ); // Фільтр за не заробленими
+
+    this.container = this.section.querySelector(`.achievements-container`); //Контейнер  з досягненнями
+    this.resizer = this.section.querySelector(
+      `#achivs-resizer${this.sectionCode}`
+    ); // Ресайзер блока досягнень
   }
   addEvents() {
     // Додавання подій для пересування вікна ачівментсів
@@ -626,6 +674,7 @@ class AchievementsBlock {
 
     config.achivsBgVisibility ? this.section.classList.add("bg-visible") : "";
   }
+
   clearAchievementsSection() {
     const { container } = this;
     container.innerHTML = "";
@@ -802,7 +851,7 @@ class AchievementsBlock {
     }
   }
   moveToTop(element) {
-    if (config.reverseSort == -1) {
+    if (this.REVERSE_SORT == -1) {
       this.container.appendChild(element);
     } else {
       this.container.insertBefore(element, this.container.firstChild);
@@ -855,7 +904,7 @@ class AchievementsBlock {
   applySorting() {
     let achivsArray = [...this.container.querySelectorAll(".achiv-block")];
     achivsArray.sort(
-      (a, b) => this.SORT_METHOD(a.dataset, b.dataset) * config.reverseSort
+      (a, b) => this.SORT_METHOD(a.dataset, b.dataset) * this.REVERSE_SORT
     );
     this.container.innerHTML = "";
     achivsArray.forEach((achiv) => this.container.appendChild(achiv));
@@ -865,7 +914,7 @@ class AchievementsBlock {
     achivsArray.forEach((a) => {
       a.classList.toggle(
         "hidden",
-        !this.FILTER_METHOD(a.dataset) ^ config.reverseFilter
+        !this.FILTER_METHOD(a.dataset) ^ this.REVERSE_FILTER
       );
     });
   }
@@ -873,7 +922,381 @@ class AchievementsBlock {
     ui.buttons.achievements.click();
   }
 }
+class AchievementsBlockTemplate extends AchievementsBlock {
+  set SORT_METHOD(value) {
+    this.sortAchievementsBy = value;
+  }
+  get SORT_METHOD() {
+    return sortBy[this.sortAchievementsBy || UI.sortMethods.default];
+  }
+  // filterBy.all;
+  set FILTER_METHOD(value) {
+    this._filterAchievementsBy = value;
+  }
+  get FILTER_METHOD() {
+    return filterBy[this._filterAchievementsBy || UI.filterMethods.all];
+  }
+  get REVERSE_SORT() {
+    return this._reverseSort ? -1 : 1;
+  }
+  get REVERSE_FILTER() {
+    return this._reverseFilter;
+  }
+  constructor(id) {
+    super(true);
+    this.id = id;
+    this.sectionCode = id ? "-" + id : "";
+    this.generateNewWidget();
+    super.initializeElements();
+    this.addEvents();
+    super.setValues();
+    this.cloneAchieves();
+    super.fitSizeVertically();
+  }
+  addEvents() {
+    this.section
+      .querySelector(".header-settings-container")
+      .addEventListener("mousedown", (e) => e.stopPropagation());
+    // Додавання подій для пересування вікна ачівментсів
+    this.section.addEventListener("mousedown", (e) => {
+      UI.moveEvent(this.section, e);
+    });
+    this.bgVisibilityCheckbox.addEventListener("change", (e) => {
+      this.bgVisibilityCheckbox.checked
+        ? this.section.classList.add("bg-visible")
+        : this.section.classList.remove("bg-visible");
+    });
+    // Додає подію кліку для сортування за замовчуванням
+    this.sortByDefaultButton.addEventListener("click", (e) => {
+      e.stopPropagation();
+      // Встановлює метод сортування за замовчуванням
+      this.SORT_METHOD = UI.sortMethods.default;
+      // Застосовує сортування та оновлює інтерфейс
+      this.applySorting();
+    });
 
+    // Додає подію кліку для сортування за отриманням досягнення
+    this.sortByEarnedButton.addEventListener("click", (e) => {
+      e.stopPropagation();
+      // Встановлює метод сортування за отриманням досягнення
+      this.SORT_METHOD = UI.sortMethods.earnedCount;
+      // Застосовує сортування та оновлює інтерфейс
+      this.applySorting();
+    });
+
+    // Додає подію кліку для сортування за датою отримання
+    this.sortByLatestButton.addEventListener("click", (e) => {
+      e.stopPropagation();
+      // Встановлює метод сортування за датою отримання
+      this.SORT_METHOD = UI.sortMethods.latest;
+      // Застосовує сортування та оновлює інтерфейс
+      this.applySorting();
+    });
+
+    // Додає подію кліку для сортування за кількістю балів
+    this.sortByPointsButton.addEventListener("click", (e) => {
+      e.stopPropagation();
+      // Встановлює метод сортування за кількістю балів
+      this.SORT_METHOD = UI.sortMethods.points;
+      // Застосовує сортування та оновлює інтерфейс
+      this.applySorting();
+    });
+    this.sortByTruepointsButton.addEventListener("click", (e) => {
+      e.stopPropagation();
+      // Встановлює метод сортування за кількістю балів
+      this.SORT_METHOD = UI.sortMethods.truepoints;
+      // Застосовує сортування та оновлює інтерфейс
+      this.applySorting();
+    });
+    this.reverseSortButton.addEventListener("click", (e) => {
+      e.stopPropagation();
+      // Встановлює reverse сортування
+      this._reverseSort = this.reverseSortButton.checked;
+      // Застосовує сортування та оновлює інтерфейс
+      this.applySorting();
+    });
+    this.reverseFilterCheckbox.addEventListener("change", (e) => {
+      this._reverseFilter = this.reverseFilterCheckbox.checked;
+      this.applyFilter();
+    });
+    // Додає подію кліку для фільтрування
+    this.filterByEarnedRadio.addEventListener("click", (e) => {
+      e.stopPropagation();
+      this.FILTER_METHOD = UI.filterMethods.earned;
+      this.applyFilter();
+    });
+
+    this.filterByAllRadio.addEventListener("click", (e) => {
+      e.stopPropagation();
+      this.FILTER_METHOD = UI.filterMethods.all;
+      this.applyFilter();
+    });
+    this.filterByMissableRadio.addEventListener("click", (e) => {
+      e.stopPropagation();
+      this.FILTER_METHOD = UI.filterMethods.missable;
+      this.applyFilter();
+    });
+
+    this.stretchButton.addEventListener("click", (e) => {
+      config.stretchAchievements = this.stretchButton.checked;
+      this.container.style.height = config.stretchAchievements
+        ? "100%"
+        : "auto";
+    });
+    this.minimumWidthInput.addEventListener("change", (e) => {
+      const { minimumWidthInput } = this;
+      if (minimumWidthInput.value)
+        config.ACHIV_MIN_SIZE = minimumWidthInput.value;
+      this.fitSizeVertically();
+    });
+    this.maximumWidthInput.addEventListener("change", (e) => {
+      const { maximumWidthInput } = this;
+      if (maximumWidthInput.value)
+        config.ACHIV_MAX_SIZE = maximumWidthInput.value;
+      this.fitSizeVertically();
+    });
+    this.resizer.addEventListener("mousedown", (event) => {
+      event.stopPropagation();
+      this.section.classList.add("resized");
+      UI.resizeEvent({
+        event: event,
+        section: this.section,
+        postFunc: () => this.fitSizeVertically(true),
+      });
+    });
+  }
+  generateNewWidget() {
+    const newWidget = document.createElement("section");
+    newWidget.id = `achievements_section${this.sectionCode}`;
+    newWidget.classList.add("achivs", "section");
+    newWidget.style.width = config.ui.achievements_section?.width ?? 350 + "px";
+    newWidget.style.height =
+      config.ui.achievements_section?.height ?? 650 + "px";
+    newWidget.innerHTML = `
+    <div class="header-container achievements-header_container">
+    <div class="header-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+        <path
+          d="m668-380 152-130 120 10-176 153 52 227-102-62-46-198Zm-94-292-42-98 46-110 92 217-96-9ZM294-287l126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM173-120l65-281L20-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Zm247-340Z" />
+      </svg></div>
+    <h2 class="widget-header-text achivs-header-text">Achieves~</h2>
+    <div class="achivs-settings-block">
+
+
+      <button class="header-settings_button header-button header-icon" title="settings"
+        onclick="this.parentNode.classList.toggle('checked')">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+          <path
+            d="M686-132 444-376q-20 8-40.5 12t-43.5 4q-100 0-170-70t-70-170q0-36 10-68.5t28-61.5l146 146 72-72-146-146q29-18 61.5-28t68.5-10q100 0 170 70t70 170q0 23-4 43.5T584-516l244 242q12 12 12 29t-12 29l-84 84q-12 12-29 12t-29-12Zm29-85 27-27-256-256q18-20 26-46.5t8-53.5q0-60-38.5-104.5T386-758l74 74q12 12 12 28t-12 28L332-500q-12 12-28 12t-28-12l-74-74q9 57 53.5 95.5T360-440q26 0 52-8t47-25l256 256ZM472-488Z" />
+        </svg>
+      </button>
+      <div class="header-settings-container">
+        <div class="widget-settings_header-container">
+          <h3 class="widget-settings_header widget-header-text">Achivs settings</h3>
+          <button class="header-button header-icon"
+            onclick="this.closest('.achivs-settings-block').classList.toggle('checked')">
+            <svg height="24" viewBox="0 -960 960 960" width="24">
+              <path
+                d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+            </svg>
+          </button>
+        </div>
+        <ul class="">
+          <li class="header-settings-item">
+            <label class="header-setting-label" title="autohide bg">Show bg:</label>
+
+            <div class="setting-radio-group">
+              <input type="checkbox" name="show-achivs-bg${
+                this.sectionCode
+              }" id="show-achivs-bg${this.sectionCode}">
+              </input>
+              <label class="settings-input " for="show-achivs-bg${
+                this.sectionCode
+              }">Show bg</label>
+            </div>
+          </li>
+          <li class="header-settings-item">
+            <label class="header-setting-label" title="filter methods">Filter:</label>
+            <div class="setting-input-values">
+              <div class="setting-radio-group">
+                <input type="radio" name="filter${
+                  this.sectionCode
+                }" id="filter-by-missable${
+      this.sectionCode
+    }" class="filter-achivs-radio ">
+                </input>
+
+                <label class="settings-input" for="filter-by-missable${
+                  this.sectionCode
+                }">missable</label>
+
+              </div>
+              <div class="setting-radio-group">
+                <input type="radio" name="filter${
+                  this.sectionCode
+                }" id="filter-by-earned${
+      this.sectionCode
+    }" class="filter-achivs-radio ">
+                </input>
+
+                <label class="settings-input" for="filter-by-earned${
+                  this.sectionCode
+                }">earned</label>
+
+              </div>
+
+              <div class="setting-radio-group">
+                <input checked type="radio" name="filter${
+                  this.sectionCode
+                }" id="filter-by-all${
+      this.sectionCode
+    }" class="filter-achivs-radio ">
+                </input>
+                <label class="settings-input" for="filter-by-all${
+                  this.sectionCode
+                }">all</label>
+
+              </div>
+              <div class="setting-radio-group">
+                <input type="checkbox" name="reverse${
+                  this.sectionCode
+                }" id="reverse-filter${this.sectionCode}">
+                </input>
+                <label class="settings-input" for="reverse-filter${
+                  this.sectionCode
+                }">reverse</label>
+              </div>
+            </div>
+
+          </li>
+          <li class="header-settings-item">
+            <label class="header-setting-label" title="sort methods">Sort:</label>
+            <div class="setting-input-values">
+              <div class="setting-radio-group">
+                <input type="radio" name="sort${
+                  this.sectionCode
+                }" id="sort-by-latest${
+      this.sectionCode
+    }" class="sort-achivs-button settings-input"
+                  title="not hard - not earn">
+                </input>
+                <label class="settings-input" for="sort-by-latest${
+                  this.sectionCode
+                }">latest</label>
+              </div>
+              <div class="setting-radio-group">
+                <input type="radio" name="sort${
+                  this.sectionCode
+                }" id="sort-by-earned${
+      this.sectionCode
+    }" class="sort-achivs-button settings-input">
+                </input>
+                <label class="settings-input" for="sort-by-earned${
+                  this.sectionCode
+                }">rarest</label>
+              </div>
+              <div class="setting-radio-group">
+                <input type="radio" name="sort${
+                  this.sectionCode
+                }" id="sort-by-points${
+      this.sectionCode
+    }" class="sort-achivs-button settings-input">
+                </input>
+                <label class="settings-input" for="sort-by-points${
+                  this.sectionCode
+                }">points</label>
+              </div>
+              <div class="setting-radio-group">
+                <input type="radio" name="sort${
+                  this.sectionCode
+                }" id="sort-by-truepoints${
+      this.sectionCode
+    }" class="sort-achivs-button settings-input">
+                </input>
+                <label class="settings-input" for="sort-by-truepoints${
+                  this.sectionCode
+                }">retropoints</label>
+              </div>
+              <div class="setting-radio-group">
+
+                <input type="radio" name="sort${
+                  this.sectionCode
+                }" id="sort-by-default${
+      this.sectionCode
+    }" class="sort-achivs-button settings-input">
+                </input>
+                <label class="settings-input" for="sort-by-default${
+                  this.sectionCode
+                }">default</label>
+              </div>
+              <div class="setting-radio-group">
+                <input type="checkbox" name="reverse${
+                  this.sectionCode
+                }" id="reverse-sort${this.sectionCode}">
+                </input>
+                <label class="settings-input" for="reverse-sort${
+                  this.sectionCode
+                }">reverse</label>
+              </div>
+            </div>
+
+          </li>
+          <li class="header-settings-item">
+            <label class="header-setting-label" title="sort methods">Achivs size:</label>
+            <div class="setting-input-values">
+
+              <input type="number" class="number-input input free-width" name="min-width" id="achiv-min-width${
+                this.sectionCode
+              }"
+                value="30" placeholder="min" title="minimum width in px" />
+              <input type="number" class="number-input input free-width" name="max-width" id="achiv-max-width${
+                this.sectionCode
+              }"
+                value="150" placeholder="max" title="maximum width in px" />
+
+              <div class="setting-radio-group">
+                <input type="checkbox" name="stretch" id="stretch-achivs${
+                  this.sectionCode
+                }">
+                </input>
+                <label class="settings-input" for="stretch-achivs${
+                  this.sectionCode
+                }">stretch</label>
+              </div>
+            </div>
+
+          </li>
+        </ul>
+      </div>
+
+
+    </div>
+    <button class="header-button header-icon" onclick="ui.achievementsBlockTemplates[${
+      this.id - 1
+    }].close();">
+      <svg height="24" viewBox="0 -960 960 960" width="24">
+        <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+      </svg>
+    </button>
+  </div>
+  <ul class="achievements-container"></ul>
+  <div class="resizer" id="achivs-resizer${this.sectionCode}"></div>
+    `;
+    document.querySelector(".wrapper").appendChild(newWidget);
+  }
+  cloneAchieves() {
+    let achievements = ui.achievementsBlock?.container.innerHTML;
+    this.container.innerHTML = achievements ?? "";
+    this.applyFilter();
+    this.applySorting();
+    this.container
+      .querySelectorAll(".add-to-target")
+      .forEach((button) => (button.style.display = "none"));
+    this.fitSizeVertically();
+  }
+  close() {
+    this.section.remove();
+  }
+}
 class ButtonPanel {
   constructor() {
     this.initializeElements();
@@ -896,7 +1319,7 @@ class ButtonPanel {
   addEvents() {
     // Отримуємо посилання на панель
     this.sidePanel = document.querySelector("#side_panel");
-    setTimeout(() => ui.buttons.section.classList.remove("expanded"), 5000);
+    setTimeout(() => ui.buttons.section.classList.remove("expanded"), 2000);
     // Додаємо подію для відслідковування руху миші
     document.addEventListener("mousemove", (e) => {
       // Перевіряємо, чи миша знаходиться біля правого краю екрану

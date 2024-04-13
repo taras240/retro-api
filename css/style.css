@@ -322,6 +322,28 @@ a:hover {
   cursor: pointer;
   opacity: 0.5;
 }
+.side-panel_achieves-group {
+  display: flex;
+  position: relative;
+}
+.side-panel_button {
+  position: absolute;
+  background-color: transparent;
+  width: 15px;
+  height: 15px;
+  right: 15%;
+  top: 0;
+  opacity: 0.8;
+}
+.side-panel_login img,
+.side-panel_input svg {
+  width: 100%;
+  aspect-ratio: 1;
+  fill: var(--font-color);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: 0.2s;
+}
 .side-panel_login:hover > img {
   transform: scale(1.05);
 }
@@ -393,16 +415,7 @@ input[type="checkbox"]:checked + .side-panel_input::before {
   background-color: var(--font-color);
   opacity: 0.15;
 }
-.side-panel_login img,
-.side-panel_input svg {
-  width: 100%;
-  aspect-ratio: 1;
-  /* height: 100%; */
-  fill: var(--font-color);
-  border-radius: 10px;
-  overflow: hidden;
-  transition: 0.2s;
-}
+
 .side-panel_settings {
 }
 /*!-------------------------------------------------*/
