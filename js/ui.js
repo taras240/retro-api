@@ -1286,11 +1286,29 @@ class AchievementsBlockTemplate extends AchievementsBlock {
   cloneAchieves() {
     let achievements = ui.achievementsBlock?.container.innerHTML;
     this.container.innerHTML = achievements ?? "";
-    this.applyFilter();
-    this.applySorting();
+    this.container.querySelectorAll(".achiv-block").forEach((achivElement) => {
+      let achivDetails = achivElement.querySelector(".achiv-details-block");
+      achivElement.addEventListener("mouseenter", (e) => {
+        achivDetails.classList.remove("left-side", "top-side");
+        this.fixDetailsPosition(achivDetails);
+      });
+
+      achivElement.addEventListener("mousedown", (e) => {
+        e.stopPropagation();
+      });
+      achivElement.addEventListener("click", (e) => {
+        e.stopPropagation();
+        this.container.querySelectorAll(".achiv-block").forEach((achiv) => {
+          if (achiv !== achivElement) achiv.classList.remove("expanded");
+        });
+        achivElement.classList.toggle("expanded");
+      });
+    });
     this.container
       .querySelectorAll(".add-to-target")
       .forEach((button) => (button.style.display = "none"));
+    this.applyFilter();
+    this.applySorting();
     this.fitSizeVertically();
   }
   close() {
