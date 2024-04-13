@@ -177,9 +177,38 @@ class UI {
     const widthChange = event.clientX - startX;
     const heightChange = event.clientY - startY;
 
+    let newWidth = startWidth + widthChange;
+    let newHeight = startHeight + heightChange;
+
+    const { offsetTop, offsetLeft } = section;
+    //Перевірка залипання до правого краю
+    newWidth =
+      newWidth + offsetLeft > window.innerWidth - 10
+        ? window.innerWidth - offsetLeft
+        : newWidth;
+
+    //Перевірка залипання до правого краю
+    newHeight =
+      newHeight + offsetTop > window.innerHeight - 15
+        ? window.innerHeight - offsetTop
+        : newHeight;
+
+    // //Перевірка залипання до лівого краю
+    // newXPos = newXPos < 5 && newXPos > -20 ? 0 : newXPos;
+
+    // //Перевірка залипання до нижнього краю
+    // newYPos =
+    //   newYPos + clientHeight > window.innerHeight - 10 &&
+    //   newYPos + clientHeight < window.innerHeight + 20
+    //     ? window.innerHeight - clientHeight
+    //     : newYPos;
+
+    // //Перевірка залипання до верхнього краю
+    // newYPos = newYPos < 10 && newYPos > -10 ? 0 : newYPos;
+
     // Оновлюємо ширину та висоту контейнера з урахуванням змін
-    section.style.width = `${startWidth + widthChange}px`;
-    section.style.height = `${startHeight + heightChange}px`;
+    section.style.width = `${newWidth}px`;
+    section.style.height = `${newHeight}px`;
   }
   static moveEvent(section, e) {
     document.querySelector("#background-animation").style.display = "none";
@@ -215,8 +244,32 @@ class UI {
   }
   static setPosition(e, offsetX, offsetY, section) {
     e.preventDefault();
-    section.style.left = e.clientX - offsetX + "px";
-    section.style.top = e.clientY - offsetY + "px";
+    let newXPos = e.clientX - offsetX;
+    let newYPos = e.clientY - offsetY;
+    const { clientHeight, clientWidth } = section;
+    //Перевірка залипання до правого краю
+    newXPos =
+      newXPos + clientWidth > window.innerWidth - 10 &&
+      newXPos + clientWidth < window.innerWidth + 20
+        ? window.innerWidth - clientWidth
+        : newXPos;
+
+    //Перевірка залипання до лівого краю
+    newXPos = newXPos < 5 && newXPos > -20 ? 0 : newXPos;
+
+    //Перевірка залипання до нижнього краю
+    newYPos =
+      newYPos + clientHeight > window.innerHeight - 10 &&
+      newYPos + clientHeight < window.innerHeight + 20
+        ? window.innerHeight - clientHeight
+        : newYPos;
+
+    //Перевірка залипання до верхнього краю
+    newYPos = newYPos < 10 && newYPos > -10 ? 0 : newYPos;
+
+    //Встановлення нових позицій
+    section.style.left = newXPos + "px";
+    section.style.top = newYPos + "px";
   }
 
   static addDraggingEventForElements(container) {
