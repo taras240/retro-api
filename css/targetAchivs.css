@@ -31,17 +31,36 @@
   gap: 10px;
   color: var(--font-color);
   background-color: var(--secondary-color);
-  /* background: linear-gradient(to right, var(--secondary-color), transparent); */
+
   border-radius: 5px;
   overflow: hidden;
-  box-shadow: 0 1px 1px 0px #000000a1;
+  box-shadow: 1px 1px 1px 0px #000000a1;
+}
+.target-achiv::before {
+  --blick-color: rgba(0, 0, 0, 0.1);
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: linear-gradient(
+    to right,
+    var(--blick-color),
+    transparent,
+    var(--blick-color)
+  );
+  pointer-events: none;
+}
+.target-achiv:hover::before {
+  --blick-color: rgba(255, 255, 255, 0.05);
 }
 .target-achiv.hidden {
   display: none;
 }
 .target-achiv:hover {
   transform: scale(1.02);
-  box-shadow: 0 2px 7px 0px #000000a1;
+  box-shadow: 2px 2px 7px 0px #000000a1;
   transition: 0.2s;
 }
 .prev-img {

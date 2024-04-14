@@ -139,10 +139,13 @@
   display: none;
 }
 .console-awards:nth-child(odd) .awarded-game {
-  background: linear-gradient(to right, var(--secondary-color), transparent);
+  background-color: var(--secondary-color);
+  /* background: linear-gradient(to right, var(--secondary-color), transparent); */
 }
 .console-awards:nth-child(even) .awarded-game {
-  background: linear-gradient(to right, var(--main-color), transparent);
+  background-color: var(--main-color);
+
+  /* background: linear-gradient(to right, var(--main-color), transparent); */
 }
 .awarded-game:hover {
   box-shadow: 0 2px 7px 0px #000000a1;
