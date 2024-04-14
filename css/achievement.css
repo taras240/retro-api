@@ -64,6 +64,9 @@
 .achiv-block.hidden {
   opacity: 0.15;
 }
+.achiv-block.removed {
+  display: none;
+}
 .achiv-block.earned {
   /* animation: achiv-earned-animation 0.6s; */
 }
@@ -167,21 +170,34 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  gap: 4px;
   position: absolute;
   margin: 1px;
-  width: 300px;
+  max-width: 300px;
+  width: max-content;
   left: 100%;
   top: 10%;
-  padding: 5px;
+  padding: 8px 16px;
   background-color: var(--secondary-color);
-  border: 1px solid var(--font-color);
-  border-radius: 5px;
+  background: linear-gradient(
+    to top left,
+    var(--main-color),
+    var(--secondary-color)
+  );
+  box-shadow: 0 0 2px 0 black;
+  /* border: 1px solid var(--font-color); */
+  border-radius: 8px;
   line-height: 1.5rem;
   pointer-events: none;
   z-index: 1;
   visibility: hidden;
   opacity: 0;
   transition: 0.2s;
+  font-size: 1.15rem;
+}
+.achiv-details-block h3 {
+  font-size: 1.15rem;
+  font-weight: 500;
 }
 .achiv-details-block.left-side {
   left: auto;

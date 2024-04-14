@@ -2,12 +2,11 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -100%);
+  transform: translate(-50%, -50%);
   width: 500px;
   overflow: hidden;
   background-color: var(--main-color);
-  /* box-shadow: 0 0 20px 20px black; */
-  z-index: 100;
+  z-index: 10000;
 }
 
 .help-container {
@@ -35,6 +34,7 @@
   text-align: justify;
 }
 .help-content a {
-  color: var(--accent-color);
+  background-color: var(--font-color);
+  color: var(--main-color);
   text-decoration: underline;
 }

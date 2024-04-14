@@ -1,6 +1,13 @@
 const CONFIG_FILE_NAME = "retroApiConfig";
 class Config {
   //! ----------[ Login information ]------------------
+  get version() {
+    return this._cfg.version ?? "0";
+  }
+  set version(value) {
+    this._cfg.version = value;
+    this.writeConfiguration();
+  }
   get API_KEY() {
     return this._cfg.identification.RAApi_key;
   }

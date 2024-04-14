@@ -1,4 +1,5 @@
 class UI {
+  VERSION = "0.1";
   static filterMethods = {
     all: "all",
     earned: "earned",
@@ -36,7 +37,10 @@ class UI {
           .forEach((el) => {
             el.addEventListener("mousedown", (e) => e.stopPropagation());
           });
-
+        if (config.version != this.VERSION) {
+          document.querySelector("#help_section").classList.remove("hidden");
+          config.version = this.VERSION;
+        }
         //Вимкнення вікна завантаження
         setTimeout(
           () =>
@@ -67,6 +71,11 @@ class UI {
     this.gameCard = new GameCard();
     this.statusPanel = new StatusPanel();
     this.buttons = new ButtonPanel();
+    document.addEventListener("click", (e) => {
+      document
+        .querySelectorAll(".context-menu")
+        .forEach((el) => el.classList.add("hidden"));
+    });
   }
   //Встановлення розмірів і розміщення елементів
   setPositions() {
@@ -89,9 +98,13 @@ class UI {
       config.bgVisibility ? "display" : "none";
   }
   createAchievementsTemplate() {
-    this.achievementsBlockTemplates.push(
-      new AchievementsBlockTemplate(this.achievementsBlockTemplates.length + 1)
-    );
+    this.achievementsBlockTemplates.length === 1
+      ? UI.switchSectionVisibility(this.achievementsBlockTemplates[0])
+      : this.achievementsBlockTemplates.push(
+          new AchievementsBlockTemplate(
+            this.achievementsBlockTemplates.length + 1
+          )
+        );
   }
   updateGameInfo({
     Title,
@@ -426,6 +439,113 @@ class UI {
 }
 
 class AchievementsBlock {
+  contextMenuItems = [
+    {
+      label: "Sort",
+      subMenu: [
+        {
+          type: "radio",
+          name: "context-sort",
+          id: "context-sort_latest",
+          label: "Latest",
+        },
+        {
+          type: "radio",
+          name: "context-sort",
+          id: "context-sort_rarest",
+          label: "Rarest",
+        },
+        {
+          type: "radio",
+          name: "context-sort",
+          id: "context-sort_points",
+          label: "Points",
+        },
+        {
+          type: "radio",
+          name: "context-sort",
+          id: "context-sort_retropoints",
+          label: "Retropoints",
+        },
+        {
+          type: "radio",
+          name: "context-sort",
+          id: "context-sort_default",
+          label: "Default",
+        },
+        {
+          type: "checkbox",
+          name: "context-reverse-sort",
+          id: "context-reverse-sort",
+          label: "Reverse",
+        },
+      ],
+    },
+    {
+      label: "Filter",
+      subMenu: [
+        {
+          type: "radio",
+          name: "context-filter",
+          id: "context_filter-missable",
+          label: "Missable",
+        },
+        {
+          type: "radio",
+          name: "context-filter",
+          id: "context_filter-earned",
+          label: "Earned",
+        },
+        {
+          type: "radio",
+          name: "context-filter",
+          id: "context_filter-all",
+          label: "All",
+        },
+        {
+          type: "checkbox",
+          name: "context-reverse-filter",
+          id: "context-reverse-filter",
+          label: "Reverse",
+        },
+        {
+          type: "checkbox",
+          name: "context-hide-filtered",
+          id: "context-hide-filtered",
+          label: "Hide filtered",
+        },
+      ],
+    },
+    {
+      label: "Achieve style",
+      subMenu: [
+        {
+          prefix: "Min size",
+          type: "input-number",
+          id: "context-menu_min-size",
+          label: "Min size",
+        },
+        {
+          prefix: "Max size",
+          type: "input-number",
+          id: "context-menu_max-size",
+          label: "Max size",
+        },
+        {
+          type: "checkbox",
+          name: "context_stretch-achieves",
+          id: "context_stretch-achieves",
+          label: "Stretch",
+        },
+      ],
+    },
+    {
+      label: "Show background",
+      type: "checkbox",
+      name: "context_show-bg",
+      id: "context_show-bg",
+    },
+  ];
   set SORT_METHOD(value) {
     config.sortAchievementsBy = value;
   }
@@ -438,6 +558,14 @@ class AchievementsBlock {
   }
   get FILTER_METHOD() {
     return filterBy[config.filterAchievementsBy];
+  }
+  get HIDE_FILTERED() {
+    return config._cfg.settings.hideFiltered ?? false;
+  }
+  set HIDE_FILTERED(value) {
+    console.log(value);
+    config._cfg.settings.hideFiltered = value;
+    config.writeConfiguration();
   }
   get REVERSE_SORT() {
     return config.reverseSort;
@@ -461,55 +589,59 @@ class AchievementsBlock {
     this.section = document.querySelector(
       `#achievements_section${this.sectionCode}`
     ); // Секція блока досягнень
+    this.contextMenu = this.generateContextMenu(this.contextMenuItems);
+    this.section.appendChild(this.contextMenu);
     this.bgVisibilityCheckbox = this.section.querySelector(
-      `#show-achivs-bg${this.sectionCode}`
+      `#context_show-bg${this.sectionCode}`
     );
     this.stretchButton = this.section.querySelector(
-      `#stretch-achivs${this.sectionCode}`
+      `#context_stretch-achieves${this.sectionCode}`
     );
     this.minimumWidthInput = this.section.querySelector(
-      `#achiv-min-width${this.sectionCode}`
+      `#context-menu_min-size${this.sectionCode}`
     );
     this.maximumWidthInput = this.section.querySelector(
-      `#achiv-max-width${this.sectionCode}`
+      `#context-menu_max-size${this.sectionCode}`
     );
 
     this.sortByLatestButton = this.section.querySelector(
-      `#sort-by-latest${this.sectionCode}`
+      `#context-sort_latest${this.sectionCode}`
     ); // Кнопка сортування за останніми
     this.sortByEarnedButton = this.section.querySelector(
-      `#sort-by-earned${this.sectionCode}`
+      `#context-sort_rarest${this.sectionCode}`
     ); // Кнопка сортування за заробленими
     this.sortByPointsButton = this.section.querySelector(
-      `#sort-by-points${this.sectionCode}`
+      `#context-sort_points${this.sectionCode}`
     ); // Кнопка сортування за балами
     this.sortByTruepointsButton = this.section.querySelector(
-      `#sort-by-truepoints${this.sectionCode}`
+      `#context-sort_retropoints${this.sectionCode}`
     );
 
     this.sortByDefaultButton = this.section.querySelector(
-      `#sort-by-default${this.sectionCode}`
+      `#context-sort_default${this.sectionCode}`
     ); // Кнопка сортування за замовчуванням
     this.reverseSortButton = this.section.querySelector(
-      `#reverse-sort${this.sectionCode}`
+      `#context-reverse-sort${this.sectionCode}`
     ); // Чекбокс сортування по зворотньому порядку
 
     this.filterByAllRadio = this.section.querySelector(
-      `#filter-by-all${this.sectionCode}`
+      `#context_filter-all${this.sectionCode}`
     ); // Фільтр за всіма
     this.filterByEarnedRadio = this.section.querySelector(
-      `#filter-by-earned${this.sectionCode}`
+      `#context_filter-earned${this.sectionCode}`
     ); // Фільтр за заробленими
     this.filterByMissableRadio = this.section.querySelector(
-      `#filter-by-missable${this.sectionCode}`
+      `#context_filter-missable${this.sectionCode}`
     ); // Фільтр за всіма
     this.filterByNotEarnedRadio = this.section.querySelector(
       `#filter-by-not-earned${this.sectionCode}`
     );
     this.reverseFilterCheckbox = this.section.querySelector(
-      `#reverse-filter${this.sectionCode}`
+      `#context-reverse-filter${this.sectionCode}`
     ); // Фільтр за не заробленими
-
+    this.hideFilteredCheckbox = this.section.querySelector(
+      `#context-hide-filtered${this.sectionCode}`
+    );
     this.container = this.section.querySelector(`.achievements-container`); //Контейнер  з досягненнями
     this.resizer = this.section.querySelector(
       `#achivs-resizer${this.sectionCode}`
@@ -519,6 +651,20 @@ class AchievementsBlock {
     // Додавання подій для пересування вікна ачівментсів
     this.section.addEventListener("mousedown", (e) => {
       UI.moveEvent(this.section, e);
+    });
+    this.section.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+
+      e.x + this.contextMenu.offsetWidth > window.innerWidth
+        ? (this.contextMenu.style.left =
+            e.x - this.contextMenu.offsetWidth + "px")
+        : (this.contextMenu.style.left = e.x + "px");
+      e.y + this.contextMenu.offsetHeight > window.innerHeight
+        ? (this.contextMenu.style.top =
+            e.y - this.contextMenu.offsetHeight + "px")
+        : (this.contextMenu.style.top = e.y + "px");
+
+      this.contextMenu.classList.remove("hidden");
     });
     this.bgVisibilityCheckbox.addEventListener("change", (e) => {
       config.achivsBgVisibility = this.bgVisibilityCheckbox.checked;
@@ -596,7 +742,10 @@ class AchievementsBlock {
       this.FILTER_METHOD = UI.filterMethods.missable;
       this.applyFilter();
     });
-
+    this.hideFilteredCheckbox.addEventListener("change", (e) => {
+      this.HIDE_FILTERED = this.hideFilteredCheckbox.checked;
+      this.applyFilter();
+    });
     this.stretchButton.addEventListener("click", (e) => {
       config.stretchAchievements = this.stretchButton.checked;
       this.container.style.height = config.stretchAchievements
@@ -630,7 +779,7 @@ class AchievementsBlock {
       UI.switchSectionVisibility(this);
     }
     this.container.style.height = config.stretchAchievements ? "100%" : "auto";
-
+    this.hideFilteredCheckbox.checked = this.HIDE_FILTERED;
     this.bgVisibilityCheckbox.checked = config.achivsBgVisibility;
 
     switch (config.filterAchievementsBy) {
@@ -791,24 +940,75 @@ class AchievementsBlock {
       achivDetails.classList.remove("left-side", "top-side");
       this.fixDetailsPosition(achivDetails);
     });
+    //!----------[ CONTEXT MENU ]---------------
 
     achivElement.addEventListener("mousedown", (e) => {
       e.stopPropagation();
     });
-    achivElement.addEventListener("click", (e) => {
-      e.stopPropagation();
-      this.container.querySelectorAll(".achiv-block").forEach((achiv) => {
-        if (achiv !== achivElement) achiv.classList.remove("expanded");
-      });
-      achivElement.classList.toggle("expanded");
-    });
+    // achivElement.addEventListener("click", (e) => {
+    //   this.container.querySelectorAll(".achiv-block").forEach((achiv) => {
+    //     if (achiv !== achivElement) achiv.classList.remove("expanded");
+    //   });
+    //   // achivElement.classList.toggle("expanded");
+    // });
     toTargetButton.addEventListener("click", (e) => {
-      e.stopPropagation();
       ui.target.addAchieveToTarget(achievement);
     });
 
     return achivElement;
   }
+
+  generateContextMenu(menuItems, isSubmenu = false) {
+    const contextElement = document.createElement("ul");
+    isSubmenu
+      ? contextElement.classList.add(
+          "context-menu_item-menu",
+          "context-submenu"
+        )
+      : contextElement.classList.add(
+          "achievement_context-menu",
+          "context-menu",
+          "hidden"
+        );
+    // Проходимося по кожному елементу меню та генеруємо HTML
+    menuItems.forEach((menuItem) => {
+      const isExpandable = menuItem.hasOwnProperty("subMenu");
+      let menuElement = document.createElement("li");
+      menuElement.classList.add(
+        "context-menu_item",
+        isExpandable ? "expandable" : "f"
+      );
+
+      if (isExpandable) {
+        menuElement.innerHTML += menuItem.label;
+        menuElement.appendChild(
+          this.generateContextMenu(menuItem.subMenu, true)
+        );
+      } else {
+        switch (menuItem.type) {
+          case "checkbox":
+          case "radio":
+            menuElement.innerHTML += `
+            <input type="${menuItem.type}" name="${menuItem.name}" id="${menuItem.id}${this.sectionCode}"></input>
+            <label class="context-menu_${menuItem.type}" for="${menuItem.id}${this.sectionCode}">${menuItem.label}</label>
+            `;
+            break;
+          case "input-number":
+            menuElement.innerHTML += `
+            ${menuItem.prefix}
+            <input class="context-menu_${menuItem.type}" id="${menuItem.id}${this.sectionCode}" type="number">px</input>
+            `;
+          default:
+            break;
+        }
+      }
+      contextElement.appendChild(menuElement);
+    });
+    contextElement.addEventListener("click", (e) => e.stopPropagation());
+    contextElement.addEventListener("mousedown", (e) => e.stopPropagation());
+    return contextElement;
+  }
+
   generateAchivDetails({
     Title,
     Description,
@@ -912,8 +1112,9 @@ class AchievementsBlock {
   applyFilter() {
     let achivsArray = [...this.container.querySelectorAll(".achiv-block")];
     achivsArray.forEach((a) => {
+      a.classList.remove("removed", "hidden");
       a.classList.toggle(
-        "hidden",
+        this.HIDE_FILTERED ? "removed" : "hidden",
         !this.FILTER_METHOD(a.dataset) ^ this.REVERSE_FILTER
       );
     });
@@ -924,23 +1125,54 @@ class AchievementsBlock {
 }
 class AchievementsBlockTemplate extends AchievementsBlock {
   set SORT_METHOD(value) {
+    config.ui[`achievements_section${this.sectionCode}`].sortAchievementsBy =
+      value;
     this.sortAchievementsBy = value;
+    config.writeConfiguration();
   }
   get SORT_METHOD() {
-    return sortBy[this.sortAchievementsBy || UI.sortMethods.default];
+    return sortBy[
+      config.ui[`achievements_section${this.sectionCode}`].sortAchievementsBy ||
+        UI.sortMethods.default
+    ];
   }
   // filterBy.all;
   set FILTER_METHOD(value) {
+    config.ui[`achievements_section${this.sectionCode}`].filterAchievementsBy =
+      value;
     this._filterAchievementsBy = value;
+    config.writeConfiguration();
   }
   get FILTER_METHOD() {
-    return filterBy[this._filterAchievementsBy || UI.filterMethods.all];
+    return filterBy[
+      config.ui[`achievements_section${this.sectionCode}`]
+        .filterAchievementsBy || UI.filterMethods.all
+    ];
+  }
+  get HIDE_FILTERED() {
+    return (
+      config.ui[`achievements_section${this.sectionCode}`].hideFiltered ?? false
+    );
+  }
+  set HIDE_FILTERED(value) {
+    config.ui[`achievements_section${this.sectionCode}`].hideFiltered = value;
+    config.writeConfiguration();
   }
   get REVERSE_SORT() {
-    return this._reverseSort ? -1 : 1;
+    return config.ui[`achievements_section${this.sectionCode}`].reverseSort
+      ? -1
+      : 1;
+  }
+  set REVERSE_SORT(value) {
+    config.ui[`achievements_section${this.sectionCode}`].reverseSort = value;
+    config.writeConfiguration();
   }
   get REVERSE_FILTER() {
-    return this._reverseFilter;
+    return config.ui[`achievements_section${this.sectionCode}`].reverseFilter;
+  }
+  set REVERSE_FILTER(value) {
+    config.ui[`achievements_section${this.sectionCode}`].reverseFilter = value;
+    config.writeConfiguration();
   }
   constructor(id) {
     super(true);
@@ -949,16 +1181,27 @@ class AchievementsBlockTemplate extends AchievementsBlock {
     this.generateNewWidget();
     super.initializeElements();
     this.addEvents();
-    super.setValues();
+    this.setValues();
     this.cloneAchieves();
-    super.fitSizeVertically();
+    super.fitSizeVertically(true);
   }
   addEvents() {
+    this.section.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+
+      e.x + this.contextMenu.offsetWidth > window.innerWidth
+        ? (this.contextMenu.style.left =
+            e.x - this.contextMenu.offsetWidth + "px")
+        : (this.contextMenu.style.left = e.x + "px");
+      e.y + this.contextMenu.offsetHeight > window.innerHeight
+        ? (this.contextMenu.style.top =
+            e.y - this.contextMenu.offsetHeight + "px")
+        : (this.contextMenu.style.top = e.y + "px");
+
+      this.contextMenu.classList.remove("hidden");
+    });
     UI.addDraggingEventForElements(this.container);
-    this.section
-      .querySelector(".header-settings-container")
-      .addEventListener("mousedown", (e) => e.stopPropagation());
-    // Додавання подій для пересування вікна ачівментсів
+
     this.section.addEventListener("mousedown", (e) => {
       UI.moveEvent(this.section, e);
     });
@@ -1012,12 +1255,12 @@ class AchievementsBlockTemplate extends AchievementsBlock {
     this.reverseSortButton.addEventListener("click", (e) => {
       e.stopPropagation();
       // Встановлює reverse сортування
-      this._reverseSort = this.reverseSortButton.checked;
+      this.REVERSE_SORT = this.reverseSortButton.checked;
       // Застосовує сортування та оновлює інтерфейс
       this.applySorting();
     });
     this.reverseFilterCheckbox.addEventListener("change", (e) => {
-      this._reverseFilter = this.reverseFilterCheckbox.checked;
+      this.REVERSE_FILTER = this.reverseFilterCheckbox.checked;
       this.applyFilter();
     });
     // Додає подію кліку для фільтрування
@@ -1037,7 +1280,10 @@ class AchievementsBlockTemplate extends AchievementsBlock {
       this.FILTER_METHOD = UI.filterMethods.missable;
       this.applyFilter();
     });
-
+    this.hideFilteredCheckbox.addEventListener("change", (e) => {
+      this.HIDE_FILTERED = this.hideFilteredCheckbox.checked;
+      this.applyFilter();
+    });
     this.stretchButton.addEventListener("click", (e) => {
       config.stretchAchievements = this.stretchButton.checked;
       this.container.style.height = config.stretchAchievements
@@ -1066,6 +1312,69 @@ class AchievementsBlockTemplate extends AchievementsBlock {
       });
     });
   }
+  setValues() {
+    if (config.ui[`achievements_section${this.sectionCode}`]) {
+      // UI.switchSectionVisibility(this);
+      this.section.style.top =
+        config.ui[`achievements_section${this.sectionCode}`].y ?? "0px";
+      this.section.style.left =
+        config.ui[`achievements_section${this.sectionCode}`].x ?? "0px";
+      this.section.style.height =
+        config.ui[`achievements_section${this.sectionCode}`].height ?? "600px";
+      this.section.style.width =
+        config.ui[`achievements_section${this.sectionCode}`].width ?? "350px";
+      this.hideFilteredCheckbox.checked = this.HIDE_FILTERED;
+    }
+    this.container.style.height = config.stretchAchievements ? "100%" : "auto";
+
+    this.bgVisibilityCheckbox.checked = config.achivsBgVisibility;
+
+    switch (
+      config.ui[`achievements_section${this.sectionCode}`].filterAchievementsBy
+    ) {
+      case UI.filterMethods.all:
+        this.filterByAllRadio.checked = true;
+        break;
+      case UI.filterMethods.earned:
+        this.filterByEarnedRadio.checked = true;
+        break;
+      case UI.filterMethods.missable:
+        this.filterByMissableRadio.checked = true;
+        break;
+      default:
+        this.filterByAllRadio.checked = true;
+        break;
+    }
+    this.reverseFilterCheckbox.checked = this.REVERSE_FILTER;
+    switch (
+      config.ui[`achievements_section${this.sectionCode}`].sortAchievementsBy
+    ) {
+      case UI.sortMethods.default:
+        this.sortByDefaultButton.checked = true;
+        break;
+      case UI.sortMethods.earnedCount:
+        this.sortByEarnedButton.checked = true;
+        break;
+      case UI.sortMethods.latest:
+        this.sortByLatestButton.checked = true;
+        break;
+      case UI.sortMethods.points:
+        this.sortByPointsButton.checked = true;
+        break;
+      default:
+      case UI.sortMethods.default:
+        this.sortByDefaultButton.checked = true;
+        break;
+    }
+    this.reverseSortButton.checked = this.REVERSE_SORT == -1;
+
+    this.maximumWidthInput.value = config.ACHIV_MAX_SIZE;
+    this.minimumWidthInput.value = config.ACHIV_MIN_SIZE;
+    this.stretchButton.checked = config.stretchAchievements;
+
+    config.achivsBgVisibility ? this.section.classList.add("bg-visible") : "";
+  }
+
   generateNewWidget() {
     const newWidget = document.createElement("section");
     newWidget.id = `achievements_section${this.sectionCode}`;
@@ -1080,197 +1389,7 @@ class AchievementsBlockTemplate extends AchievementsBlock {
           d="m668-380 152-130 120 10-176 153 52 227-102-62-46-198Zm-94-292-42-98 46-110 92 217-96-9ZM294-287l126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM173-120l65-281L20-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Zm247-340Z" />
       </svg></div>
     <h2 class="widget-header-text achivs-header-text">Achieves~</h2>
-    <div class="achivs-settings-block">
 
-
-      <button class="header-settings_button header-button header-icon" title="settings"
-        onclick="this.parentNode.classList.toggle('checked')">
-        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-          <path
-            d="M686-132 444-376q-20 8-40.5 12t-43.5 4q-100 0-170-70t-70-170q0-36 10-68.5t28-61.5l146 146 72-72-146-146q29-18 61.5-28t68.5-10q100 0 170 70t70 170q0 23-4 43.5T584-516l244 242q12 12 12 29t-12 29l-84 84q-12 12-29 12t-29-12Zm29-85 27-27-256-256q18-20 26-46.5t8-53.5q0-60-38.5-104.5T386-758l74 74q12 12 12 28t-12 28L332-500q-12 12-28 12t-28-12l-74-74q9 57 53.5 95.5T360-440q26 0 52-8t47-25l256 256ZM472-488Z" />
-        </svg>
-      </button>
-      <div class="header-settings-container">
-        <div class="widget-settings_header-container">
-          <h3 class="widget-settings_header widget-header-text">Achivs settings</h3>
-          <button class="header-button header-icon"
-            onclick="this.closest('.achivs-settings-block').classList.toggle('checked')">
-            <svg height="24" viewBox="0 -960 960 960" width="24">
-              <path
-                d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-            </svg>
-          </button>
-        </div>
-        <ul class="">
-          <li class="header-settings-item">
-            <label class="header-setting-label" title="autohide bg">Show bg:</label>
-
-            <div class="setting-radio-group">
-              <input type="checkbox" name="show-achivs-bg${
-                this.sectionCode
-              }" id="show-achivs-bg${this.sectionCode}">
-              </input>
-              <label class="settings-input " for="show-achivs-bg${
-                this.sectionCode
-              }">Show bg</label>
-            </div>
-          </li>
-          <li class="header-settings-item">
-            <label class="header-setting-label" title="filter methods">Filter:</label>
-            <div class="setting-input-values">
-              <div class="setting-radio-group">
-                <input type="radio" name="filter${
-                  this.sectionCode
-                }" id="filter-by-missable${
-      this.sectionCode
-    }" class="filter-achivs-radio ">
-                </input>
-
-                <label class="settings-input" for="filter-by-missable${
-                  this.sectionCode
-                }">missable</label>
-
-              </div>
-              <div class="setting-radio-group">
-                <input type="radio" name="filter${
-                  this.sectionCode
-                }" id="filter-by-earned${
-      this.sectionCode
-    }" class="filter-achivs-radio ">
-                </input>
-
-                <label class="settings-input" for="filter-by-earned${
-                  this.sectionCode
-                }">earned</label>
-
-              </div>
-
-              <div class="setting-radio-group">
-                <input checked type="radio" name="filter${
-                  this.sectionCode
-                }" id="filter-by-all${
-      this.sectionCode
-    }" class="filter-achivs-radio ">
-                </input>
-                <label class="settings-input" for="filter-by-all${
-                  this.sectionCode
-                }">all</label>
-
-              </div>
-              <div class="setting-radio-group">
-                <input type="checkbox" name="reverse${
-                  this.sectionCode
-                }" id="reverse-filter${this.sectionCode}">
-                </input>
-                <label class="settings-input" for="reverse-filter${
-                  this.sectionCode
-                }">reverse</label>
-              </div>
-            </div>
-
-          </li>
-          <li class="header-settings-item">
-            <label class="header-setting-label" title="sort methods">Sort:</label>
-            <div class="setting-input-values">
-              <div class="setting-radio-group">
-                <input type="radio" name="sort${
-                  this.sectionCode
-                }" id="sort-by-latest${
-      this.sectionCode
-    }" class="sort-achivs-button settings-input"
-                  title="not hard - not earn">
-                </input>
-                <label class="settings-input" for="sort-by-latest${
-                  this.sectionCode
-                }">latest</label>
-              </div>
-              <div class="setting-radio-group">
-                <input type="radio" name="sort${
-                  this.sectionCode
-                }" id="sort-by-earned${
-      this.sectionCode
-    }" class="sort-achivs-button settings-input">
-                </input>
-                <label class="settings-input" for="sort-by-earned${
-                  this.sectionCode
-                }">rarest</label>
-              </div>
-              <div class="setting-radio-group">
-                <input type="radio" name="sort${
-                  this.sectionCode
-                }" id="sort-by-points${
-      this.sectionCode
-    }" class="sort-achivs-button settings-input">
-                </input>
-                <label class="settings-input" for="sort-by-points${
-                  this.sectionCode
-                }">points</label>
-              </div>
-              <div class="setting-radio-group">
-                <input type="radio" name="sort${
-                  this.sectionCode
-                }" id="sort-by-truepoints${
-      this.sectionCode
-    }" class="sort-achivs-button settings-input">
-                </input>
-                <label class="settings-input" for="sort-by-truepoints${
-                  this.sectionCode
-                }">retropoints</label>
-              </div>
-              <div class="setting-radio-group">
-
-                <input type="radio" name="sort${
-                  this.sectionCode
-                }" id="sort-by-default${
-      this.sectionCode
-    }" class="sort-achivs-button settings-input">
-                </input>
-                <label class="settings-input" for="sort-by-default${
-                  this.sectionCode
-                }">default</label>
-              </div>
-              <div class="setting-radio-group">
-                <input type="checkbox" name="reverse${
-                  this.sectionCode
-                }" id="reverse-sort${this.sectionCode}">
-                </input>
-                <label class="settings-input" for="reverse-sort${
-                  this.sectionCode
-                }">reverse</label>
-              </div>
-            </div>
-
-          </li>
-          <li class="header-settings-item">
-            <label class="header-setting-label" title="sort methods">Achivs size:</label>
-            <div class="setting-input-values">
-
-              <input type="number" class="number-input input free-width" name="min-width" id="achiv-min-width${
-                this.sectionCode
-              }"
-                value="30" placeholder="min" title="minimum width in px" />
-              <input type="number" class="number-input input free-width" name="max-width" id="achiv-max-width${
-                this.sectionCode
-              }"
-                value="150" placeholder="max" title="maximum width in px" />
-
-              <div class="setting-radio-group">
-                <input type="checkbox" name="stretch" id="stretch-achivs${
-                  this.sectionCode
-                }">
-                </input>
-                <label class="settings-input" for="stretch-achivs${
-                  this.sectionCode
-                }">stretch</label>
-              </div>
-            </div>
-
-          </li>
-        </ul>
-      </div>
-
-
-    </div>
     <button class="header-button header-icon" onclick="ui.achievementsBlockTemplates[${
       this.id - 1
     }].close();">
@@ -1297,13 +1416,6 @@ class AchievementsBlockTemplate extends AchievementsBlock {
       achivElement.addEventListener("mousedown", (e) => {
         e.stopPropagation();
       });
-      achivElement.addEventListener("click", (e) => {
-        e.stopPropagation();
-        this.container.querySelectorAll(".achiv-block").forEach((achiv) => {
-          if (achiv !== achivElement) achiv.classList.remove("expanded");
-        });
-        achivElement.classList.toggle("expanded");
-      });
     });
     this.container
       .querySelectorAll(".add-to-target")
@@ -1313,7 +1425,7 @@ class AchievementsBlockTemplate extends AchievementsBlock {
     this.fitSizeVertically();
   }
   close() {
-    this.section.remove();
+    UI.switchSectionVisibility(ui.achievementsBlockTemplates[0]);
   }
 }
 class ButtonPanel {

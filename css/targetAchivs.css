@@ -13,7 +13,6 @@
 }
 
 .target-container {
-  flex: 1;
   padding: 10px;
   overflow: scroll;
   display: flex;

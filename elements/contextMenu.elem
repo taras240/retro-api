@@ -1,0 +1,80 @@
+<ul class="achievement_context-menu context-menu">
+    <li class="context-menu_item expandable">Sort
+        <ul class="context-menu_item-menu context-menu">
+            <li class="context-menu_item">
+                <input type="radio" name="context-sort" id="context-sort_latest">
+                </input>
+                <label class="context-menu_checkbox" for="context-sort_latest">Latest</label>
+            </li>
+            <li class="context-menu_item">
+                <input type="radio" name="context-sort" id="context-sort_rarest">
+                </input>
+                <label class="context-menu_checkbox" for="context-sort_rarest">Rarest</label>
+            </li>
+            <li class="context-menu_item">
+                <input type="radio" name="context-sort" id="context-sort_points">
+                </input>
+                <label class="context-menu_checkbox" for="context-sort_points">Points</label>
+            </li>
+            <li class="context-menu_item checked">
+                <input type="radio" name="context-sort" id="context-sort_retropoints">
+                </input>
+                <label class="context-menu_checkbox"" for=" context-sort_retropoints">Retropoints</label>
+            </li>
+            <li class="context-menu_item">
+                <input type="radio" name="context-sort" id="context-sort_default">
+                </input>
+                <label class="context-menu_checkbox" for="context-sort_default">Default</label>
+            </li>
+            <li class="context-menu_item checked">
+                <input type="checkbox" name="context-reverse-sort" id="context-reverse-sort">
+                </input>
+                <label class="context-menu_checkbox" for="context-reverse-sort">Reverse</label>
+            </li>
+        </ul>
+    </li>
+    <li class="context-menu_item expandable">Filter
+        <ul class="context-menu_item-menu context-menu">
+            <li class="context-menu_item">
+                <input type="radio" name="context-filter" id="context_filter-missable">
+                </input>
+                <label class="context-menu_checkbox" for="context_filter-missable">Missable</label>
+            </li>
+            <li class="context-menu_item">
+                <input type="radio" name="context-filter" id="context_filter-earned">
+                </input>
+                <label class="context-menu_checkbox" for="context_filter-earned">Earned</label>
+            </li>
+            <li class="context-menu_item">
+                <input type="radio" name="context-filter" id="context_filter-all">
+                </input>
+                <label class="context-menu_checkbox" for="context_filter-all">All</label>
+            </li>
+            <li class="context-menu_item checked">
+                <input type="checkbox" name="context-reverse-filter" id="context-reverse-filter">
+                </input>
+                <label class="context-menu_checkbox" for="context-reverse-filter">Reverse</label>
+            </li>
+        </ul>
+    </li>
+    <li class="context-menu_item expandable">Achieve style
+        <ul class="context-menu_item-menu context-menu">
+            <li class="context-menu_item">Min size
+                <input class="context-menu_input-text" id="context-menu_min-size" type="number">px</input>
+            </li>
+            <li class="context-menu_item">Max size
+                <input class="context-menu_input-text" id="context-menu_max-size" type="number">px</input>
+            </li>
+            <li class="context-menu_item">
+                <input type="checkbox" name="context_stretch-achieves" id="context_stretch-achieves">
+                </input>
+                <label class="context-menu_checkbox" for="context_stretch-achieves">Stretch</label>
+            </li>
+        </ul>
+    </li>
+    <li class="context-menu_item">
+        <input type="checkbox" name="context_show-bg" id="context_show-bg">
+        </input>
+        <label class="context-menu_checkbox" for="context_show-bg">Show background</label>
+    </li>
+</ul>
