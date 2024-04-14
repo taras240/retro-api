@@ -4,6 +4,8 @@
   width: 400px;
   min-height: 150px;
   min-width: 300px;
+  display: flex;
+  flex-direction: column;
 }
 .target-header_container {
   height: auto;
@@ -11,23 +13,28 @@
 }
 
 .target-container {
-  width: 100%;
-  height: calc(100% - 35px);
+  flex: 1;
   padding: 10px;
   overflow: scroll;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: start;
+  gap: 10px;
 }
 .target-achiv {
   position: relative;
-  margin: 0 0 10px;
-  width: 100%;
+  flex-basis: 300px;
+  flex-grow: 1;
   padding: 10px;
   display: flex;
   gap: 10px;
   color: var(--font-color);
-  /* background-color: var(--secondary-color); */
-  background: linear-gradient(to right, var(--secondary-color), transparent);
+  background-color: var(--secondary-color);
+  /* background: linear-gradient(to right, var(--secondary-color), transparent); */
   border-radius: 5px;
   overflow: hidden;
+  box-shadow: 0 1px 1px 0px #000000a1;
 }
 .target-achiv.hidden {
   display: none;

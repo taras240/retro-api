@@ -954,6 +954,7 @@ class AchievementsBlockTemplate extends AchievementsBlock {
     super.fitSizeVertically();
   }
   addEvents() {
+    UI.addDraggingEventForElements(this.container);
     this.section
       .querySelector(".header-settings-container")
       .addEventListener("mousedown", (e) => e.stopPropagation());

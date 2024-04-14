@@ -331,8 +331,8 @@ a:hover {
   background-color: transparent;
   width: 15px;
   height: 15px;
-  right: 15%;
-  top: 0;
+  right: 20%;
+  top: -15%;
   opacity: 0.8;
 }
 .side-panel_login img,
