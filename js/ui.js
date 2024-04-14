@@ -810,6 +810,9 @@ class AchievementsBlock {
       case UI.sortMethods.points:
         this.sortByPointsButton.checked = true;
         break;
+      case UI.sortMethods.truepoints:
+        this.sortByTruepointsButton.checked = true;
+        break;
       default:
       case UI.sortMethods.default:
         this.sortByDefaultButton.checked = true;
@@ -989,7 +992,7 @@ class AchievementsBlock {
           case "checkbox":
           case "radio":
             menuElement.innerHTML += `
-            <input type="${menuItem.type}" name="${menuItem.name}" id="${menuItem.id}${this.sectionCode}"></input>
+            <input type="${menuItem.type}" name="${menuItem.name}${this.sectionCode}" id="${menuItem.id}${this.sectionCode}"></input>
             <label class="context-menu_${menuItem.type}" for="${menuItem.id}${this.sectionCode}">${menuItem.label}</label>
             `;
             break;
@@ -1127,7 +1130,7 @@ class AchievementsBlockTemplate extends AchievementsBlock {
   set SORT_METHOD(value) {
     config.ui[`achievements_section${this.sectionCode}`].sortAchievementsBy =
       value;
-    this.sortAchievementsBy = value;
+
     config.writeConfiguration();
   }
   get SORT_METHOD() {
@@ -1140,7 +1143,6 @@ class AchievementsBlockTemplate extends AchievementsBlock {
   set FILTER_METHOD(value) {
     config.ui[`achievements_section${this.sectionCode}`].filterAchievementsBy =
       value;
-    this._filterAchievementsBy = value;
     config.writeConfiguration();
   }
   get FILTER_METHOD() {
@@ -1360,6 +1362,9 @@ class AchievementsBlockTemplate extends AchievementsBlock {
         break;
       case UI.sortMethods.points:
         this.sortByPointsButton.checked = true;
+        break;
+      case UI.sortMethods.truepoints:
+        this.sortByTruepointsButton.truepoints = true;
         break;
       default:
       case UI.sortMethods.default:
