@@ -34,6 +34,7 @@
   border-radius: 5px;
   overflow: hidden;
   box-shadow: 1px 1px 1px 0px #000000a1;
+  transition: 0.1s;
 }
 .target-achiv::before {
   --blick-color: rgba(0, 0, 0, 0.1);
@@ -54,8 +55,13 @@
 .target-achiv:hover::before {
   --blick-color: rgba(255, 255, 255, 0.05);
 }
-.target-achiv.hidden {
+.target-achiv.removed {
   display: none;
+}
+.target-achiv.hidden {
+  transition: 0.1s;
+  opacity: 0.2;
+  pointer-events: none;
 }
 .target-achiv:hover {
   transform: scale(1.02);

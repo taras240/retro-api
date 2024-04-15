@@ -1,5 +1,5 @@
 class UI {
-  VERSION = "0.1";
+  VERSION = "0.11";
   static filterMethods = {
     all: "all",
     earned: "earned",
@@ -11,6 +11,7 @@ class UI {
     earnedCount: "earnedCount",
     points: "points",
     truepoints: "truepoints",
+    disable: "disable",
     default: "default",
   };
   achievementsBlockTemplates = [];
@@ -28,20 +29,19 @@ class UI {
 
         //Оновлення ачівментсів
         if (config.identConfirmed) {
+          if (config.version != this.VERSION) {
+            setTimeout(() => {
+              document
+                .querySelector("#help_section")
+                .classList.remove("hidden");
+              config.version = this.VERSION;
+            }, 1500);
+          }
           config.startOnLoad
             ? this.statusPanel.watchButton.click()
             : this.settings.checkIdButton.click();
         }
-        document
-          .querySelectorAll(".header-settings-container")
-          .forEach((el) => {
-            el.addEventListener("mousedown", (e) => e.stopPropagation());
-          });
-        if (config.version != this.VERSION) {
-          document.querySelector("#help_section").classList.remove("hidden");
-          config.version = this.VERSION;
-        }
-        //Вимкнення вікна завантаження
+        // Вимкнення вікна завантаження
         setTimeout(
           () =>
             document.querySelector(".loading-section").classList.add("hidden"),
@@ -139,7 +139,83 @@ class UI {
       achievements: Achievements,
     });
   }
+  static generateContextMenu({
+    menuItems,
+    sectionCode = "",
+    isSubmenu = false,
+  }) {
+    const contextElement = document.createElement("ul");
+    isSubmenu
+      ? contextElement.classList.add(
+          "context-menu_item-menu",
+          "context-submenu"
+        )
+      : contextElement.classList.add(
+          "achievement_context-menu",
+          "context-menu",
+          "hidden"
+        );
+    // Проходимося по кожному елементу меню та генеруємо HTML
+    menuItems.forEach((menuItem) => {
+      const isExpandable = menuItem.hasOwnProperty("subMenu");
+      let menuElement = document.createElement("li");
+      menuElement.classList.add(
+        "context-menu_item",
+        isExpandable ? "expandable" : "f"
+      );
 
+      if (isExpandable) {
+        menuElement.innerHTML += menuItem.label;
+        menuElement.appendChild(
+          UI.generateContextMenu({
+            menuItems: menuItem.subMenu,
+            isSubmenu: true,
+            sectionCode: sectionCode,
+          })
+        );
+      } else {
+        switch (menuItem.type) {
+          case "checkbox":
+          case "radio":
+            menuElement.innerHTML += `
+            <input type="${menuItem.type}" name="${menuItem.name}${sectionCode}" id="${menuItem.id}${sectionCode}"></input>
+            <label class="context-menu_${menuItem.type}" for="${menuItem.id}${sectionCode}">${menuItem.label}</label>
+            `;
+            break;
+          case "input-number":
+            menuElement.innerHTML += `
+            ${menuItem.prefix}
+            <input class="context-menu_${menuItem.type}" id="${
+              menuItem.id
+            }${sectionCode}" type="number">${menuItem.postfix ?? ""}</input>
+            `;
+            break;
+          case "text-input":
+            menuElement.innerHTML += `
+              ${menuItem.prefix}
+              <input class="context-menu_${menuItem.type}" id="${
+              menuItem.id
+            }${sectionCode}" type="text">${menuItem.postfix ?? ""}</input>
+              `;
+            break;
+          case "button":
+            menuElement.innerHTML += `
+              <button class="context-menu_${menuItem.type}" id="${
+              menuItem.id
+            }${sectionCode}" type="button">${menuItem.label ?? ""}</button>
+              `;
+            break;
+          default:
+            break;
+        }
+      }
+      contextElement.appendChild(menuElement);
+    });
+    contextElement.addEventListener("contextmenu", (e) => e.stopPropagation());
+    contextElement.addEventListener("click", (e) => e.stopPropagation());
+    contextElement.addEventListener("mousedown", (e) => e.stopPropagation());
+    return contextElement;
+  }
   static updateColors(preset) {
     const { style } = document.body;
     const {
@@ -521,12 +597,14 @@ class AchievementsBlock {
       subMenu: [
         {
           prefix: "Min size",
+          postfix: "px",
           type: "input-number",
           id: "context-menu_min-size",
           label: "Min size",
         },
         {
           prefix: "Max size",
+          postfix: "px",
           type: "input-number",
           id: "context-menu_max-size",
           label: "Max size",
@@ -563,7 +641,6 @@ class AchievementsBlock {
     return config._cfg.settings.hideFiltered ?? false;
   }
   set HIDE_FILTERED(value) {
-    console.log(value);
     config._cfg.settings.hideFiltered = value;
     config.writeConfiguration();
   }
@@ -589,7 +666,10 @@ class AchievementsBlock {
     this.section = document.querySelector(
       `#achievements_section${this.sectionCode}`
     ); // Секція блока досягнень
-    this.contextMenu = this.generateContextMenu(this.contextMenuItems);
+    this.contextMenu = UI.generateContextMenu({
+      menuItems: this.contextMenuItems,
+      sectionCode: this.sectionCode,
+    });
     this.section.appendChild(this.contextMenu);
     this.bgVisibilityCheckbox = this.section.querySelector(
       `#context_show-bg${this.sectionCode}`
@@ -959,57 +1039,6 @@ class AchievementsBlock {
     });
 
     return achivElement;
-  }
-
-  generateContextMenu(menuItems, isSubmenu = false) {
-    const contextElement = document.createElement("ul");
-    isSubmenu
-      ? contextElement.classList.add(
-          "context-menu_item-menu",
-          "context-submenu"
-        )
-      : contextElement.classList.add(
-          "achievement_context-menu",
-          "context-menu",
-          "hidden"
-        );
-    // Проходимося по кожному елементу меню та генеруємо HTML
-    menuItems.forEach((menuItem) => {
-      const isExpandable = menuItem.hasOwnProperty("subMenu");
-      let menuElement = document.createElement("li");
-      menuElement.classList.add(
-        "context-menu_item",
-        isExpandable ? "expandable" : "f"
-      );
-
-      if (isExpandable) {
-        menuElement.innerHTML += menuItem.label;
-        menuElement.appendChild(
-          this.generateContextMenu(menuItem.subMenu, true)
-        );
-      } else {
-        switch (menuItem.type) {
-          case "checkbox":
-          case "radio":
-            menuElement.innerHTML += `
-            <input type="${menuItem.type}" name="${menuItem.name}${this.sectionCode}" id="${menuItem.id}${this.sectionCode}"></input>
-            <label class="context-menu_${menuItem.type}" for="${menuItem.id}${this.sectionCode}">${menuItem.label}</label>
-            `;
-            break;
-          case "input-number":
-            menuElement.innerHTML += `
-            ${menuItem.prefix}
-            <input class="context-menu_${menuItem.type}" id="${menuItem.id}${this.sectionCode}" type="number">px</input>
-            `;
-          default:
-            break;
-        }
-      }
-      contextElement.appendChild(menuElement);
-    });
-    contextElement.addEventListener("click", (e) => e.stopPropagation());
-    contextElement.addEventListener("mousedown", (e) => e.stopPropagation());
-    return contextElement;
   }
 
   generateAchivDetails({
@@ -2011,6 +2040,133 @@ class Awards {
 }
 
 class Target {
+  contextMenuItems = [
+    {
+      label: "Sort",
+      subMenu: [
+        {
+          type: "radio",
+          name: "context-sort",
+          id: "context-sort_latest",
+          label: "Latest",
+        },
+        {
+          type: "radio",
+          name: "context-sort",
+          id: "context-sort_rarest",
+          label: "Rarest",
+        },
+        {
+          type: "radio",
+          name: "context-sort",
+          id: "context-sort_points",
+          label: "Points",
+        },
+        {
+          type: "radio",
+          name: "context-sort",
+          id: "context-sort_retropoints",
+          label: "Retropoints",
+        },
+        {
+          type: "radio",
+          name: "context-sort",
+          id: "context-sort_default",
+          label: "Default",
+        },
+        {
+          type: "radio",
+          name: "context-sort",
+          id: "context-sort_dont-sort",
+          label: "Disable",
+        },
+        {
+          type: "checkbox",
+          name: "context-reverse-sort",
+          id: "context-reverse-sort",
+          label: "Reverse",
+        },
+      ],
+    },
+    {
+      label: "Filter",
+      subMenu: [
+        {
+          type: "radio",
+          name: "context-filter",
+          id: "context_filter-missable",
+          label: "Missable",
+        },
+        {
+          type: "radio",
+          name: "context-filter",
+          id: "context_filter-earned",
+          label: "Earned",
+        },
+        {
+          type: "radio",
+          name: "context-filter",
+          id: "context_filter-all",
+          label: "All",
+        },
+        {
+          type: "checkbox",
+          name: "context-reverse-filter",
+          id: "context-reverse-filter",
+          label: "Reverse",
+        },
+        {
+          type: "checkbox",
+          name: "context-hide-filtered",
+          id: "context-hide-filtered",
+          label: "Hide filtered",
+        },
+      ],
+    },
+    {
+      label: "Clear",
+      subMenu: [
+        {
+          type: "button",
+          name: "context-clear-all",
+          id: "context-clear-all",
+          label: "Clear All",
+        },
+        {
+          type: "checkbox",
+          name: "context-autoclear",
+          id: "context-autoclear",
+          label: "Autoclear earned",
+        },
+        {
+          prefix: "Delay",
+          postfix: "sec",
+          type: "input-number",
+          name: "context-autoclear-delay",
+          id: "context-autoclear-delay",
+          label: "Delay",
+        },
+      ],
+    },
+    {
+      label: "Fill",
+      subMenu: [
+        {
+          type: "button",
+          name: "context-fill",
+          id: "context-fill",
+          label: "Fill",
+        },
+        {
+          type: "checkbox",
+          name: "context-autofill",
+          id: "context-autofill",
+          label: "Autofill",
+        },
+      ],
+    },
+  ];
+  sectionCode = "-target";
   set SORT_METHOD(value) {
     config.sortTargetBy = value;
   }
@@ -2024,6 +2180,21 @@ class Target {
   get FILTER_METHOD() {
     return filterBy[config.filterTargetBy];
   }
+  get HIDE_FILTERED() {
+    return config._cfg.settings.hideFilteredTarget ?? false;
+  }
+  set HIDE_FILTERED(value) {
+    config._cfg.settings.hideFilteredTarget = value;
+    this.applyFilter();
+    config.writeConfiguration();
+  }
+  get AUTOCLEAR() {
+    return config.autoClearTarget ?? false;
+  }
+  set AUTOCLEAR(value) {
+    config.autoClearTarget = value;
+    config.writeConfiguration();
+  }
   constructor() {
     this.initializeElements();
     this.setValues();
@@ -2031,26 +2202,83 @@ class Target {
   }
   initializeElements() {
     this.section = document.querySelector("#target_section");
+    this.contextMenu = UI.generateContextMenu({
+      menuItems: this.contextMenuItems,
+      sectionCode: this.sectionCode,
+    });
+    this.section.appendChild(this.contextMenu);
+    this.section.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+
+      e.x + this.contextMenu.offsetWidth > window.innerWidth
+        ? (this.contextMenu.style.left =
+            e.x - this.contextMenu.offsetWidth + "px")
+        : (this.contextMenu.style.left = e.x + "px");
+      e.y + this.contextMenu.offsetHeight > window.innerHeight
+        ? (this.contextMenu.style.top =
+            e.y - this.contextMenu.offsetHeight + "px")
+        : (this.contextMenu.style.top = e.y + "px");
+
+      this.contextMenu.classList.remove("hidden");
+    });
     this.header = document.querySelector(".target-header_container");
     this.container = document.querySelector(".target-container");
 
-    this.autoclearCheckbox = document.querySelector("#auto-clear-target");
-    this.autoClearInput = document.querySelector("#auto-clear-target-time");
-    this.autofillCheckbox = document.querySelector("#auto-fill-target");
-
-    this.sortByPointsRadio = document.querySelector("#target-sort-points");
-    this.sortByTruepointsRadio = document.querySelector(
-      "#target-sort-truepoints"
+    this.autoclearCheckbox = document.querySelector(
+      `#context-autoclear${this.sectionCode}`
     );
-    this.sortByRarestRadio = document.querySelector("#target-sort-rarest");
-    this.sortByDefaultRadio = document.querySelector("#target-sort-default");
-    this.sortReverseCheckbox = document.querySelector("#target-reverse-sort");
+    this.autoClearInput = document.querySelector(
+      `#context-autoclear-delay${this.sectionCode}`
+    );
+    this.autofillCheckbox = document.querySelector(
+      `#context-autofill${this.sectionCode}`
+    );
+
+    this.sortByLatestRadio = document.querySelector(
+      `#context-sort_latest${this.sectionCode}`
+    );
+
+    this.sortByPointsRadio = document.querySelector(
+      `#context-sort_points${this.sectionCode}`
+    );
+    this.sortByTruepointsRadio = document.querySelector(
+      `#context-sort_retropoints${this.sectionCode}`
+    );
+    this.sortByRarestRadio = document.querySelector(
+      `#context-sort_rarest${this.sectionCode}`
+    );
+    this.sortByDefaultRadio = document.querySelector(
+      `#context-sort_default${this.sectionCode}`
+    );
+    this.sortByDisableRadio = document.querySelector(
+      `#context-sort_dont-sort${this.sectionCode}`
+    );
+    this.sortReverseCheckbox = document.querySelector(
+      `#context-reverse-sort${this.sectionCode}`
+    );
 
     this.filterByMissableRadio = document.querySelector(
-      "#target-filter-missable"
+      `#context_filter-missable${this.sectionCode}`
     );
-    this.filterByAllRadio = document.querySelector("#target-filter-all");
-    this.moveToTopCheckbox = document.querySelector("#target-move-to-top");
+    this.filterByEarnedRadio = document.querySelector(
+      `#context_filter-earned${this.sectionCode}`
+    );
+    this.filterByAllRadio = document.querySelector(
+      `#context_filter-all${this.sectionCode}`
+    );
+    this.filterReverseCheckbox = document.querySelector(
+      `#context-reverse-filter${this.sectionCode}`
+    );
+    this.hideFilteredCheckbox = document.querySelector(
+      `#context-hide-filtered${this.sectionCode}`
+    );
+    this.clearAllAchivementsButton = document.querySelector(
+      `#context-clear-all${this.sectionCode}`
+    );
+    this.fillAchivementsButton = document.querySelector(
+      `#context-fill${this.sectionCode}`
+    );
+    // this.moveToTopCheckbox = document.querySelector("#target-move-to-top");
 
     this.resizer = document.querySelector("#target-resizer");
   }
@@ -2066,9 +2294,14 @@ class Target {
       case UI.filterMethods.missable:
         this.filterByMissableRadio.checked = true;
         break;
+      case UI.filterMethods.earned:
+        this.filterByEarnedRadio.checked = true;
+        break;
       default:
         this.filterByAllRadio.checked = true;
     }
+    this.filterReverseCheckbox.checked = config.reverseFilterTarget;
+    this.hideFilteredCheckbox.checked = this.HIDE_FILTERED;
     switch (config.sortTargetBy) {
       case UI.sortMethods.earnedCount:
         this.sortByRarestRadio.checked = true;
@@ -2079,11 +2312,14 @@ class Target {
       case UI.sortMethods.truepoints:
         this.sortByTruepointsRadio.checked = true;
         break;
+      case UI.sortMethods.latest:
+        this.sortByLatestRadio.checked = true;
+        break;
       default:
-        this.filterByAllRadio.checked = true;
+        this.sortByDefaultRadio.checked = true;
     }
-    this.sortReverseCheckbox.checked = config.reverseSortTarget;
-    this.moveToTopCheckbox.checked = config.targetMoveToTop;
+    this.sortReverseCheckbox.checked = config.reverseSortTarget == -1;
+    // this.moveToTopCheckbox.checked = config.targetMoveToTop;
   }
   addEvents() {
     this.autoclearCheckbox.addEventListener("change", (e) => {
@@ -2116,6 +2352,10 @@ class Target {
       this.SORT_METHOD = UI.sortMethods.default;
       this.applySort();
     });
+    this.sortByLatestRadio.addEventListener("change", (e) => {
+      this.SORT_METHOD = UI.sortMethods.latest;
+      this.applySort();
+    });
     this.sortByRarestRadio.addEventListener("change", (e) => {
       this.SORT_METHOD = UI.sortMethods.earnedCount;
       this.applySort();
@@ -2128,6 +2368,10 @@ class Target {
       this.SORT_METHOD = UI.sortMethods.truepoints;
       this.applySort();
     });
+    this.sortByDisableRadio.addEventListener("change", (e) => {
+      this.SORT_METHOD = UI.sortMethods.disable;
+      this.applySort();
+    });
     this.sortReverseCheckbox.addEventListener("change", (e) => {
       config.reverseSortTarget = this.sortReverseCheckbox.checked;
       this.applySort();
@@ -2136,14 +2380,32 @@ class Target {
       this.FILTER_METHOD = UI.filterMethods.missable;
       this.applyFilter();
     });
+    this.filterByEarnedRadio.addEventListener("change", (e) => {
+      e.stopPropagation();
+      this.FILTER_METHOD = UI.filterMethods.earned;
+      this.applyFilter();
+    });
     this.filterByAllRadio.addEventListener("change", (e) => {
       e.stopPropagation();
       this.FILTER_METHOD = UI.filterMethods.all;
       this.applyFilter();
     });
-    this.moveToTopCheckbox.addEventListener("change", (e) => {
-      config.targetMoveToTop = this.moveToTopCheckbox.checked;
+    this.filterReverseCheckbox.addEventListener("change", (e) => {
+      config.reverseFilterTarget = this.filterReverseCheckbox.checked;
+      this.applyFilter();
     });
+    this.fillAchivementsButton.addEventListener("click", (e) => {
+      this.fillItems();
+    });
+    this.clearAllAchivementsButton.addEventListener("click", (e) => {
+      this.clearAllAchivements();
+    });
+    this.hideFilteredCheckbox.addEventListener("change", (e) => {
+      this.HIDE_FILTERED = this.hideFilteredCheckbox.checked;
+    });
+    // this.moveToTopCheckbox.addEventListener("change", (e) => {
+    //   config.targetMoveToTop = this.moveToTopCheckbox.checked;
+    // });
   }
   isAchievementInTargetSection({ ID, targetContainer }) {
     const targetAchievements = [
@@ -2164,6 +2426,7 @@ class Target {
     type,
     NumAwardedHardcore,
     totalPlayers,
+    DateEarnedHardcore,
   }) {
     // Перевіряємо чи ачівки нема в секції тарґет
     if (
@@ -2180,15 +2443,17 @@ class Target {
     targetElement.dataset.type = type;
     targetElement.dataset.Points = Points;
     targetElement.dataset.TrueRatio = TrueRatio;
+    DateEarnedHardcore
+      ? (targetElement.dataset.DateEarnedHardcore = DateEarnedHardcore)
+      : "";
     targetElement.dataset.NumAwardedHardcore = NumAwardedHardcore;
+    targetElement.dataset.achivId = ID;
     if (isEarned) {
       targetElement.classList.add("earned");
       if (isHardcoreEarned) {
         targetElement.classList.add("hardcore");
       }
     }
-
-    targetElement.dataset.achivId = ID;
 
     targetElement.innerHTML = `
     <button class="delete-from-target" title="remove from target" onclick="ui.target.deleteFromTarget(this)">
@@ -2229,20 +2494,35 @@ class Target {
       win_condition: "win_condition",
       missable: "missable",
     };
-    this.applyFilter();
-    this.applySort();
+    if (!this.isDynamicAdding) {
+      this.applyFilter();
+      this.applySort();
+    }
+    if (DateEarnedHardcore && this.AUTOCLEAR) {
+      this.delayedRemove(targetElement);
+    }
   }
   moveToTop(element) {
-    element && config.targetMoveToTop ? this.container.prepend(element) : "";
+    // element && config.targetMoveToTop ? this.container.prepend(element) : "";
+
+    this.applyFilter();
   }
   applyFilter() {
-    const elements = this.container.querySelectorAll(".target-achiv");
-    elements.forEach((element) => {
-      element.classList.toggle("hidden", !this.FILTER_METHOD(element.dataset));
+    const achivsArray = this.container.querySelectorAll(".target-achiv");
+    achivsArray.forEach((a) => {
+      a.classList.remove("removed", "hidden");
+      a.classList.toggle(
+        this.HIDE_FILTERED ? "removed" : "hidden",
+        !this.FILTER_METHOD(a.dataset) ^ config.reverseFilterTarget
+      );
     });
+    // achivsArray.forEach((element) => {
+    //   element.classList.toggle("hidden", !this.FILTER_METHOD(element.dataset));
+    // });
   }
   applySort() {
     const elements = [...this.container.querySelectorAll(".target-achiv")];
+
     this.container.innerHTML = "";
     elements
       .sort(
@@ -2266,14 +2546,21 @@ class Target {
   clearAllAchivements() {
     this.container.innerHTML = "";
   }
+  delayedRemove(element) {
+    setTimeout(() => element.remove(), config.autoClearTargetTime * 1000);
+  }
   fillItems() {
+    this.isDynamicAdding = true;
     ui.achievementsBlock.container
       .querySelectorAll(".achiv-block")
       .forEach((achievement) => {
-        if (!achievement.classList.contains("hardcore")) {
+        if (true) {
           achievement.querySelector(".add-to-target").click();
         }
       });
+    this.applyFilter();
+    this.applySort();
+    this.isDynamicAdding = false;
   }
 
   close() {
@@ -2378,10 +2665,10 @@ const sortBy = {
     const dateB = b.DateEarnedHardcore
       ? new Date(b.DateEarnedHardcore)
       : -Infinity;
-    const dateA2 = a.DateEarned ? new Date(a.DateEarned) : -Infinity;
-    const dateB2 = b.DateEarned ? new Date(b.DateEarned) : -Infinity;
-    const maxDateA = Math.max(dateA, dateA2);
-    const maxDateB = Math.max(dateB, dateB2);
+    // const dateA2 = a.DateEarned ? new Date(a.DateEarned) : -Infinity;
+    // const dateB2 = b.DateEarned ? new Date(b.DateEarned) : -Infinity;
+    // const maxDateA = Math.max(dateA, dateA2);
+    // const maxDateB = Math.max(dateB, dateB2);
     return dateB - dateA; // Повертає різницю дат
   },
 
@@ -2392,6 +2679,8 @@ const sortBy = {
   truepoints: (a, b) => a.TrueRatio - b.TrueRatio,
 
   default: (a, b) => a.achivId - b.achivId,
+
+  disable: (a, b) => 0,
 };
 
 //* Методи фільтрування для досягнень гри

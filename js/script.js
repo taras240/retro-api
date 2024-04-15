@@ -89,16 +89,17 @@ async function updateAchievements() {
               `[data-achiv-id="${achievement.AchievementID}"]`
             );
             element.classList?.add("earned");
-            template.applyFilter();
           });
           updateAwards();
         }
         if (isHardcoreMismatch) {
-          ui.target.moveToTop(targetElement);
           ui.statusPanel.updateProgress({ points: achievement.Points });
           achievementElement.classList.add("hardcore");
           achievementElement.dataset.DateEarnedHardcore = achievement?.Date;
+          targetElement.dataset.DateEarnedHardcore = achievement?.Date;
           targetElement?.classList.add("hardcore");
+          ui.target.applySort();
+          ui.target.applyFilter();
           ui.achievementsBlockTemplates.forEach((template) => {
             let element = template?.container?.querySelector(
               `[data-achiv-id="${achievement.AchievementID}"]`
@@ -110,7 +111,7 @@ async function updateAchievements() {
             element.dataset.DateEarnedHardcore = achievement?.Date;
             template.applyFilter();
           });
-          if (targetElement && config.autoClearTarget) {
+          if (targetElement && ui.target.AUTOCLEAR) {
             setTimeout(
               () => targetElement.remove(),
               config.autoClearTargetTime * 1000

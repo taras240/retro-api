@@ -16,6 +16,7 @@
   user-select: none;
   border: 1px solid transparent;
   transition: 0.2s;
+  max-height: 400px;
 }
 
 .help-container:active {
@@ -37,4 +38,24 @@
   background-color: var(--font-color);
   color: var(--main-color);
   text-decoration: underline;
+}
+.help_section.changelog {
+  left: 50%;
+  top: 50%;
+  width: 400px;
+  transform: translate(-50%, -50%);
+  font-size: 1.15rem;
+}
+.changelog-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  border-bottom: 1px solid var(--font-color);
+  overflow-y: scroll;
+}
+.changelog-list li {
+  list-style-type: disc;
+  margin-left: 20px;
+  z-index: 10000;
 }

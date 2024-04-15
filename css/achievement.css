@@ -62,7 +62,8 @@
   transition: opacity 0.1s;
 }
 .achiv-block.hidden {
-  opacity: 0.15;
+  opacity: 0.2;
+  pointer-events: none;
 }
 .achiv-block.removed {
   display: none;

@@ -133,6 +133,13 @@ class Config {
     this._cfg.settings.reverseSortTarget = value ? "-1" : "1";
     this.writeConfiguration();
   }
+  get reverseFilterTarget() {
+    return this._cfg.settings.reverseFilterTarget ?? false;
+  }
+  set reverseFilterTarget(value) {
+    this._cfg.settings.reverseFilterTarget = value;
+    this.writeConfiguration();
+  }
   get filterTargetBy() {
     return this._cfg.settings.filterTargetBy || "all";
   }
