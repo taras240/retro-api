@@ -4778,7 +4778,10 @@ input[type="checkbox"]:checked + .side-panel_input::before {
   border-radius: 4px;
   /* overflow: hidden; */
   font-size: 1.15rem;
-  min-width: 150px;
+  min-width: 100px;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;

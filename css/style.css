@@ -472,6 +472,7 @@ input[type="checkbox"]:checked + .side-panel_input::before {
   /* overflow: hidden; */
   font-size: 1.15rem;
   min-width: 150px;
+  width: max-content;
   user-select: none;
   z-index: 10000;
 }
