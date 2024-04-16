@@ -4181,6 +4181,56 @@ a:hover {
 .wrapper {
   height: 100%;
 }
+.loading-section {
+  --icon-width: 48px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+  z-index: 10000;
+}
+.loading-section.hidden {
+  display: none;
+}
+.loading-section::before,
+.loading-section::after {
+  position: absolute;
+  content: "";
+  font-size: 1.5rem;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+.loading-section::before {
+  content: "Loading...";
+  color: white;
+  top: calc(50% - var(--icon-width));
+  left: 50%;
+}
+.loading-section::after {
+  width: var(--icon-width);
+  aspect-ratio: 1;
+  top: 50%;
+  left: 50%;
+  background-image: url(../assets/img/progress-loading.svg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  -webkit-animation: loading-animation 0.8s linear infinite;
+          animation: loading-animation 0.8s linear infinite;
+}
+@-webkit-keyframes loading-animation {
+  to {
+    -webkit-transform: translate(-50%, -50%) rotateZ(360deg);
+            transform: translate(-50%, -50%) rotateZ(360deg);
+  }
+}
+@keyframes loading-animation {
+  to {
+    -webkit-transform: translate(-50%, -50%) rotateZ(360deg);
+            transform: translate(-50%, -50%) rotateZ(360deg);
+  }
+}
 /**---------[ Section Style ]--------------*/
 .section {
   --background-gradient: linear-gradient(
@@ -4778,7 +4828,7 @@ input[type="checkbox"]:checked + .side-panel_input::before {
   border-radius: 4px;
   /* overflow: hidden; */
   font-size: 1.15rem;
-  min-width: 100px;
+  min-width: 150px;
   width: -webkit-max-content;
   width: -moz-max-content;
   width: max-content;

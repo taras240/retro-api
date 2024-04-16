@@ -7,52 +7,7 @@
     <link rel="icon" href="./favicon.ico">
     <title>RAchievements</title>
     <style>
-        .loading-section {
-            --icon-width: 48px;
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: black;
-            z-index: 10000;
-        }
-
-        .loading-section.hidden {
-            display: none;
-        }
-
-        .loading-section::before,
-        .loading-section::after {
-            position: absolute;
-            content: "";
-            font-size: 1.5rem;
-            transform: translate(-50%, -50%);
-        }
-
-        .loading-section::before {
-            content: "Loading...";
-            color: white;
-            top: calc(50% - var(--icon-width));
-            left: 50%;
-        }
-
-        .loading-section::after {
-            width: var(--icon-width);
-            aspect-ratio: 1;
-            top: 50%;
-            left: 50%;
-            background-image: url(assets/img/progress-loading.svg);
-            background-repeat: no-repeat;
-            background-size: cover;
-            animation: loading-animation .8s linear infinite;
-        }
-
-        @keyframes loading-animation {
-            to {
-                transform: translate(-50%, -50%) rotateZ(360deg);
-            }
-        }
+      
     </style>
     <link rel="stylesheet" href="./css/style.css" />
 </head>

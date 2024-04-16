@@ -12,6 +12,7 @@ class UI {
     points: "points",
     truepoints: "truepoints",
     disable: "disable",
+    id: "id",
     default: "default",
   };
   achievementsBlockTemplates = [];
@@ -984,6 +985,7 @@ class AchievementsBlock {
       NumAwardedHardcore,
       DateEarnedHardcore,
       type,
+      DisplayOrder,
     } = achievement;
 
     let achivElement = document.createElement("li");
@@ -999,6 +1001,8 @@ class AchievementsBlock {
     achivElement.dataset.achivId = ID;
     achivElement.dataset.Points = Points;
     achivElement.dataset.TrueRatio = TrueRatio;
+    achivElement.dataset.DisplayOrder = DisplayOrder;
+
     achivElement.dataset.NumAwardedHardcore = NumAwardedHardcore;
     DateEarnedHardcore
       ? (achivElement.dataset.DateEarnedHardcore = DateEarnedHardcore)
@@ -2282,6 +2286,12 @@ class Target {
         {
           type: "radio",
           name: "context-sort",
+          id: "context-sort_id",
+          label: "ID",
+        },
+        {
+          type: "radio",
+          name: "context-sort",
           id: "context-sort_dont-sort",
           label: "Disable",
         },
@@ -2452,6 +2462,10 @@ class Target {
     this.sortByRarestRadio = document.querySelector(
       `#context-sort_rarest${this.sectionCode}`
     );
+
+    this.sortByIdRadio = document.querySelector(
+      `#context-sort_id${this.sectionCode}`
+    );
     this.sortByDefaultRadio = document.querySelector(
       `#context-sort_default${this.sectionCode}`
     );
@@ -2573,6 +2587,10 @@ class Target {
       this.SORT_METHOD = UI.sortMethods.truepoints;
       this.applySort();
     });
+    this.sortByIdRadio.addEventListener("change", (e) => {
+      this.SORT_METHOD = UI.sortMethods.id;
+      this.applySort();
+    });
     this.sortByDisableRadio.addEventListener("change", (e) => {
       this.SORT_METHOD = UI.sortMethods.disable;
       this.applySort();
@@ -2632,6 +2650,7 @@ class Target {
     NumAwardedHardcore,
     totalPlayers,
     DateEarnedHardcore,
+    DisplayOrder,
   }) {
     // Перевіряємо чи ачівки нема в секції тарґет
     if (
@@ -2649,6 +2668,7 @@ class Target {
     targetElement.dataset.type = type;
     targetElement.dataset.Points = Points;
     targetElement.dataset.TrueRatio = TrueRatio;
+    targetElement.dataset.DisplayOrder = DisplayOrder;
     DateEarnedHardcore
       ? (targetElement.dataset.DateEarnedHardcore = DateEarnedHardcore)
       : "";
@@ -2881,7 +2901,9 @@ const sortBy = {
 
   truepoints: (a, b) => a.TrueRatio - b.TrueRatio,
 
-  default: (a, b) => a.achivId - b.achivId,
+  default: (a, b) => a.DisplayOrder - b.DisplayOrder,
+
+  id: (a, b) => a.achivId - b.achivId,
 
   disable: (a, b) => 0,
 };
