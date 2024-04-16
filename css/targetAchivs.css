@@ -2,6 +2,7 @@
   top: 10px;
   left: 31%;
   width: 400px;
+  max-height: 100vh;
   min-height: 150px;
   min-width: 300px;
   display: flex;
@@ -20,6 +21,7 @@
   align-items: center;
   justify-content: start;
   gap: 10px;
+  transition: none;
 }
 .target-achiv {
   position: relative;
@@ -35,6 +37,9 @@
   overflow: hidden;
   box-shadow: 1px 1px 1px 0px #000000a1;
   transition: 0.1s;
+}
+.target-achiv.dragged {
+  transition: none;
 }
 .target-achiv::before {
   --blick-color: rgba(0, 0, 0, 0.1);

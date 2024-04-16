@@ -271,7 +271,7 @@ a:hover {
 
 /** ------------------------------------------------*/
 /** -------[ WIDGETS SECTION ]----------------------*/
-#side_panel {
+.buttons-block {
   --side-panel-width: 90px;
   position: fixed;
   top: 50%;
@@ -419,8 +419,26 @@ input[type="checkbox"]:checked + .side-panel_input::before {
   background-color: var(--font-color);
   opacity: 0.15;
 }
+.buttons-block.gradient-animation {
+  background-image: linear-gradient(
+    to bottom,
+    var(--selection-color),
+    var(--main-color),
+    var(--secondary-color),
+    var(--accent-color)
+  );
+  background-size: 300% 300%;
+  animation: gradientAnimation 10s linear infinite;
+}
 
-.side-panel_settings {
+@keyframes gradientAnimation {
+  0%,
+  100% {
+    background-position: 50% 100%;
+  }
+  50% {
+    background-position: 50% 0%;
+  }
 }
 /**----------------[ CONTEXT-MENU ]-----------------*/
 .context-menu.hidden {
@@ -461,6 +479,7 @@ input[type="checkbox"]:checked + .side-panel_input::before {
 .context-menu_item {
   --context-font-color: var(--font-color);
   color: var(--context-font-color);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   position: relative;
   padding: 0 12px;
   width: 100%;
@@ -492,6 +511,7 @@ input[type="checkbox"]:checked + .side-panel_input::before {
 } */
 .context-menu_item:last-child {
   border-radius: 0 0 4px 4px;
+  border-bottom: none;
 }
 .context-menu_item:first-child {
   border-radius: 4px 4px 0 0;
@@ -504,7 +524,7 @@ input[type="checkbox"]:checked + .side-panel_input::before {
   display: none;
   position: absolute;
   left: calc(100% - 5px);
-  top: 5px;
+  top: 0px;
   z-index: 2;
 }
 .context-menu_item:hover > .context-menu_item-menu {

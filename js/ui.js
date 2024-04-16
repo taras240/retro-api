@@ -1,5 +1,5 @@
 class UI {
-  VERSION = "0.11";
+  VERSION = "0.12";
   static filterMethods = {
     all: "all",
     earned: "earned",
@@ -178,8 +178,15 @@ class UI {
           case "checkbox":
           case "radio":
             menuElement.innerHTML += `
-            <input type="${menuItem.type}" name="${menuItem.name}${sectionCode}" id="${menuItem.id}${sectionCode}"></input>
-            <label class="context-menu_${menuItem.type}" for="${menuItem.id}${sectionCode}">${menuItem.label}</label>
+            <input type="${menuItem.type}" name="${
+              menuItem.name
+            }${sectionCode}" id="${menuItem.id}${sectionCode}" 
+             ${menuItem.checked == true ? "checked" : ""} ${
+              menuItem.event ? menuItem.event : ""
+            }></input>
+            <label class="context-menu_${menuItem.type}"  for="${
+              menuItem.id
+            }${sectionCode}">${menuItem.label}</label>
             `;
             break;
           case "input-number":
@@ -497,12 +504,16 @@ class UI {
 
   static addDraggingEventForElements(container) {
     const dragAndDropItems = container;
-
+    var list = document.getElementById("myList");
     new Sortable(dragAndDropItems, {
-      animation: 150,
-      // chosenClass: "target-achiv-chosen",
-      // dragClass: "target-achiv-drag",
+      animation: 100,
+      chosenClass: "dragged",
     });
+    // , {
+    //   animation: 100,
+    //   // chosenClass: "draggable",
+    //   // dragClass: "draggableClass",
+    // });
   }
 
   static switchSectionVisibility({ section }) {
@@ -1639,8 +1650,11 @@ class StatusPanel {
       "--progress-count",
       completionByCount * 100 + "%"
     );
+    ui.gameCard.updateGameInfoElement({
+      name: "Completion",
+      value: `${completionByPointsPercents} of points [${completionByCountPercent}]`,
+    });
     this.progressStatusText.innerText = completionByPointsPercents;
-    ui.gameCard.completion.innerText = `${completionByPointsPercents} of points [${completionByCountPercent}]`;
   }
 }
 class Settings {
@@ -1785,7 +1799,117 @@ class Settings {
 }
 
 class GameCard {
+  contextMenuItems = [
+    {
+      label: "Platform",
+      type: "checkbox",
+      name: "context_show-platform",
+      id: "context_show-platform",
+      event: `onchange="ui.gameCard.updateGameInfoElement({name:'Platform', checkbox: this.parentNode.querySelector('input')})"`,
+      checked: true,
+    },
+    {
+      label: "Developer",
+      type: "checkbox",
+      name: "context_show-developer",
+      id: "context_show-developer",
+      event: `onchange="ui.gameCard.updateGameInfoElement({name:'Developer', checkbox: this.parentNode.querySelector('input')})"`,
+      checked: true,
+    },
+    {
+      label: "Publisher",
+      type: "checkbox",
+      name: "context_show-publisher",
+      id: "context_show-publisher",
+      event: `onchange="ui.gameCard.updateGameInfoElement({name:'Publisher', checkbox: this.parentNode.querySelector('input')})"`,
+      checked: true,
+    },
+    {
+      label: "Genre",
+      type: "checkbox",
+      name: "context_show-genre",
+      id: "context_show-genre",
+      event: `onchange="ui.gameCard.updateGameInfoElement({name:'Genre', checkbox: this.parentNode.querySelector('input')})"`,
+      checked: true,
+    },
+    {
+      label: "Released",
+      type: "checkbox",
+      name: "context_show-released",
+      id: "context_show-released",
+      event: `onchange="ui.gameCard.updateGameInfoElement({name:'Released', checkbox: this.parentNode.querySelector('input')})"`,
+      checked: true,
+    },
+    {
+      label: "Points",
+      type: "checkbox",
+      name: "context_show-points",
+      id: "context_show-points",
+      event: `onchange="ui.gameCard.updateGameInfoElement({name:'Points', checkbox: this.parentNode.querySelector('input')})"`,
+      checked: true,
+    },
+    {
+      label: "Players",
+      type: "checkbox",
+      name: "context_show-players",
+      id: "context_show-players",
+      event: `onchange="ui.gameCard.updateGameInfoElement({name:'Players', checkbox: this.parentNode.querySelector('input')})"`,
+      checked: true,
+    },
+    {
+      label: "Completion",
+      type: "checkbox",
+      name: "context_show-completion",
+      id: "context_show-completion",
+      event: `onchange="ui.gameCard.updateGameInfoElement({name:'Completion', checkbox: this.parentNode.querySelector('input')})"`,
+      checked: true,
+    },
+    {
+      label: "Achievements",
+      type: "checkbox",
+      name: "context_show-achievements",
+      id: "context_show-achievements",
+      event: `onchange="ui.gameCard.updateGameInfoElement({name:'Achievements', checkbox: this.parentNode.querySelector('input')})"`,
+      checked: true,
+    },
+  ];
+
+  gameInfoElements = {
+    Platform: { title: "Platform", id: "game-card-platform" },
+    Developer: { title: "Developer", id: "game-card-developer" },
+    Publisher: { title: "Publisher", id: "game-card-publisher" },
+    Genre: { title: "Genre", id: "game-card-genre" },
+    Released: { title: "Released", id: "game-card-released" },
+    Completion: { title: "Completion", id: "game-card-completion", value: "" },
+    Points: { title: "Points", id: "game-card-points-total" },
+    Players: { title: "Players", id: "#game-card-players-total" },
+    Achievements: { title: "Achievements", id: "game-card-achivs-count" },
+  };
+  updateGameInfoElement({ name, value, visibility, checkbox }) {
+    if (this.gameInfoElements.hasOwnProperty(name)) {
+      if (checkbox) {
+        visibility = checkbox.checked ? "visible" : "hidden";
+        this.gameInfoElements[name].visibility = visibility;
+        this.contextMenuItems.map((menuItem) => {
+          menuItem.label == name ? (menuItem.checked = checkbox.checked) : "";
+        });
+        if (!config.ui.hasOwnProperty("game_section")) {
+          config.ui.game_section = [];
+        }
+        config.ui.game_section.gameInfoElements = this.gameInfoElements;
+        config.ui.game_section.contextMenuItems = this.contextMenuItems;
+        config.writeConfiguration();
+      }
+      value ? (this.gameInfoElements[name].value = value) : "";
+      visibility ? (this.gameInfoElements[name].visibility = visibility) : "";
+    }
+    this.generateInfo();
+  }
+  // get gameInfo{
+  //   return this.gameInfoElements;
+  // }
   constructor() {
+    this.loadSavedData();
     this.initializeElements();
     this.addEvents();
     if (!config.ui.game_section) {
@@ -1795,10 +1919,24 @@ class GameCard {
 
     // Додавання подій для пересування вікна картки гри
   }
+  loadSavedData() {
+    config.ui?.game_section?.gameInfoElements
+      ? (this.gameInfoElements = config.ui.game_section.gameInfoElements)
+      : "";
+    config.ui?.game_section?.contextMenuItems
+      ? (this.contextMenuItems = config.ui.game_section.contextMenuItems)
+      : "";
+  }
   initializeElements() {
     // Елементи інформації про гру
     this.section = document.querySelector(".game-card_section"); // Контейнер інформації про гру
+    this.contextMenu = UI.generateContextMenu({
+      menuItems: this.contextMenuItems,
+      sectionCode: "game-card",
+    });
+    this.section.appendChild(this.contextMenu);
     this.header = document.querySelector("#game-card-header"); // Заголовок гри
+    this.descriptions = document.querySelector(".game-card-description");
     this.preview = document.querySelector("#game-card-image"); // Зображення гри
     this.platform = document.querySelector("#game-card-platform"); // Платформа гри
     this.developer = document.querySelector("#game-card-developer"); // Розробник гри
@@ -1806,10 +1944,38 @@ class GameCard {
     this.genre = document.querySelector("#game-card-genre"); // Жанр гри
     this.released = document.querySelector("#game-card-released"); // Дата випуску гри
     this.completion = document.querySelector("#game-card-completion"); // Статус завершення гри
+
+    this.achivsCount = document.querySelector("#game-card-achivs-count");
+    this.playersCount = document.querySelector("#game-card-players-total");
+    this.pointsCount = document.querySelector("#game-card-points-total");
+    this.resizer = document.querySelector("#game-card-resizer"); // Статус завершення гри
   }
   addEvents() {
     this.section.addEventListener("mousedown", (e) => {
       UI.moveEvent(this.section, e);
+    });
+    this.section.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+
+      e.x + this.contextMenu.offsetWidth > window.innerWidth
+        ? (this.contextMenu.style.left =
+            e.x - this.contextMenu.offsetWidth + "px")
+        : (this.contextMenu.style.left = e.x + "px");
+      e.y + this.contextMenu.offsetHeight > window.innerHeight
+        ? (this.contextMenu.style.top =
+            e.y - this.contextMenu.offsetHeight + "px")
+        : (this.contextMenu.style.top = e.y + "px");
+
+      this.contextMenu.classList.remove("hidden");
+    });
+    this.resizer.addEventListener("mousedown", (event) => {
+      event.stopPropagation();
+      this.section.classList.add("resized");
+      UI.resizeEvent({
+        event: event,
+        section: this.section,
+        postFunc: () => "",
+      });
     });
   }
   updateGameCardInfo({
@@ -1823,6 +1989,9 @@ class GameCard {
     Released,
     UserCompletion,
     UserCompletionHardcore,
+    achievements_published,
+    players_total,
+    points_total,
   }) {
     this.header.innerText = Title;
     this.header.setAttribute(
@@ -1833,12 +2002,44 @@ class GameCard {
       "src",
       `https://media.retroachievements.org${ImageBoxArt}`
     );
-    this.platform.innerText = ConsoleName;
-    this.developer.innerText = Developer || "-";
-    this.publisher.innerText = Publisher || "-";
-    this.genre.innerText = Genre || "-";
-    this.released.innerText = Released || "-";
+
+    this.gameInfoElements.Platform.value = ConsoleName;
+    this.gameInfoElements.Developer.value = Developer;
+    this.gameInfoElements.Publisher.value = Publisher;
+    this.gameInfoElements.Genre.value = Genre;
+    this.gameInfoElements.Released.value = Released;
+    this.gameInfoElements.Points.value = points_total;
+    this.gameInfoElements.Players.value = players_total;
+    this.gameInfoElements.Achievements.value = achievements_published;
+
+    this.generateInfo();
+    // this.platform.innerText = ConsoleName;
+    // this.developer.innerText = Developer || "-";
+    // this.publisher.innerText = Publisher || "-";
+    // this.genre.innerText = Genre || "-";
+    // this.released.innerText = Released || "-";
+    // this.achivsCount = achievements_published || "-";
+    // this.playersCount = players_total || "-";
+    // this.pointsCount = points_total || "-";
+
     // this.completion.innerText = `${UserCompletion} [${UserCompletionHardcore}]`;
+  }
+  generateInfo() {
+    this.descriptions.innerHTML = "";
+    Object.getOwnPropertyNames(this.gameInfoElements).forEach((prop) => {
+      let gameInfo = document.createElement("div");
+      gameInfo.classList.add("game-card-info");
+      gameInfo.classList.toggle(
+        "hidden",
+        this.gameInfoElements[prop].visibility == "hidden"
+      );
+
+      gameInfo.innerHTML = `
+      <h3 class="game-info-header">${this.gameInfoElements[prop].title}</h3>
+      <p class="game-card-text" id="${this.gameInfoElements[prop].id}">${this.gameInfoElements[prop].value}</p>
+      `;
+      this.descriptions.appendChild(gameInfo);
+    });
   }
   close() {
     ui.buttons.gameCard.click();
@@ -2440,12 +2641,14 @@ class Target {
 
     let targetElement = document.createElement("li");
     targetElement.classList.add("target-achiv");
+    // targetElement.setAttribute("draggable", "true");
     targetElement.dataset.type = type;
     targetElement.dataset.Points = Points;
     targetElement.dataset.TrueRatio = TrueRatio;
     DateEarnedHardcore
       ? (targetElement.dataset.DateEarnedHardcore = DateEarnedHardcore)
       : "";
+
     targetElement.dataset.NumAwardedHardcore = NumAwardedHardcore;
     targetElement.dataset.achivId = ID;
     if (isEarned) {
@@ -2665,10 +2868,6 @@ const sortBy = {
     const dateB = b.DateEarnedHardcore
       ? new Date(b.DateEarnedHardcore)
       : -Infinity;
-    // const dateA2 = a.DateEarned ? new Date(a.DateEarned) : -Infinity;
-    // const dateB2 = b.DateEarned ? new Date(b.DateEarned) : -Infinity;
-    // const maxDateA = Math.max(dateA, dateA2);
-    // const maxDateB = Math.max(dateB, dateB2);
     return dateB - dateA; // Повертає різницю дат
   },
 

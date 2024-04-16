@@ -18,6 +18,12 @@
       </div>
     </div>
     <ul class="changelog-list">
+      <p class="changelog-list_item">16-04-24
+      </p>
+      <li class="changelog-list_item">added posibility to change elements that would be displayed in game-card. press right mouse button
+      </li>
+      <li class="changelog-list_item">game-card is now resizeble
+      </li>
       <p class="changelog-list_item">15-04-24
       </p>
       <li class="changelog-list_item">now you can hide or remove achievement with filtering.

@@ -5,43 +5,57 @@
   left: 70%;
   width: 300px;
   max-height: 100vh;
-  overflow: hidden;
+  min-width: 300px;
+  min-height: 400px;
   cursor: grab;
+  display: flex;
+  flex-direction: column;
 }
-.game-card_section.hidden {
-}
+
 .game-card-header {
   text-align: center;
 }
 .game-card_container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  height: auto;
-}
-
-.game-card-info_container {
-  width: 100%;
-}
-
-.game-card-image {
-  display: block;
-  max-height: 450px;
-  width: auto;
-  margin: auto;
+  border-radius: 0 0 5px 5px;
   overflow: hidden;
 }
 
-.game-card-image img {
-  width: 100%;
-  max-height: 90%;
-  user-select: none;
+.game-card_image-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: normal;
+  overflow: hidden;
 }
 
+.game-card_image {
+  width: 100%;
+  object-position: center;
+  object-fit: cover;
+  object-position: center;
+  user-select: none;
+}
+.game-card-description {
+  background-color: var(--main-color);
+  background: linear-gradient(
+    to bottom right,
+    var(--main-color),
+    var(--secondary-color)
+  );
+}
 .game-card-info {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px;
-  /* border-top: 1px solid white; */
+  border-top: 1px solid rgba(255, 255, 255, 0.13);
+}
+.game-card-info.hidden {
+  display: none;
 }
 .game-info-header {
   margin-right: 10px;
@@ -49,7 +63,7 @@
 .game-card-text {
   text-align: end;
 }
-.game-card-info:nth-child(even) {
-  background-color: var(--secondary-color);
+.game-card-info:first-child {
+  border-top: none;
   z-index: 2;
 }
