@@ -8,7 +8,13 @@
   left: 1%;
   z-index: 5;
 }
-
+.prefs_section.section {
+  background: linear-gradient(
+    to top left,
+    var(--main-color),
+    var(--secondary-color)
+  );
+}
 /**------------- header -------------*/
 .widget-header-text.prefs-header {
   font-size: 1.5rem;
@@ -120,10 +126,13 @@ input:checked + .settings-input,
 .settings_container > * {
   padding: 7px 20px;
 }
-.settings_container > *:nth-child(even) {
+/* .settings_container > *:nth-child(even) {
   background-color: var(--secondary-color);
-}
+} */
 
+.settings_container > * {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
 .colors-block {
   display: flex;
   visibility: visible;

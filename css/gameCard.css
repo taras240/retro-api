@@ -42,7 +42,7 @@
 .game-card-description {
   background-color: var(--main-color);
   background: linear-gradient(
-    to bottom right,
+    to top left,
     var(--main-color),
     var(--secondary-color)
   );

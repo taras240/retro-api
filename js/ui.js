@@ -1928,28 +1928,42 @@ class GameCard {
       : "";
   }
   initializeElements() {
-    // Елементи інформації про гру
-    this.section = document.querySelector(".game-card_section"); // Контейнер інформації про гру
-    this.contextMenu = UI.generateContextMenu({
-      menuItems: this.contextMenuItems,
-      sectionCode: "game-card",
-    });
-    this.section.appendChild(this.contextMenu);
-    this.header = document.querySelector("#game-card-header"); // Заголовок гри
-    this.descriptions = document.querySelector(".game-card-description");
-    this.preview = document.querySelector("#game-card-image"); // Зображення гри
-    this.platform = document.querySelector("#game-card-platform"); // Платформа гри
-    this.developer = document.querySelector("#game-card-developer"); // Розробник гри
-    this.publisher = document.querySelector("#game-card-publisher"); // Видавець гри
-    this.genre = document.querySelector("#game-card-genre"); // Жанр гри
-    this.released = document.querySelector("#game-card-released"); // Дата випуску гри
-    this.completion = document.querySelector("#game-card-completion"); // Статус завершення гри
+    // Знаходимо контейнер для інформації про гру
+    this.section = document.querySelector(".game-card_section");
 
+    // Генеруємо контекстне меню з використанням методу generateContextMenu() з класу UI
+    this.contextMenu = UI.generateContextMenu({
+      menuItems: this.contextMenuItems, // Пункти меню передаємо з властивості контекстного об'єкту
+      sectionCode: "-game-card", // Код секції передаємо для ідентифікації
+    });
+
+    // Додаємо контекстне меню до контейнера з інформацією про гру
+    this.section.appendChild(this.contextMenu);
+
+    // Знаходимо заголовок гри
+    this.header = document.querySelector("#game-card-header");
+
+    // Знаходимо блок з описом гри
+    this.descriptions = document.querySelector(".game-card-description");
+
+    // Знаходимо зображення гри
+    this.preview = document.querySelector("#game-card-image");
+
+    // Знаходимо елементи інформації про гру: платформа, розробник, видавець, жанр, дата випуску, статус завершення
+    this.platform = document.querySelector("#game-card-platform");
+    this.developer = document.querySelector("#game-card-developer");
+    this.publisher = document.querySelector("#game-card-publisher");
+    this.genre = document.querySelector("#game-card-genre");
+    this.released = document.querySelector("#game-card-released");
+    this.completion = document.querySelector("#game-card-completion");
     this.achivsCount = document.querySelector("#game-card-achivs-count");
     this.playersCount = document.querySelector("#game-card-players-total");
     this.pointsCount = document.querySelector("#game-card-points-total");
-    this.resizer = document.querySelector("#game-card-resizer"); // Статус завершення гри
+
+    // Знаходимо елемент, який відповідає за ресайз блоку
+    this.resizer = document.querySelector("#game-card-resizer");
   }
+
   addEvents() {
     this.section.addEventListener("mousedown", (e) => {
       UI.moveEvent(this.section, e);
@@ -2013,16 +2027,6 @@ class GameCard {
     this.gameInfoElements.Achievements.value = achievements_published;
 
     this.generateInfo();
-    // this.platform.innerText = ConsoleName;
-    // this.developer.innerText = Developer || "-";
-    // this.publisher.innerText = Publisher || "-";
-    // this.genre.innerText = Genre || "-";
-    // this.released.innerText = Released || "-";
-    // this.achivsCount = achievements_published || "-";
-    // this.playersCount = players_total || "-";
-    // this.pointsCount = points_total || "-";
-
-    // this.completion.innerText = `${UserCompletion} [${UserCompletionHardcore}]`;
   }
   generateInfo() {
     this.descriptions.innerHTML = "";
