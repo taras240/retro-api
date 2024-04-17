@@ -40,37 +40,6 @@ class Config {
     ui.buttons.userImage.src = value;
     this.writeConfiguration();
   }
-  //!-----------------[ Settings data ]--------------------
-  //*-----------------[ Achieves ]-----------------
-  get achivsBgVisibility() {
-    return this._cfg.settings.achivsBgVisibility ?? false;
-  }
-  set achivsBgVisibility(value) {
-    this._cfg.settings.achivsBgVisibility = value;
-    this.writeConfiguration();
-  }
-  //*-----------------[ Target ]-----------------
-  get autoClearTarget() {
-    return this._cfg.settings.autoClearTarget;
-  }
-  set autoClearTarget(value) {
-    this._cfg.settings.autoClearTarget = value;
-    this.writeConfiguration();
-  }
-  get autoClearTargetTime() {
-    return Number(this._cfg.settings.autoClearTargetTime ?? 5);
-  }
-  set autoClearTargetTime(value) {
-    this._cfg.settings.autoClearTargetTime = value >= 0 ? value : 0;
-    this.writeConfiguration();
-  }
-  get autoFillTarget() {
-    return this._cfg.settings.autoFillTarget;
-  }
-  set autoFillTarget(value) {
-    this._cfg.settings.autoFillTarget = value;
-    this.writeConfiguration();
-  }
   get startOnLoad() {
     return this._cfg.settings.startOnLoad;
   }
@@ -97,78 +66,6 @@ class Config {
     this._cfg.settings.gameID = value;
     this.writeConfiguration();
   }
-
-  get filterAchievementsBy() {
-    return this._cfg.settings.filterBy || "all";
-  }
-  set filterAchievementsBy(value) {
-    this._cfg.settings.filterBy = value;
-    this.writeConfiguration();
-  }
-  get reverseFilter() {
-    return this._cfg.settings.reverseFilter ?? false;
-  }
-  set reverseFilter(value) {
-    this._cfg.settings.reverseFilter = value;
-    this.writeConfiguration();
-  }
-  get sortAchievementsBy() {
-    return this._cfg.settings.sortBy || "default";
-  }
-  set sortAchievementsBy(value) {
-    this._cfg.settings.sortBy = value;
-    this.writeConfiguration();
-  }
-  get sortTargetBy() {
-    return this._cfg.settings.sortTargetBy || "points";
-  }
-  set sortTargetBy(value) {
-    this._cfg.settings.sortTargetBy = value;
-    this.writeConfiguration();
-  }
-  get reverseSortTarget() {
-    return this._cfg.settings.reverseSortTarget || "1";
-  }
-  set reverseSortTarget(value) {
-    this._cfg.settings.reverseSortTarget = value ? "-1" : "1";
-    this.writeConfiguration();
-  }
-  get reverseFilterTarget() {
-    return this._cfg.settings.reverseFilterTarget ?? false;
-  }
-  set reverseFilterTarget(value) {
-    this._cfg.settings.reverseFilterTarget = value;
-    this.writeConfiguration();
-  }
-  get filterTargetBy() {
-    return this._cfg.settings.filterTargetBy || "all";
-  }
-  set filterTargetBy(value) {
-    this._cfg.settings.filterTargetBy = value;
-    this.writeConfiguration();
-  }
-  get targetMoveToTop() {
-    return this._cfg.settings.targetMoveToTop;
-  }
-  set targetMoveToTop(value) {
-    this._cfg.settings.targetMoveToTop = value;
-    this.writeConfiguration();
-  }
-  get reverseSort() {
-    return this._cfg.settings.reverseSort || "1";
-  }
-  set reverseSort(value) {
-    this._cfg.settings.reverseSort = value ? "-1" : "1";
-    this.writeConfiguration();
-  }
-  get stretchAchievements() {
-    return this._cfg.settings.stretchAchievements !== "0";
-  }
-  set stretchAchievements(value) {
-    this._cfg.settings.stretchAchievements = value ? "1" : "0";
-    this.writeConfiguration();
-  }
-
   get updateDelay() {
     return this._cfg.settings.updateDelay;
   }
@@ -179,25 +76,62 @@ class Config {
     this._cfg.settings.updateDelay = value;
     this.writeConfiguration();
   }
+  //!-----------------[ Settings data ]--------------------
+  //*-----------------[ Achieves ]-----------------
+  get achivsBgVisibility() {
+    return this._cfg.settings.achivsBgVisibility ?? false;
+  }
+  set achivsBgVisibility(value) {
+    this._cfg.settings.achivsBgVisibility = value;
+    this.writeConfiguration();
+  }
+
+
+  get bgVisibility() {
+    return this._cfg.settings.bgVisibility;
+  }
+  set bgVisibility(value) {
+    this._cfg.settings.bgVisibility = value;
+    this.writeConfiguration();
+  }
+  // set stretchAchievements(value) {
+  //   this._cfg.settings.stretchAchievements = value ? "1" : "0";
+  //   this.writeConfiguration();
+  // }
+  // get stretchAchievements() {
+  //   return this._cfg.settings.stretchAchievements !== "0";
+  // }
+  // get ACHIV_MIN_SIZE() {
+  //   return this._cfg.settings.ACHIV_MIN_SIZE ?? 30;
+  // }
+  // set ACHIV_MIN_SIZE(value) {
+  //   this._cfg.settings.ACHIV_MIN_SIZE = value;
+  //   this.writeConfiguration();
+  // }
+  // get ACHIV_MAX_SIZE() {
+  //   return this._cfg.settings.ACHIV_MAX_SIZE ?? 150;
+  // }
+  // set ACHIV_MAX_SIZE(value) {
+  //   this._cfg.settings.ACHIV_MAX_SIZE = value;
+  //   this.writeConfiguration();
+  // }
+
+
+  get targetMoveToTop() {
+    return this._cfg.settings.targetMoveToTop;
+  }
+  set targetMoveToTop(value) {
+    this._cfg.settings.targetMoveToTop = value;
+    this.writeConfiguration();
+  }
+
+
 
   get ui() {
     return this._cfg.ui;
   }
 
-  get ACHIV_MIN_SIZE() {
-    return this._cfg.settings.ACHIV_MIN_SIZE ?? 30;
-  }
-  set ACHIV_MIN_SIZE(value) {
-    this._cfg.settings.ACHIV_MIN_SIZE = value;
-    this.writeConfiguration();
-  }
-  get ACHIV_MAX_SIZE() {
-    return this._cfg.settings.ACHIV_MAX_SIZE ?? 150;
-  }
-  set ACHIV_MAX_SIZE(value) {
-    this._cfg.settings.ACHIV_MAX_SIZE = value;
-    this.writeConfiguration();
-  }
+
   //!---------------[ COLORS ]-----
   get mainColor() {
     return this._cfg.settings.mainColor ?? colorPresets.default.mainColor;
@@ -246,13 +180,6 @@ class Config {
     this.writeConfiguration();
   }
 
-  get bgVisibility() {
-    return this._cfg.settings.bgVisibility;
-  }
-  set bgVisibility(value) {
-    this._cfg.settings.bgVisibility = value;
-    this.writeConfiguration();
-  }
   //!---------------[ COLORS ]-----
   constructor() {
     this.readConfiguration();

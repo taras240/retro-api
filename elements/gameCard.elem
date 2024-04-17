@@ -4,46 +4,9 @@
   </div>
   <div class="game-card_container">
     <div class="game-card_image-container">
-      <img id="game-card-image" class="game-card_image" src="./assets/img/prev.png" alt=" ">
+      <img id="game-card-image" class="game-card_image" src="" onerror="this.src='./assets/img/missable.svg';" alt=" ">
     </div>
     <div class="game-card-description">
-      <div class="game-card-info">
-        <h3 class="game-info-header">Platform</h3>
-        <p class="game-card-text nes/famicom" id="game-card-platform">Nes/Famicom</p>
-      </div>
-      <div class="game-card-info">
-        <h3 class="game-info-header">Developer</h3>
-        <p class="game-card-text sunsoft" id="game-card-developer">SunSoft</p>
-      </div>
-      <div class="game-card-info">
-        <h3 class="game-info-header">Publisher</h3>
-        <p class="game-card-text sunsoft" id="game-card-publisher">SunSoft</p>
-      </div>
-      <div class="game-card-info">
-        <h3 class="game-info-header">Genre</h3>
-        <p class="game-card-text platformer" id="game-card-genre">Platformer</p>
-      </div>
-      <div class="game-card-info">
-        <h3 class="game-info-header">Released</h3>
-        <p class="game-card-text december-1989" id="game-card-released">December 1989</p>
-      </div>
-      <div class="game-card-info">
-        <h3 class="game-info-header">Points</h3>
-        <p class="game-card-text december-1989" id="game-card-points-total">154</p>
-      </div>
-      <div class="game-card-info">
-        <h3 class="game-info-header">Players</h3>
-        <p class="game-card-text 54-45" id="game-card-players-total">1254</p>
-      </div>
-      <div class="game-card-info">
-        <h3 class="game-info-header">Completion</h3>
-        <p class="game-card-text 54-45" id="game-card-completion">54.45%</p>
-      </div>
-      <div class="game-card-info">
-        <h3 class="game-info-header">Achievements count</h3>
-        <p class="game-card-text platformer" id="game-card-achivs-count">36</p>
-      </div>
-
     </div>
   </div>
   <div class="resizer" id="game-card-resizer"></div>

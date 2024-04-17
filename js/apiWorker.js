@@ -13,6 +13,7 @@ class APIWorker {
     userAwards: "API_GetUserAwards.php",
     userGameRankAndScore: "API_GetUserGameRankAndScore.php",
     completionProgress: "API_GetUserCompletionProgress.php",
+    gameList: "API_GetGameList.php",
   };
 
   // Генерує URL для запиту до API
@@ -28,6 +29,8 @@ class APIWorker {
       g: gameID || config.gameID,
       m: minutes || 2000,
       i: gameID || config.gameID,
+      f: 1,
+      h: 1,
     };
 
     // Додавання параметрів до URL
@@ -108,6 +111,15 @@ class APIWorker {
       userName: userName,
       apiKey: apiKey,
       endpoint: this.endpoints.userProfile,
+    });
+    return fetch(url).then((resp) => resp.json());
+  }
+  getGameList({ userName, apiKey, systemID }) {
+    let url = this.getUrl({
+      userName: userName,
+      apiKey: apiKey,
+      gameID: systemID,
+      endpoint: this.endpoints.gameList,
     });
     return fetch(url).then((resp) => resp.json());
   }
