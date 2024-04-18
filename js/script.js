@@ -13,21 +13,10 @@ async function getAchievements() {
   try {
     // Отримання інформації про прогрес гри від API
     const response = await apiWorker.getGameProgress({});
-    ui.ACHIEVEMENTS = response.Achievements;
+    ui.ACHIEVEMENTS = response;
     ui.statusPanel.watchButton.classList.remove("error");
-
-    // Парсинг та відображення досягнень гри
-    ui.achievementsBlock.parseGameAchievements(response);
-    ui.achievementsBlockTemplates.forEach((template) =>
-      template.cloneAchieves()
-    );
     // Оновлення інформації в картці гри
-    ui.gameCard.updateGameCardInfo(response);
 
-    if (ui.target.AUTOFILL) {
-      ui.target.clearAllAchivements();
-      ui.target.fillItems();
-    }
   } catch (error) {
     // Додання помилки до кнопки перегляду та зупинка перегляду
     ui.statusPanel.watchButton.classList.add("error");
@@ -58,8 +47,7 @@ async function updateAchievements() {
     });
     const earnedAchievements = ui.checkForNewAchieves(achievements);
     if (earnedAchievements.length > 0) {
-      UI.updateAchievementsSection({ earnedAchievementIDs: earnedAchievements, widget: ui.achievementsBlock });
-      ui.achievementsBlockTemplates.forEach(template => UI.updateAchievementsSection({ earnedAchievementIDs: earnedAchievements, widget: template }));
+      ui.achievementsBlock.forEach(template => UI.updateAchievementsSection({ earnedAchievementIDs: earnedAchievements, widget: template }));
       UI.updateAchievementsSection({ earnedAchievementIDs: earnedAchievements, widget: ui.target });
       ui.target.delayedRemove();
       updateAwards();

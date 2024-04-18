@@ -5,7 +5,7 @@ const sections = {
   gameCard: "./elements/gameCard.elem",
   about: "./elements/about.elem",
   target: "./elements/target.elem",
-  achievements: "./elements/achievements.elem",
+  // achievements: "./elements/achievements.elem",
   login: "./elements/login.elem",
   panel: "./elements/side-panel.elem",
   settings: "./elements/settings.elem",

@@ -2812,7 +2812,7 @@ input:checked + .settings-input,
   max-width: 100%;
   max-height: calc(100% - 36px);
   gap: 1px;
-  overflow: visible;
+  overflow: scroll;
 }
 .achivs.bg-visible .achievements-header_container,
 .achivs:hover .achievements-header_container {
@@ -3059,12 +3059,12 @@ input:checked + .settings-input,
   font-weight: 500;
 }
 .achiv-details-block.left-side {
-  left: auto;
-  right: 100%;
+  -webkit-transform: translateX(calc(-100% - 35px));
+          transform: translateX(calc(-100% - 35px));
 }
 .achiv-details-block.top-side {
-  top: auto;
-  bottom: 80%;
+  -webkit-transform: translateY(calc(-60%));
+          transform: translateY(calc(-60%));
 }
 .achiv-title {
   font-weight: 600;
@@ -3082,15 +3082,34 @@ input:checked + .settings-input,
   position: relative;
   padding-left: 25px;
 }
-.achiv-block:hover .achiv-details-block {
+/* .achiv-block:hover .achiv-details-block {
+  visibility: visible;
+  opacity: 1;
+  transition: 0.2s;
+} */
+.achiv-details-block.popup {
+  margin: 1px;
+  max-width: 300px;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  left: auto;
+  top: auto;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: opacity 0.2s;
+  transition: opacity 0.2s;
+  z-index: 10000;
+}
+.achiv-details-block.popup.visible {
   visibility: visible;
   opacity: 1;
   -webkit-transition: 0.2s;
   transition: 0.2s;
 }
-.achiv-block[data-point-style="poor"] .points::before,
-.achiv-block[data-point-style="normal"] .points::before,
-.achiv-block[data-point-style="reach"] .points::before {
+[data-point-style="poor"] .points::before,
+[data-point-style="normal"] .points::before,
+[data-point-style="reach"] .points::before {
   content: "";
   position: absolute;
   height: 15px;
@@ -3104,17 +3123,13 @@ input:checked + .settings-input,
       image-rendering: pixelated;
   background-size: contain;
   background-repeat: no-repeat;
-  opacity: 0;
-  -webkit-animation: hardcore-earned-animation 0.1s linear forwards;
-          animation: hardcore-earned-animation 0.1s linear forwards;
-  -webkit-animation-delay: 0.6s;
-          animation-delay: 0.6s;
+  opacity: 1;
 }
-.achiv-block[data-point-style="poor"] .points::before {
+[data-point-style="poor"] .points::before {
   left: 5px;
   background-image: url(../assets/img/coins-less.png);
 }
-.achiv-block[data-point-style="normal"] .points::before {
+[data-point-style="normal"] .points::before {
   -webkit-transform: rotateY(180deg);
           transform: rotateY(180deg);
   bottom: -2px;
@@ -3122,7 +3137,7 @@ input:checked + .settings-input,
   height: 20px;
   background-image: url(../assets/img/coins-middle.png);
 }
-.achiv-block[data-point-style="reach"] .points::before {
+[data-point-style="reach"] .points::before {
   height: 20px;
   background-image: url(../assets/img/coins.png);
 }
@@ -3265,6 +3280,7 @@ input:checked + .settings-input,
   top: 10px;
   left: 31%;
   width: 400px;
+  height: 500px;
   max-height: 100vh;
   min-height: 150px;
   min-width: 300px;

@@ -37,9 +37,12 @@ class Config {
   }
   set userImageSrc(value) {
     this._cfg.identification.userImageSrc = value;
+    console.log(value)
     ui.buttons.userImage.src = value;
     this.writeConfiguration();
   }
+
+  //!-----------------[ Settings data ]--------------------
   get startOnLoad() {
     return this._cfg.settings.startOnLoad;
   }
@@ -58,7 +61,6 @@ class Config {
       getAwards();
     }
   }
-
   get gameID() {
     return this._cfg.settings.gameID;
   }
@@ -76,47 +78,13 @@ class Config {
     this._cfg.settings.updateDelay = value;
     this.writeConfiguration();
   }
-  //!-----------------[ Settings data ]--------------------
-  //*-----------------[ Achieves ]-----------------
-  get achivsBgVisibility() {
-    return this._cfg.settings.achivsBgVisibility ?? false;
-  }
-  set achivsBgVisibility(value) {
-    this._cfg.settings.achivsBgVisibility = value;
-    this.writeConfiguration();
-  }
-
-
   get bgVisibility() {
-    return this._cfg.settings.bgVisibility;
+    return this._cfg.settings.bgVisibility ?? true;
   }
   set bgVisibility(value) {
     this._cfg.settings.bgVisibility = value;
     this.writeConfiguration();
   }
-  // set stretchAchievements(value) {
-  //   this._cfg.settings.stretchAchievements = value ? "1" : "0";
-  //   this.writeConfiguration();
-  // }
-  // get stretchAchievements() {
-  //   return this._cfg.settings.stretchAchievements !== "0";
-  // }
-  // get ACHIV_MIN_SIZE() {
-  //   return this._cfg.settings.ACHIV_MIN_SIZE ?? 30;
-  // }
-  // set ACHIV_MIN_SIZE(value) {
-  //   this._cfg.settings.ACHIV_MIN_SIZE = value;
-  //   this.writeConfiguration();
-  // }
-  // get ACHIV_MAX_SIZE() {
-  //   return this._cfg.settings.ACHIV_MAX_SIZE ?? 150;
-  // }
-  // set ACHIV_MAX_SIZE(value) {
-  //   this._cfg.settings.ACHIV_MAX_SIZE = value;
-  //   this.writeConfiguration();
-  // }
-
-
   get targetMoveToTop() {
     return this._cfg.settings.targetMoveToTop;
   }
@@ -124,14 +92,9 @@ class Config {
     this._cfg.settings.targetMoveToTop = value;
     this.writeConfiguration();
   }
-
-
-
   get ui() {
     return this._cfg.ui;
   }
-
-
   //!---------------[ COLORS ]-----
   get mainColor() {
     return this._cfg.settings.mainColor ?? colorPresets.default.mainColor;

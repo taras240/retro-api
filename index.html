@@ -17,396 +17,366 @@
     <div id='background-star2'></div>
     <div id='background-star3'></div>
   </div>
-  <div class="wrapper">
-    <section class="game-card_section section " id="game_section">
-      <div class="game-card-header_container">
-        <h2 class="widget-header-text"><a id="game-card-header" href="#" target="_blank"> Some Game Name</a></h2>
+  <div class="wrapper"><section class="game-card_section section " id="game_section">
+  <div class="game-card-header_container">
+    <h2 class="widget-header-text"><a id="game-card-header" href="#" target="_blank"> Some Game Name</a></h2>
+  </div>
+  <div class="game-card_container">
+    <div class="game-card_image-container">
+      <img id="game-card-image" class="game-card_image" src="" onerror="this.src='./assets/img/missable.svg';" alt=" ">
+    </div>
+    <div class="game-card-description">
+    </div>
+  </div>
+  <div class="resizer" id="game-card-resizer"></div>
+</section><section id="help_section" class="help_section hidden section">
+  <div class="help-container">
+    <div class="header-container">
+      <div class="header-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+          <path
+            d="M424-320q0-81 14.5-116.5T500-514q41-36 62.5-62.5T584-637q0-41-27.5-68T480-732q-51 0-77.5 31T365-638l-103-44q21-64 77-111t141-47q105 0 161.5 58.5T698-641q0 50-21.5 85.5T609-475q-49 47-59.5 71.5T539-320H424Zm56 240q-33 0-56.5-23.5T400-160q0-33 23.5-56.5T480-240q33 0 56.5 23.5T560-160q0 33-23.5 56.5T480-80Z">
+          </path>
+        </svg>
       </div>
-      <div class="game-card_container">
-        <div class="game-card_image-container">
-          <img id="game-card-image" class="game-card_image" src="" onerror="this.src='./assets/img/missable.svg';"
-            alt=" ">
-        </div>
-        <div class="game-card-description">
-        </div>
-      </div>
-      <div class="resizer" id="game-card-resizer"></div>
-    </section>
-    <section id="help_section" class="help_section hidden section">
-      <div class="help-container">
-        <div class="header-container">
-          <div class="header-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-              <path
-                d="M424-320q0-81 14.5-116.5T500-514q41-36 62.5-62.5T584-637q0-41-27.5-68T480-732q-51 0-77.5 31T365-638l-103-44q21-64 77-111t141-47q105 0 161.5 58.5T698-641q0 50-21.5 85.5T609-475q-49 47-59.5 71.5T539-320H424Zm56 240q-33 0-56.5-23.5T400-160q0-33 23.5-56.5T480-240q33 0 56.5 23.5T560-160q0 33-23.5 56.5T480-80Z">
-              </path>
-            </svg>
-          </div>
 
-          <h2 class="widget-header-text">Changelog</h2>
-          <div class="header-button header-icon" onclick="openAbout()">
-            <svg height="24" viewBox="0 -960 960 960" width="24">
-              <path
-                d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z">
-              </path>
-            </svg>
-          </div>
-        </div>
-        <ul class="changelog-list">
-          <p class="changelog-list_item">16-04-24
-          </p>
-          <li class="changelog-list_item">added posibility to change elements that would be displayed in game-card.
-            press right mouse button
-          </li>
-          <li class="changelog-list_item">game-card is now resizeble
-          </li>
-          <p class="changelog-list_item">15-04-24
-          </p>
-          <li class="changelog-list_item">now you can hide or remove achievement with filtering.
-          </li>
-          <li class="changelog-list_item">added some filter and sort methods to target widget.
-          </li>
-          <li class="changelog-list_item">replaced 'target' widget settings with context menu. Click the right mouse
-            button on the widget.
-          </li>
-          <p class="changelog-list_item">14-04-24
-          </p>
-          <li class="changelog-list_item">now target section show multiple columns when you expand its width</li>
-          <li class="changelog-list_item">replaced 'achieves' widget settings with context menu. Click the right mouse
-            button on the widget.
-          </li>
-          <li class="changelog-list_item">now you can add only 1 additional 'achievements' widget, but data now is
-            locally saved.</li>
-          <li class="changelog-list_item">reworked achievement tooltip </li>
-          <li class="changelog-list_item">now you can hide filtered achieves (check in filter options) </li>
-
-        </ul>
-        <p class="help-content">
-          For any questions, suggestions, or feedback,
-          please contact me at the email address:
-          <a class="text" href="mailto:khomyn@outlook.com">khomyn@outlook.com</a>
-        </p>
-        <p class="help-content">If you want to help me: <a target="_blank"
-            href="https://savelife.in.ua/donate/#donate-army-card-monthly"> support Ukrainian Army</a></p>
-
+      <h2 class="widget-header-text">Changelog</h2>
+      <div class="header-button header-icon" onclick="openAbout()">
+        <svg height="24" viewBox="0 -960 960 960" width="24">
+          <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z">
+          </path>
+        </svg>
       </div>
-    </section>
-    <section id="target_section" class="target_section section ">
-      <div class="header-container target-header_container">
-        <div class="header-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-            <path
-              d="M480-400q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm-40-240v-200h80v200h-80Zm0 520v-200h80v200h-80Zm200-320v-80h200v80H640Zm-520 0v-80h200v80H120Z" />
-          </svg>
-        </div>
-        <h2 class="widget-header-text">Target</h2>
-        <button class="header-icon header-button" onclick="ui.target.close()">
-          <svg height="24" viewBox="0 -960 960 960" width="24">
-            <path
-              d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-          </svg>
-        </button>
+    </div>
+    <ul class="changelog-list">
+      <p class="changelog-list_item">18-04-24
+      </p>
+      <li class="changelog-list_item">added autoscroll feature to achivs section, works when enabled and container is
+        overfowed
+      </li>
+      <p class="changelog-list_item">16-04-24
+      </p>
+      <li class="changelog-list_item">added posibility to change elements that would be displayed in game-card. press
+        right mouse button
+      </li>
+      <li class="changelog-list_item">game-card is now resizeble
+      </li>
+      <p class="changelog-list_item">15-04-24
+      </p>
+      <li class="changelog-list_item">now you can hide or remove achievement with filtering.
+      </li>
+      <li class="changelog-list_item">added some filter and sort methods to target widget.
+      </li>
+      <li class="changelog-list_item">replaced 'target' widget settings with context menu. Click the right mouse
+        button on the widget.
+      </li>
+      <p class="changelog-list_item">14-04-24
+      </p>
+      <li class="changelog-list_item">now target section show multiple columns when you expand its width</li>
+      <li class="changelog-list_item">replaced 'achieves' widget settings with context menu. Click the right mouse
+        button on the widget.
+      </li>
+      <li class="changelog-list_item">now you can add only 1 additional 'achievements' widget, but data now is
+        locally saved.</li>
+      <li class="changelog-list_item">reworked achievement tooltip </li>
+      <li class="changelog-list_item">now you can hide filtered achieves (check in filter options) </li>
 
-      </div>
-      <ul class="target-container"></ul>
-      <!-- <div class="target-empty-list">Target is empty</div> -->
-      <div class="resizer" id="target-resizer"></div>
-    </section>
-    <section id="achievements_section" class="achivs section ">
-      <div class="header-container achievements-header_container">
-        <div class="header-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960"
-            width="24">
-            <path
-              d="m668-380 152-130 120 10-176 153 52 227-102-62-46-198Zm-94-292-42-98 46-110 92 217-96-9ZM294-287l126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM173-120l65-281L20-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Zm247-340Z" />
-          </svg></div>
-        <h2 class="widget-header-text achivs-header-text">Achieves</h2>
-        <div class="achivs-settings-block">
+    </ul>
+    <p class="help-content">
+      For any questions, suggestions, or feedback,
+      please contact me at the email address:
+      <a class="text" href="mailto:khomyn@outlook.com">khomyn@outlook.com</a>
+    </p>
+    <p class="help-content">If you want to help me: <a target="_blank"
+        href="https://savelife.in.ua/donate/#donate-army-card-monthly"> support Ukrainian Army</a></p>
 
+  </div>
+</section><section id="target_section" class="target_section section ">
+  <div class="header-container target-header_container">
+    <div class="header-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+        <path
+          d="M480-400q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm-40-240v-200h80v200h-80Zm0 520v-200h80v200h-80Zm200-320v-80h200v80H640Zm-520 0v-80h200v80H120Z" />
+      </svg>
+    </div>
+    <h2 class="widget-header-text">Target</h2>
+    <button class="header-icon header-button" onclick="ui.target.close()">
+      <svg height="24" viewBox="0 -960 960 960" width="24">
+        <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+      </svg>
+    </button>
+
+  </div>
+  <ul class="target-container"></ul>
+  <!-- <div class="target-empty-list">Target is empty</div> -->
+  <div class="resizer" id="target-resizer"></div>
+</section><section id="login_section" class="login_section section">
+  <div class="header-container login-header_container">
+    <div class="header-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+        <path
+          d="M480-120v-80h280v-560H480v-80h280q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H480Zm-80-160-55-58 102-102H120v-80h327L345-622l55-58 200 200-200 200Z" />
+      </svg>
+    </div>
+    <h2 class="widget-header-text">RA Login</h2>
+    <div class="header-icon header-button" onclick="ui.loginCard.close()">
+      <svg height="24" viewBox="0 -960 960 960" width="24">
+        <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+      </svg>
+    </div>
+  </div>
+  <img class="login-user-image" title="ra account image" onerror="this.src='./assets/img/account.svg';"
+    alt="ra account image" />
+  <div class="login-container">
+    <div class="login-form-container">
+      <div class="user-ident-input">
+        <div class="form-input-container">
+          <label for="login-user-name">User name:</label>
+          <input type="text" class="text-input login-input" name="login-input" id="login-user-name"
+            placeholder="Enter user name" />
         </div>
-        <button class="header-button header-icon" onclick="ui.achievementsBlock.close()">
-          <svg height="24" viewBox="0 -960 960 960" width="24">
-            <path
-              d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-          </svg>
-        </button>
-      </div>
-      <ul class="achievements-container"></ul>
-      <div class="resizer" id="achivs-resizer"></div>
-    </section>
-    <section id="login_section" class="login_section section">
-      <div class="header-container login-header_container">
-        <div class="header-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-            <path
-              d="M480-120v-80h280v-560H480v-80h280q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H480Zm-80-160-55-58 102-102H120v-80h327L345-622l55-58 200 200-200 200Z" />
-          </svg>
-        </div>
-        <h2 class="widget-header-text">RA Login</h2>
-        <div class="header-icon header-button" onclick="ui.loginCard.close()">
-          <svg height="24" viewBox="0 -960 960 960" width="24">
-            <path
-              d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-          </svg>
-        </div>
-      </div>
-      <img class="login-user-image" title="ra account image" onerror="this.src='./assets/img/account.svg';"
-        alt="ra account image" />
-      <div class="login-container">
-        <div class="login-form-container">
-          <div class="user-ident-input">
-            <div class="form-input-container">
-              <label for="login-user-name">User name:</label>
-              <input type="text" class="text-input login-input" name="login-input" id="login-user-name"
-                placeholder="Enter user name" />
+        <div class="form-input-container">
+          <label for="login-api-key">API Key:</label>
+          <div class="login-api-container">
+            <div class="api-input">
+              <input type="password" class="text-input login-api-key login-input" name="api-key" id="login-api-key"
+                placeholder="Enter API Key" />
+              <button class="paste-api-key svg-button" title="paste from clipboard"
+                onclick="ui.loginCard.pasteApiKeyFromClipboard()">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                  <path
+                    d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h167q11-35 43-57.5t70-22.5q40 0 71.5 22.5T594-840h166q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560h-80v120H280v-120h-80v560Zm280-560q17 0 28.5-11.5T520-800q0-17-11.5-28.5T480-840q-17 0-28.5 11.5T440-800q0 17 11.5 28.5T480-760Z" />
+                </svg>
+              </button>
             </div>
-            <div class="form-input-container">
-              <label for="login-api-key">API Key:</label>
-              <div class="login-api-container">
-                <div class="api-input">
-                  <input type="password" class="text-input login-api-key login-input" name="api-key" id="login-api-key"
-                    placeholder="Enter API Key" />
-                  <button class="paste-api-key svg-button" title="paste from clipboard"
-                    onclick="ui.loginCard.pasteApiKeyFromClipboard()">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                      <path
-                        d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h167q11-35 43-57.5t70-22.5q40 0 71.5 22.5T594-840h166q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560h-80v120H280v-120h-80v560Zm280-560q17 0 28.5-11.5T520-800q0-17-11.5-28.5T480-840q-17 0-28.5 11.5T440-800q0 17 11.5 28.5T480-760Z" />
-                    </svg>
-                  </button>
-                </div>
 
-                <a class="ra-settings-link" title="go to retroachievements settings"
-                  href="https://retroachievements.org/controlpanel.php" target="_blank">
-                  Where is the API key located?
-                  <svg class="link-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960"
-                    width="24">
-                    <path d="m216-160-56-56 464-464H360v-80h400v400h-80v-264L216-160Z" />
-                  </svg>
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-button-container">
-            <button id="submit-login" class="submit-login" onclick="ui.loginCard.submitLogin()">
-              Сonfirm
-            </button>
+            <a class="ra-settings-link" title="go to retroachievements settings"
+              href="https://retroachievements.org/controlpanel.php" target="_blank">
+              Where is the API key located?
+              <svg class="link-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                <path d="m216-160-56-56 464-464H360v-80h400v400h-80v-264L216-160Z" />
+              </svg>
+            </a>
           </div>
         </div>
       </div>
-    </section>
-    <section id="side_panel" class="buttons-block gradient-animation  section expanded">
-      <div id="buttons-header_container" class="header-container widget-header_container buttons-header_container">
 
+      <div class="form-button-container">
+        <button id="submit-login" class="submit-login" onclick="ui.loginCard.submitLogin()">
+          Сonfirm
+        </button>
       </div>
-      <div class="setting-radio-group">
+    </div>
+  </div>
+</section><section id="side_panel" class="buttons-block gradient-animation  section expanded">
+    <div id="buttons-header_container" class="header-container widget-header_container buttons-header_container">
+
+    </div>
+    <div class="setting-radio-group">
         <input type="checkbox" name="open-login-button" id="open-login-button">
         </input>
         <label class="side-panel_login login-icon" title="login" for="open-login-button"> <img
-            id="side-panel-user-image" src="" onerror="this.src='./assets/img/account.svg';" alt=""></label>
-      </div>
-      <div class="buttons-block_container">
+                id="side-panel-user-image" src="" onerror="this.src='./assets/img/account.svg';" alt=""></label>
+    </div>
+    <div class="buttons-block_container">
         <div class="buttons-block_widgets">
-          <div class="setting-radio-group">
-            <input type="checkbox" name="open-status-button" id="open-status-button">
-            </input>
-            <label class="side-panel_input" title="status widget" for="open-status-button"><svg
-                xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                <path
-                  d="M300-840q52 0 99 22t81 62q34-40 81-62t99-22q94 0 157 63t63 157q0 5-.5 10t-.5 10h-80q1-5 1-10v-10q0-60-40-100t-100-40q-47 0-87 26.5T518-666h-76q-15-41-55-67.5T300-760q-60 0-100 40t-40 100v10q0 5 1 10H81q0-5-.5-10t-.5-10q0-94 63-157t157-63Zm-88 480h112q32 31 70 67t86 79q48-43 86-79t70-67h113q-38 42-90 91T538-158l-58 52-58-52q-69-62-120.5-111T212-360Zm230 40q13 0 22.5-7.5T478-347l54-163 35 52q5 8 14 13t19 5h320v-80H623l-69-102q-6-9-15.5-13.5T518-640q-13 0-22.5 7.5T482-613l-54 162-34-51q-5-8-14-13t-19-5H40v80h297l69 102q6 9 15.5 13.5T442-320Zm38-167Z" />
-              </svg></label>
-          </div>
-          <div class="setting-radio-group side-panel_achieves-group">
-            <input type="checkbox" name="open-achivs-button" id="open-achivs-button">
-            </input>
-            <label class="side-panel_input" title="achieves widget" for="open-achivs-button"><svg
-                xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                <path
-                  d="m668-380 152-130 120 10-176 153 52 227-102-62-46-198Zm-94-292-42-98 46-110 92 217-96-9ZM294-287l126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM173-120l65-281L20-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Zm247-340Z" />
-              </svg></label>
-            <button class="side-panel_input side-panel_button" onclick="ui.createAchievementsTemplate()"><svg
-                xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                <path
-                  d="M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160Zm40 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
-              </svg></button>
-          </div>
-          <div class="setting-radio-group">
-            <input type="checkbox" name="open-target-button" id="open-target-button">
-            </input>
-            <label class="side-panel_input" title="target widget" for="open-target-button"><svg
-                xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                <path
-                  d="M480-400q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm-40-240v-200h80v200h-80Zm0 520v-200h80v200h-80Zm200-320v-80h200v80H640Zm-520 0v-80h200v80H120Z">
-                </path>
-              </svg></label>
-          </div>
-          <div class="setting-radio-group">
-            <input type="checkbox" name="open-game-card-button" id="open-game-card-button">
-            </input>
-            <label class="side-panel_input" title="game-card widget" for="open-game-card-button"><svg
-                xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                <path
-                  d="M280-280h280v-80H280v80Zm0-160h400v-80H280v80Zm0-160h400v-80H280v80Zm-80 480q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
-              </svg></label>
-          </div>
-          <div class="setting-radio-group">
-            <input type="checkbox" name="open-awards-button" id="open-awards-button">
-            </input>
-            <label class="side-panel_input" title="awards widget" for="open-awards-button"><svg
-                xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                <path
-                  d="M280-120v-80h160v-124q-49-11-87.5-41.5T296-442q-75-9-125.5-65.5T120-640v-40q0-33 23.5-56.5T200-760h80v-80h400v80h80q33 0 56.5 23.5T840-680v40q0 76-50.5 132.5T664-442q-18 46-56.5 76.5T520-324v124h160v80H280Zm0-408v-152h-80v40q0 38 22 68.5t58 43.5Zm200 128q50 0 85-35t35-85v-240H360v240q0 50 35 85t85 35Zm200-128q36-13 58-43.5t22-68.5v-40h-80v152Zm-200-52Z" />
-              </svg></label>
-          </div>
-          <div class="setting-radio-group">
-            <input type="checkbox" name="open-about-button" id="open-about-button">
-            </input>
-            <label class="side-panel_input" title="about widget" for="open-about-button" onclick="openAbout()"><svg
-                xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                <path
-                  d="M424-320q0-81 14.5-116.5T500-514q41-36 62.5-62.5T584-637q0-41-27.5-68T480-732q-51 0-77.5 31T365-638l-103-44q21-64 77-111t141-47q105 0 161.5 58.5T698-641q0 50-21.5 85.5T609-475q-49 47-59.5 71.5T539-320H424Zm56 240q-33 0-56.5-23.5T400-160q0-33 23.5-56.5T480-240q33 0 56.5 23.5T560-160q0 33-23.5 56.5T480-80Z" />
-              </svg></label>
-          </div>
+            <div class="setting-radio-group">
+                <input type="checkbox" name="open-status-button" id="open-status-button">
+                </input>
+                <label class="side-panel_input" title="status widget" for="open-status-button"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                        <path
+                            d="M300-840q52 0 99 22t81 62q34-40 81-62t99-22q94 0 157 63t63 157q0 5-.5 10t-.5 10h-80q1-5 1-10v-10q0-60-40-100t-100-40q-47 0-87 26.5T518-666h-76q-15-41-55-67.5T300-760q-60 0-100 40t-40 100v10q0 5 1 10H81q0-5-.5-10t-.5-10q0-94 63-157t157-63Zm-88 480h112q32 31 70 67t86 79q48-43 86-79t70-67h113q-38 42-90 91T538-158l-58 52-58-52q-69-62-120.5-111T212-360Zm230 40q13 0 22.5-7.5T478-347l54-163 35 52q5 8 14 13t19 5h320v-80H623l-69-102q-6-9-15.5-13.5T518-640q-13 0-22.5 7.5T482-613l-54 162-34-51q-5-8-14-13t-19-5H40v80h297l69 102q6 9 15.5 13.5T442-320Zm38-167Z" />
+                    </svg></label>
+            </div>
+            <div class="setting-radio-group side-panel_achieves-group">
+                <input type="checkbox" name="open-achivs-button" id="open-achivs-button">
+                </input>
+                <label class="side-panel_input" title="achieves widget" for="open-achivs-button"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                        <path
+                            d="m668-380 152-130 120 10-176 153 52 227-102-62-46-198Zm-94-292-42-98 46-110 92 217-96-9ZM294-287l126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM173-120l65-281L20-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Zm247-340Z" />
+                    </svg></label>
+                <button class="side-panel_input side-panel_button" onclick="ui.createAchievementsTemplate()"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                        <path
+                            d="M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160Zm40 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+                    </svg></button>
+            </div>
+            <div class="setting-radio-group">
+                <input type="checkbox" name="open-target-button" id="open-target-button">
+                </input>
+                <label class="side-panel_input" title="target widget" for="open-target-button"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                        <path
+                            d="M480-400q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm-40-240v-200h80v200h-80Zm0 520v-200h80v200h-80Zm200-320v-80h200v80H640Zm-520 0v-80h200v80H120Z">
+                        </path>
+                    </svg></label>
+            </div>
+            <div class="setting-radio-group">
+                <input type="checkbox" name="open-game-card-button" id="open-game-card-button">
+                </input>
+                <label class="side-panel_input" title="game-card widget" for="open-game-card-button"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                        <path
+                            d="M280-280h280v-80H280v80Zm0-160h400v-80H280v80Zm0-160h400v-80H280v80Zm-80 480q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
+                    </svg></label>
+            </div>
+            <div class="setting-radio-group">
+                <input type="checkbox" name="open-awards-button" id="open-awards-button">
+                </input>
+                <label class="side-panel_input" title="awards widget" for="open-awards-button"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                        <path
+                            d="M280-120v-80h160v-124q-49-11-87.5-41.5T296-442q-75-9-125.5-65.5T120-640v-40q0-33 23.5-56.5T200-760h80v-80h400v80h80q33 0 56.5 23.5T840-680v40q0 76-50.5 132.5T664-442q-18 46-56.5 76.5T520-324v124h160v80H280Zm0-408v-152h-80v40q0 38 22 68.5t58 43.5Zm200 128q50 0 85-35t35-85v-240H360v240q0 50 35 85t85 35Zm200-128q36-13 58-43.5t22-68.5v-40h-80v152Zm-200-52Z" />
+                    </svg></label>
+            </div>
+            <div class="setting-radio-group">
+                <input type="checkbox" name="open-about-button" id="open-about-button">
+                </input>
+                <label class="side-panel_input" title="about widget" for="open-about-button" onclick="openAbout()"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                        <path
+                            d="M424-320q0-81 14.5-116.5T500-514q41-36 62.5-62.5T584-637q0-41-27.5-68T480-732q-51 0-77.5 31T365-638l-103-44q21-64 77-111t141-47q105 0 161.5 58.5T698-641q0 50-21.5 85.5T609-475q-49 47-59.5 71.5T539-320H424Zm56 240q-33 0-56.5-23.5T400-160q0-33 23.5-56.5T480-240q33 0 56.5 23.5T560-160q0 33-23.5 56.5T480-80Z" />
+                    </svg></label>
+            </div>
         </div>
 
 
         <div class="setting-radio-group side-panel_settings">
-          <input type="checkbox" name="open-settings-button" id="open-settings-button">
-          </input>
-          <label class="side-panel_input " title="settings widget" for="open-settings-button"><svg
-              xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-              <path
-                d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm70-80h79l14-106q31-8 57.5-23.5T639-327l99 41 39-68-86-65q5-14 7-29.5t2-31.5q0-16-2-31.5t-7-29.5l86-65-39-68-99 42q-22-23-48.5-38.5T533-694l-13-106h-79l-14 106q-31 8-57.5 23.5T321-633l-99-41-39 68 86 64q-5 15-7 30t-2 32q0 16 2 31t7 30l-86 65 39 68 99-42q22 23 48.5 38.5T427-266l13 106Zm42-180q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Zm-2-140Z" />
-            </svg></label>
-        </div>
-
-
-
-      </div>
-
-    </section>
-    <section id="settings_section" class="prefs_section section">
-      <div class="header-container prefs-header-container">
-        <div class="header-icon settings-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" fill="white"
-            viewBox="0 -960 960 960" width="24">
-            <path
-              d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm70-80h79l14-106q31-8 57.5-23.5T639-327l99 41 39-68-86-65q5-14 7-29.5t2-31.5q0-16-2-31.5t-7-29.5l86-65-39-68-99 42q-22-23-48.5-38.5T533-694l-13-106h-79l-14 106q-31 8-57.5 23.5T321-633l-99-41-39 68 86 64q-5 15-7 30t-2 32q0 16 2 31t7 30l-86 65 39 68 99-42q22 23 48.5 38.5T427-266l13 106Zm42-180q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Zm-2-140Z" />
-          </svg></div>
-        <h2 class="widget-header-text prefs-header">Settings</h2>
-        <button class="header-button header-icon" onclick="ui.settings.close()">
-          <svg height="24" viewBox="0 -960 960 960" width="24">
-            <path
-              d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-          </svg>
-        </button>
-      </div>
-      <div class="settings_container">
-
-
-        <div class="achivs-style input-container">
-          <label class="setting-label">Colors:</label>
-          <div class="colors-block hidden">
-            <input type="color" class="color-input " id="main-color-input" title="main color" />
-            <input type="color" class="color-input " id="secondary-color-input" title="secondary color" />
-            <input type="color" class="color-input " id="accent-color-input" title="accent color" />
-            <input type="color" class="color-input " id="selection-color-input" title="selection color" />
-            <input type="color" class="color-input " id="font-color-input" title="font color" />
-
-          </div>
-          <select class="setting-select settings-input settings-select" name="color-preset" id="color-preset-selection">
-            <option value="default">default</option>
-            <option value="pink">pink</option>
-            <option value="lightgreen">lightgreen</option>
-            <option value="lightblue">lightblue</option>
-            <option value="blue">blue</option>
-            <option value="synthwave">synthwave</option>
-            <option value="darkblue">darkblue</option>
-            <option value="brown">brown</option>
-            <option value="pastel">pastel</option>
-            <option value="retro">retro</option>
-            <option value="vintage">vintage</option>
-            <option value="neon">neon</option>
-            <option value="gray">gray</option>
-            <option value="custom">custom</option>
-          </select>
-          <div class="setting-radio-group">
-            <input type="checkbox" name="show-background" id="show-background_button" checked>
+            <input type="checkbox" name="open-settings-button" id="open-settings-button">
             </input>
-            <label class="settings-input" for="show-background_button">bg</label>
-          </div>
-          <!-- <button class="settings-input" onclick="ui.resetColors()">reset</button> -->
+            <label class="side-panel_input " title="settings widget" for="open-settings-button"><svg
+                    xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                    <path
+                        d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm70-80h79l14-106q31-8 57.5-23.5T639-327l99 41 39-68-86-65q5-14 7-29.5t2-31.5q0-16-2-31.5t-7-29.5l86-65-39-68-99 42q-22-23-48.5-38.5T533-694l-13-106h-79l-14 106q-31 8-57.5 23.5T321-633l-99-41-39 68 86 64q-5 15-7 30t-2 32q0 16 2 31t7 30l-86 65 39 68 99-42q22 23 48.5 38.5T427-266l13 106Zm42-180q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Zm-2-140Z" />
+                </svg></label>
         </div>
 
 
-        <div class="update-time-settings input-container">
-          <label class="setting-label">Update delay (seconds):</label>
-          <input type="number" class="number-input input" name="update-time" id="update-time" value="5"
-            placeholder="? sec" />
-        </div>
 
-        <div class="target-user-settings input-container">
-          <label class="setting-label">Target user:</label>
-          <input type="search" class="text-input target-user input" name="target-user" id="target-user" value=""
-            placeholder="your username if empty" />
-        </div>
-        <div class="game-id-settings input-container">
-          <label class="setting-label">Game ID:</label>
-          <button class="check-id-button settings-input" title="check entered gameID">
-            Check
-          </button>
+    </div>
 
-          <button class="get-id-button settings-input" title="get your last played gameID">
-            Auto
-          </button>
-          <input type="number" class="number-input input" name="game-id" id="game-id" value="0" placeholder="id" />
-          <!-- <button class="settings-input watching-button svg-icon">
+</section><section id="settings_section" class="prefs_section section">
+  <div class="header-container prefs-header-container">
+    <div class="header-icon settings-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" fill="white"
+        viewBox="0 -960 960 960" width="24">
+        <path
+          d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm70-80h79l14-106q31-8 57.5-23.5T639-327l99 41 39-68-86-65q5-14 7-29.5t2-31.5q0-16-2-31.5t-7-29.5l86-65-39-68-99 42q-22-23-48.5-38.5T533-694l-13-106h-79l-14 106q-31 8-57.5 23.5T321-633l-99-41-39 68 86 64q-5 15-7 30t-2 32q0 16 2 31t7 30l-86 65 39 68 99-42q22 23 48.5 38.5T427-266l13 106Zm42-180q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Zm-2-140Z" />
+      </svg></div>
+    <h2 class="widget-header-text prefs-header">Settings</h2>
+    <button class="header-button header-icon" onclick="ui.settings.close()">
+      <svg height="24" viewBox="0 -960 960 960" width="24">
+        <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+      </svg>
+    </button>
+  </div>
+  <div class="settings_container">
+
+
+    <div class="achivs-style input-container">
+      <label class="setting-label">Colors:</label>
+      <div class="colors-block hidden">
+        <input type="color" class="color-input " id="main-color-input" title="main color" />
+        <input type="color" class="color-input " id="secondary-color-input" title="secondary color" />
+        <input type="color" class="color-input " id="accent-color-input" title="accent color" />
+        <input type="color" class="color-input " id="selection-color-input" title="selection color" />
+        <input type="color" class="color-input " id="font-color-input" title="font color" />
+
+      </div>
+      <select class="setting-select settings-input settings-select" name="color-preset" id="color-preset-selection">
+        <option value="default">default</option>
+        <option value="pink">pink</option>
+        <option value="lightgreen">lightgreen</option>
+        <option value="lightblue">lightblue</option>
+        <option value="blue">blue</option>
+        <option value="synthwave">synthwave</option>
+        <option value="darkblue">darkblue</option>
+        <option value="brown">brown</option>
+        <option value="pastel">pastel</option>
+        <option value="retro">retro</option>
+        <option value="vintage">vintage</option>
+        <option value="neon">neon</option>
+        <option value="gray">gray</option>
+        <option value="custom">custom</option>
+      </select>
+      <div class="setting-radio-group">
+        <input type="checkbox" name="show-background" id="show-background_button" checked>
+        </input>
+        <label class="settings-input" for="show-background_button">bg</label>
+      </div>
+      <!-- <button class="settings-input" onclick="ui.resetColors()">reset</button> -->
+    </div>
+
+
+    <div class="update-time-settings input-container">
+      <label class="setting-label">Update delay (seconds):</label>
+      <input type="number" class="number-input input" name="update-time" id="update-time" value="5"
+        placeholder="? sec" />
+    </div>
+
+    <div class="target-user-settings input-container">
+      <label class="setting-label">Target user:</label>
+      <input type="search" class="text-input target-user input" name="target-user" id="target-user" value=""
+        placeholder="your username if empty" />
+    </div>
+    <div class="game-id-settings input-container">
+      <label class="setting-label">Game ID:</label>
+      <button class="check-id-button settings-input" title="check entered gameID">
+        Check
+      </button>
+
+      <button class="get-id-button settings-input" title="get your last played gameID">
+        Auto
+      </button>
+      <input type="number" class="number-input input" name="game-id" id="game-id" value="0" placeholder="id" />
+      <!-- <button class="settings-input watching-button svg-icon">
         <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
           <path
             d="M204-318q-22-38-33-78t-11-82q0-134 93-228t227-94h7l-64-64 56-56 160 160-160 160-56-56 64-64h-7q-100 0-170 70.5T240-478q0 26 6 51t18 49l-60 60ZM481-40 321-200l160-160 56 56-64 64h7q100 0 170-70.5T720-482q0-26-6-51t-18-49l60-60q22 38 33 78t11 82q0 134-93 228t-227 94h-7l64 64-56 56Z" />
         </svg>
         Watch
       </button> -->
-        </div>
-        <div class=" input-container">
-          <label class="setting-label">Start autoupdate on load:</label>
-          <div class="setting-radio-group">
-            <input type="checkbox" name="update-on-load" id="update-on-load">
-            </input>
-            <label class="settings-input" for="update-on-load">start on load</label>
-          </div>
-        </div>
-
+    </div>
+    <div class=" input-container">
+      <label class="setting-label">Start autoupdate on load:</label>
+      <div class="setting-radio-group">
+        <input type="checkbox" name="update-on-load" id="update-on-load">
+        </input>
+        <label class="settings-input" for="update-on-load">start on load</label>
       </div>
-    </section>
-    <section class="awards_section section " id="awards_section">
-      <div class="awards_container">
-        <div class="awards-header_container header-container">
-          <div class="header-icon awards-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24"
-              viewBox="0 -960 960 960" width="24">
-              <path
-                d="M280-120v-80h160v-124q-49-11-87.5-41.5T296-442q-75-9-125.5-65.5T120-640v-40q0-33 23.5-56.5T200-760h80v-80h400v80h80q33 0 56.5 23.5T840-680v40q0 76-50.5 132.5T664-442q-18 46-56.5 76.5T520-324v124h160v80H280Zm0-408v-152h-80v40q0 38 22 68.5t58 43.5Zm200 128q50 0 85-35t35-85v-240H360v240q0 50 35 85t85 35Zm200-128q36-13 58-43.5t22-68.5v-40h-80v152Zm-200-52Z" />
-            </svg></div>
-          <h2 class="widget-header-text"> User awards</h2>
-          <div class="get-awards_button header-button header-icon" id="awards-button" title="force reload"
-            onclick="getAwards()">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-              <path
-                d="M204-318q-22-38-33-78t-11-82q0-134 93-228t227-94h7l-64-64 56-56 160 160-160 160-56-56 64-64h-7q-100 0-170 70.5T240-478q0 26 6 51t18 49l-60 60ZM481-40 321-200l160-160 56 56-64 64h7q100 0 170-70.5T720-482q0-26-6-51t-18-49l60-60q22 38 33 78t11 82q0 134-93 228t-227 94h-7l64 64-56 56Z" />
-            </svg>
-          </div>
+    </div>
 
-          <button class="header-button header-icon" onclick="ui.awards.close()">
-            <svg height="24" viewBox="0 -960 960 960" width="24">
-              <path
-                d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-            </svg>
-          </button>
+  </div>
+</section><section class="awards_section section " id="awards_section">
+    <div class="awards_container">
+        <div class="awards-header_container header-container">
+            <div class="header-icon awards-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24"
+                    viewBox="0 -960 960 960" width="24">
+                    <path
+                        d="M280-120v-80h160v-124q-49-11-87.5-41.5T296-442q-75-9-125.5-65.5T120-640v-40q0-33 23.5-56.5T200-760h80v-80h400v80h80q33 0 56.5 23.5T840-680v40q0 76-50.5 132.5T664-442q-18 46-56.5 76.5T520-324v124h160v80H280Zm0-408v-152h-80v40q0 38 22 68.5t58 43.5Zm200 128q50 0 85-35t35-85v-240H360v240q0 50 35 85t85 35Zm200-128q36-13 58-43.5t22-68.5v-40h-80v152Zm-200-52Z" />
+                </svg></div>
+            <h2 class="widget-header-text"> User awards</h2>
+            <div class="get-awards_button header-button header-icon" id="awards-button" title="force reload"
+                onclick="getAwards()">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                    <path
+                        d="M204-318q-22-38-33-78t-11-82q0-134 93-228t227-94h7l-64-64 56-56 160 160-160 160-56-56 64-64h-7q-100 0-170 70.5T240-478q0 26 6 51t18 49l-60 60ZM481-40 321-200l160-160 56 56-64 64h7q100 0 170-70.5T720-482q0-26-6-51t-18-49l60-60q22 38 33 78t11 82q0 134-93 228t-227 94h-7l64 64-56 56Z" />
+                </svg>
+            </div>
+
+            <button class="header-button header-icon" onclick="ui.awards.close()">
+                <svg height="24" viewBox="0 -960 960 960" width="24">
+                    <path
+                        d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+                </svg>
+            </button>
         </div>
         <ul class="awards-content_container">
         </ul>
-      </div>
-      <div class="resizer" id="awards-resizer"></div>
-    </section>
-    <section id="update-section" class="update_section section ">
+    </div>
+    <div class="resizer" id="awards-resizer"></div>
+</section><section id="update-section" class="update_section section ">
 
       <div class="update_container " id="update-text-block">
         <div class="progress-bar" id="status-progress-bar">

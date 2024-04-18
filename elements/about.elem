@@ -18,9 +18,15 @@
       </div>
     </div>
     <ul class="changelog-list">
+      <p class="changelog-list_item">18-04-24
+      </p>
+      <li class="changelog-list_item">added autoscroll feature to achivs section, works when enabled and container is
+        overfowed
+      </li>
       <p class="changelog-list_item">16-04-24
       </p>
-      <li class="changelog-list_item">added posibility to change elements that would be displayed in game-card. press right mouse button
+      <li class="changelog-list_item">added posibility to change elements that would be displayed in game-card. press
+        right mouse button
       </li>
       <li class="changelog-list_item">game-card is now resizeble
       </li>
