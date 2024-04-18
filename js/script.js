@@ -1,6 +1,6 @@
 let config = new Config();
 const RECENT_DELAY_MILISECS = 20 * 60 * 1000; //maybe don't need
-const RECENT_ACHIVES_RANGE_MINUTES = 5 * 1000; // for auto update
+const RECENT_ACHIVES_RANGE_MINUTES = 5; // for auto update
 // Ініціалізація UI
 let ui = new UI();
 // Ініціалізація APIWorker з ідентифікацією користувача
