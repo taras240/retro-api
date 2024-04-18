@@ -1,5 +1,5 @@
 class UI {
-  VERSION = "0.12";
+  VERSION = "0.13";
   static AUTOCLOSE_CONTEXTMENU = false;
   static filterMethods = {
     all: "all",
