@@ -104,9 +104,20 @@
   background-size: contain;
   background-repeat: no-repeat;
   opacity: 0;
-  animation: hardcore-earned-animation 0.1s linear forwards;
+  animation: target-hardcore-animation 0.3s linear forwards;
 }
-
+@keyframes target-hardcore-animation {
+  0% {
+    top: 0%;
+    opacity: 0;
+    right: 0%;
+  }
+  100% {
+    top: 50%;
+    right: 12%;
+    opacity: 1;
+  }
+}
 .target-achiv-details {
   display: flex;
   flex-direction: column;

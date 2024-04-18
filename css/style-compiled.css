@@ -2699,6 +2699,7 @@ input:checked + .settings-input,
   overflow: hidden;
 }
 .game-card_image-container {
+  position: relative;
   -webkit-box-flex: 1;
       -ms-flex: 1;
           flex: 1;
@@ -2712,6 +2713,23 @@ input:checked + .settings-input,
       -ms-flex-align: normal;
           align-items: normal;
   overflow: hidden;
+}
+.mastered .game-card_image-container::after {
+  content: "";
+  width: 100%;
+  aspect-ratio: 3;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%) rotateZ(-30deg);
+          transform: translate(-50%, -50%) rotateZ(-30deg);
+  background-image: url(../assets/img/mastered.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  -webkit-filter: drop-shadow(0px 0px 2px black);
+          filter: drop-shadow(0px 0px 2px black);
+  z-index: 10;
 }
 .game-card_image {
   width: 100%;
@@ -2850,9 +2868,16 @@ input:checked + .settings-input,
   -webkit-transition: opacity 0.1s;
   transition: opacity 0.1s;
 }
-.achiv-block.hidden {
+.achiv-block.hidden .preview-container {
   opacity: 0.2;
-  pointer-events: none;
+  -webkit-transition: 0.2s;
+  transition: 0.2s;
+  /* pointer-events: none; */
+}
+.achiv-block.hidden:hover .preview-container {
+  opacity: 0.5;
+
+  /* pointer-events: none; */
 }
 .achiv-block.removed {
   display: none;
@@ -2901,23 +2926,46 @@ input:checked + .settings-input,
   background-size: contain;
   background-repeat: no-repeat;
   opacity: 0;
+  pointer-events: none;
   -webkit-animation: hardcore-earned-animation 0.6s linear forwards;
           animation: hardcore-earned-animation 0.6s linear forwards;
   /* animation-delay: 0.6s; */
 }
 @-webkit-keyframes hardcore-earned-animation {
   0% {
+    -webkit-transform: scale(1.1);
+            transform: scale(1.1);
     opacity: 0;
   }
+  30% {
+    opacity: 0.9;
+  }
+  50% {
+    -webkit-transform: scale(0.9);
+            transform: scale(0.9);
+  }
   100% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
     opacity: 1;
   }
 }
 @keyframes hardcore-earned-animation {
   0% {
+    -webkit-transform: scale(1.1);
+            transform: scale(1.1);
     opacity: 0;
   }
+  30% {
+    opacity: 0.9;
+  }
+  50% {
+    -webkit-transform: scale(0.9);
+            transform: scale(0.9);
+  }
   100% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
     opacity: 1;
   }
 }
@@ -2955,7 +3003,7 @@ input:checked + .settings-input,
   fill: #eee;
   fill: var(--font-color);
 }
-.achiv-block:not(.hardcore):hover .add-to-target {
+.achiv-block:hover .add-to-target {
   visibility: visible;
   opacity: 1;
   -webkit-transition: 0.2s;
@@ -2973,7 +3021,7 @@ input:checked + .settings-input,
   -webkit-transition: 0.2s;
   transition: 0.2s;
 }
-.achiv-block:hover {
+.achiv-block:not(.hidden):hover {
   --shadow-color: black;
   -webkit-transform: scale(1);
           transform: scale(1);
@@ -3437,8 +3485,32 @@ input:checked + .settings-input,
   background-size: contain;
   background-repeat: no-repeat;
   opacity: 0;
-  -webkit-animation: hardcore-earned-animation 0.1s linear forwards;
-          animation: hardcore-earned-animation 0.1s linear forwards;
+  -webkit-animation: target-hardcore-animation 0.3s linear forwards;
+          animation: target-hardcore-animation 0.3s linear forwards;
+}
+@-webkit-keyframes target-hardcore-animation {
+  0% {
+    top: 0%;
+    opacity: 0;
+    right: 0%;
+  }
+  100% {
+    top: 50%;
+    right: 12%;
+    opacity: 1;
+  }
+}
+@keyframes target-hardcore-animation {
+  0% {
+    top: 0%;
+    opacity: 0;
+    right: 0%;
+  }
+  100% {
+    top: 50%;
+    right: 12%;
+    opacity: 1;
+  }
 }
 .target-achiv-details {
   display: -webkit-box;
