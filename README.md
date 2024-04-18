@@ -44,9 +44,6 @@ Before using the application, make sure the following software is installed on y
 
 The application does not require installation; you can simply navigate to the link and start using it.
 
-### Development and Contribution
-
-If you wish to join the development of the application or contribute, please refer to the *CONTRIBUTING.md* section for detailed information.
 
 ### Feedback
 
