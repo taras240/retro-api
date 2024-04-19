@@ -2171,7 +2171,7 @@ strong {
   width: auto;
   top: 31%;
   left: 1%;
-  z-index: 5;
+  z-index: 1000;
 }
 .prefs_section.section {
   background: -webkit-gradient(
@@ -2405,7 +2405,7 @@ input:checked + .settings-input,
   -ms-flex-line-pack: justify;
       align-content: space-between;
   overflow: hidden;
-  z-index: 100;
+  z-index: 1000;
 }
 .login_section::after,
 .login_section::before {
@@ -2729,7 +2729,6 @@ input:checked + .settings-input,
   background-size: contain;
   -webkit-filter: drop-shadow(0px 0px 2px black);
           filter: drop-shadow(0px 0px 2px black);
-  z-index: 10;
 }
 .game-card_image {
   width: 100%;
@@ -2844,7 +2843,6 @@ input:checked + .settings-input,
   left: 0;
   width: 100%;
   height: 35px;
-  z-index: 10;
   /* background-color: var(--main-color); */
   border-radius: 5px 5px 0 0;
   overflow: hidden;
@@ -3095,7 +3093,6 @@ input:checked + .settings-input,
   border-radius: 8px;
   line-height: 1.5rem;
   pointer-events: none;
-  z-index: 1;
   visibility: hidden;
   opacity: 0;
   -webkit-transition: 0.2s;
@@ -3147,7 +3144,7 @@ input:checked + .settings-input,
   opacity: 0;
   -webkit-transition: opacity 0.2s;
   transition: opacity 0.2s;
-  z-index: 10000;
+  z-index: 1000;
 }
 .achiv-details-block.popup.visible {
   visibility: visible;
@@ -3342,7 +3339,6 @@ input:checked + .settings-input,
 }
 .target-header_container {
   height: auto;
-  z-index: 2;
 }
 .target-container {
   padding: 10px;
@@ -3467,7 +3463,7 @@ input:checked + .settings-input,
   -webkit-filter: grayscale(0);
           filter: grayscale(0);
 }
-.target-achiv.earned.hardcore::after {
+.target-achiv.earned.hardcore:after {
   content: "";
   position: absolute;
   height: 100%;
@@ -3485,6 +3481,11 @@ input:checked + .settings-input,
   background-size: contain;
   background-repeat: no-repeat;
   opacity: 0;
+  top: 50%;
+  right: 12%;
+  opacity: 1;
+}
+.target-achiv.earned.hardcore:not(.dragged):after {
   -webkit-animation: target-hardcore-animation 0.3s linear forwards;
           animation: target-hardcore-animation 0.3s linear forwards;
 }
@@ -3639,7 +3640,6 @@ input:checked + .settings-input,
   background-color: var(--main-color);
   visibility: visible;
   opacity: 1;
-  z-index: 2;
 }
 .awards_section.hidden {
   visibility: hidden;
@@ -3931,11 +3931,10 @@ input:checked + .settings-input,
   min-height: 75px;
   max-height: 120px;
   width: 500px;
-  z-index: 100;
   /* transition: 0.2s !important; */
 }
 .update_section .resizer {
-  z-index: 11;
+  z-index: 2;
 }
 .update_container {
   padding: 10px;
@@ -4810,32 +4809,28 @@ input[type="checkbox"]:checked + .side-panel_input::before {
   background-image: -webkit-gradient(
     linear,
     left top, left bottom,
-    from(#008000),
+    from(#181118),
     color-stop(#201221),
-    color-stop(#181118),
-    to(#57125c)
+    to(#181118)
   );
   background-image: linear-gradient(
     to bottom,
-    #008000,
-    #201221,
     #181118,
-    #57125c
+    #201221,
+    #181118
   );
   background-image: -webkit-gradient(
     linear,
     left top, left bottom,
-    from(var(--selection-color)),
+    from(var(--secondary-color)),
     color-stop(var(--main-color)),
-    color-stop(var(--secondary-color)),
-    to(var(--accent-color))
+    to(var(--secondary-color))
   );
   background-image: linear-gradient(
     to bottom,
-    var(--selection-color),
-    var(--main-color),
     var(--secondary-color),
-    var(--accent-color)
+    var(--main-color),
+    var(--secondary-color)
   );
   background-size: 300% 300%;
   -webkit-animation: gradientAnimation 10s linear infinite;
@@ -5049,6 +5044,9 @@ input[type="radio"]:checked + .context-menu_radio::after {
 }
 .context-menu_input-number,
 .context-menu_text-input {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
   position: relative;
   border-radius: 4px;
   border: 1px solid var(--context-font-color);

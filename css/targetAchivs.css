@@ -11,7 +11,6 @@
 }
 .target-header_container {
   height: auto;
-  z-index: 2;
 }
 
 .target-container {
@@ -90,7 +89,7 @@
   filter: grayscale(0);
 }
 
-.target-achiv.earned.hardcore::after {
+.target-achiv.earned.hardcore:after {
   content: "";
   position: absolute;
   height: 100%;
@@ -104,6 +103,11 @@
   background-size: contain;
   background-repeat: no-repeat;
   opacity: 0;
+  top: 50%;
+  right: 12%;
+  opacity: 1;
+}
+.target-achiv.earned.hardcore:not(.dragged):after {
   animation: target-hardcore-animation 0.3s linear forwards;
 }
 @keyframes target-hardcore-animation {

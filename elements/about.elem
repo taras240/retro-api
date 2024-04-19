@@ -18,6 +18,12 @@
       </div>
     </div>
     <ul class="changelog-list">
+      <p class="changelog-list_item">19-04-24
+      </p>
+      <li class="changelog-list_item">fixed lags when dragged target achieves
+      </li>
+      <li class="changelog-list_item">added contextmenu for main settings
+      </li>
       <p class="changelog-list_item">18-04-24
       </p>
       <li class="changelog-list_item">added autoscroll feature to achivs section, works when enabled and container is

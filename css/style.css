@@ -467,10 +467,9 @@ input[type="checkbox"]:checked + .side-panel_input::before {
 .buttons-block.gradient-animation {
   background-image: linear-gradient(
     to bottom,
-    var(--selection-color),
-    var(--main-color),
     var(--secondary-color),
-    var(--accent-color)
+    var(--main-color),
+    var(--secondary-color)
   );
   background-size: 300% 300%;
   animation: gradientAnimation 10s linear infinite;
@@ -628,6 +627,7 @@ input[type="radio"]:checked + .context-menu_radio::after {
 }
 .context-menu_input-number,
 .context-menu_text-input {
+  flex: 1;
   position: relative;
   border-radius: 4px;
   border: 1px solid var(--context-font-color);

@@ -9,7 +9,7 @@
   display: grid;
   align-content: space-between;
   overflow: hidden;
-  z-index: 100;
+  z-index: 1000;
 }
 .login_section::after,
 .login_section::before {

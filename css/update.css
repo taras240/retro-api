@@ -8,11 +8,10 @@
   min-height: 75px;
   max-height: 120px;
   width: 500px;
-  z-index: 100;
   /* transition: 0.2s !important; */
 }
 .update_section .resizer {
-  z-index: 11;
+  z-index: 2;
 }
 .update_container {
   padding: 10px;

@@ -112,6 +112,26 @@ class UI {
         .querySelectorAll(".context-menu")
         .forEach((el) => el.remove());
     });
+    document.body.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+      document.querySelector(".context-menu")?.remove();
+      // this.contextMenu ? this.contextMenu.remove() : "";
+      this.contextMenu = UI.generateContextMenu({
+        menuItems: this.settings.contextMenuItems,
+      });
+      this.wrapper.appendChild(this.contextMenu);
+
+      e.x + this.contextMenu.offsetWidth > window.innerWidth
+        ? (this.contextMenu.style.left =
+          e.x - this.contextMenu.offsetWidth + "px")
+        : (this.contextMenu.style.left = e.x + "px");
+      e.y + this.contextMenu.offsetHeight > window.innerHeight
+        ? (this.contextMenu.style.top =
+          e.y - this.contextMenu.offsetHeight + "px")
+        : (this.contextMenu.style.top = e.y + "px");
+
+      this.contextMenu.classList.remove("hidden");
+    });
   }
   //Встановлення розмірів і розміщення елементів
   setPositions() {
@@ -132,6 +152,30 @@ class UI {
     });
     document.querySelector("#background-animation").style.display =
       config.bgVisibility ? "display" : "none";
+  }
+  showContextmenu({ event, menuItems, sectionCode = "" }) {
+
+    event.preventDefault();
+    event.stopPropagation();
+    document.querySelector(".context-menu")?.remove();
+    // this.contextMenu ? this.contextMenu.remove() : "";
+    this.contextMenu = UI.generateContextMenu({
+      menuItems: menuItems,
+      sectionCode: sectionCode,
+    });
+    this.wrapper.appendChild(this.contextMenu);
+
+    event.x + this.contextMenu.offsetWidth > window.innerWidth
+      ? (this.contextMenu.style.left =
+        event.x - this.contextMenu.offsetWidth + "px")
+      : (this.contextMenu.style.left = event.x + "px");
+    event.y + this.contextMenu.offsetHeight > window.innerHeight
+      ? (this.contextMenu.style.top =
+        event.y - this.contextMenu.offsetHeight + "px")
+      : (this.contextMenu.style.top = event.y + "px");
+
+    this.contextMenu.classList.remove("hidden");
+
   }
   createAchievementsTemplate() {
     if (this.achievementsBlock.length === 2) {
@@ -299,8 +343,8 @@ class UI {
             menuElement.innerHTML += `
               ${menuItem.prefix}
               <input class="context-menu_${menuItem.type}" id="${menuItem.id
-              }-${sectionCode}" type="text">${menuItem.postfix ?? ""
-              } onclick="event.stopPropagation()"</input>
+              }-${sectionCode}" type="text"  onclick="event.stopPropagation()">${menuItem.postfix ?? ""
+              }</input>
               `;
             break;
           case "button":
@@ -608,7 +652,7 @@ class UI {
     const dragAndDropItems = container;
     var list = document.getElementById("myList");
     new Sortable(dragAndDropItems, {
-      animation: 100,
+      animation: 200,
       chosenClass: "dragged",
     });
     // , {
@@ -620,6 +664,7 @@ class UI {
 
   static switchSectionVisibility({ section }) {
     section.classList.toggle("hidden");
+    console.log(section)
     config.setNewPosition({
       id: section.id,
       hidden: section.classList.contains("hidden"),
@@ -931,27 +976,10 @@ class AchievementsBlock {
     this.section.addEventListener("mousedown", (e) => {
       UI.moveEvent(this.section, e);
     });
-    this.section.addEventListener("contextmenu", (e) => {
-      e.preventDefault();
-      document.querySelector(".context-menu")?.remove();
-      // this.contextMenu ? this.contextMenu.remove() : "";
-      this.contextMenu = UI.generateContextMenu({
-        menuItems: this.contextMenuItems,
-        sectionCode: this.CLONE_NUMBER,
-      });
-      this.section.appendChild(this.contextMenu);
+    this.section.addEventListener("contextmenu", (event) => {
+      ui.showContextmenu({ event: event, menuItems: this.contextMenuItems, sectionCode: this.CLONE_NUMBER });
+    })
 
-      e.x + this.contextMenu.offsetWidth > window.innerWidth
-        ? (this.contextMenu.style.left =
-          e.x - this.contextMenu.offsetWidth + "px")
-        : (this.contextMenu.style.left = e.x + "px");
-      e.y + this.contextMenu.offsetHeight > window.innerHeight
-        ? (this.contextMenu.style.top =
-          e.y - this.contextMenu.offsetHeight + "px")
-        : (this.contextMenu.style.top = e.y + "px");
-
-      this.contextMenu.classList.remove("hidden");
-    });
     this.resizer.addEventListener("mousedown", (event) => {
       event.stopPropagation();
       this.section.classList.add("resized");
@@ -1232,42 +1260,45 @@ class AchievementsBlock {
     this.section.style.setProperty("--achiv-height", achivWidth + "px");
   }
   autoscrollInterval;
-  startAutoScroll() {
+  startAutoScroll(toBottom = true) {
     clearInterval(this.autoscrollInterval);
-    if (!this.AUTOSCROLL) return;
+    let speedInPixPerSec = 20;
+    let refreshRateMiliSecs = 50;
+
     let scrollContainer = this.container;
     let speedInPixels = 1;
-    let refreshRateMiliSecs = 50;
+    const pauseOnEndMilisecs = 500;
     // Часовий інтервал для прокручування вниз
-    let toBottom = true;
-    this.autoscrollInterval = setInterval(() => {
-      if (scrollContainer.scrollHeight - scrollContainer.clientHeight <= 10) {
-        this.stopAutoScroll();
-      }
-      if (toBottom) {
-        scrollContainer.scrollTop += speedInPixels;
-        if (scrollContainer.scrollTop + scrollContainer.clientHeight >= scrollContainer.scrollHeight) {
-          toBottom = false;
+    if (this.AUTOSCROLL) {
+      this.autoscrollInterval = setInterval(() => {
+        if (scrollContainer.scrollHeight - scrollContainer.clientHeight <= 10) {
+          this.stopAutoScroll();
         }
-      }
-      else {
-        scrollContainer.scrollTop -= speedInPixels;
-        if (scrollContainer.scrollTop === 0) {
-          toBottom = true;
-
+        if (toBottom) {
+          scrollContainer.scrollTop += speedInPixels;
+          if (scrollContainer.scrollTop + scrollContainer.clientHeight >= scrollContainer.scrollHeight) {
+            clearInterval(this.autoscrollInterval);
+            setTimeout(() => this.startAutoScroll(false), pauseOnEndMilisecs)
+          }
         }
-      }
-    }, refreshRateMiliSecs);
+        else {
+          scrollContainer.scrollTop -= speedInPixels;
+          if (scrollContainer.scrollTop === 0) {
+            clearInterval(this.autoscrollInterval);
+            setTimeout(() => this.startAutoScroll(true), pauseOnEndMilisecs)
+          }
+        }
+      }, refreshRateMiliSecs);
+      // Припиняємо прокручування при наведенні миші на контейнер
+      scrollContainer.addEventListener('mouseenter', () => {
+        speedInPixels = 0; // Зупиняємо інтервал прокрутки
+      });
 
-    // Припиняємо прокручування при наведенні миші на контейнер
-    scrollContainer.addEventListener('mouseenter', () => {
-      speedInPixels = 0; // Зупиняємо інтервал прокрутки
-    });
-
-    // Відновлюємо прокрутку при відведенні миші від контейнера
-    scrollContainer.addEventListener('mouseleave', () => {
-      speedInPixels = 1;
-    });
+      // Відновлюємо прокрутку при відведенні миші від контейнера
+      scrollContainer.addEventListener('mouseleave', () => {
+        speedInPixels = 1;
+      });
+    }
   }
   stopAutoScroll() {
     clearInterval(this.autoscrollInterval);
@@ -1540,6 +1571,203 @@ class StatusPanel {
   }
 }
 class Settings {
+  get contextMenuItems() {
+    return [
+      {
+        label: "Colors",
+        subMenu:
+          [
+            {
+              "type": "radio",
+              "name": "context_color-scheme",
+              "id": "context_color-scheme-default",
+              "label": "default",
+              "checked": ui.settings.COLOR_SCHEME === "default",
+              "event": "onchange=\"ui.settings.COLOR_SCHEME = 'default'\""
+            },
+            {
+              "type": "radio",
+              "name": "context_color-scheme",
+              "id": "context_color-scheme-pink",
+              "label": "pink",
+              "checked": ui.settings.COLOR_SCHEME === "pink",
+              "event": "onchange=\"ui.settings.COLOR_SCHEME = 'pink'\""
+            },
+            {
+              "type": "radio",
+              "name": "context_color-scheme",
+              "id": "context_color-scheme-lightgreen",
+              "label": "lightgreen",
+              "checked": ui.settings.COLOR_SCHEME === "lightgreen",
+              "event": "onchange=\"ui.settings.COLOR_SCHEME = 'lightgreen'\""
+            },
+            {
+              "type": "radio",
+              "name": "context_color-scheme",
+              "id": "context_color-scheme-lightblue",
+              "label": "lightblue",
+              "checked": ui.settings.COLOR_SCHEME === "lightblue",
+              "event": "onchange=\"ui.settings.COLOR_SCHEME = 'lightblue'\""
+            },
+            {
+              "type": "radio",
+              "name": "context_color-scheme",
+              "id": "context_color-scheme-blue",
+              "label": "blue",
+              "checked": ui.settings.COLOR_SCHEME === "blue",
+              "event": "onchange=\"ui.settings.COLOR_SCHEME = 'blue'\""
+            },
+            {
+              "type": "radio",
+              "name": "context_color-scheme",
+              "id": "context_color-scheme-synthwave",
+              "label": "synthwave",
+              "checked": ui.settings.COLOR_SCHEME === "synthwave",
+              "event": "onchange=\"ui.settings.COLOR_SCHEME = 'synthwave'\""
+            },
+            {
+              "type": "radio",
+              "name": "context_color-scheme",
+              "id": "context_color-scheme-darkblue",
+              "label": "darkblue",
+              "checked": ui.settings.COLOR_SCHEME === "darkblue",
+              "event": "onchange=\"ui.settings.COLOR_SCHEME = 'darkblue'\""
+            },
+            {
+              "type": "radio",
+              "name": "context_color-scheme",
+              "id": "context_color-scheme-brown",
+              "label": "brown",
+              "checked": ui.settings.COLOR_SCHEME === "brown",
+              "event": "onchange=\"ui.settings.COLOR_SCHEME = 'brown'\""
+            },
+            {
+              "type": "radio",
+              "name": "context_color-scheme",
+              "id": "context_color-scheme-pastel",
+              "label": "pastel",
+              "checked": ui.settings.COLOR_SCHEME === "pastel",
+              "event": "onchange=\"ui.settings.COLOR_SCHEME = 'pastel'\""
+            },
+            {
+              "type": "radio",
+              "name": "context_color-scheme",
+              "id": "context_color-scheme-retro",
+              "label": "retro",
+              "checked": ui.settings.COLOR_SCHEME === "retro",
+              "event": "onchange=\"ui.settings.COLOR_SCHEME = 'retro'\""
+            },
+            {
+              "type": "radio",
+              "name": "context_color-scheme",
+              "id": "context_color-scheme-vintage",
+              "label": "vintage",
+              "checked": ui.settings.COLOR_SCHEME === "vintage",
+              "event": "onchange=\"ui.settings.COLOR_SCHEME = 'vintage'\""
+            },
+            {
+              "type": "radio",
+              "name": "context_color-scheme",
+              "id": "context_color-scheme-neon",
+              "label": "neon",
+              "checked": ui.settings.COLOR_SCHEME === "neon",
+              "event": "onchange=\"ui.settings.COLOR_SCHEME = 'neon'\""
+            },
+            {
+              "type": "radio",
+              "name": "context_color-scheme",
+              "id": "context_color-scheme-gray",
+              "label": "gray",
+              "checked": ui.settings.COLOR_SCHEME === "gray",
+              "event": "onchange=\"ui.settings.COLOR_SCHEME = 'gray'\""
+            },
+            {
+              "type": "radio",
+              "name": "context_color-scheme",
+              "id": "context_color-scheme-custom",
+              "label": "custom",
+              "checked": ui.settings.COLOR_SCHEME === "custom",
+              "event": "onchange=\"ui.settings.COLOR_SCHEME = 'custom'\""
+            },
+
+          ]
+        //  () => {
+        //   return Object.getOwnPropertyNames(colorPresets).reduce((colorsMenuItems, name) => {
+        //     let menuItem = {
+        //       type: "radio",
+        //       name: "context_color-scheme",
+        //       id: `context_color-scheme-${name}`,
+        //       label: `${name}`,
+        //       checked: this.COLOR_SCHEME === name,
+        //       event: `onchange="ui.settings.COLOR_SCHEME = '${name}'"`,
+        //     }
+        //     colorsMenuItems.push(menuItem);
+        //     return colorsMenuItems;
+        //   }, [])
+        // }
+      },
+      {
+        label: "Show bg-animation",
+        type: "checkbox",
+        name: "context_show-bg-animation",
+        id: "context_show-bg-animation",
+        checked: ui.settings.BG_ANIMATION,
+        event: `onchange="ui.settings.BG_ANIMATION = this.checked;"`,
+
+      },
+      // {
+      //   prefix: "Update delay",
+      //   postfix: "sec",
+      //   type: "input-number",
+      //   id: "context-menu_update-delay",
+      //   label: "Update delay",
+      //   value: this.ACHIV_MIN_SIZE,
+      //   event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].ACHIV_MIN_SIZE = this.value;"`,
+      // },
+      // {
+      //   prefix: "Target user",
+      //   postfix: "",
+      //   type: "text-input",
+      //   id: "context-menu_target-user",
+      //   label: "Target user",
+      //   value: this.ACHIV_MIN_SIZE,
+      //   event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].ACHIV_MIN_SIZE = this.value;"`,
+      // },
+      {
+        label: "Start on load",
+        type: "checkbox",
+        name: "context_show-start-on-load",
+        id: "context_show-start-on-load",
+        checked: ui.settings.START_ON_LOAD,
+        event: `onchange="ui.settings.START_ON_LOAD = this.checked;"`,
+
+      },
+    ]
+  }
+  get COLOR_SCHEME() {
+    return config._cfg.settings.preset || "default";
+  }
+  set COLOR_SCHEME(value) {
+    config._cfg.settings.preset = value;
+    config.writeConfiguration();
+    UI.updateColors(value);
+  }
+  get BG_ANIMATION() {
+    return config._cfg.settings.bgVisibility ?? true;
+  }
+  set BG_ANIMATION(value) {
+    config._cfg.settings.bgVisibility = value;
+    config.writeConfiguration();
+    document.querySelector("#background-animation").style.display =
+      config.bgVisibility ? "block" : "none";
+  }
+  get START_ON_LOAD() {
+    return config._cfg.settings.startOnLoad ?? false;
+  }
+  set START_ON_LOAD(value) {
+    config._cfg.settings.startOnLoad = value;
+    config.writeConfiguration();
+  }
   constructor() {
     this.initializeElements();
     this.addEvents();
@@ -1548,6 +1776,7 @@ class Settings {
   initializeElements() {
     // Елементи налаштувань
     this.section = document.querySelector("#settings_section"); //* Контейнер налаштувань
+
     this.header = document.querySelector(".prefs-header-container");
     this.updateInterval = document.querySelector("#update-time"); // Поле введення інтервалу оновлення
 
@@ -1597,6 +1826,7 @@ class Settings {
     this.startOnLoadCheckbox.checked = config.startOnLoad;
   }
   addEvents() {
+
     // Додаємо обробник події 'change' для поля введення інтервалу оновлення
     this.updateInterval.addEventListener("change", () => {
       // Оновлюємо інтервал оновлення
@@ -1845,6 +2075,7 @@ class GameCard {
     });
     this.section.addEventListener("contextmenu", (e) => {
       e.preventDefault();
+      e.stopPropagation();
       document.querySelector(".context-menu")?.remove();
       // this.contextMenu ? this.contextMenu.remove() : "";
       this.contextMenu = UI.generateContextMenu({
@@ -2460,27 +2691,9 @@ class Target {
     this.header.addEventListener("mousedown", (e) => {
       UI.moveEvent(this.section, e);
     });
-    this.section.addEventListener("contextmenu", (e) => {
-      e.preventDefault();
-      document.querySelector(".context-menu")?.remove();
-      // this.contextMenu ? this.contextMenu.remove() : "";
-      this.contextMenu = UI.generateContextMenu({
-        menuItems: this.contextMenuItems,
-        sectionCode: "",
-      });
-      this.section.appendChild(this.contextMenu);
-
-      e.x + this.contextMenu.offsetWidth > window.innerWidth
-        ? (this.contextMenu.style.left =
-          e.x - this.contextMenu.offsetWidth + "px")
-        : (this.contextMenu.style.left = e.x + "px");
-      e.y + this.contextMenu.offsetHeight > window.innerHeight
-        ? (this.contextMenu.style.top =
-          e.y - this.contextMenu.offsetHeight + "px")
-        : (this.contextMenu.style.top = e.y + "px");
-
-      this.contextMenu.classList.remove("hidden");
-    });
+    this.section.addEventListener("contextmenu", (event) => {
+      ui.showContextmenu({ event: event, menuItems: this.contextMenuItems, sectionCode: "" });
+    })
   }
   isAchievementInTargetSection({ ID, targetContainer }) {
     const targetAchievements = [
@@ -2767,15 +2980,17 @@ const filterBy = {
   all: () => true,
 };
 
-function fixTimeString(dateString) {
-  const date = new Date(dateString);
-  const options = {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  };
-  return date.toLocaleDateString("uk-UA", options);
-}
+const fixTimeString = (
+  (dateString) => {
+    const date = new Date(dateString);
+    const options = {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    };
+    return date.toLocaleDateString("uk-UA", options);
+  }
+)
