@@ -2940,7 +2940,7 @@ class Games {
   }
   GAMES = {};
   BATCH_SIZE = 10;
-  MAX_GAMES_IN_LIST = 50;
+  MAX_GAMES_IN_LIST = 70;
   constructor() {
     this.initializeElements();
 
@@ -3136,7 +3136,7 @@ class Games {
       <div class="game-preview_container">
           <img src="./assets/imgCache/${imgName}" alt="" class="game-preview_image">
       </div>
-      <h3 class="game-description_title"><a target="_blanc" href="https://retroachievements.org/game/${ID}">${Title}</a></h3>
+      <h3 class="game-description_title"><button title="open game" class="game-description_button" onclick="config.gameID = ${ID}; getAchievements()">${Title}</button></h3>
       <div class="game-description_container">
         <div class="game-description_block">
             <p title="achievements count"

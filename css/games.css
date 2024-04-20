@@ -161,6 +161,20 @@
     border-radius: 5px;
 }
 
+.game-description_button {
+    background-color: transparent;
+    font-size: 1.1rem;
+    color: var(--font-color);
+    text-align: left;
+    border-radius: 2px;
+    padding: 0 3px;
+}
+
+.game-description_button:hover {
+    background-color: var(--font-color);
+    color: var(--main-color);
+}
+
 .game-description_container {
     display: flex;
     gap: 20px;
@@ -172,6 +186,7 @@
 .game-description_block {
     display: flex;
     justify-content: start;
+    align-items: center;
     gap: 20px;
 
 }
@@ -180,7 +195,7 @@
     position: relative;
     padding-left: 1.4rem;
     text-align: top;
-    border-radius: 5px;
+    border-radius: 2px;
     transition: .2s;
 }
 
