@@ -3103,7 +3103,7 @@ class Games {
     gameElement.classList.add("platform_game-item");
     gameElement.innerHTML = `   
       <div class="game-preview_container">
-          <img src="../assets/imgCache/${imgName}" alt="" class="game-preview_image">
+          <img src="./assets/imgCache/${imgName}" alt="" class="game-preview_image">
       </div>
       <h3 class="game-description_title"><a target="_blanc" href="https://retroachievements.org/game/${ID}">${Title}</a></h3>
       <div class="game-description_container">
