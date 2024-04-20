@@ -2935,22 +2935,19 @@ class Games {
   platformCodes = {
     "1": "Genesis/Mega Drive",
     "2": "Nintendo 64",
+    "3": "SNES/Super Famicom",
     "7": "NES/Famicom",
   }
-  GAMES = {}
+  GAMES = {};
   BATCH_SIZE = 10;
-  MAX_GAMES_IN_LIST = 70;
+  MAX_GAMES_IN_LIST = 50;
   constructor() {
     this.initializeElements();
 
     this.addEvents();
     this.loadGamesArray().then(() => {
       this.generateGamesLists();
-
-    }
-
-    )
-    // this.fillGames();
+    })
   }
   initializeElements() {
     this.section = document.querySelector("#games_section");
@@ -3036,22 +3033,52 @@ class Games {
       list.dataset.currentGamesArrayPosition = lastIndex;
     }
   }
-  toggleGamesListVisibility(platformsListItem) {
-    let gamesList = platformsListItem.querySelector(".platform-list");
+  toggleGamesListVisibility(element) {
+    const clearList = list => {
+      list.innerHTML = "";
+      list.dataset.currentGamesArrayPosition = 0;
+    }
+    const recoverGamesData = () => {
+      this.GAMES[`${platformID}-temp`] ? this.GAMES[platformID] = this.GAMES[`${platformID}-temp`] : "";
+      delete this.GAMES[`${platformID}-temp`];
+    }
+    const fillFullList = ({ gamesList, platformID }) => {
+      console.log(gamesList, platformID)
+      while (this.isEndOfListVisible({ list: gamesList }) && this.GAMES[platformID]?.length > Number(gamesList.dataset.currentGamesArrayPosition)) {
+        this.fillGamesDown({ list: gamesList, platformID: platformID }); // Після отримання даних заповнюємо список ігор
+      }
+    }
+    const platformsListItem = element.closest(".platforms-list_item");
+    const gamesList = platformsListItem.querySelector(".platform-list");
+    const platformID = platformsListItem.dataset.platformID;
+
     if (platformsListItem.classList.contains("expanded")) {
       platformsListItem.classList.remove("expanded");
-      gamesList.innerHTML = "";
-      gamesList.dataset.currentGamesArrayPosition = 0;
+      clearList(gamesList);
+      recoverGamesData();
     }
     else {
       platformsListItem.classList.add("expanded");
-      this.fillGamesDown({ list: gamesList, platformID: platformsListItem.dataset.platformID });
-      while (this.isEndOfListVisible({ list: gamesList })) {
-        this.fillGamesDown({ list: gamesList, platformID: platformsListItem.dataset.platformID }); // Після отримання даних заповнюємо список ігор
-      }
-    }
+      fillFullList({ gamesList: gamesList, platformID: platformID });
+      const searchbar = platformsListItem.querySelector(".games-searchbar");
+      searchbar.addEventListener("input", e => {
 
+        recoverGamesData();
+        let regex = new RegExp(searchbar.value, "i");
+        console.log(searchbar.value);
+
+        let searchGames = this.GAMES[platformID].filter(game => regex.test(game.Title));
+
+        this.GAMES[`${platformID}-temp`] = this.GAMES[platformID];
+        this.GAMES[platformID] = searchGames;
+
+        clearList(gamesList);
+
+        fillFullList({ gamesList: gamesList, platformID: platformID });
+      })
+    }
   }
+
   async getGames({ consoleCode }) {
     try {
       const gamesResponse = await fetch(`./json/games/${consoleCode}.json`);
@@ -3086,11 +3113,15 @@ class Games {
     platformListItem.classList.add("platforms-list_item");
     platformListItem.dataset.platformID = platformID;
     platformListItem.innerHTML = `    
-      <h2 class="platform-name " onclick="ui.games.toggleGamesListVisibility(this.parentNode)">
-          ${platformName}
+    <div class="platforms-list_header-container">
+      <h2 class="platform-name " onclick="ui.games.toggleGamesListVisibility(this)">
+        ${platformName}
       </h2>
-      <button class="expand-games_button"onclick="ui.games.toggleGamesListVisibility(this.parentNode)"> </button>
-      <ul class="platform-list" data--console-id="7">
+      <input class="search-game_text-input games-searchbar" placeholder="search" type="search" value="" /> 
+      <button class="expand-games_button" onclick="ui.games.toggleGamesListVisibility(this)"> </button>
+    </div>  
+   
+      <ul class="platform-list" data--console-id="7" data-current-games-array-position="0">
       </ul>
     `
     return platformListItem;
@@ -3117,11 +3148,11 @@ class Games {
             
         </div>
         <div class="game-description_block">
-          <a title="go to RA" href="https://retroachievements.org/game/${ID}"
+          <a title="go to RA" target="_blanc" href="https://retroachievements.org/game/${ID}"
                 class="game-description game-description_icon game-description_ra-icon game-description_ra-link " ">
                 
           </a>
-          <a title=" go to RA forum" href="https://retroachievements.org/viewtopic.php?t=${ForumTopicID}"
+          <a title=" go to RA forum" target="_blanc" href="https://retroachievements.org/viewtopic.php?t=${ForumTopicID}"
                 class="game-description game-description_icon game-description_ra-icon game-description_ra-forum " ">
         
           </a>

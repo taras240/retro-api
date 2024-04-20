@@ -62,4 +62,4 @@ function doImageСache({ gamesJsonPath }) {
 
     })
 }
-doImageСache({ gamesJsonPath: './json/games/2.json' });
+doImageСache({ gamesJsonPath: './json/games/3.json' });
