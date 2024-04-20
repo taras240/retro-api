@@ -11,6 +11,7 @@ const sections = {
   settings: "./elements/settings.elem",
   awards: "./elements/awards.elem",
   status: "./elements/status.elem",
+  games: "./elements/games.elem",
 };
 
 // Функція для завантаження розділів

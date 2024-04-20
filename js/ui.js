@@ -1,5 +1,5 @@
 class UI {
-  VERSION = "0.13";
+  VERSION = "0.14";
   static AUTOCLOSE_CONTEXTMENU = false;
   static filterMethods = {
     all: "all",
@@ -25,10 +25,12 @@ class UI {
   }
   set ACHIEVEMENTS(achievementsObject) {
     Object.values(achievementsObject.Achievements).map((achievement) => {
-      UI.fixAchievement(achievement, achievementsObject)
+      UI.fixAchievement(achievement, achievementsObject);
     });
     this._gameData = achievementsObject;
-    this.achievementsBlock.forEach(clone => clone.parseGameAchievements(this.GAME_DATA));
+    this.achievementsBlock.forEach((clone) =>
+      clone.parseGameAchievements(this.GAME_DATA)
+    );
     this.gameCard.updateGameCardInfo(this.GAME_DATA);
     if (this.target.AUTOFILL) {
       this.target.clearAllAchivements();
@@ -43,7 +45,7 @@ class UI {
 
     // Визначаєм, чи отримано досягнення та чи є воно хардкорним
     achievement.isEarned = DateEarned ?? false;
-    achievement.isHardcoreEarned = DateEarnedHardcore ?? false;;
+    achievement.isHardcoreEarned = DateEarnedHardcore ?? false;
 
     // Додаєм адресу зображення для досягнення
     achievement.prevSrc = `https://media.retroachievements.org/Badge/${BadgeName}.png`;
@@ -107,10 +109,9 @@ class UI {
     this.gameCard = new GameCard();
     this.statusPanel = new StatusPanel();
     this.buttons = new ButtonPanel();
+    this.games = new Games();
     document.addEventListener("click", (e) => {
-      document
-        .querySelectorAll(".context-menu")
-        .forEach((el) => el.remove());
+      document.querySelectorAll(".context-menu").forEach((el) => el.remove());
     });
     document.body.addEventListener("contextmenu", (e) => {
       e.preventDefault();
@@ -150,11 +151,11 @@ class UI {
       height ? (element.style.height = height) : "";
       hidden ? element.classList.add("hidden") : "";
     });
+    this.buttons.games.checked = !this.games.section.classList.contains("hidden");
     document.querySelector("#background-animation").style.display =
       config.bgVisibility ? "display" : "none";
   }
   showContextmenu({ event, menuItems, sectionCode = "" }) {
-
     event.preventDefault();
     event.stopPropagation();
     document.querySelector(".context-menu")?.remove();
@@ -175,34 +176,33 @@ class UI {
       : (this.contextMenu.style.top = event.y + "px");
 
     this.contextMenu.classList.remove("hidden");
-
   }
   createAchievementsTemplate() {
     if (this.achievementsBlock.length === 2) {
       UI.switchSectionVisibility(this.achievementsBlock[1]);
-    }
-    else {
+    } else {
       this.achievementsBlock.push(new AchievementsBlock(true));
       this.achievementsBlock.at(-1).parseGameAchievements(this.GAME_DATA);
     }
   }
   checkForNewAchieves(lastEarnedAchieves) {
     let earnedAchievements = [];
-    lastEarnedAchieves.forEach(achievement => {
+    lastEarnedAchieves.forEach((achievement) => {
       const savedAchievement = this.ACHIEVEMENTS[achievement.AchievementID];
       if (savedAchievement) {
-        const isHardcoreMismatch = achievement.HardcoreMode === 1 && !savedAchievement?.isHardcoreEarned;
+        const isHardcoreMismatch =
+          achievement.HardcoreMode === 1 && !savedAchievement?.isHardcoreEarned;
         const isSoftCoreMismatch = !savedAchievement.isEarned;
         if (isSoftCoreMismatch || isHardcoreMismatch) {
           earnedAchievements.push(achievement);
         }
       }
-    })
+    });
     this.updateAchievements(earnedAchievements);
-    return earnedAchievements?.map(achievement => achievement.AchievementID);
+    return earnedAchievements?.map((achievement) => achievement.AchievementID);
   }
   updateAchievements(earnedAchievements) {
-    earnedAchievements.forEach(achievement => {
+    earnedAchievements.forEach((achievement) => {
       const { HardcoreMode, Date } = achievement;
       const savedAchievement = this.ACHIEVEMENTS[achievement.AchievementID];
       if (HardcoreMode == 1) {
@@ -212,14 +212,22 @@ class UI {
       savedAchievement.isEarned = true;
       savedAchievement.DateEarned = savedAchievement.DateEarned ?? Date;
       this.ACHIEVEMENTS[achievement.AchievementID] = savedAchievement;
-    })
+    });
   }
   static updateAchievementsSection({ widget, earnedAchievementIDs }) {
-    earnedAchievementIDs.forEach(id => {
+    earnedAchievementIDs.forEach((id) => {
       const achievement = ui.ACHIEVEMENTS[id];
-      const achieveElement = widget.container.querySelector(`[data-achiv-id="${id}"]`);
-      achieveElement.classList.add("earned", achievement.isHardcoreEarned ? "hardcore" : "f");
-      achievement.DateEarnedHardcore ? achieveElement.dataset.DateEarnedHardcore = achievement.DateEarnedHardcore : "";
+      const achieveElement = widget.container.querySelector(
+        `[data-achiv-id="${id}"]`
+      );
+      achieveElement.classList.add(
+        "earned",
+        achievement.isHardcoreEarned ? "hardcore" : "f"
+      );
+      achievement.DateEarnedHardcore
+        ? (achieveElement.dataset.DateEarnedHardcore =
+          achievement.DateEarnedHardcore)
+        : "";
 
       if (widget.SORT_NAME === UI.sortMethods.latest) {
         widget.moveToTop(achieveElement);
@@ -326,7 +334,8 @@ class UI {
             menuElement.innerHTML += `
             <input type="${menuItem.type}" name="${menuItem.name
               }-${sectionCode}" id="${menuItem.id}-${sectionCode}" 
-             ${menuItem.checked == true ? "checked" : ""} ${menuItem.event ?? ""}></input>
+             ${menuItem.checked == true ? "checked" : ""} ${menuItem.event ?? ""
+              }></input>
             <label class="context-menu_${menuItem.type}"  for="${menuItem.id
               }-${sectionCode}">${menuItem.label}</label>
             `;
@@ -335,7 +344,8 @@ class UI {
             menuElement.innerHTML += `
             ${menuItem.prefix}
             <input class="context-menu_${menuItem.type}" id="${menuItem.id
-              }-${sectionCode}" type="number" value="${menuItem.value ?? ""}" ${menuItem.event ?? ""} onclick="event.stopPropagation()">${menuItem.postfix ?? ""
+              }-${sectionCode}" type="number" value="${menuItem.value ?? ""}" ${menuItem.event ?? ""
+              } onclick="event.stopPropagation()">${menuItem.postfix ?? ""
               } </input>
             `;
             break;
@@ -350,7 +360,8 @@ class UI {
           case "button":
             menuElement.innerHTML += `
               <button class="context-menu_${menuItem.type}" id="${menuItem.id
-              }-${sectionCode}" ${menuItem.event ?? ""} type="button">${menuItem.label ?? ""}</button>
+              }-${sectionCode}" ${menuItem.event ?? ""} type="button">${menuItem.label ?? ""
+              }</button>
               `;
             break;
           default:
@@ -652,7 +663,7 @@ class UI {
     const dragAndDropItems = container;
     var list = document.getElementById("myList");
     new Sortable(dragAndDropItems, {
-      animation: 200,
+      animation: 100,
       chosenClass: "dragged",
     });
     // , {
@@ -664,7 +675,6 @@ class UI {
 
   static switchSectionVisibility({ section }) {
     section.classList.toggle("hidden");
-    console.log(section)
     config.setNewPosition({
       id: section.id,
       hidden: section.classList.contains("hidden"),
@@ -673,7 +683,6 @@ class UI {
 }
 
 class AchievementsBlock {
-
   get contextMenuItems() {
     return [
       {
@@ -685,7 +694,7 @@ class AchievementsBlock {
             id: "context-sort_latest",
             label: "Latest",
             checked: this.SORT_NAME === UI.sortMethods.latest,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = UI.sortMethods.latest;"`
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = UI.sortMethods.latest;"`,
           },
           {
             type: "radio",
@@ -693,7 +702,7 @@ class AchievementsBlock {
             id: "context-sort_rarest",
             label: "Rarest",
             checked: this.SORT_NAME === UI.sortMethods.earnedCount,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = UI.sortMethods.earnedCount;"`
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = UI.sortMethods.earnedCount;"`,
           },
           {
             type: "radio",
@@ -701,8 +710,7 @@ class AchievementsBlock {
             id: "context-sort_points",
             label: "Points",
             checked: this.SORT_NAME === UI.sortMethods.points,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = UI.sortMethods.points;"`
-
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = UI.sortMethods.points;"`,
           },
           {
             type: "radio",
@@ -710,8 +718,7 @@ class AchievementsBlock {
             id: "context-sort_retropoints",
             label: "Retropoints",
             checked: this.SORT_NAME === UI.sortMethods.truepoints,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = UI.sortMethods.truepoints;"`
-
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = UI.sortMethods.truepoints;"`,
           },
           {
             type: "radio",
@@ -719,8 +726,7 @@ class AchievementsBlock {
             id: "context-sort_default",
             label: "Default",
             checked: this.SORT_NAME === UI.sortMethods.default,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = UI.sortMethods.default;"`
-
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = UI.sortMethods.default;"`,
           },
           {
             type: "radio",
@@ -728,8 +734,7 @@ class AchievementsBlock {
             id: "context-sort_disable",
             label: "Disable",
             checked: this.SORT_NAME === UI.sortMethods.disable,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = UI.sortMethods.disable;"`
-
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = UI.sortMethods.disable;"`,
           },
           {
             type: "checkbox",
@@ -737,8 +742,7 @@ class AchievementsBlock {
             id: "context-reverse-sort",
             label: "Reverse",
             checked: this.REVERSE_SORT == -1,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].REVERSE_SORT = this.checked"`
-
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].REVERSE_SORT = this.checked"`,
           },
         ],
       },
@@ -751,8 +755,7 @@ class AchievementsBlock {
             id: "context_filter-missable",
             label: "Missable",
             checked: this.FILTER_NAME === UI.filterMethods.missable,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].FILTER_NAME = UI.filterMethods.missable;"`
-
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].FILTER_NAME = UI.filterMethods.missable;"`,
           },
           {
             type: "radio",
@@ -760,8 +763,7 @@ class AchievementsBlock {
             id: "context_filter-earned",
             label: "Earned",
             checked: this.FILTER_NAME === UI.filterMethods.earned,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].FILTER_NAME = UI.filterMethods.earned;"`
-
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].FILTER_NAME = UI.filterMethods.earned;"`,
           },
           {
             type: "radio",
@@ -769,8 +771,7 @@ class AchievementsBlock {
             id: "context_filter-all",
             label: "All",
             checked: this.FILTER_NAME === UI.filterMethods.all,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].FILTER_NAME = UI.filterMethods.all;"`
-
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].FILTER_NAME = UI.filterMethods.all;"`,
           },
           {
             type: "checkbox",
@@ -778,8 +779,7 @@ class AchievementsBlock {
             id: "context-reverse-filter",
             label: "Reverse",
             checked: this.REVERSE_FILTER,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].REVERSE_FILTER = this.checked;"`
-
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].REVERSE_FILTER = this.checked;"`,
           },
           {
             type: "checkbox",
@@ -787,8 +787,7 @@ class AchievementsBlock {
             id: "context-hide-filtered",
             label: "Hide filtered",
             checked: this.HIDE_FILTERED,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].HIDE_FILTERED = this.checked;"`
-
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].HIDE_FILTERED = this.checked;"`,
           },
         ],
       },
@@ -802,7 +801,6 @@ class AchievementsBlock {
             label: "Autoscroll",
             checked: this.AUTOSCROLL,
             event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].AUTOSCROLL = this.checked;"`,
-
           },
           {
             prefix: "Min size",
@@ -821,7 +819,6 @@ class AchievementsBlock {
             label: "Max size",
             value: this.ACHIV_MAX_SIZE,
             event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].ACHIV_MAX_SIZE = this.value;"`,
-
           },
           {
             type: "checkbox",
@@ -830,9 +827,7 @@ class AchievementsBlock {
             label: "Stretch",
             checked: this.ACHIV_STRETCH,
             event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].ACHIV_STRETCH = this.checked;"`,
-
           },
-
         ],
       },
       {
@@ -842,18 +837,19 @@ class AchievementsBlock {
         id: "context_show-bg",
         checked: this.BG_VISIBILITY,
         event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].BG_VISIBILITY = this.checked;"`,
-
       },
-    ]
+    ];
   }
   set SORT_NAME(value) {
-    config._cfg.ui[this.SECTION_NAME].sortAchievementsBy =
-      value;
+    config._cfg.ui[this.SECTION_NAME].sortAchievementsBy = value;
     config.writeConfiguration();
     this.applySorting();
   }
   get SORT_NAME() {
-    return config?.ui[this.SECTION_NAME]?.sortAchievementsBy || UI.sortMethods.default
+    return (
+      config?.ui[this.SECTION_NAME]?.sortAchievementsBy ||
+      UI.sortMethods.default
+    );
   }
   get SORT_METHOD() {
     return sortBy[this.SORT_NAME];
@@ -939,8 +935,7 @@ class AchievementsBlock {
   get SECTION_NAME() {
     if (this.CLONE_NUMBER === 0) {
       return `achievements_section`;
-    }
-    else {
+    } else {
       return `achievements_section-${this.CLONE_NUMBER}`;
     }
   }
@@ -950,20 +945,19 @@ class AchievementsBlock {
   set CLONE_NUMBER(widget) {
     if (widget?.length) {
       this._cloneNumber = widget.length;
-    }
-    else return this._cloneNumber = 0;
+    } else return (this._cloneNumber = 0);
   }
   constructor(isClone = false) {
     this.CLONE_NUMBER = ui.achievementsBlock;
-    this.isClone = isClone
+    this.isClone = isClone;
     this.initializeElements();
     this.addEvents();
     this.setValues();
-    this.cloneAchieves()
+    this.cloneAchieves();
   }
   initializeElements() {
     // Елементи блока досягнень
-    this.section = this.generateNewWidget({})// Секція блока досягнень
+    this.section = this.generateNewWidget({}); // Секція блока досягнень
     document.querySelector(".wrapper").appendChild(this.section);
 
     this.container = this.section.querySelector(`.achievements-container`); //Контейнер  з досягненнями
@@ -977,8 +971,12 @@ class AchievementsBlock {
       UI.moveEvent(this.section, e);
     });
     this.section.addEventListener("contextmenu", (event) => {
-      ui.showContextmenu({ event: event, menuItems: this.contextMenuItems, sectionCode: this.CLONE_NUMBER });
-    })
+      ui.showContextmenu({
+        event: event,
+        menuItems: this.contextMenuItems,
+        sectionCode: this.CLONE_NUMBER,
+      });
+    });
 
     this.resizer.addEventListener("mousedown", (event) => {
       event.stopPropagation();
@@ -987,12 +985,14 @@ class AchievementsBlock {
       UI.resizeEvent({
         event: event,
         section: this.section,
-        postFunc: () => { this.fitSizeVertically(true) },
+        postFunc: () => {
+          this.fitSizeVertically(true);
+        },
       });
     });
-    this.resizer.addEventListener("mouseup", e => {
+    this.resizer.addEventListener("mouseup", (e) => {
       this.startAutoScroll();
-    })
+    });
   }
   setValues() {
     // if (!config.ui.achievements_section) {
@@ -1001,14 +1001,11 @@ class AchievementsBlock {
     this.section.classList.toggle("bg-visible", this.BG_VISIBILITY);
     if (config.ui[this.SECTION_NAME]) {
       // UI.switchSectionVisibility(this);
-      this.section.style.top =
-        config.ui[this.SECTION_NAME].y ?? "0px";
-      this.section.style.left =
-        config.ui[this.SECTION_NAME].x ?? "0px";
+      this.section.style.top = config.ui[this.SECTION_NAME].y ?? "0px";
+      this.section.style.left = config.ui[this.SECTION_NAME].x ?? "0px";
       this.section.style.height =
         config.ui[this.SECTION_NAME].height ?? "600px";
-      this.section.style.width =
-        config.ui[this.SECTION_NAME].width ?? "350px";
+      this.section.style.width = config.ui[this.SECTION_NAME].width ?? "350px";
     }
     this.container.style.height = this.ACHIV_STRETCH ? "100%" : "auto";
     if (this.AUTOSCROLL) {
@@ -1043,9 +1040,7 @@ class AchievementsBlock {
 
   displayAchievements(achievementsObject) {
     Object.values(achievementsObject.Achievements).forEach((achievement) => {
-      this.displayAchievement(
-        achievement
-      );
+      this.displayAchievement(achievement);
     });
   }
 
@@ -1107,7 +1102,6 @@ class AchievementsBlock {
       : "";
     achivElement.dataset.type = type;
 
-
     let previewContainer = document.createElement("div");
     previewContainer.classList.add("preview-container");
 
@@ -1130,14 +1124,13 @@ class AchievementsBlock {
     // let achivDetails = this.generateAchivDetails(achievement);
     // achivElement.appendChild(achivDetails);
 
-
     achivElement.addEventListener("mouseover", (e) => {
       const popUp = this.generateAchivDetails(achievement);
-      ui.wrapper.querySelectorAll(".popup").forEach(popup => popup.remove());
+      ui.wrapper.querySelectorAll(".popup").forEach((popup) => popup.remove());
       popUp.classList.add("popup");
       ui.wrapper.appendChild(popUp);
 
-      const rect = achivElement.getBoundingClientRect()
+      const rect = achivElement.getBoundingClientRect();
       const leftPos = rect.left + achivElement.offsetWidth + 8;
       const topPos = rect.top + 2;
       popUp.style.left = leftPos + "px";
@@ -1147,7 +1140,7 @@ class AchievementsBlock {
       requestAnimationFrame(() => popUp.classList.add("visible"));
     });
     achivElement.addEventListener("mouseleave", (e) => {
-      ui.wrapper.querySelectorAll(".popup").forEach(popup => popup.remove());
+      ui.wrapper.querySelectorAll(".popup").forEach((popup) => popup.remove());
     });
     //!----------[ CONTEXT MENU ]---------------
 
@@ -1212,8 +1205,7 @@ class AchievementsBlock {
   moveToTop(element) {
     if (this.REVERSE_SORT == 1) {
       this.container.prepend(element);
-    }
-    else {
+    } else {
       this.container.append(element);
     }
     this.applyFilter();
@@ -1276,26 +1268,28 @@ class AchievementsBlock {
         }
         if (toBottom) {
           scrollContainer.scrollTop += speedInPixels;
-          if (scrollContainer.scrollTop + scrollContainer.clientHeight >= scrollContainer.scrollHeight) {
+          if (
+            scrollContainer.scrollTop + scrollContainer.clientHeight >=
+            scrollContainer.scrollHeight
+          ) {
             clearInterval(this.autoscrollInterval);
-            setTimeout(() => this.startAutoScroll(false), pauseOnEndMilisecs)
+            setTimeout(() => this.startAutoScroll(false), pauseOnEndMilisecs);
           }
-        }
-        else {
+        } else {
           scrollContainer.scrollTop -= speedInPixels;
           if (scrollContainer.scrollTop === 0) {
             clearInterval(this.autoscrollInterval);
-            setTimeout(() => this.startAutoScroll(true), pauseOnEndMilisecs)
+            setTimeout(() => this.startAutoScroll(true), pauseOnEndMilisecs);
           }
         }
       }, refreshRateMiliSecs);
       // Припиняємо прокручування при наведенні миші на контейнер
-      scrollContainer.addEventListener('mouseenter', () => {
+      scrollContainer.addEventListener("mouseenter", () => {
         speedInPixels = 0; // Зупиняємо інтервал прокрутки
       });
 
       // Відновлюємо прокрутку при відведенні миші від контейнера
-      scrollContainer.addEventListener('mouseleave', () => {
+      scrollContainer.addEventListener("mouseleave", () => {
         speedInPixels = 1;
       });
     }
@@ -1321,9 +1315,9 @@ class AchievementsBlock {
     });
   }
   close() {
-    this.CLONE_NUMBER === 0 ?
-      ui.buttons.achievements.click() :
-      UI.switchSectionVisibility(ui.achievementsBlock[this.CLONE_NUMBER]);
+    this.CLONE_NUMBER === 0
+      ? ui.buttons.achievements.click()
+      : UI.switchSectionVisibility(ui.achievementsBlock[this.CLONE_NUMBER]);
   }
   generateNewWidget({ }) {
     const newWidget = document.createElement("section");
@@ -1338,9 +1332,11 @@ class AchievementsBlock {
         <path
           d="m668-380 152-130 120 10-176 153 52 227-102-62-46-198Zm-94-292-42-98 46-110 92 217-96-9ZM294-287l126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM173-120l65-281L20-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Zm247-340Z" />
       </svg></div>
-    <h2 class="widget-header-text achivs-header-text">Achieves${this.CLONE_NUMBER === 0 ? "" : this.CLONE_NUMBER}</h2>
+    <h2 class="widget-header-text achivs-header-text">Achieves${this.CLONE_NUMBER === 0 ? "" : this.CLONE_NUMBER
+      }</h2>
 
-    <button class="header-button header-icon" onclick="ui.achievementsBlock[${this.CLONE_NUMBER}].close();">
+    <button class="header-button header-icon" onclick="ui.achievementsBlock[${this.CLONE_NUMBER
+      }].close();">
       <svg height="24" viewBox="0 -960 960 960" width="24">
         <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
       </svg>
@@ -1360,7 +1356,6 @@ class AchievementsBlock {
     //     achivDetails.classList.remove("left-side", "top-side");
     //     this.fixDetailsPosition(achivDetails);
     //   });
-
     //   achivElement.addEventListener("mousedown", (e) => {
     //     e.stopPropagation();
     //   });
@@ -1391,7 +1386,9 @@ class ButtonPanel {
     this.target = document.querySelector("#open-target-button");
     this.status = document.querySelector("#open-status-button");
     this.awards = document.querySelector("#open-awards-button");
+    this.games = document.querySelector("#open-games-button");
     this.userImage = document.querySelector("#side-panel-user-image");
+
   }
   addEvents() {
     // Отримуємо посилання на панель
@@ -1414,6 +1411,7 @@ class ButtonPanel {
     // this.header.addEventListener("mousedown", (e) => {
     //   UI.moveEvent(this.section, e);
     // });
+
     this.login.addEventListener("change", (e) => {
       UI.switchSectionVisibility(ui.loginCard);
     });
@@ -1434,6 +1432,9 @@ class ButtonPanel {
     });
     this.gameCard.addEventListener("change", (e) => {
       UI.switchSectionVisibility(ui.gameCard);
+    });
+    this.games.addEventListener("change", (e) => {
+      UI.switchSectionVisibility(ui.games);
     });
   }
 
@@ -1522,16 +1523,16 @@ class StatusPanel {
       // Збереження загальної кількості досягнень та балів у датасет
       this.progresBar.dataset.totalCount = totalCount;
       this.progresBar.dataset.totalPoints = totalPoints;
-
-
     } else {
-      achievedCount = parseInt(this.progresBar.dataset.achievedCount) + earnedAchievementIDs.length || 0;
+      achievedCount =
+        parseInt(this.progresBar.dataset.achievedCount) +
+        earnedAchievementIDs.length || 0;
       totalEarnedPoints = parseInt(this.progresBar.dataset.points);
-      earnedAchievementIDs.forEach(id => {
+      earnedAchievementIDs.forEach((id) => {
         if (ui.ACHIEVEMENTS[id].DateEarnedHardcore) {
           totalEarnedPoints += ui.ACHIEVEMENTS[id].Points;
         }
-      })
+      });
 
       // Оновлення значень у випадку відсутності досягнень
       totalCount = parseInt(this.progresBar.dataset.totalCount) || 0;
@@ -1575,122 +1576,120 @@ class Settings {
     return [
       {
         label: "Colors",
-        subMenu:
-          [
-            {
-              "type": "radio",
-              "name": "context_color-scheme",
-              "id": "context_color-scheme-default",
-              "label": "default",
-              "checked": ui.settings.COLOR_SCHEME === "default",
-              "event": "onchange=\"ui.settings.COLOR_SCHEME = 'default'\""
-            },
-            {
-              "type": "radio",
-              "name": "context_color-scheme",
-              "id": "context_color-scheme-pink",
-              "label": "pink",
-              "checked": ui.settings.COLOR_SCHEME === "pink",
-              "event": "onchange=\"ui.settings.COLOR_SCHEME = 'pink'\""
-            },
-            {
-              "type": "radio",
-              "name": "context_color-scheme",
-              "id": "context_color-scheme-lightgreen",
-              "label": "lightgreen",
-              "checked": ui.settings.COLOR_SCHEME === "lightgreen",
-              "event": "onchange=\"ui.settings.COLOR_SCHEME = 'lightgreen'\""
-            },
-            {
-              "type": "radio",
-              "name": "context_color-scheme",
-              "id": "context_color-scheme-lightblue",
-              "label": "lightblue",
-              "checked": ui.settings.COLOR_SCHEME === "lightblue",
-              "event": "onchange=\"ui.settings.COLOR_SCHEME = 'lightblue'\""
-            },
-            {
-              "type": "radio",
-              "name": "context_color-scheme",
-              "id": "context_color-scheme-blue",
-              "label": "blue",
-              "checked": ui.settings.COLOR_SCHEME === "blue",
-              "event": "onchange=\"ui.settings.COLOR_SCHEME = 'blue'\""
-            },
-            {
-              "type": "radio",
-              "name": "context_color-scheme",
-              "id": "context_color-scheme-synthwave",
-              "label": "synthwave",
-              "checked": ui.settings.COLOR_SCHEME === "synthwave",
-              "event": "onchange=\"ui.settings.COLOR_SCHEME = 'synthwave'\""
-            },
-            {
-              "type": "radio",
-              "name": "context_color-scheme",
-              "id": "context_color-scheme-darkblue",
-              "label": "darkblue",
-              "checked": ui.settings.COLOR_SCHEME === "darkblue",
-              "event": "onchange=\"ui.settings.COLOR_SCHEME = 'darkblue'\""
-            },
-            {
-              "type": "radio",
-              "name": "context_color-scheme",
-              "id": "context_color-scheme-brown",
-              "label": "brown",
-              "checked": ui.settings.COLOR_SCHEME === "brown",
-              "event": "onchange=\"ui.settings.COLOR_SCHEME = 'brown'\""
-            },
-            {
-              "type": "radio",
-              "name": "context_color-scheme",
-              "id": "context_color-scheme-pastel",
-              "label": "pastel",
-              "checked": ui.settings.COLOR_SCHEME === "pastel",
-              "event": "onchange=\"ui.settings.COLOR_SCHEME = 'pastel'\""
-            },
-            {
-              "type": "radio",
-              "name": "context_color-scheme",
-              "id": "context_color-scheme-retro",
-              "label": "retro",
-              "checked": ui.settings.COLOR_SCHEME === "retro",
-              "event": "onchange=\"ui.settings.COLOR_SCHEME = 'retro'\""
-            },
-            {
-              "type": "radio",
-              "name": "context_color-scheme",
-              "id": "context_color-scheme-vintage",
-              "label": "vintage",
-              "checked": ui.settings.COLOR_SCHEME === "vintage",
-              "event": "onchange=\"ui.settings.COLOR_SCHEME = 'vintage'\""
-            },
-            {
-              "type": "radio",
-              "name": "context_color-scheme",
-              "id": "context_color-scheme-neon",
-              "label": "neon",
-              "checked": ui.settings.COLOR_SCHEME === "neon",
-              "event": "onchange=\"ui.settings.COLOR_SCHEME = 'neon'\""
-            },
-            {
-              "type": "radio",
-              "name": "context_color-scheme",
-              "id": "context_color-scheme-gray",
-              "label": "gray",
-              "checked": ui.settings.COLOR_SCHEME === "gray",
-              "event": "onchange=\"ui.settings.COLOR_SCHEME = 'gray'\""
-            },
-            {
-              "type": "radio",
-              "name": "context_color-scheme",
-              "id": "context_color-scheme-custom",
-              "label": "custom",
-              "checked": ui.settings.COLOR_SCHEME === "custom",
-              "event": "onchange=\"ui.settings.COLOR_SCHEME = 'custom'\""
-            },
-
-          ]
+        subMenu: [
+          {
+            type: "radio",
+            name: "context_color-scheme",
+            id: "context_color-scheme-default",
+            label: "default",
+            checked: ui.settings.COLOR_SCHEME === "default",
+            event: "onchange=\"ui.settings.COLOR_SCHEME = 'default'\"",
+          },
+          {
+            type: "radio",
+            name: "context_color-scheme",
+            id: "context_color-scheme-pink",
+            label: "pink",
+            checked: ui.settings.COLOR_SCHEME === "pink",
+            event: "onchange=\"ui.settings.COLOR_SCHEME = 'pink'\"",
+          },
+          {
+            type: "radio",
+            name: "context_color-scheme",
+            id: "context_color-scheme-lightgreen",
+            label: "lightgreen",
+            checked: ui.settings.COLOR_SCHEME === "lightgreen",
+            event: "onchange=\"ui.settings.COLOR_SCHEME = 'lightgreen'\"",
+          },
+          {
+            type: "radio",
+            name: "context_color-scheme",
+            id: "context_color-scheme-lightblue",
+            label: "lightblue",
+            checked: ui.settings.COLOR_SCHEME === "lightblue",
+            event: "onchange=\"ui.settings.COLOR_SCHEME = 'lightblue'\"",
+          },
+          {
+            type: "radio",
+            name: "context_color-scheme",
+            id: "context_color-scheme-blue",
+            label: "blue",
+            checked: ui.settings.COLOR_SCHEME === "blue",
+            event: "onchange=\"ui.settings.COLOR_SCHEME = 'blue'\"",
+          },
+          {
+            type: "radio",
+            name: "context_color-scheme",
+            id: "context_color-scheme-synthwave",
+            label: "synthwave",
+            checked: ui.settings.COLOR_SCHEME === "synthwave",
+            event: "onchange=\"ui.settings.COLOR_SCHEME = 'synthwave'\"",
+          },
+          {
+            type: "radio",
+            name: "context_color-scheme",
+            id: "context_color-scheme-darkblue",
+            label: "darkblue",
+            checked: ui.settings.COLOR_SCHEME === "darkblue",
+            event: "onchange=\"ui.settings.COLOR_SCHEME = 'darkblue'\"",
+          },
+          {
+            type: "radio",
+            name: "context_color-scheme",
+            id: "context_color-scheme-brown",
+            label: "brown",
+            checked: ui.settings.COLOR_SCHEME === "brown",
+            event: "onchange=\"ui.settings.COLOR_SCHEME = 'brown'\"",
+          },
+          {
+            type: "radio",
+            name: "context_color-scheme",
+            id: "context_color-scheme-pastel",
+            label: "pastel",
+            checked: ui.settings.COLOR_SCHEME === "pastel",
+            event: "onchange=\"ui.settings.COLOR_SCHEME = 'pastel'\"",
+          },
+          {
+            type: "radio",
+            name: "context_color-scheme",
+            id: "context_color-scheme-retro",
+            label: "retro",
+            checked: ui.settings.COLOR_SCHEME === "retro",
+            event: "onchange=\"ui.settings.COLOR_SCHEME = 'retro'\"",
+          },
+          {
+            type: "radio",
+            name: "context_color-scheme",
+            id: "context_color-scheme-vintage",
+            label: "vintage",
+            checked: ui.settings.COLOR_SCHEME === "vintage",
+            event: "onchange=\"ui.settings.COLOR_SCHEME = 'vintage'\"",
+          },
+          {
+            type: "radio",
+            name: "context_color-scheme",
+            id: "context_color-scheme-neon",
+            label: "neon",
+            checked: ui.settings.COLOR_SCHEME === "neon",
+            event: "onchange=\"ui.settings.COLOR_SCHEME = 'neon'\"",
+          },
+          {
+            type: "radio",
+            name: "context_color-scheme",
+            id: "context_color-scheme-gray",
+            label: "gray",
+            checked: ui.settings.COLOR_SCHEME === "gray",
+            event: "onchange=\"ui.settings.COLOR_SCHEME = 'gray'\"",
+          },
+          {
+            type: "radio",
+            name: "context_color-scheme",
+            id: "context_color-scheme-custom",
+            label: "custom",
+            checked: ui.settings.COLOR_SCHEME === "custom",
+            event: "onchange=\"ui.settings.COLOR_SCHEME = 'custom'\"",
+          },
+        ],
         //  () => {
         //   return Object.getOwnPropertyNames(colorPresets).reduce((colorsMenuItems, name) => {
         //     let menuItem = {
@@ -1713,7 +1712,6 @@ class Settings {
         id: "context_show-bg-animation",
         checked: ui.settings.BG_ANIMATION,
         event: `onchange="ui.settings.BG_ANIMATION = this.checked;"`,
-
       },
       // {
       //   prefix: "Update delay",
@@ -1740,9 +1738,8 @@ class Settings {
         id: "context_show-start-on-load",
         checked: ui.settings.START_ON_LOAD,
         event: `onchange="ui.settings.START_ON_LOAD = this.checked;"`,
-
       },
-    ]
+    ];
   }
   get COLOR_SCHEME() {
     return config._cfg.settings.preset || "default";
@@ -1826,7 +1823,6 @@ class Settings {
     this.startOnLoadCheckbox.checked = config.startOnLoad;
   }
   addEvents() {
-
     // Додаємо обробник події 'change' для поля введення інтервалу оновлення
     this.updateInterval.addEventListener("change", () => {
       // Оновлюємо інтервал оновлення
@@ -2044,7 +2040,6 @@ class GameCard {
   initializeElements() {
     // Знаходимо контейнер для інформації про гру
     this.section = document.querySelector(".game-card_section");
-
 
     // Знаходимо заголовок гри
     this.header = document.querySelector("#game-card-header");
@@ -2366,8 +2361,7 @@ class Target {
             id: "context-sort_latest",
             label: "Latest",
             checked: this.SORT_NAME === UI.sortMethods.latest,
-            event: `onchange="ui.target.SORT_NAME = UI.sortMethods.latest;"`
-
+            event: `onchange="ui.target.SORT_NAME = UI.sortMethods.latest;"`,
           },
           {
             type: "radio",
@@ -2375,7 +2369,7 @@ class Target {
             id: "context-sort_rarest",
             label: "Rarest",
             checked: this.SORT_NAME === UI.sortMethods.earnedCount,
-            event: `onchange="ui.target.SORT_NAME = UI.sortMethods.earnedCount;"`
+            event: `onchange="ui.target.SORT_NAME = UI.sortMethods.earnedCount;"`,
           },
           {
             type: "radio",
@@ -2383,8 +2377,7 @@ class Target {
             id: "context-sort_points",
             label: "Points",
             checked: this.SORT_NAME === UI.sortMethods.points,
-            event: `onchange="ui.target.SORT_NAME = UI.sortMethods.points;"`
-
+            event: `onchange="ui.target.SORT_NAME = UI.sortMethods.points;"`,
           },
           {
             type: "radio",
@@ -2392,8 +2385,7 @@ class Target {
             id: "context-sort_retropoints",
             label: "Retropoints",
             checked: this.SORT_NAME === UI.sortMethods.truepoints,
-            event: `onchange="ui.target.SORT_NAME = UI.sortMethods.truepoints;"`
-
+            event: `onchange="ui.target.SORT_NAME = UI.sortMethods.truepoints;"`,
           },
           {
             type: "radio",
@@ -2401,8 +2393,7 @@ class Target {
             id: "context-sort_default",
             label: "Default",
             checked: this.SORT_NAME === UI.sortMethods.default,
-            event: `onchange="ui.target.SORT_NAME = UI.sortMethods.default;"`
-
+            event: `onchange="ui.target.SORT_NAME = UI.sortMethods.default;"`,
           },
           // {
           //   type: "radio",
@@ -2419,8 +2410,7 @@ class Target {
             id: "context-sort_dont-sort",
             label: "Disable",
             checked: this.SORT_NAME === UI.sortMethods.disable,
-            event: `onchange="ui.target.SORT_NAME = UI.sortMethods.disable;"`
-
+            event: `onchange="ui.target.SORT_NAME = UI.sortMethods.disable;"`,
           },
           {
             type: "checkbox",
@@ -2428,9 +2418,7 @@ class Target {
             id: "context-reverse-sort",
             label: "Reverse",
             checked: this.REVERSE_SORT == -1,
-            event: `onchange="ui.target.REVERSE_SORT = this.checked"`
-
-
+            event: `onchange="ui.target.REVERSE_SORT = this.checked"`,
           },
         ],
       },
@@ -2443,7 +2431,7 @@ class Target {
             id: "context_filter-missable",
             label: "Missable",
             checked: this.FILTER_NAME === UI.filterMethods.missable,
-            event: `onchange="ui.target.FILTER_NAME = UI.filterMethods.missable;"`
+            event: `onchange="ui.target.FILTER_NAME = UI.filterMethods.missable;"`,
           },
           {
             type: "radio",
@@ -2451,7 +2439,7 @@ class Target {
             id: "context_filter-earned",
             label: "Earned",
             checked: this.FILTER_NAME === UI.filterMethods.earned,
-            event: `onchange="ui.target.FILTER_NAME = UI.filterMethods.earned;"`
+            event: `onchange="ui.target.FILTER_NAME = UI.filterMethods.earned;"`,
           },
           {
             type: "radio",
@@ -2459,7 +2447,7 @@ class Target {
             id: "context_filter-all",
             label: "All",
             checked: this.FILTER_NAME === UI.filterMethods.all,
-            event: `onchange="ui.target.FILTER_NAME = UI.filterMethods.all;"`
+            event: `onchange="ui.target.FILTER_NAME = UI.filterMethods.all;"`,
           },
           {
             type: "checkbox",
@@ -2467,7 +2455,7 @@ class Target {
             id: "context-reverse-filter",
             label: "Reverse",
             checked: this.REVERSE_FILTER,
-            event: `onchange="ui.target.REVERSE_FILTER = this.checked;"`
+            event: `onchange="ui.target.REVERSE_FILTER = this.checked;"`,
           },
           {
             type: "checkbox",
@@ -2475,7 +2463,7 @@ class Target {
             id: "context-hide-filtered",
             label: "Hide filtered",
             checked: this.HIDE_FILTERED,
-            event: `onchange="ui.target.HIDE_FILTERED = this.checked;"`
+            event: `onchange="ui.target.HIDE_FILTERED = this.checked;"`,
           },
         ],
       },
@@ -2487,7 +2475,7 @@ class Target {
             name: "context-clear-all",
             id: "context-clear-all",
             label: "Clear All",
-            event: `onclick="ui.target.clearAllAchivements();"`
+            event: `onclick="ui.target.clearAllAchivements();"`,
           },
           {
             type: "checkbox",
@@ -2496,7 +2484,6 @@ class Target {
             label: "Autoclear earned",
             checked: this.AUTOCLEAR,
             event: `onchange="ui.target.AUTOCLEAR = this.checked;"`,
-
           },
           {
             prefix: "Delay",
@@ -2518,8 +2505,7 @@ class Target {
             name: "context-fill",
             id: "context-fill",
             label: "Fill",
-            event: `onclick="ui.target.fillItems()"`
-
+            event: `onclick="ui.target.fillItems()"`,
           },
           {
             type: "checkbox",
@@ -2527,7 +2513,7 @@ class Target {
             id: "context-autofill",
             label: "Autofill",
             checked: this.AUTOFILL,
-            event: `onchange="ui.target.AUTOFILL = this.checked;"`
+            event: `onchange="ui.target.AUTOFILL = this.checked;"`,
           },
         ],
       },
@@ -2602,7 +2588,6 @@ class Target {
     config.writeConfiguration();
   }
   constructor() {
-
     this.initializeElements();
     this.addEvents();
   }
@@ -2676,7 +2661,6 @@ class Target {
   }
 
   addEvents() {
-
     // Додавання подій для пересування вікна досягнень
     this.resizer.addEventListener("mousedown", (event) => {
       event.stopPropagation();
@@ -2692,8 +2676,12 @@ class Target {
       UI.moveEvent(this.section, e);
     });
     this.section.addEventListener("contextmenu", (event) => {
-      ui.showContextmenu({ event: event, menuItems: this.contextMenuItems, sectionCode: "" });
-    })
+      ui.showContextmenu({
+        event: event,
+        menuItems: this.contextMenuItems,
+        sectionCode: "",
+      });
+    });
   }
   isAchievementInTargetSection({ ID, targetContainer }) {
     const targetAchievements = [
@@ -2791,13 +2779,11 @@ class Target {
     }
 
     this.delayedRemove();
-
   }
   moveToTop(element) {
     if (this.REVERSE_SORT == 1) {
       this.container.prepend(element);
-    }
-    else {
+    } else {
       this.container.append(element);
     }
     this.applyFilter();
@@ -2834,9 +2820,9 @@ class Target {
   }
   delayedRemove() {
     if (this.AUTOCLEAR) {
-      this.container.querySelectorAll(".earned").forEach(element => {
+      this.container.querySelectorAll(".earned").forEach((element) => {
         setTimeout(() => element.remove(), this.AUTOCLEAR_DELAY * 1000);
-      })
+      });
     }
   }
   fillItems() {
@@ -2945,7 +2931,210 @@ class LoginCard {
     ui.buttons.login.click();
   }
 }
+class Games {
+  platformCodes = {
+    "1": "Genesis/Mega Drive",
+    "2": "Nintendo 64",
+    "7": "NES/Famicom",
+  }
+  GAMES = {}
+  BATCH_SIZE = 10;
+  MAX_GAMES_IN_LIST = 70;
+  constructor() {
+    this.initializeElements();
 
+    this.addEvents();
+    this.loadGamesArray().then(() => {
+      this.generateGamesLists();
+
+    }
+
+    )
+    // this.fillGames();
+  }
+  initializeElements() {
+    this.section = document.querySelector("#games_section");
+    this.header = this.section.querySelector(".header-container");
+    this.container = this.section.querySelector(".games_container");
+    this.platformsContainer = this.section.querySelector(".platforms-list_container");
+    // this.platformList = this.section.querySelector(".platform-list");
+    this.resizer = this.section.querySelector(".resizer");
+  }
+  addEvents() {
+    this.resizer.addEventListener("mousedown", (event) => {
+      event.stopPropagation();
+      this.section.classList.add("resized");
+      UI.resizeEvent({
+        event: event,
+        section: this.section,
+        postFunc: () => "",
+      });
+    });
+    // Додавання подій для пересування вікна target
+    this.header.addEventListener("mousedown", (e) => {
+      UI.moveEvent(this.section, e);
+    });
+
+
+  }
+  async loadGamesArray() {
+    for (const platformCode of Object.getOwnPropertyNames(this.platformCodes)) {
+      await this.getGames({ consoleCode: platformCode });
+    }
+  }
+  isEndOfListVisible({ list }) {
+    const lastItem = list.lastElementChild;
+    // Перевіряємо, чи останній елемент списку є видимим у зоні прокрутки
+
+    return !lastItem || lastItem?.getBoundingClientRect().bottom <= window.innerHeight + 200;
+  }
+  isFirstOfListVisible({ list }) {
+    const firstItem = list.children[0];
+
+    // Перевіряємо, чи останній елемент списку є видимим у зоні прокрутки
+    return firstItem?.getBoundingClientRect().bottom > -200;
+  }
+  async fillGamesDown({ list, platformID }) {
+    !list.dataset.currentGamesArrayPosition ? list.dataset.currentGamesArrayPosition = 0 : "";
+
+    let startIndex = Number(list.dataset.currentGamesArrayPosition) ?? 0;
+    let lastIndex = startIndex + this.BATCH_SIZE >= this.GAMES[platformID].length ?
+      this.GAMES[platformID].length :
+      startIndex + this.BATCH_SIZE;
+    list.dataset.currentGamesArrayPosition = lastIndex;
+    // Використовуємо збережені дані у властивості games для заповнення списку
+    for (let i = startIndex; i < lastIndex; i++) {
+      const gameElement = this.generateGameElement(this.GAMES[platformID][i]);
+      list.appendChild(gameElement);
+    }
+  }
+  async fillGamesTop({ list, platformID }) {
+    !list.dataset.currentGamesArrayPosition ? list.dataset.currentGamesArrayPosition = 0 : "";
+
+    let startIndex = list.dataset.currentGamesArrayPosition - list.children.length - 1;
+    // Використовуємо збережені дані у властивості games для заповнення списку
+    for (let i = startIndex; i > startIndex - this.BATCH_SIZE && i >= 0; i--) {
+      const gameElement = this.generateGameElement(this.GAMES[platformID][i]);
+      list.prepend(gameElement);
+    }
+  }
+  clearGamesTop({ list }) {
+    if (list.children.length > this.MAX_GAMES_IN_LIST) {
+      for (let i = 0; i < this.BATCH_SIZE; i++) {
+
+        list.firstChild.remove();
+      }
+    }
+  }
+  clearGamesDown({ list }) {
+    let lastIndex = list.dataset.currentGamesArrayPosition - this.BATCH_SIZE;
+    lastIndex = lastIndex < 0 ? 0 : lastIndex;
+    if (list.children.length > this.MAX_GAMES_IN_LIST) {
+      for (let i = list.dataset.currentGamesArrayPosition; i > lastIndex; i--) {
+        list.lastChild.remove();
+      }
+      list.dataset.currentGamesArrayPosition = lastIndex;
+    }
+  }
+  toggleGamesListVisibility(platformsListItem) {
+    let gamesList = platformsListItem.querySelector(".platform-list");
+    if (platformsListItem.classList.contains("expanded")) {
+      platformsListItem.classList.remove("expanded");
+      gamesList.innerHTML = "";
+      gamesList.dataset.currentGamesArrayPosition = 0;
+    }
+    else {
+      platformsListItem.classList.add("expanded");
+      this.fillGamesDown({ list: gamesList, platformID: platformsListItem.dataset.platformID });
+      while (this.isEndOfListVisible({ list: gamesList })) {
+        this.fillGamesDown({ list: gamesList, platformID: platformsListItem.dataset.platformID }); // Після отримання даних заповнюємо список ігор
+      }
+    }
+
+  }
+  async getGames({ consoleCode }) {
+    try {
+      const gamesResponse = await fetch(`../json/games/${consoleCode}.json`);
+      const gamesJson = await gamesResponse.json();
+      this.GAMES[consoleCode] = gamesJson; // Зберігаємо отримані дані у властивості games
+    } catch (error) {
+      console.error("Error fetching games:", error);
+    }
+  }
+
+  generateGamesLists() {
+    this.platformsContainer.innerHTML = '';
+    Object.getOwnPropertyNames(this.platformCodes).forEach(platformCode => {
+      const list = this.generateGameList({ platformName: this.platformCodes[platformCode], platformID: platformCode });
+      const platformList = list.querySelector(".platform-list");
+      platformList.addEventListener("scroll", e => {
+        // Якщо останній елемент списку став видимим, завантажуємо наступну порцію елементів
+        if (this.isEndOfListVisible({ list: platformList })) {
+          this.fillGamesDown({ list: platformList, platformID: platformCode });
+          this.clearGamesTop({ list: platformList });
+        }
+        if (this.isFirstOfListVisible({ list: platformList })) {
+          this.fillGamesTop({ list: platformList, platformID: platformCode });
+          this.clearGamesDown({ list: platformList });
+        }
+      })
+      this.platformsContainer.appendChild(list);
+    })
+  }
+  generateGameList({ platformName, platformID }) {
+    let platformListItem = document.createElement("li");
+    platformListItem.classList.add("platforms-list_item");
+    platformListItem.dataset.platformID = platformID;
+    platformListItem.innerHTML = `    
+      <h2 class="platform-name " onclick="ui.games.toggleGamesListVisibility(this.parentNode)">
+          ${platformName}
+      </h2>
+      <button class="expand-games_button"onclick="ui.games.toggleGamesListVisibility(this.parentNode)"> </button>
+      <ul class="platform-list" data--console-id="7">
+      </ul>
+    `
+    return platformListItem;
+  }
+
+  generateGameElement(game) {
+    const { Title, ID, ConsoleName, ImageIcon, Points, ForumTopicID, NumAchievements, NumLeaderboards } = game;
+    const imgName = game.ImageIcon.slice(ImageIcon.lastIndexOf("/") + 1);
+    const gameElement = document.createElement("li");
+    gameElement.classList.add("platform_game-item");
+    gameElement.innerHTML = `   
+      <div class="game-preview_container">
+          <img src="../assets/imgCache/${imgName}" alt="" class="game-preview_image">
+      </div>
+      <h3 class="game-description_title"><a target="_blanc" href="https://retroachievements.org/game/${ID}">${Title}</a></h3>
+      <div class="game-description_container">
+        <div class="game-description_block">
+            <p title="achievements count"
+                class="game-description game-description_icon achievements-count">${NumAchievements}</p>
+            <p title="points count" class="game-description game-description_icon points-count">
+            ${Points}</p>
+            <p title="leaderboards count"
+                class="game-description game-description_icon leaderboards-count">${NumLeaderboards}</p>
+            
+        </div>
+        <div class="game-description_block">
+          <a title="go to RA" href="https://retroachievements.org/game/${ID}"
+                class="game-description game-description_icon game-description_ra-icon game-description_ra-link " ">
+                
+          </a>
+          <a title=" go to RA forum" href="https://retroachievements.org/viewtopic.php?t=${ForumTopicID}"
+                class="game-description game-description_icon game-description_ra-icon game-description_ra-forum " ">
+        
+          </a>
+          <a title=" search for downloading" target="_blanc" href="https://romhustler.org/roms/search?query=${Title}"
+                class="game-description game-description_icon game-description_ra-icon game-description_download-link " ">                
+          </a>
+        </div>
+          
+      </div>
+    `
+    return gameElement;
+  }
+}
 //* Методи сортування для досягнень гри
 const sortBy = {
   latest: (a, b) => {

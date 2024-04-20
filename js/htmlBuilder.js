@@ -5,11 +5,11 @@ const sections = {
   target: "./elements/target.elem",
   // achievements: "./elements/achievements.elem",
   login: "./elements/login.elem",
-  panel: "./elements/panel.elem",
+  // panel: "./elements/panel.elem",
   settings: "./elements/settings.elem",
   awards: "./elements/awards.elem",
   status: "./elements/status.elem",
-  tutor: "./elements/tutor.elem",
+  tutor: "./elements/games.elem",
 };
 
 // Функція для завантаження розділів
