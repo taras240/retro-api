@@ -3054,7 +3054,7 @@ class Games {
   }
   async getGames({ consoleCode }) {
     try {
-      const gamesResponse = await fetch(`../json/games/${consoleCode}.json`);
+      const gamesResponse = await fetch(`./json/games/${consoleCode}.json`);
       const gamesJson = await gamesResponse.json();
       this.GAMES[consoleCode] = gamesJson; // Зберігаємо отримані дані у властивості games
     } catch (error) {
