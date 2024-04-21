@@ -3043,7 +3043,6 @@ class Games {
       delete this.GAMES[`${platformID}-temp`];
     }
     const fillFullList = ({ gamesList, platformID }) => {
-      console.log(gamesList, platformID)
       while (this.isEndOfListVisible({ list: gamesList }) && this.GAMES[platformID]?.length > Number(gamesList.dataset.currentGamesArrayPosition)) {
         this.fillGamesDown({ list: gamesList, platformID: platformID }); // Після отримання даних заповнюємо список ігор
       }
@@ -3065,7 +3064,6 @@ class Games {
 
         recoverGamesData();
         let regex = new RegExp(searchbar.value, "i");
-        console.log(searchbar.value);
 
         let searchGames = this.GAMES[platformID].filter(game => regex.test(game.Title));
 
