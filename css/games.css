@@ -59,7 +59,7 @@
 }
 
 .platform-name {
-    line-height: var(--header-height);
+    /* line-height: var(--header-height); */
     font-weight: 600;
     font-size: 1.1rem;
     flex: 1;
@@ -69,13 +69,14 @@
 
 .games-searchbar {
     background-color: transparent;
+    display: none;
     color: var(--font-color);
     font-size: 1.1rem;
     border-radius: 5px;
-    padding: 5px;
     border: 1px solid var(--font-color);
     text-align: center;
-    display: none;
+    pointer-events: none;
+    transition: .2s;
 }
 
 .games-searchbar::placeholder {
@@ -83,9 +84,12 @@
 }
 
 .expanded .games-searchbar {
+    visibility: visible;
     opacity: .5;
+    width: 100px;
+    padding: 5px;
     display: block;
-    transition: .2s;
+    pointer-events: all;
 }
 
 .games-searchbar:focus {
@@ -102,7 +106,6 @@
     height: 20px;
     aspect-ratio: 1;
     opacity: 0.5;
-    margin-left: 15px;
     transform: scaleY(1);
     transition: 0.2s;
 }
@@ -118,6 +121,7 @@
     padding: 10px 10px;
     display: flex;
     justify-content: flex-start;
+    align-items: start;
     flex-direction: row;
     flex-wrap: wrap;
     gap: 10px;
@@ -150,6 +154,10 @@
     background-color: var(--secondary-color);
     -webkit-transition: 0.2s;
     transition: 0.2s;
+}
+
+.platform_game-item.expanded {
+    flex-basis: 100%;
 }
 
 .platform_game-item:hover {
@@ -200,6 +208,7 @@
     text-align: left;
     border-radius: 2px;
     padding: 0 3px;
+    transition: .2s;
 }
 
 .game-description_button:hover {
@@ -235,6 +244,15 @@
     transition: .2s;
 }
 
+.game-description_button {
+    position: relative;
+    padding: 0 5px;
+}
+
+.platform_game-item.expanded .expand-button {
+    transform: scaleY(-1);
+
+}
 
 .game-description_link {
     position: relative;
@@ -248,7 +266,7 @@
     border-radius: 2px;
 }
 
-.game-description_link:hover .game-description_icon {
+:hover>.link_icon {
     background-color: var(--secondary-color);
 }
 
@@ -269,6 +287,14 @@
     mask-image: url(../assets/img/leaderboard.svg);
 }
 
+.expand_icon {
+    margin: auto;
+    mask-position: center;
+    mask-image: url(../assets/img/expand_more.svg);
+}
+
+
+
 .ra-link_icon {
     mask-image: url(../assets/img/link2.svg);
 }
@@ -279,4 +305,21 @@
 
 .forum-icon {
     mask-image: url(../assets/img/forum.svg);
+}
+
+.game-more_block {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    grid-column: 1 / 3;
+    overflow: hidden;
+    padding: 10px 0 5px;
+}
+
+.game-description_ingame-preview {
+    max-width: calc(50% - 5px);
+    border-radius: 5px;
+    flex-grow: 1;
+    flex-shrink: 1;
+    image-rendering: pixelated;
 }

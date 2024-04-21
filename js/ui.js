@@ -3086,7 +3086,46 @@ class Games {
       console.error("Error fetching games:", error);
     }
   }
+  async showMoreDescription(element) {
+    let gameListItem = element.closest(".platform_game-item");
+    if (gameListItem.classList.contains("expanded")) {
+      const gameMoreInfoElement = gameListItem.querySelector(".game-more_block");
+      gameMoreInfoElement.remove();
+    }
+    else {
+      const gameID = gameListItem.dataset.gameID;
+      const gameMoreInfoElement = document.createElement("div");
+      gameMoreInfoElement.classList.add("game-more_block");
+      const resp = await apiWorker.getGameInfo({ gameID: gameID });
+      gameMoreInfoElement.innerHTML = `
+      <img src="https://media.retroachievements.org/${resp.ImageTitle}" alt="" class="game-description_ingame-preview">
+      <img src="https://media.retroachievements.org/${resp.ImageIngame}" alt="" class="game-description_ingame-preview">
+    `;
+      gameListItem.appendChild(gameMoreInfoElement);
+    }
+    gameListItem.classList.toggle("expanded");
 
+    // {
+    //   "Title": "1942",
+    //   "GameTitle": "1942",
+    //   "ConsoleID": 7,
+    //   "ConsoleName": "NES/Famicom",
+    //   "Console": "NES/Famicom",
+    //   "ForumTopicID": 323,
+    //   "Flags": 0,
+    //   "GameIcon": "/Images/043934.png",
+    //   "ImageIcon": "/Images/043934.png",
+    //   "ImageTitle": "/Images/000549.png",
+    //   "ImageIngame": "/Images/000550.png",
+    //   "ImageBoxArt": "/Images/011488.png",
+    //   "Publisher": "Capcom",
+    //   "Developer": "Capcom, Micronics",
+    //   "Genre": "Shoot 'em Up",
+    //   "Released": "December 11, 1985"
+    // }
+
+
+  }
   generateGamesLists() {
     this.platformsContainer.innerHTML = '';
     Object.getOwnPropertyNames(this.platformCodes).forEach(platformCode => {
@@ -3113,9 +3152,10 @@ class Games {
     platformListItem.innerHTML = `    
     <div class="platforms-list_header-container">
       <h2 class="platform-name " onclick="ui.games.toggleGamesListVisibility(this)">
-        ${platformName}
-      </h2>
+        ${platformName} [${this.GAMES[platformID].length}]
+      </h2> 
       <input class="search-game_text-input games-searchbar" placeholder="search" type="search" value="" /> 
+      
       <button class="expand-games_button" onclick="ui.games.toggleGamesListVisibility(this)"> </button>
     </div>  
    
@@ -3129,6 +3169,7 @@ class Games {
     const { Title, ID, ConsoleName, ImageIcon, Points, ForumTopicID, NumAchievements, NumLeaderboards } = game;
     const imgName = game.ImageIcon.slice(ImageIcon.lastIndexOf("/") + 1, ImageIcon.lastIndexOf(".") + 1) + "webp";
     const gameElement = document.createElement("li");
+    gameElement.dataset.gameID = ID;
     gameElement.classList.add("platform_game-item");
     gameElement.innerHTML = `   
       <div class="game-preview_container">
@@ -3137,13 +3178,18 @@ class Games {
       <h3 class="game-description_title"><button title="open game" class="game-description_button" onclick="config.gameID = ${ID}; getAchievements()">${Title}</button></h3>
       <div class="game-description_container">
         <div class="game-description_block">
-            <p title="achievements count"
-                class="game-description  achievements-count"><i class="game-description_icon achievements-icon"></i>${NumAchievements}</p>
-            <p title="points count" class="game-description  points-count"><i class="game-description_icon points-icon"></i>
+            <p title="achievements count"  class="game-description  achievements-count">
+                <i class="game-description_icon achievements-icon"></i>${NumAchievements}</p>
+            <p title="points count" class="game-description  points-count">
+              <i class="game-description_icon points-icon"></i>
             ${Points}</p>
-            <p title="leaderboards count"
-                class="game-description  leaderboards-count"><i class="game-description_icon leaderboards-icon"></i>${NumLeaderboards}</p>
-            
+            <p title="leaderboards count" class="game-description  leaderboards-count">
+              <i class="game-description_icon leaderboards-icon"></i>${NumLeaderboards}</p>            
+        </div>
+        <div class="game-description_block">
+          <button class="game-description_button  expand-button" onclick="ui.games.showMoreDescription(this)">
+            <i class="game-description_icon link_icon expand_icon"></i>
+          </button>
         </div>
         <div class="game-description_block">
           <a title="go to RA" target="_blanc" href="https://retroachievements.org/game/${ID}"
