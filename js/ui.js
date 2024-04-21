@@ -6,6 +6,7 @@ class UI {
     earned: "earned",
     notEarned: "notEarned",
     missable: "missable",
+    progression: "progression",
   };
   static sortMethods = {
     latest: "latest",
@@ -749,6 +750,14 @@ class AchievementsBlock {
       {
         label: "Filter",
         subMenu: [
+          {
+            type: "radio",
+            name: "context-filter",
+            id: "context_filter-progression",
+            label: "Progression",
+            checked: this.FILTER_NAME === UI.filterMethods.progression,
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].FILTER_NAME = UI.filterMethods.progression;"`,
+          },
           {
             type: "radio",
             name: "context-filter",
@@ -2428,6 +2437,14 @@ class Target {
           {
             type: "radio",
             name: "context-filter",
+            id: "context_filter-progression",
+            label: "Progression",
+            checked: this.FILTER_NAME === UI.filterMethods.progression,
+            event: `onchange="ui.target.FILTER_NAME = UI.filterMethods.progression;"`,
+          },
+          {
+            type: "radio",
+            name: "context-filter",
             id: "context_filter-missable",
             label: "Missable",
             checked: this.FILTER_NAME === UI.filterMethods.missable,
@@ -3241,6 +3258,7 @@ const filterBy = {
   earned: (achievement) => achievement.DateEarnedHardcore,
   notEarned: (achievement) => !achievement.DateEarnedHardcore,
   missable: (achievement) => achievement.type === "missable",
+  progression: (achievement) => achievement.type === "progression" || achievement.type === "win_condition",
   all: () => true,
 };
 
