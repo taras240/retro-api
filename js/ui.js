@@ -3129,7 +3129,7 @@ class Games {
 
   generateGameElement(game) {
     const { Title, ID, ConsoleName, ImageIcon, Points, ForumTopicID, NumAchievements, NumLeaderboards } = game;
-    const imgName = game.ImageIcon.slice(ImageIcon.lastIndexOf("/") + 1);
+    const imgName = game.ImageIcon.slice(ImageIcon.lastIndexOf("/") + 1, ImageIcon.lastIndexOf(".") + 1) + "webp";
     const gameElement = document.createElement("li");
     gameElement.classList.add("platform_game-item");
     gameElement.innerHTML = `   
@@ -3140,25 +3140,25 @@ class Games {
       <div class="game-description_container">
         <div class="game-description_block">
             <p title="achievements count"
-                class="game-description game-description_icon achievements-count">${NumAchievements}</p>
-            <p title="points count" class="game-description game-description_icon points-count">
+                class="game-description  achievements-count"><i class="game-description_icon achievements-icon"></i>${NumAchievements}</p>
+            <p title="points count" class="game-description  points-count"><i class="game-description_icon points-icon"></i>
             ${Points}</p>
             <p title="leaderboards count"
-                class="game-description game-description_icon leaderboards-count">${NumLeaderboards}</p>
+                class="game-description  leaderboards-count"><i class="game-description_icon leaderboards-icon"></i>${NumLeaderboards}</p>
             
         </div>
         <div class="game-description_block">
           <a title="go to RA" target="_blanc" href="https://retroachievements.org/game/${ID}"
-                class="game-description game-description_icon game-description_ra-icon game-description_ra-link " ">
-                
+                class="game-description game-description_link" >
+                <i class="game-description_icon link_icon ra-link_icon"></i>
           </a>
           <a title=" go to RA forum" target="_blanc" href="https://retroachievements.org/viewtopic.php?t=${ForumTopicID}"
-                class="game-description game-description_icon game-description_ra-icon game-description_ra-forum " ">
-        
+                class="game-description game-description_link   " ">
+        <i class="game-description_icon link_icon forum-icon"></i>
           </a>
           <a title=" search for downloading" target="_blanc" href="https://romhustler.org/roms/search?query=${Title}"
-                class="game-description game-description_icon game-description_ra-icon game-description_download-link " ">                
-          </a>
+                class="game-description game-description_link  " ">                
+          <i class="game-description_icon link_icon download-icon"></i></a>
         </div>
           
       </div>

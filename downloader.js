@@ -41,17 +41,19 @@ function doImageСache({ gamesJsonPath }) {
         arr.forEach((game, index) => {
             //set time delay between downloads
             const delayInMiliseconds = 500;
+            let delayMult = 0;
             setTimeout(() => {
                 // image name
                 const imgName = game.ImageIcon.slice(game.ImageIcon.lastIndexOf("/") + 1);
                 const filePath = cachePath + imgName;
+                const webpFilePath = filePath.slice(0, filePath.lastIndexOf(".") + 1) + "webp";
                 const imageUrl = `${imageUrlBase}${game.ImageIcon}`;
                 // check for image exist and download 
-                if (!isExist(filePath)) {
+                if (!isExist(filePath) && !isExist(webpFilePath)) {
                     log(`${cachePath}[${imgName}] downloading`);
                     setTimeout(() => {
                         downloadFile({ imageUrl: imageUrl, filePath: filePath });
-                    }, (index + 1) * delayInMiliseconds);
+                    }, (++delayMult) * delayInMiliseconds);
                 }
                 else {
                     log(`${cachePath}[${imgName}] exist`);
@@ -62,4 +64,4 @@ function doImageСache({ gamesJsonPath }) {
 
     })
 }
-doImageСache({ gamesJsonPath: './json/games/3.json' });
+doImageСache({ gamesJsonPath: './json/games/7.json' });
