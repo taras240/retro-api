@@ -2950,6 +2950,7 @@ class LoginCard {
 }
 class Games {
   platformCodes = {
+    "0": "Recently Played",
     "1": "Genesis/Mega Drive",
     "2": "Nintendo 64",
     "3": "SNES/Super Famicom",
@@ -3050,7 +3051,7 @@ class Games {
       list.dataset.currentGamesArrayPosition = lastIndex;
     }
   }
-  toggleGamesListVisibility(element) {
+  async toggleGamesListVisibility(element) {
     const clearList = list => {
       list.innerHTML = "";
       list.dataset.currentGamesArrayPosition = 0;
@@ -3075,6 +3076,9 @@ class Games {
     }
     else {
       platformsListItem.classList.add("expanded");
+      if (platformID == 0) {
+        await this.getRecentGamesArray();
+      }
       fillFullList({ gamesList: gamesList, platformID: platformID });
       const searchbar = platformsListItem.querySelector(".games-searchbar");
       searchbar.addEventListener("input", e => {
@@ -3093,9 +3097,13 @@ class Games {
       })
     }
   }
-
+  async getRecentGamesArray() {
+    const resp = await apiWorker.getRecentlyPlayedGames({});
+    this.GAMES["0"] = resp;
+  }
   async getGames({ consoleCode }) {
     try {
+      if (consoleCode == 0) return;
       const gamesResponse = await fetch(`./json/games/${consoleCode}.json`);
       const gamesJson = await gamesResponse.json();
       this.GAMES[consoleCode] = gamesJson; // Зберігаємо отримані дані у властивості games
@@ -3169,7 +3177,7 @@ class Games {
     platformListItem.innerHTML = `    
     <div class="platforms-list_header-container">
       <h2 class="platform-name " onclick="ui.games.toggleGamesListVisibility(this)">
-        ${platformName} [${this.GAMES[platformID].length}]
+        ${platformName} ${platformID != 0 ? '[' + this.GAMES[platformID]?.length + ']' : ""}
       </h2> 
       <input class="search-game_text-input games-searchbar" placeholder="search" type="search" value="" /> 
       
@@ -3181,16 +3189,34 @@ class Games {
     `
     return platformListItem;
   }
-
+  // {
+  //   "GameID": 1479,
+  //   "ConsoleID": 7,
+  //   "ConsoleName": "NES/Famicom",
+  //   "Title": "Kirby's Adventure",
+  //   "ImageIcon": "/Images/060148.png",
+  //   "ImageTitle": "/Images/058502.png",
+  //   "ImageIngame": "/Images/058503.png",
+  //   "ImageBoxArt": "/Images/012398.png",
+  //   "LastPlayed": "2024-04-23 16:55:32",
+  //   "AchievementsTotal": 61,
+  //   "NumPossibleAchievements": 61,
+  //   "PossibleScore": 502,
+  //   "NumAchieved": 44,
+  //   "ScoreAchieved": 177,
+  //   "NumAchievedHardcore": 44,
+  //   "ScoreAchievedHardcore": 177
+  // }
   generateGameElement(game) {
-    const { Title, ID, ConsoleName, ImageIcon, Points, ForumTopicID, NumAchievements, NumLeaderboards } = game;
+    let { Title, ID, GameID, ConsoleName, ImageIcon, Points, PossibleScore, ForumTopicID, NumAchievements, AchievementsTotal, NumLeaderboards } = game;
     const imgName = game.ImageIcon.slice(ImageIcon.lastIndexOf("/") + 1, ImageIcon.lastIndexOf(".") + 1) + "webp";
     const gameElement = document.createElement("li");
+
     gameElement.dataset.gameID = ID;
     gameElement.classList.add("platform_game-item");
     gameElement.innerHTML = `   
       <div class="game-preview_container">
-          <img src="./assets/imgCache/${imgName}" alt="" class="game-preview_image">
+          <img src="./assets/imgCache/${imgName}"  onerror="this.src='https://media.retroachievements.org${ImageIcon}';" alt="" class="game-preview_image">
       </div>
       <h3 class="game-description_title"><button title="open game" class="game-description_button" onclick="config.gameID = ${ID}; getAchievements()">${Title}</button></h3>
       <div class="game-description_container">

@@ -31,6 +31,7 @@ class APIWorker {
       i: gameID || config.gameID,
       f: 1,
       h: 1,
+      c: 20,
     };
 
     // Додавання параметрів до URL
@@ -40,7 +41,7 @@ class APIWorker {
   }
 
   // Конструктор класу
-  constructor() {}
+  constructor() { }
   getUserGameRank({ targetUser, gameID }) {
     let url = this.getUrl({ endpoint: this.endpoints.userRankAndScore });
     return fetch(url).then((resp) => resp.json());
@@ -103,7 +104,13 @@ class APIWorker {
       endpoint: this.endpoints.recentlyPlayedGames,
       targetUser: targetUser,
     });
-    return fetch(url).then((resp) => resp.json());
+    return fetch(url).then((resp) => resp.json()).then(arr => arr.map(game => {
+      game.ID = game.GameID;
+      game.Points = game.PossibleScore;
+      game.NumAchievements = game.AchievementsTotal;
+      game.NumLeaderboards = "";
+      return game;
+    }));;
   }
   verifyUserIdent({ userName, apiKey }) {
     let url = this.getUrl({

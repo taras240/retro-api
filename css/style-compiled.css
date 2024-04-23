@@ -2049,8 +2049,8 @@ strong {
     612px 833px var(--stars-color), 1149px 1874px var(--stars-color),
     97px 1814px var(--stars-color), 1613px 1466px var(--stars-color),
     496px 724px var(--stars-color), 768px 1216px var(--stars-color);
-  -webkit-animation: animStar 250s linear infinite;
-          animation: animStar 250s linear infinite;
+  -webkit-animation: animStar 90s linear infinite;
+          animation: animStar 90s linear infinite;
 }
 
 #background-star3:after {
@@ -2169,6 +2169,7 @@ strong {
     -webkit-transform: translateX(0px);
             transform: translateX(0px);
   }
+
   100% {
     -webkit-transform: translateX(2000px);
             transform: translateX(2000px);
@@ -2180,6 +2181,7 @@ strong {
     -webkit-transform: translateX(0px);
             transform: translateX(0px);
   }
+
   100% {
     -webkit-transform: translateX(2000px);
             transform: translateX(2000px);
@@ -5284,8 +5286,8 @@ a:hover {
 
 .resizer {
   position: absolute;
-  bottom: -5px;
-  right: -5px;
+  bottom: 0px;
+  right: 0px;
   width: 0px;
   aspect-ratio: 1;
   border-radius: 0 0 5px 0;
@@ -5293,12 +5295,13 @@ a:hover {
   cursor: nwse-resize;
   -webkit-transition: 0.1s;
   transition: 0.1s;
+  z-index: 1;
 }
 
 .section:hover .resizer {
   width: 15px;
-  border: 2px solid #201221;
-  border: 2px solid var(--main-color);
+  border: 2px solid #57125c;
+  border: 2px solid var(--accent-color);
   border-top: none;
   border-left: none;
 }

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Randomizer</title>
+    <link rel="stylesheet" href="css/style-compiled.css">
+    <style>
+        .scene {
+            width: 80px;
+            height: 80px;
+            border: 1px solid transparent;
+            margin: 80px;
+            perspective: 400px;
+        }
+
+        .cube {
+            --rotate-x-angel: 0deg;
+            --rotate-y-angel: 0deg;
+            --rotate-z-angel: 0deg;
+            --speed: 500ms;
+            --cube-size: 80px;
+            /* --speed: 500ms; */
+            width: 80px;
+            height: 80px;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: translateZ(-100px);
+            transition: transform var(--speed) ease-out;
+        }
+
+
+        /* .cube.show-front {
+            transform: translateZ(-100px) rotateY(0deg);
+        }
+
+        .cube.show-right {
+            transform: translateZ(-100px) rotateY(-90deg);
+        }
+
+        .cube.show-back {
+            transform: translateZ(-100px) rotateY(-180deg);
+        }
+
+        .cube.show-left {
+            transform: translateZ(-100px) rotateY(90deg);
+        }
+
+        .cube.show-top {
+            transform: translateZ(-100px) rotateX(-90deg);
+        } */
+
+        .cube-external {
+            /* transform: translateZ(-100px) rotateY(var(--rotate-y-angel)); */
+        }
+
+        .cube {
+            transform: translateZ(-100px) rotateX(var(--rotate-x-angel)) rotateY(var(--rotate-y-angel)) rotateZ(var(--rotate-z-angel));
+        }
+
+        .cube__face {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border: 2px solid black;
+            line-height: 200px;
+            font-size: 40px;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            border-radius: 2px;
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            opacity: 1;
+            background-color: black;
+        }
+
+        .cube__face--front {
+            /* background: hsla(0, 100%, 50%, 0.7); */
+            background-image: url(../assets/imgCache/000400.webp);
+        }
+
+        .cube__face--right {
+            /* background: hsla(60, 100%, 50%, 0.7); */
+            background-image: url(../assets/imgCache/093827.webp);
+        }
+
+        .cube__face--back {
+            /* background: hsla(120, 100%, 50%, 0.7); */
+            background-image: url(../assets/imgCache/093952.webp);
+        }
+
+        .cube__face--left {
+            /* background: hsla(180, 100%, 50%, 0.7); */
+            background-image: url(../assets/imgCache/094384.webp);
+        }
+
+        .cube__face--top {
+            /* background: hsla(240, 100%, 50%, 0.7); */
+            background-image: url(../assets/imgCache/094473.webp);
+        }
+
+        .cube__face--bottom {
+            /* background: hsla(300, 100%, 50%, 0.7); */
+            background-image: url(../assets/imgCache/093812.webp);
+
+        }
+
+        .cube__face--front {
+            transform: rotateY(0deg) translateZ(calc(var(--cube-size) / 2));
+        }
+
+        .cube__face--right {
+            transform: rotateY(90deg) translateZ(calc(var(--cube-size) / 2));
+        }
+
+        .cube__face--back {
+            transform: rotateY(180deg) translateZ(calc(var(--cube-size) / 2));
+        }
+
+        .cube__face--left {
+            transform: rotateY(-90deg) translateZ(calc(var(--cube-size) / 2));
+        }
+
+        .cube__face--top {
+            transform: rotateX(90deg) translateZ(calc(var(--cube-size) / 2));
+        }
+
+        .cube__face--bottom {
+            transform: rotateX(-90deg) translateZ(calc(var(--cube-size) / 2));
+        }
+    </style>
+</head>
+
+<body>
+    <div class="scene">
+        <div class="cube" data-angel="0">
+            <div class="cube__face cube__face--front"></div>
+            <div class="cube__face cube__face--back"></div>
+            <div class="cube__face cube__face--right"></div>
+            <div class="cube__face cube__face--left"></div>
+            <div class="cube__face cube__face--top"></div>
+            <div class="cube__face cube__face--bottom"></div>
+        </div>
+    </div>
+    <script>
+        var cube = document.querySelector('.cube');
+
+
+        function rotateCube() {
+            // for (let i = 0; i < 10; i++) {
+            //     setTimeout(() => rotate(), 500 * i)
+
+            // }
+
+        }
+        function rotate() {
+            let angel = Number(cube.dataset.angel) ?? 0;
+            angel += 90 * 26;
+
+            console.log(angel,);
+            cube.dataset.angel = angel;
+
+            cube.style.setProperty("--rotate-x-angel", `${angel}deg`);
+            // cube.style.setProperty("--rotate-y-angel", `${angel}deg`);
+            cube.style.setProperty("--rotate-z-angel", `${angel}deg`);
+            cube.style.setProperty("--speed", `${5000}ms`);
+            // cubeExt.style.setProperty("--rotate-y-angel", `${angel}deg`);
+        }
+
+    </script>
+</body>
+
+</html>
