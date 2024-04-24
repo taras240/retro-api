@@ -18,6 +18,9 @@
       </div>
     </div>
     <ul class="changelog-list">
+      <p class="changelog-list_item">25-04-24
+      </p><li class="changelog-list_item">added progression widget
+      </li>
       <p class="changelog-list_item">20-04-24
       </p>
       <li class="changelog-list_item">added games widget

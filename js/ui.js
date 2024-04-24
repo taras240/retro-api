@@ -1,5 +1,5 @@
 class UI {
-  VERSION = "0.14";
+  VERSION = "0.15";
   static AUTOCLOSE_CONTEXTMENU = false;
   static filterMethods = {
     all: "all",
@@ -37,6 +37,7 @@ class UI {
       this.target.clearAllAchivements();
       this.target.fillItems();
     }
+    this.progression.fillCards();
   }
   static fixAchievement(achievement, achievements) {
     const { BadgeName, DateEarned, DateEarnedHardcore } = achievement;
@@ -111,6 +112,7 @@ class UI {
     this.statusPanel = new StatusPanel();
     this.buttons = new ButtonPanel();
     this.games = new Games();
+    this.progression = new Progression();
     document.addEventListener("click", (e) => {
       document.querySelectorAll(".context-menu").forEach((el) => el.remove());
     });
@@ -1386,17 +1388,19 @@ class ButtonPanel {
   }
   initializeElements() {
     this.section = document.querySelector("#side_panel");
-    this.header = document.querySelector("#buttons-header_container");
-    this.settings = document.querySelector("#open-settings-button");
-    this.achievements = document.querySelector("#open-achivs-button");
-    this.login = document.querySelector("#open-login-button");
-    this.about = document.querySelector("#open-about-button");
-    this.gameCard = document.querySelector("#open-game-card-button");
-    this.target = document.querySelector("#open-target-button");
-    this.status = document.querySelector("#open-status-button");
-    this.awards = document.querySelector("#open-awards-button");
-    this.games = document.querySelector("#open-games-button");
-    this.userImage = document.querySelector("#side-panel-user-image");
+    this.header = this.section.querySelector("#buttons-header_container");
+    this.settings = this.section.querySelector("#open-settings-button");
+    this.achievements = this.section.querySelector("#open-achivs-button");
+    this.login = this.section.querySelector("#open-login-button");
+    this.about = this.section.querySelector("#open-about-button");
+    this.gameCard = this.section.querySelector("#open-game-card-button");
+    this.target = this.section.querySelector("#open-target-button");
+    this.status = this.section.querySelector("#open-status-button");
+    this.awards = this.section.querySelector("#open-awards-button");
+    this.games = this.section.querySelector("#open-games-button");
+    this.progression = this.section.querySelector("#open-progression-button");
+    this.userImage = this.section.querySelector("#side-panel-user-image");
+
 
   }
   addEvents() {
@@ -1445,6 +1449,13 @@ class ButtonPanel {
     this.games.addEventListener("change", (e) => {
       UI.switchSectionVisibility(ui.games);
     });
+    this.about.addEventListener("change", (e) => {
+      UI.switchSectionVisibility(ui.about);
+    });
+    this.progression.addEventListener("change", (e) => {
+
+      UI.switchSectionVisibility(ui.progression);
+    });
   }
 
   setValues() {
@@ -1463,6 +1474,7 @@ class ButtonPanel {
     this.status.checked = !config.ui?.["update-section"]?.hidden ?? true;
 
     this.awards.checked = !config.ui?.awards_section?.hidden ?? true;
+    this.progression.checked = !config.ui?.progression_section?.hidden ?? true;
     this.userImage.src = config.userImageSrc;
   }
 }
@@ -3189,24 +3201,7 @@ class Games {
     `
     return platformListItem;
   }
-  // {
-  //   "GameID": 1479,
-  //   "ConsoleID": 7,
-  //   "ConsoleName": "NES/Famicom",
-  //   "Title": "Kirby's Adventure",
-  //   "ImageIcon": "/Images/060148.png",
-  //   "ImageTitle": "/Images/058502.png",
-  //   "ImageIngame": "/Images/058503.png",
-  //   "ImageBoxArt": "/Images/012398.png",
-  //   "LastPlayed": "2024-04-23 16:55:32",
-  //   "AchievementsTotal": 61,
-  //   "NumPossibleAchievements": 61,
-  //   "PossibleScore": 502,
-  //   "NumAchieved": 44,
-  //   "ScoreAchieved": 177,
-  //   "NumAchievedHardcore": 44,
-  //   "ScoreAchievedHardcore": 177
-  // }
+
   generateGameElement(game) {
     let { Title, ID, GameID, ConsoleName, ImageIcon, Points, PossibleScore, ForumTopicID, NumAchievements, AchievementsTotal, NumLeaderboards } = game;
     const imgName = game.ImageIcon.slice(ImageIcon.lastIndexOf("/") + 1, ImageIcon.lastIndexOf(".") + 1) + "webp";
@@ -3252,6 +3247,80 @@ class Games {
     `
     return gameElement;
   }
+}
+class Progression {
+  constructor() {
+    this.initializeElements();
+    this.addEvents();
+
+  }
+  initializeElements() {
+    this.section = document.querySelector("#progression_section");
+    this.header = this.section.querySelector(".header-container");
+    this.notEarnedList = this.section.querySelector("#not-earned_progression-list");
+    this.earnedList = this.section.querySelector("#earned_progression-list");
+    this.resizer = this.section.querySelector("#progression-resizer")
+  }
+  addEvents() {
+    this.resizer.addEventListener("mousedown", event => {
+      event.stopPropagation();
+      this.section.classList.add("resized");
+      UI.resizeEvent({
+        event: event,
+        section: this.section,
+        postFunc: () => "",
+      });
+    });
+    this.header.addEventListener("mousedown", (e) => {
+      UI.moveEvent(this.section, e);
+    });
+  }
+  fillCards() {
+    this.notEarnedList.innerHTML = '';
+    this.earnedList.innerHTML = '';
+    Object.values(ui.ACHIEVEMENTS).filter(achiv => filterBy.progression(achiv)).sort((a, b) => -1 * sortBy.default(a, b)).forEach(achiv => {
+      if (achiv.type === "progression" || achiv.type === "win_condition") {
+        const achivElement = this.generateCard(achiv);
+        achiv.isHardcoreEarned ? this.earnedList.prepend(achivElement) :
+          this.notEarnedList.appendChild(achivElement);
+      }
+    })
+  }
+  generateCard({ Title, prevSrc, Points, TrueRatio, NumAwardedHardcore, totalPlayers, type, Description, DisplayOrder }) {
+    const achivElement = document.createElement("li");
+    achivElement.classList.add("horizon-list_item", "progression-achiv")
+    achivElement.innerHTML = `
+    
+    <div class="progression-achiv_prev-container">
+        <img class="progression-achiv_prev-img" src="${prevSrc}"  alt=" ">
+    </div>
+    <h3 class="progression_achiv-name">
+        <a class="progression_achiv-link" progression="_blanc" href="https://retroachievements.org/achievement/56855">${Title}</a>
+    </h3>
+        <div class="progression-details">
+            ${Description}
+        </div>
+        <div class="progression_descriptions">
+            <p class="progression-description-text" title="points"><i
+                    class="progression_description-icon game-description_icon points-icon"></i>${Points}
+
+            </p>
+            <p class="progression-description-text" title="points"><i
+                    class="progression_description-icon game-description_icon retropoints-icon"></i>${TrueRatio}
+
+            </p>
+            <p class="progression-description-text" title="earned by"><i
+                    class="progression_description-icon game-description_icon trending-icon"></i>${~~(NumAwardedHardcore / totalPlayers * 100)}%</p>
+            <div class="progression_description-icon condition ${type}" title="achievement type">
+            </div>
+        </div>               
+    `;// <div class="progression_achiv-number">4 / 6</div>
+    return achivElement;
+  }
+  close() {
+    ui.buttons.progression.click();
+  }
+
 }
 //* Методи сортування для досягнень гри
 const sortBy = {

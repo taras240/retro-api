@@ -1,0 +1,128 @@
+<section class="progression_section section" id="progression_section">
+    <div class="header-container">
+        <div class="header-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"
+                style="transform: scaleX(-1);">
+                <path
+                    d="M680-160v-640q33 0 56.5 23.5T760-720v480q0 33-23.5 56.5T680-160ZM160-80q-33 0-56.5-23.5T80-160v-640q0-33 23.5-56.5T160-880h360q33 0 56.5 23.5T600-800v640q0 33-23.5 56.5T520-80H160Zm680-160v-480q25 0 42.5 17.5T900-660v360q0 25-17.5 42.5T840-240Zm-680 80h360v-640H160v640Zm0-640v640-640Z" />
+            </svg>
+        </div>
+
+        <h2 class="widget-header-text">Progression</h2>
+        <div class="header-button header-icon" onclick="ui.progression.close()">
+            <svg height="24" viewBox="0 -960 960 960" width="24">
+                <path
+                    d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z">
+                </path>
+            </svg>
+        </div>
+    </div>
+    <div class="progression_container">
+        <ul class="horizon_list not-earned" id="not-earned_progression-list">
+            <!-- <li class="horizon-list_item progression-achiv" data-type="null" data--points="10" data--true-ratio="47"
+                data--display-order="6" data--num-awarded-hardcore="20" data-achiv-id="56855">
+
+                <div class="progression-achiv_prev-container">
+                    <img class="progression-achiv_prev-img" src="https://media.retroachievements.org/Badge/59401.png"
+                        alt=" ">
+                    <div class="progression_descriptions">
+                        <div class=" condition none" title="achievement type"></div>
+                        <p class="progression-description-text" title="points">10 [47] points</p>
+                        <p class="progression-description-text" title="earned by">5%</p>
+                    </div>
+                </div>
+                <h3 class="progression_achiv-name"><a progression="_blanc"
+                        href="https://retroachievements.org/achievement/56855">Flawless Towers</a></h3>
+
+                <div class="progression-details">
+                    Complete all rooms in both towers without dying, leaving,
+                    or giving up
+                </div>
+            </li>
+            <li class="horizon-list_item progression-achiv" data-type="null" data--points="10" data--true-ratio="47"
+                data--display-order="6" data--num-awarded-hardcore="20" data-achiv-id="56855">
+
+                <div class="progression-achiv_prev-container">
+                    <img class="progression-achiv_prev-img" src="https://media.retroachievements.org/Badge/59401.png"
+                        alt=" ">
+                    <div class="progression_descriptions">
+                        <div class=" condition none" title="achievement type"></div>
+                        <p class="progression-description-text" title="points">10 [47] points</p>
+                        <p class="progression-description-text" title="earned by">5%</p>
+                    </div>
+                </div>
+                <h3 class="progression_achiv-name"><a progression="_blanc"
+                        href="https://retroachievements.org/achievement/56855">Flawless Towers</a></h3>
+
+                <div class="progression-details">
+                    Complete all rooms in both towers without dying, leaving,
+                    or giving up
+                </div>
+            </li>
+            <li class="horizon-list_item progression-achiv" data-type="null" data--points="10" data--true-ratio="47"
+                data--display-order="6" data--num-awarded-hardcore="20" data-achiv-id="56855">
+
+                <div class="progression-achiv_prev-container">
+                    <img class="progression-achiv_prev-img" src="https://media.retroachievements.org/Badge/122515.png"
+                        alt=" ">
+                    <div class="progression_descriptions">
+                        <div class=" condition none" title="achievement type"></div>
+                        <p class="progression-description-text" title="points">10 [47] points</p>
+                        <p class="progression-description-text" title="earned by">5%</p>
+                    </div>
+                </div>
+                <h3 class="progression_achiv-name"><a progression="_blanc"
+                        href="https://retroachievements.org/achievement/56855">Flawless Towers</a></h3>
+
+                <div class="progression-details">
+                    Complete all rooms in both towers without dying, leaving,
+                    or giving up
+                </div>
+            </li>
+            <li class="horizon-list_item progression-achiv" data-type="null" data--points="10" data--true-ratio="47"
+                data--display-order="6" data--num-awarded-hardcore="20" data-achiv-id="56855">
+
+
+                <div class="progression-achiv_prev-container">
+                    <img class="progression-achiv_prev-img" src="https://media.retroachievements.org/Badge/122517.png"
+                        alt=" ">
+
+
+                </div>
+
+                <h3 class="progression_achiv-name">
+
+                    <a class="progression_achiv-link" progression="_blanc"
+                        href="https://retroachievements.org/achievement/56855">Flawless Towers</a>
+
+                </h3>
+
+                <div class="progression-details">
+                    Complete all rooms in both towers without dying, leaving,
+                    or giving up
+                </div>
+                <div class="progression_descriptions">
+                    <p class="progression-description-text" title="points"><i
+                            class="progression_description-icon game-description_icon points-icon"></i>10
+
+                    </p>
+                    <p class="progression-description-text" title="points"><i
+                            class="progression_description-icon game-description_icon retropoints-icon"></i>47
+
+                    </p>
+                    <p class="progression-description-text" title="earned by"><i
+                            class="progression_description-icon game-description_icon trending-icon"></i>5%</p>
+                    <div class="progression_description-icon condition win_condition" title="achievement type">
+                    </div>
+
+                </div>
+            </li>
+
+ -->
+
+
+        </ul>
+        <ul class="horizon_list earned" id="earned_progression-list"></ul>
+    </div>
+    <div class="resizer" id="progression-resizer"></div>
+</section>

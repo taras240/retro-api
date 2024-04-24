@@ -104,10 +104,28 @@ class APIWorker {
       endpoint: this.endpoints.recentlyPlayedGames,
       targetUser: targetUser,
     });
+    // {
+    //   "GameID": 1479,
+    //   "ConsoleID": 7,
+    //   "ConsoleName": "NES/Famicom",
+    //   "Title": "Kirby's Adventure",
+    //   "ImageIcon": "/Images/060148.png",
+    //   "ImageTitle": "/Images/058502.png",
+    //   "ImageIngame": "/Images/058503.png",
+    //   "ImageBoxArt": "/Images/012398.png",
+    //   "LastPlayed": "2024-04-23 16:55:32",
+    //   "AchievementsTotal": 61,
+    //   "NumPossibleAchievements": 61,
+    //   "PossibleScore": 502,
+    //   "NumAchieved": 44,
+    //   "ScoreAchieved": 177,
+    //   "NumAchievedHardcore": 44,
+    //   "ScoreAchievedHardcore": 177
+    // }
     return fetch(url).then((resp) => resp.json()).then(arr => arr.map(game => {
       game.ID = game.GameID;
-      game.Points = game.PossibleScore;
-      game.NumAchievements = game.AchievementsTotal;
+      game.Points = game.ScoreAchievedHardcore + "/" + game.PossibleScore;
+      game.NumAchievements = game.NumAchievedHardcore + "/" + game.AchievementsTotal;
       game.NumLeaderboards = "";
       return game;
     }));;
