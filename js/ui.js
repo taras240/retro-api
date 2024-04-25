@@ -152,7 +152,7 @@ class UI {
       y ? (element.style.top = y) : "";
       width ? (element.style.width = width) : "";
       height ? (element.style.height = height) : "";
-      hidden ? element.classList.add("hidden") : "";
+      hidden ? element.classList.add("hidden", "disposed") : "";
     });
     this.buttons.games.checked = !this.games.section.classList.contains("hidden");
     document.querySelector("#background-animation").style.display =
@@ -3304,6 +3304,44 @@ class Progression {
   addGlowEffectToCard(card) {
     var marker = card.querySelector('.marker');
     let bounds;
+    function addLines(e) {
+      var xPos = e.offsetX;
+      var yPos = e.offsetY;
+
+      var height = card.offsetHeight;
+      var width = card.offsetWidth;
+
+      var lp = Math.abs(Math.floor(100 / width * xPos) - 100);
+      var tp = Math.abs(Math.floor(100 / height * yPos) - 100);
+
+      marker.style.backgroundPosition = `${lp}% ${tp}%`;
+
+      // cards.forEach(function (card) {
+      //   card.addEventListener("mousemove", function (e) {
+      //     var l = e.offsetX;
+      //     var t = e.offsetY;
+      //     var h = card.offsetHeight;
+      //     var w = card.offsetWidth;
+      //     var lp = Math.abs(Math.floor(100 / w * l) - 100);
+      //     var tp = Math.abs(Math.floor(100 / h * t) - 100);
+      //     var bg = `background-position: ${lp}% ${tp}%;`;
+      //     var newStyle = `.card.active:before { ${bg} }`;
+
+      //     cards.forEach(function (card) {
+      //       card.classList.remove("active");
+      //     });
+
+      //     card.classList.add("active");
+      //     style.innerHTML = newStyle;
+      //   });
+
+      //   card.addEventListener("mouseout", function () {
+      //     cards.forEach(function (card) {
+      //       card.classList.remove("active");
+      //     });
+      //   });
+      // });
+    }
     function rotateToMouse(e) {
       const mouseX = e.clientX;
       const mouseY = e.clientY;
@@ -3325,19 +3363,20 @@ class Progression {
       //   )
       // `;
       marker.style.backgroundImage = `
-    radial-gradient(
+      radial-gradient(
       circle at
       ${center.x * 2 + bounds.width / 2}px
       ${center.y * 2 + bounds.height / 2}px,
       rgba(255, 255, 255, 0.15) ,
       #0000000f
-    )`;
+      )`;
     }
+
     card.addEventListener("mouseenter", event => {
       bounds = card.getBoundingClientRect();
       marker.classList.remove("hidden");
       card.addEventListener("mousemove", event => {
-        rotateToMouse(event);
+        addLines(event);
       });
 
     });
@@ -3345,12 +3384,15 @@ class Progression {
       card.style.transform = '';
       card.style.background = '';
       marker.classList.add("hidden")
+      card.removeEventListener("mousemove", event => addLines(event))
     });
   }
   generateCard({ Title, ID, prevSrc, Points, TrueRatio, NumAwardedHardcore, totalPlayers, type, Description, DisplayOrder }) {
     const achivElement = document.createElement("li");
-    achivElement.classList.add("horizon-list_item", "progression-achiv");
+    achivElement.classList.add("horizon-list_item", "progression-achiv", type == "win_condition" ? "trophy" : "f");
+
     achivElement.dataset.id = ID;
+
     achivElement.innerHTML = `
     <div class="progression-achiv_prev-container">
         <img class="progression-achiv_prev-img" src="${prevSrc}"  alt=" ">
@@ -3375,7 +3417,7 @@ class Progression {
             <div class="progression_description-icon condition ${type}" title="achievement type">
             </div>
         </div>    
-        <div class="marker" style="position: absolute;"></div>
+        <div class="marker hidden" style="position: absolute;"></div>
            
     `;// <div class="progression_achiv-number">4 / 6</div>
     return achivElement;

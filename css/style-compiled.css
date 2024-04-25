@@ -4975,6 +4975,10 @@ input:checked + .settings-input,
     min-height: calc(30px + var(--height));
 }
 
+.horizon_list:empty {
+    display: none;
+}
+
 .horizon-list_item {
     position: relative;
     margin-bottom: calc(10px - var(--height));
@@ -5003,7 +5007,35 @@ input:checked + .settings-input,
     /* z-index: 1; */
     transition: .2s;
 
+
 }
+
+/* .progression-achiv:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+
+    background-position: 0% 0%;
+    background-repeat: no-repeat;
+    background-size: 300% 300%;
+    mix-blend-mode: color-dodge;
+    opacity: 0.2;
+
+
+    opacity: 1;
+    animation: none;
+    transition: none;
+    background-image: linear-gradient(115deg,
+            transparent 0%,
+            transparent 25%,
+            rgba(0, 231, 255, 0.7) 45%,
+            rgba(255, 0, 231, 0.7) 55%,
+            transparent 70%,
+            transparent 100%);
+} */
 
 .progression-achiv.removed {
     -webkit-animation: animate-remove .3s ease-out;
@@ -5071,32 +5103,99 @@ input:checked + .settings-input,
 
 }
 
-.marker {
+.earned .progression-achiv.trophy::after {
+    content: "";
     position: absolute;
     width: 100%;
     height: 100%;
-    left: 0;
     top: 0;
-    /* mask-image: url(../assets/img/bg.png); */
-    /* mask-image: url(https://poke-holo.b-cdn.net/foils/swsh12/masks/upscaled/085_foil_holo_reverse_2x.webp); */
-    -webkit-mask-size: contain;
-            mask-size: contain;
-    -webkit-mask-position: bottom;
-            mask-position: bottom;
-    -webkit-mask-repeat: no-repeat;
-            mask-repeat: no-repeat;
-    /* background-color: red; */
-    background-image: radial-gradient(circle at 50% 20%, transparent rgb(244, 65, 165) transparent);
-    /* filter: brightness(1.5) contrast(1.5) saturate(1); */
-    mix-blend-mode: difference;
-    opacity: .5;
-    -webkit-transition: .5s;
-    transition: .5s;
+    left: 0;
+    background-image: url("../assets/img/sparkles.gif");
+    background-position: center;
+    background-size: 200%;
+    mix-blend-mode: color-dodge;
+}
+
+.marker {
+    position: absolute;
+    border-radius: inherit;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    background-position: 120% 120%;
+    background-repeat: no-repeat;
+    background-size: 400% 400%;
+    mix-blend-mode: color-dodge;
+    opacity: 1;
+    -webkit-animation: none;
+            animation: none;
+    -webkit-transition: none;
+    transition: none;
+    background-image: linear-gradient(115deg,
+            transparent 0%,
+            transparent 25%,
+            rgba(0, 231, 255, 0.7) 45%,
+            rgba(255, 0, 231, 0.7) 55%,
+            transparent 70%,
+            transparent 100%);
+
+}
+
+.not-earned .marker {
+    /* opacity: .5; */
+    mix-blend-mode: soft-light;
 }
 
 .marker.hidden {
     visibility: hidden;
-    opacity: 0;
+    background-position: 100% 100%;
+
+
+}
+
+.earned .progression-achiv:last-child .marker.hidden {
+    visibility: visible;
+    opacity: 1;
+    -webkit-animation: glass-animation 30s ease-out infinite;
+            animation: glass-animation 30s ease-out infinite;
+    -webkit-animation-delay: 2s;
+            animation-delay: 2s;
+}
+
+@-webkit-keyframes glass-animation {
+    0% {
+        background-position: 100% 100%;
+    }
+
+    20% {
+        background-position: -20% 0%;
+    }
+
+    100% {
+        background-position: -20% 0%;
+    }
+}
+
+@keyframes glass-animation {
+    0% {
+        background-position: 100% 100%;
+    }
+
+    20% {
+        background-position: -20% 0%;
+    }
+
+    100% {
+        background-position: -20% 0%;
+    }
+}
+
+.marker.hidden {
+    /* visibility: hidden;
+    opacity: 0; */
 }
 
 .horizon-list_item:last-child:hover {
@@ -5258,6 +5357,7 @@ input:checked + .settings-input,
         -ms-grid-row-align: center;
         align-self: center;
     padding: 10px;
+
 }
 
 .progression-description-text {
