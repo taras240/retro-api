@@ -51,7 +51,7 @@ async function updateAchievements() {
       UI.updateAchievementsSection({ earnedAchievementIDs: earnedAchievements, widget: ui.target });
       ui.target.delayedRemove();
       updateAwards();
-      ui.progression.fillCards();
+      ui.progression.updateEarnedCards({ gameIDArray: earnedAchievements });
       ui.statusPanel.updateProgress({ earnedAchievementIDs: earnedAchievements });
     }
   } catch (error) {

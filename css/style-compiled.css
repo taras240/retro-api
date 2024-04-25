@@ -4933,9 +4933,9 @@ input:checked + .settings-input,
 .progression_section.section {
     left: 30%;
     top: 20px;
-    min-width: 510px;
+    min-width: 260px;
     width: 550px;
-    min-height: 50px;
+    min-height: 40px;
     /* background: transparent !important; */
 }
 
@@ -4953,7 +4953,7 @@ input:checked + .settings-input,
             justify-content: space-evenly;
     -ms-flex-wrap: wrap;
         flex-wrap: wrap;
-    padding-top: 20px;
+    padding-top: 15px;
     position: relative;
 }
 
@@ -4972,7 +4972,7 @@ input:checked + .settings-input,
     -ms-flex-negative: 1;
         flex-shrink: 1;
     min-width: 250px;
-    min-height: calc(50px + var(--height));
+    min-height: calc(30px + var(--height));
 }
 
 .horizon-list_item {
@@ -4996,12 +4996,107 @@ input:checked + .settings-input,
     display: none;
     -ms-grid-rows: auto auto 1fr auto;
     grid-template-rows: auto auto 1fr auto;
-    border-radius: 5px;
+    border-radius: 10px;
+    overflow: hidden;
     -webkit-transition: .2s;
     transition: .2s;
     /* z-index: 1; */
-    overflow: hidden;
     transition: .2s;
+
+}
+
+.progression-achiv.removed {
+    -webkit-animation: animate-remove .3s ease-out;
+            animation: animate-remove .3s ease-out;
+}
+
+.progression-achiv.added {
+    -webkit-animation: animate-add .3s ease-out;
+            animation: animate-add .3s ease-out;
+}
+
+@-webkit-keyframes animate-remove {
+    0% {
+        -webkit-transform: translate(0, 0) rotateZ(0);
+                transform: translate(0, 0) rotateZ(0);
+    }
+
+    100% {
+        -webkit-transform: translate(-120%, 5%) rotateZ(-5deg);
+                transform: translate(-120%, 5%) rotateZ(-5deg);
+        opacity: 0;
+    }
+}
+
+@keyframes animate-remove {
+    0% {
+        -webkit-transform: translate(0, 0) rotateZ(0);
+                transform: translate(0, 0) rotateZ(0);
+    }
+
+    100% {
+        -webkit-transform: translate(-120%, 5%) rotateZ(-5deg);
+                transform: translate(-120%, 5%) rotateZ(-5deg);
+        opacity: 0;
+    }
+}
+
+@-webkit-keyframes animate-add {
+    0% {
+        -webkit-transform: translate(120%, 5%) rotateZ(-5deg);
+                transform: translate(120%, 5%) rotateZ(-5deg);
+        opacity: 0;
+    }
+
+    100% {
+        -webkit-transform: translate(0, 0) rotateZ(0);
+                transform: translate(0, 0) rotateZ(0);
+    }
+
+
+}
+
+@keyframes animate-add {
+    0% {
+        -webkit-transform: translate(120%, 5%) rotateZ(-5deg);
+                transform: translate(120%, 5%) rotateZ(-5deg);
+        opacity: 0;
+    }
+
+    100% {
+        -webkit-transform: translate(0, 0) rotateZ(0);
+                transform: translate(0, 0) rotateZ(0);
+    }
+
+
+}
+
+.marker {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    /* mask-image: url(../assets/img/bg.png); */
+    /* mask-image: url(https://poke-holo.b-cdn.net/foils/swsh12/masks/upscaled/085_foil_holo_reverse_2x.webp); */
+    -webkit-mask-size: contain;
+            mask-size: contain;
+    -webkit-mask-position: bottom;
+            mask-position: bottom;
+    -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+    /* background-color: red; */
+    background-image: radial-gradient(circle at 50% 20%, transparent rgb(244, 65, 165) transparent);
+    /* filter: brightness(1.5) contrast(1.5) saturate(1); */
+    mix-blend-mode: difference;
+    opacity: .5;
+    -webkit-transition: .5s;
+    transition: .5s;
+}
+
+.marker.hidden {
+    visibility: hidden;
+    opacity: 0;
 }
 
 .horizon-list_item:last-child:hover {
@@ -5041,8 +5136,7 @@ input:checked + .settings-input,
     position: relative;
     font-size: 1.3rem;
     text-align: center;
-    background: -webkit-gradient(linear, left top, right top, from(#03a9f4), color-stop(#f441a5), color-stop(#ffeb3b), to(#03a9f4));
-    background: linear-gradient(to right, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
+    background: #03a9f4;
     background-size: 400%;
 }
 
@@ -5051,9 +5145,18 @@ input:checked + .settings-input,
     color: black;
 }
 
+.earned .progression_achiv-name {
+
+    background: -webkit-gradient(linear, left top, right top, from(#03a9f4), color-stop(#f441a5), color-stop(#ffeb3b), to(#03a9f4));
+
+    background: linear-gradient(to right, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
+    background-size: 400%;
+
+}
+
 .earned .progression-achiv:last-child .progression_achiv-name {
-    -webkit-animation: animate 8s linear infinite;
-            animation: animate 8s linear infinite;
+    -webkit-animation: animate 8s linear forwards infinite;
+            animation: animate 8s linear forwards infinite;
 }
 
 @-webkit-keyframes animate {
@@ -5081,7 +5184,6 @@ input:checked + .settings-input,
     -ms-grid-column-align: center;
         justify-self: center;
     width: 100%;
-    /* border-radius: 15px 15px 0 0; */
     overflow: hidden;
     -webkit-box-shadow: 0 0 5px 5px black inset;
             box-shadow: 0 0 5px 5px black inset;
@@ -5386,6 +5488,10 @@ a:hover {
           box-shadow: 0 0 5px 2px black;
   -webkit-transition: 0.2s ease-out;
   transition: 0.2s ease-out;
+}
+
+.section.disposed {
+  display: none;
 }
 
 .section.dragable {

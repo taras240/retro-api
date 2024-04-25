@@ -142,6 +142,10 @@ a:hover {
   transition: 0.2s ease-out;
 }
 
+.section.disposed {
+  display: none;
+}
+
 .section.dragable {
   z-index: 101;
   transition: none !important;

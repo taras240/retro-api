@@ -677,11 +677,23 @@ class UI {
   }
 
   static switchSectionVisibility({ section }) {
-    section.classList.toggle("hidden");
-    config.setNewPosition({
-      id: section.id,
-      hidden: section.classList.contains("hidden"),
-    });
+    if (section.classList.contains("hidden")) {
+      section.classList.remove("disposed");
+      setTimeout(() => section.classList.remove("hidden"), 100);
+      config.setNewPosition({
+        id: section.id,
+        hidden: false,
+      })
+    }
+    else {
+      section.classList.add("hidden")
+      setTimeout(() => section.classList.add("disposed"), 300);
+      config.setNewPosition({
+        id: section.id,
+        hidden: true,
+      })
+    }
+
   }
 }
 
@@ -3281,16 +3293,65 @@ class Progression {
     Object.values(ui.ACHIEVEMENTS).filter(achiv => filterBy.progression(achiv)).sort((a, b) => -1 * sortBy.default(a, b)).forEach(achiv => {
       if (achiv.type === "progression" || achiv.type === "win_condition") {
         const achivElement = this.generateCard(achiv);
+        this.addGlowEffectToCard(achivElement);
         achiv.isHardcoreEarned ? this.earnedList.prepend(achivElement) :
           this.notEarnedList.appendChild(achivElement);
       }
     })
+    // const lastCard = this.earnedList.lastChild;
+    // lastCard ? this.addGlowEffectToCard(lastCard) : "";
   }
-  generateCard({ Title, prevSrc, Points, TrueRatio, NumAwardedHardcore, totalPlayers, type, Description, DisplayOrder }) {
+  addGlowEffectToCard(card) {
+    var marker = card.querySelector('.marker');
+    let bounds;
+    function rotateToMouse(e) {
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+      const leftX = mouseX - bounds.x;
+      const topY = mouseY - bounds.y;
+      const center = {
+        x: leftX - bounds.width / 2,
+        y: topY - bounds.height / 2
+      }
+      const distance = Math.sqrt(center.x ** 2 + center.y ** 2);
+      // scale3d(1.07, 1.07, 1.07)
+      // card.style.transform = `
+
+      //   rotate3d(
+      //     ${center.y / 100},
+      //     ${-center.x / 100},
+      //     0,
+      //     ${Math.log(distance) * 2}deg
+      //   )
+      // `;
+      marker.style.backgroundImage = `
+    radial-gradient(
+      circle at
+      ${center.x * 2 + bounds.width / 2}px
+      ${center.y * 2 + bounds.height / 2}px,
+      rgba(255, 255, 255, 0.15) ,
+      #0000000f
+    )`;
+    }
+    card.addEventListener("mouseenter", event => {
+      bounds = card.getBoundingClientRect();
+      marker.classList.remove("hidden");
+      card.addEventListener("mousemove", event => {
+        rotateToMouse(event);
+      });
+
+    });
+    card.addEventListener("mouseleave", event => {
+      card.style.transform = '';
+      card.style.background = '';
+      marker.classList.add("hidden")
+    });
+  }
+  generateCard({ Title, ID, prevSrc, Points, TrueRatio, NumAwardedHardcore, totalPlayers, type, Description, DisplayOrder }) {
     const achivElement = document.createElement("li");
-    achivElement.classList.add("horizon-list_item", "progression-achiv")
+    achivElement.classList.add("horizon-list_item", "progression-achiv");
+    achivElement.dataset.id = ID;
     achivElement.innerHTML = `
-    
     <div class="progression-achiv_prev-container">
         <img class="progression-achiv_prev-img" src="${prevSrc}"  alt=" ">
     </div>
@@ -3313,9 +3374,25 @@ class Progression {
                     class="progression_description-icon game-description_icon trending-icon"></i>${~~(NumAwardedHardcore / totalPlayers * 100)}%</p>
             <div class="progression_description-icon condition ${type}" title="achievement type">
             </div>
-        </div>               
+        </div>    
+        <div class="marker" style="position: absolute;"></div>
+           
     `;// <div class="progression_achiv-number">4 / 6</div>
     return achivElement;
+  }
+  updateEarnedCards({ gameIDArray }) {
+    gameIDArray?.forEach(gameID => {
+      this.notEarnedList.querySelectorAll(".progression-achiv").forEach(element => {
+        if (element.dataset.id == gameID) {
+          element.classList.add("removed");
+          setTimeout(() => {
+            element.classList.remove("removed");
+            this.earnedList.appendChild(element);
+            element.classList.add("added");
+          }, 500);
+        }
+      })
+    })
   }
   close() {
     ui.buttons.progression.click();
