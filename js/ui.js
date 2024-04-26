@@ -3290,14 +3290,18 @@ class Progression {
   fillCards() {
     this.notEarnedList.innerHTML = '';
     this.earnedList.innerHTML = '';
-    Object.values(ui.ACHIEVEMENTS).filter(achiv => filterBy.progression(achiv)).sort((a, b) => -1 * sortBy.default(a, b)).forEach(achiv => {
-      if (achiv.type === "progression" || achiv.type === "win_condition") {
-        const achivElement = this.generateCard(achiv);
-        this.addGlowEffectToCard(achivElement);
-        achiv.isHardcoreEarned ? this.earnedList.prepend(achivElement) :
-          this.notEarnedList.appendChild(achivElement);
-      }
-    })
+    Object.values(ui.ACHIEVEMENTS)
+      .filter(achiv => filterBy.progression(achiv))
+      .sort((a, b) => -1 * sortBy.id(a, b))
+      .sort((a, b) => -1 * sortBy.default(a, b))
+      .forEach(achiv => {
+        if (achiv.type === "progression" || achiv.type === "win_condition") {
+          const achivElement = this.generateCard(achiv);
+          this.addGlowEffectToCard(achivElement);
+          achiv.isHardcoreEarned ? this.earnedList.prepend(achivElement) :
+            this.notEarnedList.appendChild(achivElement);
+        }
+      })
     // const lastCard = this.earnedList.lastChild;
     // lastCard ? this.addGlowEffectToCard(lastCard) : "";
   }
@@ -3462,7 +3466,7 @@ const sortBy = {
 
   default: (a, b) => a.DisplayOrder - b.DisplayOrder,
 
-  id: (a, b) => a.achivId - b.achivId,
+  id: (a, b) => a.ID - b.ID,
 
   disable: (a, b) => 0,
 };
