@@ -42,48 +42,43 @@
 .progression-achiv {
     display: none;
     position: relative;
-
+    padding: 8px;
     /* background: linear-gradient(to right bottom, var(--secondary-color), var(--main-color), var(--secondary-color)); */
     background-color: var(--secondary-color);
     width: 250px;
     height: var(--height);
     display: none;
-    grid-template-rows: auto auto 1fr auto;
+
     border-radius: 10px;
     overflow: hidden;
     transition: .2s;
     /* z-index: 1; */
     transition: .2s;
+}
 
+
+.not-earned .progression-achiv:active {
+    transform: translate(-80%, 10%) rotateZ(-20deg);
+}
+
+.earned .progression-achiv:active {
+    transform: translate(80%, 10%) rotateZ(20deg);
+}
+
+.horizon_list li:nth-last-child(-n+3) {
+    display: grid;
+}
+
+.progression-achiv_container {
+    /* border: 2px solid black; */
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: var(--main-color);
 
 }
 
-/* .progression-achiv:before {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    top: 0;
-
-    background-position: 0% 0%;
-    background-repeat: no-repeat;
-    background-size: 300% 300%;
-    mix-blend-mode: color-dodge;
-    opacity: 0.2;
-
-
-    opacity: 1;
-    animation: none;
-    transition: none;
-    background-image: linear-gradient(115deg,
-            transparent 0%,
-            transparent 25%,
-            rgba(0, 231, 255, 0.7) 45%,
-            rgba(255, 0, 231, 0.7) 55%,
-            transparent 70%,
-            transparent 100%);
-} */
 
 .progression-achiv.removed {
     animation: animate-remove .3s ease-out;
@@ -128,6 +123,148 @@
     background-position: center;
     background-size: 200%;
     mix-blend-mode: color-dodge;
+}
+
+.progression_descriptions {
+    /* position: absolute; */
+    flex-shrink: 0;
+    width: 100%;
+    bottom: 0;
+    padding: 2px 0;
+    display: flex;
+    transform: translateY(00%);
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 10px;
+    background-color: rgba(0, 0, 0, 0.51);
+    color: white;
+    gap: 5px;
+    border-radius: 10px 10px 0 0;
+}
+
+.progression_description-icon {
+    padding-left: 1.2rem;
+    mask-position: center;
+    height: 100%;
+    aspect-ratio: 1;
+    background-color: white;
+}
+
+.retropoints-icon {
+    mask-image: url(../assets/img/bolt.svg);
+}
+
+.trending-icon {
+    mask-image: url(../assets/img/trending.svg);
+}
+
+
+.progression-achiv_prev-container {
+    flex-shrink: 1;
+    flex-grow: 0;
+    position: relative;
+    justify-self: center;
+    width: 100%;
+    overflow: hidden;
+    box-shadow: 0 0 5px 5px black inset;
+
+}
+
+.progression-achiv_prev-img {
+    width: 100%;
+    object-fit: cover;
+    image-rendering: pixelated;
+
+}
+
+.not-earned .progression-achiv_prev-img {
+    filter: grayscale(1);
+}
+
+
+.progression_achiv-name {
+    margin: 0 -10px;
+    color: black;
+    font-weight: 800;
+    padding: 5px 10px;
+    position: relative;
+    font-size: 1.3rem;
+    text-align: center;
+    background: #03a9f4;
+    background-size: 400%;
+    box-shadow: 0 0px 3px 1px black;
+}
+
+.progression_achiv-link:hover {
+    background-color: transparent;
+    color: black;
+}
+
+.earned .progression_achiv-name {
+
+    background: linear-gradient(to right, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
+    background-size: 400%;
+
+}
+
+.earned .progression-achiv:last-child .progression_achiv-name {
+    animation: animate 8s linear forwards infinite;
+}
+
+@keyframes animate {
+    0% {
+        background-position: 0%;
+    }
+
+    100% {
+        background-position: 400%;
+    }
+}
+
+
+
+
+.progression-details {
+    flex-shrink: 0;
+    flex-grow: 1;
+    object-fit: contain;
+    font-size: 1.1rem;
+    justify-self: center;
+    text-align: center;
+    align-self: center;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+}
+
+
+
+.progression-description-text {
+    margin-left: 5px;
+}
+
+.progression_achiv-number {
+    position: absolute;
+    bottom: 5px;
+    right: 0;
+    justify-self: end;
+    background-color: var(--secondary-color);
+    padding: 2px 10px;
+    font-size: 1.1rem;
+    /* transform: rotateZ(-45deg); */
+}
+
+.progression_achiv-number::before {
+    /* content: ""; */
+    position: absolute;
+    width: var(--height);
+    height: 1px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--font-color);
+    z-index: -1;
 }
 
 .marker {
@@ -188,203 +325,3 @@
         background-position: -20% 0%;
     }
 }
-
-.marker.hidden {
-    /* visibility: hidden;
-    opacity: 0; */
-}
-
-.horizon-list_item:last-child:hover {
-    /* margin-bottom: calc(150px - var(--height)); */
-
-
-}
-
-.not-earned .progression-achiv:active {
-    transform: translate(-80%, 10%) rotateZ(-20deg);
-}
-
-.earned .progression-achiv:active {
-    transform: translate(80%, 10%) rotateZ(20deg);
-}
-
-.horizon_list li:nth-last-child(-n+3) {
-    display: grid;
-}
-
-/* .progression-achiv::after {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: inherit;
-    background: linear-gradient(to right bottom, transparent, rgba(255, 255, 255, 0.05), transparent);
-} */
-
-
-
-.progression_achiv-name {
-    color: black;
-    font-weight: 800;
-    padding: 5px 10px;
-    position: relative;
-    font-size: 1.3rem;
-    text-align: center;
-    background: #03a9f4;
-    background-size: 400%;
-}
-
-.progression_achiv-link:hover {
-    background-color: transparent;
-    color: black;
-}
-
-.earned .progression_achiv-name {
-
-    background: linear-gradient(to right, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
-    background-size: 400%;
-
-}
-
-.earned .progression-achiv:last-child .progression_achiv-name {
-    animation: animate 8s linear forwards infinite;
-}
-
-@keyframes animate {
-    0% {
-        background-position: 0%;
-    }
-
-    100% {
-        background-position: 400%;
-    }
-}
-
-.progression-achiv_prev-container {
-    position: relative;
-    justify-self: center;
-    width: 100%;
-    overflow: hidden;
-    box-shadow: 0 0 5px 5px black inset;
-
-}
-
-.progression-achiv_prev-img {
-    width: 100%;
-    image-rendering: pixelated;
-    vertical-align: middle;
-
-}
-
-.not-earned .progression-achiv_prev-img {
-    filter: grayscale(1);
-}
-
-.progression_descriptions {
-    /* position: absolute; */
-    width: 100%;
-    bottom: 0;
-    padding: 2px 0;
-    display: flex;
-    transform: translateY(00%);
-    flex-direction: row;
-    justify-content: space-evenly;
-    align-items: center;
-    gap: 10px;
-    background-color: rgba(0, 0, 0, 0.51);
-    color: white;
-    gap: 5px;
-}
-
-.progression_description-icon {
-    padding-left: 1.2rem;
-    mask-position: center;
-    height: 100%;
-    aspect-ratio: 1;
-    background-color: white;
-}
-
-.retropoints-icon {
-    mask-image: url(../assets/img/bolt.svg);
-}
-
-.trending-icon {
-    mask-image: url(../assets/img/trending.svg);
-}
-
-.progression-details {
-    font-size: 1.1rem;
-    justify-self: center;
-    text-align: center;
-    align-self: center;
-    padding: 10px;
-
-}
-
-
-
-.progression-description-text {
-    margin-left: 5px;
-}
-
-.progression_achiv-number {
-    position: absolute;
-    bottom: 5px;
-    right: 0;
-    justify-self: end;
-    background-color: var(--secondary-color);
-    padding: 2px 10px;
-    font-size: 1.1rem;
-    /* transform: rotateZ(-45deg); */
-}
-
-.progression_achiv-number::before {
-    /* content: ""; */
-    position: absolute;
-    width: var(--height);
-    height: 1px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: var(--font-color);
-    z-index: -1;
-}
-
-/* 
-a {
-    position: absolute;
-    background: linear-gradient(90deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
-
-    border-radius: 30px;
-    z-index: 1;
-
-}
-
-a:hover {
-
-
-   
-
-    a:before {
-        content: '';
-        position: absolute;
-        top: -5px;
-        left: -5px;
-        right: -5px;
-        bottom: -5px;
-        z-index: -1;
-        background: linear-gradient(90deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
-        background-size: 400%;
-        border-radius: 40px;
-        opacity: 0;
-        transition: .5s;
-        filter: blur(20px);
-        opacity: 1;
-        animation: animate 8s linear infinite;
-    }
-
-    a:hover:before {
-        filter: blur(20px);
-        opacity: 1;
-        animation: animate 8s linear infinite;
-    } */

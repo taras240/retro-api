@@ -663,12 +663,12 @@ class UI {
   }
 
   static addDraggingEventForElements(container) {
-    const dragAndDropItems = container;
-    var list = document.getElementById("myList");
-    new Sortable(dragAndDropItems, {
-      animation: 100,
-      chosenClass: "dragged",
-    });
+    // const dragAndDropItems = container;
+    // var list = document.getElementById("myList");
+    // new Sortable(dragAndDropItems, {
+    //   animation: 100,
+    //   chosenClass: "dragged",
+    // });
     // , {
     //   animation: 100,
     //   // chosenClass: "draggable",
@@ -3398,15 +3398,7 @@ class Progression {
     achivElement.dataset.id = ID;
 
     achivElement.innerHTML = `
-    <div class="progression-achiv_prev-container">
-        <img class="progression-achiv_prev-img" src="${prevSrc}"  alt=" ">
-    </div>
-    <h3 class="progression_achiv-name">
-        <a class="progression_achiv-link" progression="_blanc" href="https://retroachievements.org/achievement/56855">${Title}</a>
-    </h3>
-        <div class="progression-details">
-            ${Description}
-        </div>
+    <div class="progression-achiv_container">
         <div class="progression_descriptions">
             <p class="progression-description-text" title="points"><i
                     class="progression_description-icon game-description_icon points-icon"></i>${Points}
@@ -3419,11 +3411,21 @@ class Progression {
             <p class="progression-description-text" title="earned by"><i
                     class="progression_description-icon game-description_icon trending-icon"></i>${~~(NumAwardedHardcore / totalPlayers * 100)}%</p>
             <div class="progression_description-icon condition ${type}" title="achievement type">
-            </div>
-        </div>    
-        <div class="marker hidden" style="position: absolute;"></div>
+        </div>
+        </div> 
+        <div class="progression-achiv_prev-container">
+            <img class="progression-achiv_prev-img" src="${prevSrc}"  alt=" ">
+        </div>
+        <h3 class="progression_achiv-name">
+            <a class="progression_achiv-link" progression="_blanc" href="https://retroachievements.org/achievement/56855">${Title}</a>
+        </h3>
+        <div class="progression-details">
+            ${Description}
+        </div>
            
-    `;// <div class="progression_achiv-number">4 / 6</div>
+        <div class="marker hidden" style="position: absolute;"></div>
+      </div>       
+      `;// <div class="progression_achiv-number">4 / 6</div>
     return achivElement;
   }
   updateEarnedCards({ gameIDArray }) {
