@@ -148,4 +148,10 @@ class APIWorker {
     });
     return fetch(url).then((resp) => resp.json());
   }
+  doTestEndpoint({ endpoint }) {
+    let url = this.getUrl({
+      endpoint: endpoint,
+    });
+    return fetch(url).then((resp) => resp.json()).then(obj => console.log(obj));
+  }
 }

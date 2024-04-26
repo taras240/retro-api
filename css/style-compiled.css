@@ -4564,6 +4564,13 @@ input:checked + .settings-input,
     padding: 0 15px;
 }
 
+.platform-preview {
+    width: 24px;
+    aspect-ratio: 1;
+    padding: 0;
+    margin-right: 5px;
+}
+
 .platform-name {
     /* line-height: var(--header-height); */
     font-weight: 600;
@@ -4790,7 +4797,6 @@ input:checked + .settings-input,
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    gap: 20px;
     -webkit-box-pack: justify;
         -ms-flex-pack: justify;
             justify-content: space-between;

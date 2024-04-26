@@ -1,8 +1,8 @@
-const http = require('http');
+const https = require('https');
 const fs = require('fs');
 const { log } = require('console');
 
-const imageUrlBase = 'http://media.retroachievements.org';
+const imageUrlBase = 'https://media.retroachievements.org';
 
 
 function readFile(filePath) {
@@ -16,14 +16,15 @@ function readFile(filePath) {
         });
     });
 }
+let count = 0;
 function downloadFile({ imageUrl, filePath }) {
-    http.get(imageUrl, function (response) {
+    https.get(imageUrl, function (response) {
         const writer = fs.createWriteStream(filePath);
 
         response.pipe(writer);
 
         writer.on('finish', function () {
-            log(filePath, ': Image downloaded successfully.');
+            log(`${++count}. `, filePath, ': Image downloaded successfully.');
         });
 
     }).on('error', function (error) {
@@ -33,15 +34,17 @@ function downloadFile({ imageUrl, filePath }) {
 function isExist(filePath) {
     return fs.existsSync(filePath);
 }
+
 function doImageСache({ gamesJsonPath }) {
     const cachePath = './assets/imgCache/'
     //read json file with game-objects
     readFile(gamesJsonPath).then(arr => {
         //download image from each game-object
+        const delayInMiliseconds = 500;
+        let delayMult = 0;
         arr.forEach((game, index) => {
             //set time delay between downloads
-            const delayInMiliseconds = 500;
-            let delayMult = 0;
+
             setTimeout(() => {
                 // image name
                 const imgName = game.ImageIcon.slice(game.ImageIcon.lastIndexOf("/") + 1);
@@ -50,7 +53,6 @@ function doImageСache({ gamesJsonPath }) {
                 const imageUrl = `${imageUrlBase}${game.ImageIcon}`;
                 // check for image exist and download 
                 if (!isExist(filePath) && !isExist(webpFilePath)) {
-                    log(`${cachePath}[${imgName}] downloading`);
                     setTimeout(() => {
                         downloadFile({ imageUrl: imageUrl, filePath: filePath });
                     }, (++delayMult) * delayInMiliseconds);
@@ -64,4 +66,34 @@ function doImageСache({ gamesJsonPath }) {
 
     })
 }
-doImageСache({ gamesJsonPath: './json/games/7.json' });
+function downloadConsolesPreview({ consolesJsonPath }) {
+    const cachePath = './assets/imgCache/'
+    //read json file with game-objects
+    readFile(consolesJsonPath).then(arr => {
+        //download image from each game-object
+        const delayInMiliseconds = 500;
+        let delayMult = 0;
+        arr.forEach((console, index) => {
+            //set time delay between downloads
+            setTimeout(() => {
+                // image name
+                const imgName = console.ID + ".png";
+                const filePath = cachePath + imgName;
+                const imageUrl = console.IconURL;
+                // check for image exist and download 
+                if (!isExist(filePath)) {
+                    setTimeout(() => {
+                        downloadFile({ imageUrl: imageUrl, filePath: filePath });
+                    }, (++delayMult) * delayInMiliseconds);
+                }
+                else {
+                    log(`${cachePath}[${imgName}] exist`);
+                }
+            });
+
+        })
+
+    })
+}
+downloadConsolesPreview({ consolesJsonPath: './json/games/consoles.json' });
+// doImageСache({ gamesJsonPath: './json/games/41.json' });

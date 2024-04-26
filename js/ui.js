@@ -2978,12 +2978,21 @@ class Games {
     "1": "Genesis/Mega Drive",
     "2": "Nintendo 64",
     "3": "SNES/Super Famicom",
+    "4": "Game Boy",
+    "5": "Game Boy Advance",
+    "6": "Game Boy Color",
     "7": "NES/Famicom",
+    "8": "PC Engine/TurboGrafx-16",
+    "12": "PlayStation",
+    "21": "PlayStation 2",
+    "41": "PlayStation Portable",
   }
+  plaformsInfo = {};
   GAMES = {};
   BATCH_SIZE = 10;
   MAX_GAMES_IN_LIST = 70;
   constructor() {
+    this.loadPlatformInfo();
     this.initializeElements();
 
     this.addEvents();
@@ -3019,6 +3028,15 @@ class Games {
   async loadGamesArray() {
     for (const platformCode of Object.getOwnPropertyNames(this.platformCodes)) {
       await this.getGames({ consoleCode: platformCode });
+    }
+  }
+  async loadPlatformInfo() {
+    try {
+      const responce = await fetch(`./json/games/consoles.json`);
+      const platformsData = await responce.json();
+      this.plaformsInfo = platformsData;
+    } catch (error) {
+      console.error("Error fetching games:", error);
     }
   }
   isEndOfListVisible({ list }) {
@@ -3198,12 +3216,16 @@ class Games {
     let platformListItem = document.createElement("li");
     platformListItem.classList.add("platforms-list_item");
     platformListItem.dataset.platformID = platformID;
+    const platformImgElement = platformID != 0 ?
+      `<img class="platform-preview" src="./assets/imgCache/${platformID}.webp">` :
+      "";
     platformListItem.innerHTML = `    
-    <div class="platforms-list_header-container">
-      <h2 class="platform-name " onclick="ui.games.toggleGamesListVisibility(this)">
+    <div class="platforms-list_header-container" onclick="ui.games.toggleGamesListVisibility(this)" >
+      ${platformImgElement}
+      <h2 class="platform-name "">
         ${platformName} ${platformID != 0 ? '[' + this.GAMES[platformID]?.length + ']' : ""}
       </h2> 
-      <input class="search-game_text-input games-searchbar" placeholder="search" type="search" value="" /> 
+      <input class="search-game_text-input games-searchbar" onclick="event.stopPropagation();" placeholder="search" type="search" value="" /> 
       
       <button class="expand-games_button" onclick="ui.games.toggleGamesListVisibility(this)"> </button>
     </div>  
