@@ -224,6 +224,43 @@
     color: var(--main-color);
 }
 
+.game-title_suffix {
+    display: inline-block;
+    font-size: .8rem;
+    padding: 0 2px;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    margin: 2px;
+    text-wrap: nowrap;
+    background-color: chartreuse;
+    color: black;
+    font-weight: 600;
+}
+
+.game-title_hack {
+    background-color: crimson;
+}
+
+.game-title_unlicensed {
+    background-color: gold;
+}
+
+.game-title_homebrew {
+    background-color: cyan;
+}
+
+.game-title_prototype {
+    background-color: white;
+}
+
+.game-title_demo {
+    background-color: chocolate;
+}
+
+/* .game-description_button:hover .game-title_suffix {
+    border-color: var(--secondary-color);
+} */
+
 .game-description_container {
     display: flex;
     justify-content: space-between;
@@ -426,6 +463,11 @@ input:disabled+.game-filters_checkbox {
     font-size: 1.2rem;
     z-index: 3;
     transition: .2s;
+}
+
+.games_search-input::placeholder {
+    color: var(--font-color);
+    opacity: 0.6;
 }
 
 .games_search-input:focus,

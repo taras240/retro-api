@@ -3270,7 +3270,24 @@ class Games {
       if (!(consoleCode == 0 || consoleCode == "all")) {
         const gamesResponse = await fetch(`./json/games/${consoleCode}.json`);
         const gamesJson = await gamesResponse.json();
-        this.GAMES[consoleCode] = gamesJson; // Зберігаємо отримані дані у властивості games
+
+        const ignoredWords = ["~UNLICENSED~", "~DEMO~", "~HOMEBREW~", "~HACK~", "~PROTOTYPE~", ".HACK//", "~TEST KIT~"];
+
+        this.GAMES[consoleCode] = gamesJson.map(game => {
+          let title = game.Title;
+          const sufixes = ignoredWords.reduce((sufixes, word) => {
+            const reg = new RegExp(word, "gi");
+            if (reg.test(game.Title)) {
+              title = title.replace(reg, "");
+              sufixes.push(word.replaceAll(new RegExp("[^A-Za-z]", "gi"), ""));
+
+            }
+            return sufixes;
+          }, [])
+          game.sufixes = sufixes;
+          game.FixedTitle = title.trim();
+          return game;
+        })
       }
 
     } catch (error) {
@@ -3333,18 +3350,26 @@ class Games {
       this.platformFiltersList.appendChild(filterItem);
     })
   }
+  generateSufixes(sufixes) {
+    return sufixes?.reduce((acc, sufix) => acc += `<i class="game-title_suffix game-title_${sufix.toLowerCase()}">${sufix}</i>`, "")
+  }
   generateGameElement(game) {
-    let { Title, ID, GameID, ConsoleName, ImageIcon, Points, PossibleScore, ForumTopicID, NumAchievements, AchievementsTotal, NumLeaderboards } = game;
+    let { Title, FixedTitle, ID, GameID, sufixes, ConsoleName, ImageIcon, Points, PossibleScore, ForumTopicID, NumAchievements, AchievementsTotal, NumLeaderboards } = game;
     const imgName = game.ImageIcon.slice(ImageIcon.lastIndexOf("/") + 1, ImageIcon.lastIndexOf(".") + 1) + "webp";
     const gameElement = document.createElement("li");
-
+    const sufixesElements = this.generateSufixes(sufixes);
     gameElement.dataset.gameID = ID;
     gameElement.classList.add("platform_game-item");
     gameElement.innerHTML = `   
       <div class="game-preview_container">
           <img src="./assets/imgCache/${imgName}"  onerror="this.src='https://media.retroachievements.org${ImageIcon}';" alt="" class="game-preview_image">
       </div>
-      <h3 class="game-description_title"><button title="open game" class="game-description_button" onclick="config.gameID = ${ID}; getAchievements()">${Title}</button></h3>
+      <h3 class="game-description_title"><button title="open game" class="game-description_button" 
+        onclick="config.gameID = ${ID}; getAchievements()">${FixedTitle}
+        ${sufixesElements ?? ""}
+        <i class="game-title_suffix game-title_platform">${ConsoleName}</i>
+       
+        </button></h3>
       <div class="game-description_container">
         <div class="game-description_block">
             <p title="achievements count"  class="game-description  achievements-count">
@@ -3654,16 +3679,16 @@ const sortBy = {
   achievementsCount: (a, b) => parseInt(a.NumAchievements) - parseInt(b.NumAchievements),
 
   title: (a, b) => {
-    const ignoredWords = ["~UNLICENSED~", "~DEMO~", "~HOMEBREW~", "~HACK~", "~PROTOTYPE~", ".HACK//", "~TEST", "KIT~"];
+    // const ignoredWords = ["~UNLICENSED~", "~DEMO~", "~HOMEBREW~", "~HACK~", "~PROTOTYPE~", ".HACK//", "~TEST", "KIT~"];
 
-    function removeIgnoredWords(title) {
-      const regex = new RegExp(`(${ignoredWords.join('|')})`, 'gi');
-      let fixedTitle = title.replace(regex, '').trim();
-      return fixedTitle;
-    }
+    // function removeIgnoredWords(title) {
+    //   const regex = new RegExp(`(${ignoredWords.join('|')})`, 'gi');
+    //   let fixedTitle = title.replace(regex, '').trim();
+    //   return fixedTitle;
+    // }
 
-    let nameA = removeIgnoredWords(a.Title.toUpperCase());
-    let nameB = removeIgnoredWords(b.Title.toUpperCase());
+    let nameA = a.FixedTitle.toUpperCase();
+    let nameB = b.FixedTitle.toUpperCase();
 
     if (nameA < nameB) {
       return -1;

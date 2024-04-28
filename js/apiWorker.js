@@ -129,6 +129,20 @@ class APIWorker {
       game.NumAchievements = game.NumAchievedHardcore + "/" + game.AchievementsTotal;
       game.NumLeaderboards = "";
       game.DateEarnedHardcore = game.LastPlayed;
+      let title = game.Title;
+      const ignoredWords = ["~UNLICENSED~", "~DEMO~", "~HOMEBREW~", "~HACK~", "~PROTOTYPE~", ".HACK//", "~TEST KIT~"];
+
+      const sufixes = ignoredWords.reduce((sufixes, word) => {
+        const reg = new RegExp(word, "gi");
+        if (reg.test(game.Title)) {
+          title = title.replace(reg, "");
+          sufixes.push(word.replaceAll(new RegExp("[^A-Za-z]", "gi"), ""));
+
+        }
+        return sufixes;
+      }, [])
+      game.sufixes = sufixes;
+      game.FixedTitle = title.trim();
       return game;
     }));;
   }
