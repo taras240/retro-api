@@ -5005,16 +5005,16 @@ input:checked+.game-filters_checkbox::before {
 }
 
 input:checked+.game-filters_checkbox:hover::before {
-    background-color: #201221;
-    background-color: var(--main-color);
+    background-color: #181118;
+    background-color: var(--secondary-color);
 }
 
 input:checked+.game-filters_checkbox:hover,
 .game-filters_checkbox:hover {
     background-color: #eee;
     background-color: var(--font-color);
-    color: #201221;
-    color: var(--main-color);
+    color: #181118;
+    color: var(--secondary-color);
 
 }
 
@@ -5114,9 +5114,9 @@ input:disabled+.game-filters_checkbox {
 
 .games_settings-checkbox-container {
     right: 20px;
-    height: 1.7rem;
-    -webkit-mask-image: url(../assets/img/settings.svg);
-            mask-image: url(../assets/img/settings.svg);
+    height: 1.8rem;
+    -webkit-mask-image: url(../assets/img/more.svg);
+            mask-image: url(../assets/img/more.svg);
 }
 
 .games_search-menu {

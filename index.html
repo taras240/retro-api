@@ -620,7 +620,8 @@
                     <h3 class="games_menu-header">Filter by platform:</h3>
                     <ul class="games_filter-platform-list" id="games_filter-platform-list">
                         <li class="game-filters_item">
-                            <input disabled type="checkbox" name="game-filters_item" id="game-filters_all">
+                            <input onchange="ui.games.markAllFilters()" type="checkbox" name="game-filters_item"
+                                id="game-filters_all">
                             <label class="game-filters_checkbox" for="game-filters_all">All</label>
                         </li>
                     </ul>
