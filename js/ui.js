@@ -2988,12 +2988,12 @@ class Games {
     this.applySort()
   }
   set REVERSE_SORT(value) {
-    config._cfg.ui.games_section.reverse_sort = value ? 1 : -1;
+    config._cfg.ui.games_section.reverse_sort = value ? -1 : 1;
     config.writeConfiguration();
     this.applySort()
   }
   get REVERSE_SORT() {
-    return config._cfg.ui?.games_section?.reverse_sort ?? 1;
+    return config._cfg.ui?.games_section?.reverse_sort ?? -1;
   }
 
   get GAMES_GROUP() {
@@ -3031,17 +3031,23 @@ class Games {
 
 
   async changeGamesGroup(group) {
+    const resentCheckbox = this.section.querySelector("#games_sort-latest");
     switch (group) {
       case 'recent':
         this.GAMES.all = await this.getRecentGamesArray({});
         this.platformFiltersList.classList.add("disabled");
+        resentCheckbox.closest(".games_filters-item").classList.remove("disabled");
+        resentCheckbox.click();
         this.clearList();
         this.fillFullList();
         this.applySort();
         break;
       default:
         this.clearList();
+        this.GAMES.all = this.GAMES.saved;
+        resentCheckbox.closest(".games_filters-item").classList.add("disabled");
         this.platformFiltersList.classList.remove("disabled");
+        this.section.querySelector("#games_sort-title").click();
         await this.loadGamesArray()
     }
   }
@@ -3247,12 +3253,12 @@ class Games {
   async getRecentGamesArray() {
     const resp = await apiWorker.getRecentlyPlayedGames({});
 
-    console.log(resp);
     return resp;
     // this.GAMES["0"] = resp;
   }
 
   async loadGamesArray() {
+    this.GAMES = {};
     for (const platformCode of Object.getOwnPropertyNames(this.platformCodes)) {
       await this.getAllGames({ consoleCode: platformCode });
     }
@@ -3647,7 +3653,7 @@ const sortBy = {
 
   achievementsCount: (a, b) => parseInt(a.NumAchievements) - parseInt(b.NumAchievements),
 
-  title: (b, a) => {
+  title: (a, b) => {
     const ignoredWords = ["~UNLICENSED~", "~DEMO~", "~HOMEBREW~", "~HACK~", "~PROTOTYPE~", ".HACK//", "~TEST", "KIT~"];
 
     function removeIgnoredWords(title) {

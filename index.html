@@ -627,6 +627,8 @@
                     </ul>
                     <h3 class="games_menu-header">Sort by:</h3>
                     <ul class="games_filter-platform-list" id="games_filter-platform-list">
+
+
                         <li class="games_filters-item">
                             <input onchange="ui.games.SORT_NAME = UI.sortMethods.title;" type="radio"
                                 name="games_sort-items" id="games_sort-title" checked></input>
@@ -642,6 +644,11 @@
                             <input onchange="ui.games.SORT_NAME = UI.sortMethods.achievementsCount" type="radio"
                                 name="games_sort-items" id="games_sort-achieves"></input>
                             <label class="game-filters_checkbox" for="games_sort-achieves">Achieves count</label>
+                        </li>
+                        <li class="games_filters-item disabled">
+                            <input onchange="ui.games.SORT_NAME = UI.sortMethods.latest;" type="radio"
+                                name="games_sort-items" id="games_sort-latest" checked></input>
+                            <label class="game-filters_checkbox" for="games_sort-latest">Date</label>
                         </li>
                         <li class="games_filters-item">
                             <input onchange="ui.games.REVERSE_SORT = this.checked" type="checkbox"

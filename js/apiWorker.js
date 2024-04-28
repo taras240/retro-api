@@ -17,7 +17,7 @@ class APIWorker {
   };
 
   // Генерує URL для запиту до API
-  getUrl({ endpoint, targetUser, gameID, minutes, apiKey, userName }) {
+  getUrl({ endpoint, targetUser, gameID, minutes, apiKey, userName, count }) {
     // Створення нового об'єкту URL з вказаною кінцевою точкою та базовим URL
     let url = new URL(endpoint, this.baseUrl);
 
@@ -31,7 +31,7 @@ class APIWorker {
       i: gameID || config.gameID,
       f: 1,
       h: 1,
-      c: 20,
+      c: count || 20,
     };
 
     // Додавання параметрів до URL
@@ -103,6 +103,7 @@ class APIWorker {
     let url = this.getUrl({
       endpoint: this.endpoints.recentlyPlayedGames,
       targetUser: targetUser,
+      count: 50,
     });
     // {
     //   "GameID": 1479,
@@ -122,11 +123,12 @@ class APIWorker {
     //   "NumAchievedHardcore": 44,
     //   "ScoreAchievedHardcore": 177
     // }
-    return fetch(url).then((resp) => resp.json()).then(arr => arr.map(game => {
+    return fetch(url).then((resp) => resp.json()).then(arr => arr.map((game, index) => {
       game.ID = game.GameID;
       game.Points = game.ScoreAchievedHardcore + "/" + game.PossibleScore;
       game.NumAchievements = game.NumAchievedHardcore + "/" + game.AchievementsTotal;
       game.NumLeaderboards = "";
+      game.DateEarnedHardcore = game.LastPlayed;
       return game;
     }));;
   }
