@@ -16,6 +16,9 @@ class UI {
     disable: "disable",
     id: "id",
     default: "default",
+    achievementsCount: "achievementsCount",
+    title: "title",
+
   };
 
   get ACHIEVEMENTS() {
@@ -2973,8 +2976,102 @@ class LoginCard {
   }
 }
 class Games {
+  get SORT_METHOD() {
+    return sortBy[this.SORT_NAME];
+  }
+  get SORT_NAME() {
+    return config._cfg.ui?.games_section?.sort_name ?? UI.sortMethods.title;
+  }
+  set SORT_NAME(value) {
+    config._cfg.ui.games_section.sort_name = value;
+    config.writeConfiguration();
+    this.applySort()
+  }
+  set REVERSE_SORT(value) {
+    config._cfg.ui.games_section.reverse_sort = value ? 1 : -1;
+    config.writeConfiguration();
+    this.applySort()
+  }
+  get REVERSE_SORT() {
+    return config._cfg.ui?.games_section?.reverse_sort ?? 1;
+  }
+
+  get GAMES_GROUP() {
+    return config._cfg.ui?.games_section?.games_group ?? "all";
+  }
+  set GAMES_GROUP(value) {
+    config._cfg.ui.games_section.games_group = value;
+    config.writeConfiguration();
+    this.changeGamesGroup(this.GAMES_GROUP);
+  }
+  async changeGamesGroup(group) {
+    switch (group) {
+      case 'recent':
+        this.GAMES.all = await this.getRecentGamesArray({});
+        this.clearList();
+        this.fillFullList();
+        this.applySort();
+        break;
+      default:
+        this.clearList();
+        await this.loadGamesArray()
+    }
+  }
+  applySort() {
+    this.GAMES.all = [...this.GAMES.all].sort((a, b) => this.SORT_METHOD(a, b) * this.REVERSE_SORT);
+    this.clearList();
+    this.fillFullList();
+  }
+  applyFilter() {
+    const checkBoxes = this.platformFiltersList.querySelectorAll("[type='checkbox']");
+    this.GAMES.all = [];
+    checkBoxes.forEach(checkbox => {
+
+      if (checkbox.dataset.platformId && checkbox.checked) {
+        this.GAMES.all = this.GAMES.all.concat(this.GAMES[checkbox.dataset.platformId]);
+      }
+      const searchbarValue = this.searchbar.value;
+      this.searchbar.classList.toggle("empty", searchbarValue)
+
+      if (searchbarValue) {
+
+        let regex = new RegExp(searchbarValue, "i");
+
+        this.GAMES.all = [...this.GAMES.all.filter(game => regex.test(game.Title))];
+
+        // clearList();
+
+        // fillFullList();
+      }
+
+    })
+    this.applySort()
+  }
+  fillFullList = () => {
+    while (this.isEndOfListVisible({ list: this.gamesList }) && this.GAMES["all"]?.length > Number(this.gamesList.dataset.currentGamesArrayPosition)) {
+      this.fillGamesDown({ list: this.gamesList, platformID: "all" }); // Після отримання даних заповнюємо список ігор
+    }
+  }
+  clearList = () => {
+    this.gamesList.innerHTML = "";
+    this.gamesList.dataset.currentGamesArrayPosition = 0;
+  }
   platformCodes = {
     "0": "Recently Played",
+    "all": "All games",
+    "1": "Genesis/Mega Drive",
+    "2": "Nintendo 64",
+    "3": "SNES/Super Famicom",
+    "4": "Game Boy",
+    "5": "Game Boy Advance",
+    "6": "Game Boy Color",
+    "7": "NES/Famicom",
+    "8": "PC Engine/TurboGrafx-16",
+    "12": "PlayStation",
+    "21": "PlayStation 2",
+    "41": "PlayStation Portable",
+  }
+  gameFilters = {
     "1": "Genesis/Mega Drive",
     "2": "Nintendo 64",
     "3": "SNES/Super Famicom",
@@ -2990,21 +3087,28 @@ class Games {
   plaformsInfo = {};
   GAMES = {};
   BATCH_SIZE = 10;
-  MAX_GAMES_IN_LIST = 70;
+  MAX_GAMES_IN_LIST = 50;
   constructor() {
     this.loadPlatformInfo();
     this.initializeElements();
-
     this.addEvents();
+
     this.loadGamesArray().then(() => {
-      this.generateGamesLists();
+      this.fillGamesDown({ list: this.section.querySelector(".platform-list"), platformID: "all" })
+      this.generateFiltersList();
+      this.setValues();
+      // this.generateGamesLists();
     })
+
   }
   initializeElements() {
     this.section = document.querySelector("#games_section");
     this.header = this.section.querySelector(".header-container");
     this.container = this.section.querySelector(".games_container");
-    this.platformsContainer = this.section.querySelector(".platforms-list_container");
+    // this.platformsContainer = this.section.querySelector(".platforms-list_container");
+    this.searchbar = this.section.querySelector("#games_search-input");
+    this.platformFiltersList = this.section.querySelector("#games_filter-platform-list");
+    this.gamesList = this.section.querySelector("#games-list");
     // this.platformList = this.section.querySelector(".platform-list");
     this.resizer = this.section.querySelector(".resizer");
   }
@@ -3022,12 +3126,21 @@ class Games {
     this.header.addEventListener("mousedown", (e) => {
       UI.moveEvent(this.section, e);
     });
-
+    this.searchbar.addEventListener("input", () => this.searchInputHandler());
+    this.gamesList.addEventListener("scroll", () => this.gamesListScrollHandler())
 
   }
-  async loadGamesArray() {
-    for (const platformCode of Object.getOwnPropertyNames(this.platformCodes)) {
-      await this.getGames({ consoleCode: platformCode });
+  setValues() {
+    switch (this.SORT_NAME) {
+      case UI.sortMethods.achievementsCount:
+        this.section.querySelector("#games_sort-achieves").checked = true;
+        break;
+      case UI.sortMethods.points:
+        this.section.querySelector("#games_sort-points").checked = true;
+        break;
+      default:
+        this.section.querySelector("#games_sort-title").checked = true;
+        break;
     }
   }
   async loadPlatformInfo() {
@@ -3093,62 +3206,29 @@ class Games {
       list.dataset.currentGamesArrayPosition = lastIndex;
     }
   }
-  async toggleGamesListVisibility(element) {
-    const clearList = list => {
-      list.innerHTML = "";
-      list.dataset.currentGamesArrayPosition = 0;
-    }
-    const recoverGamesData = () => {
-      this.GAMES[`${platformID}-temp`] ? this.GAMES[platformID] = this.GAMES[`${platformID}-temp`] : "";
-      delete this.GAMES[`${platformID}-temp`];
-    }
-    const fillFullList = ({ gamesList, platformID }) => {
-      while (this.isEndOfListVisible({ list: gamesList }) && this.GAMES[platformID]?.length > Number(gamesList.dataset.currentGamesArrayPosition)) {
-        this.fillGamesDown({ list: gamesList, platformID: platformID }); // Після отримання даних заповнюємо список ігор
-      }
-    }
-    const platformsListItem = element.closest(".platforms-list_item");
-    const gamesList = platformsListItem.querySelector(".platform-list");
-    const platformID = platformsListItem.dataset.platformID;
 
-    if (platformsListItem.classList.contains("expanded")) {
-      platformsListItem.classList.remove("expanded");
-      clearList(gamesList);
-      recoverGamesData();
-    }
-    else {
-      platformsListItem.classList.add("expanded");
-      if (platformID == 0) {
-        await this.getRecentGamesArray();
-      }
-      fillFullList({ gamesList: gamesList, platformID: platformID });
-      const searchbar = platformsListItem.querySelector(".games-searchbar");
-      searchbar.addEventListener("input", e => {
 
-        recoverGamesData();
-        let regex = new RegExp(searchbar.value, "i");
-
-        let searchGames = this.GAMES[platformID].filter(game => regex.test(game.Title));
-
-        this.GAMES[`${platformID}-temp`] = this.GAMES[platformID];
-        this.GAMES[platformID] = searchGames;
-
-        clearList(gamesList);
-
-        fillFullList({ gamesList: gamesList, platformID: platformID });
-      })
-    }
-  }
   async getRecentGamesArray() {
     const resp = await apiWorker.getRecentlyPlayedGames({});
-    this.GAMES["0"] = resp;
+    return resp;
+    // this.GAMES["0"] = resp;
   }
-  async getGames({ consoleCode }) {
+
+  async loadGamesArray() {
+    for (const platformCode of Object.getOwnPropertyNames(this.platformCodes)) {
+      await this.getAllGames({ consoleCode: platformCode });
+    }
+    this.GAMES["all"] = this.GAMES.saved = Object.values(this.GAMES).flat();
+    this.applySort();
+  }
+  async getAllGames({ consoleCode }) {
     try {
-      if (consoleCode == 0) return;
-      const gamesResponse = await fetch(`./json/games/${consoleCode}.json`);
-      const gamesJson = await gamesResponse.json();
-      this.GAMES[consoleCode] = gamesJson; // Зберігаємо отримані дані у властивості games
+      if (!(consoleCode == 0 || consoleCode == "all")) {
+        const gamesResponse = await fetch(`./json/games/${consoleCode}.json`);
+        const gamesJson = await gamesResponse.json();
+        this.GAMES[consoleCode] = gamesJson; // Зберігаємо отримані дані у властивості games
+      }
+
     } catch (error) {
       console.error("Error fetching games:", error);
     }
@@ -3193,49 +3273,20 @@ class Games {
 
 
   }
-  generateGamesLists() {
-    this.platformsContainer.innerHTML = '';
-    Object.getOwnPropertyNames(this.platformCodes).forEach(platformCode => {
-      const list = this.generateGameList({ platformName: this.platformCodes[platformCode], platformID: platformCode });
-      const platformList = list.querySelector(".platform-list");
-      platformList.addEventListener("scroll", e => {
-        // Якщо останній елемент списку став видимим, завантажуємо наступну порцію елементів
-        if (this.isEndOfListVisible({ list: platformList })) {
-          this.fillGamesDown({ list: platformList, platformID: platformCode });
-          this.clearGamesTop({ list: platformList });
-        }
-        if (this.isFirstOfListVisible({ list: platformList })) {
-          this.fillGamesTop({ list: platformList, platformID: platformCode });
-          this.clearGamesDown({ list: platformList });
-        }
-      })
-      this.platformsContainer.appendChild(list);
+
+
+  generateFiltersList() {
+    Object.getOwnPropertyNames(this.gameFilters).forEach(platformCode => {
+      const filterItem = document.createElement("li");
+      filterItem.classList.add("game-filters_item");
+      filterItem.innerHTML =
+        `
+        <input checked onchange='ui.games.applyFilter()' type="checkbox" data-platform-id="${platformCode}"  name="game-filters_item" id="game-filters_${platformCode}" ></input>
+        <label class="game-filters_checkbox" for="game-filters_${platformCode}">${this.platformCodes[platformCode]}</label>
+      `;
+      this.platformFiltersList.appendChild(filterItem);
     })
   }
-  generateGameList({ platformName, platformID }) {
-    let platformListItem = document.createElement("li");
-    platformListItem.classList.add("platforms-list_item");
-    platformListItem.dataset.platformID = platformID;
-    const platformImgElement = platformID != 0 ?
-      `<img class="platform-preview" src="./assets/imgCache/${platformID}.webp">` :
-      "";
-    platformListItem.innerHTML = `    
-    <div class="platforms-list_header-container" onclick="ui.games.toggleGamesListVisibility(this)" >
-      ${platformImgElement}
-      <h2 class="platform-name "">
-        ${platformName} ${platformID != 0 ? '[' + this.GAMES[platformID]?.length + ']' : ""}
-      </h2> 
-      <input class="search-game_text-input games-searchbar" onclick="event.stopPropagation();" placeholder="search" type="search" value="" /> 
-      
-      <button class="expand-games_button" onclick="ui.games.toggleGamesListVisibility(this)"> </button>
-    </div>  
-   
-      <ul class="platform-list" data--console-id="7" data-current-games-array-position="0">
-      </ul>
-    `
-    return platformListItem;
-  }
-
   generateGameElement(game) {
     let { Title, ID, GameID, ConsoleName, ImageIcon, Points, PossibleScore, ForumTopicID, NumAchievements, AchievementsTotal, NumLeaderboards } = game;
     const imgName = game.ImageIcon.slice(ImageIcon.lastIndexOf("/") + 1, ImageIcon.lastIndexOf(".") + 1) + "webp";
@@ -3280,6 +3331,50 @@ class Games {
       </div>
     `
     return gameElement;
+  }
+  gamesListScrollHandler() {
+    if (this.isEndOfListVisible({ list: this.gamesList })) {
+      this.fillGamesDown({ list: this.gamesList, platformID: "all" });
+      this.clearGamesTop({ list: this.gamesList });
+    }
+    if (this.isFirstOfListVisible({ list: this.gamesList })) {
+      this.fillGamesTop({ list: this.gamesList, platformID: "all" });
+      this.clearGamesDown({ list: this.gamesList });
+    }
+  }
+  searchInputHandler() {
+    const clearList = () => {
+      this.gamesList.innerHTML = "";
+      this.gamesList.dataset.currentGamesArrayPosition = 0;
+    }
+    const recoverGamesData = () => {
+      this.GAMES.all = this.GAMES.saved;
+      this.applyFilter();
+
+    }
+    const fillFullList = () => {
+      while (this.isEndOfListVisible({ list: this.gamesList }) && this.GAMES["all"]?.length > Number(this.gamesList.dataset.currentGamesArrayPosition)) {
+        this.fillGamesDown({ list: this.gamesList, platformID: "all" }); // Після отримання даних заповнюємо список ігор
+      }
+    }
+    recoverGamesData();
+    const searchbarValue = this.searchbar.value;
+
+    this.searchbar.classList.toggle("empty", searchbarValue == "")
+
+    let regex = new RegExp(searchbarValue, "i");
+
+    let searchGames = this.GAMES.all.filter(game => regex.test(game.Title));
+
+    this.GAMES.all = searchGames;
+
+    clearList();
+
+    fillFullList();
+  }
+  clearSearchbar() {
+    this.searchbar.value = "";
+    this.searchInputHandler();
   }
 }
 class Progression {
@@ -3493,6 +3588,20 @@ const sortBy = {
   id: (a, b) => a.ID - b.ID,
 
   disable: (a, b) => 0,
+
+  achievementsCount: (a, b) => a.NumAchievements - b.NumAchievements,
+
+  title: (b, a) => {
+    var nameA = a.Title.toUpperCase();
+    var nameB = b.Title.toUpperCase();
+    if (nameA < nameB) {
+      return -1;
+    }
+    if (nameA > nameB) {
+      return 1;
+    }
+    return 0;
+  },
 };
 
 //* Методи фільтрування для досягнень гри

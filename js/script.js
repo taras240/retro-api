@@ -120,3 +120,12 @@ function openAbout() {
   );
   UI.switchSectionVisibility(ui.about);
 }
+
+
+function horizontalScroll(event) {
+  var delta = Math.max(-1, Math.min(1, (event.wheelDelta || -event.detail)));
+  var scrollSpeed = 10;
+  var scrollDistance = 10;
+  event.currentTarget.scrollLeft -= delta * scrollDistance * scrollSpeed;
+  event.preventDefault();
+}
