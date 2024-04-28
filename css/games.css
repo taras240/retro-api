@@ -510,3 +510,8 @@ input:disabled+.game-filters_checkbox {
 .games_menu-header {
     position: relative;
 }
+
+.games_filter-platform-list.disabled {
+    pointer-events: none;
+    opacity: .4;
+}

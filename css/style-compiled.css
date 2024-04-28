@@ -5160,6 +5160,11 @@ input:disabled+.game-filters_checkbox {
     position: relative;
 }
 
+.games_filter-platform-list.disabled {
+    pointer-events: none;
+    opacity: .4;
+}
+
 .progression_section.section {
     left: 30%;
     top: 20px;

@@ -42,8 +42,8 @@
 
                         </li>
                         <li class="games_filters-item">
-                            <input disabled onchange="ui.games.GAMES_GROUP = 'recent'" type="radio"
-                                name="games_group-selection" id="games_group-recent"></input>
+                            <input onchange="ui.games.GAMES_GROUP = 'recent'" type="radio" name="games_group-selection"
+                                id="games_group-recent"></input>
                             <label class="game-filters_checkbox" for="games_group-recent">Recent</label>
 
                         </li>

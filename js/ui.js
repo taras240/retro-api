@@ -3029,31 +3029,19 @@ class Games {
     return config.ui.games_section.platformsFilter ?? ["7"];
   }
 
-  markAllFilters() {
-    if (this.PLATFORMS_FILTER.length === Object.keys(this.gameFilters).length) {
-      config.ui.games_section.platformsFilter = [];
-      this.platformFiltersList.querySelectorAll("[type='checkbox']").forEach(checkbox => checkbox.checked = false);
-      config.writeConfiguration();
-      this.applyFilter();
-    }
-    else {
-      config.ui.games_section.platformsFilter = [...Object.keys(this.gameFilters)];
-      this.platformFiltersList.querySelectorAll("[type='checkbox']").forEach(checkbox => checkbox.checked = true);
-      config.writeConfiguration();
-      this.applyFilter();
-    }
 
-  }
   async changeGamesGroup(group) {
     switch (group) {
       case 'recent':
         this.GAMES.all = await this.getRecentGamesArray({});
+        this.platformFiltersList.classList.add("disabled");
         this.clearList();
         this.fillFullList();
         this.applySort();
         break;
       default:
         this.clearList();
+        this.platformFiltersList.classList.remove("disabled");
         await this.loadGamesArray()
     }
   }
@@ -3258,6 +3246,8 @@ class Games {
 
   async getRecentGamesArray() {
     const resp = await apiWorker.getRecentlyPlayedGames({});
+
+    console.log(resp);
     return resp;
     // this.GAMES["0"] = resp;
   }
@@ -3266,7 +3256,7 @@ class Games {
     for (const platformCode of Object.getOwnPropertyNames(this.platformCodes)) {
       await this.getAllGames({ consoleCode: platformCode });
     }
-    this.GAMES["all"] = this.GAMES.saved = Object.values(this.GAMES).flat();
+    this.GAMES.all = this.GAMES.saved = Object.values(this.GAMES).flat();
     this.applySort();
   }
   async getAllGames({ consoleCode }) {
@@ -3421,6 +3411,22 @@ class Games {
     clearList();
 
     fillFullList();
+
+  }
+  markAllFilters() {
+    if (this.PLATFORMS_FILTER.length === Object.keys(this.gameFilters).length) {
+      config.ui.games_section.platformsFilter = [];
+      this.platformFiltersList.querySelectorAll("[type='checkbox']").forEach(checkbox => checkbox.checked = false);
+      config.writeConfiguration();
+      this.applyFilter();
+    }
+    else {
+      config.ui.games_section.platformsFilter = [...Object.keys(this.gameFilters)];
+      this.platformFiltersList.querySelectorAll("[type='checkbox']").forEach(checkbox => checkbox.checked = true);
+      config.writeConfiguration();
+      this.applyFilter();
+    }
+
   }
   clearSearchbar() {
     this.searchbar.value = "";
@@ -3629,7 +3635,7 @@ const sortBy = {
 
   earnedCount: (a, b) => b.NumAwardedHardcore - a.NumAwardedHardcore,
 
-  points: (a, b) => a.Points - b.Points,
+  points: (a, b) => parseInt(a.Points) - parseInt(b.Points),
 
   truepoints: (a, b) => a.TrueRatio - b.TrueRatio,
 
@@ -3639,7 +3645,7 @@ const sortBy = {
 
   disable: (a, b) => 0,
 
-  achievementsCount: (a, b) => a.NumAchievements - b.NumAchievements,
+  achievementsCount: (a, b) => parseInt(a.NumAchievements) - parseInt(b.NumAchievements),
 
   title: (b, a) => {
     const ignoredWords = ["~UNLICENSED~", "~DEMO~", "~HOMEBREW~", "~HACK~", "~PROTOTYPE~", ".HACK//", "~TEST", "KIT~"];
