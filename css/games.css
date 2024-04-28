@@ -369,8 +369,6 @@
 }
 
 
-
-
 .games_filter-platform-list {
     display: flex;
     flex-direction: row;
@@ -390,7 +388,7 @@
     display: block;
     position: relative;
     text-wrap: nowrap;
-    padding: 5px 15px;
+    padding: 3px 15px;
     border-radius: 10px;
     background-color: var(--main-color);
     cursor: pointer;

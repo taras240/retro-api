@@ -617,6 +617,39 @@
 
                         </li>
                     </ul>
+                    <h3 class="games_menu-header">Filter by type:</h3>
+                    <ul class="games_filter-platform-list" id="games_filter-types-list">
+                        <li class="game-filters_item">
+                            <input onchange="ui.games.TYPES_FILTER = this" data-type="original" type="checkbox"
+                                name="game-filters_item" id="game-filters_original">
+                            <label class="game-filters_checkbox" for="game-filters_original">Original</label>
+                        </li>
+                        <li class="game-filters_item">
+                            <input onchange="ui.games.TYPES_FILTER = this" data-type="hack" type="checkbox"
+                                name="game-filters_item" id="game-filters_hack">
+                            <label class="game-filters_checkbox" for="game-filters_hack">Hack</label>
+                        </li>
+                        <li class="game-filters_item">
+                            <input onchange="ui.games.TYPES_FILTER = this" data-type="homebrew" type="checkbox"
+                                name="game-filters_item" id="game-filters_homebrew">
+                            <label class="game-filters_checkbox" for="game-filters_homebrew">Homebrew</label>
+                        </li>
+                        <li class="game-filters_item">
+                            <input onchange="ui.games.TYPES_FILTER = this" data-type="unlicensed" type="checkbox"
+                                name="game-filters_item" id="game-filters_unlicensed">
+                            <label class="game-filters_checkbox" for="game-filters_unlicensed">Unlicensed</label>
+                        </li>
+                        <li class="game-filters_item">
+                            <input onchange="ui.games.TYPES_FILTER = this" data-type="prototype" type="checkbox"
+                                name="game-filters_item" id="game-filters_prototype">
+                            <label class="game-filters_checkbox" for="game-filters_prototype">Prototype</label>
+                        </li>
+                        <li class="game-filters_item">
+                            <input onchange="ui.games.TYPES_FILTER = this" data-type="demo" type="checkbox"
+                                name="game-filters_item" id="game-filters_demo">
+                            <label class="game-filters_checkbox" for="game-filters_demo">Demo</label>
+                        </li>
+                    </ul>
                     <h3 class="games_menu-header">Filter by platform:</h3>
                     <ul class="games_filter-platform-list" id="games_filter-platform-list">
                         <li class="game-filters_item">

@@ -5005,7 +5005,7 @@ input:checked + .settings-input,
     display: block;
     position: relative;
     text-wrap: nowrap;
-    padding: 5px 15px;
+    padding: 3px 15px;
     border-radius: 10px;
     background-color: #201221;
     background-color: var(--main-color);

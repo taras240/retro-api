@@ -3026,9 +3026,28 @@ class Games {
 
   }
   get PLATFORMS_FILTER() {
-    return config.ui.games_section.platformsFilter ?? ["7"];
+    return config.ui?.games_section?.platformsFilter ?? ["7"];
   }
-
+  get TYPES_FILTER() {
+    return config.ui?.games_section?.typesFilter ?? ["original"];
+  }
+  set TYPES_FILTER(checkbox) {
+    const type = checkbox.dataset.type ?? "";
+    const typesFilters = this.TYPES_FILTER;
+    const checked = checkbox.checked;
+    if (checked) {
+      typesFilters.push(type);
+    }
+    else {
+      const index = typesFilters.indexOf(type);
+      if (index !== -1) {
+        typesFilters.splice(index, 1);
+      }
+    }
+    config.ui.games_section.typesFilter = typesFilters;
+    config.writeConfiguration();
+    this.applyFilter();
+  }
 
   async changeGamesGroup(group) {
     const resentCheckbox = this.section.querySelector("#games_sort-latest");
@@ -3036,6 +3055,7 @@ class Games {
       case 'recent':
         this.GAMES.all = await this.getRecentGamesArray({});
         this.platformFiltersList.classList.add("disabled");
+        this.section.querySelector("#games_filter-types-list").classList.add("disabled")
         resentCheckbox.closest(".games_filters-item").classList.remove("disabled");
         resentCheckbox.click();
         this.clearList();
@@ -3047,6 +3067,8 @@ class Games {
         this.GAMES.all = this.GAMES.saved;
         resentCheckbox.closest(".games_filters-item").classList.add("disabled");
         this.platformFiltersList.classList.remove("disabled");
+        this.section.querySelector("#games_filter-types-list").classList.remove("disabled")
+
         this.section.querySelector("#games_sort-title").click();
         await this.loadGamesArray()
     }
@@ -3073,8 +3095,21 @@ class Games {
       }
 
     })
-
+    this.applyTypesFilter();
     this.applySort()
+  }
+  applyTypesFilter() {
+    const types = this.TYPES_FILTER;
+    let filteredGamesArray = [];
+    types.forEach(type => {
+      filteredGamesArray = filteredGamesArray.concat(
+        this.GAMES.all
+          .filter(game =>
+            game.sufixes.includes(type.toUpperCase()) || (game.sufixes.length == 0 && type == "original")
+          )
+      );
+    })
+    this.GAMES.all = filteredGamesArray;
   }
   fillFullList = () => {
     while (this.isEndOfListVisible({ list: this.gamesList }) && this.GAMES["all"]?.length > Number(this.gamesList.dataset.currentGamesArrayPosition)) {
@@ -3181,6 +3216,10 @@ class Games {
         this.section.querySelector("#games_sort-title").checked = true;
         break;
     }
+    this.TYPES_FILTER.forEach(type => {
+      const checkbox = this.section.querySelector(`#game-filters_${type.toLowerCase()}`);
+      checkbox ? checkbox.checked = true : "";
+    })
     this.REVERSE_SORT == -1 ? this.section.querySelector("#games_sort-reverse").checked = true : "";
     this.platformFiltersList.querySelector("#game-filters_all").checked = this.PLATFORMS_FILTER.length === Object.keys(this.gameFilters).length;
 
