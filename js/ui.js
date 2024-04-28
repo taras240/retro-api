@@ -3181,7 +3181,7 @@ class Games {
         this.section.querySelector("#games_sort-title").checked = true;
         break;
     }
-    this.REVERSE_SORT == 1 ? this.section.querySelector("#games_sort-reverse").checked = true : "";
+    this.REVERSE_SORT == -1 ? this.section.querySelector("#games_sort-reverse").checked = true : "";
     this.platformFiltersList.querySelector("#game-filters_all").checked = this.PLATFORMS_FILTER.length === Object.keys(this.gameFilters).length;
 
   }
