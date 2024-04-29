@@ -363,6 +363,12 @@ class UI {
               }</input>
               `;
             break;
+          case "range": menuElement.innerHTML += `
+              ${menuItem.prefix}
+              <input type="range"  ${menuItem.event ?? ""} min="${menuItem.minRange}" max="${menuItem.maxRange}" value="${menuItem.value}" class="slider" id="${menuItem.id
+            }-${sectionCode}">
+            `;
+            break;
           case "button":
             menuElement.innerHTML += `
               <button class="context-menu_${menuItem.type}" id="${menuItem.id
@@ -1774,8 +1780,27 @@ class Settings {
         id: "context_show-start-on-load",
         checked: ui.settings.START_ON_LOAD,
         event: `onchange="ui.settings.START_ON_LOAD = this.checked;"`,
-      },
-    ];
+      }
+      ,
+      {
+        type: "range",
+        id: "context_font-size",
+        label: "Font size",
+        event: "oninput =\"ui.settings.FONT_SIZE = this.value;\"",
+        prefix: "Font size",
+        minRange: 12,
+        maxRange: 20,
+        value: ui.settings.FONT_SIZE,
+      }
+    ]
+  }
+  get FONT_SIZE() {
+    return config?._cfg.settings?.fontSize ?? 14;
+  }
+  set FONT_SIZE(value) {
+    config._cfg.settings.fontSize = value;
+    config.writeConfiguration();
+    document.documentElement.style.setProperty('font-size', `${this.FONT_SIZE}px`);
   }
   get COLOR_SCHEME() {
     return config._cfg.settings.preset || "default";
@@ -1832,6 +1857,7 @@ class Settings {
     this.getGameIdButton = document.querySelector(".get-id-button"); // Кнопка отримання ідентифікатора гри
     this.checkIdButton = document.querySelector(".check-id-button"); // Кнопка перевірки ідентифікатора гри
     this.startOnLoadCheckbox = document.querySelector("#update-on-load");
+    this.FONT_SIZE = this.FONT_SIZE;
   }
   setValues() {
     if (!config.ui.settings_section) {
@@ -3070,7 +3096,8 @@ class Games {
         this.section.querySelector("#games_filter-types-list").classList.remove("disabled")
 
         this.section.querySelector("#games_sort-title").click();
-        await this.loadGamesArray()
+        await this.loadGamesArray();
+
     }
   }
   applySort() {
@@ -3302,7 +3329,7 @@ class Games {
       await this.getAllGames({ consoleCode: platformCode });
     }
     this.GAMES.all = this.GAMES.saved = Object.values(this.GAMES).flat();
-    this.applySort();
+    this.applyFilter();
   }
   async getAllGames({ consoleCode }) {
     try {

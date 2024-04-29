@@ -5691,6 +5691,7 @@ h3,
 button,
 div {
   font-family: "system-ui", sans-serif;
+  font-size: 1rem;
 }
 
 h3 {
@@ -5714,6 +5715,7 @@ input[type="radio"] {
 }
 
 :root {
+  font-size: 16px;
   --main-color: #201221;
   --secondary-color: #181118;
   --accent-color: #57125c;
