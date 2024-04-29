@@ -350,7 +350,7 @@ class UI {
             menuElement.innerHTML += `
             ${menuItem.prefix}
             <input class="context-menu_${menuItem.type}" id="${menuItem.id
-              }-${sectionCode}" type="number" value="${menuItem.value ?? ""}" ${menuItem.event ?? ""
+              }-${sectionCode}" type="number" title="${menuItem.title}" value="${menuItem.value ?? ""}" ${menuItem.event ?? ""
               } onclick="event.stopPropagation()">${menuItem.postfix ?? ""
               } </input>
             `;
@@ -359,7 +359,7 @@ class UI {
             menuElement.innerHTML += `
               ${menuItem.prefix}
               <input class="context-menu_${menuItem.type}" id="${menuItem.id
-              }-${sectionCode}" type="text"  onclick="event.stopPropagation()">${menuItem.postfix ?? ""
+              }-${sectionCode}"  ${menuItem.event ?? ""} title="${menuItem.title}" type="text" placeholder="${menuItem.placeholder ?? ""}"  onclick="event.stopPropagation()">${menuItem.postfix ?? ""
               }</input>
               `;
             break;
@@ -1791,6 +1791,16 @@ class Settings {
         minRange: 12,
         maxRange: 20,
         value: ui.settings.FONT_SIZE,
+      },
+      {
+        prefix: "Font family",
+        postfix: "",
+        type: "text-input",
+        id: "context-menu_font-family",
+        label: "Font family",
+        title: "paste embed code of custom font(@import... or url...) or write 'def' for reset it",
+        placeholder: this.FONT_NAME,
+        event: `onchange="ui.settings.FONT_FAMILY = this.value;"`,
       }
     ]
   }
@@ -1801,6 +1811,40 @@ class Settings {
     config._cfg.settings.fontSize = value;
     config.writeConfiguration();
     document.documentElement.style.setProperty('font-size', `${this.FONT_SIZE}px`);
+  }
+  get FONT_FAMILY() {
+    return config._cfg.settings?.fontFamily ?? "def";
+  }
+  get FONT_NAME() {
+    let regFontName = new RegExp(/(?<=family=)([A-Za-z0-9+);])*/gmi);
+    let fontName = "default";
+    if (regFontName.test(this.FONT_FAMILY)) {
+      fontName = this.FONT_FAMILY.match(regFontName)[0].replaceAll("+", " ")
+    }
+    return fontName;
+  }
+  set FONT_FAMILY(value) {
+    let regFontFamily = new RegExp(/https:\/\/[^'");]*/gmi);
+    let regFontName = new RegExp(/(?<=family=)([A-Za-z0-9+);])*/gmi);
+    if (regFontFamily.test(value)) {
+      let fontFamily = value.match(regFontFamily)[0];
+      config._cfg.settings.fontFamily = fontFamily;
+      config.writeConfiguration();
+      let fontName = value.match(regFontName)[0].replaceAll("+", " ");
+      const fontLink = document.createElement('link');
+      fontLink.rel = 'stylesheet';
+      fontLink.href = fontFamily;
+      document.head.appendChild(fontLink);
+
+      document.documentElement.style.setProperty("--font-family", `"${fontName}", system-ui, sans-serif`);
+
+    }
+    if (value == "def") {
+      config._cfg.settings.fontFamily = "";
+      config.writeConfiguration();
+      document.documentElement.style.setProperty("--font-family", ` system-ui, sans-serif`);
+    }
+
   }
   get COLOR_SCHEME() {
     return config._cfg.settings.preset || "default";
@@ -1857,7 +1901,7 @@ class Settings {
     this.getGameIdButton = document.querySelector(".get-id-button"); // Кнопка отримання ідентифікатора гри
     this.checkIdButton = document.querySelector(".check-id-button"); // Кнопка перевірки ідентифікатора гри
     this.startOnLoadCheckbox = document.querySelector("#update-on-load");
-    this.FONT_SIZE = this.FONT_SIZE;
+
   }
   setValues() {
     if (!config.ui.settings_section) {
@@ -1883,6 +1927,8 @@ class Settings {
     this.colorPresetSelector.dispatchEvent(new Event("change"));
     this.showBackgroundCheckbox.checked = config.bgVisibility;
     this.startOnLoadCheckbox.checked = config.startOnLoad;
+    this.FONT_SIZE = this.FONT_SIZE;
+    this.FONT_FAMILY = this.FONT_FAMILY;
   }
   addEvents() {
     // Додаємо обробник події 'change' для поля введення інтервалу оновлення

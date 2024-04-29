@@ -10,14 +10,16 @@
 @import url(./update.css);
 @import url(./games.css);
 @import url(./progression.css);
+/* @import url('https://fonts.googleapis.com/css2?family=Jersey+15&display=swap'); */
 
 p,
 h1,
 h2,
 h3,
 button,
-div {
-  font-family: "system-ui", sans-serif;
+div,
+li {
+  font-family: var(--font-family);
   font-size: 1rem;
 }
 
@@ -41,6 +43,7 @@ input[type="radio"] {
 }
 
 :root {
+  --font-family: system-ui, sans-serif;
   font-size: 16px;
   --main-color: #201221;
   --secondary-color: #181118;

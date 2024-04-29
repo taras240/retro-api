@@ -4054,16 +4054,12 @@ input:checked + .settings-input,
   border-radius: 50%;
   overflow: hidden;
   opacity: 0.5;
-  background-image: radial-gradient(
-    circle,
-    transparent,
-    transparent
-  );
-  background-image: radial-gradient(
-    circle,
-    var(--dot-fill-from-color),
-    var(--dot-fill-to-color)
-  );
+  background-image: radial-gradient(circle,
+      transparent,
+      transparent);
+  background-image: radial-gradient(circle,
+      var(--dot-fill-from-color),
+      var(--dot-fill-to-color));
   border: 2px solid transparent;
   border: 2px solid var(--dot-border-color);
   background-color: transparent;
@@ -4118,8 +4114,8 @@ input:checked + .settings-input,
   overflow: hidden;
   aspect-ratio: 1;
   -ms-grid-row: 1;
-  -ms-grid-row-span: 4;
-  grid-row: 1 / 5;
+  -ms-grid-row-span: 3;
+  grid-row: 1 / 4;
   -ms-grid-row-align: center;
       align-self: center;
 }
@@ -5684,13 +5680,17 @@ input:disabled+.game-filters_checkbox {
     }
 }
 
+/* @import url('https://fonts.googleapis.com/css2?family=Jersey+15&display=swap'); */
+
 p,
 h1,
 h2,
 h3,
 button,
-div {
-  font-family: "system-ui", sans-serif;
+div,
+li {
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
+  font-family: var(--font-family);
   font-size: 1rem;
 }
 
@@ -5715,6 +5715,7 @@ input[type="radio"] {
 }
 
 :root {
+  --font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
   font-size: 16px;
   --main-color: #201221;
   --secondary-color: #181118;
