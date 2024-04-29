@@ -1748,41 +1748,6 @@ class Settings {
         // }
       },
       {
-        label: "Show bg-animation",
-        type: "checkbox",
-        name: "context_show-bg-animation",
-        id: "context_show-bg-animation",
-        checked: ui.settings.BG_ANIMATION,
-        event: `onchange="ui.settings.BG_ANIMATION = this.checked;"`,
-      },
-      // {
-      //   prefix: "Update delay",
-      //   postfix: "sec",
-      //   type: "input-number",
-      //   id: "context-menu_update-delay",
-      //   label: "Update delay",
-      //   value: this.ACHIV_MIN_SIZE,
-      //   event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].ACHIV_MIN_SIZE = this.value;"`,
-      // },
-      // {
-      //   prefix: "Target user",
-      //   postfix: "",
-      //   type: "text-input",
-      //   id: "context-menu_target-user",
-      //   label: "Target user",
-      //   value: this.ACHIV_MIN_SIZE,
-      //   event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].ACHIV_MIN_SIZE = this.value;"`,
-      // },
-      {
-        label: "Start on load",
-        type: "checkbox",
-        name: "context_show-start-on-load",
-        id: "context_show-start-on-load",
-        checked: ui.settings.START_ON_LOAD,
-        event: `onchange="ui.settings.START_ON_LOAD = this.checked;"`,
-      }
-      ,
-      {
         type: "range",
         id: "context_font-size",
         label: "Font size",
@@ -1793,7 +1758,7 @@ class Settings {
         value: ui.settings.FONT_SIZE,
       },
       {
-        prefix: "Font family",
+        prefix: "<a href='https://fonts.google.com/' title='go to google fonts' target='_blanc'>Font family</a>",
         postfix: "",
         type: "text-input",
         id: "context-menu_font-family",
@@ -1801,7 +1766,24 @@ class Settings {
         title: "paste embed code of custom font(@import... or url...) or write 'def' for reset it",
         placeholder: this.FONT_NAME,
         event: `onchange="ui.settings.FONT_FAMILY = this.value;"`,
+      },
+      {
+        label: "Show bg-animation",
+        type: "checkbox",
+        name: "context_show-bg-animation",
+        id: "context_show-bg-animation",
+        checked: ui.settings.BG_ANIMATION,
+        event: `onchange="ui.settings.BG_ANIMATION = this.checked;"`,
+      },
+      {
+        label: "Start on load",
+        type: "checkbox",
+        name: "context_show-start-on-load",
+        id: "context_show-start-on-load",
+        checked: ui.settings.START_ON_LOAD,
+        event: `onchange="ui.settings.START_ON_LOAD = this.checked;"`,
       }
+
     ]
   }
   get FONT_SIZE() {

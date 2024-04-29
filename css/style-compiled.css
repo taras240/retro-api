@@ -6623,6 +6623,33 @@ input[type="radio"]:checked+.context-menu_radio::after {
   width: 50px;
 }
 
+.context-menu_item ::-webkit-input-placeholder {
+  background-color: transparent;
+  color: var(--context-font-color);
+}
+
+.context-menu_item ::-moz-placeholder {
+  background-color: transparent;
+  color: var(--context-font-color);
+}
+
+.context-menu_item :-ms-input-placeholder {
+  background-color: transparent;
+  color: var(--context-font-color);
+}
+
+.context-menu_item ::-ms-input-placeholder {
+  background-color: transparent;
+  color: var(--context-font-color);
+}
+
+.context-menu_item ::placeholder,
+.context-menu_item a,
+.context-menu_item a:hover {
+  background-color: transparent;
+  color: var(--context-font-color);
+}
+
 /* .buttons-block {
   top: calc(100% - 200px);
   left: calc(100% - 320px);
