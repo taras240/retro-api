@@ -1748,25 +1748,29 @@ class Settings {
         // }
       },
       {
-        type: "range",
-        id: "context_font-size",
-        label: "Font size",
-        event: "oninput =\"ui.settings.FONT_SIZE = this.value;\"",
-        prefix: "Font size",
-        minRange: 12,
-        maxRange: 20,
-        value: ui.settings.FONT_SIZE,
+        label: "Font",
+        subMenu: [{
+          type: "range",
+          id: "context_font-size",
+          label: "Font size",
+          event: "oninput =\"ui.settings.FONT_SIZE = this.value;\"",
+          prefix: "Font size",
+          minRange: 12,
+          maxRange: 20,
+          value: ui.settings.FONT_SIZE,
+        },
+        {
+          prefix: "<a href='https://fonts.google.com/' title='go to google fonts' target='_blanc'>Font family</a>",
+          postfix: "",
+          type: "text-input",
+          id: "context-menu_font-family",
+          label: "Font family",
+          title: "paste embed code of custom font(@import... or url...) or write 'def' to reset it",
+          placeholder: this.FONT_NAME,
+          event: `onchange="ui.settings.FONT_FAMILY = this.value;"`,
+        }]
       },
-      {
-        prefix: "<a href='https://fonts.google.com/' title='go to google fonts' target='_blanc'>Font family</a>",
-        postfix: "",
-        type: "text-input",
-        id: "context-menu_font-family",
-        label: "Font family",
-        title: "paste embed code of custom font(@import... or url...) or write 'def' for reset it",
-        placeholder: this.FONT_NAME,
-        event: `onchange="ui.settings.FONT_FAMILY = this.value;"`,
-      },
+
       {
         label: "Show bg-animation",
         type: "checkbox",

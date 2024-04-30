@@ -123,10 +123,9 @@
 }
 
 .platform-list {
-    max-height: calc(100% - 60px);
     width: 100%;
     max-width: 100%;
-    padding: 10px 10px;
+    padding: 80px 10px 10px;
     display: flex;
     justify-content: flex-start;
     align-items: start;
@@ -435,20 +434,24 @@ input:disabled+.game-filters_checkbox {
 /*!-----------------[ SEARCHBAR ]   ---------------------*/
 
 .games_search-bar_container {
+    position: absolute;
+    max-width: 700px;
+    min-width: 400px;
+    width: 70%;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
     align-items: center;
     flex-direction: column;
     justify-content: center;
     gap: 10px;
     padding: 15px 20px;
-
-
+    z-index: 2;
 }
 
 .games_search-block {
     position: relative;
-    min-width: 400px;
-    width: 70%;
+    width: 100%;
 }
 
 .games_search-input {
@@ -461,6 +464,11 @@ input:disabled+.game-filters_checkbox {
     font-size: 1.2rem;
     z-index: 3;
     transition: .2s;
+    box-shadow: 0 3px 6px 2px rgba(0, 0, 0, .3);
+}
+
+.games_search-block.extended .games_search-input {
+    box-shadow: 0 0 0 transparent;
 }
 
 .games_search-input::placeholder {
@@ -468,15 +476,15 @@ input:disabled+.game-filters_checkbox {
     opacity: 0.6;
 }
 
-.games_search-input:focus,
+/* .games_search-input:focus,
 .games_search-input:hover {
     box-shadow: 0 3px 6px 2px rgba(0, 0, 0, .3);
-}
+} */
 
-.extended .games_search-input:focus,
+/* .extended .games_search-input:focus,
 .extended .games_search-input:hover {
     box-shadow: 0 0 0;
-}
+} */
 
 .games_search-input.empty+.games_searchbar-clear {
     opacity: 0;
@@ -518,14 +526,13 @@ input:disabled+.game-filters_checkbox {
     display: none;
     position: absolute;
     top: 50%;
-    /* transform: translate(0, -50%); */
     border-radius: 0 0 24px 24px;
     width: 100%;
-    height: auto;
+    /* max-height: 50vh; */
     background-color: var(--secondary-color);
     z-index: 2;
-    padding: 50px 20px;
-    overflow: hidden;
+    padding: 50px 20px 20px;
+    overflow: scroll;
 
 
 }
