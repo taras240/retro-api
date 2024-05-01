@@ -143,8 +143,9 @@ class Config {
     this.writeConfiguration();
   }
 
-  //!---------------[ COLORS ]-----
+  //!---------------[ COLORS ]-----------------------------------
   constructor() {
+
     this.readConfiguration();
   }
 
@@ -182,7 +183,9 @@ class Config {
     this.writeConfiguration();
   }
   readConfiguration() {
+
     let config = JSON.parse(localStorage.getItem(CONFIG_FILE_NAME));
+
     if (!config) {
       config = {
         identification: {
@@ -196,8 +199,10 @@ class Config {
           ACHIV_MAX_SIZE: 150,
           ACHIV_MIN_SIZE: 30,
         },
-        ui: { some: 1 },
+        ui: {},
       };
+
+
     }
     this._cfg = config;
     this.writeConfiguration();

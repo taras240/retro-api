@@ -22,10 +22,6 @@
     </div>
     <div class="wrapper">
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
-    <script src="./js/config.js"></script>
-    <script src="./js/apiWorker.js"></script>
-    <script src="./js/ui.js"></script>
     <script>
         const sections = {
             gameCard: "./elements/gameCard.elem",
@@ -38,6 +34,7 @@
             awards: "./elements/awards.elem",
             status: "./elements/status.elem",
             games: "./elements/games.elem",
+            note: "./elements/note.elem",
         };
         async function loadSections() {
             try {
@@ -66,6 +63,11 @@
             }
         }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <script src="./js/config.js"></script>
+    <script src="./js/apiWorker.js"></script>
+    <script src="./js/ui.js"></script>
+
     <script src="./js/script.js"></script>
 </body>
 

@@ -1,4 +1,4 @@
-<section id="settings_section" class="prefs_section section">
+<section id="settings_section" class="prefs_section section ">
   <div class="header-container prefs-header-container">
     <div class="header-icon settings-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" fill="white"
         viewBox="0 -960 960 960" width="24">

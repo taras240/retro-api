@@ -1,5 +1,5 @@
 class UI {
-  VERSION = "0.15";
+  VERSION = "0.16";
   static AUTOCLOSE_CONTEXTMENU = false;
   static filterMethods = {
     all: "all",
@@ -28,13 +28,11 @@ class UI {
     return this._gameData;
   }
   set ACHIEVEMENTS(achievementsObject) {
-    Object.values(achievementsObject.Achievements).map((achievement) => {
-      UI.fixAchievement(achievement, achievementsObject);
-    });
     this._gameData = achievementsObject;
-    this.achievementsBlock.forEach((clone) =>
-      clone.parseGameAchievements(this.GAME_DATA)
+    this.achievementsBlock.forEach((widgetClone) =>
+      widgetClone.parseGameAchievements(this.GAME_DATA)
     );
+    this.updateGameInfo(this.GAME_DATA);
     this.gameCard.updateGameCardInfo(this.GAME_DATA);
     if (this.target.AUTOFILL) {
       this.target.clearAllAchivements();
@@ -42,22 +40,7 @@ class UI {
     }
     this.progression.fillCards();
   }
-  static fixAchievement(achievement, achievements) {
-    const { BadgeName, DateEarned, DateEarnedHardcore } = achievement;
 
-    //Додаєм кількість гравців
-    achievement.totalPlayers = achievements.NumDistinctPlayers;
-
-    // Визначаєм, чи отримано досягнення та чи є воно хардкорним
-    achievement.isEarned = DateEarned ?? false;
-    achievement.isHardcoreEarned = DateEarnedHardcore ?? false;
-
-    // Додаєм адресу зображення для досягнення
-    achievement.prevSrc = `https://media.retroachievements.org/Badge/${BadgeName}.png`;
-
-    //Повертаємо виправлений об'єкт
-    return achievement;
-  }
   constructor() {
     loadSections()
       .then(() => {
@@ -83,6 +66,16 @@ class UI {
           config.startOnLoad
             ? this.statusPanel.watchButton.click()
             : this.settings.checkIdButton.click();
+        }
+        else {
+          const section = this.loginCard.section;
+          section.classList.remove("disposed");
+          setTimeout(() => section.classList.remove("hidden"), 100);
+          config.setNewPosition({
+            id: section.id,
+            hidden: false,
+          })
+          // UI.switchSectionVisibility({ section: this.loginCard.section })
         }
         // Вимкнення вікна завантаження
         setTimeout(
@@ -113,9 +106,11 @@ class UI {
     this.awards = new Awards();
     this.gameCard = new GameCard();
     this.statusPanel = new StatusPanel();
-    this.buttons = new ButtonPanel();
     this.games = new Games();
     this.progression = new Progression();
+    this.note = new Note();
+
+    this.buttons = new ButtonPanel();
     document.addEventListener("click", (e) => {
       document.querySelectorAll(".context-menu").forEach((el) => el.remove());
     });
@@ -143,20 +138,45 @@ class UI {
   //Встановлення розмірів і розміщення елементів
   setPositions() {
     // Проходження по кожному ідентифікатору контейнера в об'єкті config.uierw
-    Object.getOwnPropertyNames(config.ui).forEach((containerId) => {
-      // Отримання елемента за його ідентифікатором
-      let element = document.getElementById(containerId);
-      if (!element) return;
-      // Отримання позиції та розмірів елемента з об'єкта config.ui
-      const { x, y, width, height, hidden } = config.ui[containerId];
-      // Встановлення нових значень стилів елемента, якщо вони вказані у config.ui
-      // Якщо значення відсутнє (undefined), то стилі не змінюються
-      x ? (element.style.left = x) : "";
-      y ? (element.style.top = y) : "";
-      width ? (element.style.width = width) : "";
-      height ? (element.style.height = height) : "";
-      hidden ? element.classList.add("hidden", "disposed") : "";
-    });
+    [...document.querySelectorAll(".section")].forEach(section => {
+      const id = section.id;
+      if (config.ui[id]) {
+        if (!section) return;
+        // Отримання позиції та розмірів елемента з об'єкта config.ui
+        const { x, y, width, height, hidden } = config.ui[id];
+        // Встановлення нових значень стилів елемента, якщо вони вказані у config.ui
+        // Якщо значення відсутнє (undefined), то стилі не змінюються
+        x ? (section.style.left = x) : "";
+        y ? (section.style.top = y) : "";
+        width ? (section.style.width = width) : "";
+        height ? (section.style.height = height) : "";
+        const isHidden = hidden ?? true;
+        if (isHidden) {
+          section.classList.add("hidden", "disposed");
+        }
+
+      }
+      else {
+        section.classList.add("hidden", "disposed");
+      }
+    })
+    // Object.getOwnPropertyNames(config.ui).forEach((containerId) => {
+    //   // Отримання елемента за його ідентифікатором
+    //   let element = document.getElementById(containerId);
+    //   if (!element) return;
+    //   // Отримання позиції та розмірів елемента з об'єкта config.ui
+    //   const { x, y, width, height, hidden } = config.ui[containerId];
+    //   // Встановлення нових значень стилів елемента, якщо вони вказані у config.ui
+    //   // Якщо значення відсутнє (undefined), то стилі не змінюються
+    //   x ? (element.style.left = x) : "";
+    //   y ? (element.style.top = y) : "";
+    //   width ? (element.style.width = width) : "";
+    //   height ? (element.style.height = height) : "";
+    //   const isHidden = hidden ?? true;
+    //   if (isHidden) {
+    //     element.classList.add("hidden", "disposed");
+    //   }
+    // });
     this.buttons.games.checked = !this.games.section.classList.contains("hidden");
     document.querySelector("#background-animation").style.display =
       config.bgVisibility ? "display" : "none";
@@ -256,8 +276,8 @@ class UI {
       gamePlatform,
       gameAchivsCount,
       richPresence,
-    } = ui.statusPanel;
-    ui.gameCard.section.classList.remove("mastered");
+    } = this.statusPanel;
+    this.gameCard.section.classList.remove("mastered");
     gamePreview.setAttribute(
       "src",
       `https://media.retroachievements.org${ImageIcon}`
@@ -268,7 +288,7 @@ class UI {
       "https://retroachievements.org/game/" + config.gameID
     );
     gamePlatform.innerText = ConsoleName || "";
-    ui.statusPanel.updateProgress({
+    this.statusPanel.updateProgress({
       totalPoints: points_total,
       achievements: Achievements,
     });
@@ -707,6 +727,9 @@ class UI {
 }
 
 class AchievementsBlock {
+  get VISIBLE() {
+    return !this.section.classList.contains("hidden");
+  }
   get contextMenuItems() {
     return [
       {
@@ -1054,8 +1077,6 @@ class AchievementsBlock {
     // Очистити вміст розділу досягнень
     this.clearAchievementsSection();
 
-    // Оновити інформацію про гру
-    ui.updateGameInfo(achivs);
 
     // Відсортувати досягнення та відобразити їх
     this.displayAchievements(achivs);
@@ -1402,6 +1423,9 @@ class AchievementsBlock {
 }
 
 class ButtonPanel {
+  get VISIBLE() {
+    return !this.section.classList.contains("hidden");
+  }
   constructor() {
     this.initializeElements();
     this.addEvents();
@@ -1421,27 +1445,15 @@ class ButtonPanel {
     this.games = this.section.querySelector("#open-games-button");
     this.progression = this.section.querySelector("#open-progression-button");
     this.userImage = this.section.querySelector("#side-panel-user-image");
-
-
+    this.note = this.section.querySelector("#open-note-button");
   }
   addEvents() {
     // Отримуємо посилання на панель
     this.sidePanel = document.querySelector("#side_panel");
     setTimeout(() => ui.buttons.section.classList.remove("expanded"), 2000);
-    // Додаємо подію для відслідковування руху миші
-    document.addEventListener("mousemove", (e) => {
-      // Перевіряємо, чи миша знаходиться біля правого краю екрану
-      if (e.clientX < 10) {
-        // Якщо так, показуємо панель
-        this.section.classList.add("expanded");
-        this.section.addEventListener("mouseleave", (e) => {
-          setTimeout(
-            () => ui.buttons.section.classList.remove("expanded"),
-            200
-          );
-        });
-      }
-    });
+    // Додаємо подію для відслідковування руху миші touchmove 
+    document.addEventListener("touchstart", (e) => this.touchVisibilityHandler(e));
+    document.addEventListener("mousemove", (e) => this.positionVisibilityHandler(e));
     // this.header.addEventListener("mousedown", (e) => {
     //   UI.moveEvent(this.section, e);
     // });
@@ -1477,35 +1489,72 @@ class ButtonPanel {
 
       UI.switchSectionVisibility(ui.progression);
     });
+    this.note.addEventListener("change", (e) => {
+      UI.switchSectionVisibility(ui.note);
+    });
   }
 
   setValues() {
     // Встановлення початкових індикаторів віджетів
     this.achievements.checked =
-      !config.ui?.achievements_section?.hidden ?? false;
+      config.ui?.achievements_section?.hidden === false ?? ui.achievementsBlock[0].VISIBLE;
 
-    this.settings.checked = !config.ui?.settings_section?.hidden ?? true;
+    this.settings.checked = config.ui?.settings_section?.hidden === false ?? ui.settings.VISIBLE;
 
-    this.login.checked = !config.ui?.login_section?.hidden ?? true;
+    this.login.checked = config.ui?.login_section?.hidden === false ?? ui.loginCard.VISIBLE;
 
-    this.target.checked = !config.ui?.target_section?.hidden ?? true;
+    this.target.checked = config.ui?.target_section?.hidden === false ?? ui.target.VISIBLE;
 
-    this.gameCard.checked = !config.ui?.game_section?.hidden ?? true;
+    this.gameCard.checked = config.ui?.game_section?.hidden === false ?? ui.gameCard.VISIBLE;
 
-    this.status.checked = !config.ui?.["update-section"]?.hidden ?? true;
+    this.status.checked = config.ui?.["update-section"]?.hidden === false ?? ui.statusPanel.VISIBLE;
 
-    this.awards.checked = !config.ui?.awards_section?.hidden ?? true;
-    this.progression.checked = !config.ui?.progression_section?.hidden ?? true;
+    this.awards.checked = config.ui?.awards_section?.hidden === false ?? ui.awards.VISIBLE;
+
+    this.note.checked = config.ui?.note_section?.hidden === false ?? ui.note.VISIBLE;
+
+    this.progression.checked = config.ui?.progression_section?.hidden === false ?? ui.progression.VISIBLE;
+
+
     this.userImage.src = config.userImageSrc;
   }
+  touchVisibilityHandler(e) {
+    const xPos = e.touches[0].clientX;
+    if (xPos < 50) {
+      // Якщо так, показуємо панель
+      this.section.classList.add("expanded");
+      this.section.addEventListener("blur", (e) => {
+        console.log("blur")
+        setTimeout(
+          () => ui.buttons.section.classList.remove("expanded"),
+          0
+        );
+      });
+    }
+  }
+  positionVisibilityHandler(e) {
+    const xPos = e.clientX;
+    if (xPos < 10) {
+      // Якщо так, показуємо панель
+      this.section.classList.add("expanded");
+      this.section.addEventListener("mouseleave", (e) => {
+        console.log("blur")
+        setTimeout(
+          () => ui.buttons.section.classList.remove("expanded"),
+          200
+        );
+      });
+    }
+  }
+
 }
 class StatusPanel {
+  get VISIBLE() {
+    return !this.section.classList.contains("hidden");
+  }
   constructor() {
     this.initializeElements();
     this.addEvents();
-    if (!config.ui["update-section"]) {
-      UI.switchSectionVisibility(this);
-    }
   }
   initializeElements() {
     this.section = document.querySelector("#update-section");
@@ -1614,6 +1663,9 @@ class StatusPanel {
   }
 }
 class Settings {
+  get VISIBLE() {
+    return !this.section.classList.contains("hidden");
+  }
   get contextMenuItems() {
     return [
       {
@@ -1890,9 +1942,7 @@ class Settings {
 
   }
   setValues() {
-    if (!config.ui.settings_section) {
-      UI.switchSectionVisibility(this);
-    }
+
     // this.settings.stretchButton.classList
     // Отримати ідентифікатор гри з localStorage та встановити його значення
     this.gameID.value = config.gameID;
@@ -2001,6 +2051,9 @@ class Settings {
 }
 
 class GameCard {
+  get VISIBLE() {
+    return !this.section.classList.contains("hidden");
+  }
   get contextMenuItems() {
     return this._contextMenuItems;
   }
@@ -2116,9 +2169,9 @@ class GameCard {
     this.loadSavedData();
     this.initializeElements();
     this.addEvents();
-    if (!config.ui.game_section) {
-      UI.switchSectionVisibility(this);
-    }
+    // if (!config.ui.game_section) {
+    //   UI.switchSectionVisibility(this);
+    // }
     //-----------
 
     // Додавання подій для пересування вікна картки гри
@@ -2255,6 +2308,9 @@ class GameCard {
 }
 
 class Awards {
+  get VISIBLE() {
+    return !this.section.classList.contains("hidden");
+  }
   awardTypes = {
     mastery: "mastery",
     completion: "completion",
@@ -2264,9 +2320,7 @@ class Awards {
   constructor() {
     this.initializeElements();
     this.addEvents();
-    if (!config.ui.awards_section) {
-      UI.switchSectionVisibility(this);
-    }
+
   }
   initializeElements() {
     this.section = document.querySelector(".awards_section"); // Контейнер інформації про гру
@@ -2444,6 +2498,9 @@ class Awards {
 }
 
 class Target {
+  get VISIBLE() {
+    return !this.section.classList.contains("hidden");
+  }
   get contextMenuItems() {
     return [
       {
@@ -2947,6 +3004,9 @@ class Target {
 }
 
 class LoginCard {
+  get VISIBLE() {
+    return !this.section.classList.contains("hidden");
+  }
   constructor() {
     this.initializeElements();
     this.addEvents();
@@ -2962,9 +3022,9 @@ class LoginCard {
   }
 
   addEvents() {
-    this.header.addEventListener("mousedown", (e) => {
-      UI.moveEvent(this.section, e);
-    });
+    // this.header.addEventListener("mousedown", (e) => {
+    //   UI.moveEvent(this.section, e);
+    // });
   }
   setValues() {
     // Встановити ключ API з об'єкта ідентифікації користувача
@@ -3034,6 +3094,9 @@ class LoginCard {
   }
 }
 class Games {
+  get VISIBLE() {
+    return !this.section.classList.contains("hidden");
+  }
   get SORT_METHOD() {
     return sortBy[this.SORT_NAME];
   }
@@ -3216,13 +3279,7 @@ class Games {
     this.initializeElements();
     this.addEvents();
 
-    this.loadGamesArray().then(() => {
-      this.fillGamesDown({ list: this.section.querySelector(".platform-list"), platformID: "all" })
-      this.generateFiltersList();
-      this.setValues();
-      this.applyFilter();
-      // this.generateGamesLists();
-    })
+
 
   }
   initializeElements() {
@@ -3563,6 +3620,9 @@ class Games {
   }
 }
 class Progression {
+  get VISIBLE() {
+    return !this.section.classList.contains("hidden");
+  }
   constructor() {
     this.initializeElements();
     this.addEvents();
@@ -3748,6 +3808,57 @@ class Progression {
     ui.buttons.progression.click();
   }
 
+}
+class Note {
+  get VISIBLE() {
+    return !this.section.classList.contains("hidden");
+  }
+  AUTOSAVE_INTERVAL_MILISECS = 3000;
+  get NOTES_VALUE() {
+    return config._cfg.ui?.note_section?.notes ?? "";
+  }
+  set NOTES_VALUE(value) {
+    config._cfg.ui.note_section.notes = value;
+    config.writeConfiguration();
+  }
+  constructor() {
+    this.initializeElements();
+    this.addEvents();
+    this.setValues();
+  }
+  initializeElements() {
+    this.section = document.querySelector("#note_section");
+    this.header = this.section.querySelector(".header-container");
+    this.resizer = this.section.querySelector("#note-resizer");
+    this.textaria = this.section.querySelector(".note-textaria");
+  }
+
+  addEvents() {
+    this.delayedSave;
+    this.textaria.addEventListener("input", e => {
+      clearTimeout(this.delayedSave);
+      this.delayedSave = setTimeout(() => {
+        this.NOTES_VALUE = this.textaria.value;
+      },
+        this.AUTOSAVE_INTERVAL_MILISECS);
+
+    })
+    this.resizer.addEventListener("mousedown", event => {
+      event.stopPropagation();
+      this.section.classList.add("resized");
+      UI.resizeEvent({
+        event: event,
+        section: this.section,
+        postFunc: () => "",
+      });
+    });
+    this.header.addEventListener("mousedown", (e) => {
+      UI.moveEvent(this.section, e);
+    });
+  }
+  setValues() {
+    this.textaria.value = this.NOTES_VALUE;
+  }
 }
 //* Методи сортування для досягнень гри
 const sortBy = {

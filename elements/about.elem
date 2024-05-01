@@ -1,4 +1,4 @@
-<section id="help_section" class="help_section hidden section">
+<section id="help_section" class="help_section hidden disposed section">
   <div class="help-container">
     <div class="header-container">
       <div class="header-icon">
@@ -18,8 +18,13 @@
       </div>
     </div>
     <ul class="changelog-list">
+      <p class="changelog-list_item">02-05-24
+      </p>
+      <li class="changelog-list_item">added notes widget
+      </li>
       <p class="changelog-list_item">25-04-24
-      </p><li class="changelog-list_item">added progression widget
+      </p>
+      <li class="changelog-list_item">added progression widget
       </li>
       <p class="changelog-list_item">20-04-24
       </p>

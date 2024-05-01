@@ -1,0 +1,30 @@
+.section.note_section {
+    display: flex;
+    flex-direction: column;
+    top: 100px;
+    left: 200px;
+    width: 350px;
+    height: 300px;
+    min-width: 250px;
+    min-height: 200px;
+}
+
+.note-container {
+    position: relative;
+    flex: 1;
+    padding: 10px;
+
+}
+
+.note-textaria {
+    background-color: black;
+    font-family: consolas, system-ui, sans-serif;
+    color: greenyellow;
+    text-wrap: wrap;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    font-size: 1.3rem;
+    resize: none;
+    border-radius: 5px;
+}

@@ -29,7 +29,7 @@
     </div>
   </div>
   <div class="resizer" id="game-card-resizer"></div>
-</section><section id="help_section" class="help_section hidden section">
+</section><section id="help_section" class="help_section hidden disposed section">
   <div class="help-container">
     <div class="header-container">
       <div class="header-icon">
@@ -49,8 +49,13 @@
       </div>
     </div>
     <ul class="changelog-list">
+      <p class="changelog-list_item">02-05-24
+      </p>
+      <li class="changelog-list_item">added notes widget
+      </li>
       <p class="changelog-list_item">25-04-24
-      </p><li class="changelog-list_item">added progression widget
+      </p>
+      <li class="changelog-list_item">added progression widget
       </li>
       <p class="changelog-list_item">20-04-24
       </p>
@@ -306,7 +311,7 @@
       </div>
     </div>
   </div>
-</section><section id="side_panel" class="buttons-block gradient-animation  section expanded">
+</section><section id="side_panel" class="buttons-block gradient-animation expanded">
     <div id="buttons-header_container" class="header-container widget-header_container buttons-header_container">
 
     </div>
@@ -389,6 +394,18 @@
                 </label>
             </div>
             <div class="setting-radio-group">
+                <input type="checkbox" name="open-note-button" id="open-note-button">
+                </input>
+                <label class="side-panel_input" title="note widget" for="open-note-button" onclick="">
+
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                        fill="#e8eaed">
+                        <path
+                            d="M280-280h84l240-238-86-86-238 238v86Zm352-266 42-44q6-6 6-14t-6-14l-56-56q-6-6-14-6t-14 6l-44 42 86 86ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h168q13-36 43.5-58t68.5-22q38 0 68.5 22t43.5 58h168q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm280-590q13 0 21.5-8.5T510-820q0-13-8.5-21.5T480-850q-13 0-21.5 8.5T450-820q0 13 8.5 21.5T480-790ZM200-200v-560 560Z" />
+                    </svg>
+                </label>
+            </div>
+            <div class="setting-radio-group">
                 <input type="checkbox" name="open-about-button" id="open-about-button">
                 </input>
                 <label class="side-panel_input" title="about widget" for="open-about-button" onclick="">
@@ -399,8 +416,6 @@
                     </svg>
                 </label>
             </div>
-
-
 
         </div>
 
@@ -419,7 +434,7 @@
 
     </div>
 
-</section><section id="settings_section" class="prefs_section section">
+</section><section id="settings_section" class="prefs_section section ">
   <div class="header-container prefs-header-container">
     <div class="header-icon settings-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" fill="white"
         viewBox="0 -960 960 960" width="24">
@@ -540,34 +555,34 @@
     <div class="resizer" id="awards-resizer"></div>
 </section><section id="update-section" class="update_section section ">
 
-      <div class="update_container " id="update-text-block">
-        <div class="progress-bar" id="status-progress-bar">
-          <div class="progress-percent" id="status-progress-text">10%</div>
-        </div>
-        <button title="autoupdate achievements" id="watching-button" class="round-button update-button box-3d checked">
-          <!-- <svg xmlns="http://www.w3.org/2000/svg" height="24"
+  <div class="update_container " id="update-text-block">
+    <div class="progress-bar" id="status-progress-bar">
+      <div class="progress-percent" id="status-progress-text">10%</div>
+    </div>
+    <button title="autoupdate achievements" id="watching-button" class="round-button update-button box-3d checked">
+      <!-- <svg xmlns="http://www.w3.org/2000/svg" height="24"
             viewBox="0 -960 960 960" width="24">
             <path
               d="M204-318q-22-38-33-78t-11-82q0-134 93-228t227-94h7l-64-64 56-56 160 160-160 160-56-56 64-64h-7q-100 0-170 70.5T240-478q0 26 6 51t18 49l-60 60ZM481-40 321-200l160-160 56 56-64 64h7q100 0 170-70.5T720-482q0-26-6-51t-18-49l60-60q22 38 33 78t11 82q0 134-93 228t-227 94h-7l64 64-56 56Z">
             </path>
           </svg> -->
-        </button>
-        <div class="update-text-block">
-          <div class="update-game_header">
-            <a id="game-title" target="_blank" class=" update-section-text" href="">Game tittle</a>
-          </div>
-          <p id="game-platform" class="update-game-platform update-section-text">Console</p>
-          <p id="rich-presence" class="update-section-text"></p>
-          <!-- <p class="game-achivs-count" id="game-achivs-count">
+    </button>
+    <div class="update-text-block">
+      <div class="update-game_header">
+        <a id="game-title" target="_blank" class=" update-section-text" href="">Game tittle</a>
+      </div>
+      <p id="game-platform" class="update-game-platform update-section-text">Console</p>
+      <p id="rich-presence" class="update-section-text"></p>
+      <!-- <p class="game-achivs-count" id="game-achivs-count">
             10
           </p> -->
-        </div>
-        <img src="./assets/img/icon.png" alt=" " class="update-game-preview box-3d" id="game-preview" />
+    </div>
+    <img src="./assets/img/icon.png" alt=" " class="update-game-preview box-3d" id="game-preview" />
 
-      </div>
+  </div>
 
-      <div class="resizer" id="status-resizer"></div>
-    </section><section class="section games_setion" id="games_section">
+  <div class="resizer" id="status-resizer"></div>
+</section><section class="section games_setion " id="games_section">
 
     <div class="games-header_container header-container">
         <div class="header-icon games-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960"
@@ -2072,6 +2087,27 @@
 
 
 
+</section><section id="note_section" class="note_section  section">
+    <div class="header-container">
+        <div class="header-icon note-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24px"
+                viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+                <path
+                    d="M280-280h84l240-238-86-86-238 238v86Zm352-266 42-44q6-6 6-14t-6-14l-56-56q-6-6-14-6t-14 6l-44 42 86 86ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h168q13-36 43.5-58t68.5-22q38 0 68.5 22t43.5 58h168q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm280-590q13 0 21.5-8.5T510-820q0-13-8.5-21.5T480-850q-13 0-21.5 8.5T450-820q0 13 8.5 21.5T480-790ZM200-200v-560 560Z" />
+            </svg></div>
+        <h2 class="widget-header-text"> Notes</h2>
+
+        <button class="header-button header-icon" onclick="ui.buttons.note.click()">
+            <svg height="24" viewBox="0 -960 960 960" width="24">
+                <path
+                    d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+            </svg>
+        </button>
+    </div>
+    <div class="note-container">
+        <textarea placeholder="Your notes will be here" name="note_textaria" class="note-textaria" id="note_textarea"
+            cols="auto" rows="auto"></textarea>
+    </div>
+    <div class="resizer" id="note-resizer"></div>
 </section>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>

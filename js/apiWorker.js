@@ -77,7 +77,13 @@ class APIWorker {
       targetUser: targetUser || config.targetUser,
       gameID: gameID || config.gameID,
     });
-    return fetch(url).then((resp) => resp.json());
+
+    return fetch(url).then((resp) => resp.json()).then(gameProgressObject => {
+      gameProgressObject.Achievements = Object.values(gameProgressObject.Achievements)
+        .map(achievement =>
+          this.fixAchievement(achievement, gameProgressObject));
+      return gameProgressObject;
+    });
   }
 
   // Отримання недавно отриманих досягнень користувача
@@ -169,5 +175,29 @@ class APIWorker {
       endpoint: endpoint,
     });
     return fetch(url).then((resp) => resp.json()).then(obj => console.log(obj));
+  }
+
+
+
+
+
+
+
+
+  fixAchievement(achievement, achievements) {
+    const { BadgeName, DateEarned, DateEarnedHardcore } = achievement;
+
+    //Додаєм кількість гравців
+    achievement.totalPlayers = achievements.NumDistinctPlayers;
+
+    // Визначаєм, чи отримано досягнення та чи є воно хардкорним
+    achievement.isEarned = !!DateEarned;
+    achievement.isHardcoreEarned = !!DateEarnedHardcore;
+
+    // Додаєм адресу зображення для досягнення
+    achievement.prevSrc = `https://media.retroachievements.org/Badge/${BadgeName}.png`;
+
+    //Повертаємо виправлений об'єкт
+    return achievement;
   }
 }
