@@ -3279,7 +3279,13 @@ class Games {
     this.initializeElements();
     this.addEvents();
 
-
+    this.loadGamesArray().then(() => {
+      this.fillGamesDown({ list: this.section.querySelector(".platform-list"), platformID: "all" })
+      this.generateFiltersList();
+      this.setValues();
+      this.applyFilter();
+      // this.generateGamesLists();
+    })
 
   }
   initializeElements() {
