@@ -234,6 +234,11 @@
     background-color: chartreuse;
     color: black;
     font-weight: 600;
+    text-transform: uppercase;
+}
+
+.game-title_original {
+    display: none;
 }
 
 .game-title_hack {
@@ -254,6 +259,22 @@
 
 .game-title_demo {
     background-color: chocolate;
+}
+
+.game-title_mastered {
+    background-color: gold;
+}
+
+.game-title_completed {
+    background-color: rgba(255, 217, 0, 0.473);
+}
+
+.game-title_beaten-hardcore {
+    background-color: grey;
+}
+
+.game-title_beaten-softcore {
+    background-color: rgba(128, 128, 128, 0.281);
 }
 
 /* .game-description_button:hover .game-title_suffix {

@@ -1524,7 +1524,6 @@ class ButtonPanel {
       // Якщо так, показуємо панель
       this.section.classList.add("expanded");
       this.section.addEventListener("blur", (e) => {
-        console.log("blur")
         setTimeout(
           () => ui.buttons.section.classList.remove("expanded"),
           0
@@ -1538,7 +1537,6 @@ class ButtonPanel {
       // Якщо так, показуємо панель
       this.section.classList.add("expanded");
       this.section.addEventListener("mouseleave", (e) => {
-        console.log("blur")
         setTimeout(
           () => ui.buttons.section.classList.remove("expanded"),
           200
@@ -3171,32 +3169,31 @@ class Games {
   }
 
   async changeGamesGroup(group) {
-    const resentCheckbox = this.section.querySelector("#games_sort-latest");
+    const recentCheckbox = this.section.querySelector("#games_sort-latest");
     switch (group) {
       case 'recent':
-        this.GAMES.all = await this.getRecentGamesArray({});
-        this.platformFiltersList.classList.add("disabled");
-        this.section.querySelector("#games_filter-types-list").classList.add("disabled")
-        resentCheckbox.closest(".games_filters-item").classList.remove("disabled");
-        resentCheckbox.click();
-        this.clearList();
+        await this.getRecentGamesArray({});
+        recentCheckbox.closest(".games_filters-item").classList.remove("disabled");
+        recentCheckbox.click();
         this.fillFullList();
-        this.applySort();
+        break;
+      case 'completion':
+        await this.getCompletionGamesArray({});
+        recentCheckbox.closest(".games_filters-item").classList.remove("disabled");
+        recentCheckbox.click();
+        this.fillFullList();
         break;
       default:
-        this.clearList();
-        this.GAMES.all = this.GAMES.saved;
-        resentCheckbox.closest(".games_filters-item").classList.add("disabled");
+        recentCheckbox.closest(".games_filters-item").classList.add("disabled");
         this.platformFiltersList.classList.remove("disabled");
         this.section.querySelector("#games_filter-types-list").classList.remove("disabled")
-
         this.section.querySelector("#games_sort-title").click();
         await this.loadGamesArray();
-
     }
+    this.applySort();
   }
   applySort() {
-    this.GAMES.all = [...this.GAMES.all].sort((a, b) => this.SORT_METHOD(a, b) * this.REVERSE_SORT);
+    this.GAMES.all = this.GAMES.all.sort((a, b) => this.SORT_METHOD(a, b) * this.REVERSE_SORT);
     this.clearList();
     this.fillFullList();
   }
@@ -3205,18 +3202,17 @@ class Games {
     this.PLATFORMS_FILTER.forEach(platformId => {
       this.GAMES.all = this.GAMES.all.concat(this.GAMES[platformId]);
 
-      const searchbarValue = this.searchbar.value;
-      this.searchbar.classList.toggle("empty", searchbarValue)
-
-      if (searchbarValue) {
-
-        let regex = new RegExp(searchbarValue, "i");
-
-        this.GAMES.all = [...this.GAMES.all.filter(game => regex.test(game.Title))];
-
-      }
-
     })
+    const searchbarValue = this.searchbar.value;
+    this.searchbar.classList.toggle("empty", searchbarValue)
+
+    if (searchbarValue) {
+
+      let regex = new RegExp(searchbarValue, "i");
+
+      this.GAMES.all = this.GAMES.all.filter(game => regex.test(game.Title));
+
+    }
     this.applyTypesFilter();
     this.applySort()
   }
@@ -3226,8 +3222,8 @@ class Games {
     types.forEach(type => {
       filteredGamesArray = filteredGamesArray.concat(
         this.GAMES.all
-          .filter(game =>
-            game.sufixes.includes(type.toUpperCase()) || (game.sufixes.length == 0 && type == "original")
+          ?.filter(game =>
+            game?.sufixes.includes(type.toUpperCase()) || (game?.sufixes.length == 0 && type == "original")
           )
       );
     })
@@ -3243,8 +3239,20 @@ class Games {
     this.gamesList.dataset.currentGamesArrayPosition = 0;
   }
   platformCodes = {
-    "0": "Recently Played",
-    "all": "All games",
+    "Genesis/Mega Drive": "1",
+    "Nintendo 64": "2",
+    "SNES/Super Famicom": "3",
+    "Game Boy": "4",
+    "Game Boy Advance": "5",
+    "Game Boy Color": "6",
+    "NES/Famicom": "7",
+    "PC Engine/TurboGrafx-16": "8",
+    "PlayStation": "12",
+    "PlayStation 2": "21",
+    "PlayStation Portable": "41",
+    "etc.": "999",
+  }
+  platformNames = {
     "1": "Genesis/Mega Drive",
     "2": "Nintendo 64",
     "3": "SNES/Super Famicom",
@@ -3256,6 +3264,7 @@ class Games {
     "12": "PlayStation",
     "21": "PlayStation 2",
     "41": "PlayStation Portable",
+    "999": "etc.",
   }
   gameFilters = {
     "1": "Genesis/Mega Drive",
@@ -3269,23 +3278,25 @@ class Games {
     "12": "PlayStation",
     "21": "PlayStation 2",
     "41": "PlayStation Portable",
+    "999": "etc.",
   }
   plaformsInfo = {};
   GAMES = {};
   BATCH_SIZE = 10;
   MAX_GAMES_IN_LIST = 50;
   constructor() {
-    this.loadPlatformInfo();
     this.initializeElements();
     this.addEvents();
+    this.generateFiltersList();
+    this.setValues();
+    this.loadGamesArray()
+      .then(() => {
+        this.applyFilter();
+        this.fillGamesDown({ list: this.section.querySelector(".platform-list") })
+        // this.applyFilter();
+        // this.applySort();
 
-    this.loadGamesArray().then(() => {
-      this.fillGamesDown({ list: this.section.querySelector(".platform-list"), platformID: "all" })
-      this.generateFiltersList();
-      this.setValues();
-      this.applyFilter();
-      // this.generateGamesLists();
-    })
+      })
 
   }
   initializeElements() {
@@ -3327,6 +3338,7 @@ class Games {
 
   }
   setValues() {
+    this.gamesList.innerHTML = "";
     switch (this.SORT_NAME) {
       case UI.sortMethods.achievementsCount:
         this.section.querySelector("#games_sort-achieves").checked = true;
@@ -3346,15 +3358,7 @@ class Games {
     this.platformFiltersList.querySelector("#game-filters_all").checked = this.PLATFORMS_FILTER.length === Object.keys(this.gameFilters).length;
 
   }
-  async loadPlatformInfo() {
-    try {
-      const responce = await fetch(`./json/games/consoles.json`);
-      const platformsData = await responce.json();
-      this.plaformsInfo = platformsData;
-    } catch (error) {
-      console.error("Error fetching games:", error);
-    }
-  }
+
   isEndOfListVisible({ list }) {
     const lastItem = list.lastElementChild;
     // Перевіряємо, чи останній елемент списку є видимим у зоні прокрутки
@@ -3367,27 +3371,27 @@ class Games {
     // Перевіряємо, чи останній елемент списку є видимим у зоні прокрутки
     return firstItem?.getBoundingClientRect().bottom > -200;
   }
-  async fillGamesDown({ list, platformID }) {
+  fillGamesDown({ list }) {
     !list.dataset.currentGamesArrayPosition ? list.dataset.currentGamesArrayPosition = 0 : "";
 
     let startIndex = Number(list.dataset.currentGamesArrayPosition) ?? 0;
-    let lastIndex = startIndex + this.BATCH_SIZE >= this.GAMES[platformID].length ?
-      this.GAMES[platformID].length :
+    let lastIndex = startIndex + this.BATCH_SIZE >= this.GAMES.all.length ?
+      this.GAMES.all.length :
       startIndex + this.BATCH_SIZE;
     list.dataset.currentGamesArrayPosition = lastIndex;
     // Використовуємо збережені дані у властивості games для заповнення списку
     for (let i = startIndex; i < lastIndex; i++) {
-      const gameElement = this.generateGameElement(this.GAMES[platformID][i]);
+      const gameElement = this.generateGameElement(this.GAMES.all[i]);
       list.appendChild(gameElement);
     }
   }
-  async fillGamesTop({ list, platformID }) {
+  fillGamesTop({ list }) {
     !list.dataset.currentGamesArrayPosition ? list.dataset.currentGamesArrayPosition = 0 : "";
 
     let startIndex = list.dataset.currentGamesArrayPosition - list.children.length - 1;
     // Використовуємо збережені дані у властивості games для заповнення списку
     for (let i = startIndex; i > startIndex - this.BATCH_SIZE && i >= 0; i--) {
-      const gameElement = this.generateGameElement(this.GAMES[platformID][i]);
+      const gameElement = this.generateGameElement(this.GAMES.all[i]);
       list.prepend(gameElement);
     }
   }
@@ -3413,18 +3417,43 @@ class Games {
 
   async getRecentGamesArray() {
     const resp = await apiWorker.getRecentlyPlayedGames({});
-
-    return resp;
-    // this.GAMES["0"] = resp;
+    this.GAMES = {};
+    this.clearList();
+    resp.forEach(game => {
+      const platformCode =
+        this.platformNames.hasOwnProperty(game.ConsoleID) ? game.ConsoleID : this.platformCodes["etc."];
+      if (!this.GAMES[platformCode]) {
+        this.GAMES[platformCode] = []
+      }
+      this.GAMES[platformCode].push(game)
+    })
+    this.GAMES.all = this.GAMES.saved = Object.values(this.GAMES).flat();
+    this.applyFilter();
   }
+  async getCompletionGamesArray() {
+    const resp = await apiWorker.SAVED_COMPLETION_PROGRESS;
+    this.GAMES = {};
+    this.clearList();
+    resp.Results.forEach(game => {
+      const platformCode =
+        this.platformNames.hasOwnProperty(game.ConsoleID) ? game.ConsoleID : this.platformCodes["etc."];
+      if (!this.GAMES[platformCode]) {
+        this.GAMES[platformCode] = []
+      }
+      this.GAMES[platformCode].push(game)
+    })
+    this.GAMES.all = this.GAMES.saved = Object.values(this.GAMES).flat();
+    this.applyFilter();
+  }
+
 
   async loadGamesArray() {
     this.GAMES = {};
-    for (const platformCode of Object.getOwnPropertyNames(this.platformCodes)) {
+    this.clearList();
+    for (const platformCode of Object.getOwnPropertyNames(this.platformNames)) {
       await this.getAllGames({ consoleCode: platformCode });
     }
     this.GAMES.all = this.GAMES.saved = Object.values(this.GAMES).flat();
-    this.applyFilter();
   }
   async getAllGames({ consoleCode }) {
     try {
@@ -3452,7 +3481,7 @@ class Games {
       }
 
     } catch (error) {
-      console.error("Error fetching games:", error);
+      return [];
     }
   }
   async showMoreDescription(element) {
@@ -3506,7 +3535,7 @@ class Games {
       filterItem.innerHTML =
         `
         <input ${isChecked ? "checked" : ""} onchange='ui.games.PLATFORMS_FILTER = this' type="checkbox" data-platform-id="${platformCode}"  name="game-filters_item" id="game-filters_${platformCode}" ></input>
-        <label class="game-filters_checkbox" for="game-filters_${platformCode}">${this.platformCodes[platformCode]}</label>
+        <label class="game-filters_checkbox" for="game-filters_${platformCode}">${this.platformNames[platformCode]}</label>
       `;
       this.platformFiltersList.appendChild(filterItem);
     })

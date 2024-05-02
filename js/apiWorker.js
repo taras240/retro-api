@@ -1,4 +1,24 @@
 class APIWorker {
+  get _savedCompletionProgress() {
+    return config._cfg?.apiWorker?.completionProgress ?? {}
+  }
+  get SAVED_COMPLETION_PROGRESS() {
+    let completionProgress = this._savedCompletionProgress;
+    if (!completionProgress?.Total || config._cfg.apiWorker.targetUser !== config.targetUser) {
+      return this.updateCompletionProgress({ batchSize: 500 }).then(() => this._savedCompletionProgress)
+    }
+    else {
+      return this.updateCompletionProgress({ batchSize: 20, savedArray: completionProgress.Results }).then(() => this._savedCompletionProgress)
+    }
+  }
+  set SAVED_COMPLETION_PROGRESS(value) {
+    if (!config._cfg.apiWorker) {
+      config._cfg.apiWorker = {};
+    }
+    config._cfg.apiWorker.targetUser = config.targetUser;
+    config._cfg.apiWorker.completionProgress = value;
+    config.writeConfiguration();
+  }
   // Базовий URL API
   baseUrl = `https://retroachievements.org/API/`;
 
@@ -17,7 +37,7 @@ class APIWorker {
   };
 
   // Генерує URL для запиту до API
-  getUrl({ endpoint, targetUser, gameID, minutes, apiKey, userName, count }) {
+  getUrl({ endpoint, targetUser, gameID, minutes, apiKey, userName, count, offset }) {
     // Створення нового об'єкту URL з вказаною кінцевою точкою та базовим URL
     let url = new URL(endpoint, this.baseUrl);
 
@@ -32,6 +52,7 @@ class APIWorker {
       f: 1,
       h: 1,
       c: count || 20,
+      o: offset || 0,
     };
 
     // Додавання параметрів до URL
@@ -55,12 +76,43 @@ class APIWorker {
     return fetch(url).then((resp) => resp.json());
   }
   //Отримати прогрес завершення користувача
-  getUserCompelitionProgress({ targetUser }) {
+  getUserCompelitionProgress({ targetUser, count, offset }) {
     let url = this.getUrl({
       targetUser: targetUser || config.targetUser,
+      count: count || 100,
+      offset: offset || 0,
       endpoint: this.endpoints.completionProgress,
     });
-    return fetch(url).then((resp) => resp.json());
+    return fetch(url).then((resp) => resp.json()).then(arr => {
+      arr.Results = arr.Results.map((game, index) => {
+        game.ID = game.GameID;
+        game.Points = "";
+        game.NumAchievements = game.NumAwardedHardcore + "/" + game.MaxPossible;
+        game.NumLeaderboards = "";
+        game.DateEarnedHardcore = game.MostRecentAwardedDate;
+        let title = game.Title;
+        const ignoredWords = ["~UNLICENSED~", "~DEMO~", "~HOMEBREW~", "~HACK~", "~PROTOTYPE~", ".HACK//", "~TEST KIT~"];
+
+        const sufixes = ignoredWords.reduce((sufixes, word) => {
+          const reg = new RegExp(word, "gi");
+          if (reg.test(game.Title)) {
+            title = title.replace(reg, "");
+            sufixes.push(word.replaceAll(new RegExp("[^A-Za-z]", "gi"), ""));
+
+          }
+          return sufixes;
+        }, []);
+        if (sufixes.length === 0) {
+          sufixes.push("ORIGINAL")
+        }
+        game.HighestAwardKind ? sufixes.push(game.HighestAwardKind) : "";
+        game.sufixes = sufixes;
+        game.FixedTitle = title.trim();
+        return game;
+      })
+      return arr;
+    }
+    )
   }
   //Отримати нагороди користувача
   getUserAwards({ targetUser }) {
@@ -178,7 +230,45 @@ class APIWorker {
   }
 
 
+  // {
+  //   "Count": 100,
+  //   "Total": 1287,
+  //   "Results": [
+  //     {
+  //       "GameID": 20246,
+  //       "Title": "~Hack~ Knuckles the Echidna in Sonic the Hedgehog",
+  //       "ImageIcon": "/Images/074560.png",
+  //       "ConsoleID": 1,
+  //       "ConsoleName": "Mega Drive / Genesis",
+  //       "MaxPossible": 0,
+  //       "NumAwarded": 0,
+  //       "NumAwardedHardcore": 0,
+  //       "MostRecentAwardedDate": "2023-10-27T02:52:34+00:00",
+  //       "HighestAwardKind": "beaten-hardcore",
+  //       "HighestAwardDate": "2023-10-27T02:52:34+00:00"
+  //     }
+  // ...
+  //   ]
+  // }
+  async updateCompletionProgress({ savedArray = [], completionProgress = [], batchSize = 500 }) {
+    let completionOffset = await this.getUserCompelitionProgress({ count: batchSize, offset: completionProgress.length });
+    completionProgress = [...completionProgress, ...completionOffset.Results];
+    let lastGame = completionProgress.at(-1);
 
+    let savedIndex = savedArray.findIndex(game => {
+      return game.hasOwnProperty("GameID") && game.GameID === lastGame.GameID &&
+        game.MostRecentAwardedDate === lastGame.MostRecentAwardedDate;
+    });
+    if (savedIndex >= 0 || completionProgress.length === completionOffset.Total) {
+      const completionIDs = completionProgress.map(game => game.GameID);
+      savedArray = savedArray.filter(game => !completionIDs.includes(game.GameID))
+      savedArray = [...completionProgress, ...savedArray];
+      this.SAVED_COMPLETION_PROGRESS = { Total: savedArray.length, Results: savedArray };
+    }
+    else {
+      setTimeout(() => this.updateCompletionProgress({ savedArray: savedArray, completionProgress: completionProgress, batchSize: batchSize }), 100)
+    }
+  }
 
 
 
