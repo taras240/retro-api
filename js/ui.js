@@ -3210,7 +3210,7 @@ class Games {
 
       let regex = new RegExp(searchbarValue, "i");
 
-      this.GAMES.all = this.GAMES.all.filter(game => regex.test(game.Title));
+      this.GAMES.all = this.GAMES.all.filter(game => regex.test(game?.Title));
 
     }
     this.applyTypesFilter();

@@ -131,9 +131,10 @@ class APIWorker {
     });
 
     return fetch(url).then((resp) => resp.json()).then(gameProgressObject => {
-      gameProgressObject.Achievements = Object.values(gameProgressObject.Achievements)
-        .map(achievement =>
-          this.fixAchievement(achievement, gameProgressObject));
+
+      Object.getOwnPropertyNames(gameProgressObject.Achievements)
+        .forEach(id =>
+          this.fixAchievement(gameProgressObject.Achievements[id], gameProgressObject));
       return gameProgressObject;
     });
   }

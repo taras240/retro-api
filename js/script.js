@@ -13,6 +13,7 @@ async function getAchievements() {
   try {
     // Отримання інформації про прогрес гри від API
     const response = await apiWorker.getGameProgress({});
+
     ui.ACHIEVEMENTS = response;
     ui.statusPanel.watchButton.classList.remove("error");
     // Оновлення інформації в картці гри
@@ -45,14 +46,16 @@ async function updateAchievements() {
     const achievements = await apiWorker.getRecentAchieves({
       minutes: RECENT_ACHIVES_RANGE_MINUTES,
     });
-    const earnedAchievements = ui.checkForNewAchieves(achievements);
-    if (earnedAchievements.length > 0) {
-      ui.achievementsBlock.forEach(template => UI.updateAchievementsSection({ earnedAchievementIDs: earnedAchievements, widget: template }));
-      UI.updateAchievementsSection({ earnedAchievementIDs: earnedAchievements, widget: ui.target });
+    const earnedAchievementsIDs = ui.checkForNewAchieves(achievements);
+
+    if (earnedAchievementsIDs.length > 0) {
+
+      ui.achievementsBlock.forEach(template => UI.updateAchievementsSection({ earnedAchievementIDs: earnedAchievementsIDs, widget: template }));
+      UI.updateAchievementsSection({ earnedAchievementIDs: earnedAchievementsIDs, widget: ui.target });
       ui.target.delayedRemove();
       updateAwards();
-      ui.progression.updateEarnedCards({ gameIDArray: earnedAchievements });
-      ui.statusPanel.updateProgress({ earnedAchievementIDs: earnedAchievements });
+      ui.progression.updateEarnedCards({ gameIDArray: earnedAchievementsIDs });
+      ui.statusPanel.updateProgress({ earnedAchievementIDs: earnedAchievementsIDs });
     }
   } catch (error) {
     console.error(error); // Обробка помилок
