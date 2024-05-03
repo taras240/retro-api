@@ -34,6 +34,7 @@ class APIWorker {
     userGameRankAndScore: "API_GetUserGameRankAndScore.php",
     completionProgress: "API_GetUserCompletionProgress.php",
     gameList: "API_GetGameList.php",
+    summary: "API_GetUserSummary.php",
   };
 
   // Генерує URL для запиту до API

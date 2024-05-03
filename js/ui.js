@@ -3204,9 +3204,9 @@ class Games {
 
     })
     const searchbarValue = this.searchbar.value;
-    this.searchbar.classList.toggle("empty", searchbarValue)
+    this.searchbar.classList.toggle("empty", searchbarValue == "")
 
-    if (searchbarValue) {
+    if (searchbarValue != "") {
 
       let regex = new RegExp(searchbarValue, "i");
 
@@ -3324,9 +3324,8 @@ class Games {
     this.header.addEventListener("mousedown", (e) => {
       UI.moveEvent(this.section, e);
     });
-    this.section.querySelector(".games_search-block").addEventListener("click", e => {
+    this.section.querySelector(".games_search-bar_container").addEventListener("click", e => {
       e.stopPropagation();
-
     })
     this.section.addEventListener("click", () => {
       this.section.querySelector(".extended")?.classList.remove("extended");
@@ -3621,7 +3620,7 @@ class Games {
     recoverGamesData();
     const searchbarValue = this.searchbar.value;
 
-    this.searchbar.classList.toggle("empty", searchbarValue == "")
+    this.searchbar.classList.toggle("empty", searchbarValue == "");
 
     let regex = new RegExp(searchbarValue, "i");
 

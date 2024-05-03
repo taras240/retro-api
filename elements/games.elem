@@ -22,7 +22,8 @@
                 <input type="text" class="games_search-input empty" id="games_search-input" placeholder="Search">
                 <button class="games_searchbar-clear games_searchbar-icon" onclick="ui.games.clearSearchbar()"></button>
                 <div class="games_settings-checkbox-container games_searchbar-icon">
-                    <input onchange="this.closest('.games_search-block').classList.toggle('extended',this.checked)"
+                    <input
+                        onchange="this.closest('.games_search-bar_container').classList.toggle('extended',this.checked)"
                         type="checkbox" name="games_settings-checkbox" id="games_settings-checkbox">
                     </input>
                     <label class="side-panel_input" title="progression widget" for="games_settings-checkbox">
@@ -32,103 +33,103 @@
                         </svg>
                     </label>
                 </div>
-                <div class="games_search-menu">
-                    <h3 class="games_menu-header">Select games group:</h3>
-                    <ul class="games_group-selection-list games_filter-platform-list">
-                        <li class="games_filters-item">
-                            <input onchange="ui.games.GAMES_GROUP = 'all'" type="radio" name="games_group-selection"
-                                id="games_group-all" checked></input>
-                            <label class="game-filters_checkbox" for="games_group-all">All</label>
 
-                        </li>
-                        <li class="games_filters-item">
-                            <input onchange="ui.games.GAMES_GROUP = 'recent'" type="radio" name="games_group-selection"
-                                id="games_group-recent"></input>
-                            <label class="game-filters_checkbox" for="games_group-recent">Recent</label>
-
-                        </li>
-                        <li class="games_filters-item">
-                            <input onchange="ui.games.GAMES_GROUP = 'completion'" type="radio"
-                                name="games_group-selection" id="games_group-completion"></input>
-                            <label class="game-filters_checkbox" for="games_group-completion">Completion</label>
-
-                        </li>
-                    </ul>
-                    <h3 class="games_menu-header">Filter by type:</h3>
-                    <ul class="games_filter-platform-list" id="games_filter-types-list">
-                        <li class="game-filters_item">
-                            <input onchange="ui.games.TYPES_FILTER = this" data-type="original" type="checkbox"
-                                name="game-filters_item" id="game-filters_original">
-                            <label class="game-filters_checkbox" for="game-filters_original">Original</label>
-                        </li>
-                        <li class="game-filters_item">
-                            <input onchange="ui.games.TYPES_FILTER = this" data-type="hack" type="checkbox"
-                                name="game-filters_item" id="game-filters_hack">
-                            <label class="game-filters_checkbox" for="game-filters_hack">Hack</label>
-                        </li>
-                        <li class="game-filters_item">
-                            <input onchange="ui.games.TYPES_FILTER = this" data-type="homebrew" type="checkbox"
-                                name="game-filters_item" id="game-filters_homebrew">
-                            <label class="game-filters_checkbox" for="game-filters_homebrew">Homebrew</label>
-                        </li>
-                        <li class="game-filters_item">
-                            <input onchange="ui.games.TYPES_FILTER = this" data-type="unlicensed" type="checkbox"
-                                name="game-filters_item" id="game-filters_unlicensed">
-                            <label class="game-filters_checkbox" for="game-filters_unlicensed">Unlicensed</label>
-                        </li>
-                        <li class="game-filters_item">
-                            <input onchange="ui.games.TYPES_FILTER = this" data-type="prototype" type="checkbox"
-                                name="game-filters_item" id="game-filters_prototype">
-                            <label class="game-filters_checkbox" for="game-filters_prototype">Prototype</label>
-                        </li>
-                        <li class="game-filters_item">
-                            <input onchange="ui.games.TYPES_FILTER = this" data-type="demo" type="checkbox"
-                                name="game-filters_item" id="game-filters_demo">
-                            <label class="game-filters_checkbox" for="game-filters_demo">Demo</label>
-                        </li>
-                    </ul>
-                    <h3 class="games_menu-header">Filter by platform:</h3>
-                    <ul class="games_filter-platform-list" id="games_filter-platform-list">
-                        <li class="game-filters_item">
-                            <input onchange="ui.games.markAllFilters()" type="checkbox" name="game-filters_item"
-                                id="game-filters_all">
-                            <label class="game-filters_checkbox" for="game-filters_all">All</label>
-                        </li>
-                    </ul>
-                    <h3 class="games_menu-header">Sort by:</h3>
-                    <ul class="games_filter-platform-list" id="games_filter-platform-list">
-
-
-                        <li class="games_filters-item">
-                            <input onchange="ui.games.SORT_NAME = UI.sortMethods.title;" type="radio"
-                                name="games_sort-items" id="games_sort-title" checked></input>
-                            <label class="game-filters_checkbox" for="games_sort-title">Title</label>
-
-                        </li>
-                        <li class="games_filters-item">
-                            <input onchange="ui.games.SORT_NAME = UI.sortMethods.points;" type="radio"
-                                name="games_sort-items" id="games_sort-points"></input>
-                            <label class="game-filters_checkbox" for="games_sort-points">Points</label>
-                        </li>
-                        <li class="games_filters-item">
-                            <input onchange="ui.games.SORT_NAME = UI.sortMethods.achievementsCount" type="radio"
-                                name="games_sort-items" id="games_sort-achieves"></input>
-                            <label class="game-filters_checkbox" for="games_sort-achieves">Achieves count</label>
-                        </li>
-                        <li class="games_filters-item disabled">
-                            <input onchange="ui.games.SORT_NAME = UI.sortMethods.latest;" type="radio"
-                                name="games_sort-items" id="games_sort-latest" checked></input>
-                            <label class="game-filters_checkbox" for="games_sort-latest">Date</label>
-                        </li>
-                        <li class="games_filters-item">
-                            <input onchange="ui.games.REVERSE_SORT = this.checked" type="checkbox"
-                                name="games_sort-items" id="games_sort-reverse"></input>
-                            <label class="game-filters_checkbox" for="games_sort-reverse">Reverse</label>
-                        </li>
-                    </ul>
-                </div>
             </div>
+            <div class="games_search-menu">
+                <h3 class="games_menu-header">Select games group:</h3>
+                <ul class="games_group-selection-list games_filter-platform-list">
+                    <li class="games_filters-item">
+                        <input onchange="ui.games.GAMES_GROUP = 'all'" type="radio" name="games_group-selection"
+                            id="games_group-all" checked></input>
+                        <label class="game-filters_checkbox" for="games_group-all">All</label>
 
+                    </li>
+                    <li class="games_filters-item">
+                        <input onchange="ui.games.GAMES_GROUP = 'recent'" type="radio" name="games_group-selection"
+                            id="games_group-recent"></input>
+                        <label class="game-filters_checkbox" for="games_group-recent">Recent</label>
+
+                    </li>
+                    <li class="games_filters-item">
+                        <input onchange="ui.games.GAMES_GROUP = 'completion'" type="radio" name="games_group-selection"
+                            id="games_group-completion"></input>
+                        <label class="game-filters_checkbox" for="games_group-completion">Completion</label>
+
+                    </li>
+                </ul>
+                <h3 class="games_menu-header">Filter by type:</h3>
+                <ul class="games_filter-platform-list" id="games_filter-types-list">
+                    <li class="game-filters_item">
+                        <input onchange="ui.games.TYPES_FILTER = this" data-type="original" type="checkbox"
+                            name="game-filters_item" id="game-filters_original">
+                        <label class="game-filters_checkbox" for="game-filters_original">Original</label>
+                    </li>
+                    <li class="game-filters_item">
+                        <input onchange="ui.games.TYPES_FILTER = this" data-type="hack" type="checkbox"
+                            name="game-filters_item" id="game-filters_hack">
+                        <label class="game-filters_checkbox" for="game-filters_hack">Hack</label>
+                    </li>
+                    <li class="game-filters_item">
+                        <input onchange="ui.games.TYPES_FILTER = this" data-type="homebrew" type="checkbox"
+                            name="game-filters_item" id="game-filters_homebrew">
+                        <label class="game-filters_checkbox" for="game-filters_homebrew">Homebrew</label>
+                    </li>
+                    <li class="game-filters_item">
+                        <input onchange="ui.games.TYPES_FILTER = this" data-type="unlicensed" type="checkbox"
+                            name="game-filters_item" id="game-filters_unlicensed">
+                        <label class="game-filters_checkbox" for="game-filters_unlicensed">Unlicensed</label>
+                    </li>
+                    <li class="game-filters_item">
+                        <input onchange="ui.games.TYPES_FILTER = this" data-type="prototype" type="checkbox"
+                            name="game-filters_item" id="game-filters_prototype">
+                        <label class="game-filters_checkbox" for="game-filters_prototype">Prototype</label>
+                    </li>
+                    <li class="game-filters_item">
+                        <input onchange="ui.games.TYPES_FILTER = this" data-type="demo" type="checkbox"
+                            name="game-filters_item" id="game-filters_demo">
+                        <label class="game-filters_checkbox" for="game-filters_demo">Demo</label>
+                    </li>
+                </ul>
+                <h3 class="games_menu-header">Filter by platform:</h3>
+                <ul class="games_filter-platform-list" id="games_filter-platform-list">
+                    <li class="game-filters_item">
+                        <input onchange="ui.games.markAllFilters()" type="checkbox" name="game-filters_item"
+                            id="game-filters_all">
+                        <label class="game-filters_checkbox" for="game-filters_all">All</label>
+                    </li>
+                </ul>
+                <h3 class="games_menu-header">Sort by:</h3>
+                <ul class="games_filter-platform-list" id="games_filter-platform-list">
+
+
+                    <li class="games_filters-item">
+                        <input onchange="ui.games.SORT_NAME = UI.sortMethods.title;" type="radio"
+                            name="games_sort-items" id="games_sort-title" checked></input>
+                        <label class="game-filters_checkbox" for="games_sort-title">Title</label>
+
+                    </li>
+                    <li class="games_filters-item">
+                        <input onchange="ui.games.SORT_NAME = UI.sortMethods.points;" type="radio"
+                            name="games_sort-items" id="games_sort-points"></input>
+                        <label class="game-filters_checkbox" for="games_sort-points">Points</label>
+                    </li>
+                    <li class="games_filters-item">
+                        <input onchange="ui.games.SORT_NAME = UI.sortMethods.achievementsCount" type="radio"
+                            name="games_sort-items" id="games_sort-achieves"></input>
+                        <label class="game-filters_checkbox" for="games_sort-achieves">Achieves count</label>
+                    </li>
+                    <li class="games_filters-item disabled">
+                        <input onchange="ui.games.SORT_NAME = UI.sortMethods.latest;" type="radio"
+                            name="games_sort-items" id="games_sort-latest" checked></input>
+                        <label class="game-filters_checkbox" for="games_sort-latest">Date</label>
+                    </li>
+                    <li class="games_filters-item">
+                        <input onchange="ui.games.REVERSE_SORT = this.checked" type="checkbox" name="games_sort-items"
+                            id="games_sort-reverse"></input>
+                        <label class="game-filters_checkbox" for="games_sort-reverse">Reverse</label>
+                    </li>
+                </ul>
+            </div>
 
             <!-- <div class="games_menu-container">
                 <button class="games-menu_button">filter</button>
