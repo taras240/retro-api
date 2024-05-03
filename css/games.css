@@ -227,7 +227,7 @@
     display: inline-block;
     font-size: .8rem;
     padding: 0 2px;
-    border: 1px solid transparent;
+    /* border: 1px solid transparent; */
     border-radius: 3px;
     margin: 2px;
     text-wrap: nowrap;

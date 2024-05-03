@@ -108,9 +108,13 @@ class UI {
     this.statusPanel = new StatusPanel();
     this.games = new Games();
     this.progression = new Progression();
+    this.userInfo = new UserInfo();
     this.note = new Note();
 
+
+    //*  Must be last initialize to set correct values
     this.buttons = new ButtonPanel();
+
     document.addEventListener("click", (e) => {
       document.querySelectorAll(".context-menu").forEach((el) => el.remove());
     });
@@ -1446,6 +1450,8 @@ class ButtonPanel {
     this.progression = this.section.querySelector("#open-progression-button");
     this.userImage = this.section.querySelector("#side-panel-user-image");
     this.note = this.section.querySelector("#open-note-button");
+    this.user = this.section.querySelector("#open-user-button");
+
   }
   addEvents() {
     // Отримуємо посилання на панель
@@ -1492,6 +1498,9 @@ class ButtonPanel {
     this.note.addEventListener("change", (e) => {
       UI.switchSectionVisibility(ui.note);
     });
+    this.user.addEventListener("change", (e) => {
+      UI.switchSectionVisibility(ui.userInfo);
+    });
   }
 
   setValues() {
@@ -1514,6 +1523,7 @@ class ButtonPanel {
     this.note.checked = config.ui?.note_section?.hidden === false ?? ui.note.VISIBLE;
 
     this.progression.checked = config.ui?.progression_section?.hidden === false ?? ui.progression.VISIBLE;
+    this.user.checked = config.ui?.user_section?.hidden === false ?? ui.user.VISIBLE;
 
 
     this.userImage.src = config.userImageSrc;
@@ -3292,10 +3302,6 @@ class Games {
     this.loadGamesArray()
       .then(() => {
         this.applyFilter();
-        this.fillGamesDown({ list: this.section.querySelector(".platform-list") })
-        // this.applyFilter();
-        // this.applySort();
-
       })
 
   }
@@ -3843,6 +3849,7 @@ class Progression {
   }
 
 }
+
 class Note {
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
@@ -3892,6 +3899,133 @@ class Note {
   }
   setValues() {
     this.textaria.value = this.NOTES_VALUE;
+  }
+}
+
+class UserInfo {
+  get VISIBLE() {
+    return !this.section.classList.contains("hidden");
+  }
+  USER_INFO = config._cfg.ui?.userInfoData ?? {
+    userName: config.USER_NAME ?? "userName",
+    userImageSrc: config.userImageSrc ?? "",
+    userRank: "???",
+    softpoints: "",
+    retropoints: "",
+    hardpoints: "",
+    lastGames: [],
+    lastAchivs: [],
+
+  }
+  constructor() {
+    this.initializeElements();
+    this.addEvents();
+    this.setValues();
+    if (config.identConfirmed) {
+      setTimeout(() => this.update(), 5000);
+    }
+
+  }
+  initializeElements() {
+    this.section = document.querySelector("#user_section");
+    this.userNameElement = this.section.querySelector(".user_user-name");
+    this.userImg = this.section.querySelector(".user-preview");
+    this.userRankElement = this.section.querySelector(".user_rank");//!------
+    this.userSoftpointsElement = this.section.querySelector(".user_softcore-points");
+    this.userHardpointsElement = this.section.querySelector(".user_hardcore-points")
+    this.userRetropointsElement = this.section.querySelector(".user_retropoints")
+    this.lastGamesList = this.section.querySelector(".user_last-games-list");
+    this.lastAchivsList = this.section.querySelector(".user_last-achivs-list");
+    this.resizer = this.section.querySelector("#user-info-resizer");
+
+  }
+  addEvents() {
+    this.section.addEventListener("mousedown", (e) => {
+      UI.moveEvent(this.section, e);
+    });
+    this.resizer.addEventListener("mousedown", event => {
+      event.stopPropagation();
+      this.section.classList.add("resized");
+      UI.resizeEvent({
+        event: event,
+        section: this.section,
+        postFunc: () => "",
+      });
+    });
+  }
+  setValues() {
+    this.userNameElement.innerText = this.USER_INFO.userName;
+    this.userImg.src = this.USER_INFO.userImageSrc;
+    this.userRankElement.innerText = this.USER_INFO.userRank;
+    this.userHardpointsElement.innerText = this.USER_INFO.hardpoints;
+    this.userSoftpointsElement.innerText = this.USER_INFO.softpoints;
+    this.userRetropointsElement.innerText = this.USER_INFO.retropoints;
+    this.lastGamesList.innerHTML = "";
+    this.lastAchivsList.innerHTML = "";
+    this.USER_INFO?.lastGames?.forEach(game => {
+      this.lastGamesList.appendChild(this.generateGameElement(game));
+    })
+    this.USER_INFO?.lastAchivs?.forEach(achiv => {
+      this.lastAchivsList.appendChild(this.generateAchivElement(achiv));
+    })
+
+  }
+  update() {
+    this.updateMainInformation()
+      .then(() => this.updateRecentAchives()
+        .then(() => this.updateRecentGames())).then(() => {
+          this.setValues();
+          config._cfg.ui.userInfoData = this.USER_INFO;
+          config.writeConfiguration();
+        })
+  }
+  async updateMainInformation() {
+    const resp = await apiWorker.getUserProfile({});
+    const { User, UserPic, TotalPoints, TotalSoftcorePoints, TotalTruePoints } = resp;
+    this.USER_INFO.userName = User;
+    this.USER_INFO.userImageSrc = `https://media.retroachievements.org${UserPic}`;
+    this.USER_INFO.softpoints = TotalSoftcorePoints;
+    this.USER_INFO.retropoints = TotalTruePoints;
+    this.USER_INFO.hardpoints = TotalPoints;
+  }
+  async updateRecentGames() {
+    const games = await apiWorker.getRecentlyPlayedGames({ count: 3 });
+    this.USER_INFO.lastGames = games;
+
+  }
+  async updateRecentAchives() {
+    const achives = await apiWorker.getRecentAchieves({});
+    this.USER_INFO.lastAchivs = achives
+      .slice(0, 5)
+      .reverse();
+  }
+
+  generateGameElement(game) {
+    const gameElement = document.createElement("li");
+    gameElement.classList.add("user_last-game");
+    gameElement.innerHTML = `
+    <div class="user_game-preview">
+        <img class="user_game-img" src="https://media.retroachievements.org${game.ImageIcon}" alt="">
+    </div>
+    <div class="user_game-title">${game.Title}</div>
+    <p class="user_game-description">${game.ConsoleName}</p>
+    `;
+    return gameElement;
+  }
+  generateAchivElement(achiv) {
+    const achivElement = document.createElement("li");
+    achivElement.classList.add("user_last-game");
+    achivElement.innerHTML = `
+    <div class="user_game-preview">
+        <img class="user_game-img" src="https://media.retroachievements.org${achiv.BadgeURL}" alt="">
+    </div>
+    <div class="user_game-title">${achiv.Title}</div>
+    <p class="user_game-description">${fixTimeString(achiv.Date)}</p>
+    `;
+    return achivElement;
+  }
+  close() {
+    ui.buttons.user.click();
   }
 }
 //* Методи сортування для досягнень гри

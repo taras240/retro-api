@@ -140,6 +140,25 @@ class APIWorker {
     });
   }
 
+  // {
+  //   "Date": "2023-12-27 16:04:50",
+  //   "HardcoreMode": 1,
+  //   "AchievementID": 98012,
+  //   "Title": "Beginner I",
+  //   "Description": "Clear stages 01 - 05 in Quest.",
+  //   "BadgeName": "108302",
+  //   "Points": 5,
+  //   "TrueRatio": 25,
+  //   "Type": null,
+  //   "Author": "jos",
+  //   "GameTitle": "Pokemon Pinball mini",
+  //   "GameIcon": "/Images/028399.png",
+  //   "GameID": 14715,
+  //   "ConsoleName": "Pokemon Mini",
+  //   "BadgeURL": "/Badge/108302.png",
+  //   "GameURL": "/game/14715"
+  // }
+
   // Отримання недавно отриманих досягнень користувача
   getRecentAchieves({ targetUser, minutes }) {
     let url = this.getUrl({
@@ -159,11 +178,11 @@ class APIWorker {
     return fetch(url).then((resp) => resp.json());
   }
 
-  getRecentlyPlayedGames({ targetUser }) {
+  getRecentlyPlayedGames({ targetUser, count }) {
     let url = this.getUrl({
       endpoint: this.endpoints.recentlyPlayedGames,
       targetUser: targetUser,
-      count: 50,
+      count: count || 50,
     });
     // {
     //   "GameID": 1479,
@@ -205,6 +224,14 @@ class APIWorker {
       game.FixedTitle = title.trim();
       return game;
     }));;
+  }
+  getUserProfile({ userName }) {
+    let url = this.getUrl({
+      targetUser: userName,
+      userName: userName,
+      endpoint: this.endpoints.userProfile,
+    });
+    return fetch(url).then((resp) => resp.json());
   }
   verifyUserIdent({ userName, apiKey }) {
     let url = this.getUrl({
