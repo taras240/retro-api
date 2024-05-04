@@ -144,7 +144,7 @@
 
 .achiv-description {
   font-size: 1rem;
-  flex: 1;
+
 }
 
 .delete-from-target {
@@ -191,6 +191,28 @@
   flex-wrap: wrap;
   gap: 10px;
   align-items: center;
+}
+
+.target-description-text {
+  display: flex;
+  align-items: center;
+  gap: 2px
+}
+
+.target_description-icon {
+  display: inline-block;
+  position: relative;
+  height: 1.1rem;
+  aspect-ratio: 1;
+  background-color: var(--font-color);
+  mask-size: contain;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  transition: .2s;
+}
+
+.target_description-icon.none {
+  display: none;
 }
 
 .condition {

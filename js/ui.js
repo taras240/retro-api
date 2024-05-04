@@ -2954,16 +2954,18 @@ class Target {
             <div class="target-achiv-details">
               <h3 class="achiv-name"><a target="_blanc" href="https://retroachievements.org/achievement/${ID}">${Title}</a></h3>
               <p class="achiv-description">${Description}</p>
-              <div class="target-other-descriptions">
-                <div class=" condition ${type ?? "none"
-      }" title="achievement type"></div>
-                <p class="target-description-text" title="points">${Points} [${TrueRatio}] points</p>
-                <p class="target-description-text" title="earned by">${~~(
-        (100 * NumAwardedHardcore) /
-        totalPlayers
-      )}%</p>
-              </div>
+              <div class="target-other-descriptions">       
+              <i class=" target_description-icon ${type ?? "none"}" title="achievement type"></i> 
              
+                <p class="target-description-text" title="points"><i class="target_description-icon  points-icon"></i>${Points}
+                </p>
+                
+                <p class="target-description-text" title="retropoints"><i class="target_description-icon  retropoints-icon"></i>${TrueRatio}
+                </p>
+                <p class="target-description-text" title="earned by"><i class="target_description-icon  trending-icon"></i>${~~(
+        (100 * NumAwardedHardcore) / totalPlayers)}%
+                </p>
+              </div>             
             </div>
     `;
     // targetElement.addEventListener("mousedown", (e) => e.stopPropagation());
