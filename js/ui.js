@@ -890,6 +890,14 @@ class AchievementsBlock {
         ],
       },
       {
+        label: "Show header",
+        type: "checkbox",
+        name: "context_hide-achivs-header",
+        id: "context_hide-achivs-header",
+        checked: this.SHOW_HEADER,
+        event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SHOW_HEADER = this.checked;"`,
+      },
+      {
         label: "Show background",
         type: "checkbox",
         name: "context_show-bg",
@@ -899,6 +907,7 @@ class AchievementsBlock {
       },
     ];
   }
+
   set SORT_NAME(value) {
     config._cfg.ui[this.SECTION_NAME].sortAchievementsBy = value;
     config.writeConfiguration();
@@ -984,6 +993,14 @@ class AchievementsBlock {
     config.writeConfiguration();
     this.section.classList.toggle("bg-visible", this.BG_VISIBILITY);
   }
+  get SHOW_HEADER() {
+    return config?.ui[this.SECTION_NAME]?.showHeader ?? true;
+  }
+  set SHOW_HEADER(value) {
+    config.ui[this.SECTION_NAME].showHeader = value;
+    config.writeConfiguration();
+    this.section.classList.toggle("compact", !this.SHOW_HEADER);
+  }
   get AUTOSCROLL() {
     return config?.ui[this.SECTION_NAME]?.autoscroll ?? true;
   }
@@ -1058,6 +1075,7 @@ class AchievementsBlock {
     //   UI.switchSectionVisibility(this);
     // }
     this.section.classList.toggle("bg-visible", this.BG_VISIBILITY);
+    this.section.classList.toggle("compact", !this.SHOW_HEADER);
     if (config.ui[this.SECTION_NAME]) {
       // UI.switchSectionVisibility(this);
       this.section.style.top = config.ui[this.SECTION_NAME].y ?? "0px";
@@ -2684,7 +2702,23 @@ class Target {
           },
         ],
       },
+      {
+        label: "Show header",
+        type: "checkbox",
+        name: "context_hide-target-header",
+        id: "context_hide-target-header",
+        checked: this.SHOW_HEADER,
+        event: `onchange="ui.target.SHOW_HEADER = this.checked;"`,
+      },
     ];
+  }
+  get SHOW_HEADER() {
+    return config?.ui.target_section?.showHeader ?? true;
+  }
+  set SHOW_HEADER(value) {
+    config.ui.target_section.showHeader = value;
+    config.writeConfiguration();
+    this.section.classList.toggle("compact", !this.SHOW_HEADER);
   }
   sectionCode = "-target";
   set SORT_NAME(value) {
@@ -2757,6 +2791,8 @@ class Target {
   constructor() {
     this.initializeElements();
     this.addEvents();
+
+    this.section.classList.toggle("compact", !this.SHOW_HEADER);
   }
   initializeElements() {
     this.section = document.querySelector("#target_section");
@@ -2839,7 +2875,7 @@ class Target {
       });
     });
     // Додавання подій для пересування вікна target
-    this.header.addEventListener("mousedown", (e) => {
+    this.section.addEventListener("mousedown", (e) => {
       UI.moveEvent(this.section, e);
     });
     this.section.addEventListener("contextmenu", (event) => {
@@ -2930,7 +2966,7 @@ class Target {
              
             </div>
     `;
-    targetElement.addEventListener("mousedown", (e) => e.stopPropagation());
+    // targetElement.addEventListener("mousedown", (e) => e.stopPropagation());
     this.container.appendChild(targetElement);
 
     UI.addDraggingEventForElements(this.container);

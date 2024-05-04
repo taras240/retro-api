@@ -4,11 +4,13 @@
   width: 400px;
   height: 500px;
   max-height: 100vh;
-  min-height: 150px;
+  min-height: 100px;
   min-width: 300px;
   display: flex;
   flex-direction: column;
+  cursor: grab;
 }
+
 .target-header_container {
   height: auto;
 }
@@ -23,6 +25,7 @@
   gap: 10px;
   transition: none;
 }
+
 .target-achiv {
   position: relative;
   flex-basis: 300px;
@@ -38,9 +41,11 @@
   box-shadow: 1px 1px 1px 0px #000000a1;
   transition: 0.1s;
 }
+
 .target-achiv.dragged {
   transition: none;
 }
+
 .target-achiv::before {
   --blick-color: rgba(0, 0, 0, 0.1);
   content: "";
@@ -49,30 +54,33 @@
   height: 100%;
   top: 0;
   left: 0;
-  background: linear-gradient(
-    to right,
-    var(--blick-color),
-    transparent,
-    var(--blick-color)
-  );
+  background: linear-gradient(to right,
+      var(--blick-color),
+      transparent,
+      var(--blick-color));
   pointer-events: none;
 }
+
 .target-achiv:hover::before {
   --blick-color: rgba(255, 255, 255, 0.05);
 }
+
 .target-achiv.removed {
   display: none;
 }
+
 .target-achiv.hidden {
   transition: 0.1s;
   opacity: 0.2;
   pointer-events: none;
 }
+
 .target-achiv:hover {
   transform: scale(1.02);
   box-shadow: 2px 2px 7px 0px #000000a1;
   transition: 0.2s;
 }
+
 .prev-img {
   height: 80px;
   aspect-ratio: 1;
@@ -82,9 +90,11 @@
   overflow: hidden;
   transition: 0.2s;
 }
+
 .target-achiv.earned .prev-img {
   filter: grayscale(0.8);
 }
+
 .target-achiv.earned.hardcore .prev-img {
   filter: grayscale(0);
 }
@@ -107,30 +117,36 @@
   right: 12%;
   opacity: 1;
 }
+
 .target-achiv.earned.hardcore:not(.dragged):after {
   animation: target-hardcore-animation 0.3s linear forwards;
 }
+
 @keyframes target-hardcore-animation {
   0% {
     top: 0%;
     opacity: 0;
     right: 0%;
   }
+
   100% {
     top: 50%;
     right: 12%;
     opacity: 1;
   }
 }
+
 .target-achiv-details {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
+
 .achiv-description {
   font-size: 1rem;
   flex: 1;
 }
+
 .delete-from-target {
   position: absolute;
   bottom: 10px;
@@ -142,25 +158,30 @@
   opacity: 0;
   transition: 0.2s;
 }
+
 .delete-from-target svg {
   padding: 1px;
   fill: var(--font-color);
   height: 100%;
 }
+
 .target-achiv:hover .delete-from-target {
   opacity: 0.8;
   transition: 0.2s;
 }
+
 .target-achiv:hover .delete-from-target:hover {
   transform: scale(1.1);
   opacity: 1;
   transition: 0.2s;
 }
+
 .target-achiv:hover .delete-from-target:active {
   transform: scale(0.9);
   opacity: 0.9;
   transition: 0.2s;
 }
+
 .target-achiv .prev {
   align-self: center;
 }
@@ -171,35 +192,43 @@
   gap: 10px;
   align-items: center;
 }
+
 .condition {
   aspect-ratio: 1;
   height: 1.1rem;
   background-color: var(--font-color);
 }
+
 .condition.none {
   display: none;
 }
+
 .win_condition {
   mask-image: url(../assets/img/win-condition.svg);
   -webkit-mask-image: url(../assets/img/win-condition.svg);
 }
+
 .missable {
   mask-image: url(../assets/img/missable.svg);
   -webkit-mask-image: url(../assets/img/missable.svg);
 }
+
 .progression {
   mask-image: url(../assets/img/progression.svg);
   -webkit-mask-image: url(../assets/img/progression.svg);
 }
+
 .delete-from-target:hover {
   opacity: 1;
   transition: 0.2s;
 }
+
 .delete-from-target:active {
   opacity: 0.8;
   transform: scale(0.9);
   transition: 0.2s;
 }
+
 .target-empty-list {
   position: absolute;
   top: 50px;

@@ -183,6 +183,10 @@ a:hover {
   border-bottom: 0px solid var(--font-color);
 }
 
+.section.compact .header-container {
+  display: none;
+}
+
 .widget-header-text {
   text-align: center;
   padding: 5px;
