@@ -1,6 +1,8 @@
 <section id="update-section" class="update_section section ">
 
   <div class="update_container " id="update-text-block">
+    <div class="status_glass-effect"></div>
+
     <div class="progress-bar" id="status-progress-bar">
     </div>
     <div class="progress-percent progress_points-percent" id="status-progress-text">0%</div>
@@ -27,6 +29,5 @@
     <img src="./assets/img/icon.png" alt=" " class="update-game-preview box-3d" id="game-preview" />
 
   </div>
-
   <div class="resizer" id="status-resizer"></div>
 </section>

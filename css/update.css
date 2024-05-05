@@ -274,3 +274,48 @@
   opacity: 0.36;
   z-index: -1;
 }
+
+.status_glass-effect {
+  position: absolute;
+  border-radius: inherit;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background-position: 100% 0%;
+  background-repeat: no-repeat;
+  background-size: 400% 400%;
+  mix-blend-mode: color-dodge;
+  opacity: 1;
+  animation: none;
+  transition: none;
+  background-image: linear-gradient(115deg,
+      transparent 0%,
+      transparent 25%,
+      rgba(255, 0, 231, 0.7) 35%,
+      rgba(0, 231, 255, 0.7) 45%,
+      rgba(255, 0, 231, 0.7) 55%,
+      transparent 70%,
+      transparent 100%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.status_glass-effect.update {
+  animation: status-glass-animation 3s ease-in-out forwards;
+  animation-delay: 0s;
+}
+
+@keyframes status-glass-animation {
+  0% {
+    background-position: 100% 0%;
+  }
+
+  100% {
+    background-position: 00% 0%;
+  }
+
+
+}

@@ -1591,61 +1591,6 @@ class StatusPanel {
     return !this.section.classList.contains("hidden");
   }
 
-  // {
-  //   "ID": 3797,
-  //   "Title": "Super Nazo Puyo: Ruruu no Ruu",
-  //   "ConsoleID": 3,
-  //   "ForumTopicID": 24470,
-  //   "Flags": 0,
-  //   "ImageIcon": "/Images/073905.png",
-  //   "ImageTitle": "/Images/071614.png",
-  //   "ImageIngame": "/Images/071615.png",
-  //   "ImageBoxArt": "/Images/071616.png",
-  //   "Publisher": "Banpresto",
-  //   "Developer": "Compile",
-  //   "Genre": "",
-  //   "Released": "May 26, 1995",
-  //   "IsFinal": 0,
-  //   "RichPresencePatch": "55b760e3301a83ac6fb17985544e8acc",
-  //   "players_total": 25,
-  //   "achievements_published": 32,
-  //   "points_total": 232,
-  //   "GuideURL": "",
-  //   "ConsoleName": "SNES/Super Famicom",
-  //   "NumDistinctPlayers": 25,
-  //   "ParentGameID": null,
-  //   "NumAchievements": 32,
-  //   "Achievements": {
-  //     "344462": {
-  //       "ID": 344462,
-  //       "NumAwarded": 24,
-  //       "NumAwardedHardcore": 21,
-  //       "Title": "One Red Chili Pepper",
-  //       "Description": "Complete Stage 1 in Arle's Roux by defeating Draco Centauros.",
-  //       "Points": 1,
-  //       "TrueRatio": 1,
-  //       "Author": "kiwibasket",
-  //       "DateModified": "2023-08-31 20:17:39",
-  //       "DateCreated": "2023-08-10 15:15:12",
-  //       "BadgeName": "396184",
-  //       "DisplayOrder": 1,
-  //       "MemAddr": "604456d893c070ed1ce4f026802c1b7c",
-  //       "type": "progression",
-  //       "DateEarnedHardcore": "2024-05-05 12:14:44",
-  //       "DateEarned": "2024-05-05 12:14:44",
-  //       "totalPlayers": 25,
-  //       "isEarned": true,
-  //       "isHardcoreEarned": true,
-  //       "prevSrc": "https://media.retroachievements.org/Badge/396184.png"
-  //     }
-  //   },
-  //   "NumAwardedToUser": 2,
-  //   "NumAwardedToUserHardcore": 2,
-  //   "NumDistinctPlayersCasual": 25,
-  //   "NumDistinctPlayersHardcore": 25,
-  //   "UserCompletion": "6.25%",
-  //   "UserCompletionHardcore": "6.25%"
-  // }
   stats = {
     gameTitle: ui?.GAME_DATA?.Title ?? "Title",
     gamePlatform: ui?.GAME_DATA?.ConsoleName ?? "Platform",
@@ -1747,6 +1692,7 @@ class StatusPanel {
       }
     });
     this.setValues();
+    // this.startAnimation();
   }
 
   updateProgress({ earnedAchievementIDs }) {
@@ -1757,6 +1703,12 @@ class StatusPanel {
       }
     });
     this.setValues();
+    this.startAnimation();
+  }
+  startAnimation() {
+    const glassElement = this.section.querySelector(".status_glass-effect");
+    glassElement.classList.remove("update");
+    setTimeout(() => glassElement.classList.add("update"), 20);
   }
   addAnimationToStats() {
     this.progressStatusText.classList.remove("hide");

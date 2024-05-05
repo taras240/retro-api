@@ -1,18 +1,20 @@
 .section.user_section {
     min-width: fit-content;
-    min-height: 400px;
+    min-height: 320px;
     height: 700px;
     top: 150px;
     left: 400px;
     display: flex;
     flex-direction: column;
     justify-content: start;
-    border-radius: 20px;
+    /* border-radius: 5px; */
     cursor: grab;
+    background-color: transparent !important;
+    z-index: 1;
 }
 
 .user_header-container {
-    border-radius: 20px 20px 0 0;
+    border-radius: 5px 5px 0 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -147,6 +149,7 @@
     margin-bottom: 10px;
     gap: 10px;
     overflow-y: scroll;
+    background-color: var(--main-color);
 }
 
 .user_last-header {
@@ -208,7 +211,7 @@
 }
 
 .user_resizer.resizer {
-    border-radius: 0 0 20px 0;
+    /* border-radius: 0 0 20px 0; */
     /* margin-right: 2px;
     margin-bottom: 2px; */
 }
