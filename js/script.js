@@ -29,16 +29,7 @@ async function getAwards() {
   const response = await apiWorker.getUserAwards({});
   ui.awards.parseAwards(response);
 }
-async function updateAwards() {
-  const response = await apiWorker.getUserAwards({});
-  if (
-    response.TotalAwardsCount != ui.awards.container.dataset.total ||
-    response.MasteryAwardsCount != ui.awards.container.dataset.mastery ||
-    response.BeatenHardcoreAwardsCount != ui.awards.container.dataset.beatenHard
-  ) {
-    ui.awards.parseAwards(response);
-  }
-}
+
 // Функція для оновлення досягнень
 async function updateAchievements() {
   try {
@@ -49,13 +40,10 @@ async function updateAchievements() {
     const earnedAchievementsIDs = ui.checkForNewAchieves(achievements);
 
     if (earnedAchievementsIDs.length > 0) {
+      // !____-------------------------
+      ui.updateWidgets({ earnedAchievementsIDs: earnedAchievementsIDs });
+      // !____-------------------------
 
-      ui.achievementsBlock.forEach(template => UI.updateAchievementsSection({ earnedAchievementIDs: earnedAchievementsIDs, widget: template }));
-      UI.updateAchievementsSection({ earnedAchievementIDs: earnedAchievementsIDs, widget: ui.target });
-      ui.target.delayedRemove();
-      updateAwards();
-      ui.progression.updateEarnedCards({ gameIDArray: earnedAchievementsIDs });
-      ui.statusPanel.updateProgress({ earnedAchievementIDs: earnedAchievementsIDs });
     }
   } catch (error) {
     console.error(error); // Обробка помилок

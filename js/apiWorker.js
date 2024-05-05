@@ -34,11 +34,11 @@ class APIWorker {
     userGameRankAndScore: "API_GetUserGameRankAndScore.php",
     completionProgress: "API_GetUserCompletionProgress.php",
     gameList: "API_GetGameList.php",
-    summary: "API_GetUserSummary.php",
+    userSummary: "API_GetUserSummary.php",
   };
 
   // Генерує URL для запиту до API
-  getUrl({ endpoint, targetUser, gameID, minutes, apiKey, userName, count, offset }) {
+  getUrl({ endpoint, targetUser, gameID, minutes, apiKey, userName, achievesCount, count, offset }) {
     // Створення нового об'єкту URL з вказаною кінцевою точкою та базовим URL
     let url = new URL(endpoint, this.baseUrl);
 
@@ -52,6 +52,7 @@ class APIWorker {
       i: gameID || config.gameID,
       f: 1,
       h: 1,
+      a: achievesCount || 5,
       c: count || 20,
       o: offset || 0,
     };
@@ -68,7 +69,7 @@ class APIWorker {
     let url = this.getUrl({ endpoint: this.endpoints.userRankAndScore });
     return fetch(url).then((resp) => resp.json());
   }
-  // Отримання інформації про профіль користувача
+  // // Отримання інформації про профіль користувача
   getProfileInfo({ targetUser }) {
     let url = this.getUrl({
       targetUser: targetUser,
@@ -232,6 +233,16 @@ class APIWorker {
       endpoint: this.endpoints.userProfile,
     });
     return fetch(url).then((resp) => resp.json());
+  }
+
+  getUserSummary({ targetUser, gamesCount = 3, achievesCount }) {
+    let url = this.getUrl({
+      targetUser: targetUser,
+      gameID: gamesCount, //same parameter 'g' as for gameID
+      achievesCount: achievesCount,
+      endpoint: this.endpoints.userSummary,
+    });
+    return fetch(url).then(resp => resp.json())
   }
   verifyUserIdent({ userName, apiKey }) {
     let url = this.getUrl({

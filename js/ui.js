@@ -1,6 +1,7 @@
 class UI {
   VERSION = "0.16";
   static AUTOCLOSE_CONTEXTMENU = false;
+  static STICK_MARGIN = 10;
   static filterMethods = {
     all: "all",
     earned: "earned",
@@ -184,6 +185,16 @@ class UI {
     this.buttons.games.checked = !this.games.section.classList.contains("hidden");
     document.querySelector("#background-animation").style.display =
       config.bgVisibility ? "display" : "none";
+  }
+  updateWidgets({ earnedAchievementsIDs }) {
+    this.achievementsBlock.forEach(template => UI.updateAchievementsSection({ earnedAchievementIDs: earnedAchievementsIDs, widget: template }));
+    UI.updateAchievementsSection({ earnedAchievementIDs: earnedAchievementsIDs, widget: this.target });
+    this.target.delayedRemove();
+    this.awards.updateAwards();
+    this.progression.updateEarnedCards({ gameIDArray: earnedAchievementsIDs });
+    this.statusPanel.updateProgress({ earnedAchievementIDs: earnedAchievementsIDs });
+    setTimeout(() => ui.userInfo.update(), 2000);
+
   }
   showContextmenu({ event, menuItems, sectionCode = "" }) {
     event.preventDefault();
@@ -1291,14 +1302,15 @@ class AchievementsBlock {
     const { section, container } = this;
     // Отримання розмірів вікна блоку досягнень
     let windowHeight, windowWidth;
+    container.style.flex = "1";
     if (isLoadDynamic || !config.ui[this.SECTION_NAME]?.height) {
-      windowHeight = section.clientHeight - 35;
-      windowWidth = section.clientWidth;
+      windowHeight = container.clientHeight;
+      windowWidth = container.clientWidth;
     } else {
-      windowHeight = parseInt(config.ui[this.SECTION_NAME].height) - 35;
+      windowHeight = parseInt(config.ui[this.SECTION_NAME].height) - section.querySelector(".header-container").clientHeight;
       windowWidth = parseInt(config.ui[this.SECTION_NAME].width);
     }
-
+    container.style.flex = "";
     const achivs = Array.from(container.children);
     const achivsCount = achivs.length;
     // Перевірка, чи є елементи в блоці досягнень
@@ -1312,8 +1324,8 @@ class AchievementsBlock {
     // Цикл для знаходження оптимального розміру досягнень
     do {
       achivWidth--;
-      rowsCount = Math.floor(windowHeight / (achivWidth + 2));
-      colsCount = Math.floor(windowWidth / (achivWidth + 2));
+      rowsCount = Math.floor(windowHeight / (achivWidth + 1));
+      colsCount = Math.floor(windowWidth / (achivWidth + 1));
     } while (
       rowsCount * colsCount < achivsCount &&
       achivWidth > this.ACHIV_MIN_SIZE
@@ -1329,12 +1341,11 @@ class AchievementsBlock {
   autoscrollInterval;
   startAutoScroll(toBottom = true) {
     clearInterval(this.autoscrollInterval);
-    let speedInPixPerSec = 20;
     let refreshRateMiliSecs = 50;
 
     let scrollContainer = this.container;
     let speedInPixels = 1;
-    const pauseOnEndMilisecs = 500;
+    const pauseOnEndMilisecs = 2000;
     // Часовий інтервал для прокручування вниз
     if (this.AUTOSCROLL) {
       this.autoscrollInterval = setInterval(() => {
@@ -2419,6 +2430,16 @@ class Awards {
         postFunc: () => "",
       });
     });
+  }
+  async updateAwards() {
+    const response = await apiWorker.getUserAwards({});
+    if (
+      response.TotalAwardsCount != this.container.dataset.total ||
+      response.MasteryAwardsCount != this.container.dataset.mastery ||
+      response.BeatenHardcoreAwardsCount != this.container.dataset.beatenHard
+    ) {
+      this.parseAwards(response);
+    }
   }
   parseAwards(userAwards) {
     if (!userAwards?.TotalAwardsCount) return;
@@ -3996,6 +4017,7 @@ class UserInfo {
   }
   USER_INFO = config._cfg.ui?.userInfoData ?? {
     userName: config.USER_NAME ?? "userName",
+    status: "Offline",
     userImageSrc: config.userImageSrc ?? "",
     userRank: "???",
     softpoints: "",
@@ -4018,6 +4040,7 @@ class UserInfo {
     this.section = document.querySelector("#user_section");
     this.userNameElement = this.section.querySelector(".user_user-name");
     this.userImg = this.section.querySelector(".user-preview");
+    this.connectionStatus = this.section.querySelector(".user_online-indicator")
     this.userRankElement = this.section.querySelector(".user_rank");//!------
     this.userSoftpointsElement = this.section.querySelector(".user_softcore-points");
     this.userHardpointsElement = this.section.querySelector(".user_hardcore-points")
@@ -4043,6 +4066,7 @@ class UserInfo {
   }
   setValues() {
     this.userNameElement.innerText = this.USER_INFO.userName;
+    this.connectionStatus.classList.toggle("online", this.USER_INFO.status == "online");
     this.userImg.src = this.USER_INFO.userImageSrc;
     this.userRankElement.innerText = this.USER_INFO.userRank;
     this.userHardpointsElement.innerText = this.USER_INFO.hardpoints;
@@ -4059,13 +4083,28 @@ class UserInfo {
 
   }
   update() {
-    this.updateMainInformation()
-      .then(() => this.updateRecentAchives()
-        .then(() => this.updateRecentGames())).then(() => {
-          this.setValues();
-          config._cfg.ui.userInfoData = this.USER_INFO;
-          config.writeConfiguration();
-        })
+    apiWorker.getUserSummary({}).then(resp => {
+      const { User, Status, UserPic, Rank, TotalRanked, TotalPoints, TotalSoftcorePoints, TotalTruePoints, RecentlyPlayed, RecentAchievements } = resp;
+      this.USER_INFO.userName = User;
+      this.USER_INFO.status = Status.toLowerCase();
+      this.USER_INFO.userImageSrc = `https://media.retroachievements.org${UserPic}`;
+      this.USER_INFO.userRank = `${Rank} (Top ${~~(10000 * Rank / TotalRanked) / 100}%)`;
+      this.USER_INFO.softpoints = TotalSoftcorePoints;
+      this.USER_INFO.retropoints = TotalTruePoints;
+      this.USER_INFO.hardpoints = TotalPoints;
+      this.USER_INFO.lastGames = RecentlyPlayed;
+      this.USER_INFO.lastAchivs = Object.values(RecentAchievements)
+        .flatMap(RecentAchievements => Object.values(RecentAchievements));
+
+    }).then(() => this.setValues())
+
+    // this.updateMainInformation()
+    //   .then(() => this.updateRecentAchives()
+    //     .then(() => this.updateRecentGames())).then(() => {
+    //       this.setValues();
+    //       config._cfg.ui.userInfoData = this.USER_INFO;
+    //       config.writeConfiguration();
+    //     })
   }
   async updateMainInformation() {
     const resp = await apiWorker.getUserProfile({});
@@ -4105,10 +4144,10 @@ class UserInfo {
     achivElement.classList.add("user_last-game");
     achivElement.innerHTML = `
     <div class="user_game-preview">
-        <img class="user_game-img" src="https://media.retroachievements.org${achiv.BadgeURL}" alt="">
+        <img class="user_game-img" src="https://media.retroachievements.org/Badge/${achiv.BadgeName}.png" alt="">
     </div>
     <div class="user_game-title">${achiv.Title}</div>
-    <p class="user_game-description">${fixTimeString(achiv.Date)}</p>
+    <p class="user_game-description">${fixTimeString(achiv.DateAwarded)}</p>
     `;
     return achivElement;
   }
