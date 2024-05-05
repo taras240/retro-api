@@ -495,8 +495,27 @@
       </div>
       <!-- <button class="settings-input" onclick="ui.resetColors()">reset</button> -->
     </div>
+    <div class="achivs-style input-container">
+      <label class="setting-label"><a href='https://fonts.google.com/' title='go to google fonts' target='_blanc'>Font
+          family:</a></label>
 
-
+      <select class="setting-select settings-input settings-select" name="color-preset" id="font-preset-selection">
+        <option value="default">Default</option>
+        <option value="oxygen">Oxygen</option>
+        <option value="shadows">Shadows</option>
+        <option value="pixelifySans">Pixelify</option>
+        <option value="jaro">Jaro</option>
+        <option value="jacquard">Jacquard</option>
+        <option value="custom">Custom</option>
+      </select>
+      <input type="text" onchange="ui.settings.loadCustomFont(this.value);" class="text-input input font-input"
+        name="custom-font" title="paste font url here" id="settings_font-input" value="" placeholder="font url" />
+    </div>
+    <div class="font-size-settings input-container">
+      <label class="setting-label">Font size (px):</label>
+      <input type="number" class="number-input input" title="16px by default" name="settings_font-size"
+        id="settings_font-size" value="16" placeholder="__px" />
+    </div>
     <div class="update-time-settings input-container">
       <label class="setting-label">Update delay (seconds):</label>
       <input type="number" class="number-input input" name="update-time" id="update-time" value="5"

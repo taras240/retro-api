@@ -8,23 +8,23 @@
   left: 1%;
   z-index: 1000;
 }
+
 .prefs_section.section {
-  background: linear-gradient(
-    to top left,
-    var(--main-color),
-    var(--secondary-color)
-  );
+  background: linear-gradient(to top left,
+      var(--main-color),
+      var(--secondary-color));
 }
+
 /**------------- header -------------*/
 .widget-header-text.prefs-header {
   font-size: 1.5rem;
 }
+
 .input-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 5px;
-  height: 40px;
   gap: 5px;
 }
 
@@ -69,13 +69,14 @@
   transition: 0.1s;
   color: var(--input-color);
 }
+
 .input {
   min-width: 70px;
 }
 
 .setting-button::after,
-input[type="radio"] + .settings-input::after,
-input[type="checkbox"] + .settings-input::after {
+input[type="radio"]+.settings-input::after,
+input[type="checkbox"]+.settings-input::after {
   content: "";
   position: absolute;
   width: 7px;
@@ -86,18 +87,20 @@ input[type="checkbox"] + .settings-input::after {
   top: 2px;
   right: 2px;
 }
-input[type="radio"]:not(:checked) + .settings-input::after,
-input[type="checkbox"]:not(:checked) + .settings-input::after {
+
+input[type="radio"]:not(:checked)+.settings-input::after,
+input[type="checkbox"]:not(:checked)+.settings-input::after {
   background-color: black;
   box-shadow: 0 0 3px 2px transparent;
 }
 
 .setting-button.checked::after,
-input[type="radio"]:checked + .settings-input::after,
-input[type="checkbox"]:checked + .settings-input::after {
+input[type="radio"]:checked+.settings-input::after,
+input[type="checkbox"]:checked+.settings-input::after {
   background-color: var(--selection-color);
   box-shadow: 0 0 3px 2px var(--selection-color);
 }
+
 .setting-button:hover,
 .settings-input:hover,
 .input:hover {
@@ -105,13 +108,15 @@ input[type="checkbox"]:checked + .settings-input::after {
   left: 1px;
   box-shadow: 1px 1px 0 var(--shadow-color), 2px 2px 0 var(--shadow-color);
 }
+
 .setting-button.checked,
-input:checked + .settings-input,
+input:checked+.settings-input,
 .input:focus {
   top: 2px;
   left: 2px;
   box-shadow: 0 0 0;
 }
+
 .setting-button:active,
 .settings-input:active {
   top: 2px;
@@ -123,26 +128,30 @@ input:checked + .settings-input,
   content: " achieves availible";
 }
 
-.settings_container > * {
+.settings_container>* {
   padding: 7px 20px;
 }
+
 /* .settings_container > *:nth-child(even) {
   background-color: var(--secondary-color);
 } */
 
-.settings_container > * {
+.settings_container>* {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
+
 .colors-block {
   display: flex;
   visibility: visible;
   opacity: 1;
   transition: 0.2s;
 }
+
 .colors-block.hidden {
   visibility: hidden;
   opacity: 0;
 }
+
 .color-input {
   background-color: transparent;
   cursor: pointer;
@@ -150,9 +159,11 @@ input:checked + .settings-input,
   width: 30px;
   transition: 0.2s;
 }
+
 .color-input:hover {
   transform: scale(1.05);
 }
+
 .color-input:active {
   transform: scale(0.95);
 }
@@ -161,12 +172,25 @@ input:checked + .settings-input,
   background-color: transparent;
 }
 
-#color-preset-selection option {
+/* #color-preset-selection option {
   background-color: var(--secondary-color);
   color: var(--font-color);
   padding: 5px;
   height: 10px;
-}
+} */
+
 .settings-select {
   padding: 2.5px 4px;
+  font-family: inherit;
+}
+
+.font-input {
+  max-width: 130px;
+  padding: 2px 5px;
+}
+
+.font-input::placeholder {
+  color: var(--font-color);
+  opacity: .6;
+
 }

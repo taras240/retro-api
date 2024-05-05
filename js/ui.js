@@ -1825,29 +1825,29 @@ class Settings {
         //   }, [])
         // }
       },
-      {
-        label: "Font",
-        subMenu: [{
-          type: "range",
-          id: "context_font-size",
-          label: "Font size",
-          event: "oninput =\"ui.settings.FONT_SIZE = this.value;\"",
-          prefix: "Font size",
-          minRange: 12,
-          maxRange: 20,
-          value: ui.settings.FONT_SIZE,
-        },
-        {
-          prefix: "<a href='https://fonts.google.com/' title='go to google fonts' target='_blanc'>Font family</a>",
-          postfix: "",
-          type: "text-input",
-          id: "context-menu_font-family",
-          label: "Font family",
-          title: "paste embed code of custom font(@import... or url...) or write 'def' to reset it",
-          placeholder: this.FONT_NAME,
-          event: `onchange="ui.settings.FONT_FAMILY = this.value;"`,
-        }]
-      },
+      // {
+      //   label: "Font",
+      //   subMenu: [{
+      //     type: "range",
+      //     id: "context_font-size",
+      //     label: "Font size",
+      //     event: "oninput =\"ui.settings.FONT_SIZE = this.value;\"",
+      //     prefix: "Font size",
+      //     minRange: 12,
+      //     maxRange: 20,
+      //     value: ui.settings.FONT_SIZE,
+      //   },
+      //   {
+      //     prefix: "<a href='https://fonts.google.com/' title='go to google fonts' target='_blanc'>Font family</a>",
+      //     postfix: "",
+      //     type: "text-input",
+      //     id: "context-menu_font-family",
+      //     label: "Font family",
+      //     title: "paste embed code of custom font(@import... or url...) or write 'def' to reset it",
+      //     placeholder: this.FONT_NAME,
+      //     event: `onchange="ui.settings.loadCustomFont(this.value);"`,
+      //   }]
+      // },
 
       {
         label: "Show bg-animation",
@@ -1877,7 +1877,7 @@ class Settings {
     document.documentElement.style.setProperty('font-size', `${this.FONT_SIZE}px`);
   }
   get FONT_FAMILY() {
-    return config._cfg.settings?.fontFamily ?? "def";
+    return this.fonts[config._cfg?.fontSelectorName ?? "default"]
   }
   get FONT_NAME() {
     let regFontName = new RegExp(/(?<=family=)([A-Za-z0-9+);])*/gmi);
@@ -1892,21 +1892,44 @@ class Settings {
     let regFontName = new RegExp(/(?<=family=)([A-Za-z0-9+);])*/gmi);
     if (regFontFamily.test(value)) {
       let fontFamily = value.match(regFontFamily)[0];
-      config._cfg.settings.fontFamily = fontFamily;
-      config.writeConfiguration();
       let fontName = value.match(regFontName)[0].replaceAll("+", " ");
       const fontLink = document.createElement('link');
       fontLink.rel = 'stylesheet';
       fontLink.href = fontFamily;
       document.head.appendChild(fontLink);
-
       document.documentElement.style.setProperty("--font-family", `"${fontName}", system-ui, sans-serif`);
+    }
+    if (value == "def") {
+      // config._cfg.settings.fontFamily = "";
+      // config.writeConfiguration();
+      document.documentElement.style.setProperty("--font-family", ` system-ui, sans-serif`);
+    }
 
+  }
+  loadCustomFont(value) {
+    const font = this.parseFontUrl(value);
+    console.log(font);
+    if (font) {
+      config._cfg.settings.customFontFamily = font.fontFamily;
+      this.fontColorInput.value = font.fontName;
+      this.FONT_FAMILY = font.fontFamily;
+      this.fontSelector.value = "custom";
+      config._cfg.fontSelectorName = "custom";
+      config.writeConfiguration();
     }
     if (value == "def") {
       config._cfg.settings.fontFamily = "";
       config.writeConfiguration();
       document.documentElement.style.setProperty("--font-family", ` system-ui, sans-serif`);
+    }
+  }
+  parseFontUrl(value) {
+    let regFontFamily = new RegExp(/https:\/\/[^'");]*/gmi);
+    let regFontName = new RegExp(/(?<=family=)([A-Za-z0-9+);])*/gmi);
+    if (regFontFamily.test(value)) {
+      let fontFamily = value.match(regFontFamily)[0];
+      let fontName = value.match(regFontName)[0].replaceAll("+", " ");
+      return { fontFamily: fontFamily, fontName: fontName };
     }
 
   }
@@ -1934,6 +1957,15 @@ class Settings {
     config._cfg.settings.startOnLoad = value;
     config.writeConfiguration();
   }
+  fonts = {
+    default: "def",
+    pixelifySans: 'https://fonts.googleapis.com/css2?family=Pixelify+Sans',
+    jaro: 'https://fonts.googleapis.com/css2?family=Jaro',
+    oxygen: 'https://fonts.googleapis.com/css2?family=Oxygen:wght@300;400;700',
+    jacquard: 'https://fonts.googleapis.com/css2?family=Jacquard+24',
+    shadows: 'https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap',
+    custom: config._cfg?.settings?.customFontFamily ?? "def",
+  }
   constructor() {
     this.initializeElements();
     this.addEvents();
@@ -1959,6 +1991,9 @@ class Settings {
       "#show-background_button"
     );
     //!-----------------------------------------
+    this.fontUrlInput = this.section.querySelector("#settings_font-input");
+    this.fontSelector = this.section.querySelector("#font-preset-selection");
+    this.fontSizeInput = this.section.querySelector("#settings_font-size");
 
     this.targetUserInput = document.querySelector("#target-user");
     this.gameID = document.querySelector("#game-id"); // Поле введення ідентифікатора гри
@@ -1987,10 +2022,13 @@ class Settings {
     this.selectionColorInput.value = config.selectionColor;
     this.colorPresetSelector.value = config.colorsPreset;
     this.colorPresetSelector.dispatchEvent(new Event("change"));
+    this.fontSelector.value = config._cfg?.fontSelectorName ?? "default";
+    this.fontUrlInput.value = this.FONT_NAME;
+    this.fontSizeInput.value = this.FONT_SIZE;
     this.showBackgroundCheckbox.checked = config.bgVisibility;
     this.startOnLoadCheckbox.checked = config.startOnLoad;
     this.FONT_SIZE = this.FONT_SIZE;
-    this.FONT_FAMILY = this.FONT_FAMILY;
+    this.FONT_FAMILY = this.fonts[config._cfg?.fontSelectorName ?? "default"];
   }
   addEvents() {
     // Додаємо обробник події 'change' для поля введення інтервалу оновлення
@@ -2035,6 +2073,7 @@ class Settings {
       config.selectionColor = this.selectionColorInput.value;
       UI.updateColors("custom");
     });
+
     this.colorPresetSelector.addEventListener("change", (e) => {
       const preset = this.colorPresetSelector.value;
       document
@@ -2043,6 +2082,17 @@ class Settings {
       UI.updateColors(preset);
     });
 
+    this.fontSelector.addEventListener("change", e => {
+      const font = this.fontSelector.value;
+      this.fontColorInput.value = "this.FONT_NAME";
+      this.FONT_FAMILY = this.fonts[font];
+      config._cfg.fontSelectorName = font;
+      config.writeConfiguration();
+      this.fontUrlInput.value = this.FONT_NAME;
+    })
+    this.fontSizeInput.addEventListener("change", e => {
+      this.FONT_SIZE = this.fontSizeInput.value;
+    })
     this.targetUserInput.addEventListener("change", (e) => {
       e.stopPropagation();
       config.targetUser = this.targetUserInput.value;
