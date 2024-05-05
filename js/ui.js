@@ -303,10 +303,11 @@ class UI {
       "https://retroachievements.org/game/" + config.gameID
     );
     gamePlatform.innerText = ConsoleName || "";
-    this.statusPanel.updateProgress({
-      totalPoints: points_total,
-      achievements: Achievements,
-    });
+    this.statusPanel.updateData();
+    // this.statusPanel.updateProgress({
+    //   totalPoints: points_total,
+    //   achievements: Achievements,
+    // });
   }
   static applySort({ container, itemClassName, sortMethod, reverse }) {
     const elements = [...container.querySelectorAll(itemClassName)];
@@ -1589,9 +1590,80 @@ class StatusPanel {
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
   }
+
+  // {
+  //   "ID": 3797,
+  //   "Title": "Super Nazo Puyo: Ruruu no Ruu",
+  //   "ConsoleID": 3,
+  //   "ForumTopicID": 24470,
+  //   "Flags": 0,
+  //   "ImageIcon": "/Images/073905.png",
+  //   "ImageTitle": "/Images/071614.png",
+  //   "ImageIngame": "/Images/071615.png",
+  //   "ImageBoxArt": "/Images/071616.png",
+  //   "Publisher": "Banpresto",
+  //   "Developer": "Compile",
+  //   "Genre": "",
+  //   "Released": "May 26, 1995",
+  //   "IsFinal": 0,
+  //   "RichPresencePatch": "55b760e3301a83ac6fb17985544e8acc",
+  //   "players_total": 25,
+  //   "achievements_published": 32,
+  //   "points_total": 232,
+  //   "GuideURL": "",
+  //   "ConsoleName": "SNES/Super Famicom",
+  //   "NumDistinctPlayers": 25,
+  //   "ParentGameID": null,
+  //   "NumAchievements": 32,
+  //   "Achievements": {
+  //     "344462": {
+  //       "ID": 344462,
+  //       "NumAwarded": 24,
+  //       "NumAwardedHardcore": 21,
+  //       "Title": "One Red Chili Pepper",
+  //       "Description": "Complete Stage 1 in Arle's Roux by defeating Draco Centauros.",
+  //       "Points": 1,
+  //       "TrueRatio": 1,
+  //       "Author": "kiwibasket",
+  //       "DateModified": "2023-08-31 20:17:39",
+  //       "DateCreated": "2023-08-10 15:15:12",
+  //       "BadgeName": "396184",
+  //       "DisplayOrder": 1,
+  //       "MemAddr": "604456d893c070ed1ce4f026802c1b7c",
+  //       "type": "progression",
+  //       "DateEarnedHardcore": "2024-05-05 12:14:44",
+  //       "DateEarned": "2024-05-05 12:14:44",
+  //       "totalPlayers": 25,
+  //       "isEarned": true,
+  //       "isHardcoreEarned": true,
+  //       "prevSrc": "https://media.retroachievements.org/Badge/396184.png"
+  //     }
+  //   },
+  //   "NumAwardedToUser": 2,
+  //   "NumAwardedToUserHardcore": 2,
+  //   "NumDistinctPlayersCasual": 25,
+  //   "NumDistinctPlayersHardcore": 25,
+  //   "UserCompletion": "6.25%",
+  //   "UserCompletionHardcore": "6.25%"
+  // }
+  stats = {
+    gameTitle: ui?.GAME_DATA?.Title ?? "Title",
+    gamePlatform: ui?.GAME_DATA?.ConsoleName ?? "Platform",
+    richPresence: "Waiting...",
+    imageSrc: `https://media.retroachievements.org${ui?.GAME_DATA?.ImageIcon}`,
+    totalPoints: ui?.GAME_DATA?.points_total ?? 0,
+    totalAchievesCount: ui?.GAME_DATA?.achievements_published ?? 0,
+
+    earnedPoints: 0,
+    earnedAchievesCount: 0,
+    totalRetropoints: 0,
+    earnedRetropoints: 0,
+  }
+  ANIMATION_DELAY_IN_SECONDS = 10;
   constructor() {
     this.initializeElements();
     this.addEvents();
+    this.addAnimationToStats()
   }
   initializeElements() {
     this.section = document.querySelector("#update-section");
@@ -1603,6 +1675,7 @@ class StatusPanel {
     this.watchButton = document.querySelector("#watching-button"); // Кнопка спостереження за грою
     this.progresBar = document.querySelector("#status-progress-bar");
     this.progressStatusText = document.querySelector("#status-progress-text");
+    this.progressStatusCountText = this.section.querySelector("#status-progress-count-text");
     this.resizer = document.querySelector("#status-resizer");
   }
   addEvents() {
@@ -1632,55 +1705,19 @@ class StatusPanel {
       });
     });
   }
-  updateProgress({ totalPoints, earnedAchievementIDs, achievements }) {
-    let achievedCount = 0; // Лічильник досягнень
-    let totalCount = 0; // Загальна кількість досягнень
-    let totalEarnedPoints = 0;
-    const width = this.section.clientWidth || 0; // Отримання ширини блока
-
-    // Перевірка наявності досягнень
-    if (achievements) {
-      // Підрахунок кількості досягнень та набраних балів
-      Object.values(achievements).forEach((achievement) => {
-        totalCount++; // Збільшення загальної кількості досягнень
-        if (achievement.DateEarnedHardcore) {
-          totalEarnedPoints += achievement.Points; // Додавання балів
-          achievedCount++; // Збільшення кількості досягнень
-        }
-      });
-      // Збереження загальної кількості досягнень та балів у датасет
-      this.progresBar.dataset.totalCount = totalCount;
-      this.progresBar.dataset.totalPoints = totalPoints;
-    } else {
-      achievedCount =
-        parseInt(this.progresBar.dataset.achievedCount) +
-        earnedAchievementIDs.length || 0;
-      totalEarnedPoints = parseInt(this.progresBar.dataset.points);
-      earnedAchievementIDs.forEach((id) => {
-        if (ui.ACHIEVEMENTS[id].DateEarnedHardcore) {
-          totalEarnedPoints += ui.ACHIEVEMENTS[id].Points;
-        }
-      });
-
-      // Оновлення значень у випадку відсутності досягнень
-      totalCount = parseInt(this.progresBar.dataset.totalCount) || 0;
-      // points = totalEarnedPoints;
-      totalPoints = parseInt(this.progresBar.dataset.totalPoints) || 0;
-    }
-    // Оновлення даних про досягнення та бали у датасет
-    this.progresBar.dataset.achievedCount = achievedCount;
-    this.progresBar.dataset.points = totalEarnedPoints;
-
-    // Обчислення прогресу за балами та за кількістю досягнень
-    const completionByPoints = totalEarnedPoints / totalPoints || 0;
+  setValues() {
+    //* Обчислення прогресу за балами та за кількістю досягнень
+    const completionByPoints = this.stats.earnedPoints / ui.GAME_DATA.points_total || 0;
     const completionByPointsPercents = ~~(completionByPoints * 100) + "%";
     //*Потрібно перевести ширину у відсотки від ширини прогресу по поінтах
+    const width = this.section.clientWidth || 0;
     const completionByPointsInPixels = completionByPoints * width;
     const completionByCount =
-      (width * achievedCount) / (totalCount * completionByPointsInPixels) || 0;
-    const completionByCountPercent =
-      ~~((100 * achievedCount) / totalCount) + "%";
-    // Встановлення стилів прогресу
+      (width * this.stats.earnedAchievesCount) / (ui?.GAME_DATA?.achievements_published * completionByPointsInPixels) || 0;
+    const completionByCountPercents =
+      ~~((100 * this.stats.earnedAchievesCount) / ui?.GAME_DATA?.achievements_published) + "%";
+
+    //* Встановлення стилів прогресу
     this.progresBar.style.setProperty(
       "--progress-points",
       completionByPoints * 100 + "%"
@@ -1689,14 +1726,58 @@ class StatusPanel {
       "--progress-count",
       completionByCount * 100 + "%"
     );
+    this.progressStatusText.innerText = completionByPointsPercents + " of points"; // + '/' + completionByCountPercent;
+    this.progressStatusCountText.innerText = completionByCountPercents + " of count"
     ui.gameCard.updateGameInfoElement({
       name: "Completion",
-      value: `${completionByPointsPercents} of points [${completionByCountPercent}]`,
+      value: `${completionByPointsPercents} of points [${completionByCountPercents}]`,
     });
-    if (totalPoints === totalEarnedPoints) {
+    if (this.stats.totalPoints === this.stats.earnedPoints) {
       ui.gameCard.section.classList.add("mastered");
     }
-    this.progressStatusText.innerText = completionByPointsPercents;
+  }
+  updateData() {
+    this.stats.earnedPoints = 0;
+    this.stats.earnedAchievesCount = 0;
+    //* Підрахунок кількості досягнень та набраних балів
+    Object.values(ui.ACHIEVEMENTS).forEach((achievement) => {
+      if (achievement.DateEarnedHardcore) {
+        this.stats.earnedPoints += achievement.Points; // Додавання балів
+        this.stats.earnedAchievesCount++;
+      }
+    });
+    this.setValues();
+  }
+
+  updateProgress({ earnedAchievementIDs }) {
+    this.stats.earnedAchievesCount += earnedAchievementIDs.length;
+    earnedAchievementIDs.forEach((id) => {
+      if (ui.ACHIEVEMENTS[id].DateEarnedHardcore) {
+        this.stats.earnedPoints += ui.ACHIEVEMENTS[id].Points;
+      }
+    });
+    this.setValues();
+  }
+  addAnimationToStats() {
+    this.progressStatusText.classList.remove("hide");
+    this.progressStatusCountText.classList.add("hide");
+
+    let animationInterval = setInterval(() => {
+      // this.progressStatusText.classList.remove("show");
+      this.progressStatusText.classList.toggle("hide");
+
+      this.progressStatusCountText.classList.toggle("hide");
+      // this.progressStatusCountText.classList.add("show");
+      setTimeout(() => {
+
+        this.progressStatusText.classList.toggle("hide");
+        // this.progressStatusText.classList.add("show");
+
+        this.progressStatusCountText.classList.toggle("hide");
+        // this.progressStatusCountText.classList.remove("show");
+
+      }, this.ANIMATION_DELAY_IN_SECONDS * 1 * 1000)
+    }, this.ANIMATION_DELAY_IN_SECONDS * 2 * 1000);
   }
 }
 class Settings {
@@ -2781,6 +2862,14 @@ class Target {
         checked: this.SHOW_HEADER,
         event: `onchange="ui.target.SHOW_HEADER = this.checked;"`,
       },
+      {
+        type: "checkbox",
+        name: "context_autoscroll-target",
+        id: "context_autoscroll-target",
+        label: "Autoscroll",
+        checked: this.AUTOSCROLL,
+        event: `onchange="ui.target.AUTOSCROLL = this.checked;"`,
+      },
     ];
   }
   get SHOW_HEADER() {
@@ -2858,6 +2947,13 @@ class Target {
   set AUTOCLEAR_DELAY(value) {
     config._cfg.settings.autoClearTargetTime = value >= 0 ? value : 0;
     config.writeConfiguration();
+  }
+  get AUTOSCROLL() {
+    return config?.ui?.target_section?.autoscroll ?? true;
+  }
+  set AUTOSCROLL(value) {
+    config.ui.target_section.autoscroll = value;
+    value ? this.startAutoScroll() : this.stopAutoScroll();
   }
   constructor() {
     this.initializeElements();
@@ -2956,6 +3052,52 @@ class Target {
         sectionCode: "",
       });
     });
+    this.startAutoScroll();
+  }
+  autoscrollInterval;
+  startAutoScroll(toBottom = true) {
+    clearInterval(this.autoscrollInterval);
+    let refreshRateMiliSecs = 50;
+
+    let scrollContainer = this.container;
+    let speedInPixels = 1;
+    const pauseOnEndMilisecs = 2000;
+    // Часовий інтервал для прокручування вниз
+    if (this.AUTOSCROLL) {
+      this.autoscrollInterval = setInterval(() => {
+        if (scrollContainer.scrollHeight - scrollContainer.clientHeight <= 10) {
+          this.stopAutoScroll();
+        }
+        if (toBottom) {
+          scrollContainer.scrollTop += speedInPixels;
+          if (
+            scrollContainer.scrollTop + scrollContainer.clientHeight >=
+            scrollContainer.scrollHeight
+          ) {
+            clearInterval(this.autoscrollInterval);
+            setTimeout(() => this.startAutoScroll(false), pauseOnEndMilisecs);
+          }
+        } else {
+          scrollContainer.scrollTop -= speedInPixels;
+          if (scrollContainer.scrollTop === 0) {
+            clearInterval(this.autoscrollInterval);
+            setTimeout(() => this.startAutoScroll(true), pauseOnEndMilisecs);
+          }
+        }
+      }, refreshRateMiliSecs);
+      // Припиняємо прокручування при наведенні миші на контейнер
+      scrollContainer.addEventListener("mouseenter", () => {
+        speedInPixels = 0; // Зупиняємо інтервал прокрутки
+      });
+
+      // Відновлюємо прокрутку при відведенні миші від контейнера
+      scrollContainer.addEventListener("mouseleave", () => {
+        speedInPixels = 1;
+      });
+    }
+  }
+  stopAutoScroll() {
+    clearInterval(this.autoscrollInterval);
   }
   isAchievementInTargetSection({ ID, targetContainer }) {
     const targetAchievements = [
@@ -4041,7 +4183,7 @@ class UserInfo {
     this.userNameElement = this.section.querySelector(".user_user-name");
     this.userImg = this.section.querySelector(".user-preview");
     this.connectionStatus = this.section.querySelector(".user_online-indicator")
-    this.userRankElement = this.section.querySelector(".user_rank");//!------
+    this.userRankElement = this.section.querySelector(".user_rank");
     this.userSoftpointsElement = this.section.querySelector(".user_softcore-points");
     this.userHardpointsElement = this.section.querySelector(".user_hardcore-points")
     this.userRetropointsElement = this.section.querySelector(".user_retropoints")

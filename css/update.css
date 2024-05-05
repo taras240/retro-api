@@ -8,13 +8,16 @@
   min-height: 75px;
   max-height: 120px;
   width: 500px;
+  z-index: 1;
   /* transition: 0.2s !important; */
 }
+
 .update_section .resizer {
   z-index: 2;
 }
+
 .update_container {
-  padding: 10px;
+  padding: 0 10px;
   height: 100%;
   position: relative;
   display: flex;
@@ -27,28 +30,69 @@
   z-index: 2;
   cursor: grab;
 }
+
 .update-section-text {
   text-align: right;
   text-wrap: nowrap;
   overflow: hidden;
 }
+
 .progress-percent {
+  --animation-duration: 0.5s;
   position: absolute;
-  bottom: 5px;
+  /* bottom: 5px; */
   left: 60px;
   transform: translate(0, 0);
   font-size: 1.8rem;
   font-weight: 600;
+  bottom: 5px;
   color: var(--font-color);
-  opacity: 0.5;
+  animation: show-percent var(--animation-duration) ease-in forwards;
+
 }
+
 .progress-percent.hidden {
   visibility: hidden;
 }
+
+.progress-percent.hide {
+  /* animation-delay: 0; */
+  animation: hide-percent var(--animation-duration) ease-out forwards;
+}
+
+/* .progress-percent.show {
+  bottom: -200px;
+  animation: show-percent var(--animation-duration) linear forwards;
+
+} */
+
+@keyframes show-percent {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes hide-percent {
+  0% {
+    opacity: 0.6;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
 .update-button {
   width: auto;
   margin-right: 20px;
+  /* margin: 10px; */
+  max-height: 80%;
 }
+
 .update-button {
   position: relative;
   --shadow-color: black;
@@ -71,6 +115,7 @@
   background-repeat: no-repeat;
   background-size: contain;
 }
+
 .update-button::after {
   content: "";
   position: absolute;
@@ -86,38 +131,47 @@
   mask-position: center;
   -webkit-mask-position: center;
 }
+
 .update-button.active::after {
   mask-image: url(../assets/img/pause.svg);
   -webkit-mask-image: url(../assets/img/pause.svg);
 }
+
 .update-button.tick {
   /* animation: tickAnimation 0.5s; */
 }
+
 @keyframes tickAnimation {
   0% {
     background-color: var(--selection-color);
   }
+
   50% {
     background-color: var(--accent-color);
   }
+
   100% {
     background-color: var(--selection-color);
   }
 }
-.round-button:hover {
-}
+
+.round-button:hover {}
+
 .update-button:active {
   box-shadow: 0 0 0;
   background-color: var(--selection-color);
 }
+
 .update-button svg {
   fill: var(--font-color);
   width: 26px;
   height: 26px;
 }
+
 .update-button.active {
   /* background-color: var(--selection-color); */
 }
+
 .update-button.active::after {
   /* content: "";
   position: absolute;
@@ -129,10 +183,12 @@
   top: 2px;
   right: 2px; */
 }
+
 .update-button.active svg,
 .update-button.error svg {
   fill: black;
 }
+
 .update-button.active svg {
   animation: updateTickAnimation 2s linear infinite;
 }
@@ -141,6 +197,7 @@
   opacity: 0.8;
   animation: endTickAnimation 0.5s linear;
 }
+
 .update-button.error {
   background-color: red;
   border-color: transparent;
@@ -150,24 +207,29 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
 }
+
 @keyframes endTickAnimation {
   to {
     transform: rotate(180deg);
   }
 }
+
 .update-game_header {
   text-align: end;
 }
+
 .update-game_header a {
   position: relative;
   color: var(--font-color);
   font-size: 1.1rem;
   font-weight: 600;
 }
+
 .update-game_header a:hover {
   text-decoration: underline;
 }
@@ -175,20 +237,22 @@
 .update-text-block {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: space-evenly;
   height: 100%;
   flex: 1;
   overflow: hidden;
 }
+
 .update-game-preview {
   height: 100%;
-  max-height: 100%;
+  max-height: 80%;
   aspect-ratio: 1;
   object-fit: fill;
   border-radius: 5px;
   overflow: hidden;
   pointer-events: none;
 }
+
 .progress-bar {
   position: absolute;
   top: 0;
@@ -198,6 +262,7 @@
   width: var(--progress-points, 0%);
   background-color: var(--accent-color);
 }
+
 .progress-bar::before {
   content: "";
   position: absolute;
