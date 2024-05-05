@@ -4094,7 +4094,8 @@ class UserInfo {
       this.USER_INFO.hardpoints = TotalPoints;
       this.USER_INFO.lastGames = RecentlyPlayed;
       this.USER_INFO.lastAchivs = Object.values(RecentAchievements)
-        .flatMap(RecentAchievements => Object.values(RecentAchievements));
+        .flatMap(RecentAchievements => Object.values(RecentAchievements))
+        .sort((a, b) => new Date(b.DateAwarded) - new Date(a.DateAwarded));
 
     }).then(() => this.setValues())
 
