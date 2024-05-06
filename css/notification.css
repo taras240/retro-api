@@ -1,0 +1,128 @@
+.section.notification_section {
+    top: 100px;
+    left: 40%;
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    height: 500px;
+    min-width: 300px;
+    min-height: 150px;
+}
+
+.notification_section.hide-bg:hover {
+    background: var(--main-color) !important;
+}
+
+.notification_section.hide-bg {
+    background: transparent !important;
+}
+
+.hide-bg .header-container {
+    opacity: 0;
+}
+
+.hide-bg:hover .header-container {
+    opacity: 1;
+}
+
+.notification_section.compact .header-container {
+    display: none;
+}
+
+.notification-container {
+    flex-shrink: 0;
+    flex: 1;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: start;
+    /* align-items: center; */
+    overflow: scroll;
+}
+
+.notification_timestamp {
+    align-self: center;
+    width: fit-content;
+    padding: 2px 20px;
+    border-radius: 10px;
+    background-color: var(--secondary-color);
+}
+
+.notification_message {
+    padding: 5px;
+    background-color: var(--secondary-color);
+    font-size: 1rem;
+    border-radius: 3px;
+    overflow: hidden;
+    animation: notification-popup 1s forwards linear;
+}
+
+@keyframes notification-popup {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.notification-game,
+.notification-achiv {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    background-color: var(--secondary-color);
+    border-radius: 5px;
+    overflow: hidden;
+    padding: 5px;
+}
+
+.notification-container .prev-img {
+    filter: none;
+}
+
+.notification_details {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-self: stretch;
+}
+
+.notification_description-icons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+}
+
+.notification_description-text {
+    font-size: 1rem;
+    color: var(--font-color);
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.notification_description-icon {
+    background-color: var(--font-color);
+    display: inline-block;
+    height: 1rem;
+    aspect-ratio: 1;
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+
+
+
+}
+
+.notification_description-icon.achievements-icon {
+    mask-image: url(../assets/img/star.svg);
+}
+
+.notification_description-icon.retropoints-icon {
+    mask-image: url(../assets/img/bolt.svg);
+}

@@ -1,5 +1,5 @@
 class UI {
-  VERSION = "0.16";
+  VERSION = "0.20";
   static AUTOCLOSE_CONTEXTMENU = false;
   static STICK_MARGIN = 10;
   static filterMethods = {
@@ -19,7 +19,6 @@ class UI {
     default: "default",
     achievementsCount: "achievementsCount",
     title: "title",
-
   };
 
   get ACHIEVEMENTS() {
@@ -29,6 +28,9 @@ class UI {
     return this._gameData;
   }
   set ACHIEVEMENTS(achievementsObject) {
+    if (this.GAME_DATA && achievementsObject.ID != this.GAME_DATA?.ID) {
+      this.notifications.pushNotification({ type: this.notifications.types.newGame, elements: achievementsObject });
+    }
     this._gameData = achievementsObject;
     this.achievementsBlock.forEach((widgetClone) =>
       widgetClone.parseGameAchievements(this.GAME_DATA)
@@ -58,9 +60,10 @@ class UI {
         if (config.identConfirmed) {
           if (config.version != this.VERSION) {
             setTimeout(() => {
-              document
-                .querySelector("#help_section")
-                .classList.remove("hidden");
+              UI.switchSectionVisibility({
+                section: document
+                  .querySelector("#help_section")
+              })
               config.version = this.VERSION;
             }, 1500);
           }
@@ -111,7 +114,7 @@ class UI {
     this.progression = new Progression();
     this.userInfo = new UserInfo();
     this.note = new Note();
-
+    this.notifications = new Notification();
 
     //*  Must be last initialize to set correct values
     this.buttons = new ButtonPanel();
@@ -165,23 +168,7 @@ class UI {
         section.classList.add("hidden", "disposed");
       }
     })
-    // Object.getOwnPropertyNames(config.ui).forEach((containerId) => {
-    //   // Отримання елемента за його ідентифікатором
-    //   let element = document.getElementById(containerId);
-    //   if (!element) return;
-    //   // Отримання позиції та розмірів елемента з об'єкта config.ui
-    //   const { x, y, width, height, hidden } = config.ui[containerId];
-    //   // Встановлення нових значень стилів елемента, якщо вони вказані у config.ui
-    //   // Якщо значення відсутнє (undefined), то стилі не змінюються
-    //   x ? (element.style.left = x) : "";
-    //   y ? (element.style.top = y) : "";
-    //   width ? (element.style.width = width) : "";
-    //   height ? (element.style.height = height) : "";
-    //   const isHidden = hidden ?? true;
-    //   if (isHidden) {
-    //     element.classList.add("hidden", "disposed");
-    //   }
-    // });
+
     this.buttons.games.checked = !this.games.section.classList.contains("hidden");
     document.querySelector("#background-animation").style.display =
       config.bgVisibility ? "display" : "none";
@@ -243,6 +230,7 @@ class UI {
     return earnedAchievements?.map((achievement) => achievement.AchievementID);
   }
   updateAchievements(earnedAchievements) {
+    this.notifications.pushNotification({ type: this.notifications.types.earnedAchivs, elements: earnedAchievements })
     earnedAchievements.forEach((achievement) => {
       const { HardcoreMode, Date } = achievement;
       const savedAchievement = this.ACHIEVEMENTS[achievement.AchievementID];
@@ -1480,6 +1468,7 @@ class ButtonPanel {
     this.progression = this.section.querySelector("#open-progression-button");
     this.userImage = this.section.querySelector("#side-panel-user-image");
     this.note = this.section.querySelector("#open-note-button");
+    this.notifications = this.section.querySelector("#open-notifications-button");
     this.user = this.section.querySelector("#open-user-button");
 
   }
@@ -1531,6 +1520,9 @@ class ButtonPanel {
     this.user.addEventListener("change", (e) => {
       UI.switchSectionVisibility(ui.userInfo);
     });
+    this.notifications.addEventListener("change", (e) => {
+      UI.switchSectionVisibility(ui.notifications);
+    });
   }
 
   setValues() {
@@ -1554,7 +1546,7 @@ class ButtonPanel {
 
     this.progression.checked = config.ui?.progression_section?.hidden === false ?? ui.progression.VISIBLE;
     this.user.checked = config.ui?.user_section?.hidden === false ?? ui.user.VISIBLE;
-
+    this.notifications.checked = config.ui?.notification_section?.hidden === false ?? ui.notifications.VISIBLE;
 
     this.userImage.src = config.userImageSrc;
   }
@@ -4121,6 +4113,7 @@ class UserInfo {
     lastAchivs: [],
 
   }
+
   constructor() {
     this.initializeElements();
     this.addEvents();
@@ -4248,6 +4241,208 @@ class UserInfo {
   }
   close() {
     ui.buttons.user.click();
+  }
+}
+class Notification {
+  get contextMenuItems() {
+    return [
+      {
+        label: "Show header",
+        type: "checkbox",
+        name: "context_hide-notification-header",
+        id: "context_hide-notification-header",
+        checked: this.SHOW_HEADER,
+        event: `onchange="ui.notifications.SHOW_HEADER = this.checked;"`,
+      },
+      {
+        label: "Hide background",
+        type: "checkbox",
+        name: "context_hide-notification-bg",
+        id: "context_hide-notification-bg",
+        checked: this.HIDE_BG,
+        event: `onchange="ui.notifications.HIDE_BG = this.checked;"`,
+      }
+    ];
+  }
+  types = {
+    newGame: "newGame",
+    earnedAchivs: "earnedAchivs",
+  }
+  get VISIBLE() {
+    return !this.section.classList.contains("hidden");
+  }
+  get SHOW_HEADER() {
+    return config?.ui.notification_section?.showHeader ?? true;
+  }
+  set SHOW_HEADER(value) {
+    if (!config.ui.notification_section) {
+      config.ui.notification_section = {};
+    }
+    config.ui.notification_section.showHeader = value;
+    config.writeConfiguration();
+    this.section.classList.toggle("compact", !this.SHOW_HEADER);
+  }
+  get HIDE_BG() {
+    return config?.ui.notification_section?.hideBg ?? false;
+  }
+  set HIDE_BG(value) {
+    if (!config.ui.notification_section) {
+      config.ui.notification_section = {};
+    }
+    config.ui.notification_section.hideBg = value;
+    config.writeConfiguration();
+    this.section.classList.toggle("hide-bg", this.HIDE_BG);
+  }
+  get NOTIFICATIONS() {
+    return this._notifications ?? {
+      time: "",
+      notifications: [],
+    };
+  }
+  constructor() {
+    this.initializeElements();
+    this.addEvents();
+    this.SHOW_HEADER = this.SHOW_HEADER;
+    this.updateInterval = setInterval(() => {
+      this.container.querySelectorAll(".notification_timestamp").forEach(timeStamp => {
+        timeStamp.innerText = this.getDeltaTime(timeStamp.dataset.time);
+      })
+    }, 1 * 1000 * 60)
+  }
+
+  initializeElements() {
+    this.section = document.querySelector("#notification_section");
+    this.container = this.section.querySelector(".notification-container");
+    this.resizer = this.section.querySelector(".resizer");
+  }
+  addEvents() {
+    this.section.addEventListener("mousedown", (e) => {
+      UI.moveEvent(this.section, e);
+    });
+    this.section.addEventListener("contextmenu", (event) => {
+      ui.showContextmenu({
+        event: event,
+        menuItems: this.contextMenuItems,
+        sectionCode: "",
+      });
+    });
+    this.resizer.addEventListener("mousedown", event => {
+      event.stopPropagation();
+      this.section.classList.add("resized");
+      UI.resizeEvent({
+        event: event,
+        section: this.section,
+        postFunc: () => "",
+      });
+    });
+  }
+  pushNotification({ type, elements }) {
+    const timestampElement = this.generatePopupTime();
+    let messageElements = [];
+    switch (type) {
+      case this.types.newGame:
+        messageElements.push(this.generateNewgameElement(elements));
+        break;
+      case this.types.earnedAchivs:
+        messageElements = this.generateNewachivsElements(elements);
+        break;
+      default:
+        console.log(`notification type doesn't exist`);
+        return;
+    }
+    messageElements.forEach(element => this.container.prepend(element));
+    messageElements.length > 0 ? this.container.prepend(timestampElement) : "";
+  }
+  generatePopupTime() {
+    const timestampElement = document.createElement("li");
+    const popupTime = (new Date()).getTime();
+    timestampElement.dataset.time = popupTime;
+    timestampElement.classList.add("notification_timestamp");
+    timestampElement.innerHTML = `
+      few seconds ago
+    `;
+    return timestampElement;
+  }
+
+  generateNewgameElement(gameObject) {
+    const gameMessage = document.createElement("li");
+    gameMessage.classList.add("notification-game", "new-game");
+    gameMessage.innerHTML =
+      `   
+      <div class="prev">
+        <img class="prev-img" src="https://media.retroachievements.org${gameObject.ImageIcon}" alt=" ">
+      </div>
+      <div class="notification_details">
+        <h3 class="achiv-name">
+          <a target="_blanc" href="https://retroachievements.org/achievement/168861">
+            ${gameObject.Title}
+          </a>
+        </h3>
+        <p class="achiv-description">${gameObject.Genre ? gameObject.Genre + ",\n" : ""}${gameObject.ConsoleName}</p>
+        <div class="notification_description-icons">
+          <p class="notification_description-text" title="points">
+            <i class="notification_description-icon  points-icon"></i>
+            ${gameObject.points_total}
+          </p>
+          <p class="notification_description-text" title="retropoints">
+            <i class="notification_description-icon  achievements-icon"></i>
+            ${gameObject.achievements_published}
+          </p>
+          <p class="notification_description-text" title="earned by">
+            <i class="notification_description-icon  trending-icon"></i>
+            ${gameObject.NumDistinctPlayersHardcore}
+          </p>
+        </div>
+      </div>
+    `;
+    return gameMessage;
+  }
+
+  generateNewachivsElements(achivs) {
+    let achivElements = [];
+    achivs.forEach(achiv => {
+      const { AchievementID, BadgeURL, Description, Title, Points, TrueRatio } = achiv;
+      const earnPercent = ~~(1000 * ui.ACHIEVEMENTS[AchievementID].NumAwardedHardcore / ui.GAME_DATA.NumDistinctPlayers) / 100;
+      const achivElement = document.createElement("li");
+      achivElement.classList.add("notification-achiv", "new-achiv");
+      achivElement.innerHTML =
+        `   
+      <div class="prev">
+                <img class="prev-img" src="https://media.retroachievements.org/${BadgeURL}" alt=" ">
+              </div>
+              <div class="notification_details">
+                <h3 class="achiv-name"><a target="_blanc" href="https://retroachievements.org/achievement/${AchievementID}">${Title}</a></h3>
+                <p class="achiv-description">${Description}</p>
+                <div class="notification_description-icons">       
+                  <p class="notification_description-text" title="points">
+                    <i class="notification_description-icon  points-icon"></i>
+                    ${Points}
+                  </p>
+                  
+                  <p class="notification_description-text" title="retropoints">
+                    <i class="notification_description-icon  retropoints-icon"></i>
+                    ${TrueRatio}
+                  </p>
+                  <p class="notification_description-text" title="earned by">
+                    <i class="notification_description-icon  trending-icon"></i>
+                    ${earnPercent}
+                  </p>
+                </div>             
+              </div>
+      `;
+      achivElements.push(achivElement);
+    })
+
+    return achivElements;
+  }
+
+  getDeltaTime(timeStamp) {
+    let date = +timeStamp;
+    let now = (new Date()).getTime();
+    let deltaSeconds = ~~((now - date) / 1000);
+    return deltaSeconds < 2 * 60 ? "few seconds ago" :
+      deltaSeconds < 60 * 60 ? `${~~(deltaSeconds / 60)} minutes ago` :
+        new Date(date).toTimeString().replace(/:[^:]*$/gi, "");
   }
 }
 //* Методи сортування для досягнень гри

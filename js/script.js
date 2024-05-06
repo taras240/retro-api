@@ -16,7 +16,6 @@ async function getAchievements() {
 
     ui.ACHIEVEMENTS = response;
     ui.statusPanel.watchButton.classList.remove("error");
-    // Оновлення інформації в картці гри
 
   } catch (error) {
     // Додання помилки до кнопки перегляду та зупинка перегляду
@@ -75,10 +74,9 @@ async function checkUpdates() {
   if (responce.LastGameID != config.gameID) {
     config.gameID = responce.LastGameID;
     ui.settings.gameID.value = config.gameID;
-    if (config.identConfirmed) {
-      ui.target.clearAllAchivements();
-      getAchievements();
-    }
+    ui.target.clearAllAchivements();
+    getAchievements();
+
   }
   if (
     responce.TotalPoints != totalPoints ||

@@ -18,6 +18,10 @@
       </div>
     </div>
     <ul class="changelog-list">
+      <p class="changelog-list_item">06-05-24
+      </p>
+      <li class="changelog-list_item">added notifications widget
+      </li>
       <p class="changelog-list_item">02-05-24
       </p>
       <li class="changelog-list_item">added notes widget

@@ -14,6 +14,7 @@ const sections = {
   games: "./elements/games.elem",
   note: "./elements/note.elem",
   user: "./elements/userInfo.elem",
+  notifications: "./elements/notification.elem",
 };
 
 // Функція для завантаження розділів
