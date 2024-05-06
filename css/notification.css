@@ -13,9 +13,12 @@
     background: var(--main-color) !important;
 }
 
+.notification_section:not(:hover) {
+    box-shadow: 0 0 5px 2px transparent;
+}
+
 .notification_section.hide-bg {
     background: transparent !important;
-    box-shadow: 0 0 0 transparent !important;
 }
 
 .hide-bg .header-container {
