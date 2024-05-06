@@ -4302,6 +4302,7 @@ class Notification {
   constructor() {
     this.initializeElements();
     this.addEvents();
+    this.HIDE_BG = this.HIDE_BG;
     this.SHOW_HEADER = this.SHOW_HEADER;
     this.updateInterval = setInterval(() => {
       this.container.querySelectorAll(".notification_timestamp").forEach(timeStamp => {
