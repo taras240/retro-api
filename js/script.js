@@ -118,3 +118,21 @@ function horizontalScroll(event) {
   event.currentTarget.scrollLeft -= delta * scrollDistance * scrollSpeed;
   event.preventDefault();
 }
+const authTokenGetter = () => {
+
+}
+function openTwitchBotAuth() {
+  //https://www.twitchapps.com/tmi/
+  const twitchAUTHLink = 'https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=q6batx0epp608isickayubi39itsckt&redirect_uri=https://twitchapps.com/tmi/&scope=chat%3Aread+chat%3Aedit';
+  window.open(twitchAUTHLink, '_blank');
+}
+// const client = new tmi.Client({
+//   options: { debug: true },
+//   identity: {
+//     username: 'retrocheevos',
+//     password: ''
+//   },
+//   channels: ['splinteruk']
+// });
+
+// client.connect();

@@ -34,7 +34,6 @@
 }
 
 .notification-container {
-
     --offset-height: 0px;
     flex-shrink: 0;
     flex: 1;
@@ -55,7 +54,15 @@
     flex-direction: column;
     gap: 5px;
     justify-content: start;
+    background-color: var(--secondary-color);
+    padding: 2px;
+    /* border: 2px solid gold; */
+    border-radius: 5px;
+    transition: transform 0.2s;
+}
 
+.notification_timeblock-list:hover {
+    transform: scale(1.01);
 }
 
 .notification_timeblock-list.notification_popup {
@@ -117,15 +124,15 @@
     align-items: center;
     column-gap: 10px;
     flex-shrink: 0;
-    background-color: var(--secondary-color);
+    background-color: var(--main-color);
     border-radius: 5px;
     overflow: hidden;
     box-shadow: 0 0 8px -5px var(--secondary-color);
-    /* padding: 0 10px; */
+    padding: 5px;
 }
 
 .notificaton_header {
-    grid-column: 1 /3;
+    grid-column: 1 / 3;
     background-color: rgba(0, 0, 0, 0.747);
     margin: 0 -10px;
     text-align: center;
@@ -135,7 +142,7 @@
 
 .notification-container .prev-img {
     filter: none;
-    border-radius: 0;
+
 }
 
 .notification_details {
