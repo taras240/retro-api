@@ -34,23 +34,57 @@
 }
 
 .notification-container {
+    --offset-height: 0px;
     flex-shrink: 0;
     flex: 1;
     padding: 10px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 5px;
     justify-content: start;
     /* align-items: center; */
     overflow: scroll;
+    margin-top: 0;
+}
+
+.notification_timeblock-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    justify-content: start;
+
+}
+
+.notification_timeblock-list.notification_popup {
+    animation: notification_popup-animation 1s ease-out forwards;
+}
+
+@keyframes notification_popup-animation {
+    0% {
+        margin-top: calc(0px - var(--offset-height));
+    }
+
+    100% {
+        margin-top: 0;
+    }
 }
 
 .notification_timestamp {
     align-self: center;
-    width: fit-content;
-    padding: 2px 20px;
-    border-radius: 10px;
+    font-size: 0.9rem;
+    padding: 0px 20px;
+    border-radius: 5px;
     background-color: var(--secondary-color);
+    height: 1.4rem;
+    display: flex;
+    align-items: center;
+    transition: 0.5s;
+    overflow: hidden;
+}
+
+.notification_timestamp.hidden {
+    height: 0;
+    opacity: 0;
 }
 
 .notification_message {
@@ -120,6 +154,11 @@
     mask-position: center;
 
 
+
+}
+
+.notification_description-icon.players-icon {
+    mask-image: url(../assets/img/group.svg);
 
 }
 

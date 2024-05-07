@@ -4261,6 +4261,14 @@ class Notification {
         id: "context_hide-notification-bg",
         checked: this.HIDE_BG,
         event: `onchange="ui.notifications.HIDE_BG = this.checked;"`,
+      },
+      {
+        label: "Show timestamp",
+        type: "checkbox",
+        name: "context_show-notification-time",
+        id: "context_show-notification-time",
+        checked: this.SHOW_TIMESTAMP,
+        event: `onchange="ui.notifications.SHOW_TIMESTAMP = this.checked;"`,
       }
     ];
   }
@@ -4270,6 +4278,18 @@ class Notification {
   }
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
+  }
+  get SHOW_TIMESTAMP() {
+    return config?.ui.notification_section?.showTimestamp ?? true;
+  }
+  set SHOW_TIMESTAMP(value) {
+    if (!config.ui.notification_section) {
+      config.ui.notification_section = {};
+    }
+    this.section.querySelectorAll(".notification_timestamp").forEach(timeStamp => timeStamp.classList.toggle("hidden", this.SHOW_TIMESTAMP))
+    config.ui.notification_section.showTimestamp = value;
+    config.writeConfiguration();
+    this.section.classList.toggle("compact", !this.SHOW_HEADER);
   }
   get SHOW_HEADER() {
     return config?.ui.notification_section?.showHeader ?? true;
@@ -4351,14 +4371,27 @@ class Notification {
         console.log(`notification type doesn't exist`);
         return;
     }
-    messageElements.forEach(element => this.container.prepend(element));
-    messageElements.length > 0 ? this.container.prepend(timestampElement) : "";
+    const notificationElement = this.generateTimeBlock(timestampElement, messageElements);
+    messageElements.length > 0 ? this.container.prepend(notificationElement) : "";
+    const elementHeight = notificationElement.getBoundingClientRect().height;
+    this.container.style.setProperty("--offset-height", `${elementHeight}px`);
+    notificationElement.classList.add("notification_popup");
+  }
+  generateTimeBlock(timeStamp, messageElements) {
+    const timeBlockElement = document.createElement("ul");
+    timeBlockElement.classList.add("notification_timeblock-list");
+    timeBlockElement.appendChild(timeStamp);
+    messageElements.forEach(element => {
+      timeBlockElement.appendChild(element);
+    })
+    return timeBlockElement;
   }
   generatePopupTime() {
     const timestampElement = document.createElement("li");
     const popupTime = (new Date()).getTime();
     timestampElement.dataset.time = popupTime;
     timestampElement.classList.add("notification_timestamp");
+    !this.SHOW_TIMESTAMP ? timestampElement.classList.add("hidden") : "";
     timestampElement.innerHTML = `
       few seconds ago
     `;
@@ -4390,7 +4423,7 @@ class Notification {
             ${gameObject.achievements_published}
           </p>
           <p class="notification_description-text" title="earned by">
-            <i class="notification_description-icon  trending-icon"></i>
+            <i class="notification_description-icon  players-icon"></i>
             ${gameObject.NumDistinctPlayersHardcore}
           </p>
         </div>
@@ -4403,7 +4436,7 @@ class Notification {
     let achivElements = [];
     achivs.forEach(achiv => {
       const { AchievementID, BadgeURL, Description, Title, Points, TrueRatio } = achiv;
-      const earnPercent = ~~(1000 * ui.ACHIEVEMENTS[AchievementID].NumAwardedHardcore / ui.GAME_DATA.NumDistinctPlayers) / 100;
+      const earnPercent = ~~(100 * ui.ACHIEVEMENTS[AchievementID].NumAwardedHardcore / ui.GAME_DATA.NumDistinctPlayers);
       const achivElement = document.createElement("li");
       achivElement.classList.add("notification-achiv", "new-achiv");
       achivElement.innerHTML =
@@ -4426,7 +4459,7 @@ class Notification {
                   </p>
                   <p class="notification_description-text" title="earned by">
                     <i class="notification_description-icon  trending-icon"></i>
-                    ${earnPercent}
+                    ${earnPercent}%
                   </p>
                 </div>             
               </div>
