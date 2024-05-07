@@ -230,7 +230,6 @@ class UI {
     return earnedAchievements?.map((achievement) => achievement.AchievementID);
   }
   updateAchievements(earnedAchievements) {
-    this.notifications.pushNotification({ type: this.notifications.types.earnedAchivs, elements: earnedAchievements })
     earnedAchievements.forEach((achievement) => {
       const { HardcoreMode, Date } = achievement;
       const savedAchievement = this.ACHIEVEMENTS[achievement.AchievementID];
@@ -242,6 +241,7 @@ class UI {
       savedAchievement.DateEarned = savedAchievement.DateEarned ?? Date;
       this.ACHIEVEMENTS[achievement.AchievementID] = savedAchievement;
     });
+    this.notifications.pushNotification({ type: this.notifications.types.earnedAchivs, elements: earnedAchievements })
   }
   static updateAchievementsSection({ widget, earnedAchievementIDs }) {
     earnedAchievementIDs.forEach((id) => {
@@ -4402,7 +4402,8 @@ class Notification {
     const gameMessage = document.createElement("li");
     gameMessage.classList.add("notification-game", "new-game");
     gameMessage.innerHTML =
-      `   
+      `
+      <div class="notificaton_header">Launched game</div>
       <div class="prev">
         <img class="prev-img" src="https://media.retroachievements.org${gameObject.ImageIcon}" alt=" ">
       </div>
@@ -4435,12 +4436,13 @@ class Notification {
   generateNewachivsElements(achivs) {
     let achivElements = [];
     achivs.forEach(achiv => {
-      const { AchievementID, BadgeURL, Description, Title, Points, TrueRatio } = achiv;
+      const { AchievementID, BadgeURL, Description, Title, Points, TrueRatio, HardcoreMode } = achiv;
       const earnPercent = ~~(100 * ui.ACHIEVEMENTS[AchievementID].NumAwardedHardcore / ui.GAME_DATA.NumDistinctPlayers);
       const achivElement = document.createElement("li");
       achivElement.classList.add("notification-achiv", "new-achiv");
       achivElement.innerHTML =
         `   
+      <div class="notificaton_header">Earned achievement ${HardcoreMode == 1 ? "hardcore" : "softcore"}</div>
       <div class="prev">
                 <img class="prev-img" src="https://media.retroachievements.org/${BadgeURL}" alt=" ">
               </div>
