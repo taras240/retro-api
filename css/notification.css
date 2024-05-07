@@ -41,7 +41,7 @@
     padding: 10px;
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 10px;
     justify-content: start;
     /* align-items: center; */
     overflow: scroll;

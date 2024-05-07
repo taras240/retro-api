@@ -4401,9 +4401,9 @@ class Notification {
   generateNewgameElement(gameObject) {
     const gameMessage = document.createElement("li");
     gameMessage.classList.add("notification-game", "new-game");
+    // <div class="notificaton_header">Launched game</div>
     gameMessage.innerHTML =
       `
-      <div class="notificaton_header">Launched game</div>
       <div class="prev">
         <img class="prev-img" src="https://media.retroachievements.org${gameObject.ImageIcon}" alt=" ">
       </div>
@@ -4440,9 +4440,10 @@ class Notification {
       const earnPercent = ~~(100 * ui.ACHIEVEMENTS[AchievementID].NumAwardedHardcore / ui.GAME_DATA.NumDistinctPlayers);
       const achivElement = document.createElement("li");
       achivElement.classList.add("notification-achiv", "new-achiv");
+      // <div class="notificaton_header">Earned achievement ${HardcoreMode == 1 ? "hardcore" : "softcore"}</div>
+
       achivElement.innerHTML =
         `   
-      <div class="notificaton_header">Earned achievement ${HardcoreMode == 1 ? "hardcore" : "softcore"}</div>
       <div class="prev">
                 <img class="prev-img" src="https://media.retroachievements.org/${BadgeURL}" alt=" ">
               </div>
