@@ -24,6 +24,7 @@ class UI {
       this.target.fillItems();
     }
     this.progression.fillCards();
+
   }
 
   constructor() {
@@ -178,7 +179,7 @@ class UI {
     this.statusPanel.updateProgress({ earnedAchievementIDs: earnedAchievementsIDs });
 
     //Update UserInfo widget
-    setTimeout(() => ui.userInfo.update(), 2000);
+    // setTimeout(() => ui.userInfo.update(), 2000);
 
   }
   showContextmenu({ event, menuItems, sectionCode = "" }) {
@@ -239,6 +240,7 @@ class UI {
       savedAchievement.DateEarned = savedAchievement.DateEarned ?? Date;
       this.ACHIEVEMENTS[achievement.AchievementID] = savedAchievement;
     });
+    this.userInfo.pushAchievements({ achievements: earnedAchievements });
     this.notifications.pushNotification({ type: this.notifications.types.earnedAchivs, elements: earnedAchievements })
   }
   updateGameInfo({ Title, ConsoleName, ImageIcon, }) {
@@ -1925,7 +1927,6 @@ class Settings {
   }
   loadCustomFont(value) {
     const font = this.parseFontUrl(value);
-    console.log(font);
     if (font) {
       config._cfg.settings.customFontFamily = font.fontFamily;
       this.fontColorInput.value = font.fontName;
@@ -2438,7 +2439,6 @@ class Awards {
     });
   }
   async updateAwards() {
-    console.log("getAwards", this.VISIBLE);
     const response = await apiWorker.getUserAwards({});
     if (
       response.TotalAwardsCount != this.container.dataset.total ||
@@ -3319,8 +3319,6 @@ class Games {
         checkedPlatforms.splice(index, 1);
       }
     }
-    // console.log()
-
     config.ui.games_section.platformsFilter = checkedPlatforms;
     config.writeConfiguration();
     this.applyFilter();
@@ -4161,6 +4159,7 @@ class UserInfo {
       this.USER_INFO.lastAchivs = Object.values(RecentAchievements)
         .flatMap(RecentAchievements => Object.values(RecentAchievements))
         .sort((a, b) => new Date(b.DateAwarded) - new Date(a.DateAwarded));
+      ui.notifications.parseUserSummary(this.USER_INFO)
 
     }).then(() => this.setValues())
 
@@ -4193,6 +4192,32 @@ class UserInfo {
       .reverse();
   }
 
+  updatePoints({ points }) {
+    this.USER_INFO.softpoints = points.TotalSoftcorePoints;
+    this.USER_INFO.retropoints = points.TotalTruePoints;
+    this.USER_INFO.hardpoints = points.TotalPoints;
+    this.setValues();
+  }
+
+  pushNewGame({ game }) {
+    this.USER_INFO.lastGames.unshift(game);
+    this.USER_INFO.lastGames.pop();
+    this.setValues();
+  }
+  pushAchievements({ achievements }) {
+    achievements.forEach(achiv => {
+      if (achiv.DateEarnedHardcore) {
+        this.USER_INFO.hardpoints += achiv.Points;
+        this.USER_INFO.retropoints += achiv.TrueRatio;
+      }
+      else {
+        this.USER_INFO.softpoints += achiv.Points;
+      }
+      this.USER_INFO.lastAchivs.unshift(achiv);
+      this.USER_INFO.lastAchivs.pop();
+    })
+    this.setValues();
+  }
   generateGameElement(game) {
     const gameElement = document.createElement("li");
     gameElement.classList.add("user_last-game");
@@ -4213,7 +4238,7 @@ class UserInfo {
         <img class="user_game-img" src="https://media.retroachievements.org/Badge/${achiv.BadgeName}.png" alt="">
     </div>
     <div class="user_game-title">${achiv.Title}</div>
-    <p class="user_game-description">${fixTimeString(achiv.DateAwarded)}</p>
+    <p class="user_game-description">${fixTimeString(achiv.DateAwarded ?? achiv.Date)}</p>
     `;
     return achivElement;
   }
@@ -4335,15 +4360,69 @@ class Notification {
       });
     });
   }
-  pushNotification({ type, elements }) {
-    const timestampElement = this.generatePopupTime();
+  // {
+  //   "lastAchivs": [
+  //     {
+  //       "ID": 112429,
+  //       "GameID": 1915,
+  //       "GameTitle": "RoboCop 3",
+  //       "Title": "Who needs repairs?",
+  //       "Description": "Finish level 1 without repairing",
+  //       "Points": 2,
+  //       "Type": "missable",
+  //       "BadgeName": "122522",
+  //       "IsAwarded": "1",
+  //       "DateAwarded": "2024-05-10 15:45:05",
+  //       "HardcoreAchieved": 1
+  //     },
+  //   ],
+  //   "lastGames": [
+  //     {
+  //       "GameID": 1469,
+  //       "ConsoleID": 7,
+  //       "ConsoleName": "NES/Famicom",
+  //       "Title": "Dr. Mario",
+  //       "ImageIcon": "/Images/045855.png",
+  //       "ImageTitle": "/Images/002004.png",
+  //       "ImageIngame": "/Images/002005.png",
+  //       "ImageBoxArt": "/Images/012014.png",
+  //       "LastPlayed": "2024-05-10 16:35:57",
+  //       "AchievementsTotal": 70
+  //     },
+  //   ],
+  // }
+
+  parseUserSummary(userInfo) {
+    userInfo.lastGames.map(game => {
+      game.DateEarnedHardcore = game.LastPlayed;
+      game.type = this.types.newGame;
+      return game;
+    })
+    userInfo.lastAchivs.map(achiv => {
+      achiv.DateEarnedHardcore = achiv.DateAwarded;
+      achiv.type = this.types.earnedAchivs;
+      achiv.BadgeURL = `Badge/${achiv.BadgeName}.png`;
+      return achiv;
+    });
+    ([...userInfo.lastAchivs, ...userInfo.lastGames]
+      .sort((a, b) => -1 * sortBy.latest(a, b))
+    ).forEach(element =>
+      this.pushNotification({
+        type: element.type,
+        elements: element,
+        time: element.DateEarnedHardcore
+      })
+    );
+  }
+  pushNotification({ type, elements, time }) {
+    const timestampElement = this.generatePopupTime(time);
     let messageElements = [];
     switch (type) {
       case this.types.newGame:
         messageElements.push(this.generateNewgameElement(elements));
         break;
       case this.types.earnedAchivs:
-        messageElements = this.generateNewachivsElements(elements);
+        messageElements = this.generateNewachivsElements(Array.isArray(elements) ? elements : [elements]);
         break;
       default:
         console.log(`notification type doesn't exist`);
@@ -4364,14 +4443,14 @@ class Notification {
     })
     return timeBlockElement;
   }
-  generatePopupTime() {
+  generatePopupTime(time) {
     const timestampElement = document.createElement("li");
-    const popupTime = (new Date()).getTime();
+    const popupTime = (new Date(time ?? '')).getTime();
     timestampElement.dataset.time = popupTime;
     timestampElement.classList.add("notification_timestamp");
     !this.SHOW_TIMESTAMP ? timestampElement.classList.add("hidden") : "";
     timestampElement.innerHTML = `
-      few seconds ago
+     ${this.getDeltaTime(popupTime)}
     `;
     return timestampElement;
   }
@@ -4387,7 +4466,7 @@ class Notification {
       </div>
       <div class="notification_details">
         <h3 class="achiv-name">
-          <a target="_blanc" href="https://retroachievements.org/achievement/168861">
+          <a target="_blanc" href="">
             ${gameObject.Title}
           </a>
         </h3>
@@ -4395,15 +4474,15 @@ class Notification {
         <div class="notification_description-icons">
           <p class="notification_description-text" title="points">
             <i class="notification_description-icon  points-icon"></i>
-            ${gameObject.points_total}
+            ${gameObject.points_total ?? ""}
           </p>
           <p class="notification_description-text" title="retropoints">
             <i class="notification_description-icon  achievements-icon"></i>
-            ${gameObject.achievements_published}
+            ${gameObject.achievements_published ?? gameObject.AchievementsTotal}
           </p>
           <p class="notification_description-text" title="earned by">
             <i class="notification_description-icon  players-icon"></i>
-            ${gameObject.NumDistinctPlayersHardcore}
+            ${gameObject.NumDistinctPlayersHardcore ?? ""}
           </p>
         </div>
       </div>
@@ -4415,7 +4494,11 @@ class Notification {
     let achivElements = [];
     achivs.forEach(achiv => {
       const { AchievementID, BadgeURL, Description, Title, Points, TrueRatio, HardcoreMode } = achiv;
-      const earnPercent = ~~(100 * ui.ACHIEVEMENTS[AchievementID].NumAwardedHardcore / ui.GAME_DATA.NumDistinctPlayers);
+      const earnPercent = "";
+      if (ui.GAME_DATA.GameID == achiv.GameID) {
+        earnPercent = ~~(100 * ui.ACHIEVEMENTS[AchievementID].NumAwardedHardcore / ui.GAME_DATA.NumDistinctPlayers);
+
+      }
       const achivElement = document.createElement("li");
       achivElement.classList.add("notification-achiv", "new-achiv");
       // <div class="notificaton_header">Earned achievement ${HardcoreMode == 1 ? "hardcore" : "softcore"}</div>
@@ -4436,11 +4519,11 @@ class Notification {
                   
                   <p class="notification_description-text" title="retropoints">
                     <i class="notification_description-icon  retropoints-icon"></i>
-                    ${TrueRatio}
+                    ${TrueRatio ?? ""}
                   </p>
                   <p class="notification_description-text" title="earned by">
                     <i class="notification_description-icon  trending-icon"></i>
-                    ${earnPercent}%
+                    ${earnPercent ? earnPercent + "%" : ""}
                   </p>
                 </div>             
               </div>
@@ -4457,7 +4540,8 @@ class Notification {
     let deltaSeconds = ~~((now - date) / 1000);
     return deltaSeconds < 2 * 60 ? "few seconds ago" :
       deltaSeconds < 60 * 60 ? `${~~(deltaSeconds / 60)} minutes ago` :
-        new Date(date).toTimeString().replace(/:[^:]*$/gi, "");
+        deltaSeconds < 60 * 60 * 12 ? new Date(date).toLocaleTimeString().replace(/:[^:]*$/gi, "") :
+          new Date(date).toLocaleString().replace(/:[^:]*$/gi, "");
   }
 }
 //* Методи сортування для досягнень гри

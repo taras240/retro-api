@@ -95,20 +95,20 @@ class APIWorker {
         let title = game.Title;
         const ignoredWords = ["~UNLICENSED~", "~DEMO~", "~HOMEBREW~", "~HACK~", "~PROTOTYPE~", ".HACK//", "~TEST KIT~"];
 
-        const sufixes = ignoredWords.reduce((sufixes, word) => {
+        const badges = ignoredWords.reduce((badges, word) => {
           const reg = new RegExp(word, "gi");
           if (reg.test(game.Title)) {
             title = title.replace(reg, "");
-            sufixes.push(word.replaceAll(new RegExp("[^A-Za-z]", "gi"), ""));
+            badges.push(word.replaceAll(new RegExp("[^A-Za-z]", "gi"), ""));
 
           }
-          return sufixes;
+          return badges;
         }, []);
-        if (sufixes.length === 0) {
-          sufixes.push("ORIGINAL")
+        if (badges.length === 0) {
+          badges.push("ORIGINAL")
         }
-        game.HighestAwardKind ? sufixes.push(game.HighestAwardKind) : "";
-        game.sufixes = sufixes;
+        game.HighestAwardKind ? badges.push(game.HighestAwardKind) : "";
+        game.sufixes = badges;
         game.FixedTitle = title.trim();
         return game;
       })

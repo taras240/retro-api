@@ -64,7 +64,9 @@ async function checkUpdates() {
   if (responce.LastGameID != config.gameID) {
     config.gameID = responce.LastGameID;
     ui.settings.gameID.value = config.gameID;
-    getAchievements();
+    getAchievements().then(() =>
+      ui.userInfo.pushNewGame({ game: ui.GAME_DATA })
+    );
   }
   if (
     responce.TotalPoints != totalPoints ||
@@ -72,8 +74,10 @@ async function checkUpdates() {
   ) {
     updateAchievements();
     totalPoints = responce.TotalPoints;
-    softcorePoints = responce.TotalSoftcorePoints;
+    softcorePoints = responce.SoftcorePoints
+    ui.userInfo.updatePoints({ points: responce });
   }
+
   ui.statusPanel.richPresence.innerText = responce.RichPresenceMsg;
 }
 
