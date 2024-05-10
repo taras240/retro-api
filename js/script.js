@@ -1,19 +1,17 @@
-let config = new Config();
-const RECENT_DELAY_MILISECS = 20 * 60 * 1000; //maybe don't need
 const RECENT_ACHIVES_RANGE_MINUTES = 5; // for auto update
+let config = new Config();
 // Ініціалізація UI
 let ui = new UI();
-// Ініціалізація APIWorker з ідентифікацією користувача
+// Ініціалізація APIWorker 
 let apiWorker = new APIWorker();
 //Інтервал автооновлення ачівментсів
-let apiTikInterval;
+let apiTrackerInterval;
 
 // Функція для отримання досягнень гри
 async function getAchievements() {
   try {
     // Отримання інформації про прогрес гри від API
     const response = await apiWorker.getGameProgress({});
-
     ui.ACHIEVEMENTS = response;
     ui.statusPanel.watchButton.classList.remove("error");
 
@@ -24,25 +22,18 @@ async function getAchievements() {
     console.error(error);
   }
 }
-async function getAwards() {
-  const response = await apiWorker.getUserAwards({});
-  ui.awards.parseAwards(response);
-}
 
 // Функція для оновлення досягнень
 async function updateAchievements() {
   try {
-    // Отримання недавніх досягнень від API //* 5 minutes recomend
+    // Отримання недавніх досягнень від API
     const achievements = await apiWorker.getRecentAchieves({
       minutes: RECENT_ACHIVES_RANGE_MINUTES,
     });
     const earnedAchievementsIDs = ui.checkForNewAchieves(achievements);
 
     if (earnedAchievementsIDs.length > 0) {
-      // !____-------------------------
       ui.updateWidgets({ earnedAchievementsIDs: earnedAchievementsIDs });
-      // !____-------------------------
-
     }
   } catch (error) {
     console.error(error); // Обробка помилок
@@ -62,9 +53,8 @@ function startWatching() {
   }
 
   // Встановлення інтервалу для оновлення досягнень та зміни стану кнопки
-  apiTikInterval = setInterval(() => {
+  apiTrackerInterval = setInterval(() => {
     checkUpdates();
-    toggleTickClass();
   }, config.updateDelayInMiliSecs);
 }
 let totalPoints = 0;
@@ -74,9 +64,7 @@ async function checkUpdates() {
   if (responce.LastGameID != config.gameID) {
     config.gameID = responce.LastGameID;
     ui.settings.gameID.value = config.gameID;
-    ui.target.clearAllAchivements();
     getAchievements();
-
   }
   if (
     responce.TotalPoints != totalPoints ||
@@ -88,16 +76,12 @@ async function checkUpdates() {
   }
   ui.statusPanel.richPresence.innerText = responce.RichPresenceMsg;
 }
-// Функція для перемикання класу "tick" на кнопці слідкування
-function toggleTickClass() {
-  ui.statusPanel.watchButton.classList.remove("tick");
-  setTimeout(() => ui.statusPanel.watchButton.classList.add("tick"), 500);
-}
+
 
 // Функція для зупинки слідкування за досягненнями
 function stopWatching() {
   ui.statusPanel.watchButton.classList.remove("active");
-  clearInterval(apiTikInterval);
+  clearInterval(apiTrackerInterval);
 }
 
 // Функція для закриття About
@@ -132,7 +116,7 @@ function openTwitchBotAuth() {
 //     username: 'retrocheevos',
 //     password: ''
 //   },
-//   channels: ['splinteruk']
+//   channels: ['']
 // });
 
 // client.connect();

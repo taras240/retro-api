@@ -2,24 +2,6 @@ class UI {
   VERSION = "0.20";
   static AUTOCLOSE_CONTEXTMENU = false;
   static STICK_MARGIN = 10;
-  static filterMethods = {
-    all: "all",
-    earned: "earned",
-    notEarned: "notEarned",
-    missable: "missable",
-    progression: "progression",
-  };
-  static sortMethods = {
-    latest: "latest",
-    earnedCount: "earnedCount",
-    points: "points",
-    truepoints: "truepoints",
-    disable: "disable",
-    id: "id",
-    default: "default",
-    achievementsCount: "achievementsCount",
-    title: "title",
-  };
 
   get ACHIEVEMENTS() {
     return this.GAME_DATA.Achievements;
@@ -53,6 +35,7 @@ class UI {
         //Встановлення розмірів і розміщення елементів
         this.setPositions();
 
+        this.addEvents();
         //Оновлення кольорів
         UI.updateColors();
 
@@ -116,32 +99,10 @@ class UI {
     this.note = new Note();
     this.notifications = new Notification();
 
-    //*  Must be last initialize to set correct values
+    //*  Must be last initialized to set correct values
     this.buttons = new ButtonPanel();
 
-    document.addEventListener("click", (e) => {
-      document.querySelectorAll(".context-menu").forEach((el) => el.remove());
-    });
-    document.body.addEventListener("contextmenu", (e) => {
-      e.preventDefault();
-      document.querySelector(".context-menu")?.remove();
-      // this.contextMenu ? this.contextMenu.remove() : "";
-      this.contextMenu = UI.generateContextMenu({
-        menuItems: this.settings.contextMenuItems,
-      });
-      this.wrapper.appendChild(this.contextMenu);
 
-      e.x + this.contextMenu.offsetWidth > window.innerWidth
-        ? (this.contextMenu.style.left =
-          e.x - this.contextMenu.offsetWidth + "px")
-        : (this.contextMenu.style.left = e.x + "px");
-      e.y + this.contextMenu.offsetHeight > window.innerHeight
-        ? (this.contextMenu.style.top =
-          e.y - this.contextMenu.offsetHeight + "px")
-        : (this.contextMenu.style.top = e.y + "px");
-
-      this.contextMenu.classList.remove("hidden");
-    });
   }
   //Встановлення розмірів і розміщення елементів
   setPositions() {
@@ -173,13 +134,50 @@ class UI {
     document.querySelector("#background-animation").style.display =
       config.bgVisibility ? "display" : "none";
   }
+  addEvents() {
+    document.addEventListener("click", (e) => {
+      document.querySelectorAll(".context-menu").forEach((el) => el.remove());
+    });
+    document.body.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+      document.querySelector(".context-menu")?.remove();
+      // this.contextMenu ? this.contextMenu.remove() : "";
+      this.contextMenu = UI.generateContextMenu({
+        menuItems: this.settings.contextMenuItems,
+      });
+      this.wrapper.appendChild(this.contextMenu);
+
+      e.x + this.contextMenu.offsetWidth > window.innerWidth
+        ? (this.contextMenu.style.left =
+          e.x - this.contextMenu.offsetWidth + "px")
+        : (this.contextMenu.style.left = e.x + "px");
+      e.y + this.contextMenu.offsetHeight > window.innerHeight
+        ? (this.contextMenu.style.top =
+          e.y - this.contextMenu.offsetHeight + "px")
+        : (this.contextMenu.style.top = e.y + "px");
+
+      this.contextMenu.classList.remove("hidden");
+    });
+  }
   updateWidgets({ earnedAchievementsIDs }) {
-    this.achievementsBlock.forEach(template => UI.updateAchievementsSection({ earnedAchievementIDs: earnedAchievementsIDs, widget: template }));
+    //Update Achievements widgets
+    this.achievementsBlock.forEach(template =>
+      UI.updateAchievementsSection({ earnedAchievementIDs: earnedAchievementsIDs, widget: template }));
+
+    //Update Target widget
     UI.updateAchievementsSection({ earnedAchievementIDs: earnedAchievementsIDs, widget: this.target });
     this.target.delayedRemove();
-    this.awards.updateAwards();
+
+    //Update Awards widget
+    this.awards.VISIBLE ? this.awards.updateAwards() : "";
+
+    //Update Progression widget
     this.progression.updateEarnedCards({ gameIDArray: earnedAchievementsIDs });
+
+    //Update status widget
     this.statusPanel.updateProgress({ earnedAchievementIDs: earnedAchievementsIDs });
+
+    //Update UserInfo widget
     setTimeout(() => ui.userInfo.update(), 2000);
 
   }
@@ -243,6 +241,20 @@ class UI {
     });
     this.notifications.pushNotification({ type: this.notifications.types.earnedAchivs, elements: earnedAchievements })
   }
+  updateGameInfo({ Title, ConsoleName, ImageIcon, }) {
+    const { gamePreview, gameTitle, gamePlatform } = this.statusPanel;
+    gamePreview.setAttribute(
+      "src",
+      `https://media.retroachievements.org${ImageIcon}`
+    );
+    gameTitle.innerText = Title || "Some game name";
+    gameTitle.setAttribute(
+      "href",
+      "https://retroachievements.org/game/" + config.gameID
+    );
+    gamePlatform.innerText = ConsoleName || "";
+    this.statusPanel.updateData();
+  }
   static updateAchievementsSection({ widget, earnedAchievementIDs }) {
     earnedAchievementIDs.forEach((id) => {
       const achievement = ui.ACHIEVEMENTS[id];
@@ -258,45 +270,13 @@ class UI {
           achievement.DateEarnedHardcore)
         : "";
 
-      if (widget.SORT_NAME === UI.sortMethods.latest) {
+      if (widget.SORT_NAME === sortMethods.latest) {
         widget.moveToTop(achieveElement);
       }
     });
     widget?.applyFilter();
   }
-  updateGameInfo({
-    Title,
-    ConsoleName,
-    ImageIcon,
-    NumAchievements,
-    UserCompletionHardcore,
-    points_total,
-    Achievements,
-  }) {
-    const {
-      gamePreview,
-      gameTitle,
-      gamePlatform,
-      gameAchivsCount,
-      richPresence,
-    } = this.statusPanel;
-    this.gameCard.section.classList.remove("mastered");
-    gamePreview.setAttribute(
-      "src",
-      `https://media.retroachievements.org${ImageIcon}`
-    );
-    gameTitle.innerText = Title || "Some game name";
-    gameTitle.setAttribute(
-      "href",
-      "https://retroachievements.org/game/" + config.gameID
-    );
-    gamePlatform.innerText = ConsoleName || "";
-    this.statusPanel.updateData();
-    // this.statusPanel.updateProgress({
-    //   totalPoints: points_total,
-    //   achievements: Achievements,
-    // });
-  }
+
   static applySort({ container, itemClassName, sortMethod, reverse }) {
     const elements = [...container.querySelectorAll(itemClassName)];
 
@@ -638,8 +618,8 @@ class UI {
 
     const handleMouseUp = (e) => {
       section.classList.remove("dragable");
-      section.removeEventListener("mousemove", handleMouseMove);
-      section.removeEventListener("mouseup", handleMouseUp);
+      ui.wrapper.removeEventListener("mousemove", handleMouseMove);
+      ui.wrapper.removeEventListener("mouseup", handleMouseUp);
       section.removeEventListener("mouseleave", handleMouseUp);
       document.querySelector("#background-animation").style.display =
         config.bgVisibility ? "block" : "none";
@@ -654,9 +634,9 @@ class UI {
     };
 
     // Додаємо обробники подій
-    section.addEventListener("mousemove", handleMouseMove);
-    section.addEventListener("mouseup", handleMouseUp);
-    section.addEventListener("mouseleave", handleMouseUp);
+    ui.wrapper.addEventListener("mousemove", handleMouseMove);
+    ui.wrapper.addEventListener("mouseup", handleMouseUp);
+    // section.addEventListener("mouseleave", handleMouseUp);
   }
   static setPosition(e, offsetX, offsetY, section) {
     e.preventDefault();
@@ -696,12 +676,13 @@ class UI {
   }
 
   static addDraggingEventForElements(container) {
-    // const dragAndDropItems = container;
-    // var list = document.getElementById("myList");
-    // new Sortable(dragAndDropItems, {
-    //   animation: 100,
-    //   chosenClass: "dragged",
-    // });
+    // container.addEventListener("mousedown", e => e.stopPropagation())
+    const dragAndDropItems = container;
+    var list = document.getElementById("myList");
+    new Sortable(dragAndDropItems, {
+      animation: 100,
+      chosenClass: "dragged",
+    });
     // , {
     //   animation: 100,
     //   // chosenClass: "draggable",
@@ -744,48 +725,48 @@ class AchievementsBlock {
             name: "context-sort",
             id: "context-sort_latest",
             label: "Latest",
-            checked: this.SORT_NAME === UI.sortMethods.latest,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = UI.sortMethods.latest;"`,
+            checked: this.SORT_NAME === sortMethods.latest,
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = sortMethods.latest;"`,
           },
           {
             type: "radio",
             name: "context-sort",
             id: "context-sort_rarest",
             label: "Rarest",
-            checked: this.SORT_NAME === UI.sortMethods.earnedCount,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = UI.sortMethods.earnedCount;"`,
+            checked: this.SORT_NAME === sortMethods.earnedCount,
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = sortMethods.earnedCount;"`,
           },
           {
             type: "radio",
             name: "context-sort",
             id: "context-sort_points",
             label: "Points",
-            checked: this.SORT_NAME === UI.sortMethods.points,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = UI.sortMethods.points;"`,
+            checked: this.SORT_NAME === sortMethods.points,
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = sortMethods.points;"`,
           },
           {
             type: "radio",
             name: "context-sort",
             id: "context-sort_retropoints",
             label: "Retropoints",
-            checked: this.SORT_NAME === UI.sortMethods.truepoints,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = UI.sortMethods.truepoints;"`,
+            checked: this.SORT_NAME === sortMethods.truepoints,
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = sortMethods.truepoints;"`,
           },
           {
             type: "radio",
             name: "context-sort",
             id: "context-sort_default",
             label: "Default",
-            checked: this.SORT_NAME === UI.sortMethods.default,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = UI.sortMethods.default;"`,
+            checked: this.SORT_NAME === sortMethods.default,
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = sortMethods.default;"`,
           },
           {
             type: "radio",
             name: "context-sort",
             id: "context-sort_disable",
             label: "Disable",
-            checked: this.SORT_NAME === UI.sortMethods.disable,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = UI.sortMethods.disable;"`,
+            checked: this.SORT_NAME === sortMethods.disable,
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = sortMethods.disable;"`,
           },
           {
             type: "checkbox",
@@ -805,32 +786,32 @@ class AchievementsBlock {
             name: "context-filter",
             id: "context_filter-progression",
             label: "Progression",
-            checked: this.FILTER_NAME === UI.filterMethods.progression,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].FILTER_NAME = UI.filterMethods.progression;"`,
+            checked: this.FILTER_NAME === filterMethods.progression,
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].FILTER_NAME = filterMethods.progression;"`,
           },
           {
             type: "radio",
             name: "context-filter",
             id: "context_filter-missable",
             label: "Missable",
-            checked: this.FILTER_NAME === UI.filterMethods.missable,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].FILTER_NAME = UI.filterMethods.missable;"`,
+            checked: this.FILTER_NAME === filterMethods.missable,
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].FILTER_NAME = filterMethods.missable;"`,
           },
           {
             type: "radio",
             name: "context-filter",
             id: "context_filter-earned",
             label: "Earned",
-            checked: this.FILTER_NAME === UI.filterMethods.earned,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].FILTER_NAME = UI.filterMethods.earned;"`,
+            checked: this.FILTER_NAME === filterMethods.earned,
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].FILTER_NAME = filterMethods.earned;"`,
           },
           {
             type: "radio",
             name: "context-filter",
             id: "context_filter-all",
             label: "All",
-            checked: this.FILTER_NAME === UI.filterMethods.all,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].FILTER_NAME = UI.filterMethods.all;"`,
+            checked: this.FILTER_NAME === filterMethods.all,
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].FILTER_NAME = filterMethods.all;"`,
           },
           {
             type: "checkbox",
@@ -916,7 +897,7 @@ class AchievementsBlock {
   get SORT_NAME() {
     return (
       config?.ui[this.SECTION_NAME]?.sortAchievementsBy ||
-      UI.sortMethods.default
+      sortMethods.default
     );
   }
   get SORT_METHOD() {
@@ -928,7 +909,7 @@ class AchievementsBlock {
     this.applyFilter();
   }
   get FILTER_NAME() {
-    return config?.ui[this.SECTION_NAME]?.filterBy || UI.filterMethods.all;
+    return config?.ui[this.SECTION_NAME]?.filterBy || filterMethods.all;
   }
   get FILTER_METHOD() {
     return filterBy[this.FILTER_NAME];
@@ -1069,6 +1050,7 @@ class AchievementsBlock {
     this.resizer.addEventListener("mouseup", (e) => {
       this.startAutoScroll();
     });
+    UI.addDraggingEventForElements(this.container);
   }
   setValues() {
     // if (!config.ui.achievements_section) {
@@ -1110,7 +1092,7 @@ class AchievementsBlock {
     this.applySorting();
     this.startAutoScroll();
     //Додаєм можливість перетягування елементів
-    UI.addDraggingEventForElements(this.container);
+
   }
 
   displayAchievements(achievementsObject) {
@@ -1582,21 +1564,11 @@ class StatusPanel {
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
   }
+  ANIMATION_DELAY_IN_SECONDS = 10;
 
   stats = {
-    gameTitle: ui?.GAME_DATA?.Title ?? "Title",
-    gamePlatform: ui?.GAME_DATA?.ConsoleName ?? "Platform",
-    richPresence: "Waiting...",
-    imageSrc: `https://media.retroachievements.org${ui?.GAME_DATA?.ImageIcon}`,
-    totalPoints: ui?.GAME_DATA?.points_total ?? 0,
-    totalAchievesCount: ui?.GAME_DATA?.achievements_published ?? 0,
-
-    earnedPoints: 0,
-    earnedAchievesCount: 0,
-    totalRetropoints: 0,
-    earnedRetropoints: 0,
   }
-  ANIMATION_DELAY_IN_SECONDS = 10;
+
   constructor() {
     this.initializeElements();
     this.addEvents();
@@ -1669,13 +1641,22 @@ class StatusPanel {
       name: "Completion",
       value: `${completionByPointsPercents} of points [${completionByCountPercents}]`,
     });
-    if (this.stats.totalPoints === this.stats.earnedPoints) {
-      ui.gameCard.section.classList.add("mastered");
-    }
+    ui.gameCard.section.classList.toggle("mastered", this.stats.earnedPoints != 0 && this.stats.totalPoints === this.stats.earnedPoints);
+
   }
   updateData() {
-    this.stats.earnedPoints = 0;
-    this.stats.earnedAchievesCount = 0;
+    this.stats = {
+      gameTitle: ui?.GAME_DATA?.Title ?? "Title",
+      gamePlatform: ui?.GAME_DATA?.ConsoleName ?? "Platform",
+      richPresence: "Waiting...",
+      imageSrc: `https://media.retroachievements.org${ui?.GAME_DATA?.ImageIcon}`,
+      totalPoints: ui?.GAME_DATA?.points_total ?? 0,
+      totalAchievesCount: ui?.GAME_DATA?.achievements_published ?? 0,
+      earnedPoints: 0,
+      earnedAchievesCount: 0,
+      totalRetropoints: 0,
+      earnedRetropoints: 0,
+    }
     //* Підрахунок кількості досягнень та набраних балів
     Object.values(ui.ACHIEVEMENTS).forEach((achievement) => {
       if (achievement.DateEarnedHardcore) {
@@ -2445,7 +2426,7 @@ class Awards {
     this.header.addEventListener("mousedown", (e) => {
       UI.moveEvent(this.section, e);
     });
-    this.section.querySelector("#awards-button").click();
+    // this.section.querySelector("#awards-button").click();
     this.resizer.addEventListener("mousedown", (event) => {
       event.stopPropagation();
       this.section.classList.add("resized");
@@ -2457,6 +2438,7 @@ class Awards {
     });
   }
   async updateAwards() {
+    console.log("getAwards", this.VISIBLE);
     const response = await apiWorker.getUserAwards({});
     if (
       response.TotalAwardsCount != this.container.dataset.total ||
@@ -2633,48 +2615,48 @@ class Target {
             name: "context-sort",
             id: "context-sort_latest",
             label: "Latest",
-            checked: this.SORT_NAME === UI.sortMethods.latest,
-            event: `onchange="ui.target.SORT_NAME = UI.sortMethods.latest;"`,
+            checked: this.SORT_NAME === sortMethods.latest,
+            event: `onchange="ui.target.SORT_NAME = sortMethods.latest;"`,
           },
           {
             type: "radio",
             name: "context-sort",
             id: "context-sort_rarest",
             label: "Rarest",
-            checked: this.SORT_NAME === UI.sortMethods.earnedCount,
-            event: `onchange="ui.target.SORT_NAME = UI.sortMethods.earnedCount;"`,
+            checked: this.SORT_NAME === sortMethods.earnedCount,
+            event: `onchange="ui.target.SORT_NAME = sortMethods.earnedCount;"`,
           },
           {
             type: "radio",
             name: "context-sort",
             id: "context-sort_points",
             label: "Points",
-            checked: this.SORT_NAME === UI.sortMethods.points,
-            event: `onchange="ui.target.SORT_NAME = UI.sortMethods.points;"`,
+            checked: this.SORT_NAME === sortMethods.points,
+            event: `onchange="ui.target.SORT_NAME = sortMethods.points;"`,
           },
           {
             type: "radio",
             name: "context-sort",
             id: "context-sort_retropoints",
             label: "Retropoints",
-            checked: this.SORT_NAME === UI.sortMethods.truepoints,
-            event: `onchange="ui.target.SORT_NAME = UI.sortMethods.truepoints;"`,
+            checked: this.SORT_NAME === sortMethods.truepoints,
+            event: `onchange="ui.target.SORT_NAME = sortMethods.truepoints;"`,
           },
           {
             type: "radio",
             name: "context-sort",
             id: "context-sort_default",
             label: "Default",
-            checked: this.SORT_NAME === UI.sortMethods.default,
-            event: `onchange="ui.target.SORT_NAME = UI.sortMethods.default;"`,
+            checked: this.SORT_NAME === sortMethods.default,
+            event: `onchange="ui.target.SORT_NAME = sortMethods.default;"`,
           },
           // {
           //   type: "radio",
           //   name: "context-sort",
           //   id: "context-sort_id",
           //   label: "ID",
-          //   checked: this.SORT_NAME === UI.sortMethods.id,
-          //   event: `onchange="ui.target.SORT_NAME = UI.sortMethods.id;"`
+          //   checked: this.SORT_NAME === sortMethods.id,
+          //   event: `onchange="ui.target.SORT_NAME = sortMethods.id;"`
 
           // },
           {
@@ -2682,8 +2664,8 @@ class Target {
             name: "context-sort",
             id: "context-sort_dont-sort",
             label: "Disable",
-            checked: this.SORT_NAME === UI.sortMethods.disable,
-            event: `onchange="ui.target.SORT_NAME = UI.sortMethods.disable;"`,
+            checked: this.SORT_NAME === sortMethods.disable,
+            event: `onchange="ui.target.SORT_NAME = sortMethods.disable;"`,
           },
           {
             type: "checkbox",
@@ -2703,32 +2685,32 @@ class Target {
             name: "context-filter",
             id: "context_filter-progression",
             label: "Progression",
-            checked: this.FILTER_NAME === UI.filterMethods.progression,
-            event: `onchange="ui.target.FILTER_NAME = UI.filterMethods.progression;"`,
+            checked: this.FILTER_NAME === filterMethods.progression,
+            event: `onchange="ui.target.FILTER_NAME = filterMethods.progression;"`,
           },
           {
             type: "radio",
             name: "context-filter",
             id: "context_filter-missable",
             label: "Missable",
-            checked: this.FILTER_NAME === UI.filterMethods.missable,
-            event: `onchange="ui.target.FILTER_NAME = UI.filterMethods.missable;"`,
+            checked: this.FILTER_NAME === filterMethods.missable,
+            event: `onchange="ui.target.FILTER_NAME = filterMethods.missable;"`,
           },
           {
             type: "radio",
             name: "context-filter",
             id: "context_filter-earned",
             label: "Earned",
-            checked: this.FILTER_NAME === UI.filterMethods.earned,
-            event: `onchange="ui.target.FILTER_NAME = UI.filterMethods.earned;"`,
+            checked: this.FILTER_NAME === filterMethods.earned,
+            event: `onchange="ui.target.FILTER_NAME = filterMethods.earned;"`,
           },
           {
             type: "radio",
             name: "context-filter",
             id: "context_filter-all",
             label: "All",
-            checked: this.FILTER_NAME === UI.filterMethods.all,
-            event: `onchange="ui.target.FILTER_NAME = UI.filterMethods.all;"`,
+            checked: this.FILTER_NAME === filterMethods.all,
+            event: `onchange="ui.target.FILTER_NAME = filterMethods.all;"`,
           },
           {
             type: "checkbox",
@@ -2831,7 +2813,7 @@ class Target {
     this.applySort();
   }
   get SORT_NAME() {
-    return config._cfg.settings.sortTargetBy || UI.sortMethods.default;
+    return config._cfg.settings.sortTargetBy || sortMethods.default;
   }
   get SORT_METHOD() {
     return sortBy[this.SORT_NAME];
@@ -2845,7 +2827,7 @@ class Target {
     this.applySort();
   }
   get FILTER_NAME() {
-    return config._cfg.settings.filterTargetBy || UI.filterMethods.all;
+    return config._cfg.settings.filterTargetBy || filterMethods.all;
   }
   set FILTER_NAME(value) {
     config._cfg.settings.filterTargetBy = value;
@@ -2989,6 +2971,7 @@ class Target {
     this.section.addEventListener("mousedown", (e) => {
       UI.moveEvent(this.section, e);
     });
+    this.container.addEventListener("mousedown", (e) => e.stopPropagation())
     this.section.addEventListener("contextmenu", (event) => {
       ui.showContextmenu({
         event: event,
@@ -2996,6 +2979,7 @@ class Target {
         sectionCode: "",
       });
     });
+    UI.addDraggingEventForElements(this.container)
     this.startAutoScroll();
   }
   autoscrollInterval;
@@ -3125,10 +3109,7 @@ class Target {
               </div>             
             </div>
     `;
-    // targetElement.addEventListener("mousedown", (e) => e.stopPropagation());
     this.container.appendChild(targetElement);
-
-    UI.addDraggingEventForElements(this.container);
 
     const conditions = {
       progression: "progression",
@@ -3189,13 +3170,10 @@ class Target {
   }
   fillItems() {
     this.isDynamicAdding = true;
-    ui.achievementsBlock[0].container
-      .querySelectorAll(".achiv-block")
-      .forEach((achievement) => {
-        if (true) {
-          achievement.querySelector(".add-to-target").click();
-        }
-      });
+    Object.values(ui.ACHIEVEMENTS).forEach(achievement => {
+      this.addAchieveToTarget(achievement)
+    });
+
     this.applyFilter();
     this.applySort();
     this.isDynamicAdding = false;
@@ -3304,7 +3282,7 @@ class Games {
     return sortBy[this.SORT_NAME];
   }
   get SORT_NAME() {
-    return config._cfg.ui?.games_section?.sort_name ?? UI.sortMethods.title;
+    return config._cfg.ui?.games_section?.sort_name ?? sortMethods.title;
   }
   set SORT_NAME(value) {
     config._cfg.ui.games_section.sort_name = value;
@@ -3540,10 +3518,10 @@ class Games {
   setValues() {
     this.gamesList.innerHTML = "";
     switch (this.SORT_NAME) {
-      case UI.sortMethods.achievementsCount:
+      case sortMethods.achievementsCount:
         this.section.querySelector("#games_sort-achieves").checked = true;
         break;
-      case UI.sortMethods.points:
+      case sortMethods.points:
         this.section.querySelector("#games_sort-points").checked = true;
         break;
       default:
@@ -4538,6 +4516,24 @@ const filterBy = {
   missable: (achievement) => achievement.type === "missable",
   progression: (achievement) => achievement.type === "progression" || achievement.type === "win_condition",
   all: () => true,
+};
+const filterMethods = {
+  all: "all",
+  earned: "earned",
+  notEarned: "notEarned",
+  missable: "missable",
+  progression: "progression",
+};
+const sortMethods = {
+  latest: "latest",
+  earnedCount: "earnedCount",
+  points: "points",
+  truepoints: "truepoints",
+  disable: "disable",
+  id: "id",
+  default: "default",
+  achievementsCount: "achievementsCount",
+  title: "title",
 };
 
 const fixTimeString = (
