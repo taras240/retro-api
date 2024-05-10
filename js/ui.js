@@ -3350,6 +3350,7 @@ class Games {
   }
 
   async changeGamesGroup(group) {
+    console.log(group)
     const recentCheckbox = this.section.querySelector("#games_sort-latest");
     switch (group) {
       case 'recent':
@@ -3357,6 +3358,7 @@ class Games {
         recentCheckbox.closest(".games_filters-item").classList.remove("disabled");
         recentCheckbox.click();
         this.fillFullList();
+        this.applyFilter();
         break;
       case 'completion':
         await this.getCompletionGamesArray({});
@@ -4360,37 +4362,6 @@ class Notification {
       });
     });
   }
-  // {
-  //   "lastAchivs": [
-  //     {
-  //       "ID": 112429,
-  //       "GameID": 1915,
-  //       "GameTitle": "RoboCop 3",
-  //       "Title": "Who needs repairs?",
-  //       "Description": "Finish level 1 without repairing",
-  //       "Points": 2,
-  //       "Type": "missable",
-  //       "BadgeName": "122522",
-  //       "IsAwarded": "1",
-  //       "DateAwarded": "2024-05-10 15:45:05",
-  //       "HardcoreAchieved": 1
-  //     },
-  //   ],
-  //   "lastGames": [
-  //     {
-  //       "GameID": 1469,
-  //       "ConsoleID": 7,
-  //       "ConsoleName": "NES/Famicom",
-  //       "Title": "Dr. Mario",
-  //       "ImageIcon": "/Images/045855.png",
-  //       "ImageTitle": "/Images/002004.png",
-  //       "ImageIngame": "/Images/002005.png",
-  //       "ImageBoxArt": "/Images/012014.png",
-  //       "LastPlayed": "2024-05-10 16:35:57",
-  //       "AchievementsTotal": 70
-  //     },
-  //   ],
-  // }
 
   parseUserSummary(userInfo) {
     userInfo.lastGames.map(game => {
@@ -4466,7 +4437,7 @@ class Notification {
       </div>
       <div class="notification_details">
         <h3 class="achiv-name">
-          <a target="_blanc" href="">
+          <a target="_blanc" href="https://retroachievements.org/game/${gameObject.ID ?? gameObject.GameID}">
             ${gameObject.Title}
           </a>
         </h3>
@@ -4493,7 +4464,7 @@ class Notification {
   generateNewachivsElements(achivs) {
     let achivElements = [];
     achivs.forEach(achiv => {
-      const { AchievementID, BadgeURL, Description, Title, Points, TrueRatio, HardcoreMode } = achiv;
+      const { AchievementID, BadgeURL, Description, Title, Points, TrueRatio, HardcoreMode, ID } = achiv;
       const earnPercent = "";
       if (ui.GAME_DATA.GameID == achiv.GameID) {
         earnPercent = ~~(100 * ui.ACHIEVEMENTS[AchievementID].NumAwardedHardcore / ui.GAME_DATA.NumDistinctPlayers);
@@ -4509,7 +4480,7 @@ class Notification {
                 <img class="prev-img" src="https://media.retroachievements.org/${BadgeURL}" alt=" ">
               </div>
               <div class="notification_details">
-                <h3 class="achiv-name"><a target="_blanc" href="https://retroachievements.org/achievement/${AchievementID}">${Title}</a></h3>
+                <h3 class="achiv-name"><a target="_blanc" href="https://retroachievements.org/achievement/${AchievementID ?? ID}">${Title}</a></h3>
                 <p class="achiv-description">${Description}</p>
                 <div class="notification_description-icons">       
                   <p class="notification_description-text" title="points">
