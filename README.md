@@ -3,12 +3,7 @@
 
 *This web application is designed to track achievements obtained in retro games using the open API from retroachievements.org.*
 
-![image](https://github.com/taras240/retro-api/assets/41308277/d0bb79b4-f989-4076-9673-5c514f598d00)
-
-
-
-
-
+![image](https://github.com/taras240/retro-api/assets/41308277/3c609584-23bf-4a87-8dfc-468b42b47182)
 
 
 
@@ -16,8 +11,7 @@
 
 - Upon first launch, you need to enter your login and API key in the "Login" section.
 - The program sends a getUserProfile request to the API, and if such a user exists, it considers the data valid and stores it in the local storage.
-- When you press the auto-update button, the program sends a GetGameInfoAndUserProgress request and retrieves all achievements for the last launched game. Afterward, every 5 seconds, a GetUserRecentAchievements request is sent, and unlocked achievements for the past 5 minutes are received. If there are any achievements that are not updated, they are refreshed. Additionally, the progress bar and reward section are updated.
-
+- When you press the auto-update button, the program sends a getGameInfoAndUserProgress request and retrieves all achievements for the last launched game. Afterward, every 5 seconds a getUserProfile request is sent, and if TotalPoins or SoftcorePoints is mismatched, it get last achivs for 5 mins and refresh widgets.
 ### Features
 
 - Retrieval of game progress and user achievements information via the API.
