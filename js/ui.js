@@ -4470,9 +4470,9 @@ class Notification {
     let achivElements = [];
     achivs.forEach(achiv => {
       const { AchievementID, BadgeURL, Description, Title, Points, TrueRatio, HardcoreMode, ID } = achiv;
-      const earnPercent = "";
+      let earnPercent = "";
       if (ui.GAME_DATA.ID == achiv.GameID) {
-        earnPercent = ~~(100 * ui.ACHIEVEMENTS[AchievementID].NumAwardedHardcore / ui.GAME_DATA.NumDistinctPlayers);
+        earnPercent = ~~(100 * ui.ACHIEVEMENTS[AchievementID ?? ID].NumAwardedHardcore / ui.GAME_DATA.NumDistinctPlayers);
       }
       const achivElement = document.createElement("li");
       achivElement.classList.add("notification-achiv", "new-achiv");
@@ -4513,10 +4513,11 @@ class Notification {
     let date = +timeStamp;
     let now = (new Date()).getTime();
     let deltaSeconds = ~~((now - date) / 1000);
-    return deltaSeconds < 2 * 60 ? "few seconds ago" :
-      deltaSeconds < 60 * 60 ? `${~~(deltaSeconds / 60)} minutes ago` :
-        deltaSeconds < 60 * 60 * 12 ? new Date(date).toLocaleTimeString().replace(/:[^:]*$/gi, "") :
-          new Date(date).toLocaleString().replace(/:[^:]*$/gi, "");
+    return deltaSeconds < 2 * 60 ? "moment ago" :
+      deltaSeconds < 10 * 60 ? `few minutes ago` :
+        deltaSeconds < 60 * 60 ? `${~~(deltaSeconds / 60)} minutes ago` :
+          deltaSeconds < 60 * 60 * 12 ? new Date(date).toLocaleTimeString().replace(/:[^:]*$/gi, "") :
+            new Date(date).toLocaleString().replace(/:[^:]*$/gi, "");
   }
 }
 //* Методи сортування для досягнень гри
