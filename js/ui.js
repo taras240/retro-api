@@ -3203,9 +3203,9 @@ class LoginCard {
   }
 
   addEvents() {
-    // this.header.addEventListener("mousedown", (e) => {
-    //   UI.moveEvent(this.section, e);
-    // });
+    this.section.addEventListener("mousedown", (e) => {
+      UI.moveEvent(this.section, e);
+    });
   }
   setValues() {
     // Встановити ключ API з об'єкта ідентифікації користувача
