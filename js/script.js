@@ -12,7 +12,7 @@ async function getAchievements() {
   try {
     // Отримання інформації про прогрес гри від API
     const response = await apiWorker.getGameProgress({});
-    ui.ACHIEVEMENTS = response;
+    ui.GAME_DATA = response;
     ui.statusPanel.watchButton.classList.remove("error");
 
   } catch (error) {

@@ -318,7 +318,7 @@ a:hover {
   background-color: transparent;
   cursor: nwse-resize;
   transition: 0.1s;
-  z-index: 1;
+  z-index: 2;
 }
 
 .section:hover .resizer {

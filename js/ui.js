@@ -9,11 +9,11 @@ class UI {
   get GAME_DATA() {
     return this._gameData;
   }
-  set ACHIEVEMENTS(achievementsObject) {
-    if (this.GAME_DATA && achievementsObject.ID != this.GAME_DATA?.ID) {
-      this.notifications.pushNotification({ type: this.notifications.types.newGame, elements: achievementsObject });
+  set GAME_DATA(gameObject) {
+    if (this.GAME_DATA && gameObject.ID != this.GAME_DATA?.ID) {
+      this.notifications.pushNotification({ type: this.notifications.types.newGame, elements: gameObject });
     }
-    this._gameData = achievementsObject;
+    this._gameData = gameObject;
     this.achievementsBlock.forEach((widgetClone) =>
       widgetClone.parseGameAchievements(this.GAME_DATA)
     );
@@ -26,6 +26,23 @@ class UI {
     this.progression.fillCards();
 
   }
+  // set ACHIEVEMENTS(achievementsObject) {
+  //   if (this.GAME_DATA && achievementsObject.ID != this.GAME_DATA?.ID) {
+  //     this.notifications.pushNotification({ type: this.notifications.types.newGame, elements: achievementsObject });
+  //   }
+  //   this._gameData = achievementsObject;
+  //   this.achievementsBlock.forEach((widgetClone) =>
+  //     widgetClone.parseGameAchievements(this.GAME_DATA)
+  //   );
+  //   this.updateGameInfo(this.GAME_DATA);
+  //   this.gameCard.updateGameCardInfo(this.GAME_DATA);
+  //   if (this.target.AUTOFILL) {
+  //     this.target.clearAllAchivements();
+  //     this.target.fillItems();
+  //   }
+  //   this.progression.fillCards();
+
+  // }
 
   constructor() {
     loadSections()
@@ -226,7 +243,9 @@ class UI {
       }
     });
     this.updateAchievements(earnedAchievements);
-    return earnedAchievements?.map((achievement) => achievement.AchievementID);
+    const achievementsIDs = earnedAchievements?.map((achievement) => achievement.AchievementID);
+    this.checkForAwards(achievementsIDs);
+    return achievementsIDs;
   }
   updateAchievements(earnedAchievements) {
     earnedAchievements.forEach((achievement) => {
@@ -241,7 +260,11 @@ class UI {
       this.ACHIEVEMENTS[achievement.AchievementID] = savedAchievement;
     });
     this.userInfo.pushAchievements({ achievements: earnedAchievements });
-    this.notifications.pushNotification({ type: this.notifications.types.earnedAchivs, elements: earnedAchievements })
+    this.notifications.pushNotification({ type: this.notifications.types.earnedAchivs, elements: earnedAchievements });
+  }
+  //TODO-------------------------------------
+  checkForAwards(achievementsIDs) {
+    // achievementsIDs.forEach
   }
   updateGameInfo({ Title, ConsoleName, ImageIcon, }) {
     const { gamePreview, gameTitle, gamePlatform } = this.statusPanel;
@@ -1407,24 +1430,6 @@ class AchievementsBlock {
     return newWidget;
   }
   cloneAchieves() {
-    // let achievements = ui.achievementsBlock[0]?.container.innerHTML;
-    // this.container.innerHTML = achievements ?? "";
-    // this.container.querySelectorAll(".achiv-block").forEach((achivElement) => {
-    //   let achivDetails = achivElement.querySelector(".achiv-details-block");
-    //   achivElement.addEventListener("mouseenter", (e) => {
-    //     achivDetails.classList.remove("left-side", "top-side");
-    //     this.fixDetailsPosition(achivDetails);
-    //   });
-    //   achivElement.addEventListener("mousedown", (e) => {
-    //     e.stopPropagation();
-    //   });
-    // });
-    // this.container
-    //   .querySelectorAll(".add-to-target")
-    //   .forEach((button) => (button.style.display = "none"));
-    // this.applyFilter();
-    // this.applySorting();
-    // this.fitSizeVertically();
   }
 }
 
@@ -3350,7 +3355,6 @@ class Games {
   }
 
   async changeGamesGroup(group) {
-    console.log(group)
     const recentCheckbox = this.section.querySelector("#games_sort-latest");
     switch (group) {
       case 'recent':
@@ -4405,6 +4409,7 @@ class Notification {
     this.container.style.setProperty("--offset-height", `${elementHeight}px`);
     notificationElement.classList.add("notification_popup");
   }
+
   generateTimeBlock(timeStamp, messageElements) {
     const timeBlockElement = document.createElement("ul");
     timeBlockElement.classList.add("notification_timeblock-list");
@@ -4416,7 +4421,7 @@ class Notification {
   }
   generatePopupTime(time) {
     const timestampElement = document.createElement("li");
-    const popupTime = (new Date(time ?? '')).getTime();
+    const popupTime = (time ? new Date(time) : new Date()).getTime();
     timestampElement.dataset.time = popupTime;
     timestampElement.classList.add("notification_timestamp");
     !this.SHOW_TIMESTAMP ? timestampElement.classList.add("hidden") : "";
@@ -4466,9 +4471,8 @@ class Notification {
     achivs.forEach(achiv => {
       const { AchievementID, BadgeURL, Description, Title, Points, TrueRatio, HardcoreMode, ID } = achiv;
       const earnPercent = "";
-      if (ui.GAME_DATA.GameID == achiv.GameID) {
+      if (ui.GAME_DATA.ID == achiv.GameID) {
         earnPercent = ~~(100 * ui.ACHIEVEMENTS[AchievementID].NumAwardedHardcore / ui.GAME_DATA.NumDistinctPlayers);
-
       }
       const achivElement = document.createElement("li");
       achivElement.classList.add("notification-achiv", "new-achiv");

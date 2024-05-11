@@ -58,7 +58,7 @@ class Config {
     this.writeConfiguration();
     if (this.identConfirmed) {
       ui.settings.getGameIdButton.click();
-      getAwards();
+      ui.awards.updateAwards();
     }
   }
   get gameID() {
