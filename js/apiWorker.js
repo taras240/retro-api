@@ -133,7 +133,10 @@ class APIWorker {
     });
 
     return fetch(url).then((resp) => resp.json()).then(gameProgressObject => {
-
+      gameProgressObject.TotalRetropoints = 0;
+      Object.values(gameProgressObject.Achievements)
+        .forEach(achievement =>
+          gameProgressObject.TotalRetropoints += achievement.TrueRatio);
       Object.getOwnPropertyNames(gameProgressObject.Achievements)
         .forEach(id =>
           this.fixAchievement(gameProgressObject.Achievements[id], gameProgressObject));

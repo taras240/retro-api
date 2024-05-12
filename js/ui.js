@@ -24,25 +24,7 @@ class UI {
       this.target.fillItems();
     }
     this.progression.fillCards();
-
   }
-  // set ACHIEVEMENTS(achievementsObject) {
-  //   if (this.GAME_DATA && achievementsObject.ID != this.GAME_DATA?.ID) {
-  //     this.notifications.pushNotification({ type: this.notifications.types.newGame, elements: achievementsObject });
-  //   }
-  //   this._gameData = achievementsObject;
-  //   this.achievementsBlock.forEach((widgetClone) =>
-  //     widgetClone.parseGameAchievements(this.GAME_DATA)
-  //   );
-  //   this.updateGameInfo(this.GAME_DATA);
-  //   this.gameCard.updateGameCardInfo(this.GAME_DATA);
-  //   if (this.target.AUTOFILL) {
-  //     this.target.clearAllAchivements();
-  //     this.target.fillItems();
-  //   }
-  //   this.progression.fillCards();
-
-  // }
 
   constructor() {
     loadSections()
@@ -1568,18 +1550,41 @@ class ButtonPanel {
 
 }
 class StatusPanel {
+  get AUTOSCROLL_RICHPRESENCE() {
+    return true;
+  }
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
   }
-  ANIMATION_DELAY_IN_SECONDS = 10;
+  ANIMATION_DELAY_IN_SECONDS = 20;
 
   stats = {
+    gameTitle: ui?.GAME_DATA?.Title ?? "Title",
+    gamePlatform: ui?.GAME_DATA?.ConsoleName ?? "Platform",
+    richPresence: "Waiting...",
+    imageSrc: `https://media.retroachievements.org${ui?.GAME_DATA?.ImageIcon}`,
+    totalPoints: ui?.GAME_DATA?.points_total ?? 0,
+    totalAchievesCount: ui?.GAME_DATA?.achievements_published ?? 0,
+    earnedPoints: 0,
+    earnedAchievesCount: 0,
+    totalRetropoints: ui?.GAME_DATA?.TotalRetropoints,
+    earnedRetropoints: 0,
   }
-
+  get statusTextValues() {
+    const statusObj = {
+      progressionInPoints: `${this.stats.earnedPoints}/${this.stats.totalPoints} HP`,
+      progressionInCount: `${this.stats.earnedAchievesCount}/${this.stats.totalAchievesCount} CHEEVOS`,
+      progressionInRetroPoints: `${this.stats.earnedRetropoints}/${this.stats.totalRetropoints} RP`,
+    }
+    if (this.stats.earnedSoftpoints > 0 && this.stats.totalSoftPoints > 0) {
+      statusObj.progressionInSoftpoints = `${this.stats.earnedSoftpoints}/${this.stats.totalSoftPoints} SP`
+    }
+    return statusObj;
+  }
   constructor() {
     this.initializeElements();
     this.addEvents();
-    this.addAnimationToStats()
+    this.startAutoScrollRP();
   }
   initializeElements() {
     this.section = document.querySelector("#update-section");
@@ -1642,8 +1647,8 @@ class StatusPanel {
       "--progress-count",
       completionByCount * 100 + "%"
     );
-    this.progressStatusText.innerText = completionByPointsPercents + " of points"; // + '/' + completionByCountPercent;
-    this.progressStatusCountText.innerText = completionByCountPercents + " of count"
+    this.progressStatusText.innerText = "";
+    this.startStatsAnimation();
     ui.gameCard.updateGameInfoElement({
       name: "Completion",
       value: `${completionByPointsPercents} of points [${completionByCountPercents}]`,
@@ -1658,31 +1663,40 @@ class StatusPanel {
       richPresence: "Waiting...",
       imageSrc: `https://media.retroachievements.org${ui?.GAME_DATA?.ImageIcon}`,
       totalPoints: ui?.GAME_DATA?.points_total ?? 0,
+      totalSoftPoints: 0,
       totalAchievesCount: ui?.GAME_DATA?.achievements_published ?? 0,
       earnedPoints: 0,
       earnedAchievesCount: 0,
-      totalRetropoints: 0,
+      totalRetropoints: ui?.GAME_DATA?.TotalRetropoints,
       earnedRetropoints: 0,
+      earnedSoftpoints: 0,
+
     }
     //* Підрахунок кількості досягнень та набраних балів
     Object.values(ui.ACHIEVEMENTS).forEach((achievement) => {
       if (achievement.DateEarnedHardcore) {
         this.stats.earnedPoints += achievement.Points; // Додавання балів
         this.stats.earnedAchievesCount++;
+        this.stats.earnedRetropoints += achievement.TrueRatio;
+      }
+      else if (achievement.DateEarned) {
+        this.stats.earnedSoftpoints += achievement.Points;
       }
     });
+    this.stats.totalSoftPoints = this.stats.totalPoints - this.stats.earnedPoints;
+
     this.setValues();
-    // this.startAnimation();
   }
 
   updateProgress({ earnedAchievementIDs }) {
-    this.stats.earnedAchievesCount += earnedAchievementIDs.length;
-    earnedAchievementIDs.forEach((id) => {
-      if (ui.ACHIEVEMENTS[id].DateEarnedHardcore) {
-        this.stats.earnedPoints += ui.ACHIEVEMENTS[id].Points;
-      }
-    });
-    this.setValues();
+    // this.stats.earnedAchievesCount += earnedAchievementIDs.length;
+    // earnedAchievementIDs.forEach((id) => {
+    //   if (ui.ACHIEVEMENTS[id].DateEarnedHardcore) {
+    //     this.stats.earnedPoints += ui.ACHIEVEMENTS[id].Points;
+    //   }
+    // });
+    // this.setValues();
+    this.updateData();
     this.startAnimation();
   }
   startAnimation() {
@@ -1690,26 +1704,75 @@ class StatusPanel {
     glassElement.classList.remove("update");
     setTimeout(() => glassElement.classList.add("update"), 20);
   }
-  addAnimationToStats() {
+
+  currentStatusTextIndex = 0;
+  statsAnimationInterval;
+  startStatsAnimation() {
+    this.stopStatsAnimation();
     this.progressStatusText.classList.remove("hide");
     this.progressStatusCountText.classList.add("hide");
-
-    let animationInterval = setInterval(() => {
-      // this.progressStatusText.classList.remove("show");
-      this.progressStatusText.classList.toggle("hide");
-
-      this.progressStatusCountText.classList.toggle("hide");
-      // this.progressStatusCountText.classList.add("show");
+    this.progressStatusText.innerText = Object.values(this.statusTextValues)[this.currentStatusTextIndex++];
+    this.statsAnimationInterval = setInterval(() => {
+      this.progressStatusText.classList.add("hide");
       setTimeout(() => {
+        this.progressStatusText.innerText = Object.values(this.statusTextValues)[this.currentStatusTextIndex];
+        this.progressStatusText.classList.remove("hide")
+        this.currentStatusTextIndex =
+          this.currentStatusTextIndex < Object.values(this.statusTextValues).length - 1 ?
+            this.currentStatusTextIndex + 1 : 0;
+      }, 200)
+    }, this.ANIMATION_DELAY_IN_SECONDS * 1000);
+  }
+  stopStatsAnimation() {
+    console.log("stopAn")
+    clearInterval(this.statsAnimationInterval);
+    this.currentStatusTextIndex = 0;
+  }
+  autoscrollRPInterval;
+  startAutoScrollRP(toLeft = true) {
+    this.autoscrollRPInterval ? this.stopAutoScrollRP() : "";
+    let refreshRateMiliSecs = 40;
+    let scrollContainer = this.richPresence;
+    let speedInPixels = 1;
+    const pauseOnEndMilisecs = 1000;
+    // Часовий інтервал для прокручування вниз
+    if (this.AUTOSCROLL_RICHPRESENCE) {
+      this.autoscrollRPInterval = setInterval(() => {
+        if (scrollContainer.clientWidth == scrollContainer.scrollWidth) {
+          this.stopAutoScrollRP();
+          console.log(this.autoscrollRPInterval);
+          setTimeout(() => this.startAutoScrollRP(), 10 * 1000);
+        }
+        else if (toLeft) {
+          scrollContainer.scrollLeft += speedInPixels;
+          if (
+            scrollContainer.scrollLeft + scrollContainer.clientWidth >=
+            scrollContainer.scrollWidth
+          ) {
+            this.stopAutoScrollRP();
+            setTimeout(() => this.startAutoScrollRP(false), pauseOnEndMilisecs);
+          }
+        } else {
+          scrollContainer.scrollLeft -= speedInPixels;
+          if (scrollContainer.scrollLeft == 0) {
+            this.stopAutoScrollRP();
+            setTimeout(() => this.startAutoScrollRP(true), pauseOnEndMilisecs);
+          }
+        }
+      }, refreshRateMiliSecs);
+      // Припиняємо прокручування при наведенні миші на контейнер
+      scrollContainer.addEventListener("mouseenter", () => {
+        speedInPixels = 0; // Зупиняємо інтервал прокрутки
+      });
 
-        this.progressStatusText.classList.toggle("hide");
-        // this.progressStatusText.classList.add("show");
-
-        this.progressStatusCountText.classList.toggle("hide");
-        // this.progressStatusCountText.classList.remove("show");
-
-      }, this.ANIMATION_DELAY_IN_SECONDS * 1 * 1000)
-    }, this.ANIMATION_DELAY_IN_SECONDS * 2 * 1000);
+      // Відновлюємо прокрутку при відведенні миші від контейнера
+      scrollContainer.addEventListener("mouseleave", () => {
+        speedInPixels = 1;
+      });
+    }
+  }
+  stopAutoScrollRP() {
+    clearInterval(this.autoscrollRPInterval);
   }
 }
 class Settings {

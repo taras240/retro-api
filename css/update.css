@@ -38,16 +38,16 @@
 }
 
 .progress-percent {
-  --animation-duration: 0.5s;
+  --animation-duration: 0.2s;
   position: absolute;
-  /* bottom: 5px; */
   left: 60px;
-  transform: translate(0, 0);
-  font-size: 1.8rem;
+  transform: translateY(50%);
+  font-size: 2rem;
   font-weight: 600;
   bottom: 5px;
   color: var(--font-color);
-  animation: show-percent var(--animation-duration) ease-in forwards;
+  opacity: 0.5;
+  animation: show-animation var(--animation-duration) ease-in-out forwards;
 
 }
 
@@ -56,33 +56,26 @@
 }
 
 .progress-percent.hide {
-  /* animation-delay: 0; */
-  animation: hide-percent var(--animation-duration) ease-out forwards;
+  animation: hide-animation var(--animation-duration) ease-out forwards;
 }
 
-/* .progress-percent.show {
-  bottom: -200px;
-  animation: show-percent var(--animation-duration) linear forwards;
-
-} */
-
-@keyframes show-percent {
+@keyframes show-animation {
   0% {
-    opacity: 0;
+    bottom: 150%;
   }
 
   100% {
-    opacity: 0.6;
+    bottom: 50%;
   }
 }
 
-@keyframes hide-percent {
+@keyframes hide-animation {
   0% {
-    opacity: 0.6;
+    bottom: 50%;
   }
 
   100% {
-    opacity: 0;
+    bottom: -50%;
   }
 }
 
@@ -221,17 +214,22 @@
 
 .update-game_header {
   text-align: end;
+  flex-shrink: 0;
 }
 
 .update-game_header a {
   position: relative;
   color: var(--font-color);
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: 600;
 }
 
 .update-game_header a:hover {
   text-decoration: underline;
+}
+
+.update-game-platform {
+  flex-shrink: 0;
 }
 
 .update-text-block {
@@ -251,6 +249,15 @@
   border-radius: 5px;
   overflow: hidden;
   pointer-events: none;
+  z-index: 2;
+}
+
+.update-section-text.rich-presence_text {
+  height: 20px;
+  overflow: scroll;
+  text-wrap: nowrap;
+  flex-grow: 0;
+  white-space: nowrap;
 }
 
 .progress-bar {
