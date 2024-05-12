@@ -2228,13 +2228,37 @@ class GameCard {
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
   }
+  get SHOW_BADGES() {
+    return config.ui?.game_section?.showBadges ?? true;
+  }
+  set SHOW_BADGES(value) {
+    config.ui.game_section.showBadges = value;
+    config.writeConfiguration();
+    this.updateGameCardInfo(ui.GAME_DATA);
+  }
   get contextMenuItems() {
-    return this._contextMenuItems;
+    return [...this.contexMenuSettingsItems, ...this.contextMenuPropertiesItems];
   }
-  set contextMenuItems(value) {
-    this._contextMenuItems = value;
+  get contextMenuPropertiesItems() {
+    return this._contextMenuPropertiesItems;
   }
-  _contextMenuItems = [
+  set contextMenuPropertiesItems(value) {
+    this._contextMenuPropertiesItems = value;
+  }
+  get contexMenuSettingsItems() {
+    return [
+      {
+        label: "Show title badges",
+        type: "checkbox",
+        name: "game-card_show-badges",
+        id: "game-card_show-badges",
+        event: `onchange="ui.gameCard.SHOW_BADGES = this.parentNode.querySelector('input').checked"`,
+        checked: this.SHOW_BADGES,
+      }
+    ]
+  }
+
+  _contextMenuPropertiesItems = [
     {
       label: "Platform",
       type: "checkbox",
@@ -2324,38 +2348,33 @@ class GameCard {
       if (checkbox) {
         visibility = checkbox.checked ? "visible" : "hidden";
         this.gameInfoElements[name].visibility = visibility;
-        this.contextMenuItems.map((menuItem) => {
+        this.contextMenuPropertiesItems.map((menuItem) => {
           menuItem.label == name ? (menuItem.checked = checkbox.checked) : "";
         });
         if (!config.ui.hasOwnProperty("game_section")) {
           config.ui.game_section = [];
         }
         config.ui.game_section.gameInfoElements = this.gameInfoElements;
-        config.ui.game_section.contextMenuItems = this.contextMenuItems;
+        config.ui.game_section.contextMenuPropertiesItems = this.contextMenuPropertiesItems;
         config.writeConfiguration();
       }
       value ? (this.gameInfoElements[name].value = value) : "";
       visibility ? (this.gameInfoElements[name].visibility = visibility) : "";
     }
+
     this.generateInfo();
   }
   constructor() {
     this.loadSavedData();
     this.initializeElements();
     this.addEvents();
-    // if (!config.ui.game_section) {
-    //   UI.switchSectionVisibility(this);
-    // }
-    //-----------
-
-    // Додавання подій для пересування вікна картки гри
   }
   loadSavedData() {
     config.ui?.game_section?.gameInfoElements
       ? (this.gameInfoElements = config.ui.game_section.gameInfoElements)
       : "";
     config.ui?.game_section?.contextMenuItems
-      ? (this.contextMenuItems = config.ui.game_section.contextMenuItems)
+      ? (this.contextMenuPropertiesItems = config.ui.game_section.contextMenuItems)
       : "";
   }
   initializeElements() {
@@ -2423,6 +2442,7 @@ class GameCard {
   }
   updateGameCardInfo({
     Title,
+    FixedTitle,
     ID,
     ImageBoxArt,
     ConsoleName,
@@ -2430,13 +2450,12 @@ class GameCard {
     Publisher,
     Genre,
     Released,
-    UserCompletion,
-    UserCompletionHardcore,
     achievements_published,
     players_total,
     points_total,
+    sufixes,
   }) {
-    this.header.innerText = Title;
+    this.header.innerHTML = `${FixedTitle} ${this.SHOW_BADGES ? this.generateSufixes(sufixes) : ""} `;
     this.header.setAttribute(
       "href",
       `https://retroachievements.org/game/${ID}`
@@ -2457,7 +2476,9 @@ class GameCard {
 
     this.generateInfo();
   }
-
+  generateSufixes(sufixes) {
+    return sufixes?.reduce((acc, sufix) => acc += `<i class="game-card_suffix game-title_${sufix.toLowerCase()}">${sufix}</i>`, "")
+  }
   generateInfo() {
     this.descriptions.innerHTML = "";
     Object.getOwnPropertyNames(this.gameInfoElements).forEach((prop) => {
