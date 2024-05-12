@@ -47,7 +47,7 @@
   bottom: 5px;
   color: var(--font-color);
   opacity: 0.5;
-  animation: show-animation var(--animation-duration) ease-in-out forwards;
+  animation: show-stats-animation var(--animation-duration) ease-in-out forwards;
 
 }
 
@@ -56,10 +56,10 @@
 }
 
 .progress-percent.hide {
-  animation: hide-animation var(--animation-duration) ease-out forwards;
+  animation: hide-stats-animation var(--animation-duration) ease-in-out forwards;
 }
 
-@keyframes show-animation {
+@keyframes show-stats-animation {
   0% {
     bottom: 150%;
   }
@@ -69,7 +69,7 @@
   }
 }
 
-@keyframes hide-animation {
+@keyframes hide-stats-animation {
   0% {
     bottom: 50%;
   }
@@ -81,8 +81,6 @@
 
 .update-button {
   width: auto;
-  margin-right: 20px;
-  /* margin: 10px; */
   max-height: 80%;
 }
 
@@ -268,10 +266,11 @@
   z-index: -1;
   width: var(--progress-points, 0%);
   background-color: var(--accent-color);
+  transition: width 2s ease-in-out;
 }
 
 .progress-bar::before {
-  content: "";
+  /* content: ""; */
   position: absolute;
   top: 0;
   left: 0;
@@ -291,7 +290,7 @@
   right: 0;
   bottom: 0;
   top: 0;
-  background-position: 100% 0%;
+  background-position: 110% 0%;
   background-repeat: no-repeat;
   background-size: 400% 400%;
   mix-blend-mode: color-dodge;
@@ -317,11 +316,11 @@
 
 @keyframes status-glass-animation {
   0% {
-    background-position: 100% 0%;
+    background-position: 110% 0%;
   }
 
   100% {
-    background-position: 00% 0%;
+    background-position: 0% 0%;
   }
 
 

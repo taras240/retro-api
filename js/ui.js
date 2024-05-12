@@ -1556,7 +1556,7 @@ class StatusPanel {
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
   }
-  ANIMATION_DELAY_IN_SECONDS = 20;
+  ANIMATION_DELAY_IN_SECONDS = 40;
 
   stats = {
     gameTitle: ui?.GAME_DATA?.Title ?? "Title",
@@ -1709,14 +1709,23 @@ class StatusPanel {
   statsAnimationInterval;
   startStatsAnimation() {
     this.stopStatsAnimation();
-    this.progressStatusText.classList.remove("hide");
+
     this.progressStatusCountText.classList.add("hide");
     this.progressStatusText.innerText = Object.values(this.statusTextValues)[this.currentStatusTextIndex++];
+
     this.statsAnimationInterval = setInterval(() => {
+
       this.progressStatusText.classList.add("hide");
+
       setTimeout(() => {
-        this.progressStatusText.innerText = Object.values(this.statusTextValues)[this.currentStatusTextIndex];
-        this.progressStatusText.classList.remove("hide")
+        const statsTextValue = Object.values(this.statusTextValues)[this.currentStatusTextIndex];
+        this.progressStatusText.innerText = statsTextValue;
+        this.progressStatusText.classList.remove("hide");
+
+        this.progresBar.style.setProperty(
+          "--progress-points",
+          this.convertToPercentage(statsTextValue)
+        );
         this.currentStatusTextIndex =
           this.currentStatusTextIndex < Object.values(this.statusTextValues).length - 1 ?
             this.currentStatusTextIndex + 1 : 0;
@@ -1724,14 +1733,13 @@ class StatusPanel {
     }, this.ANIMATION_DELAY_IN_SECONDS * 1000);
   }
   stopStatsAnimation() {
-    console.log("stopAn")
     clearInterval(this.statsAnimationInterval);
     this.currentStatusTextIndex = 0;
   }
   autoscrollRPInterval;
   startAutoScrollRP(toLeft = true) {
     this.autoscrollRPInterval ? this.stopAutoScrollRP() : "";
-    let refreshRateMiliSecs = 40;
+    let refreshRateMiliSecs = 50;
     let scrollContainer = this.richPresence;
     let speedInPixels = 1;
     const pauseOnEndMilisecs = 1000;
@@ -1740,7 +1748,6 @@ class StatusPanel {
       this.autoscrollRPInterval = setInterval(() => {
         if (scrollContainer.clientWidth == scrollContainer.scrollWidth) {
           this.stopAutoScrollRP();
-          console.log(this.autoscrollRPInterval);
           setTimeout(() => this.startAutoScrollRP(), 10 * 1000);
         }
         else if (toLeft) {
@@ -1773,6 +1780,16 @@ class StatusPanel {
   }
   stopAutoScrollRP() {
     clearInterval(this.autoscrollRPInterval);
+  }
+  convertToPercentage(inputString) {
+    // Розбиваємо рядок за допомогою розділювача '/'
+    const parts = inputString.split('/');
+
+    // Перетворюємо перші дві частини у числа та рахуємо відсотки
+    const result = (parseInt(parts[0], 10) / parseInt(parts[1], 10)) * 100;
+
+    // Повертаємо результат у вигляді рядка з відсотками
+    return result.toFixed(2) + '%';
   }
 }
 class Settings {
