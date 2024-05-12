@@ -1595,6 +1595,7 @@ class StatusPanel {
     this.richPresence = document.querySelector("#rich-presence");
     this.watchButton = document.querySelector("#watching-button"); // Кнопка спостереження за грою
     this.progresBar = document.querySelector("#status-progress-bar");
+    this.progresBarDelta = this.section.querySelector("#status_progress-bar-delta");
     this.progressStatusText = document.querySelector("#status-progress-text");
     this.progressStatusCountText = this.section.querySelector("#status-progress-count-text");
     this.resizer = document.querySelector("#status-resizer");
@@ -1639,13 +1640,9 @@ class StatusPanel {
       ~~((100 * this.stats.earnedAchievesCount) / ui?.GAME_DATA?.achievements_published) + "%";
 
     //* Встановлення стилів прогресу
-    this.progresBar.style.setProperty(
+    this.section.style.setProperty(
       "--progress-points",
       completionByPoints * 100 + "%"
-    );
-    this.progresBar.style.setProperty(
-      "--progress-count",
-      completionByCount * 100 + "%"
     );
     this.progressStatusText.innerText = "";
     this.startStatsAnimation();
@@ -1689,16 +1686,14 @@ class StatusPanel {
   }
 
   updateProgress({ earnedAchievementIDs }) {
-    // this.stats.earnedAchievesCount += earnedAchievementIDs.length;
-    // earnedAchievementIDs.forEach((id) => {
-    //   if (ui.ACHIEVEMENTS[id].DateEarnedHardcore) {
-    //     this.stats.earnedPoints += ui.ACHIEVEMENTS[id].Points;
-    //   }
-    // });
-    // this.setValues();
     this.updateData();
     this.startAnimation();
+
+    //push points toggle animation
+    this.progresBarDelta.classList.remove("hidden");
+    setTimeout(() => this.progresBarDelta.classList.add("hidden"), 50)
   }
+
   startAnimation() {
     const glassElement = this.section.querySelector(".status_glass-effect");
     glassElement.classList.remove("update");
@@ -1722,7 +1717,7 @@ class StatusPanel {
         this.progressStatusText.innerText = statsTextValue;
         this.progressStatusText.classList.remove("hide");
 
-        this.progresBar.style.setProperty(
+        this.section.style.setProperty(
           "--progress-points",
           this.convertToPercentage(statsTextValue)
         );

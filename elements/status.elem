@@ -3,8 +3,8 @@
   <div class="update_container " id="update-text-block">
     <div class="status_glass-effect"></div>
 
-    <div class="progress-bar" id="status-progress-bar">
-    </div>
+    <div class="progress-bar" id="status-progress-bar"></div>
+    <div class="progress-bar progress-bar_delta-values hidden" id="status_progress-bar-delta"></div>
     <div class="progress-percent progress_points-percent" id="status-progress-text">0%</div>
     <div class="progress-percent progress_count-percent" id="status-progress-count-text">0% of count</div>
 

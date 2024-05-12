@@ -263,22 +263,27 @@
   top: 0;
   left: 0;
   height: 100%;
-  z-index: -1;
+  z-index: 0;
   width: var(--progress-points, 0%);
   background-color: var(--accent-color);
   transition: width 2s ease-in-out;
 }
 
-.progress-bar::before {
-  /* content: ""; */
+.progress-bar.progress-bar_delta-values {
   position: absolute;
   top: 0;
   left: 0;
   height: 100%;
-  width: var(--progress-count, 0%);
-  background-color: var(--accent-color);
-  opacity: 0.36;
+  width: var(--progress-points, 0%);
+  background-color: var(--selection-color);
   z-index: -1;
+  transition: none;
+}
+
+.progress-bar.progress-bar_delta-values.hidden {
+  opacity: 0;
+  transition: .2s;
+  transition-delay: 5s;
 }
 
 .status_glass-effect {
@@ -322,6 +327,4 @@
   100% {
     background-position: 0% 0%;
   }
-
-
 }
