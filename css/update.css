@@ -237,6 +237,7 @@
   height: 100%;
   flex: 1;
   overflow: hidden;
+  z-index: 1;
 }
 
 .update-game-preview {

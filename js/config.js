@@ -248,11 +248,11 @@ const colorPresets = {
     selectionColor: "#00224D",
   },
   darkblue: {
-    mainColor: "#222831",
-    secondaryColor: "#393E46",
-    accentColor: "#00ADB5",
-    fontColor: "#eeeeee",
-    selectionColor: "#EEEEEE",
+    "mainColor": "#1f1f1f",
+    "secondaryColor": "#303134",
+    "accentColor": "#34517d",
+    "fontColor": "#d6d6d6",
+    "selectionColor": "#2c303d"
   },
   brown: {
     mainColor: "#481E14",
