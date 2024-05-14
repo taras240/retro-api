@@ -75,7 +75,7 @@ async function checkUpdates() {
   ) {
     updateAchievements();
     totalPoints = responce.TotalPoints;
-    softcorePoints = responce.SoftcorePoints
+    softcorePoints = responce.TotalSoftcorePoints;
     ui.userInfo.updatePoints({ points: responce });
   }
 
