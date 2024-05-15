@@ -1,32 +1,29 @@
-<section id="update-section" class="update_section section ">
+<section id="update-section" class="update_section  section">
 
   <div class="update_container " id="update-text-block">
     <div class="status_glass-effect"></div>
 
     <div class="progress-bar" id="status-progress-bar"></div>
-    <div class="progress-bar progress-bar_delta-values hidden" id="status_progress-bar-delta"></div>
-    <div class="progress-percent progress_points-percent" id="status-progress-text">0%</div>
-    <div class="progress-percent progress_count-percent" id="status-progress-count-text">0% of count</div>
+    <div class="progress-bar_delta-values hidden" id="status_progress-bar-delta"></div>
 
-    <button title="autoupdate achievements" id="watching-button" class="round-button update-button box-3d checked">
-      <!-- <svg xmlns="http://www.w3.org/2000/svg" height="24"
-            viewBox="0 -960 960 960" width="24">
-            <path
-              d="M204-318q-22-38-33-78t-11-82q0-134 93-228t227-94h7l-64-64 56-56 160 160-160 160-56-56 64-64h-7q-100 0-170 70.5T240-478q0 26 6 51t18 49l-60 60ZM481-40 321-200l160-160 56 56-64 64h7q100 0 170-70.5T720-482q0-26-6-51t-18-49l60-60q22 38 33 78t11 82q0 134-93 228t-227 94h-7l64 64-56 56Z">
-            </path>
-          </svg> -->
+    <img class="update-game-preview" id="game-preview" src="./assets/img/icon.png" alt=" " />
     </button>
     <div class="update-text-block">
       <div class="update-game_header">
         <a id="game-title" target="_blank" class=" update-section-text" href="">Game tittle</a>
       </div>
       <p id="game-platform" class="update-game-platform update-section-text">Console</p>
-      <div id="rich-presence" class="update-section-text rich-presence_text"></div>
-      <!-- <p class="game-achivs-count" id="game-achivs-count">
-            10
-          </p> -->
+
+      <div id="rich-presence" class="update-section-text rich-presence_text">Waiting...</div>
+
     </div>
-    <img src="./assets/img/icon.png" alt=" " class="update-game-preview box-3d" id="game-preview" />
+    <div class="update-button_container">
+      <div class="progress-percent progress_points-percent" id="status-progress-text">0%</div>
+
+      <button id="watching-button" class="update-button checked" title="autoupdate achievements"></button>
+
+
+    </div>
 
   </div>
   <div class="resizer" id="status-resizer"></div>

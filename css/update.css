@@ -12,12 +12,24 @@
   /* transition: 0.2s !important; */
 }
 
+.section.update_section {
+  background: transparent;
+  border-radius: 5px;
+
+}
+
 .update_section .resizer {
+  overflow: visible;
   z-index: 2;
 }
 
+#status-resizer {
+  border-radius: 0 0 5px 0;
+}
+
 .update_container {
-  padding: 0 10px;
+  background: var(--main-color);
+  padding: 0 15px;
   height: 100%;
   position: relative;
   display: flex;
@@ -31,24 +43,44 @@
   cursor: grab;
 }
 
+.update-game-preview {
+  height: 100%;
+  max-height: 75%;
+  aspect-ratio: 1;
+  object-fit: fill;
+  border-radius: 10px;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 2;
+  filter: contrast(1);
+}
+
 .update-section-text {
-  text-align: right;
+  text-align: left;
   text-wrap: nowrap;
   overflow: hidden;
 }
 
+.update-button_container {
+  display: flex;
+  align-items: center;
+  height: 33%;
+  gap: 20px;
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+}
+
 .progress-percent {
   --animation-duration: 0.2s;
-  position: absolute;
-  left: 60px;
-  transform: translateY(50%);
-  font-size: 2rem;
+  /* transform: translateY(50%); */
+  font-size: 1.5rem;
   font-weight: 600;
-  bottom: 5px;
   color: var(--font-color);
-  opacity: 0.5;
+  opacity: 0.2;
   animation: show-stats-animation var(--animation-duration) ease-in-out forwards;
-
 }
 
 .progress-percent.hidden {
@@ -61,57 +93,52 @@
 
 @keyframes show-stats-animation {
   0% {
-    bottom: 150%;
+    margin-bottom: 150%;
   }
 
   100% {
-    bottom: 50%;
+    margin-bottom: 0;
   }
 }
 
 @keyframes hide-stats-animation {
   0% {
-    bottom: 50%;
+    margin-bottom: 0;
   }
 
   100% {
-    bottom: -50%;
+    margin-bottom: -50%;
   }
 }
 
-.update-button {
-  width: auto;
-  max-height: 80%;
-}
+
 
 .update-button {
   position: relative;
-  --shadow-color: black;
-  width: 40px;
   height: 100%;
-  border-radius: 5px;
+  aspect-ratio: 1;
+  border-radius: 50%;
   overflow: hidden;
-  background-color: var(--main-color);
-  border: 1px solid var(--shadow-color);
-  border-right: none;
-  border-bottom: none;
-  color: var(--font-color);
+  background-color: var(--secondary-color);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: 0.1s;
-  /* background-image: url(../assets/img/play.svg); */
-
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
+  box-shadow: 0 0 10px 2px var(--secondary-color);
+  transition: 0.2s;
+}
+
+.update-button:hover {
+  box-shadow: 0 0 10px 4px var(--secondary-color);
 }
 
 .update-button::after {
   content: "";
   position: absolute;
-  width: 100%;
-  height: 100%;
+  height: 80%;
+  aspect-ratio: 1;
   background-color: var(--font-color);
   mask-image: url(../assets/img/play.svg);
   -webkit-mask-image: url(../assets/img/play.svg);
@@ -121,15 +148,17 @@
   -webkit-mask-size: contain;
   mask-position: center;
   -webkit-mask-position: center;
+  opacity: 0.6;
+  transition: .2s;
+}
+
+.update-button:hover::after {
+  opacity: 1;
 }
 
 .update-button.active::after {
   mask-image: url(../assets/img/pause.svg);
   -webkit-mask-image: url(../assets/img/pause.svg);
-}
-
-.update-button.tick {
-  /* animation: tickAnimation 0.5s; */
 }
 
 @keyframes tickAnimation {
@@ -146,8 +175,6 @@
   }
 }
 
-.round-button:hover {}
-
 .update-button:active {
   box-shadow: 0 0 0;
   background-color: var(--selection-color);
@@ -157,22 +184,6 @@
   fill: var(--font-color);
   width: 26px;
   height: 26px;
-}
-
-.update-button.active {
-  /* background-color: var(--selection-color); */
-}
-
-.update-button.active::after {
-  /* content: "";
-  position: absolute;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background-color: var(--selection-color);
-  box-shadow: 0 0 3px 2px var(--selection-color);
-  top: 2px;
-  right: 2px; */
 }
 
 .update-button.active svg,
@@ -211,8 +222,12 @@
 }
 
 .update-game_header {
-  text-align: end;
-  flex-shrink: 0;
+  text-align: start;
+  display: flex;
+  flex-direction: row;
+  column-gap: 10px;
+  align-items: center;
+  overflow: scroll;
 }
 
 .update-game_header a {
@@ -220,17 +235,31 @@
   color: var(--font-color);
   font-size: 1.2rem;
   font-weight: 600;
+  padding: 0 2px;
+  border-radius: 8px;
+  flex-shrink: 0;
 }
 
 .update-game_header a:hover {
   text-decoration: underline;
+  background-color: var(--secondary-color);
+  color: var(--font-color);
 }
 
 .update-game-platform {
-  flex-shrink: 0;
+  flex-shrink: 1;
+  color: var(--font-color);
+  background-color: var(--secondary-color);
+  align-self: flex-start;
+  padding: 0px 8px;
+  border-radius: 5px;
+  font-weight: 600;
+  font-size: 1.0rem;
+  opacity: 0.8;
 }
 
 .update-text-block {
+  padding: 5px 0;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -240,23 +269,14 @@
   z-index: 1;
 }
 
-.update-game-preview {
-  height: 100%;
-  max-height: 80%;
-  aspect-ratio: 1;
-  object-fit: fill;
-  border-radius: 5px;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 2;
-}
+
 
 .update-section-text.rich-presence_text {
-  height: 20px;
+  flex-grow: 0;
   overflow: scroll;
   text-wrap: nowrap;
-  flex-grow: 0;
   white-space: nowrap;
+  font-size: 1rem;
 }
 
 .progress-bar {
@@ -267,10 +287,11 @@
   z-index: 0;
   width: var(--progress-points, 0%);
   background-color: var(--accent-color);
+  box-shadow: 0 0 2px 0 var(--accent-color);
   transition: width 2s ease-in-out;
 }
 
-.progress-bar.progress-bar_delta-values {
+.progress-bar_delta-values {
   position: absolute;
   top: 0;
   left: 0;
@@ -281,7 +302,7 @@
   transition: none;
 }
 
-.progress-bar.progress-bar_delta-values.hidden {
+.progress-bar_delta-values.hidden {
   opacity: 0;
   transition: .2s;
   transition-delay: 5s;

@@ -17,7 +17,8 @@ class UI {
     this.achievementsBlock.forEach((widgetClone) =>
       widgetClone.parseGameAchievements(this.GAME_DATA)
     );
-    this.updateGameInfo(this.GAME_DATA);
+    // this.updateGameInfo(this.GAME_DATA);
+    this.statusPanel.gameChangeEvent();
     this.gameCard.updateGameCardInfo(this.GAME_DATA);
     if (this.target.AUTOFILL) {
       this.target.clearAllAchivements();
@@ -1556,7 +1557,7 @@ class StatusPanel {
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
   }
-  ANIMATION_DELAY_IN_SECONDS = 40;
+  ANIMATION_DELAY_IN_SECONDS = 30;
 
   stats = {
     gameTitle: ui?.GAME_DATA?.Title ?? "Title",
@@ -1570,9 +1571,12 @@ class StatusPanel {
     totalRetropoints: ui?.GAME_DATA?.TotalRetropoints,
     earnedRetropoints: 0,
   }
+  gameTime = 0;
+  gameTimeInterval;
   get statusTextValues() {
     const statusObj = {
       progressionInPoints: `${this.stats.earnedPoints}/${this.stats.totalPoints} HP`,
+      gameTime: `${this.formatTime(this.gameTime)}`,
       progressionInCount: `${this.stats.earnedAchievesCount}/${this.stats.totalAchievesCount} CHEEVOS`,
       progressionInRetroPoints: `${this.stats.earnedRetropoints}/${this.stats.totalRetropoints} RP`,
     }
@@ -1582,6 +1586,9 @@ class StatusPanel {
     return statusObj;
   }
   constructor() {
+    !config.ui.update_section && (config.ui.update_section = {});
+    !config.ui.update_section.playTime && (config.ui.update_section.playTime = {});
+
     this.initializeElements();
     this.addEvents();
     this.startAutoScrollRP();
@@ -1597,7 +1604,6 @@ class StatusPanel {
     this.progresBar = document.querySelector("#status-progress-bar");
     this.progresBarDelta = this.section.querySelector("#status_progress-bar-delta");
     this.progressStatusText = document.querySelector("#status-progress-text");
-    this.progressStatusCountText = this.section.querySelector("#status-progress-count-text");
     this.resizer = document.querySelector("#status-resizer");
   }
   addEvents() {
@@ -1607,12 +1613,27 @@ class StatusPanel {
     // Додаємо обробник події 'click' для кнопки автооновлення
     this.watchButton.addEventListener("click", (e) => {
       e.stopPropagation();
+      const savePlayTime = () => {
+        config.ui.update_section.playTime[config.gameID] = this.gameTime;
+        config.writeConfiguration();
+      }
       // Перевіряємо стан кнопки та відповідно запускаємо або припиняємо автооновлення
-      this.watchButton.classList.contains("active")
-        ? stopWatching()
-        : startWatching();
+      if (this.watchButton.classList.contains("active")) {
+        stopWatching();
+        savePlayTime();
+        clearInterval(this.gameTimeInterval);
+      }
+      else {
+        startWatching();
+        this.gameTimeInterval = setInterval(() => {
+          this.gameTime++;
+          this.gameTime % 60 == 0 && (savePlayTime());
+          const time = this.formatTime(this.gameTime);
+          this.section.querySelector(`.gameTime`) && (this.section.querySelector(`.gameTime`).innerText = time);
+        }, 1000)
+      }
+
     });
-    //relel;
     this.textBlock.addEventListener("mousedown", (e) => {
       UI.moveEvent(this.section, e);
       //fsdf;
@@ -1684,7 +1705,22 @@ class StatusPanel {
 
     this.setValues();
   }
-
+  gameChangeEvent() {
+    const { ImageIcon, Title, ConsoleName } = ui.GAME_DATA;
+    const { gamePreview, gameTitle, gamePlatform } = this;
+    gamePreview.setAttribute(
+      "src",
+      `https://media.retroachievements.org${ImageIcon}`
+    );
+    gameTitle.innerText = Title || "Some game name";
+    gameTitle.setAttribute(
+      "href",
+      "https://retroachievements.org/game/" + config.gameID
+    );
+    gamePlatform.innerText = ConsoleName || "";
+    this.updateData();
+    this.gameTime = config.ui.update_section.playTime[config.gameID] ? config.ui.update_section.playTime[config.gameID] : 0;
+  }
   updateProgress({ earnedAchievementIDs }) {
     this.updateData();
     this.startAnimation();
@@ -1705,22 +1741,23 @@ class StatusPanel {
   startStatsAnimation() {
     this.stopStatsAnimation();
 
-    this.progressStatusCountText.classList.add("hide");
-    this.progressStatusText.innerText = Object.values(this.statusTextValues)[this.currentStatusTextIndex++];
 
+    this.progressStatusText.innerText = Object.values(this.statusTextValues)[this.currentStatusTextIndex++];
+    this.progressStatusText.className = `progress_points-percent progress-percent`;
     this.statsAnimationInterval = setInterval(() => {
 
       this.progressStatusText.classList.add("hide");
 
       setTimeout(() => {
-        const statsTextValue = Object.values(this.statusTextValues)[this.currentStatusTextIndex];
+        const statsTextName = Object.getOwnPropertyNames(this.statusTextValues)[this.currentStatusTextIndex];
+        const statsTextValue = this.statusTextValues[statsTextName];
         this.progressStatusText.innerText = statsTextValue;
-        this.progressStatusText.classList.remove("hide");
 
-        this.section.style.setProperty(
+        this.progressStatusText.className = `progress_points-percent progress-percent ${statsTextName}`;
+        statsTextName != "gameTime" && (this.section.style.setProperty(
           "--progress-points",
-          this.convertToPercentage(statsTextValue)
-        );
+          this.convertToPercentage(statsTextValue) || "0%"
+        ));
         this.currentStatusTextIndex =
           this.currentStatusTextIndex < Object.values(this.statusTextValues).length - 1 ?
             this.currentStatusTextIndex + 1 : 0;
@@ -1785,6 +1822,18 @@ class StatusPanel {
 
     // Повертаємо результат у вигляді рядка з відсотками
     return result.toFixed(2) + '%';
+  }
+  formatTime(seconds) {
+    let hours = Math.floor(seconds / 3600);
+    let minutes = Math.floor((seconds % 3600) / 60);
+    let remainingSeconds = seconds % 60;
+
+    // Додавання ведучих нулів, якщо необхідно
+    hours = (hours < 10) ? "0" + hours : hours;
+    minutes = (minutes < 10) ? "0" + minutes : minutes;
+    remainingSeconds = (remainingSeconds < 10) ? "0" + remainingSeconds : remainingSeconds;
+
+    return `${hours != "00" ? hours + ":" : ""}${minutes}:${remainingSeconds}`;
   }
 }
 class Settings {

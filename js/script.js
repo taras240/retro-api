@@ -63,6 +63,7 @@ let softcorePoints = 0;
 async function checkUpdates() {
   const responce = await apiWorker.getProfileInfo({});
   if (responce.LastGameID != config.gameID) {
+
     config.gameID = responce.LastGameID;
     ui.settings.gameID.value = config.gameID;
     getAchievements().then(() =>
