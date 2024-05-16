@@ -258,6 +258,10 @@
   opacity: 0.8;
 }
 
+.update-game-platform.hidden {
+  display: none;
+}
+
 .update-text-block {
   padding: 5px 0;
   display: flex;
@@ -277,6 +281,10 @@
   text-wrap: nowrap;
   white-space: nowrap;
   font-size: 1rem;
+}
+
+.rich-presence_text.hidden {
+  display: none;
 }
 
 .progress-bar {

@@ -1551,13 +1551,198 @@ class ButtonPanel {
 
 }
 class StatusPanel {
+  get contextMenuItems() {
+    return [
+      {
+        label: "Show stats",
+        subMenu: [
+          {
+            type: "checkbox",
+            name: "context_show-points",
+            id: "context_show-points",
+            label: "Hard points",
+            checked: this.SHOW_HP,
+            event: `onchange="ui.statusPanel.SHOW_HP = this.checked;"`,
+          },
+
+          {
+            type: "checkbox",
+            name: "context_show-retropoints",
+            id: "context_show-retropoints",
+            label: "Retropoints",
+            checked: this.SHOW_RP,
+            event: `onchange="ui.statusPanel.SHOW_RP = this.checked;"`,
+          },
+          {
+            type: "checkbox",
+            name: "context_show-cheevos",
+            id: "context_show-cheevos",
+            label: "Cheevos",
+            checked: this.SHOW_CHEEVOS,
+            event: `onchange="ui.statusPanel.SHOW_CHEEVOS = this.checked;"`,
+          },
+
+          {
+            type: "checkbox",
+            name: "context_show-softpoints",
+            id: "context_show-softpoints",
+            label: "Soft points",
+            checked: this.SHOW_SP,
+            event: `onchange="ui.statusPanel.SHOW_SP = this.checked;"`,
+          },
+          {
+            type: "checkbox",
+            name: "context_game-time",
+            id: "context_game-time",
+            label: "Play time",
+            checked: this.SHOW_PLAYTIME,
+            event: `onchange="ui.statusPanel.SHOW_PLAYTIME = this.checked;"`,
+          },
+          {
+            prefix: "Duration ",
+            postfix: "sec",
+            type: "input-number",
+            id: "context-menu_stats-duration",
+            label: "Duration",
+            value: this.STATS_DURATION,
+            event: `onchange="ui.statusPanel.STATS_DURATION = this.value;"`,
+          },
+          // {
+          //   prefix: "Min size",
+          //   postfix: "px",
+          //   type: "input-number",
+          //   id: "context-menu_min-size",
+          //   label: "Min size",
+          //   value: this.ACHIV_MIN_SIZE,
+          //   event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].ACHIV_MIN_SIZE = this.value;"`,
+          // },
+          // {
+          //   prefix: "Max size",
+          //   postfix: "px",
+          //   type: "input-number",
+          //   id: "context-menu_max-size",
+          //   label: "Max size",
+          //   value: this.ACHIV_MAX_SIZE,
+          //   event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].ACHIV_MAX_SIZE = this.value;"`,
+          // },
+          // {
+          //   type: "checkbox",
+          //   name: "context_stretch-achieves",
+          //   id: "context_stretch-achieves",
+          //   label: "Stretch",
+          //   checked: this.ACHIV_STRETCH,
+          //   event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].ACHIV_STRETCH = this.checked;"`,
+          // },
+        ],
+      },
+      {
+        type: "checkbox",
+        name: "context_show-platform",
+        id: "context_show-platform",
+        label: "Platform",
+        checked: this.SHOW_PLATFORM,
+        event: `onchange="ui.statusPanel.SHOW_PLATFORM = this.checked;"`,
+      }, {
+        type: "checkbox",
+        name: "context_show-rich-presence",
+        id: "context_show-rich-presence",
+        label: "Rich presence",
+        checked: this.SHOW_RICH_PRESENCE,
+        event: `onchange="ui.statusPanel.SHOW_RICH_PRESENCE = this.checked;"`,
+      },
+      // {
+      //   label: "Show header",
+      //   type: "checkbox",
+      //   name: "context_hide-achivs-header",
+      //   id: "context_hide-achivs-header",
+      //   checked: this.SHOW_HEADER,
+      //   event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SHOW_HEADER = this.checked;"`,
+      // },
+      // {
+      //   label: "Show background",
+      //   type: "checkbox",
+      //   name: "context_show-bg",
+      //   id: "context_show-bg",
+      //   checked: this.BG_VISIBILITY,
+      //   event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].BG_VISIBILITY = this.checked;"`,
+      // },
+    ];
+  }
+  get SHOW_PLAYTIME() {
+    return config.ui.update_section?.showPlayTime ?? true;
+  }
+  set SHOW_PLAYTIME(value) {
+    config.ui.update_section.showPlayTime = value;
+    config.writeConfiguration();
+    this.startStatsAnimation();
+  }
+  get SHOW_RP() {
+    return config.ui.update_section?.showRP ?? true;
+  }
+  set SHOW_RP(value) {
+    config.ui.update_section.showRP = value;
+    config.writeConfiguration();
+    this.startStatsAnimation();
+  }
+  get SHOW_HP() {
+    return config.ui.update_section?.showHP ?? true;
+  }
+  set SHOW_HP(value) {
+    config.ui.update_section.showHP = value;
+    config.writeConfiguration();
+    this.startStatsAnimation();
+
+  }
+  get SHOW_SP() {
+    return config.ui.update_section?.showSP ?? true;
+  }
+  set SHOW_SP(value) {
+    config.ui.update_section.showSP = value;
+    config.writeConfiguration();
+    this.startStatsAnimation();
+
+  }
+  get SHOW_CHEEVOS() {
+    return config.ui.update_section?.showCheevos ?? true;
+  }
+  set SHOW_CHEEVOS(value) {
+    config.ui.update_section.showCheevos = value;
+    config.writeConfiguration();
+    this.startStatsAnimation();
+
+  }
+  get SHOW_PLATFORM() {
+    return config.ui.update_section?.showPlatform ?? true;
+  }
+  set SHOW_PLATFORM(value) {
+    config.ui.update_section.showPlatform = value;
+    config.writeConfiguration();
+    this.setValues();
+  }
+  get SHOW_RICH_PRESENCE() {
+    return config.ui.update_section?.showRichPresence ?? true;
+  }
+  set SHOW_RICH_PRESENCE(value) {
+    config.ui.update_section.showRichPresence = value;
+    config.writeConfiguration();
+    this.setValues();
+  }
+  get STATS_DURATION() {
+    const duration = config.ui.update_section?.statsDuration ?? 5
+    return duration < 5 ? 5 : duration;
+  }
+  set STATS_DURATION(value) {
+    config.ui.update_section.statsDuration = value;
+    config.writeConfiguration();
+    this.startStatsAnimation();
+  }
+
   get AUTOSCROLL_RICHPRESENCE() {
     return true;
   }
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
   }
-  ANIMATION_DELAY_IN_SECONDS = 30;
 
   stats = {
     gameTitle: ui?.GAME_DATA?.Title ?? "Title",
@@ -1566,23 +1751,23 @@ class StatusPanel {
     imageSrc: `https://media.retroachievements.org${ui?.GAME_DATA?.ImageIcon}`,
     totalPoints: ui?.GAME_DATA?.points_total ?? 0,
     totalAchievesCount: ui?.GAME_DATA?.achievements_published ?? 0,
+    totalSoftpoints: 0,
     earnedPoints: 0,
     earnedAchievesCount: 0,
     totalRetropoints: ui?.GAME_DATA?.TotalRetropoints,
     earnedRetropoints: 0,
+    earnedSoftpoints: 0,
   }
   gameTime = 0;
   gameTimeInterval;
+
   get statusTextValues() {
-    const statusObj = {
-      progressionInPoints: `${this.stats.earnedPoints}/${this.stats.totalPoints} HP`,
-      gameTime: `${this.formatTime(this.gameTime)}`,
-      progressionInCount: `${this.stats.earnedAchievesCount}/${this.stats.totalAchievesCount} CHEEVOS`,
-      progressionInRetroPoints: `${this.stats.earnedRetropoints}/${this.stats.totalRetropoints} RP`,
-    }
-    if (this.stats.earnedSoftpoints > 0 && this.stats.totalSoftPoints > 0) {
-      statusObj.progressionInSoftpoints = `${this.stats.earnedSoftpoints}/${this.stats.totalSoftPoints} SP`
-    }
+    const statusObj = {}
+    this.SHOW_HP && (statusObj.progressionInPointsStats = `${this.stats.earnedPoints}/${this.stats.totalPoints} HP`);
+    this.SHOW_CHEEVOS && (statusObj.cheevosStats = `${this.stats.earnedAchievesCount}/${this.stats.totalAchievesCount} CHEEVOS`);
+    this.SHOW_RP && (statusObj.retroPointsStats = `${this.stats.earnedRetropoints}/${this.stats.totalRetropoints} RP`);
+    this.SHOW_SP && (statusObj.softPointsStats = `${this.stats.earnedSoftpoints}/${this.stats.totalSoftPoints} SP`);
+    this.SHOW_PLAYTIME && (statusObj.gameTime = `${this.formatTime(this.gameTime)}`);
     return statusObj;
   }
   constructor() {
@@ -1638,6 +1823,12 @@ class StatusPanel {
       UI.moveEvent(this.section, e);
       //fsdf;
     });
+    this.section.addEventListener("contextmenu", (event) => {
+      ui.showContextmenu({
+        event: event,
+        menuItems: this.contextMenuItems,
+      });
+    });
     this.resizer.addEventListener("mousedown", (event) => {
       event.stopPropagation();
       this.section.classList.add("resized");
@@ -1649,6 +1840,10 @@ class StatusPanel {
     });
   }
   setValues() {
+    this.gamePlatform.classList.toggle("hidden", !this.SHOW_PLATFORM);
+    this.richPresence.classList.toggle("hidden", !this.SHOW_RICH_PRESENCE);
+
+
     //* Обчислення прогресу за балами та за кількістю досягнень
     const completionByPoints = this.stats.earnedPoints / ui.GAME_DATA.points_total || 0;
     const completionByPointsPercents = ~~(completionByPoints * 100) + "%";
@@ -1736,37 +1931,55 @@ class StatusPanel {
     setTimeout(() => glassElement.classList.add("update"), 20);
   }
 
-  currentStatusTextIndex = 0;
   statsAnimationInterval;
   startStatsAnimation() {
     this.stopStatsAnimation();
 
-
-    this.progressStatusText.innerText = Object.values(this.statusTextValues)[this.currentStatusTextIndex++];
+    this.progressStatusText.innerText = '';
     this.progressStatusText.className = `progress_points-percent progress-percent`;
-    this.statsAnimationInterval = setInterval(() => {
 
-      this.progressStatusText.classList.add("hide");
+    let currentStatusTextIndex = 0;
+    let statusTextObjectLength = Object.values(this.statusTextValues).length;
+    Object.getOwnPropertyNames(this.statusTextValues)[currentStatusTextIndex] == "gameTime" && (
+      this.section.style.setProperty("--progress-points", "0%")
+    );
 
-      setTimeout(() => {
-        const statsTextName = Object.getOwnPropertyNames(this.statusTextValues)[this.currentStatusTextIndex];
-        const statsTextValue = this.statusTextValues[statsTextName];
-        this.progressStatusText.innerText = statsTextValue;
 
-        this.progressStatusText.className = `progress_points-percent progress-percent ${statsTextName}`;
-        statsTextName != "gameTime" && (this.section.style.setProperty(
-          "--progress-points",
-          this.convertToPercentage(statsTextValue) || "0%"
-        ));
-        this.currentStatusTextIndex =
-          this.currentStatusTextIndex < Object.values(this.statusTextValues).length - 1 ?
-            this.currentStatusTextIndex + 1 : 0;
-      }, 200)
-    }, this.ANIMATION_DELAY_IN_SECONDS * 1000);
+    statusTextObjectLength > 0 && (
+      this.changeStatsElementValues({
+        className: Object.getOwnPropertyNames(this.statusTextValues)[currentStatusTextIndex],
+        text: Object.values(this.statusTextValues)[currentStatusTextIndex]
+      })
+    );
+
+
+    statusTextObjectLength > 1 && (
+      this.statsAnimationInterval = setInterval(() => {
+        currentStatusTextIndex = currentStatusTextIndex < statusTextObjectLength - 1 ?
+          currentStatusTextIndex + 1 : 0;
+
+        this.progressStatusText.classList.add("hide");
+
+        setTimeout(() => {
+          this.changeStatsElementValues({
+            className: Object.getOwnPropertyNames(this.statusTextValues)[currentStatusTextIndex],
+            text: Object.values(this.statusTextValues)[currentStatusTextIndex]
+          })
+
+        }, 200)
+      }, this.STATS_DURATION * 1000))
   }
   stopStatsAnimation() {
     clearInterval(this.statsAnimationInterval);
     this.currentStatusTextIndex = 0;
+  }
+  changeStatsElementValues({ className, text }) {
+    this.progressStatusText.innerText = text;
+    this.progressStatusText.className = `progress_points-percent progress-percent ${className}`;
+    className != "gameTime" && (this.section.style.setProperty(
+      "--progress-points",
+      this.convertToPercentage(text) || "0%"
+    ));
   }
   autoscrollRPInterval;
   startAutoScrollRP(toLeft = true) {
