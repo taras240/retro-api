@@ -1728,7 +1728,7 @@ class StatusPanel {
     this.setValues();
   }
   get STATS_DURATION() {
-    const duration = config.ui.update_section?.statsDuration ?? 5
+    const duration = config.ui.update_section?.statsDuration ?? 30
     return duration < 5 ? 5 : duration;
   }
   set STATS_DURATION(value) {
