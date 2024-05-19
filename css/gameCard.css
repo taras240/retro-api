@@ -1,6 +1,5 @@
 /* Section for the game card */
 .game-card_section {
-  position: absolute;
   top: 10px;
   left: 70%;
   width: 300px;
@@ -68,6 +67,7 @@
   object-fit: cover;
   object-position: center;
   user-select: none;
+  image-rendering: auto;
 }
 
 .game-card-description {

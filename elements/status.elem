@@ -27,7 +27,7 @@
       <img class="update-game-preview" id="update_achiv-preview"
         src="https://media.retroachievements.org/Badge/276671.png" alt=" " />
       <div class="update-text-block">
-        <div class="update_achiv-header"> Earned:
+        <div class="update_achiv-header">
           <a id="update_achiv-title" target="_blank" class=" update-section-text" href="">Achiv tittle</a>
         </div>
         <p id="update_achiv-earned-points" class="update-section-text update_achiv-points">

@@ -6,7 +6,7 @@
   height: 70px;
   min-width: 300px;
   min-height: 75px;
-  max-height: 120px;
+  max-height: 150px;
   width: 500px;
   z-index: 1;
   perspective: 1500px;
@@ -56,6 +56,7 @@
 
 /**---------------- BACK SIDE ------------- */
 .update_back-side {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -64,6 +65,24 @@
   transform: rotateX(180deg);
   background-color: var(--secondary-color);
   border-radius: inherit;
+}
+
+.update_back-side::after {
+  content: "";
+  position: absolute;
+  height: 100%;
+  aspect-ratio: 2 / 1;
+  top: 50%;
+  right: 20px;
+  transform: translate(0, -50%) rotate(45deg);
+  background-image: url(../assets/img/S-rank-1.png);
+  filter: drop-shadow(5px 3px 3px black);
+  image-rendering: pixelated;
+  background-size: contain;
+  background-repeat: no-repeat;
+  top: 50%;
+  right: -20px;
+  z-index: 2;
 }
 
 .card-3d {
@@ -109,7 +128,7 @@
 .update-button_container {
   display: flex;
   align-items: center;
-  height: 33%;
+  height: 50%;
   gap: 20px;
   position: absolute;
   right: 20px;
@@ -121,7 +140,9 @@
 .progress-percent {
   --animation-duration: 0.2s;
   /* transform: translateY(50%); */
-  font-size: 1.5rem;
+  font-size: 2.5rem;
+  text-wrap: nowrap;
+  word-wrap: none;
   font-weight: 600;
   color: var(--font-color);
   opacity: 0.2;
