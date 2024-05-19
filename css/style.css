@@ -436,7 +436,6 @@ input:checked+.checkbox-input::before {
   font-size: inherit;
   color: inherit;
   min-width: 5rem;
-  max-width: 40%;
   border: 1px solid var(--secondary-color);
   text-align: center;
   transition: 0.2s;
