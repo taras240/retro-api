@@ -57,7 +57,7 @@ class Config {
     this._cfg.settings.targetUser = value;
     this.writeConfiguration();
     if (this.identConfirmed) {
-      ui.settings.getGameIdButton.click();
+      ui.settings.getLastGameID();
       ui.awards.updateAwards();
     }
   }
@@ -75,7 +75,8 @@ class Config {
     return this._cfg.settings.updateDelay * 1000;
   }
   set updateDelay(value) {
-    this._cfg.settings.updateDelay = value;
+    let delay = parseInt(value) > 0 ? value : 5;
+    this._cfg.settings.updateDelay = delay;
     this.writeConfiguration();
   }
   get bgVisibility() {

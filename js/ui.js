@@ -51,9 +51,10 @@ class UI {
               config.version = this.VERSION;
             }, 1500);
           }
+          //!-----------------------------------
           config.startOnLoad
             ? this.statusPanel.watchButton.click()
-            : this.settings.checkIdButton.click();
+            : getAchievements();
         }
         else {
           const section = this.loginCard.section;
@@ -116,10 +117,10 @@ class UI {
         const { x, y, width, height, hidden } = config.ui[id];
         // Встановлення нових значень стилів елемента, якщо вони вказані у config.ui
         // Якщо значення відсутнє (undefined), то стилі не змінюються
-        x ? (section.style.left = x) : "";
-        y ? (section.style.top = y) : "";
-        width ? (section.style.width = width) : "";
-        height ? (section.style.height = height) : "";
+        x && (section.style.left = x);
+        y && (section.style.top = y);
+        width && (section.style.width = width);
+        height && (section.style.height = height);
         const isHidden = hidden ?? true;
         if (isHidden) {
           section.classList.add("hidden", "disposed");
@@ -1018,7 +1019,6 @@ class AchievementsBlock {
     this.initializeElements();
     this.addEvents();
     this.setValues();
-    this.cloneAchieves();
   }
   initializeElements() {
     // Елементи блока досягнень
@@ -1061,13 +1061,9 @@ class AchievementsBlock {
     UI.addDraggingEventForElements(this.container);
   }
   setValues() {
-    // if (!config.ui.achievements_section) {
-    //   UI.switchSectionVisibility(this);
-    // }
     this.section.classList.toggle("bg-visible", this.BG_VISIBILITY);
     this.section.classList.toggle("compact", !this.SHOW_HEADER);
     if (config.ui[this.SECTION_NAME]) {
-      // UI.switchSectionVisibility(this);
       this.section.style.top = config.ui[this.SECTION_NAME].y ?? "0px";
       this.section.style.left = config.ui[this.SECTION_NAME].x ?? "0px";
       this.section.style.height =
@@ -1081,14 +1077,12 @@ class AchievementsBlock {
   }
 
   clearAchievementsSection() {
-    const { container } = this;
-    container.innerHTML = "";
+    this.container.innerHTML = "";
   }
   // Розбирає отримані досягнення гри та відображає їх на сторінці
   parseGameAchievements(achivs) {
     // Очистити вміст розділу досягнень
     this.clearAchievementsSection();
-
 
     // Відсортувати досягнення та відобразити їх
     this.displayAchievements(achivs);
@@ -1105,31 +1099,9 @@ class AchievementsBlock {
 
   displayAchievements(achievementsObject) {
     Object.values(achievementsObject.Achievements).forEach((achievement) => {
-      this.displayAchievement(achievement);
+      const achivElement = this.generateAchievement(achievement);
+      this.container.appendChild(achivElement);
     });
-  }
-
-  displayAchievement(achievement) {
-    const { container } = this;
-    const achivElement = this.generateAchievement(achievement);
-    container.appendChild(achivElement);
-  }
-  //Додавання відсутніх властивостей
-  fixAchievement(achievement, achievements) {
-    const { BadgeName, DateEarned, DateEarnedHardcore } = achievement;
-
-    //Додаєм кількість гравців
-    achievement.totalPlayers = achievements.NumDistinctPlayers;
-
-    // Визначаєм, чи отримано досягнення та чи є воно хардкорним
-    achievement.isEarned = DateEarned !== undefined;
-    achievement.isHardcoreEarned = DateEarnedHardcore !== undefined;
-
-    // Додаєм адресу зображення для досягнення
-    achievement.prevSrc = `https://media.retroachievements.org/Badge/${BadgeName}.png`;
-
-    //Повертаємо виправлений об'єкт
-    return achievement;
   }
 
   generateAchievement(achievement) {
@@ -1166,28 +1138,16 @@ class AchievementsBlock {
       ? (achivElement.dataset.DateEarnedHardcore = DateEarnedHardcore)
       : "";
     achivElement.dataset.type = type;
-
-    let previewContainer = document.createElement("div");
-    previewContainer.classList.add("preview-container");
-
-    let achivPreview = document.createElement("img");
-    achivPreview.classList.add("achiv-preview");
-    achivPreview.src = prevSrc;
-
-    previewContainer.appendChild(achivPreview);
-    achivElement.appendChild(previewContainer);
-
-    let toTargetButton = document.createElement("button");
-    toTargetButton.classList.add("add-to-target");
-    toTargetButton.innerHTML = `
-      <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-        <path d="M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160Zm40 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
-      </svg>
+    achivElement.innerHTML = `
+      <div class="preview-container">
+        <img class="achiv-preview" src="${prevSrc}"/>
+      </div>
+      <button class="add-to-target" onclick="ui.target.addAchieveToTarget(${ID})">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+          <path d="M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160Zm40 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+        </svg>
+      </button>
     `;
-    achivElement.appendChild(toTargetButton);
-
-    // let achivDetails = this.generateAchivDetails(achievement);
-    // achivElement.appendChild(achivDetails);
 
     achivElement.addEventListener("mouseover", (e) => {
       const popUp = this.generateAchivDetails(achievement);
@@ -1212,16 +1172,6 @@ class AchievementsBlock {
     achivElement.addEventListener("mousedown", (e) => {
       e.stopPropagation();
     });
-    // achivElement.addEventListener("click", (e) => {
-    //   this.container.querySelectorAll(".achiv-block").forEach((achiv) => {
-    //     if (achiv !== achivElement) achiv.classList.remove("expanded");
-    //   });
-    //   // achivElement.classList.toggle("expanded");
-    // });
-    toTargetButton.addEventListener("click", (e) => {
-      ui.target.addAchieveToTarget(achievement);
-    });
-
     return achivElement;
   }
 
@@ -1240,17 +1190,17 @@ class AchievementsBlock {
     detailsElement.dataset.pointStyle =
       Points < 10 ? "poor" : Points < 20 ? "normal" : "reach";
     detailsElement.innerHTML = `
-    <h3>${Title}</h3>
-    <p>${Description}</p>
-    <p>Earned by ${NumAwardedHardcore} of ${totalPlayers} players</p>
-    <p class="points">${Points} [${TrueRatio}] points</p>
-    ${DateEarnedHardcore
+      <h3>${Title}</h3>
+      <p>${Description}</p>
+      <p>Earned by ${NumAwardedHardcore} of ${totalPlayers} players</p>
+      <p class="points">${Points} [${TrueRatio}] points</p>
+      ${DateEarnedHardcore
         ? "<p>Earned hardcore: " + fixTimeString(DateEarnedHardcore) + "</p>"
         : DateEarned
           ? "<p>Earned softcore: " + fixTimeString(DateEarned) + "</p>"
           : ""
       }
-      `;
+    `;
     return detailsElement;
   }
   fixDetailsPosition(achivDetails) {
@@ -1392,28 +1342,28 @@ class AchievementsBlock {
     newWidget.style.height =
       config.ui.achievements_section?.height ?? 650 + "px";
     newWidget.innerHTML = `
-    <div class="header-container achievements-header_container">
-    <div class="header-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-        <path
-          d="m668-380 152-130 120 10-176 153 52 227-102-62-46-198Zm-94-292-42-98 46-110 92 217-96-9ZM294-287l126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM173-120l65-281L20-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Zm247-340Z" />
-      </svg></div>
-    <h2 class="widget-header-text achivs-header-text">Achieves${this.CLONE_NUMBER === 0 ? "" : this.CLONE_NUMBER
+      <div class="header-container achievements-header_container">
+        <div class="header-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+            <path
+              d="m668-380 152-130 120 10-176 153 52 227-102-62-46-198Zm-94-292-42-98 46-110 92 217-96-9ZM294-287l126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM173-120l65-281L20-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Zm247-340Z" />
+          </svg>
+        </div>
+        <h2 class="widget-header-text achivs-header-text">Achieves${this.CLONE_NUMBER === 0 ? "" : this.CLONE_NUMBER
       }</h2>
 
-    <button class="header-button header-icon" onclick="ui.achievementsBlock[${this.CLONE_NUMBER
+        <button class="header-button header-icon" onclick="ui.achievementsBlock[${this.CLONE_NUMBER
       }].close();">
-      <svg height="24" viewBox="0 -960 960 960" width="24">
-        <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-      </svg>
-    </button>
-  </div>
-  <ul class="achievements-container"></ul>
-  <div class="resizer" id="achivs-resizer${this.CLONE_NUMBER}"></div>
+          <svg height="24" viewBox="0 -960 960 960" width="24">
+            <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+          </svg>
+        </button>
+      </div>
+      <ul class="achievements-container"></ul>
+      <div class="resizer" id="achivs-resizer${this.CLONE_NUMBER}"></div>
     `;
     return newWidget;
   }
-  cloneAchieves() {
-  }
+
 }
 
 class ButtonPanel {
@@ -1465,7 +1415,9 @@ class ButtonPanel {
       UI.switchSectionVisibility(ui.statusPanel);
     });
     this.settings.addEventListener("change", (e) => {
-      UI.switchSectionVisibility(ui.settings);
+      // UI.switchSectionVisibility(ui.settings);
+      const settingsWidget = document.querySelector("#settings_section");
+      settingsWidget ? settingsWidget.remove() : ui.settings.openSettings();
     });
     this.awards.addEventListener("change", (e) => {
       UI.switchSectionVisibility(ui.awards);
@@ -1502,7 +1454,7 @@ class ButtonPanel {
     this.achievements.checked =
       config.ui?.achievements_section?.hidden === false ?? ui.achievementsBlock[0].VISIBLE;
 
-    this.settings.checked = config.ui?.settings_section?.hidden === false ?? ui.settings.VISIBLE;
+    // this.settings.checked = config.ui?.settings_section?.hidden === false ?? ui.settings.VISIBLE;
 
     this.login.checked = config.ui?.login_section?.hidden === false ?? ui.loginCard.VISIBLE;
 
@@ -1550,6 +1502,7 @@ class ButtonPanel {
   }
 
 }
+
 class StatusPanel {
   get contextMenuItems() {
     return [
@@ -1607,6 +1560,7 @@ class StatusPanel {
             value: this.STATS_DURATION,
             event: `onchange="ui.statusPanel.STATS_DURATION = this.value;"`,
           },
+
           // {
           //   prefix: "Min size",
           //   postfix: "px",
@@ -1650,22 +1604,23 @@ class StatusPanel {
         checked: this.SHOW_RICH_PRESENCE,
         event: `onchange="ui.statusPanel.SHOW_RICH_PRESENCE = this.checked;"`,
       },
-      // {
-      //   label: "Show header",
-      //   type: "checkbox",
-      //   name: "context_hide-achivs-header",
-      //   id: "context_hide-achivs-header",
-      //   checked: this.SHOW_HEADER,
-      //   event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SHOW_HEADER = this.checked;"`,
-      // },
-      // {
-      //   label: "Show background",
-      //   type: "checkbox",
-      //   name: "context_show-bg",
-      //   id: "context_show-bg",
-      //   checked: this.BG_VISIBILITY,
-      //   event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].BG_VISIBILITY = this.checked;"`,
-      // },
+      {
+        type: "checkbox",
+        name: "context_show-new-cheevos",
+        id: "context_show-new-cheevos",
+        label: "Show new cheevos",
+        checked: this.SHOW_NEW_ACHIV,
+        event: `onchange="ui.statusPanel.SHOW_NEW_ACHIV = this.checked;"`,
+      },
+      {
+        prefix: "Cheevos duration",
+        postfix: "sec",
+        type: "input-number",
+        id: "context-menu_stats-earned-duration",
+        label: "Duration",
+        value: this.NEW_ACHIV_DURATION,
+        event: `onchange="ui.statusPanel.NEW_ACHIV_DURATION = this.value;"`,
+      },
     ];
   }
   get SHOW_PLAYTIME() {
@@ -1728,13 +1683,28 @@ class StatusPanel {
     this.setValues();
   }
   get STATS_DURATION() {
-    const duration = config.ui.update_section?.statsDuration ?? 30
+    const duration = config.ui.update_section?.statsDuration ?? 30;
     return duration < 5 ? 5 : duration;
   }
   set STATS_DURATION(value) {
     config.ui.update_section.statsDuration = value;
     config.writeConfiguration();
     this.startStatsAnimation();
+  }
+  get SHOW_NEW_ACHIV() {
+    return config.ui.update_section?.showNewAchiv ?? true;
+  }
+  set SHOW_NEW_ACHIV(value) {
+    config.ui.update_section.showNewAchiv = value;
+    config.writeConfiguration();
+  }
+  get NEW_ACHIV_DURATION() {
+    const duration = config.ui.update_section?.newAchivDuration ?? 15;
+    return duration < 5 ? 5 : duration;
+  }
+  set NEW_ACHIV_DURATION(value) {
+    config.ui.update_section.newAchivDuration = value;
+    config.writeConfiguration();
   }
 
   get AUTOSCROLL_RICHPRESENCE() {
@@ -1780,16 +1750,22 @@ class StatusPanel {
   }
   initializeElements() {
     this.section = document.querySelector("#update-section");
-    this.gamePreview = document.querySelector("#game-preview"); // Іконка гри
-    this.textBlock = document.querySelector("#update-text-block");
-    this.gameTitle = document.querySelector("#game-title"); // Заголовок гри
-    this.gamePlatform = document.querySelector("#game-platform"); // Платформа гри
-    this.richPresence = document.querySelector("#rich-presence");
-    this.watchButton = document.querySelector("#watching-button"); // Кнопка спостереження за грою
-    this.progresBar = document.querySelector("#status-progress-bar");
+    this.container = this.section.querySelector(".update_container");
+    this.gamePreview = this.section.querySelector("#game-preview"); // Іконка гри
+    this.textBlock = this.section.querySelector("#update-text-block");
+    this.gameTitle = this.section.querySelector("#game-title"); // Заголовок гри
+    this.gamePlatform = this.section.querySelector("#game-platform"); // Платформа гри
+    this.richPresence = this.section.querySelector("#rich-presence");
+    this.watchButton = this.section.querySelector("#watching-button"); // Кнопка спостереження за грою
+    this.progresBar = this.section.querySelector("#status-progress-bar");
     this.progresBarDelta = this.section.querySelector("#status_progress-bar-delta");
-    this.progressStatusText = document.querySelector("#status-progress-text");
-    this.resizer = document.querySelector("#status-resizer");
+    this.progressStatusText = this.section.querySelector("#status-progress-text");
+    this.resizer = this.section.querySelector("#status-resizer");
+    this.backSide = {
+      imgElement: this.section.querySelector("#update_achiv-preview"),
+      achivTitleElement: this.section.querySelector("#update_achiv-title"),
+      earnedPoints: this.section.querySelector("#update_achiv-earned-points"),
+    }
   }
   addEvents() {
     this.watchButton.addEventListener("mousedown", (e) => {
@@ -1920,9 +1896,51 @@ class StatusPanel {
     this.updateData();
     this.startAnimation();
 
+    //show new achivs in statusPanel
+    this.SHOW_NEW_ACHIV && this.showEarnedAchieves({ earnedAchievementIDs: earnedAchievementIDs });
+
     //push points toggle animation
     this.progresBarDelta.classList.remove("hidden");
+
     setTimeout(() => this.progresBarDelta.classList.add("hidden"), 50)
+  }
+  newAchievementsIDs = [];
+  showEarnedAchieves({ earnedAchievementIDs }) {
+
+    const delay = (ms) => {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    //fill achiv data to html element
+    const updateAchivData = (id) => {
+      const { isHardcoreEarned, Title, prevSrc, Points, TrueRatio, rateEarned, rateEarnedHardcore } = ui.ACHIEVEMENTS[id];
+      this.backSide.imgElement.src = prevSrc;
+      this.backSide.achivTitleElement.innerText = Title;
+      let earnedPoints = isHardcoreEarned ?
+        `+${Points}HP +${TrueRatio}RP TOP${rateEarnedHardcore}`
+        : `+${Points}SP TOP${rateEarned}`;
+      this.backSide.earnedPoints.innerText = earnedPoints;
+    }
+
+    async function processAchivData() {
+      while (ui.statusPanel.newAchievementsIDs.length > 0) {
+        //waiting for animation end
+        await delay(2000);
+
+        //draw new achiv and show animation
+        updateAchivData(ui.statusPanel.newAchievementsIDs.shift());
+        ui.statusPanel.container.classList.add("show-back");
+
+        //back to main information in status panel
+        await delay(ui.statusPanel.NEW_ACHIV_DURATION * 1000);
+        ui.statusPanel.container.classList.remove("show-back");
+      }
+    }
+
+    this.newAchievementsIDs.length > 0 ?
+      (this.newAchievementsIDs = this.newAchievementsIDs.concat(earnedAchievementIDs)) :
+      (this.newAchievementsIDs = earnedAchievementIDs, processAchivData())
+
   }
 
   startAnimation() {
@@ -1981,6 +1999,7 @@ class StatusPanel {
       this.convertToPercentage(text) || "0%"
     ));
   }
+
   autoscrollRPInterval;
   startAutoScrollRP(toLeft = true) {
     this.autoscrollRPInterval ? this.stopAutoScrollRP() : "";
@@ -2049,7 +2068,330 @@ class StatusPanel {
     return `${hours != "00" ? hours + ":" : ""}${minutes}:${remainingSeconds}`;
   }
 }
+
 class Settings {
+  get settingsItems() {
+    return [
+      {
+        label: "Style",
+        elements: [
+          {
+            type: "select",
+            label: "Select colors",
+            id: "settings_colors-selector",
+            selectValues: [
+              {
+                type: "radio",
+                name: "context_color-scheme",
+                id: "context_color-scheme-default",
+                label: "default",
+                checked: ui.settings.COLOR_SCHEME === "default",
+                event: "onchange=\"ui.settings.COLOR_SCHEME = 'default'\"",
+              },
+              {
+                type: "radio",
+                name: "context_color-scheme",
+                id: "context_color-scheme-pink",
+                label: "pink",
+                checked: ui.settings.COLOR_SCHEME === "pink",
+                event: "onchange=\"ui.settings.COLOR_SCHEME = 'pink'\"",
+              },
+              {
+                type: "radio",
+                name: "context_color-scheme",
+                id: "context_color-scheme-lightgreen",
+                label: "lightgreen",
+                checked: ui.settings.COLOR_SCHEME === "lightgreen",
+                event: "onchange=\"ui.settings.COLOR_SCHEME = 'lightgreen'\"",
+              },
+              {
+                type: "radio",
+                name: "context_color-scheme",
+                id: "context_color-scheme-lightblue",
+                label: "lightblue",
+                checked: ui.settings.COLOR_SCHEME === "lightblue",
+                event: "onchange=\"ui.settings.COLOR_SCHEME = 'lightblue'\"",
+              },
+              {
+                type: "radio",
+                name: "context_color-scheme",
+                id: "context_color-scheme-blue",
+                label: "blue",
+                checked: ui.settings.COLOR_SCHEME === "blue",
+                event: "onchange=\"ui.settings.COLOR_SCHEME = 'blue'\"",
+              },
+              {
+                type: "radio",
+                name: "context_color-scheme",
+                id: "context_color-scheme-synthwave",
+                label: "synthwave",
+                checked: ui.settings.COLOR_SCHEME === "synthwave",
+                event: "onchange=\"ui.settings.COLOR_SCHEME = 'synthwave'\"",
+              },
+              {
+                type: "radio",
+                name: "context_color-scheme",
+                id: "context_color-scheme-darkblue",
+                label: "darkblue",
+                checked: ui.settings.COLOR_SCHEME === "darkblue",
+                event: "onchange=\"ui.settings.COLOR_SCHEME = 'darkblue'\"",
+              },
+              {
+                type: "radio",
+                name: "context_color-scheme",
+                id: "context_color-scheme-brown",
+                label: "brown",
+                checked: ui.settings.COLOR_SCHEME === "brown",
+                event: "onchange=\"ui.settings.COLOR_SCHEME = 'brown'\"",
+              },
+              {
+                type: "radio",
+                name: "context_color-scheme",
+                id: "context_color-scheme-pastel",
+                label: "pastel",
+                checked: ui.settings.COLOR_SCHEME === "pastel",
+                event: "onchange=\"ui.settings.COLOR_SCHEME = 'pastel'\"",
+              },
+              {
+                type: "radio",
+                name: "context_color-scheme",
+                id: "context_color-scheme-retro",
+                label: "retro",
+                checked: ui.settings.COLOR_SCHEME === "retro",
+                event: "onchange=\"ui.settings.COLOR_SCHEME = 'retro'\"",
+              },
+              {
+                type: "radio",
+                name: "context_color-scheme",
+                id: "context_color-scheme-vintage",
+                label: "vintage",
+                checked: ui.settings.COLOR_SCHEME === "vintage",
+                event: "onchange=\"ui.settings.COLOR_SCHEME = 'vintage'\"",
+              },
+              {
+                type: "radio",
+                name: "context_color-scheme",
+                id: "context_color-scheme-neon",
+                label: "neon",
+                checked: ui.settings.COLOR_SCHEME === "neon",
+                event: "onchange=\"ui.settings.COLOR_SCHEME = 'neon'\"",
+              },
+              {
+                type: "radio",
+                name: "context_color-scheme",
+                id: "context_color-scheme-gray",
+                label: "gray",
+                checked: ui.settings.COLOR_SCHEME === "gray",
+                event: "onchange=\"ui.settings.COLOR_SCHEME = 'gray'\"",
+              },
+              {
+                type: "radio",
+                name: "context_color-scheme",
+                id: "context_color-scheme-custom",
+                label: "custom",
+                checked: ui.settings.COLOR_SCHEME === "custom",
+                event: "onchange=\"ui.settings.COLOR_SCHEME = 'custom'\"",
+              },
+            ]
+          },
+          {
+            type: "checkbox",
+            label: "Show bg",
+            id: "settings_show-bg",
+            onChange: "ui.settings.BG_ANIMATION = this.checked;",
+            checked: this.BG_ANIMATION,
+          }
+        ]
+      },
+      {
+        label: "Custom colors",
+        elements: [
+          {
+            type: "color",
+            id: "main-color-input",
+            label: "main color",
+            value: config.mainColor,
+            onChange: "console.log(this); config.mainColor = this.value; ui.settings.COLOR_SCHEME = ui.settings.COLOR_SCHEME",
+          },
+          {
+            type: "color",
+            id: "secondary-color-input",
+            label: "secondary color",
+            value: config.secondaryColor,
+            onChange: "config.secondaryColor = this.value; ui.settings.COLOR_SCHEME = ui.settings.COLOR_SCHEME",
+          },
+          {
+            type: "color",
+            id: "accent-color-input",
+            label: "accent color",
+            value: config.accentColor,
+            onChange: "config.accentColor = this.value; ui.settings.COLOR_SCHEME = ui.settings.COLOR_SCHEME",
+          },
+          {
+            type: "color",
+            id: "selection-color-input",
+            label: "selection color",
+            value: config.selectionColor,
+            onChange: "config.selectionColor = this.value; ui.settings.COLOR_SCHEME = ui.settings.COLOR_SCHEME",
+          },
+          {
+            type: "color",
+            id: "font-color-input",
+            label: "font color",
+            value: config.fontColor,
+            onChange: "config.fontColor = this.value; ui.settings.COLOR_SCHEME = ui.settings.COLOR_SCHEME",
+          },
+        ]
+      },
+      {
+        label: "Font family",
+        elements: [
+          {
+            type: "select",
+            label: "Select font",
+            id: "settings_font-family",
+            selectValues: [
+              {
+                type: "radio",
+                name: "settings_font-family",
+                id: "settings_font-family-default",
+                label: "default",
+                checked: ui.settings.FONT_NAME === "default",
+                event: "onchange=\"ui.settings.selectFont('default');\"",
+              },
+              {
+                type: "radio",
+                name: "settings_font-family",
+                id: "settings_font-family-Oxygen",
+                label: "Oxygen",
+                checked: ui.settings.FONT_NAME === "Oxygen",
+                event: "onchange=\"ui.settings.selectFont('oxygen');\"",
+              },
+              {
+                type: "radio",
+                name: "settings_font-family",
+                id: "settings_font-family-Shadows",
+                label: "Shadows",
+                checked: ui.settings.FONT_NAME === "Shadows",
+                event: "onchange=\"ui.settings.selectFont('shadows');\"",
+              },
+              {
+                type: "radio",
+                name: "settings_font-family",
+                id: "settings_font-family-Pixelify",
+                label: "Pixelify",
+                checked: ui.settings.FONT_NAME === "Pixelify Sans",
+                event: "onchange=\"ui.settings.selectFont('pixelifySans');\"",
+              },
+              {
+                type: "radio",
+                name: "settings_font-family",
+                id: "settings_font-family-Jaro",
+                label: "Jaro",
+                checked: ui.settings.FONT_NAME === "Jaro",
+                event: "onchange=\"ui.settings.selectFont('jaro');\"",
+              },
+              {
+                type: "radio",
+                name: "settings_font-family",
+                id: "settings_font-family-Jacquard",
+                label: "Jacquard",
+                checked: ui.settings.FONT_NAME === "Jacquard",
+                event: "onchange=\"ui.settings.selectFont('jacquard');\"",
+              },
+              {
+                type: "radio",
+                name: "settings_font-family",
+                id: "settings_font-family-Custom",
+                label: "Custom",
+                checked: ui.settings.FONT_NAME === "custom",
+                event: "onchange=\"ui.settings.selectFont('custom');\"",
+              },
+            ]
+          },
+          {
+            type: "search",
+            label: "paste url here",
+            id: "settings_font-input",
+            value: "",
+            onChange: "ui.settings.FONT_FAMILY = this.value; this.value = '';",
+          }
+        ]
+      },
+      {
+        label: "Font size (base in px)",
+        elements: [
+          {
+            type: "number",
+            label: "font size",
+            id: "settings_font-size-input",
+            value: this.FONT_SIZE,
+            onChange: "ui.settings.FONT_SIZE = this.value;",
+          }
+        ]
+      },
+      {
+        label: "Update delay (in secs)",
+        elements: [
+          {
+            type: "number",
+            label: "sec",
+            id: "settings_update-delay-input",
+            value: config.updateDelay,
+            onChange: "config.updateDelay = this.value",
+          }
+        ]
+      },
+      {
+        label: "Target user",
+        elements: [
+          {
+            type: "search",
+            label: config.targetUser,
+            id: "settings_target-user-input",
+            value: config.targetUser,
+            onChange: "config.targetUser = this.value",
+          }
+        ]
+      },
+      {
+        label: "Game ID",
+        elements: [
+          {
+            type: "button",
+            label: "Check ID",
+            id: "settings_check-game-id",
+            onClick: "getAchievements()",
+          },
+          {
+            type: "button",
+            label: "Get last ID",
+            id: "settings_get-last-id",
+            onClick: "ui.settings.getLastGameID()",
+          },
+          {
+            type: "number",
+            label: "game id",
+            id: "settings_game-id-input",
+            value: config.gameID,
+            onChange: "config.gameID = this.value;",
+          }
+        ]
+      },
+      {
+        label: "Autoupdate",
+        elements: [
+          {
+            type: "checkbox",
+            label: "Start on load",
+            id: "settings_start-on-load",
+            onChange: "ui.settings.START_ON_LOAD = this.checked;",
+            checked: this.START_ON_LOAD,
+          }
+        ]
+      },
+    ]
+  }
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
   }
@@ -2327,162 +2669,125 @@ class Settings {
     custom: config._cfg?.settings?.customFontFamily ?? "def",
   }
   constructor() {
-    this.initializeElements();
-    this.addEvents();
     this.setValues();
   }
-  initializeElements() {
-    // Елементи налаштувань
-    this.section = document.querySelector("#settings_section"); //* Контейнер налаштувань
-
-    this.header = document.querySelector(".prefs-header-container");
-    this.updateInterval = document.querySelector("#update-time"); // Поле введення інтервалу оновлення
-
-    //!-------------------------------[ COLORS ]-----------------------------
-    this.mainColorInput = document.querySelector("#main-color-input");
-    this.secondaryColorInput = document.querySelector("#secondary-color-input");
-    this.accentColorInput = document.querySelector("#accent-color-input");
-    this.fontColorInput = document.querySelector("#font-color-input");
-    this.selectionColorInput = document.querySelector("#selection-color-input"); //
-    this.colorPresetSelector = document.querySelector(
-      "#color-preset-selection"
-    );
-    this.showBackgroundCheckbox = document.querySelector(
-      "#show-background_button"
-    );
-    //!-----------------------------------------
-    this.fontUrlInput = this.section.querySelector("#settings_font-input");
-    this.fontSelector = this.section.querySelector("#font-preset-selection");
-    this.fontSizeInput = this.section.querySelector("#settings_font-size");
-
-    this.targetUserInput = document.querySelector("#target-user");
-    this.gameID = document.querySelector("#game-id"); // Поле введення ідентифікатора гри
-    this.getGameIdButton = document.querySelector(".get-id-button"); // Кнопка отримання ідентифікатора гри
-    this.checkIdButton = document.querySelector(".check-id-button"); // Кнопка перевірки ідентифікатора гри
-    this.startOnLoadCheckbox = document.querySelector("#update-on-load");
-
-  }
   setValues() {
-
-    // this.settings.stretchButton.classList
-    // Отримати ідентифікатор гри з localStorage та встановити його значення
-    this.gameID.value = config.gameID;
-
-    this.targetUserInput.value = config.targetUser ?? config.USER_NAME;
-    this.targetUserInput.setAttribute(
-      "placeholder",
-      config.USER_NAME || "your username if empty"
-    );
-    this.updateInterval.value = config.updateDelay;
-
-    this.mainColorInput.value = config.mainColor;
-    this.secondaryColorInput.value = config.secondaryColor;
-    this.accentColorInput.value = config.accentColor;
-    this.fontColorInput.value = config.fontColor;
-    this.selectionColorInput.value = config.selectionColor;
-    this.colorPresetSelector.value = config.colorsPreset;
-    this.colorPresetSelector.dispatchEvent(new Event("change"));
-    this.fontSelector.value = config._cfg?.fontSelectorName ?? "default";
-    this.fontUrlInput.value = this.FONT_NAME;
-    this.fontSizeInput.value = this.FONT_SIZE;
-    this.showBackgroundCheckbox.checked = config.bgVisibility;
-    this.startOnLoadCheckbox.checked = config.startOnLoad;
     this.FONT_SIZE = this.FONT_SIZE;
     this.FONT_FAMILY = this.fonts[config._cfg?.fontSelectorName ?? "default"];
   }
-  addEvents() {
-    // Додаємо обробник події 'change' для поля введення інтервалу оновлення
-    this.updateInterval.addEventListener("change", () => {
-      // Оновлюємо інтервал оновлення
-      config.updateDelay = this.updateInterval.value || 5;
-    });
-    this.showBackgroundCheckbox.addEventListener("change", (e) => {
-      config.bgVisibility = this.showBackgroundCheckbox.checked;
-      document.querySelector("#background-animation").style.display =
-        config.bgVisibility ? "block" : "none";
-    });
-    // Додаємо обробник події 'change' для поля введення ідентифікатора гри
-    this.gameID.addEventListener("change", () => {
-      // Оновлюємо ідентифікатор гри
-      config.gameID = this.gameID.value;
-    });
-
-    this.mainColorInput.addEventListener("change", (e) => {
-      e.stopPropagation();
-      config.mainColor = this.mainColorInput.value;
-      UI.updateColors("custom");
-    });
-    this.secondaryColorInput.addEventListener("change", (e) => {
-      e.stopPropagation();
-      config.secondaryColor = this.secondaryColorInput.value;
-      UI.updateColors("custom");
-    });
-    this.accentColorInput.addEventListener("change", (e) => {
-      e.stopPropagation();
-      config.accentColor = this.accentColorInput.value;
-      UI.updateColors("custom");
-    });
-    this.fontColorInput.addEventListener("change", (e) => {
-      e.stopPropagation();
-      const preset = (this.colorPresetSelector.value = "custom");
-      config.fontColor = this.fontColorInput.value;
-      UI.updateColors("custom");
-    });
-    this.selectionColorInput.addEventListener("change", (e) => {
-      e.stopPropagation();
-      config.selectionColor = this.selectionColorInput.value;
-      UI.updateColors("custom");
-    });
-
-    this.colorPresetSelector.addEventListener("change", (e) => {
-      const preset = this.colorPresetSelector.value;
-      document
-        .querySelector(".colors-block")
-        .classList.toggle("hidden", preset !== "custom");
-      UI.updateColors(preset);
-    });
-
-    this.fontSelector.addEventListener("change", e => {
-      const font = this.fontSelector.value;
-      this.fontColorInput.value = "this.FONT_NAME";
-      this.FONT_FAMILY = this.fonts[font];
-      config._cfg.fontSelectorName = font;
-      config.writeConfiguration();
-      this.fontUrlInput.value = this.FONT_NAME;
-    })
-    this.fontSizeInput.addEventListener("change", e => {
-      this.FONT_SIZE = this.fontSizeInput.value;
-    })
-    this.targetUserInput.addEventListener("change", (e) => {
-      e.stopPropagation();
-      config.targetUser = this.targetUserInput.value;
-    });
-
-    //Додаємо обробник події 'click' для кнопки отримання id останньої гри
-    this.getGameIdButton.addEventListener("click", () => {
-      apiWorker.getProfileInfo({}).then((resp) => {
-        this.gameID.value = resp.LastGameID;
-        config.gameID = resp.LastGameID;
-      });
-    });
-
-    //Додаємо обробник події 'click' для кнопки отримання списку ачівментсів для вибраного id гри
-    this.checkIdButton.addEventListener("click", () => {
+  getLastGameID() {
+    apiWorker.getProfileInfo({}).then((resp) => {
+      document.getElementById("settings_game-id-input").value = resp.LastGameID;
+      config.gameID = resp.LastGameID;
       getAchievements();
     });
-
-    this.startOnLoadCheckbox.addEventListener("change", (e) => {
-      e.stopPropagation();
-      config.startOnLoad = this.startOnLoadCheckbox.checked;
-    });
-
-    // Додавання подій для пересування вікна налаштувань
-    this.header.addEventListener("mousedown", (e) => {
-      UI.moveEvent(this.section, e);
-    });
   }
+  selectFont(fontName) {
+    const font = fontName;
+    // this.fontColorInput.value = "this.FONT_NAME";
+    this.FONT_FAMILY = this.fonts[font];
+    config._cfg.fontSelectorName = font;
+    config.writeConfiguration();
+    this.fontUrlInput.value = this.FONT_NAME;
+  }
+
   close() {
     ui.buttons.settings.click();
+  }
+  openSettings() {
+    const section = this.generateSettingsContainer()
+
+    config.ui.settings_section && (
+      config.ui.settings_section.x && (section.style.left = config.ui.settings_section.x),
+      config.ui.settings_section.y && (section.style.top = config.ui.settings_section.y)
+    )
+
+    section.querySelector(".header-container").addEventListener("mousedown", (e) => {
+      UI.moveEvent(section, e);
+    });
+
+    section.addEventListener("click", (e) => {
+      section.querySelectorAll(".extended").forEach(el => el.classList.remove("extended"));
+    });
+
+    ui.wrapper.appendChild(section);
+  }
+  generateSettingsContainer() {
+    const settingsElement = document.createElement('section');
+    settingsElement.classList.add("prefs_section", "section");
+    settingsElement.id = "settings_section";
+    settingsElement.innerHTML = `
+      <div class="header-container prefs-header-container">
+        <div class="header-icon settings-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" fill="white" viewBox="0 -960 960 960" width="24">
+            <path d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm70-80h79l14-106q31-8 57.5-23.5T639-327l99 41 39-68-86-65q5-14 7-29.5t2-31.5q0-16-2-31.5t-7-29.5l86-65-39-68-99 42q-22-23-48.5-38.5T533-694l-13-106h-79l-14 106q-31 8-57.5 23.5T321-633l-99-41-39 68 86 64q-5 15-7 30t-2 32q0 16 2 31t7 30l-86 65 39 68 99-42q22 23 48.5 38.5T427-266l13 106Zm42-180q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Zm-2-140Z"></path>
+          </svg></div>
+        <h2 class="widget-header-text prefs-header">Settings</h2>
+        <button class="header-button header-icon" onclick="ui.settings.close()">
+          <svg height="24" viewBox="0 -960 960 960" width="24">
+            <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="settings_container"></div>
+    `;
+
+    const settingsContainerElement = document.createElement("ul");
+    settingsContainerElement.classList.add("settings_container");
+    const generateSettingInput = (settingItem) => {
+      switch (settingItem.type) {
+        case "button":
+          return `
+            <button class="button-input" onclick="${settingItem.onClick ?? ""}">${settingItem.label}</button>
+          `;
+        case "checkbox":
+          return `
+            <div class="checkbox-input_container">
+              <input onchange="${settingItem.onChange ?? ""}" type="checkbox" id="${settingItem.id}" ${settingItem.checked && "checked"}>
+              <label class="checkbox-input" for="${settingItem.id}">${settingItem.label}</label>
+            </div>
+          `;
+        case "select":
+          return `
+            <button class="select-button" id="${settingItem.id}" onclick="this.classList.toggle('extended'); event.stopPropagation();">
+              <div class="select-label"> ${settingItem.label}</div>
+              <div class="select-menu">
+             ${UI.generateContextMenu({ menuItems: settingItem.selectValues }).innerHTML}
+           
+              </div>
+            </button>
+          `;
+        case "number":
+          return `
+              <input type="number" class="text-input" id="${settingItem.id}" value="${settingItem.value}"
+               placeholder="${settingItem.label}" onchange="${settingItem.onChange}"/>
+            `;
+        case "search":
+          return `
+              <input type="search" class="text-input" id="${settingItem.id}" value="${settingItem.value}"
+               placeholder="${settingItem.label}" onchange="${settingItem.onChange}"/>
+            `;
+        case "color":
+          return `
+          <input type="color" class="color-input" onchange="${settingItem.onChange}" value="${settingItem.value}" id="${settingItem.id}" title="${settingItem.label}" />
+          `;
+        default:
+          return "default";
+      }
+    }
+    this.settingsItems.forEach(setting => {
+      const settingItemsLine = document.createElement("li");
+      settingItemsLine.classList.add("settings_setting-line");
+      settingItemsLine.innerHTML = `
+        <h3 class="settings_setting-header">${setting.label}</h3>
+      `
+      setting.elements.forEach(settingItem => {
+        settingItemsLine.innerHTML += (generateSettingInput(settingItem));
+      })
+      settingsContainerElement.appendChild(settingItemsLine);
+
+    })
+    settingsElement.appendChild(settingsContainerElement);
+    return settingsElement;
   }
 }
 
@@ -3397,21 +3702,7 @@ class Target {
 
     return targetAchievements.includes(ID);
   }
-  addAchieveToTarget({
-    Title,
-    prevSrc,
-    Description,
-    Points,
-    TrueRatio,
-    isEarned,
-    isHardcoreEarned,
-    ID,
-    type,
-    NumAwardedHardcore,
-    totalPlayers,
-    DateEarnedHardcore,
-    DisplayOrder,
-  }) {
+  addAchieveToTarget(ID) {
     // Перевіряємо чи ачівки нема в секції тарґет
     if (
       this.isAchievementInTargetSection({
@@ -3421,7 +3712,20 @@ class Target {
     ) {
       return;
     }
-
+    const {
+      Title,
+      prevSrc,
+      Description,
+      Points,
+      TrueRatio,
+      isEarned,
+      isHardcoreEarned,
+      type,
+      NumAwardedHardcore,
+      totalPlayers,
+      DateEarnedHardcore,
+      DisplayOrder,
+    } = ui.ACHIEVEMENTS[ID];
     let targetElement = document.createElement("li");
     targetElement.classList.add("target-achiv");
     // targetElement.setAttribute("draggable", "true");
@@ -3533,8 +3837,9 @@ class Target {
   }
   fillItems() {
     this.isDynamicAdding = true;
-    Object.values(ui.ACHIEVEMENTS).forEach(achievement => {
-      this.addAchieveToTarget(achievement)
+    this.clearAllAchivements();
+    Object.keys(ui.ACHIEVEMENTS).forEach(id => {
+      this.addAchieveToTarget(id)
     });
 
     this.applyFilter();
@@ -3637,6 +3942,7 @@ class LoginCard {
     ui.buttons.login.click();
   }
 }
+
 class Games {
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
@@ -4194,6 +4500,7 @@ class Games {
     this.searchInputHandler();
   }
 }
+
 class Progression {
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
@@ -4610,6 +4917,7 @@ class UserInfo {
     ui.buttons.user.click();
   }
 }
+
 class Notification {
   get contextMenuItems() {
     return [

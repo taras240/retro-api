@@ -2,7 +2,6 @@
 .prefs_section {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   width: auto;
   top: 31%;
   left: 1%;
@@ -29,7 +28,23 @@
 }
 
 /**-----------[ Elements ]-----------*/
+/**! NEW ELEMENTS **/
+.settings_setting-line {
+  display: flex;
+  column-gap: 10px;
+  align-items: center;
+  padding: 10px;
+}
 
+.settings_setting-header {
+  flex: 1;
+  display: block;
+  line-height: 100%;
+  font-size: 1.1rem;
+  user-select: none;
+}
+
+/**! NEW ELEMENTS **/
 .setting-label {
   flex: 1;
   display: block;

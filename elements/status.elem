@@ -1,30 +1,44 @@
 <section id="update-section" class="update_section  section">
 
   <div class="update_container " id="update-text-block">
-    <div class="status_glass-effect"></div>
+    <div class="update_user-status card-3d">
+      <div class="status_glass-effect"></div>
 
-    <div class="progress-bar" id="status-progress-bar"></div>
-    <div class="progress-bar_delta-values hidden" id="status_progress-bar-delta"></div>
+      <div class="progress-bar" id="status-progress-bar"></div>
+      <div class="progress-bar_delta-values hidden" id="status_progress-bar-delta"></div>
 
-    <img class="update-game-preview" id="game-preview" src="./assets/img/icon.png" alt=" " />
-    </button>
-    <div class="update-text-block">
-      <div class="update-game_header">
-        <a id="game-title" target="_blank" class=" update-section-text" href="">Game tittle</a>
+      <img class="update-game-preview" id="game-preview" src="./assets/img/icon.png" alt=" " />
+      </button>
+      <div class="update-text-block">
+        <div class="update-game_header">
+          <a id="game-title" target="_blank" class=" update-section-text" href="">Game tittle</a>
+        </div>
+        <p id="game-platform" class="update-game-platform update-section-text">Console</p>
+
+        <div id="rich-presence" class="update-section-text rich-presence_text">Waiting...</div>
+
       </div>
-      <p id="game-platform" class="update-game-platform update-section-text">Console</p>
-
-      <div id="rich-presence" class="update-section-text rich-presence_text">Waiting...</div>
-
+      <div class="update-button_container">
+        <div class="progress-percent progress_points-percent" id="status-progress-text">0%</div>
+        <button id="watching-button" class="update-button checked" title="autoupdate achievements"></button>
+      </div>
     </div>
-    <div class="update-button_container">
-      <div class="progress-percent progress_points-percent" id="status-progress-text">0%</div>
-
-      <button id="watching-button" class="update-button checked" title="autoupdate achievements"></button>
+    <div class="update_back-side card-3d">
+      <img class="update-game-preview" id="update_achiv-preview"
+        src="https://media.retroachievements.org/Badge/276671.png" alt=" " />
+      <div class="update-text-block">
+        <div class="update_achiv-header"> Earned:
+          <a id="update_achiv-title" target="_blank" class=" update-section-text" href="">Achiv tittle</a>
+        </div>
+        <p id="update_achiv-earned-points" class="update-section-text update_achiv-points">
+          +5HP +10RP TOP15%
+        </p>
+      </div>
 
 
     </div>
 
   </div>
+
   <div class="resizer" id="status-resizer"></div>
 </section>

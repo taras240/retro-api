@@ -49,7 +49,8 @@
       <!-- <button class="settings-input" onclick="ui.resetColors()">reset</button> -->
     </div>
     <div class="achivs-style input-container">
-      <label class="setting-label"><a href='https://fonts.google.com/' title='go to google fonts' target='_blanc'>Font
+      <label class="setting-label">
+        <a href='https://fonts.google.com/' title='go to google fonts' target='_blanc'>Font
           family:</a></label>
 
       <select class="setting-select settings-input settings-select" name="color-preset" id="font-preset-selection">

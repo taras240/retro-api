@@ -67,7 +67,7 @@
   top: 0;
   aspect-ratio: 1;
   cursor: default;
-  box-shadow: 0 0 0;
+  box-shadow: 0 0 0 black;
   opacity: 1;
   transition: opacity 0.1s;
 }
@@ -199,14 +199,15 @@
 
 .achiv-block:not(.hidden):hover {
   --shadow-color: black;
-  transform: scale(1);
+  transform: scale(1.1);
+  box-shadow: 0 0 10px 5px black;
   z-index: 2;
   transition: 0.2s;
-  left: 5px;
+  /* left: 5px;
   top: -5px;
   box-shadow: -1px 1px 0 var(--shadow-color), -2px 2px 0 var(--shadow-color),
     -3px 3px 0 var(--shadow-color), -4px 4px 0 var(--shadow-color),
-    -5px 5px 0 var(--shadow-color), -6px 6px 0 var(--shadow-color);
+    -5px 5px 0 var(--shadow-color), -6px 6px 0 var(--shadow-color); */
 }
 
 /** ----[ TOOLTIP ]--------- */

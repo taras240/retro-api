@@ -336,7 +336,7 @@ class APIWorker {
 
 
   fixAchievement(achievement, achievements) {
-    const { BadgeName, DateEarned, DateEarnedHardcore } = achievement;
+    const { BadgeName, DateEarned, DateEarnedHardcore, NumAwardedHardcore, NumAwarded } = achievement;
 
     //Додаєм кількість гравців
     achievement.totalPlayers = achievements.NumDistinctPlayers;
@@ -348,6 +348,8 @@ class APIWorker {
     // Додаєм адресу зображення для досягнення
     achievement.prevSrc = `https://media.retroachievements.org/Badge/${BadgeName}.png`;
 
+    achievement.rateEarned = ~~(100 * NumAwarded / achievements.NumDistinctPlayers) + "%";
+    achievement.rateEarnedHardcore = ~~(100 * NumAwardedHardcore / achievements.NumDistinctPlayers) + "%";
     //Повертаємо виправлений об'єкт
     return achievement;
   }
