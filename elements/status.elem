@@ -25,9 +25,10 @@
 
     </div>
     <div class="update_back-side card-3d">
-
-      <img class="update-game-preview" id="update_achiv-preview"
-        src="https://media.retroachievements.org/Badge/276671.png" alt=" " />
+      <div class="update_preview-container">
+        <img class="update-game-preview" id="update_achiv-preview"
+          src="https://media.retroachievements.org/Badge/276671.png" alt=" " />
+      </div>
       <div class="update-text-block">
         <div class="update_achiv-header">
           <a id="update_achiv-title" target="_blank" class=" update-section-text" href="">Achiv tittle</a>

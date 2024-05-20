@@ -59,9 +59,9 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 20px;
   justify-content: space-between;
-  padding: 0 10px;
+  padding: 5px 20px;
   transform: rotateX(180deg);
   background-color: var(--secondary-color);
   border-radius: inherit;
@@ -137,6 +137,10 @@
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
+}
+
+.update_back-side .update_preview-container::after {
+  background-image: url(../assets/img/game-border-7.webp);
 }
 
 .update-section-text {
