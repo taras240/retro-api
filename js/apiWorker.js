@@ -263,7 +263,20 @@ class APIWorker {
       achievesCount: achievesCount,
       endpoint: this.endpoints.userSummary,
     });
-    return fetch(url).then(resp => resp.json())
+    return fetch(url)
+      .then(resp => resp.json())
+      .then(summary => {
+        summary.RecentlyPlayed = summary.RecentlyPlayed.map(game => {
+          game.LastPlayed = this.toLocalTimeString(game.LastPlayed);
+          return game;
+        });
+        summary.RecentAchievements = Object.values(summary.RecentAchievements)
+          .flatMap(RecentAchievements => Object.values(RecentAchievements)).map(achiv => {
+            achiv.DateAwarded = this.toLocalTimeString(achiv.DateAwarded);
+            return achiv;
+          })
+        return summary;
+      })
   }
   verifyUserIdent({ userName, apiKey }) {
     let url = this.getUrl({
@@ -345,6 +358,9 @@ class APIWorker {
     achievement.isEarned = !!DateEarned;
     achievement.isHardcoreEarned = !!DateEarnedHardcore;
 
+    achievement.isEarned && (achievement.DateEarned = this.toLocalTimeString(DateEarned));
+    achievement.isEarned && (achievement.DateEarnedHardcore = this.toLocalTimeString(DateEarnedHardcore));
+
     // Додаєм адресу зображення для досягнення
     achievement.prevSrc = `https://media.retroachievements.org/Badge/${BadgeName}.png`;
 
@@ -352,5 +368,10 @@ class APIWorker {
     achievement.rateEarnedHardcore = ~~(100 * NumAwardedHardcore / achievements.NumDistinctPlayers) + "%";
     //Повертаємо виправлений об'єкт
     return achievement;
+  }
+  toLocalTimeString(UTCTime) {
+    UTCTime += "+00:00"; // Mark time as UTC Time 
+    const date = new Date(UTCTime);
+    return date.toString();
   }
 }

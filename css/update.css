@@ -124,6 +124,21 @@
   filter: contrast(1);
 }
 
+/* .update_preview-container::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 100%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  background-image: url(../assets/img/glass.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: 2;
+} */
+
 .update_preview-container::after {
   content: "";
   position: absolute;

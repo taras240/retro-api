@@ -4827,8 +4827,7 @@ class UserInfo {
       this.USER_INFO.retropoints = TotalTruePoints;
       this.USER_INFO.hardpoints = TotalPoints;
       this.USER_INFO.lastGames = RecentlyPlayed;
-      this.USER_INFO.lastAchivs = Object.values(RecentAchievements)
-        .flatMap(RecentAchievements => Object.values(RecentAchievements))
+      this.USER_INFO.lastAchivs = RecentAchievements
         .sort((a, b) => new Date(b.DateAwarded) - new Date(a.DateAwarded));
       ui.notifications.parseUserSummary(this.USER_INFO)
 

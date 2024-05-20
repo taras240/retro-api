@@ -1,5 +1,5 @@
 .section.user_section {
-    min-width: fit-content;
+    min-width: min-content;
     min-height: 320px;
     height: 700px;
     top: 150px;
@@ -190,6 +190,8 @@
 
 .user_game-title {
     font-size: 1.0rem;
+
+    overflow: hidden;
 }
 
 .user_game-description {
