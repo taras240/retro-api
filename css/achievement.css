@@ -93,7 +93,7 @@
 }
 
 .achiv-block.earned .achiv-preview {
-  filter: grayscale(0.8);
+  filter: grayscale(0);
 }
 
 .achiv-block.hardcore .achiv-preview {
@@ -117,35 +117,25 @@
   position: absolute;
   left: 0;
   top: 0;
-  width: calc(100%);
   aspect-ratio: 1/1;
-  background-image: url(../assets/img/glass-bg_hard.png);
-  filter: drop-shadow(0px 0px 3px black);
+  height: 100%;
+  filter: drop-shadow(2px -2px 10px rgba(220, 20, 60, 0.418));
   image-rendering: pixelated;
   background-size: contain;
   background-repeat: no-repeat;
   opacity: 0;
   pointer-events: none;
+  background-image: url(../assets/img/hard-angle.png);
   animation: hardcore-earned-animation 0.6s linear forwards;
   /* animation-delay: 0.6s; */
 }
 
 @keyframes hardcore-earned-animation {
   0% {
-    transform: scale(1.1);
     opacity: 0;
   }
 
-  30% {
-    opacity: 0.9;
-  }
-
-  50% {
-    transform: scale(0.9);
-  }
-
   100% {
-    transform: scale(1);
     opacity: 1;
   }
 }
@@ -158,6 +148,30 @@
   image-rendering: pixelated;
   border-radius: 2px;
   overflow: hidden;
+}
+
+.achiv-block .preview-container::before {
+  position: absolute;
+  content: "";
+  aspect-ratio: 1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-position: center;
+  background-size: contain;
+  image-rendering: pixelated;
+}
+
+.achiv-block .preview-container::before {
+  width: 100%;
+  background-image: url(../assets/img/question.webp);
+  z-index: 1;
+  opacity: 1;
+  transition: .2s;
+}
+
+.achiv-block.earned .preview-container::before {
+  opacity: 0;
 }
 
 .achiv-block .add-to-target {

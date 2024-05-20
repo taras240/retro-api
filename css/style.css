@@ -150,7 +150,7 @@ a:hover {
   opacity: 1;
   /* background-color: var(--main-color); */
   background: var(--background-gradient);
-
+  z-index: 1;
   box-shadow: 0 0 5px 2px black;
   transition: 0.2s ease-out;
 }
@@ -561,6 +561,7 @@ input:checked+.checkbox-input::before {
 .side-panel_link:hover {
   background-color: transparent;
   text-decoration: none;
+
 }
 
 .side-panel_input,
