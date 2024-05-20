@@ -558,6 +558,11 @@ input:checked+.checkbox-input::before {
   width: 100%;
 }
 
+.side-panel_link:hover {
+  background-color: transparent;
+  text-decoration: none;
+}
+
 .side-panel_input,
 .side-panel_login {
   position: relative;

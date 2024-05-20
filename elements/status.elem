@@ -6,8 +6,10 @@
 
       <div class="progress-bar" id="status-progress-bar"></div>
       <div class="progress-bar_delta-values hidden" id="status_progress-bar-delta"></div>
-
-      <img class="update-game-preview" id="game-preview" src="./assets/img/icon.png" alt=" " />
+      <div class="update_preview-container">
+        <img class="update-game-preview" id="game-preview" src="./assets/img/icon.png" alt=" " />
+        <button id="watching-button" class="update-button checked" title="autoupdate achievements"></button>
+      </div>
       </button>
       <div class="update-text-block">
         <div class="update-game_header">
@@ -18,12 +20,12 @@
         <div id="rich-presence" class="update-section-text rich-presence_text">Waiting...</div>
 
       </div>
-      <div class="update-button_container">
-        <div class="progress-percent progress_points-percent" id="status-progress-text">0%</div>
-        <button id="watching-button" class="update-button checked" title="autoupdate achievements"></button>
-      </div>
+
+      <div class="progress-percent progress_points-percent" id="status-progress-text">0%</div>
+
     </div>
     <div class="update_back-side card-3d">
+
       <img class="update-game-preview" id="update_achiv-preview"
         src="https://media.retroachievements.org/Badge/276671.png" alt=" " />
       <div class="update-text-block">

@@ -44,10 +44,10 @@ class UI {
         if (config.identConfirmed) {
           if (config.version != this.VERSION) {
             setTimeout(() => {
-              UI.switchSectionVisibility({
-                section: document
-                  .querySelector("#help_section")
-              })
+              // UI.switchSectionVisibility({
+              //   section: document
+              //     .querySelector("#help_section")
+              // })
               config.version = this.VERSION;
             }, 1500);
           }
@@ -85,9 +85,9 @@ class UI {
 
   initializeElements() {
     this.wrapper = document.querySelector(".wrapper");
-    this.about = {
-      section: document.querySelector("#help_section"),
-    };
+    // this.about = {
+    //   section: document.querySelector("#help_section"),
+    // };
     this.loginCard = new LoginCard();
     this.target = new Target();
     this.achievementsBlock = [new AchievementsBlock()];
@@ -1381,7 +1381,7 @@ class ButtonPanel {
     this.settings = this.section.querySelector("#open-settings-button");
     this.achievements = this.section.querySelector("#open-achivs-button");
     this.login = this.section.querySelector("#open-login-button");
-    this.about = this.section.querySelector("#open-about-button");
+    // this.about = this.section.querySelector("#open-about-button");
     this.gameCard = this.section.querySelector("#open-game-card-button");
     this.target = this.section.querySelector("#open-target-button");
     this.status = this.section.querySelector("#open-status-button");
@@ -1431,9 +1431,9 @@ class ButtonPanel {
     this.games.addEventListener("change", (e) => {
       UI.switchSectionVisibility(ui.games);
     });
-    this.about.addEventListener("change", (e) => {
-      UI.switchSectionVisibility(ui.about);
-    });
+    // this.about.addEventListener("change", (e) => {
+    //   UI.switchSectionVisibility(ui.about);
+    // });
     this.progression.addEventListener("change", (e) => {
 
       UI.switchSectionVisibility(ui.progression);

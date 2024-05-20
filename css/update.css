@@ -107,9 +107,14 @@
 }
 
 /**---------------- BACK SIDE ------------- */
+.update_preview-container {
+  position: relative;
+  max-height: 75%;
+  height: 100%;
+}
+
 .update-game-preview {
   height: 100%;
-  max-height: 75%;
   aspect-ratio: 1;
   object-fit: fill;
   border-radius: 10px;
@@ -119,25 +124,34 @@
   filter: contrast(1);
 }
 
+.update_preview-container::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 140%;
+  transform: translate(-50%, -50%);
+  aspect-ratio: 1;
+  z-index: 3;
+  background-image: url(../assets/img/game-border-5.webp);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 .update-section-text {
   text-align: left;
   text-wrap: nowrap;
   overflow: hidden;
 }
 
-.update-button_container {
-  display: flex;
-  align-items: center;
-  height: 50%;
-  gap: 20px;
+
+
+.progress-percent {
   position: absolute;
   right: 20px;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 2;
-}
-
-.progress-percent {
   --animation-duration: 0.2s;
   /* transform: translateY(50%); */
   font-size: 2.5rem;
@@ -147,6 +161,7 @@
   color: var(--font-color);
   opacity: 0.2;
   animation: show-stats-animation var(--animation-duration) ease-in-out forwards;
+  z-index: 2;
 }
 
 .progress-percent.hidden {
@@ -180,8 +195,11 @@
 
 
 .update-button {
-  position: relative;
-  height: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 60%;
   aspect-ratio: 1;
   border-radius: 50%;
   overflow: hidden;
@@ -189,20 +207,25 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
   box-shadow: 0 0 10px 2px var(--secondary-color);
+  z-index: 10;
+  opacity: 0;
   transition: 0.2s;
+}
+
+.section:hover .update-button {
+  opacity: 1;
 }
 
 .update-button:hover {
   box-shadow: 0 0 10px 4px var(--secondary-color);
-  transform: scale(1.1);
+  transform: translate(-50%, -50%) scale(1.1);
 }
 
 .update-button:active {
-  transform: scale(1.05);
+  background-color: var(--accent-color);
+  box-shadow: 0 0 10px 4px var(--accent-color);
+  transform: translate(-50%, -50%) scale(1.05);
 }
 
 .update-button::after {
@@ -247,10 +270,6 @@
   }
 }
 
-.update-button:active {
-  box-shadow: 0 0 0;
-  background-color: var(--selection-color);
-}
 
 .update-button svg {
   fill: var(--font-color);

@@ -3,7 +3,7 @@ const templateFilePath = "./elements/tempIndex.elen";
 const indexFilePath = "./index.html";
 const sections = {
   gameCard: "./elements/gameCard.elem",
-  about: "./elements/about.elem",
+  // about: "./elements/about.elem",
   target: "./elements/target.elem",
   progression: "./elements/progression.elem",
   login: "./elements/login.elem",
