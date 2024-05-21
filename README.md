@@ -3,7 +3,8 @@
 
 *This web application is designed to track achievements obtained in retro games using the open API from retroachievements.org.*
 
-![image](https://github.com/taras240/retro-api/assets/41308277/3c609584-23bf-4a87-8dfc-468b42b47182)
+![image](https://github.com/taras240/retro-api/assets/41308277/028a6538-96c0-429f-ade4-a7cda9544472)
+
 
 
 
@@ -42,4 +43,4 @@ The application does not require installation; you can simply navigate to the li
 
 ### Feedback
 
-If you have any questions, comments, or suggestions, please contact me *khomyn@outlook.com* or open a new issue in the Issues section on GitHub.
+If you have any questions, comments, or suggestions, please contact me *https://discord.gg/G6aHM5Yy* | *khomyn@outlook.com*  or open a new issue in the Issues section on GitHub.
