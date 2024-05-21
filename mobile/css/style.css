@@ -1,0 +1,73 @@
+@import url(./reset.css);
+@import url(./home.css);
+
+body {
+    --main-color: #1f1f1f;
+    --secondary-color: #303134;
+    --accent-color: #34517d;
+    --font-color: #d6d6d6;
+    --selection-color: #2c303d;
+    --font-family: system-ui;
+}
+
+a,
+p,
+h1,
+h2,
+h3,
+button,
+div,
+li {
+    font-family: var(--font-family);
+    font-size: 1rem;
+    color: var(--font-color);
+}
+
+.wrapper {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--main-color);
+}
+
+/* *----------NAVBAR--------------- */
+.navbar {
+    width: 100vw;
+    position: sticky;
+    bottom: 0;
+}
+
+.navbar__list {
+    flex: 1;
+    display: flex;
+    justify-content: space-evenly;
+    background-color: var(--secondary-color);
+}
+
+.navbar__item {
+    flex-grow: 1;
+    color: var(--font-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navbar__item {
+    height: 5rem;
+}
+
+.navbar__item svg {
+    height: 2rem;
+    width: 2rem;
+    aspect-ratio: 1;
+    fill: var(--font-color);
+}
+
+/* *----------SECTION--------------- */
+.section-container {
+    width: 100%;
+    flex: 1;
+    border: 1px solid red;
+    overflow-y: scroll;
+}
