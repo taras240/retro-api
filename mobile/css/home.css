@@ -1,35 +1,269 @@
 .user-info__container {
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-self: flex-start;
+    gap: 2rem;
+    padding-bottom: 6rem;
 }
 
 .user-info__header {
     display: flex;
-    column-gap: 20px;
+    gap: 20px;
 }
 
 .user-info__avatar-container {
-    height: 5rem;
+    height: 7rem;
     aspect-ratio: 1;
 }
 
 .user-info__avatar {
     height: 100%;
     aspect-ratio: 1;
-    border-radius: 20%;
-    border: 3px solid var(--accent-color);
+    border-radius: 15%;
+    border: 1px solid var(--secondary-color);
+}
+
+.user-info__user-name-container {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: space-between;
+    overflow: hidden;
 }
 
 .user-info__user-name {
     font-size: 1.5rem;
     font-weight: 600;
     text-transform: uppercase;
-    margin-bottom: 10px;
 }
 
 .user-info__user-rank {
-    font-size: 1.0rem;
+    justify-self: flex-start;
+    font-size: 1.2rem;
     font-weight: 600;
     background-color: var(--accent-color);
-    padding: 2px 10px;
+    padding: 5px 10px;
     border-radius: .5rem;
+}
+
+.user-info__rich-presence {
+    max-width: 100%;
+    overflow-x: scroll;
+    text-wrap: nowrap;
+    font-size: 1.1rem;
+}
+
+.user-info__points-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+
+.user-info__points-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.user-info__points-name {
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.user-info__points {
+    display: inline-block;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.vertical-line {
+    align-self: center;
+    width: 1px;
+    height: 3rem;
+    /* height: 100%; */
+    background-color: var(--font-color);
+    opacity: 0.2;
+}
+
+.user-info__block-header {
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.user-info__last-games-list {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.user-info__last-game-container {
+    width: 100%;
+    background-color: var(--secondary-color);
+    border-radius: 1rem;
+    box-shadow: 0 1px 6px 1px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
+.user-info__game-main-info {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: .8rem;
+    height: 6rem;
+}
+
+.user-info__game-preview-container {
+    height: 100%;
+}
+
+.user-info__game-preview {
+    height: 100%;
+    aspect-ratio: 1;
+    border-radius: 15%;
+}
+
+.user-info__game-description {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: start;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+.user-info__game-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    max-width: 100%;
+    overflow-x: scroll;
+    text-wrap: nowrap;
+}
+
+.user-info_game-stats-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.game-stats {
+    position: relative;
+    display: flex;
+    gap: .1rem;
+    align-items: center;
+}
+
+.game-stats__text {
+    font-size: 1.3rem;
+}
+
+.game-stats__icon {
+    display: inline-block;
+    height: 1.4rem;
+    aspect-ratio: 1;
+    background-color: var(--font-color);
+    mask-size: contain;
+    mask-repeat: no-repeat;
+}
+
+.game-stats__achivs-icon {
+
+    mask-image: url(../../assets/img/star.svg);
+
+}
+
+.game-stats__points-icon {
+    mask-image: url(../../assets/img/points.svg);
+}
+
+.game-stats__points-icon {
+    mask-image: url(../../assets/img/points.svg);
+}
+
+.game-stats__button {
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    text-align: right;
+    flex: 1;
+    justify-content: end;
+}
+
+.game-stats__expand-icon {
+    padding-right: 2rem;
+    mask-image: url(../../assets/img/expand_more.svg);
+
+}
+
+.user-info__game-achivs-container {
+    max-height: 0;
+    transition: max-height 0.5s ease-in-out;
+}
+
+.expanded .user-info__game-achivs-container {
+    max-height: 50vh;
+    overflow-y: auto;
+}
+
+.user-info__game-achivs-list {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: end;
+    gap: 0.5rem;
+    overflow-y: hidden;
+    height: 100%;
+    width: 100%;
+    padding: 1rem 1rem 1rem 2rem;
+}
+
+
+
+.user-info__achiv-container {
+    display: flex;
+    justify-content: start;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: var(--main-color);
+    border-radius: 1rem;
+    width: 100%;
+    height: 6rem;
+    overflow: hidden;
+}
+
+.user-info__achiv-description {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    height: 100%;
+    overflow-x: scroll;
+}
+
+.user-info__achiv-preview-container {
+    height: 100%;
+}
+
+.user-info__achiv-preview {
+    height: 100%;
+    aspect-ratio: 1;
+    border-radius: 15%;
+    filter: grayscale(1);
+}
+
+.user-info__achiv-preview.earned {
+    filter: grayscale(0.2);
 }

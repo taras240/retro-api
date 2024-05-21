@@ -1,0 +1,64 @@
+<section class="home__section" id="home_section">
+    <div class="user-info__container">
+        <div class="user-info__header">
+            <div class="user-info__avatar-container">
+                <img src="https://media.retroachievements.org/UserPic/taras240.png" alt="" class="user-info__avatar">
+            </div>
+            <div class="user-info__user-name-container">
+                <h1 class="user-info__user-name">taras240</h1>
+                <div class="user-info__user-rank">RANK: 12450</div>
+                <div class="user-info__rich-presence">Member since: 2017-06-09 18:29:51</div>
+            </div>
+
+        </div>
+        <div class="user-info__rich-presence"> dsff fdsa d sdf fd Playing Single Player on Normal
+            Difficulty</div>
+        <div class="user-info__points-container">
+            <div class="user-info__points-group">
+                <h3 class="user-info__points-name">softpoints</h3>
+                <p class="user-info__points">1253</p>
+
+            </div>
+            <div class="vertical-line"></div>
+            <div class="user-info__points-group">
+                <h3 class="user-info__points-name">hardpoints</h3>
+                <p class="user-info__points">4217</p>
+
+            </div>
+            <div class="vertical-line"></div>
+            <div class="user-info__points-group">
+                <h3 class="user-info__points-name">retropoints</h3>
+                <p class="user-info__points">14524</p>
+
+            </div>
+        </div>
+        <h2 class="user-info__block-header">Last played</h2>
+        <ul class="user-info__last-games-list">
+            <li class="user-info__last-game-container">
+                <div class="user-info__game-preview-container">
+                    <img class="user-info__game-preview" src="https://media.retroachievements.org/Images/043551.png"
+                        alt="">
+                </div>
+                <div class="user-info__game-description">
+                    <h2 class="user-info__game-title">Super Bomberman</h2>
+                    <div class="user-info_game-stats-container">
+                        <div class="game-stats ">
+                            <i class="game-stats__icon game-stats__achivs-icon"></i>
+                            <div class="game-stats__text"> 18/35</div>
+                        </div>
+                        <div class="game-stats game-stats__points">
+                            <i class="game-stats__icon game-stats__points-icon"></i>
+                            <div class="game-stats__text"> 121/455</div>
+                        </div>
+                        <button class="game-stats__button">
+                            <i class="game-stats__icon game-stats__expand-icon"></i>
+                        </button>
+                    </div>
+                </div>
+            </li>
+
+        </ul>
+
+    </div>
+
+</section>

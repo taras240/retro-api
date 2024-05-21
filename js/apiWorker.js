@@ -264,10 +264,14 @@ class APIWorker {
       endpoint: this.endpoints.userSummary,
     });
     return fetch(url)
-      .then(resp => resp.json())
+      .then(resp => {
+        let r = resp.json();
+        return r;
+      })
       .then(summary => {
         summary.RecentlyPlayed = summary.RecentlyPlayed.map(game => {
           game.LastPlayed = this.toLocalTimeString(game.LastPlayed);
+          summary.Awarded[game.GameID] && (game = { ...game, ...summary.Awarded[game.GameID] })
           return game;
         });
         summary.RecentAchievements = Object.values(summary.RecentAchievements)
@@ -275,6 +279,7 @@ class APIWorker {
             achiv.DateAwarded = this.toLocalTimeString(achiv.DateAwarded);
             return achiv;
           })
+
         return summary;
       })
   }

@@ -37,8 +37,7 @@ class Config {
   }
   set userImageSrc(value) {
     this._cfg.identification.userImageSrc = value;
-    console.log(value)
-    ui.buttons.userImage.src = value;
+    this.ui.buttons && (ui.buttons.userImage.src = value);
     this.writeConfiguration();
   }
 

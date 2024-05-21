@@ -1,9 +1,20 @@
-const RECENT_ACHIVES_RANGE_MINUTES = 5; // for auto update
-let config = new Config();
-// Ініціалізація UI
-let ui = new UI();
-// Ініціалізація APIWorker 
-let apiWorker = new APIWorker();
+let config, ui, apiWorker;
+const RECENT_ACHIVES_RANGE_MINUTES = 5;
+const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+if (/android/i.test(userAgent) || (/iPhone/.test(userAgent) && !window.MSStream)) {
+  window.location.href = "/mobile";
+}
+
+else {
+  config = new Config();
+  // Ініціалізація UI
+  ui = new UI();
+  // Ініціалізація APIWorker 
+  apiWorker = new APIWorker();
+}
+
+
 //Інтервал автооновлення ачівментсів
 let apiTrackerInterval;
 

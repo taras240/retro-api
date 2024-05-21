@@ -1,4 +1,5 @@
 @import url(./reset.css);
+@import url(./login.css);
 @import url(./home.css);
 
 body {
@@ -8,6 +9,7 @@ body {
     --font-color: #d6d6d6;
     --selection-color: #2c303d;
     --font-family: system-ui;
+    background-color: var(--main-color);
 }
 
 a,
@@ -21,21 +23,28 @@ li {
     font-family: var(--font-family);
     font-size: 1rem;
     color: var(--font-color);
+    user-select: none;
 }
 
 .wrapper {
     width: 100vw;
-    height: 100vh;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    background-color: var(--main-color);
+    /* background-color: black; */
 }
 
 /* *----------NAVBAR--------------- */
 .navbar {
     width: 100vw;
-    position: sticky;
+    position: fixed;
     bottom: 0;
+    overflow: hidden;
+    padding: 0 1rem 0.5rem;
+}
+
+.navbar.hidden {
+    display: none;
 }
 
 .navbar__list {
@@ -43,6 +52,8 @@ li {
     display: flex;
     justify-content: space-evenly;
     background-color: var(--secondary-color);
+    border-radius: 1rem;
+
 }
 
 .navbar__item {
@@ -64,10 +75,19 @@ li {
     fill: var(--font-color);
 }
 
+.disabled {
+    opacity: 0.3;
+    pointer-events: none;
+}
+
 /* *----------SECTION--------------- */
 .section-container {
     width: 100%;
     flex: 1;
-    border: 1px solid red;
+    /* border: 1px solid red; */
     overflow-y: scroll;
+}
+
+.section {
+    height: 100%;
 }
