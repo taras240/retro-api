@@ -368,8 +368,8 @@ class Awards {
           label: "All",
           id: "filter_all",
           type: "radio",
-          onChange: "ui.awards.awardFilter = 'all'",
-          checked: this.awardFilterName === 'all',
+          onChange: "ui.awards.awardFilter = 'award'",
+          checked: this.awardFilterName === 'award',
           name: "filter-by-award"
         },
         {
@@ -409,25 +409,24 @@ class Awards {
 
   }
   get awardFilter() {
-    const type = config.ui?.mobile?.awardsTypeFilter ?? "all";
+    const type = config.ui?.mobile?.awardsTypeFilter ?? "award";
     return this.awardTypes[type]
   }
   get awardFilterName() {
-    const type = config.ui?.mobile?.awardsTypeFilter ?? "all";
+    const type = config.ui?.mobile?.awardsTypeFilter ?? "award";
     return type;
   }
   set awardFilter(value) {
-    !config.ui.mobile && (
-      config.ui.mobile = {},
-      config.writeConfiguration()
-    )
+    !config.ui.mobile && (config.ui.mobile = {});
+
     config.ui.mobile.awardsTypeFilter = value;
+    config.writeConfiguration()
     this.applyFilter();
     ui.content.innerHTML = '';
     ui.content.append(this.AwardsSection());
   }
   applyFilter() {
-    this.awardedGames = this.awardFilter == "all" ?
+    this.awardedGames = this.awardFilterName == "award" ?
       this.awardsObj.VisibleUserAwards :
       this.awardsObj.VisibleUserAwards.filter(game => game.award == this.awardFilter);
 
@@ -437,7 +436,7 @@ class Awards {
     beaten_softcore: "beaten softcore",
     completed: "completed",
     mastered: "mastered",
-    all: "all",
+    award: "award type",
   }
   awardsObj;
   awardedGames = [];
