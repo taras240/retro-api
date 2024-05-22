@@ -83,6 +83,10 @@ class UI {
     window.addEventListener('DOMContentLoaded', () => {
       window.dispatchEvent(new Event('hashchange'));
     });
+    app.addEventListener("touchend", () => {
+      this.removeContext();
+      this.removePopups();
+    })
   }
   clearNavbar() {
     this.navbar.container.querySelectorAll(".checked").forEach(el => el.classList.remove("checked"));
@@ -95,9 +99,13 @@ class UI {
   removePopups() {
     document.querySelectorAll(".popup").forEach(el => el.remove());
   }
+  removeContext() {
+    document.querySelectorAll(".context").forEach(el => el.remove());
+  }
   showGameDetails(gameID) {
     ui.removePopups();
     const gameElement = document.createElement("div");
+    gameElement.addEventListener("touchend", e => e.stopPropagation());
     gameElement.classList.add("popup-info__container", "popup");
     ui.content.append(gameElement);
     GAMES_DATA[gameID] ?
@@ -150,6 +158,8 @@ class UI {
   showAchivDetails(achivID, gameID) {
     ui.removePopups();
     const achivElement = document.createElement("div");
+    achivElement.addEventListener("touchend", e => e.stopPropagation());
+
     achivElement.classList.add("popup-info__container", "popup");
     const achiv = GAMES_DATA[gameID].Achievements[achivID];
     const achivHtml = this.achivPopupHtml(achiv)
@@ -350,19 +360,103 @@ class Home {
   }
 }
 class Awards {
+  awardTypeContext = () => {
+    return {
+      label: "Filter by",
+      elements: [
+        {
+          label: "All",
+          id: "filter_all",
+          type: "radio",
+          onChange: "ui.awards.awardFilter = 'all'",
+          checked: this.awardFilterName === 'all',
+          name: "filter-by-award"
+        },
+        {
+          label: "Mastered",
+          id: "filter_mastered",
+          type: "radio",
+          onChange: "ui.awards.awardFilter = 'mastered'",
+          checked: this.awardFilterName === 'mastered',
+          name: "filter-by-award"
+        },
+        {
+          label: "Completed",
+          id: "filter_completed",
+          type: "radio",
+          onChange: "ui.awards.awardFilter = 'completed'",
+          checked: this.awardFilterName === 'completed',
+          name: "filter-by-award"
+        },
+        {
+          label: "Beeten",
+          id: "filter_beeten",
+          type: "radio",
+          onChange: "ui.awards.awardFilter = 'beaten'",
+          checked: this.awardFilterName === 'beaten',
+          name: "filter-by-award"
+        },
+        {
+          label: "Beeten softcore",
+          id: "filter_beeten-softcore",
+          type: "radio",
+          onChange: "ui.awards.awardFilter = 'beaten_softcore'",
+          checked: this.awardFilterName === 'beaten_softcore',
+          name: "filter-by-award"
+        }
+      ]
+    }
 
+  }
+  get awardFilter() {
+    const type = config.ui?.mobile?.awardsTypeFilter ?? "all";
+    return this.awardTypes[type]
+  }
+  get awardFilterName() {
+    const type = config.ui?.mobile?.awardsTypeFilter ?? "all";
+    return type;
+  }
+  set awardFilter(value) {
+    !config.ui.mobile && (
+      config.ui.mobile = {},
+      config.writeConfiguration()
+    )
+    config.ui.mobile.awardsTypeFilter = value;
+    this.applyFilter();
+    ui.content.innerHTML = '';
+    ui.content.append(this.AwardsSection());
+  }
+  applyFilter() {
+    this.awardedGames = this.awardFilter == "all" ?
+      this.awardsObj.VisibleUserAwards :
+      this.awardsObj.VisibleUserAwards.filter(game => game.award == this.awardFilter);
+
+  }
+  awardTypes = {
+    beaten: "beaten",
+    beaten_softcore: "beaten softcore",
+    completed: "completed",
+    mastered: "mastered",
+    all: "all",
+  }
+  awardsObj;
+  awardedGames = [];
   constructor() {
     this.update();
   }
   update() {
-    apiWorker.getUserAwards({})
-      .then(resp => {
-        this.awardsObj = resp;
-      })
-      .then(() => {
-        ui.content.innerHTML = '';
-        ui.content.append(this.AwardsSection());
-      })
+    this.awardsObj ? (
+      ui.content.innerHTML = '',
+      ui.content.append(this.AwardsSection())) :
+      apiWorker.getUserAwards({})
+        .then(resp => {
+          this.awardsObj = resp;
+          this.applyFilter();
+        })
+        .then(() => {
+          ui.content.innerHTML = '';
+          ui.content.append(this.AwardsSection());
+        })
   }
 
   AwardsSection() {
@@ -371,7 +465,7 @@ class Awards {
     awardsSection.innerHTML = `
             ${this.headerHtml()}
             <ul class="user-info__awards-list">
-                ${this.awardsObj.VisibleUserAwards.reduce((elements, game) => {
+                ${this.awardedGames.reduce((elements, game) => {
       const awardHtml = this.gameHtml(game);
       elements += awardHtml;
       return elements;
@@ -386,7 +480,7 @@ class Awards {
       <div class="section__header-container">
         <div class="section__header-title">Awards</div>
         <div class="section__control-container">
-            <button class="popup-button simple-button">Filter</button>
+            <button class="popup-button simple-button" onclick="generateContextMenu(ui.awards.awardTypeContext())">${this.awardFilter}</button>
             <button class="popup-button simple-button">Sort</button>
         </div>
       </div>
@@ -493,4 +587,35 @@ const Test = () => {
       sectionElement.innerHTML = sectionHTML;
       return sectionElement;
     })
+}
+
+function generateContextMenu(structureObj) {
+
+  ui.removeContext();
+  const contextElement = document.createElement("div");
+  contextElement.classList.add("context-menu__container", "context");
+  contextElement.addEventListener("touchend", e => e.stopPropagation())
+  contextElement.innerHTML += `<div class="context__header">${structureObj.label}</div>`;
+  const generateContextElements = () => {
+    const controlsContainer = document.createElement("div");
+    controlsContainer.classList.add("context__controls");
+    structureObj.elements.forEach(el => {
+      switch (el.type) {
+        case "radio":
+          controlsContainer.innerHTML += `
+            <div class="context__radio">
+              <input type="radio" onchange="${el.onChange}"
+                    name="${el.name}" ${el.checked && "checked"} id="${el.id}">
+              <label class="context__radio-label" for="${el.id}">${el.label}</label>
+            </div>
+          `;
+        default:
+          return "";
+      }
+
+    })
+    return controlsContainer;
+  }
+  contextElement.append(generateContextElements(structureObj));
+  ui.content.appendChild(contextElement);
 }

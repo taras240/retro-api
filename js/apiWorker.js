@@ -122,7 +122,15 @@ class APIWorker {
       targetUser: targetUser || config.targetUser,
       endpoint: this.endpoints.userAwards,
     });
-    return fetch(url).then((resp) => resp.json());
+    return fetch(url).then((resp) => resp.json()).then(awardsObj => {
+      awardsObj.VisibleUserAwards = awardsObj.VisibleUserAwards.map(game => {
+        game.award = game.AwardType == "Game Beaten" ?
+          game.AwardDataExtra == "1" ? "beaten" : "beaten softcore" :
+          game.AwardDataExtra == "1" ? "mastered" : "completed";
+        return game;
+      })
+      return awardsObj;
+    });
   }
   // Отримання прогресу гри користувача
   getGameProgress({ targetUser, gameID }) {

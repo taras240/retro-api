@@ -2,3 +2,18 @@
     <button class="simple-button">Sort</button>
     <button class="popup-button simple-button">Sort</button>
 </div>
+<div class="context-menu__container">
+    <div class="context__header">Sort by</div>
+    <div class="context__checkbox">
+        <input type="checkbox" name="" id="filter_mastered">
+        <label class="context__checkbox-label" for="filter_mastered">Mastered</label>
+    </div>
+    <div class="context__radio">
+        <input type="radio" name="sort" id="sort_date">
+        <label class="context__radio-label" for="sort_date">Date</label>
+    </div>
+    <div class="context__radio">
+        <input type="radio" name="sort" id="sort_rarity">
+        <label class="context__radio-label" for="sort_rarity">Rarity</label>
+    </div>
+</div>
