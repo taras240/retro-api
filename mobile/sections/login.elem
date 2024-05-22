@@ -3,11 +3,11 @@
         <img src="../assets/img/ra.png" alt="" class="login__image">
     </div>
     <div class="login__input-container">
-        <input class="login__input" id="login_user-name" placeholder="User name" type="text" name="login"
-            id="login_user-name">
+        <input class="login__input" id="login_user-name" autocapitalize="none" placeholder="User name" type="text"
+            name="login" id="login_user-name">
         <div class="">
-            <input class="login__input" id="login__api-key" placeholder="API key" type="password" name="login"
-                id="login_user-name">
+            <input class="login__input" id="login__api-key" autocapitalize="none" placeholder="API key" type="password"
+                name="login" id="login_user-name">
             <a class="login__apikey-link" target="_blank" href="https://retroachievements.org/controlpanel.php">Get
                 RA API Key</a>
         </div>

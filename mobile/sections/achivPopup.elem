@@ -1,0 +1,23 @@
+<div class="achievement-info_container">
+    <button class="close-popup">X</button>
+    <div class="achievement-info_preview-container">
+        <img src="https://media.retroachievements.org/Badge/276685.png" alt="" class="achievement-info_preview">
+    </div>
+    <h2 class="achievement-info_title">Supreme Bomber</h2>
+    <div class="hor-line"></div>
+    <p class="achievement-info_description">
+        Acquire nine Fire Upgrades as Player 1 without obtaining the Gold Fire Upgrade (can be playing in 2 player mode)
+    </p>
+    <div class="hor-line"></div>
+    <div class="achievement-info_properties">
+        <div class="achievement-info_property">Points: <span>12</span></div>
+        <div class="achievement-info_property">Retropoints: <span>22</span></div>
+        <div class="achievement-info_property">Total players: <span>1124</span></div>
+        <div class="achievement-info_property">Earned by: <span>632</span></div>
+        <div class="achievement-info_property">Earned harcore by: <span>315</span></div>
+        <div class="achievement-info_property">Date earned : <span>22.05.2022</span></div>
+        <div class="achievement-info_property">Date earned hardcore : <span>28.05.2022</span></div>
+        <div class="achievement-info_property">Date created : <span>22.05.2018</span></div>
+        <div class="achievement-info_property">Author : <span>"chenwulong"</span></div>
+    </div>
+</div>

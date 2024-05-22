@@ -1,11 +1,11 @@
 config = new Config();
 const apiWorker = new APIWorker();
 const ui = new UI();
-
+const GAMES_DATA = {};
 
 
 const submitRAData = () => {
-  let userName = ui.content.querySelector("#login_user-name").value.toLowerCase();
+  let userName = ui.content.querySelector("#login_user-name").value;
   let apiKey = ui.content.querySelector("#login__api-key").value;
   apiWorker
     .verifyUserIdent({ userName: userName, apiKey: apiKey })
