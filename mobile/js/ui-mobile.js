@@ -7,10 +7,7 @@ class UI {
         this.navbar.home.classList.add("checked");
       }
       else {
-        content.innerHTML = "";
-        content.append(await Login());
-        this.clearNavbar()
-        this.navbar.login.classList.add("checked");
+        this.goto.login();
       }
     },
 
@@ -28,10 +25,17 @@ class UI {
         this.navbar.home.classList.add("checked");
       }
       else {
-        content.innerHTML = "";
-        content.append(await Login());
+        this.goto.login();
+      }
+    },
+    '/awards': async () => {
+      if (config.identConfirmed) {
+        this.awards = new Awards();
         this.clearNavbar()
-        this.navbar.login.classList.add("checked");
+        this.navbar.awards.classList.add("checked");
+      }
+      else {
+        this.goto.login();
       }
     },
 
@@ -44,6 +48,10 @@ class UI {
   goto = {
     "home": () => {
       history.pushState(null, null, "#/home");
+      this.updatePage();
+    },
+    "awards": () => {
+      history.pushState(null, null, "#/awards");
       this.updatePage();
     },
     "login": () => {
@@ -63,6 +71,7 @@ class UI {
     this.navbar = {
       container: document.querySelector(".navbar"),
       home: document.querySelector("#navbar_home"),
+      awards: document.querySelector("#navbar_awards"),
       login: document.querySelector("#navbar_login"),
     }
   }
@@ -85,68 +94,6 @@ class UI {
   }
   removePopups() {
     document.querySelectorAll(".popup").forEach(el => el.remove());
-  }
-}
-class Home {
-  USER_INFO = {};
-  constructor() {
-    this.update();
-  }
-
-
-  update() {
-    apiWorker.getUserSummary({ gamesCount: 5, achievesCount: 0 })
-      .then(resp => {
-        this.USER_INFO.userName = resp.User;
-        this.USER_INFO.status = resp.Status.toLowerCase();
-        this.USER_INFO.richPresence = resp.RichPresenceMsg;
-        this.USER_INFO.memberSince = resp.MemberSince;
-        this.USER_INFO.userImageSrc = `https://media.retroachievements.org${resp.UserPic}`;
-        this.USER_INFO.userRank = `${resp.Rank} (Top ${~~(10000 * resp.Rank / resp.TotalRanked) / 100}%)`;
-        this.USER_INFO.softpoints = resp.TotalSoftcorePoints;
-        this.USER_INFO.retropoints = resp.TotalTruePoints;
-        this.USER_INFO.hardpoints = resp.TotalPoints;
-        this.USER_INFO.lastGames = resp.RecentlyPlayed;
-
-      })
-      .then(() => {
-        ui.content.innerHTML = '';
-        ui.content.append(this.HomeSection());
-      })
-  }
-
-  expandRecentGame(gameID) {
-    const targetGameElement = document
-      .querySelector(`.user-info__last-game-container[data-id='${gameID}'`);
-    targetGameElement.classList.toggle("expanded");
-
-    const getRecentGame = (gameID) => {
-
-      const achivsContainer = document.createElement("div");
-      achivsContainer.classList.add("user-info__game-achivs-container");
-
-      const achivsList = document.createElement("ul");
-      achivsList.classList.add("user-info__game-achivs-list");
-
-      achivsContainer.appendChild(achivsList);
-      targetGameElement.appendChild(achivsContainer);
-      GAMES_DATA[gameID] ?
-        Object.values(GAMES_DATA[gameID].Achievements).forEach(achiv => {
-          achivsList.innerHTML += this.achivHtml(achiv, gameID);
-        })
-        : apiWorker
-          .getGameProgress({ gameID: gameID })
-          .then(gameObj => {
-            GAMES_DATA[gameID] = gameObj;
-            Object.values(gameObj.Achievements).forEach(achiv => {
-              achivsList.innerHTML += this.achivHtml(achiv, gameID);
-            })
-          })
-    }
-
-
-
-    targetGameElement.querySelector(".user-info__game-achivs-container") ?? (getRecentGame(gameID))
   }
   showGameDetails(gameID) {
     ui.removePopups();
@@ -235,6 +182,63 @@ class Home {
   `;
   }
 
+}
+class Home {
+  USER_INFO = {};
+  constructor() {
+    this.update();
+  }
+  update() {
+    apiWorker.getUserSummary({ gamesCount: 5, achievesCount: 0 })
+      .then(resp => {
+        this.USER_INFO.userName = resp.User;
+        this.USER_INFO.status = resp.Status.toLowerCase();
+        this.USER_INFO.richPresence = resp.RichPresenceMsg;
+        this.USER_INFO.memberSince = resp.MemberSince;
+        this.USER_INFO.userImageSrc = `https://media.retroachievements.org${resp.UserPic}`;
+        this.USER_INFO.userRank = `${resp.Rank} (Top ${~~(10000 * resp.Rank / resp.TotalRanked) / 100}%)`;
+        this.USER_INFO.softpoints = resp.TotalSoftcorePoints;
+        this.USER_INFO.retropoints = resp.TotalTruePoints;
+        this.USER_INFO.hardpoints = resp.TotalPoints;
+        this.USER_INFO.lastGames = resp.RecentlyPlayed;
+
+      })
+      .then(() => {
+        ui.content.innerHTML = '';
+        ui.content.append(this.HomeSection());
+      })
+  }
+
+  expandRecentGame(gameID, button) {
+    const targetGameElement = button.closest(`.user-info__last-game-container[data-id='${gameID}'`);
+    targetGameElement.classList.toggle("expanded");
+
+    const getRecentGame = (gameID) => {
+
+      const achivsContainer = document.createElement("div");
+      achivsContainer.classList.add("user-info__game-achivs-container");
+
+      const achivsList = document.createElement("ul");
+      achivsList.classList.add("user-info__game-achivs-list");
+
+      achivsContainer.appendChild(achivsList);
+      targetGameElement.appendChild(achivsContainer);
+      GAMES_DATA[gameID] ?
+        Object.values(GAMES_DATA[gameID].Achievements).forEach(achiv => {
+          achivsList.innerHTML += this.achivHtml(achiv, gameID);
+        })
+        : apiWorker
+          .getGameProgress({ gameID: gameID })
+          .then(gameObj => {
+            GAMES_DATA[gameID] = gameObj;
+            Object.values(gameObj.Achievements).forEach(achiv => {
+              achivsList.innerHTML += this.achivHtml(achiv, gameID);
+            })
+          })
+    }
+    targetGameElement.querySelector(".user-info__game-achivs-container") ?? (getRecentGame(gameID))
+  }
+
   HomeSection() {
     const homeSection = document.createElement("section");
     homeSection.classList.add("home__section");
@@ -298,13 +302,13 @@ class Home {
   gameHtml(game) {
     return `    
             <li class="user-info__last-game-container" data-id="${game.GameID}">
-                <div class="user-info__game-main-info"  onclick="ui.home.showGameDetails(${game.GameID}); event.stopPropagation()">
+                <div class="user-info__game-main-info"  onclick="ui.showGameDetails(${game.GameID}); event.stopPropagation()">
                     <div class="user-info__game-preview-container">
                         <img class="user-info__game-preview" src="https://media.retroachievements.org${game.ImageIcon}" alt="">
                     </div>
                     <div class="user-info__game-description" >
                         <h2 class="user-info__game-title">${game.Title}</h2>
-                        <div class="user-info_game-stats-container" onclick="ui.home.expandRecentGame(${game.GameID}); event.stopPropagation()">
+                        <div class="user-info_game-stats-container" onclick="ui.home.expandRecentGame(${game.GameID},this); event.stopPropagation()">
                             <div class="game-stats ">
                             <i class="game-stats__icon game-stats__achivs-icon"></i>
                             <div class="game-stats__text">${game.NumAchievedHardcore} / ${game.NumPossibleAchievements}</div>
@@ -324,7 +328,7 @@ class Home {
   }
   achivHtml(achiv, gameID) {
     return `    
-            <li class="user-info__achiv-container"  onclick="ui.home.showAchivDetails(${achiv.ID},${gameID})">                
+            <li class="user-info__achiv-container"  onclick="ui.showAchivDetails(${achiv.ID},${gameID})">                
                 <div class="user-info__achiv-preview-container">
                     <img class="user-info__achiv-preview ${achiv.isHardcoreEarned && "earned"}" src="${achiv.prevSrc}" alt="">
                 </div>
@@ -345,7 +349,122 @@ class Home {
         `;
   }
 }
+class Awards {
 
+  constructor() {
+    this.update();
+  }
+  update() {
+    apiWorker.getUserAwards({})
+      .then(resp => {
+        this.awardsObj = resp;
+      })
+      .then(() => {
+        ui.content.innerHTML = '';
+        ui.content.append(this.AwardsSection());
+      })
+  }
+
+  AwardsSection() {
+    const awardsSection = document.createElement("section");
+    awardsSection.classList.add("awards__section");
+    awardsSection.innerHTML = `
+            ${this.headerHtml()}
+            <ul class="user-info__awards-list">
+                ${this.awardsObj.VisibleUserAwards.reduce((elements, game) => {
+      const awardHtml = this.gameHtml(game);
+      elements += awardHtml;
+      return elements;
+    }, "")}
+            </ul>
+        </div>
+        `;
+    return awardsSection;
+  }
+  headerHtml() {
+    return `
+      <div class="section__header-container">
+        <div class="section__header-title">Awards</div>
+        <div class="section__control-container">
+            <button class="popup-button simple-button">Filter</button>
+            <button class="popup-button simple-button">Sort</button>
+        </div>
+      </div>
+    `;
+  }
+  gameHtml(game) {
+    return `    
+            <li class="awards__game-item" data-id="${game.AwardData}">
+                <div class="awards__game-container"  onclick="ui.showGameDetails(${game.AwardData}); event.stopPropagation()">
+                    <div class="awards__game-preview-container">
+                        <img class="awards__game-preview" src="https://media.retroachievements.org${game.ImageIcon}" alt="">
+                    </div>
+                    <div class="awards__game-description" >
+                        <h2 class="awards__game-title">${game.Title}</h2>
+                        <div class="awards__game-stats-container" onclick="ui.awards.expandAwardGame(${game.AwardData},this); event.stopPropagation()">
+                            <div class="awards__game-stats__text">${game.AwardType}</div>
+                            <div class="awards__game-stats__text">${new Date(game.AwardedAt).toLocaleDateString()}</div>
+                           
+                        </div>
+                    </div>
+                </div>
+            </li>
+        `;
+  }
+  expandAwardGame(gameID, button) {
+    button.closest(`.awards__game-item[data-id='${gameID}'`)
+    const targetGameElement = button.closest(`.awards__game-item[data-id='${gameID}'`)
+    targetGameElement.classList.toggle("expanded");
+
+    const getRecentGame = (gameID) => {
+
+      const achivsContainer = document.createElement("div");
+      achivsContainer.classList.add("user-info__game-achivs-container");
+
+      const achivsList = document.createElement("ul");
+      achivsList.classList.add("user-info__game-achivs-list");
+
+      achivsContainer.appendChild(achivsList);
+      targetGameElement.appendChild(achivsContainer);
+      GAMES_DATA[gameID] ?
+        Object.values(GAMES_DATA[gameID].Achievements).forEach(achiv => {
+          achivsList.innerHTML += this.achivHtml(achiv, gameID);
+        })
+        : apiWorker
+          .getGameProgress({ gameID: gameID })
+          .then(gameObj => {
+            GAMES_DATA[gameID] = gameObj;
+            Object.values(gameObj.Achievements).forEach(achiv => {
+              achivsList.innerHTML += this.achivHtml(achiv, gameID);
+            })
+          })
+    }
+    targetGameElement.querySelector(".user-info__game-achivs-container") ?? (getRecentGame(gameID))
+  }
+  achivHtml(achiv, gameID) {
+    return `    
+            <li class="user-info__achiv-container"  onclick="ui.showAchivDetails(${achiv.ID},${gameID})">                
+                <div class="user-info__achiv-preview-container">
+                    <img class="user-info__achiv-preview ${achiv.isHardcoreEarned && "earned"}" src="${achiv.prevSrc}" alt="">
+                </div>
+                <div class="user-info__achiv-description">
+                    <h2 class="user-info__game-title">${achiv.Title}</h2>
+                    <div class="user-info_game-stats-container">
+                        <div class="game-stats ">
+                        <i class="game-stats__icon game-stats__points-icon"></i>
+                        <div class="game-stats__text">${achiv.Points}</div>
+                        </div>
+                        <div class="game-stats game-stats__points">
+                        <i class="game-stats__icon game-stats__points-icon"></i>
+                        <div class="game-stats__text">${achiv.TrueRatio}</div>
+                        </div>                        
+                    </div>
+                </div>             
+            </li>
+        `;
+  }
+
+}
 const Login = () => {
   const sectionUrl = './sections/login.elem';
   return fetch(sectionUrl)

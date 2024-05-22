@@ -1,32 +1,10 @@
-<div class="popup-info__container">
-    <button class="close-popup" onclick="ui.removePopups()">X</button>
-    <div class="popup-info__preview-container">
-        <img src="https://media.retroachievements.org/Images/043551.png" alt="" class="popup-info__preview">
+<div class="section__header-container">
+    <div class="section__header-title">Awards</div>
+    <div class="section__control-container">
+        <button class="popup-button simple-button">Filter</button>
+        <button class="popup-button simple-button">Sort</button>
     </div>
-    <h2 class="popup-info__title">Super Bomberman</h2>
-    <div class="hor-line"></div>
-    <ul class="popup-info__image-list">
-        <li class="popup-info__image-container">
-            <img src="https://media.retroachievements.org/Images/069658.png" alt="" class="popup-info__image">
-        </li>
-        <li class="popup-info_image-container">
-            <img src="https://media.retroachievements.org/Images/039426.png" alt="" class="popup-info__image">
-        </li>
-        <li class="popup-info__image-container">
-            <img src="https://media.retroachievements.org/Images/039427.png" alt="" class="popup-info__image">
-        </li>
+</div>
+<div class="context-menu__container">
 
-    </ul>
-    <div class="hor-line"></div>
-    <div class="popup-info__properties">
-        <div class="popup-info__property">Platform: <span>NES/Famicom</span></div>
-        <div class="popup-info__property">Developer: <span>Hudson Soft</span></div>
-        <div class="popup-info__property">Genre: <span>Action, Puzzle</span></div>
-        <div class="popup-info__property">Publisher: <span>Hudson Soft</span></div>
-        <div class="popup-info__property">Released: <span>April 28, 1993</span></div>
-        <div class="popup-info__property">Achievements total : <span>54</span></div>
-        <div class="popup-info__property">Total points : <span>474</span></div>
-        <div class="popup-info__property">Total players : <span>7229</span></div>
-
-    </div>
 </div>
