@@ -571,7 +571,7 @@ class Awards {
                     <div class="awards__game-description" >
                         <h2 class="awards__game-title">${game.Title}</h2>
                         <div class="awards__game-stats-container" onclick="ui.awards.expandAwardGame(${game.AwardData},this); event.stopPropagation()">
-                            <div class="awards__game-stats__text">${game.AwardType}</div>
+                            <div class="awards__game-stats__text awards__game-award-type">${game.award}</div>
                             <div class="awards__game-stats__text">${new Date(game.AwardedAt).toLocaleDateString()}</div>
                            
                         </div>
@@ -671,7 +671,9 @@ function generateContextMenu(structureObj) {
   contextElement.classList.add("context-menu__container", "context");
   contextElement.addEventListener("touchend", e => e.stopPropagation());
   contextElement.addEventListener("mousedown", e => e.stopPropagation());
-  contextElement.innerHTML += `<div class="context__header">${structureObj.label}</div>`;
+  contextElement.innerHTML += `
+    <div class="context__header" onclick="ui.removeContext()">${structureObj.label}</div>
+  `;
   const generateContextElements = () => {
     const controlsContainer = document.createElement("div");
     controlsContainer.classList.add("context__controls");

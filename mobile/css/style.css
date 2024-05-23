@@ -4,13 +4,13 @@
 @import url(./awards.css);
 
 body {
-    --main-color: #1f1f1f;
-    --secondary-color: #303134;
-    --accent-color: #34517d;
+    --main-color: #01080D;
+    --secondary-color: #0E161F;
+    --accent-color: #71D788;
     --font-color: #d6d6d6;
     --selection-color: #2c303d;
     --font-family: system-ui;
-    --item-shadow: 0 1px 6px 1px rgba(0, 0, 0, 0.5);
+    --item-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.5);
     background-color: var(--main-color);
 }
 
@@ -175,6 +175,7 @@ li {
 .simple-button:active {
     -webkit-tap-highlight-color: transparent;
     background-color: var(--accent-color);
+    color: var(--main-color);
 }
 
 .popup-button {
@@ -230,12 +231,30 @@ li {
 }
 
 .context__header {
+    display: block;
     position: relative;
     font-size: 1.5rem;
     font-weight: 600;
     text-transform: uppercase;
     padding: 1rem 0 1rem;
     text-align: center;
+}
+
+.context__header::before {
+    content: "";
+    display: block;
+    position: absolute;
+    transform: translate(0, -50%);
+    top: 50%;
+    right: 1rem;
+    width: 2rem;
+    height: 2rem;
+    background-color: var(--font-color);
+    mask-image: url(../../assets/img/expand_more.svg);
+    mask-size: contain;
+    mask-position: center;
+    mask-repeat: no-repeat;
+    z-index: 5;
 }
 
 .context__header::after {
@@ -256,15 +275,18 @@ input[type="radio"] {
 
 .context__checkbox-label,
 .context__radio-label {
+    --context-font-color: var(--font-color);
     position: relative;
     display: block;
     font-size: 1.5rem;
     /* text-transform: uppercase; */
     padding: 0.75rem 2rem 0.75rem 3rem;
+    color: var(--context-font-color);
 }
 
 .context__checkbox-label:active,
 .context__radio-label:active {
+    --context-font-color: var(--main-color);
     background-color: var(--accent-color);
     transition: 0.2s;
 }
@@ -282,7 +304,7 @@ input[type="radio"] {
     left: 1.5rem;
     width: 1.4rem;
     height: 1.4rem;
-    background-color: var(--font-color);
+    background-color: var(--context-font-color);
     mask-size: contain;
     mask-repeat: no-repeat;
     mask-position: center;
