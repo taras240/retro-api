@@ -133,6 +133,7 @@ li {
     gap: 1rem;
     position: sticky;
     top: 0;
+    z-index: 1;
 }
 
 .section__header-title {
@@ -211,6 +212,20 @@ li {
 
     to {
         bottom: 0;
+    }
+}
+
+.context-menu__container.hidden {
+    animation: context-hide-animation 0.2s forwards;
+}
+
+@keyframes context-hide-animation {
+    from {
+        bottom: 0;
+    }
+
+    to {
+        bottom: -60vh;
     }
 }
 

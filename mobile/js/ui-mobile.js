@@ -87,6 +87,10 @@ class UI {
       this.removeContext();
       this.removePopups();
     })
+    app.addEventListener("mousedown", () => {
+      this.removeContext();
+      this.removePopups();
+    })
   }
   clearNavbar() {
     this.navbar.container.querySelectorAll(".checked").forEach(el => el.classList.remove("checked"));
@@ -100,7 +104,10 @@ class UI {
     document.querySelectorAll(".popup").forEach(el => el.remove());
   }
   removeContext() {
-    document.querySelectorAll(".context").forEach(el => el.remove());
+    document.querySelectorAll(".context").forEach(el => {
+      el.classList.add("hidden");
+      setTimeout(() => el.remove(), 1000);
+    });
   }
   showGameDetails(gameID) {
     ui.removePopups();
@@ -406,7 +413,37 @@ class Awards {
         }
       ]
     }
-
+  }
+  awardSortContext = () => {
+    return {
+      label: "Sort by",
+      elements: [
+        {
+          label: "Date earned",
+          id: "sort_date-earned",
+          type: "radio",
+          onChange: "ui.awards.awardSortType = 'date'",
+          checked: this.awardSortType === 'date',
+          name: "sort-awards"
+        },
+        {
+          label: "Title",
+          id: "sort_title",
+          type: "radio",
+          onChange: "ui.awards.awardSortType = 'title'",
+          checked: this.awardSortType === 'title',
+          name: "sort-awards"
+        },
+        {
+          label: "Reverse sort",
+          id: "sort_reverse-sort",
+          type: "checkbox",
+          onChange: "ui.awards.awardSortTypeReverse = this.checked",
+          checked: this.awardSortTypeReverse == -1,
+          name: "sort-awards-reverse"
+        },
+      ]
+    }
   }
   get awardFilter() {
     const type = config.ui?.mobile?.awardsTypeFilter ?? "award";
@@ -421,10 +458,34 @@ class Awards {
 
     config.ui.mobile.awardsTypeFilter = value;
     config.writeConfiguration()
-    this.applyFilter();
-    ui.content.innerHTML = '';
-    ui.content.append(this.AwardsSection());
+    this.update();
   }
+  get awardSortType() {
+    return config.ui?.mobile?.awardSortType ?? "date";
+  }
+
+  set awardSortType(value) {
+    !config.ui.mobile && (config.ui.mobile = {});
+    config.ui.mobile.awardSortType = value;
+    config.writeConfiguration()
+    this.update();
+  }
+  get awardSortTypeReverse() {
+    return config.ui?.mobile?.awardSortTypeReverse ?? "1";
+  }
+
+  set awardSortTypeReverse(value) {
+    !config.ui.mobile && (config.ui.mobile = {});
+    config.ui.mobile.awardSortTypeReverse = value ? -1 : 1;
+    config.writeConfiguration()
+    this.update();
+
+  }
+
+  applySort() {
+    this.awardedGames = this.awardedGames.sort((a, b) => this.awardSortTypeReverse * sortBy[this.awardSortType](a, b));
+  }
+
   applyFilter() {
     this.awardedGames = this.awardFilterName == "award" ?
       this.awardsObj.VisibleUserAwards :
@@ -438,6 +499,17 @@ class Awards {
     mastered: "mastered",
     award: "award type",
   }
+  sortMethods = {
+    latest: "date",
+    // earnedCount: "earnedCount",
+    // points: "points",
+    // truepoints: "truepoints",
+    // disable: "disable",
+    // id: "id",
+    // default: "default",
+    // achievementsCount: "achievementsCount",
+    title: "title",
+  };
   awardsObj;
   awardedGames = [];
   constructor() {
@@ -445,12 +517,15 @@ class Awards {
   }
   update() {
     this.awardsObj ? (
+      this.applyFilter(),
+      this.applySort(),
       ui.content.innerHTML = '',
       ui.content.append(this.AwardsSection())) :
       apiWorker.getUserAwards({})
         .then(resp => {
           this.awardsObj = resp;
           this.applyFilter();
+          this.applySort();
         })
         .then(() => {
           ui.content.innerHTML = '';
@@ -474,13 +549,14 @@ class Awards {
         `;
     return awardsSection;
   }
+  upda
   headerHtml() {
     return `
       <div class="section__header-container">
         <div class="section__header-title">Awards</div>
         <div class="section__control-container">
             <button class="popup-button simple-button" onclick="generateContextMenu(ui.awards.awardTypeContext())">${this.awardFilter}</button>
-            <button class="popup-button simple-button">Sort</button>
+            <button class="popup-button simple-button" onclick="generateContextMenu(ui.awards.awardSortContext())">Sort</button>
         </div>
       </div>
     `;
@@ -593,7 +669,8 @@ function generateContextMenu(structureObj) {
   ui.removeContext();
   const contextElement = document.createElement("div");
   contextElement.classList.add("context-menu__container", "context");
-  contextElement.addEventListener("touchend", e => e.stopPropagation())
+  contextElement.addEventListener("touchend", e => e.stopPropagation());
+  contextElement.addEventListener("mousedown", e => e.stopPropagation());
   contextElement.innerHTML += `<div class="context__header">${structureObj.label}</div>`;
   const generateContextElements = () => {
     const controlsContainer = document.createElement("div");
@@ -608,6 +685,16 @@ function generateContextMenu(structureObj) {
               <label class="context__radio-label" for="${el.id}">${el.label}</label>
             </div>
           `;
+          break;
+        case "checkbox":
+          controlsContainer.innerHTML += `
+            <div class="context__checkbox">
+              <input type="checkbox" onchange="${el.onChange}"
+                    name="${el.name}" ${el.checked && "checked"} id="${el.id}">
+              <label class="context__checkbox-label" for="${el.id}">${el.label}</label>
+            </div>
+          `;
+          break;
         default:
           return "";
       }
@@ -616,5 +703,57 @@ function generateContextMenu(structureObj) {
     return controlsContainer;
   }
   contextElement.append(generateContextElements(structureObj));
-  ui.content.appendChild(contextElement);
+  ui.app.appendChild(contextElement);
+}
+
+const sortMethods = {
+  latest: "date",
+  earnedCount: "earnedCount",
+  points: "points",
+  truepoints: "truepoints",
+  disable: "disable",
+  id: "id",
+  default: "default",
+  achievementsCount: "achievementsCount",
+  title: "title",
+};
+const sortBy = {
+  date: (a, b) => {
+    // Перевіряємо, чи існують дати та обираємо найновішу
+    const dateA = a.DateEarnedHardcore
+      ? new Date(a.DateEarnedHardcore)
+      : -Infinity;
+    const dateB = b.DateEarnedHardcore
+      ? new Date(b.DateEarnedHardcore)
+      : -Infinity;
+    return dateB - dateA; // Повертає різницю дат
+  },
+
+  earnedCount: (a, b) => b.NumAwardedHardcore - a.NumAwardedHardcore,
+
+  points: (a, b) => parseInt(a.Points) - parseInt(b.Points),
+
+  truepoints: (a, b) => a.TrueRatio - b.TrueRatio,
+
+  default: (a, b) => a.DisplayOrder - b.DisplayOrder,
+
+  id: (a, b) => a.ID - b.ID,
+
+  disable: (a, b) => 0,
+
+  achievementsCount: (a, b) => parseInt(a.NumAchievements) - parseInt(b.NumAchievements),
+
+  title: (a, b) => {
+    let nameA = a.Title.toUpperCase();
+    let nameB = b.Title.toUpperCase();
+
+    if (nameA < nameB) {
+      return -1;
+    }
+    if (nameA > nameB) {
+      return 1;
+    }
+    return 0;
+
+  }
 }

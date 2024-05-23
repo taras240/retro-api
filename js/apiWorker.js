@@ -127,6 +127,7 @@ class APIWorker {
         game.award = game.AwardType == "Game Beaten" ?
           game.AwardDataExtra == "1" ? "beaten" : "beaten softcore" :
           game.AwardDataExtra == "1" ? "mastered" : "completed";
+        game.DateEarnedHardcore = game.AwardedAt;
         return game;
       })
       return awardsObj;
