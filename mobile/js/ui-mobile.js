@@ -294,26 +294,29 @@ class Home {
   }
   pointsHtml() {
     return `
-            <div class="user-info__points-container">
-                <div class="user-info__points-group">
-                    <h3 class="user-info__points-name">softpoints</h3>
-                    <p class="user-info__points">${this.USER_INFO.softpoints}</p>
-                </div>
-
-                <div class="vertical-line"></div>
-                <div class="user-info__points-group">
-                    <h3 class="user-info__points-name">hardpoints</h3>
-                    <p class="user-info__points">${this.USER_INFO.hardpoints}</p>
-
-                </div>
-                <div class="vertical-line"></div>
-                <div class="user-info__points-group">
-                    <h3 class="user-info__points-name">retropoints</h3>
-                    <p class="user-info__points">${this.USER_INFO.retropoints}</p>
-
-                </div>
+            
+        <div class="user-info__points-container">
+          ${this.USER_INFO.softpoints > 0 ? `
+            <div class="user-info__points-group">
+              <h3 class="user-info__points-name">softpoints</h3>
+              <p class="user-info__points">${this.USER_INFO.softpoints}</p>
             </div>
-        `;
+            <div class="vertical-line"></div>
+          `: ""
+      }
+            <div class="user-info__points-group">
+                <h3 class="user-info__points-name">hardpoints</h3>
+                <p class="user-info__points">${this.USER_INFO.hardpoints}</p>
+
+            </div>
+            <div class="vertical-line"></div>
+            <div class="user-info__points-group">
+                <h3 class="user-info__points-name">retropoints</h3>
+                <p class="user-info__points">${this.USER_INFO.retropoints}</p>
+
+            </div>
+        </div>
+    `;
   }
 
   gameHtml(game) {
