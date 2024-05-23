@@ -42,6 +42,7 @@ li {
     position: fixed;
     bottom: 0;
     padding: 0 1rem 5px;
+    z-index: 2;
     /* box-shadow: ; */
 }
 
@@ -337,4 +338,35 @@ input[type="radio"] {
 
 :checked+.context__radio-label::before {
     mask-image: url(../../assets/img/radio_button_checked.svg);
+}
+
+/* *------------LOADING_SCREEN--------------- */
+.loading_screen {
+    /* width: 100vw;
+    height: 100vh; */
+    /* background-color: #01080d91; */
+    background-color: transparent;
+    z-index: 10;
+
+}
+
+.loading_screen__loader-icon {
+    position: fixed;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    width: 6rem;
+    height: 6rem;
+    background-color: var(--font-color);
+    mask-image: url(../../assets/img/progress-loading.svg);
+    mask-position: center;
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    animation: loader-animation 1s linear infinite;
+}
+
+@keyframes loader-animation {
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
 }

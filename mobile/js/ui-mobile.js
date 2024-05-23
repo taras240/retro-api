@@ -12,8 +12,10 @@ class UI {
     },
 
     '/login': async () => {
+      this.content.innerHTML = Loader();
+      const login = await Login()
       content.innerHTML = "";
-      content.append(await Login());
+      content.append(login);
       this.clearNavbar()
       this.navbar.login.classList.add("checked");
     },
@@ -110,19 +112,26 @@ class UI {
     });
   }
   showGameDetails(gameID) {
-    ui.removePopups();
+    this.removePopups();
+    this.showLoader();
+
     const gameElement = document.createElement("div");
     gameElement.addEventListener("touchend", e => e.stopPropagation());
     gameElement.classList.add("popup-info__container", "popup");
-    ui.content.append(gameElement);
+
     GAMES_DATA[gameID] ?
-      gameElement.innerHTML = this.gamePopupHtml(GAMES_DATA[gameID]) :
+      (
+        gameElement.innerHTML = this.gamePopupHtml(GAMES_DATA[gameID]),
+        this.content.append(gameElement),
+        this.removeLoader()
+      ) :
       apiWorker
         .getGameProgress({ gameID: gameID })
         .then(gameObj => {
           GAMES_DATA[gameID] = gameObj;
           gameElement.innerHTML = this.gamePopupHtml(gameObj);
-        })
+          this.content.append(gameElement);
+        }).then(() => this.removeLoader())
 
     const game = GAMES_DATA[gameID];
     const gameHtml = this.gamePopupHtml(game)
@@ -163,7 +172,8 @@ class UI {
     `
   }
   showAchivDetails(achivID, gameID) {
-    ui.removePopups();
+    this.removePopups();
+    this.showLoader();
     const achivElement = document.createElement("div");
     achivElement.addEventListener("touchend", e => e.stopPropagation());
 
@@ -171,7 +181,8 @@ class UI {
     const achiv = GAMES_DATA[gameID].Achievements[achivID];
     const achivHtml = this.achivPopupHtml(achiv)
     achivElement.innerHTML = achivHtml;
-    ui.content.append(achivElement)
+    this.content.append(achivElement)
+    this.removeLoader()
   }
   achivPopupHtml(achiv) {
     return `
@@ -198,6 +209,13 @@ class UI {
     </div>
   `;
   }
+  showLoader() {
+    this.removeLoader();
+    this.app.append(Loader());
+  }
+  removeLoader() {
+    document.querySelectorAll(".loading_screen").forEach(el => el.remove())
+  }
 
 }
 class Home {
@@ -206,6 +224,7 @@ class Home {
     this.update();
   }
   update() {
+    ui.showLoader();
     apiWorker.getUserSummary({ gamesCount: 5, achievesCount: 0 })
       .then(resp => {
         this.USER_INFO.userName = resp.User;
@@ -221,17 +240,20 @@ class Home {
 
       })
       .then(() => {
+        const section = this.HomeSection()
         ui.content.innerHTML = '';
-        ui.content.append(this.HomeSection());
+        ui.content.append(section);
+        ui.removeLoader();
       })
   }
 
-  expandRecentGame(gameID, button) {
+  async expandRecentGame(gameID, button) {
+
     const targetGameElement = button.closest(`.user-info__last-game-container[data-id='${gameID}'`);
     targetGameElement.classList.toggle("expanded");
 
     const getRecentGame = (gameID) => {
-
+      ui.showLoader();
       const achivsContainer = document.createElement("div");
       achivsContainer.classList.add("user-info__game-achivs-container");
 
@@ -240,20 +262,26 @@ class Home {
 
       achivsContainer.appendChild(achivsList);
       targetGameElement.appendChild(achivsContainer);
-      GAMES_DATA[gameID] ?
+
+      if (GAMES_DATA[gameID]) {
         Object.values(GAMES_DATA[gameID].Achievements).forEach(achiv => {
           achivsList.innerHTML += this.achivHtml(achiv, gameID);
-        })
-        : apiWorker
+        });
+        ui.removeLoader();
+      }
+
+      else {
+        apiWorker
           .getGameProgress({ gameID: gameID })
           .then(gameObj => {
             GAMES_DATA[gameID] = gameObj;
             Object.values(gameObj.Achievements).forEach(achiv => {
               achivsList.innerHTML += this.achivHtml(achiv, gameID);
             })
-          })
+          }).then(() => ui.removeLoader())
+      }
     }
-    targetGameElement.querySelector(".user-info__game-achivs-container") ?? (getRecentGame(gameID))
+    targetGameElement.querySelector(".user-info__game-achivs-container") ?? (getRecentGame(gameID));
   }
 
   HomeSection() {
@@ -489,6 +517,7 @@ class Awards {
 
     config.ui.mobile.awardsTypeFilter = value;
     config.writeConfiguration()
+
     this.update();
   }
 
@@ -565,22 +594,15 @@ class Awards {
     this.update();
   }
   async update() {
+    ui.showLoader();
+    await delay(50);
     !this.awardsObj && (await this.downloadAwardsData());
-
-    this.applyFilter(),
-      this.applySort(),
-      ui.content.innerHTML = '',
-      ui.content.append(this.AwardsSection());
-    // apiWorker.getUserAwards({})
-    //   .then(resp => {
-    //     this.awardsObj = resp;
-    //     this.applyFilter();
-    //     this.applySort();
-    //   })
-    //   .then(() => {
-    //     ui.content.innerHTML = '';
-    //     ui.content.append(this.AwardsSection());
-    //   })
+    this.applyFilter();
+    this.applySort();
+    const section = this.AwardsSection()
+    ui.content.innerHTML = '';
+    ui.content.append(section);
+    ui.removeLoader();
   }
   async downloadAwardsData() {
     const resp = await apiWorker.getUserAwards({});
@@ -650,7 +672,7 @@ class Awards {
     targetGameElement.classList.toggle("expanded");
 
     const getRecentGame = (gameID) => {
-
+      ui.showLoader();
       const achivsContainer = document.createElement("div");
       achivsContainer.classList.add("user-info__game-achivs-container");
 
@@ -659,18 +681,22 @@ class Awards {
 
       achivsContainer.appendChild(achivsList);
       targetGameElement.appendChild(achivsContainer);
-      GAMES_DATA[gameID] ?
+      if (GAMES_DATA[gameID]) {
         Object.values(GAMES_DATA[gameID].Achievements).forEach(achiv => {
           achivsList.innerHTML += this.achivHtml(achiv, gameID);
-        })
-        : apiWorker
+        });
+        ui.removeLoader();
+      }
+      else {
+        apiWorker
           .getGameProgress({ gameID: gameID })
           .then(gameObj => {
             GAMES_DATA[gameID] = gameObj;
             Object.values(gameObj.Achievements).forEach(achiv => {
               achivsList.innerHTML += this.achivHtml(achiv, gameID);
             })
-          })
+          }).then(() => ui.removeLoader())
+      }
     }
     targetGameElement.querySelector(".user-info__game-achivs-container") ?? (getRecentGame(gameID))
   }
@@ -715,7 +741,12 @@ const Login = () => {
       return sectionElement;
     })
 }
-
+const Loader = () => {
+  const loader = document.createElement("div");
+  loader.classList.add("loading_screen");
+  loader.innerHTML = `<div class="loading_screen__loader-icon"></div>`;
+  return loader;
+}
 const Test = () => {
   const sectionUrl = './sections/test.elem';
   return fetch(sectionUrl)
@@ -813,8 +844,8 @@ const sortBy = {
   achievementsCount: (a, b) => parseInt(a.NumAchievements) - parseInt(b.NumAchievements),
 
   title: (a, b) => {
-    let nameA = a.Title.toUpperCase();
-    let nameB = b.Title.toUpperCase();
+    let nameA = a.Title?.toUpperCase();
+    let nameB = b.Title?.toUpperCase();
 
     if (nameA < nameB) {
       return -1;
@@ -882,4 +913,7 @@ const RAPlatforms = {
   "80": "Uzebox",
   "101": "Events",
   "102": "Standalone"
+}
+const delay = (ms) => {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
