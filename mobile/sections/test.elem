@@ -7,21 +7,41 @@
 </div>
 <div class="context-menu__container">
     <div class="context__header">Filter by</div>
-    <div class="context__radio">
-        <input type="radio" name="sort" id="filter_mastered">
-        <label class="context__radio-label" for="filter_mastered">Mastered</label>
+    <div class="context__control-container">
+        <div class="context__radio">
+            <input type="radio" name="sort" id="filter_mastered">
+            <label class="context__radio-label" for="filter_mastered">Mastered</label>
+        </div>
+        <div class="context__radio">
+            <input type="radio" name="sort" id="filter_completed">
+            <label class="context__radio-label" for="filter_completed">Completed</label>
+        </div>
+        <div class="context__radio">
+            <input type="radio" name="sort" id="filter_beaten">
+            <label class="context__radio-label" for="filter_beaten">Beeten</label>
+        </div>
+        <div class="context__radio">
+            <input type="radio" name="sort" id="filter_beaten-softcore">
+            <label class="context__radio-label" for="filter_beaten-softcore">
+                Beaten Softcore</label>
+        </div>
+        <div class="context__radio">
+            <input type="radio" name="sort" id="filter_mastered">
+            <label class="context__radio-label" for="filter_mastered">Mastered</label>
+        </div>
+        <div class="context__radio">
+            <input type="radio" name="sort" id="filter_completed">
+            <label class="context__radio-label" for="filter_completed">Completed</label>
+        </div>
+        <div class="context__radio">
+            <input type="radio" name="sort" id="filter_beaten">
+            <label class="context__radio-label" for="filter_beaten">Beeten</label>
+        </div>
+        <div class="context__radio">
+            <input type="radio" name="sort" id="filter_beaten-softcore">
+            <label class="context__radio-label" for="filter_beaten-softcore">
+                Beaten Softcore</label>
+        </div>
     </div>
-    <div class="context__radio">
-        <input type="radio" name="sort" id="filter_completed">
-        <label class="context__radio-label" for="filter_completed">Completed</label>
-    </div>
-    <div class="context__radio">
-        <input type="radio" name="sort" id="filter_beaten">
-        <label class="context__radio-label" for="filter_beaten">Beeten</label>
-    </div>
-    <div class="context__radio">
-        <input type="radio" name="sort" id="filter_beaten-softcore">
-        <label class="context__radio-label" for="filter_beaten-softcore">
-            Beaten Softcore</label>
-    </div>
+
 </div>

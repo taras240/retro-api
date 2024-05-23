@@ -125,7 +125,6 @@ li {
 }
 
 .section__header-container {
-    padding: 1rem 1rem 0.5rem;
     /* background: linear-gradient(to bottom, var(--secondary-color), var(--main-color)); */
     background-color: var(--main-color);
     display: flex;
@@ -137,16 +136,21 @@ li {
 }
 
 .section__header-title {
+    padding: 1rem 1rem 0;
     font-size: 2rem;
     font-weight: 600;
     text-align: center;
 }
 
 .section__control-container {
+    padding: 1rem 1rem 0.5rem;
+
     display: flex;
     align-items: center;
     justify-content: space-evenly;
     gap: 0.5rem;
+    width: 100%;
+    overflow-x: scroll;
 }
 
 
@@ -161,21 +165,23 @@ li {
 }
 
 .simple-button {
+    --context-font-color: var(--font-color);
     position: relative;
     padding: 0.5rem 1.5rem;
     background-color: transparent;
-    color: var(--font-color);
+    color: var(--context-font-color);
     font-weight: 600;
     font-size: 1.1rem;
     text-transform: uppercase;
     border: 1px solid var(--secondary-color);
     border-radius: 0.8rem;
+    text-wrap: nowrap;
 }
 
 .simple-button:active {
+    --context-font-color: var(--main-color);
     -webkit-tap-highlight-color: transparent;
     background-color: var(--accent-color);
-    color: var(--main-color);
 }
 
 .popup-button {
@@ -189,14 +195,14 @@ li {
     top: 50%;
     right: 1.5rem;
     border: 0.5rem solid;
-    border-color: var(--font-color) transparent transparent transparent;
+    border-color: var(--context-font-color) transparent transparent transparent;
 }
 
 .context-menu__container {
     position: fixed;
     bottom: 0;
     width: 100vw;
-    max-height: 60vh;
+    max-height: 50vh;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
@@ -255,6 +261,7 @@ li {
     mask-position: center;
     mask-repeat: no-repeat;
     z-index: 5;
+
 }
 
 .context__header::after {
@@ -266,6 +273,11 @@ li {
     width: 100%;
     height: 1px;
     background: linear-gradient(to right, transparent, var(--font-color), transparent);
+}
+
+.context__control-container {
+    flex: 1;
+    overflow-y: scroll;
 }
 
 input[type="checkbox"],

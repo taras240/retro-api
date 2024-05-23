@@ -414,6 +414,34 @@ class Awards {
       ]
     }
   }
+  awardPlatformContext = () => {
+    return {
+      label: "Filter by",
+      elements: [
+        {
+          label: `All (${this.awardsObj.VisibleUserAwards.length})`,
+          id: "filter_all",
+          type: "radio",
+          onChange: "ui.awards.platformFilterCode = 'platform'",
+          checked: this.platformFilterName === 'platform',
+          name: "filter-by-platform"
+        },
+        ...Object.getOwnPropertyNames(this.platformCodes).reduce((elems, platformCode) => {
+          const filterObj = {
+            label: `${this.platformCodes[platformCode].name} (${this.platformCodes[platformCode].count})`,
+            id: `filter_code-${platformCode}`,
+            type: "radio",
+            onChange: `ui.awards.platformFilterCode = ${platformCode}`,
+            checked: this.platformFilterCode == platformCode,
+            name: "filter-by-platform"
+          };
+          elems.push(filterObj);
+          return elems;
+        }, [])
+
+      ]
+    }
+  }
   awardSortContext = () => {
     return {
       label: "Sort by",
@@ -460,6 +488,22 @@ class Awards {
     config.writeConfiguration()
     this.update();
   }
+
+  get platformFilterName() {
+    const code = config.ui?.mobile?.platformFilter ?? "platform";
+    return code == "platform" ? "platform" : RAPlatforms[code];
+  }
+  get platformFilterCode() {
+    const code = config.ui?.mobile?.platformFilter ?? "platform";
+    return code;
+  }
+  set platformFilterCode(value) {
+    !config.ui.mobile && (config.ui.mobile = {});
+    config.ui.mobile.platformFilter = value;
+    config.writeConfiguration()
+    this.update();
+  }
+
   get awardSortType() {
     return config.ui?.mobile?.awardSortType ?? "date";
   }
@@ -487,10 +531,12 @@ class Awards {
   }
 
   applyFilter() {
-    this.awardedGames = this.awardFilterName == "award" ?
-      this.awardsObj.VisibleUserAwards :
-      this.awardsObj.VisibleUserAwards.filter(game => game.award == this.awardFilter);
-
+    this.awardedGames = this.awardsObj.VisibleUserAwards;
+    this.awardFilterName !== "award" && (this.awardedGames = this.awardedGames
+      .filter(game => game.award == this.awardFilter));
+    this.platformFilterCode !== "platform" && (this.awardedGames =
+      this.awardedGames
+        .filter(game => game.ConsoleID == this.platformFilterCode));
   }
   awardTypes = {
     beaten: "beaten",
@@ -515,24 +561,39 @@ class Awards {
   constructor() {
     this.update();
   }
-  update() {
-    this.awardsObj ? (
-      this.applyFilter(),
+  async update() {
+    !this.awardsObj && (await this.downloadAwardsData());
+
+    this.applyFilter(),
       this.applySort(),
       ui.content.innerHTML = '',
-      ui.content.append(this.AwardsSection())) :
-      apiWorker.getUserAwards({})
-        .then(resp => {
-          this.awardsObj = resp;
-          this.applyFilter();
-          this.applySort();
-        })
-        .then(() => {
-          ui.content.innerHTML = '';
-          ui.content.append(this.AwardsSection());
-        })
+      ui.content.append(this.AwardsSection());
+    // apiWorker.getUserAwards({})
+    //   .then(resp => {
+    //     this.awardsObj = resp;
+    //     this.applyFilter();
+    //     this.applySort();
+    //   })
+    //   .then(() => {
+    //     ui.content.innerHTML = '';
+    //     ui.content.append(this.AwardsSection());
+    //   })
   }
+  async downloadAwardsData() {
+    const resp = await apiWorker.getUserAwards({});
+    this.awardsObj = resp;
+    this.platformCodes =
+      this.awardsObj.VisibleUserAwards
+        .reduce((platforms, game) => {
+          !platforms[game.ConsoleID] && (platforms[game.ConsoleID] = { count: 0 });
 
+          platforms[game.ConsoleID].name = game.ConsoleName;
+          platforms[game.ConsoleID].count++;
+
+          return platforms;
+        }, {});
+
+  }
   AwardsSection() {
     const awardsSection = document.createElement("section");
     awardsSection.classList.add("awards__section");
@@ -549,14 +610,14 @@ class Awards {
         `;
     return awardsSection;
   }
-  upda
   headerHtml() {
     return `
       <div class="section__header-container">
         <div class="section__header-title">Awards</div>
         <div class="section__control-container">
-            <button class="popup-button simple-button" onclick="generateContextMenu(ui.awards.awardTypeContext())">${this.awardFilter}</button>
-            <button class="popup-button simple-button" onclick="generateContextMenu(ui.awards.awardSortContext())">Sort</button>
+            <button class=" simple-button" onclick="generateContextMenu(ui.awards.awardSortContext())">Sort</button>
+            <button class=" simple-button" onclick="generateContextMenu(ui.awards.awardPlatformContext())">${this.platformFilterName ?? "Platform"}</button>
+            <button class=" simple-button" onclick="generateContextMenu(ui.awards.awardTypeContext())">${this.awardFilter}</button>
         </div>
       </div>
     `;
@@ -704,7 +765,10 @@ function generateContextMenu(structureObj) {
     })
     return controlsContainer;
   }
-  contextElement.append(generateContextElements(structureObj));
+  const controlContainer = document.createElement("div");
+  controlContainer.classList.add("context__control-container");
+  controlContainer.append(generateContextElements(structureObj));
+  contextElement.append(controlContainer);
   ui.app.appendChild(contextElement);
 }
 
@@ -758,4 +822,61 @@ const sortBy = {
     return 0;
 
   }
+}
+
+
+const RAPlatforms = {
+  "1": "Genesis/Mega Drive",
+  "2": "Nintendo 64",
+  "3": "SNES/Super Famicom",
+  "4": "Game Boy",
+  "5": "Game Boy Advance",
+  "6": "Game Boy Color",
+  "7": "NES/Famicom",
+  "8": "PC Engine/TurboGrafx-16",
+  "9": "Sega CD",
+  "10": "32X",
+  "11": "Master System",
+  "12": "PlayStation",
+  "13": "Atari Lynx",
+  "14": "Neo Geo Pocket",
+  "15": "Game Gear",
+  "17": "Atari Jaguar",
+  "18": "Nintendo DS",
+  "21": "PlayStation 2",
+  "23": "Magnavox Odyssey 2",
+  "24": "Pokemon Mini",
+  "25": "Atari 2600",
+  "27": "Arcade",
+  "28": "Virtual Boy",
+  "29": "MSX",
+  "33": "SG-1000",
+  "37": "Amstrad CPC",
+  "38": "Apple II",
+  "39": "Saturn",
+  "40": "Dreamcast",
+  "41": "PlayStation Portable",
+  "43": "3DO Interactive Multiplayer",
+  "44": "ColecoVision",
+  "45": "Intellivision",
+  "46": "Vectrex",
+  "47": "PC-8000/8800",
+  "49": "PC-FX",
+  "51": "Atari 7800",
+  "53": "WonderSwan",
+  "56": "Neo Geo CD",
+  "57": "Fairchild Channel F",
+  "63": "Watara Supervision",
+  "69": "Mega Duck",
+  "71": "Arduboy",
+  "72": "WASM-4",
+  "73": "Arcadia 2001",
+  "74": "Interton VC 4000",
+  "75": "Elektor TV Games Computer",
+  "76": "PC Engine CD/TurboGrafx-CD",
+  "77": "Atari Jaguar CD",
+  "78": "Nintendo DSi",
+  "80": "Uzebox",
+  "101": "Events",
+  "102": "Standalone"
 }
