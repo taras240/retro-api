@@ -12,12 +12,13 @@ class UI {
     },
 
     '/login': async () => {
-      this.content.innerHTML = Loader();
+      this.showLoader();
       const login = await Login()
       content.innerHTML = "";
       content.append(login);
       this.clearNavbar()
       this.navbar.login.classList.add("checked");
+      this.removeLoader();
     },
 
     '/home': async () => {
