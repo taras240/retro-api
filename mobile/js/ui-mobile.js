@@ -408,7 +408,7 @@ class Awards {
       label: "Filter by",
       elements: [
         {
-          label: "All",
+          label: `All (${this.awardsObj.VisibleUserAwards.length})`,
           id: "filter_all",
           type: "radio",
           onChange: "ui.awards.awardFilter = 'award'",
