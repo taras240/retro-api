@@ -421,7 +421,7 @@ class Home {
                         <div class="game-stats__text">${achiv.Points}</div>
                         </div>
                         <div class="game-stats game-stats__points">
-                        <i class="game-stats__icon game-stats__points-icon"></i>
+                        <i class="game-stats__icon game-stats__retropoints-icon"></i>
                         <div class="game-stats__text">${achiv.TrueRatio}</div>
                         </div>                        
                     </div>
@@ -745,7 +745,7 @@ class Awards {
                         <div class="game-stats__text">${achiv.Points}</div>
                         </div>
                         <div class="game-stats game-stats__points">
-                        <i class="game-stats__icon game-stats__points-icon"></i>
+                        <i class="game-stats__icon game-stats__retropoints-icon"></i>
                         <div class="game-stats__text">${achiv.TrueRatio}</div>
                         </div>                        
                     </div>
