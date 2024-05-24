@@ -415,38 +415,27 @@ class Awards {
           checked: this.awardFilterName === 'award',
           name: "filter-by-award"
         },
-        {
-          label: "Mastered",
-          id: "filter_mastered",
-          type: "radio",
-          onChange: "ui.awards.awardFilter = 'mastered'",
-          checked: this.awardFilterName === 'mastered',
-          name: "filter-by-award"
-        },
-        {
-          label: "Completed",
-          id: "filter_completed",
-          type: "radio",
-          onChange: "ui.awards.awardFilter = 'completed'",
-          checked: this.awardFilterName === 'completed',
-          name: "filter-by-award"
-        },
-        {
-          label: "Beeten",
-          id: "filter_beeten",
-          type: "radio",
-          onChange: "ui.awards.awardFilter = 'beaten'",
-          checked: this.awardFilterName === 'beaten',
-          name: "filter-by-award"
-        },
-        {
-          label: "Beeten softcore",
-          id: "filter_beeten-softcore",
-          type: "radio",
-          onChange: "ui.awards.awardFilter = 'beaten_softcore'",
-          checked: this.awardFilterName === 'beaten_softcore',
-          name: "filter-by-award"
-        }
+        // {
+        //   label: "Mastered",
+        //   id: "filter_mastered",
+        //   type: "radio",
+        //   onChange: "ui.awards.awardFilter = 'mastered'",
+        //   checked: this.awardFilterName === 'mastered',
+        //   name: "filter-by-award"
+        // },
+        ...Object.getOwnPropertyNames(this.awardTypes).reduce((elems, award) => {
+          const filterObj = {
+            label: `${this.awardTypes[award].name} (${this.awardTypes[award].count})`,
+            id: `filter_code-${award}`,
+            type: "radio",
+            onChange: `ui.awards.awardFilter = '${award}'`,
+            checked: this.awardFilterName == award,
+            name: "filter-by-award"
+          };
+          console.log(filterObj);
+          elems.push(filterObj);
+          return elems;
+        }, [])
       ]
     }
   }
@@ -511,7 +500,7 @@ class Awards {
   }
   get awardFilter() {
     const type = config.ui?.mobile?.awardsTypeFilter ?? "award";
-    return this.awardTypes[type]
+    return this.awardTypesNames[type]
   }
   get awardFilterName() {
     const type = config.ui?.mobile?.awardsTypeFilter ?? "award";
@@ -570,17 +559,17 @@ class Awards {
   applyFilter() {
     this.awardedGames = this.awardsObj.VisibleUserAwards;
     this.awardFilterName !== "award" && (this.awardedGames = this.awardedGames
-      .filter(game => game.award == this.awardFilter));
+      .filter(game => game.award == this.awardFilterName));
     this.platformFilterCode !== "platform" && (this.awardedGames =
       this.awardedGames
         .filter(game => game.ConsoleID == this.platformFilterCode));
   }
-  awardTypes = {
-    beaten: "beaten",
-    beaten_softcore: "beaten softcore",
-    completed: "completed",
-    mastered: "mastered",
-    award: "award type",
+  awardTypesNames = {
+    beaten: "Beaten",
+    beaten_softcore: "Beaten Softcore",
+    completed: "Completed",
+    mastered: "Mastered",
+    award: "Award Type",
   }
   sortMethods = {
     latest: "date",
@@ -612,17 +601,21 @@ class Awards {
   async downloadAwardsData() {
     const resp = await apiWorker.getUserAwards({});
     this.awardsObj = resp;
-    this.platformCodes =
-      this.awardsObj.VisibleUserAwards
-        .reduce((platforms, game) => {
-          !platforms[game.ConsoleID] && (platforms[game.ConsoleID] = { count: 0 });
 
-          platforms[game.ConsoleID].name = game.ConsoleName;
-          platforms[game.ConsoleID].count++;
+    const stats = this.awardsObj.VisibleUserAwards
+      .reduce((res, game) => {
+        !res.platforms[game.ConsoleID] && (res.platforms[game.ConsoleID] = { count: 0 });
+        res.platforms[game.ConsoleID].name = game.ConsoleName;
+        res.platforms[game.ConsoleID].count++;
 
-          return platforms;
-        }, {});
+        !res.awards[game.award] && (res.awards[game.award] = { count: 0 });
+        res.awards[game.award].name = this.awardTypesNames[game.award];
+        res.awards[game.award].count++;
 
+        return res;
+      }, { platforms: {}, awards: {} });
+    this.platformCodes = stats.platforms;
+    this.awardTypes = stats.awards;
   }
   AwardsSection() {
     const awardsSection = document.createElement("section");
@@ -667,7 +660,7 @@ class Awards {
                         <div class="awards__game-stats__text">${game.ConsoleName}</div>
 
                         <div class="awards__game-stats-container" >
-                            <div class="awards__game-stats__text awards__game-award-type">${game.award}</div>
+                            <div class="awards__game-stats__text awards__game-award-type">${this.awardTypesNames[game.award]}</div>
                             <div class="awards__game-stats__text">${new Date(game.AwardedAt).toLocaleDateString()}</div>
                            
                         </div>
