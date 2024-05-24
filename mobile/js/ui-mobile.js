@@ -355,9 +355,15 @@ class Home {
                     <div class="user-info__game-preview-container">
                         <img class="user-info__game-preview" src="https://media.retroachievements.org${game.ImageIcon}" alt="">
                     </div>
+
+
                     <div class="user-info__game-description" >
                         <h2 class="user-info__game-title">${game.Title}</h2>
-                        <div class="user-info_game-stats-container" onclick="ui.home.expandRecentGame(${game.GameID},this); event.stopPropagation()">
+                        <div class="game-stats__text">${game.ConsoleName}</div>
+                        <div  class="game-stats__button"  onclick="ui.home.expandRecentGame(${game.GameID},this); event.stopPropagation()">
+                          <i class="game-stats__icon game-stats__expand-icon"></i>
+                        </div>
+                        <div class="user-info_game-stats-container">
                             <div class="game-stats ">
                             <i class="game-stats__icon game-stats__achivs-icon"></i>
                             <div class="game-stats__text">${game.NumAchievedHardcore} / ${game.NumPossibleAchievements}</div>
@@ -366,9 +372,7 @@ class Home {
                             <i class="game-stats__icon game-stats__points-icon"></i>
                             <div class="game-stats__text">${game.ScoreAchievedHardcore} / ${game.PossibleScore}</div>
                             </div>
-                            <div  class="game-stats__button">
-                                <i class="game-stats__icon game-stats__expand-icon"></i>
-                            </div>
+                           
                         </div>
                     </div>
                 </div>
@@ -657,7 +661,12 @@ class Awards {
                     </div>
                     <div class="awards__game-description" >
                         <h2 class="awards__game-title">${game.Title}</h2>
-                        <div class="awards__game-stats-container" onclick="ui.awards.expandAwardGame(${game.AwardData},this); event.stopPropagation()">
+                        <div  class="game-stats__button"  onclick="ui.awards.expandAwardGame(${game.AwardData},this); event.stopPropagation()">
+                          <i class="game-stats__icon game-stats__expand-icon"></i>
+                        </div>
+                        <div class="awards__game-stats__text">${game.ConsoleName}</div>
+
+                        <div class="awards__game-stats-container" >
                             <div class="awards__game-stats__text awards__game-award-type">${game.award}</div>
                             <div class="awards__game-stats__text">${new Date(game.AwardedAt).toLocaleDateString()}</div>
                            

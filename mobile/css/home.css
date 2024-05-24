@@ -94,7 +94,7 @@
 }
 
 .user-info__block-header {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     font-weight: 600;
     text-align: center;
 }
@@ -121,7 +121,7 @@
     justify-content: flex-start;
     align-items: flex-start;
     gap: 1rem;
-    padding: .8rem;
+    padding: .75rem;
     height: 6.5rem;
 }
 
@@ -136,6 +136,7 @@
 }
 
 .user-info__game-description {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -146,7 +147,7 @@
 }
 
 .user-info__game-title {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     font-weight: 400;
     max-width: 100%;
     overflow-x: scroll;
@@ -171,7 +172,7 @@
 
 .game-stats__text {
     text-wrap: nowrap;
-    font-size: 1.3rem;
+    font-size: 1rem;
 }
 
 .game-stats__icon {
@@ -198,19 +199,30 @@
 }
 
 .game-stats__button {
-    background-color: transparent;
-    display: flex;
-    align-items: center;
-    text-align: right;
-    flex: 1;
-    justify-content: end;
     position: absolute;
-    right: 0;
+    transform: translateY(-50%);
+    top: 50%;
+    right: 0.25rem;
+    background-color: var(--font-color);
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    /* padding: 0.2rem; */
+    /* aspect-ratio: 1; */
+    border-radius: 50%;
+    /* overflow: hidden; */
 }
 
 .game-stats__expand-icon {
+    width: 100%;
+    height: 100%;
+
+    background-color: var(--main-color);
     mask-image: url(../../assets/img/expand_more.svg);
-    margin-right: .5rem;
+    mask-position: bottom;
+    mask-size: contain;
+    /* margin-right: .5rem; */
     transition: .2s;
 }
 
@@ -262,7 +274,7 @@
     display: flex;
     justify-content: start;
     gap: 1rem;
-    padding: 1rem;
+    padding: 0.75rem;
     background-color: var(--main-color);
     border-radius: 1rem;
     width: 100%;
