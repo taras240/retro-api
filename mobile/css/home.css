@@ -1,5 +1,5 @@
 .user-info__container {
-    padding: 20px;
+    padding: 0 1rem 1rem;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -8,9 +8,14 @@
     padding-bottom: 6rem;
 }
 
+.section__header-container.user-info__header-container {
+    padding: 1rem;
+    gap: 1rem;
+}
+
 .user-info__header {
     display: flex;
-    gap: 20px;
+    gap: 1rem;
 }
 
 .user-info__avatar-container {
@@ -194,8 +199,13 @@
     mask-image: url(../../assets/img/points.svg);
 }
 
-.game-stats__points-icon {
-    mask-image: url(../../assets/img/points.svg);
+.game-stats__retropoints-icon {
+    mask-image: url(../../assets/img/bolt.svg);
+}
+
+.game-stats__trending-icon {
+    mask-image: url(../../assets/img/trending.svg);
+
 }
 
 .game-stats__button {
@@ -230,6 +240,54 @@
     mask-image: url(../../assets/img/expand_more.svg);
     transform: rotate(180deg);
 
+}
+
+.achiv-rarity {
+    padding: 0.2rem 1rem;
+    border-radius: 5pt;
+    color: black;
+    text-transform: uppercase;
+    font-weight: 600;
+
+}
+
+.achiv-rarity__hell {
+    background-color: #800080;
+    animation: hell-anim 6s infinite;
+}
+
+@keyframes hell-anim {
+    0% {
+        background-color: #800080;
+    }
+
+    50% {
+        background-color: crimson;
+    }
+
+    100% {
+        background-color: #800080;
+    }
+}
+
+.achiv-rarity__insane {
+    background-color: #800080;
+}
+
+.achiv-rarity__nightmare {
+    background-color: crimson;
+}
+
+.achiv-rarity__expert {
+    background-color: orange;
+}
+
+.achiv-rarity__standard {
+    background-color: greenyellow;
+}
+
+.achiv-rarity__easy {
+    background-color: green;
 }
 
 .user-info__game-achivs-container {
@@ -300,6 +358,7 @@
     height: 100%;
     aspect-ratio: 1;
     border-radius: 15%;
+    image-rendering: pixelated;
     filter: grayscale(1);
 }
 

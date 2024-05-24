@@ -1,3 +1,80 @@
-<div class="loading_screen">
-    <div class="loading_screen__loader-icon"></div>
+<div class="game__section">
+    <div class="section__header-container game__header-container">
+        <div class="game-header__background-container">
+            <img class="game-header__background-img" src="https://media.retroachievements.org/Images/039426.png" alt="">
+            <div class="game-header__background-gradient"></div>
+        </div>
+        <div class="game-header__main-info">
+            <div class="game-header__icon-container">
+                <img class="game-header__icon" src="https://media.retroachievements.org/Images/043551.png" alt="">
+            </div>
+            <div class="game-header__description-container">
+                <h1 class="game-header__title">Super Bomberman</h1>
+                <div class="game-header__progress-container">
+                    <div class="game-header__progress">Progress: 63.72%</div>
+                </div>
+                <div class="game-header__platform">Platform: SNES/Super Famicom</div>
+            </div>
+        </div>
+        <div class="game-points__container">
+            <div class="user-info__points-group">
+                <h3 class="game-points__points-name">cheevos</h3>
+                <p class="user-info__points">2/24</p>
+            </div>
+            <div class="vertical-line"></div>
+
+            <div class="user-info__points-group">
+                <h3 class="game-points__points-name">points</h3>
+                <p class="user-info__points">124/450</p>
+
+            </div>
+            <div class="vertical-line"></div>
+            <div class="user-info__points-group">
+                <h3 class="game-points__points-name">retropoints</h3>
+                <p class="user-info__points">1001/1620</p>
+
+            </div>
+        </div>
+
+    </div>
+    <ul class="game-achivs__container">
+        <li class="achiv__achiv-container" onclick="ui.showAchivDetails(15406,2115)">
+            <div class="achiv__title-container">
+                <div class="achiv__preview-container">
+                    <img class="user-info__achiv-preview earned"
+                        src="https://media.retroachievements.org/Badge/356604.png" alt="">
+                </div>
+
+                <div class="achiv__achiv-description">
+                    <h2 class="achiv__achiv-title">Fun on the Beach</h2>
+                    <p class="achiv__achiv-description">Win Battle on Normal Zone (2, 3, 4 COM. COM Level 10. 3 Wins)
+                        Win Battle on Normal Zone (2, 3, 4 COM. COM Level 10. 3 Wins)
+                        Win Battle on Normal Zone (2, 3, 4 COM. COM Level 10. 3 Wins)
+                        Win Battle on Normal Zone (2, 3, 4 COM. COM Level 10. 3 Wins)
+                        Win Battle on Normal Zone (2, 3, 4 COM. COM Level 10. 3 Wins)
+                    </p>
+
+                </div>
+            </div>
+            <div class="achiv__icons">
+
+                <div class="game-stats ">
+                    <i class="game-stats__icon game-stats__points-icon"></i>
+                    <div class="game-stats__text">5</div>
+                </div>
+                <div class="game-stats game-stats__points">
+                    <i class="game-stats__icon game-stats__retropoints-icon"></i>
+                    <div class="game-stats__text">7</div>
+                </div>
+                <div class="game-stats game-stats__points">
+                    <i class="game-stats__icon game-stats__trending-icon"></i>
+                    <div class="game-stats__text">7%</div>
+                </div>
+                <div class="game-stats game-stats__points">
+                    <div class="game-stats__text achiv-rarity achiv-rarity__impossible">impossible</div>
+                </div>
+
+            </div>
+        </li>
+    </ul>
 </div>

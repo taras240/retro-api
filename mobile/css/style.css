@@ -2,6 +2,7 @@
 @import url(./login.css);
 @import url(./home.css);
 @import url(./awards.css);
+@import url(./game.css);
 
 body {
     --main-color: #01080D;

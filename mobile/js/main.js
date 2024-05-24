@@ -1,4 +1,5 @@
-config = new Config();
+"use strict";
+const config = new Config();
 const apiWorker = new APIWorker();
 const ui = new UI();
 const GAMES_DATA = {};

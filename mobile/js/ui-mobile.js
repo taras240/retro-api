@@ -1,3 +1,4 @@
+"use strict";
 class UI {
   routes = {
     '/': async () => {
@@ -41,7 +42,15 @@ class UI {
         this.goto.login();
       }
     },
-
+    '/game': async (args) => {
+      if (config.identConfirmed) {
+        const gameID = args.gameID ? parseInt(args.gameID, 10) : false;
+        gameID && (this.game = new Game(gameID));
+      }
+      else {
+        this.goto.login();
+      }
+    },
     '/test': async () => {
       content.innerHTML = "";
       content.append(await Test());
@@ -55,6 +64,10 @@ class UI {
     },
     "awards": () => {
       history.pushState(null, null, "#/awards");
+      this.updatePage();
+    },
+    "game": (gameID) => {
+      history.pushState(null, null, `#/game&gameID=${gameID}`);
       this.updatePage();
     },
     "login": () => {
@@ -98,10 +111,21 @@ class UI {
   clearNavbar() {
     this.navbar.container.querySelectorAll(".checked").forEach(el => el.classList.remove("checked"));
   }
+
   updatePage() {
     const hash = window.location.hash.substring(1);
-    const route = this.routes[hash] || this.routes['/'];
-    route();
+    const [path, queryString] = hash.split('&');
+    const route = this.routes[path] || this.routes['/'];
+
+    // Розбираємо параметри запиту
+    const params = new URLSearchParams(queryString);
+    const args = {};
+    for (const [key, value] of params.entries()) {
+      args[key] = value;
+    }
+
+    // Викликаємо маршрут з аргументами
+    route(args);
   }
   removePopups() {
     document.querySelectorAll(".popup").forEach(el => el.remove());
@@ -289,11 +313,10 @@ class Home {
     const homeSection = document.createElement("section");
     homeSection.classList.add("home__section");
     homeSection.innerHTML = `
-        <div class="user-info__container">
+        
             ${this.headerHtml()}
-            <div class="user-info__rich-presence"> ${this.USER_INFO.richPresence}</div>
-            ${this.pointsHtml()}
-            <h2 class="user-info__block-header">Recently played</h2>
+            <div class="user-info__container">
+           
             <ul class="user-info__last-games-list">
                 ${this.USER_INFO.lastGames.reduce((elements, game) => {
       const gameHtml = this.gameHtml(game);
@@ -309,16 +332,21 @@ class Home {
 
   headerHtml() {
     return `
-            <div class="user-info__header">
-                <div class="user-info__avatar-container">
-                    <img src="${this.USER_INFO.userImageSrc}" alt="" class="user-info__avatar">
-                </div>
-                <div class="user-info__user-name-container">
-                    <h1 class="user-info__user-name">${this.USER_INFO.userName}</h1>
-                    <div class="user-info__user-rank">RANK: ${this.USER_INFO.userRank}</div>
-                    <div class="user-info__rich-presence">Member since: ${this.USER_INFO.memberSince}</div>
-                </div>
+      <div class="section__header-container user-info__header-container">
+        <div class="user-info__header">
+            <div class="user-info__avatar-container">
+                <img src="${this.USER_INFO.userImageSrc}" alt="" class="user-info__avatar">
             </div>
+            <div class="user-info__user-name-container">
+                <h1 class="user-info__user-name">${this.USER_INFO.userName}</h1>
+                <div class="user-info__user-rank">RANK: ${this.USER_INFO.userRank}</div>
+                <div class="user-info__rich-presence">Member since: ${this.USER_INFO.memberSince}</div>
+            </div>
+        </div>
+        <div class="user-info__rich-presence"> ${this.USER_INFO.richPresence}</div>
+        ${this.pointsHtml()}
+        <h2 class="user-info__block-header">Recently played</h2>
+      </div>
         `;
   }
   pointsHtml() {
@@ -352,7 +380,7 @@ class Home {
     return `    
             <li class="user-info__last-game-container" data-id="${game.GameID}">
                 <div class="user-info__game-main-info"  onclick="ui.showGameDetails(${game.GameID}); event.stopPropagation()">
-                    <div class="user-info__game-preview-container">
+                    <div class="user-info__game-preview-container" onclick="ui.goto.game(${game.GameID}); event.stopPropagation()">
                         <img class="user-info__game-preview" src="https://media.retroachievements.org${game.ImageIcon}" alt="">
                     </div>
 
@@ -405,7 +433,7 @@ class Home {
 class Awards {
   awardTypeContext = () => {
     return {
-      label: "Filter by",
+      label: "Filter by type",
       elements: [
         {
           label: `All (${this.awardsObj.VisibleUserAwards.length})`,
@@ -441,7 +469,7 @@ class Awards {
   }
   awardPlatformContext = () => {
     return {
-      label: "Filter by",
+      label: "Filter by platform",
       elements: [
         {
           label: `All (${this.awardsObj.VisibleUserAwards.length})`,
@@ -649,7 +677,7 @@ class Awards {
     return `    
             <li class="awards__game-item" data-id="${game.AwardData}">
                 <div class="awards__game-container"  onclick="ui.showGameDetails(${game.AwardData}); event.stopPropagation()">
-                    <div class="awards__game-preview-container">
+                    <div class="awards__game-preview-container" onclick="ui.goto.game(${game.AwardData}); event.stopPropagation()">
                         <img class="awards__game-preview" src="https://media.retroachievements.org${game.ImageIcon}" alt="">
                     </div>
                     <div class="awards__game-description" >
@@ -726,6 +754,132 @@ class Awards {
         `;
   }
 
+}
+class Game {
+  constructor(gameID) {
+    this.gameID = gameID;
+    this.update();
+  }
+  getSectionElement() {
+    const section = document.createElement("div");
+    section.classList.add("game__section");
+    section.innerHTML = `
+      ${this.SectionHeaderHtml()}
+      <ul class="game-achivs__container">
+        ${Object.values(this.gameData.Achievements).reduce((elementsHtml, achiv) => {
+      elementsHtml += this.AchievementHtml(achiv);
+      return elementsHtml;
+    }, "")}
+      </ul>
+    `;
+    return section;
+  }
+  AchievementHtml(achiv) {
+    const trend = ~~(1000 * achiv.NumAwardedHardcore / this.gameData.NumDistinctPlayers) / 10;
+    const rarity = trend < 1 ? "hell" : trend <= 2 ? "insane" : trend < 10 ? "nightmare" : trend < 15 ? "expert" : trend < 20 ? "standard" : "easy";
+
+    return `
+      <li class="achiv__achiv-container" onclick="ui.showAchivDetails(${achiv.ID}, ${this.gameID}); event.stopPropagation()">
+        <div class="achiv__title-container">
+            <div class="achiv__preview-container">
+                <img class="user-info__achiv-preview earned"
+                    src="https://media.retroachievements.org/Badge/${achiv.BadgeName}.png" alt="">
+            </div>
+
+            <div class="achiv__achiv-description">
+                <h2 class="achiv__achiv-title">${achiv.Title}</h2>
+                <p class="achiv__achiv-text">${achiv.Description}</p>
+            </div>
+        </div>
+        <div class="achiv__icons">
+            <div class="game-stats ">
+                <i class="game-stats__icon game-stats__points-icon"></i>
+                <div class="game-stats__text">${achiv.Points}</div>
+            </div>
+            <div class="game-stats game-stats__points">
+                <i class="game-stats__icon game-stats__retropoints-icon"></i>
+                <div class="game-stats__text">${achiv.TrueRatio}</div>
+            </div>
+            <div class="game-stats game-stats__points">
+                <i class="game-stats__icon game-stats__trending-icon"></i>
+                <div class="game-stats__text">${~~trend}%</div>
+            </div>
+            <div class="game-stats game-stats__points">
+                <div class="game-stats__text achiv-rarity achiv-rarity__${rarity}">${rarity}</div>
+            </div>
+
+        </div>
+      </li>
+    
+    `
+  }
+  SectionHeaderHtml() {
+    let earnedData = Object.values(this.gameData.Achievements).reduce((data, achiv) => {
+      achiv.isHardcoreEarned && (
+        data.achivs++,
+        data.points += achiv.Points,
+        data.retropoints += achiv.TrueRatio
+      );
+      return data;
+    }, { achivs: 0, points: 0, retropoints: 0 });
+    const completionProgress = ~~(100 * (earnedData.points) / this.gameData.points_total)
+    earnedData.achivs == 0 && (earnedData = false);
+    return `
+            <div class="section__header-container game__header-container" onclick="ui.showGameDetails(${this.gameID})">
+                <div class="game-header__background-container">
+                    <img class="game-header__background-img" src="https://media.retroachievements.org${this.gameData.ImageTitle}" alt="">
+                    <div class="game-header__background-gradient"></div>
+                </div>
+                <div class="game-header__main-info">
+                    <div class="game-header__icon-container">
+                        <img class="game-header__icon" src="https://media.retroachievements.org${this.gameData.ImageIcon}" alt="">
+                    </div>
+                    <div class="game-header__description-container">
+                        <h1 class="game-header__title">${this.gameData.Title}</h1>
+                        <div class="game-header__platform">${this.gameData.ConsoleName}</div>
+                        ${completionProgress > 0 ? `
+                          <div class="game-header__progress-container" style='--progress: ${completionProgress}%;'>
+                              <div class="game-header__progress">Progress: ${completionProgress}% </div>
+                          </div> 
+                          ` : ''}  
+                    </div>
+                </div>
+                <div class="game-points__container">
+                    <div class="user-info__points-group">
+                        <h3 class="game-points__points-name">cheevos</h3>
+                        <p class="user-info__points">${earnedData ? (earnedData.achivs + '/') : ""}${this.gameData.NumAchievements}</p>
+                    </div>
+                    <div class="vertical-line"></div>
+
+                    <div class="user-info__points-group">
+                        <h3 class="game-points__points-name">points</h3>
+                        <p class="user-info__points">${earnedData ? (earnedData.points + '/') : ""}${this.gameData.points_total}</p>
+                    </div>
+                    <div class="vertical-line"></div>
+                    <div class="user-info__points-group">
+                        <h3 class="game-points__points-name">retropoints</h3>
+                        <p class="user-info__points">${earnedData ? (earnedData.retropoints + '/') : ""}${this.gameData.TotalRetropoints}</p>
+                    </div>
+                </div>
+            </div>
+    `;
+  }
+  update(gameID = this.gameID) {
+    ui.showLoader();
+
+    if (GAMES_DATA[gameID]) {
+      this.gameData = GAMES_DATA[this.gameID];
+      const section = this.getSectionElement();
+      ui.content.innerHTML = "";
+      ui.content.append(section);
+      ui.removeLoader();
+    }
+    else {
+      apiWorker.getGameProgress({ gameID: gameID }).then((resp) => {
+        GAMES_DATA[gameID] = resp;
+      }).then(() => this.update())
+    }
+  }
 }
 const Login = () => {
   const sectionUrl = './sections/login.elem';
@@ -809,6 +963,14 @@ function generateContextMenu(structureObj) {
   ui.app.appendChild(contextElement);
 }
 
+
+
+
+
+
+
+
+//* --------------- ------------------------- ----------------------------------
 const sortMethods = {
   latest: "date",
   earnedCount: "earnedCount",

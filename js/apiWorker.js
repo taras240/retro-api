@@ -1,3 +1,4 @@
+"use strict";
 class APIWorker {
   get _savedCompletionProgress() {
     return config._cfg?.apiWorker?.completionProgress ?? {}

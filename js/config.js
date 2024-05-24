@@ -1,3 +1,4 @@
+"use strict";
 const CONFIG_FILE_NAME = "retroApiConfig";
 class Config {
   //! ----------[ Login information ]------------------
