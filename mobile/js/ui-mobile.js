@@ -42,6 +42,16 @@ class UI {
         this.goto.login();
       }
     },
+    '/library': async () => {
+      if (config.identConfirmed) {
+        this.library = new Library();
+        this.clearNavbar()
+        this.navbar.library.classList.add("checked");
+      }
+      else {
+        this.goto.login();
+      }
+    },
     '/game': async (args) => {
       if (config.identConfirmed) {
         const gameID = args.gameID ? parseInt(args.gameID, 10) : false;
@@ -66,6 +76,10 @@ class UI {
       history.pushState(null, null, "#/awards");
       this.updatePage();
     },
+    "library": () => {
+      history.pushState(null, null, "#/library");
+      this.updatePage();
+    },
     "game": (gameID) => {
       history.pushState(null, null, `#/game&gameID=${gameID}`);
       this.updatePage();
@@ -88,6 +102,7 @@ class UI {
       container: document.querySelector(".navbar"),
       home: document.querySelector("#navbar_home"),
       awards: document.querySelector("#navbar_awards"),
+      library: document.querySelector("#navbar_library"),
       login: document.querySelector("#navbar_login"),
     }
   }
@@ -234,6 +249,65 @@ class UI {
     </div>
   `;
   }
+  expandGameItem(gameID, button) {
+    const targetGameElement = button.closest(`li`)
+    targetGameElement.classList.toggle("expanded");
+
+    const getRecentGame = (gameID) => {
+      this.showLoader();
+      const achivsContainer = document.createElement("div");
+      achivsContainer.classList.add("user-info__game-achivs-container");
+
+      const achivsList = document.createElement("ul");
+      achivsList.classList.add("user-info__game-achivs-list");
+
+      achivsContainer.appendChild(achivsList);
+      targetGameElement.appendChild(achivsContainer);
+      if (GAMES_DATA[gameID]) {
+        Object.values(GAMES_DATA[gameID].Achievements).forEach(achiv => {
+          achivsList.innerHTML += this.achivHtml(achiv, gameID);
+        });
+        this.removeLoader();
+      }
+      else {
+        apiWorker
+          .getGameProgress({ gameID: gameID })
+          .then(gameObj => {
+            GAMES_DATA[gameID] = gameObj;
+            Object.values(gameObj.Achievements).forEach(achiv => {
+              achivsList.innerHTML += this.achivHtml(achiv, gameID);
+            })
+          }).then(() => this.removeLoader())
+      }
+    }
+    targetGameElement.querySelector(".user-info__game-achivs-container") ?? (getRecentGame(gameID))
+  }
+  achivHtml(achiv, gameID) {
+    return `    
+            <li class="user-info__achiv-container"  onclick="ui.showAchivDetails(${achiv.ID},${gameID})">                
+                <div class="user-info__achiv-preview-container">
+                    <img class="user-info__achiv-preview ${achiv.isHardcoreEarned && "earned"}" src="${achiv.prevSrc}" alt="">
+                </div>
+                <div class="user-info__achiv-description">
+                    <h2 class="user-info__game-title">${achiv.Title}</h2>
+                    <div class="user-info_game-stats-container">
+                        <div class="game-stats ">
+                        <i class="game-stats__icon game-stats__points-icon"></i>
+                        <div class="game-stats__text">${achiv.Points}</div>
+                        </div>
+                        <div class="game-stats game-stats__points">
+                        <i class="game-stats__icon game-stats__retropoints-icon"></i>
+                        <div class="game-stats__text">${achiv.TrueRatio}</div>
+                        </div>    
+                        <div class="game-stats game-stats__points">
+                        <i class="game-stats__icon game-stats__trending-icon"></i>
+                        <div class="game-stats__text">${achiv.rateEarnedHardcore}</div>
+                        </div>                     
+                    </div>
+                </div>             
+            </li>
+        `;
+  }
   showLoader() {
     this.removeLoader();
     this.app.append(Loader());
@@ -272,42 +346,6 @@ class Home {
       })
   }
 
-  async expandRecentGame(gameID, button) {
-
-    const targetGameElement = button.closest(`.user-info__last-game-container[data-id='${gameID}'`);
-    targetGameElement.classList.toggle("expanded");
-
-    const getRecentGame = (gameID) => {
-      ui.showLoader();
-      const achivsContainer = document.createElement("div");
-      achivsContainer.classList.add("user-info__game-achivs-container");
-
-      const achivsList = document.createElement("ul");
-      achivsList.classList.add("user-info__game-achivs-list");
-
-      achivsContainer.appendChild(achivsList);
-      targetGameElement.appendChild(achivsContainer);
-
-      if (GAMES_DATA[gameID]) {
-        Object.values(GAMES_DATA[gameID].Achievements).forEach(achiv => {
-          achivsList.innerHTML += this.achivHtml(achiv, gameID);
-        });
-        ui.removeLoader();
-      }
-
-      else {
-        apiWorker
-          .getGameProgress({ gameID: gameID })
-          .then(gameObj => {
-            GAMES_DATA[gameID] = gameObj;
-            Object.values(gameObj.Achievements).forEach(achiv => {
-              achivsList.innerHTML += this.achivHtml(achiv, gameID);
-            })
-          }).then(() => ui.removeLoader())
-      }
-    }
-    targetGameElement.querySelector(".user-info__game-achivs-container") ?? (getRecentGame(gameID));
-  }
 
   HomeSection() {
     const homeSection = document.createElement("section");
@@ -388,7 +426,7 @@ class Home {
                     <div class="user-info__game-description" >
                         <h2 class="user-info__game-title">${game.Title}</h2>
                         <div class="game-stats__text">${game.ConsoleName}</div>
-                        <div  class="game-stats__button"  onclick="ui.home.expandRecentGame(${game.GameID},this); event.stopPropagation()">
+                        <div  class="game-stats__button"  onclick="ui.expandGameItem(${game.ID},this); event.stopPropagation()">
                           <i class="game-stats__icon game-stats__expand-icon"></i>
                         </div>
                         <div class="user-info_game-stats-container">
@@ -407,28 +445,7 @@ class Home {
             </li>
         `;
   }
-  achivHtml(achiv, gameID) {
-    return `    
-            <li class="user-info__achiv-container"  onclick="ui.showAchivDetails(${achiv.ID},${gameID})">                
-                <div class="user-info__achiv-preview-container">
-                    <img class="user-info__achiv-preview ${achiv.isHardcoreEarned && "earned"}" src="${achiv.prevSrc}" alt="">
-                </div>
-                <div class="user-info__achiv-description">
-                    <h2 class="user-info__game-title">${achiv.Title}</h2>
-                    <div class="user-info_game-stats-container">
-                        <div class="game-stats ">
-                        <i class="game-stats__icon game-stats__points-icon"></i>
-                        <div class="game-stats__text">${achiv.Points}</div>
-                        </div>
-                        <div class="game-stats game-stats__points">
-                        <i class="game-stats__icon game-stats__retropoints-icon"></i>
-                        <div class="game-stats__text">${achiv.TrueRatio}</div>
-                        </div>                        
-                    </div>
-                </div>             
-            </li>
-        `;
-  }
+
 }
 class Awards {
   awardTypeContext = () => {
@@ -460,7 +477,6 @@ class Awards {
             checked: this.awardFilterName == award,
             name: "filter-by-award"
           };
-          console.log(filterObj);
           elems.push(filterObj);
           return elems;
         }, [])
@@ -682,7 +698,7 @@ class Awards {
                     </div>
                     <div class="awards__game-description" >
                         <h2 class="awards__game-title">${game.Title}</h2>
-                        <div  class="game-stats__button"  onclick="ui.awards.expandAwardGame(${game.AwardData},this); event.stopPropagation()">
+                        <div  class="game-stats__button"  onclick="ui.expandGameItem(${game.ID},this); event.stopPropagation()">
                           <i class="game-stats__icon game-stats__expand-icon"></i>
                         </div>
                         <div class="awards__game-stats__text">${game.ConsoleName}</div>
@@ -697,63 +713,6 @@ class Awards {
             </li>
         `;
   }
-  expandAwardGame(gameID, button) {
-    button.closest(`.awards__game-item[data-id='${gameID}'`)
-    const targetGameElement = button.closest(`.awards__game-item[data-id='${gameID}'`)
-    targetGameElement.classList.toggle("expanded");
-
-    const getRecentGame = (gameID) => {
-      ui.showLoader();
-      const achivsContainer = document.createElement("div");
-      achivsContainer.classList.add("user-info__game-achivs-container");
-
-      const achivsList = document.createElement("ul");
-      achivsList.classList.add("user-info__game-achivs-list");
-
-      achivsContainer.appendChild(achivsList);
-      targetGameElement.appendChild(achivsContainer);
-      if (GAMES_DATA[gameID]) {
-        Object.values(GAMES_DATA[gameID].Achievements).forEach(achiv => {
-          achivsList.innerHTML += this.achivHtml(achiv, gameID);
-        });
-        ui.removeLoader();
-      }
-      else {
-        apiWorker
-          .getGameProgress({ gameID: gameID })
-          .then(gameObj => {
-            GAMES_DATA[gameID] = gameObj;
-            Object.values(gameObj.Achievements).forEach(achiv => {
-              achivsList.innerHTML += this.achivHtml(achiv, gameID);
-            })
-          }).then(() => ui.removeLoader())
-      }
-    }
-    targetGameElement.querySelector(".user-info__game-achivs-container") ?? (getRecentGame(gameID))
-  }
-  achivHtml(achiv, gameID) {
-    return `    
-            <li class="user-info__achiv-container"  onclick="ui.showAchivDetails(${achiv.ID},${gameID})">                
-                <div class="user-info__achiv-preview-container">
-                    <img class="user-info__achiv-preview ${achiv.isHardcoreEarned && "earned"}" src="${achiv.prevSrc}" alt="">
-                </div>
-                <div class="user-info__achiv-description">
-                    <h2 class="user-info__game-title">${achiv.Title}</h2>
-                    <div class="user-info_game-stats-container">
-                        <div class="game-stats ">
-                        <i class="game-stats__icon game-stats__points-icon"></i>
-                        <div class="game-stats__text">${achiv.Points}</div>
-                        </div>
-                        <div class="game-stats game-stats__points">
-                        <i class="game-stats__icon game-stats__retropoints-icon"></i>
-                        <div class="game-stats__text">${achiv.TrueRatio}</div>
-                        </div>                        
-                    </div>
-                </div>             
-            </li>
-        `;
-  }
-
 }
 class Game {
   constructor(gameID) {
@@ -782,33 +741,34 @@ class Game {
       <li class="achiv__achiv-container" onclick="ui.showAchivDetails(${achiv.ID}, ${this.gameID}); event.stopPropagation()">
         <div class="achiv__title-container">
             <div class="achiv__preview-container">
-                <img class="user-info__achiv-preview earned"
+                <img class="user-info__achiv-preview ${achiv.isHardcoreEarned ? "earned" : ""}"
                     src="https://media.retroachievements.org/Badge/${achiv.BadgeName}.png" alt="">
             </div>
 
             <div class="achiv__achiv-description">
                 <h2 class="achiv__achiv-title">${achiv.Title}</h2>
                 <p class="achiv__achiv-text">${achiv.Description}</p>
+                <div class="achiv__icons">
+              <div class="game-stats ">
+                  <i class="game-stats__icon game-stats__points-icon"></i>
+                  <div class="game-stats__text">${achiv.Points}</div>
+              </div>
+              <div class="game-stats game-stats__points">
+                  <i class="game-stats__icon game-stats__retropoints-icon"></i>
+                  <div class="game-stats__text">${achiv.TrueRatio}</div>
+              </div>
+              <div class="game-stats game-stats__points">
+                  <i class="game-stats__icon game-stats__trending-icon"></i>
+                  <div class="game-stats__text">${~~trend}%</div>
+              </div>
+              <div class="game-stats game-stats__points">
+                  <div class="game-stats__text achiv-rarity achiv-rarity__${rarity}">${rarity}</div>
+              </div>
             </div>
+            </div>
+            
         </div>
-        <div class="achiv__icons">
-            <div class="game-stats ">
-                <i class="game-stats__icon game-stats__points-icon"></i>
-                <div class="game-stats__text">${achiv.Points}</div>
-            </div>
-            <div class="game-stats game-stats__points">
-                <i class="game-stats__icon game-stats__retropoints-icon"></i>
-                <div class="game-stats__text">${achiv.TrueRatio}</div>
-            </div>
-            <div class="game-stats game-stats__points">
-                <i class="game-stats__icon game-stats__trending-icon"></i>
-                <div class="game-stats__text">${~~trend}%</div>
-            </div>
-            <div class="game-stats game-stats__points">
-                <div class="game-stats__text achiv-rarity achiv-rarity__${rarity}">${rarity}</div>
-            </div>
-
-        </div>
+        
       </li>
     
     `
@@ -879,6 +839,290 @@ class Game {
         GAMES_DATA[gameID] = resp;
       }).then(() => this.update())
     }
+  }
+}
+class Library {
+  gamesPlatformContext = () => {
+    return {
+      label: "Filter by platform",
+      elements: [
+        {
+          label: `All (${this.GAMES.all.length})`,
+          id: "filter_all",
+          type: "radio",
+          onChange: "ui.library.platformFilter = 'all'",
+          checked: this.platformFilterCode === 'all',
+          name: "filter-by-platform"
+        },
+        ...Object.getOwnPropertyNames(this.GAMES).reduce((elems, platformCode) => {
+          if (platformCode != 'all') {
+            const filterObj = {
+              label: `${this.platformCodes[platformCode]} (${this.GAMES[platformCode].length})`,
+              id: `filter_code-${platformCode}`,
+              type: "radio",
+              onChange: `ui.library.platformFilter = ${platformCode}`,
+              checked: this.platformFilterCode == platformCode,
+              name: "filter-by-platform"
+            };
+            elems.push(filterObj);
+          }
+          return elems;
+        }, [])
+
+      ]
+    }
+  }
+  gamesSortContext = () => {
+    return {
+      label: "Sort by",
+      elements: [
+        {
+          label: "Title",
+          id: "sort_title",
+          type: "radio",
+          onChange: "ui.library.sortType = 'title'",
+          checked: this.sortType === 'title',
+          name: "sort-games"
+        },
+        {
+          label: "Points",
+          id: "sort_points-count",
+          type: "radio",
+          onChange: "ui.library.sortType = 'points'",
+          checked: this.awardSortType === 'points',
+          name: "sort-games"
+        },
+        {
+          label: "Achieves",
+          id: "sort_achieves",
+          type: "radio",
+          onChange: "ui.library.sortType = 'achievementsCount'",
+          checked: this.sortType === 'achievementsCount',
+          name: "sort-games"
+        },
+        {
+          label: "Reverse sort",
+          id: "sort_reverse-sort",
+          type: "checkbox",
+          onChange: "ui.library.sortTypeReverse = this.checked",
+          checked: this.sortTypeReverse == -1,
+          name: "sort-games-reverse"
+        },
+      ]
+    }
+  }
+  get sortType() {
+    return config.ui?.mobile?.librarySortType ?? "title";
+  }
+  set sortType(value) {
+    !config.ui.mobile && (config.ui.mobile = {});
+
+    config.ui.mobile.librarySortType = value;
+    config.writeConfiguration();
+
+    this.updateGames();
+  }
+  get sortTypeReverse() {
+    return config.ui?.mobile?.librarysortTypeReverse ?? 1;
+  }
+  set sortTypeReverse(value) {
+    !config.ui.mobile && (config.ui.mobile = {});
+
+    config.ui.mobile.librarysortTypeReverse = value ? -1 : 1;
+    config.writeConfiguration();
+
+    this.updateGames();
+  }
+  get platformFilter() {
+    const code = config.ui?.mobile?.libraryPlatformFilter ?? "all";
+
+    return code == "all" ? "all" : this.platformCodes[code]
+  }
+  get platformFilterCode() {
+    const code = config.ui?.mobile?.libraryPlatformFilter ?? "all";
+    return code;
+  }
+  set platformFilter(value) {
+    !config.ui.mobile && (config.ui.mobile = {});
+
+    config.ui.mobile.libraryPlatformFilter = value;
+    config.writeConfiguration();
+
+    this.updateGames();
+    document.querySelector(".games-platform-filter").innerText = this.platformFilter;
+
+  }
+  titleFilter = '';
+  platformCodes = {
+    "1": "Genesis/Mega Drive",
+    "2": "Nintendo 64",
+    "3": "SNES/Super Famicom",
+    "4": "Game Boy",
+    "5": "Game Boy Advance",
+    "6": "Game Boy Color",
+    "7": "NES/Famicom",
+    "8": "PC Engine/TurboGrafx-16",
+    "12": "PlayStation",
+    "21": "PlayStation 2",
+    "41": "PlayStation Portable",
+    // "999": "etc.",
+  }
+  applyFilter() {
+    this.games = this.GAMES[this.platformFilterCode];
+    if (this.titleFilter) {
+      let regex = new RegExp(this.titleFilter, "i");
+      this.games = this.games.filter(game => regex.test(game?.Title));
+
+    }
+
+
+    // console.log(this.games)
+  }
+  applySort() {
+    this.games = this.games.sort((a, b) => this.sortTypeReverse * sortBy[this.sortType](a, b));
+
+  }
+  constructor() {
+    this.update();
+  }
+
+  async update() {
+    ui.showLoader();
+    await delay(50);
+    !this.GAMES && (await this.loadGamesArray());
+    this.applyFilter();
+    this.applySort();
+    const section = this.LibrarySection();
+    ui.content.innerHTML = '';
+    ui.content.append(section);
+    ui.removeLoader();
+    lazyLoad({ list: this.gameList, items: this.games, callback: this.getGameElement })
+  }
+  updateGames() {
+    this.applyFilter();
+    this.applySort();
+    this.gameList.innerHTML = '';
+    lazyLoad({ list: this.gameList, items: this.games, callback: this.getGameElement })
+
+  }
+  LibrarySection() {
+    this.librarySection = document.createElement("section");
+    this.librarySection.classList.add("library__section");
+
+    this.librarySection.appendChild(this.headerElement());
+
+    this.gameList = document.createElement("ul");
+    this.gameList.classList.add("games-list");
+
+    this.librarySection.appendChild(this.gameList);
+
+    return this.librarySection;
+  }
+
+  headerElement() {
+    const gamesHeader = document.createElement("div");
+    gamesHeader.classList.add("section__header-container");
+    gamesHeader.innerHTML = `
+        <div class="section__header-title">Library</div>
+        <div class="section__control-container">
+            <button class=" simple-button" onclick="generateContextMenu(ui.library.gamesSortContext())">Sort</button>
+            <button class="games-platform-filter simple-button" onclick="generateContextMenu(ui.library.gamesPlatformContext())">${this.platformFilter ?? "Platform"}</button>
+            <div class="hidden-text-input__container">
+            <input class="hidden-text-input__input" type="search">
+            <button class="hidden-text-input__button icon-button simple-button search-icon show-searchbar__button"
+                onclick="ui.library.showHiddenInput(this)"></button>
+
+        </div>
+            </div>
+    `;
+    return gamesHeader;
+  }
+
+
+
+  getGameElement(game) {
+    const gameElement = document.createElement("li");
+    gameElement.classList.add("awards__game-item");
+    gameElement.dataset.id = game.ID;
+    const imgName = game.ImageIcon.slice(game.ImageIcon.lastIndexOf("/") + 1, game.ImageIcon.lastIndexOf(".") + 1) + "webp";
+    gameElement.innerHTML = `    
+            <li class="awards__game-item" data-id="${game.ID}">
+                <div class="awards__game-container"  onclick="ui.showGameDetails(${game.ID}); event.stopPropagation()">
+                    <div class="awards__game-preview-container" onclick="ui.goto.game(${game.ID}); event.stopPropagation()">
+                        <img class="awards__game-preview" src="../../assets/imgCache/${imgName}" alt="">
+                    </div>
+                    <div class="awards__game-description" >
+                        <h2 class="awards__game-title">${game.FixedTitle}</h2>
+                        <div  class="game-stats__button"  onclick="ui.expandGameItem(${game.ID},this); event.stopPropagation()">
+                          <i class="game-stats__icon game-stats__expand-icon"></i>
+                        </div>
+                        <div class="awards__game-stats__text">${game.ConsoleName}</div>
+
+                        <div class="awards__game-stats-container" >                           
+                        <div class="game-stats ">
+                        <i class="game-stats__icon game-stats__achivs-icon"></i>
+                        <div class="game-stats__text">${game.NumAchievements}</div>
+                        </div>
+                        <div class="game-stats game-stats__points">
+                        <i class="game-stats__icon game-stats__points-icon"></i>
+                        <div class="game-stats__text">${game.Points}</div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+        `;
+    return gameElement;
+  }
+  async loadGamesArray() {
+    this.GAMES = {};
+    // this.clearList();
+    for (const platformCode of Object.getOwnPropertyNames(this.platformCodes)) {
+      await this.getAllGames({ consoleCode: platformCode });
+    }
+    this.GAMES.all = Object.values(this.GAMES).flat();
+  }
+  async getAllGames({ consoleCode }) {
+    try {
+      if (!(consoleCode == 0 || consoleCode == "all")) {
+        const gamesResponse = await fetch(`../../json/games/${consoleCode}.json`);
+        const gamesJson = await gamesResponse.json();
+
+        const ignoredWords = ["~UNLICENSED~", "~DEMO~", "~HOMEBREW~", "~HACK~", "~PROTOTYPE~", ".HACK//", "~TEST KIT~"];
+
+        this.GAMES[consoleCode] = gamesJson.map(game => {
+          let title = game.Title;
+          const sufixes = ignoredWords.reduce((sufixes, word) => {
+            const reg = new RegExp(word, "gi");
+            if (reg.test(game.Title)) {
+              title = title.replace(reg, "");
+              sufixes.push(word.replaceAll(new RegExp("[^A-Za-z]", "gi"), ""));
+            }
+            return sufixes;
+          }, [])
+          game.sufixes = sufixes;
+          game.FixedTitle = title.trim();
+          return game;
+        })
+      }
+
+    } catch (error) {
+      return [];
+    }
+  }
+  showHiddenInput(button) {
+    console.log("click")
+    const container = button.closest(".hidden-text-input__container");
+    container.classList.add("expanded-input");
+    const textInput = container.querySelector("input");
+    textInput.focus();
+    textInput.addEventListener("blur", e => {
+      // console.log(textInput.value = '')
+      textInput.value == '' && (container.classList.remove("expanded-input"))
+    })
+    textInput.addEventListener("input", e => {
+      this.titleFilter = textInput.value;
+      this.updateGames();
+    })
   }
 }
 const Login = () => {
@@ -963,7 +1207,44 @@ function generateContextMenu(structureObj) {
   ui.app.appendChild(contextElement);
 }
 
+function lazyLoad({ list, items, callback }) {
+  const trigger = document.createElement("div");
+  trigger.classList.add("lazy-load_trigger")
+  list.parentNode.insertBefore(trigger, list.nextSibling);
 
+  // Ініціалізація списку з початковими елементами
+  let itemIndex = 1;
+  const initialLoadCount = 15;
+  const loadItems = (count) => {
+    for (let i = 0; i < count; i++) {
+      list.appendChild(callback(items[itemIndex++]));
+    }
+  };
+  loadItems(initialLoadCount);
+
+  // Callback функція для Intersection Observer
+  const loadMoreItems = (entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        loadItems(initialLoadCount);
+        // Оновлюємо спостереження
+        observer.unobserve(trigger);
+        list.appendChild(trigger);
+        observer.observe(trigger);
+      }
+    });
+  };
+  // Налаштування Intersection Observer
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 1.0
+  };
+  const observer = new IntersectionObserver(loadMoreItems, observerOptions);
+
+  // Початкове спостереження за тригером
+  observer.observe(trigger);
+}
 
 
 

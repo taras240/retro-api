@@ -243,7 +243,7 @@
 }
 
 .achiv-rarity {
-    padding: 0.2rem 1rem;
+    padding: 0 0.5rem;
     border-radius: 5pt;
     color: black;
     text-transform: uppercase;

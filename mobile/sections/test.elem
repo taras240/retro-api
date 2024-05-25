@@ -1,41 +1,19 @@
 <div class="game__section">
-    <div class="section__header-container game__header-container">
-        <div class="game-header__background-container">
-            <img class="game-header__background-img" src="https://media.retroachievements.org/Images/039426.png" alt="">
-            <div class="game-header__background-gradient"></div>
+    <div class="section__header-container">
+        <div class="section__header-title">Library</div>
+        <div class="section__control-container">
+            <button class=" simple-button" onclick="generateContextMenu(ui.library.gamesSortContext())">Sort</button>
+            <button class=" simple-button"
+                onclick="generateContextMenu(ui.library.gamesPlatformContext())">alldddddddddddddddd</button>
+
+            <div class="hidden-text-input__container">
+                <input class="hidden-text-input__input" type="search">
+                <button class="hidden-text-input__button icon-button simple-button search-icon show-searchbar__button"
+                    onclick="ui.library.showHiddenInput(this)"></button>
+
+            </div>
+
         </div>
-        <div class="game-header__main-info">
-            <div class="game-header__icon-container">
-                <img class="game-header__icon" src="https://media.retroachievements.org/Images/043551.png" alt="">
-            </div>
-            <div class="game-header__description-container">
-                <h1 class="game-header__title">Super Bomberman</h1>
-                <div class="game-header__progress-container">
-                    <div class="game-header__progress">Progress: 63.72%</div>
-                </div>
-                <div class="game-header__platform">Platform: SNES/Super Famicom</div>
-            </div>
-        </div>
-        <div class="game-points__container">
-            <div class="user-info__points-group">
-                <h3 class="game-points__points-name">cheevos</h3>
-                <p class="user-info__points">2/24</p>
-            </div>
-            <div class="vertical-line"></div>
-
-            <div class="user-info__points-group">
-                <h3 class="game-points__points-name">points</h3>
-                <p class="user-info__points">124/450</p>
-
-            </div>
-            <div class="vertical-line"></div>
-            <div class="user-info__points-group">
-                <h3 class="game-points__points-name">retropoints</h3>
-                <p class="user-info__points">1001/1620</p>
-
-            </div>
-        </div>
-
     </div>
     <ul class="game-achivs__container">
         <li class="achiv__achiv-container" onclick="ui.showAchivDetails(15406,2115)">
@@ -48,10 +26,7 @@
                 <div class="achiv__achiv-description">
                     <h2 class="achiv__achiv-title">Fun on the Beach</h2>
                     <p class="achiv__achiv-description">Win Battle on Normal Zone (2, 3, 4 COM. COM Level 10. 3 Wins)
-                        Win Battle on Normal Zone (2, 3, 4 COM. COM Level 10. 3 Wins)
-                        Win Battle on Normal Zone (2, 3, 4 COM. COM Level 10. 3 Wins)
-                        Win Battle on Normal Zone (2, 3, 4 COM. COM Level 10. 3 Wins)
-                        Win Battle on Normal Zone (2, 3, 4 COM. COM Level 10. 3 Wins)
+
                     </p>
 
                 </div>
