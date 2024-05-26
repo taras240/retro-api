@@ -210,23 +210,34 @@
 
 .game-stats__button {
     position: absolute;
-    transform: translateY(-50%);
-    top: 50%;
-    right: 0.25rem;
-    background-color: var(--font-color);
+    right: 0;
     display: grid;
     place-items: center;
-    width: 1.75rem;
-    height: 1.75rem;
+    width: 2.5rem;
+    padding: 0.5rem;
+    height: 100%;
+    z-index: 1;
     /* padding: 0.2rem; */
     /* aspect-ratio: 1; */
-    border-radius: 50%;
+
     /* overflow: hidden; */
+}
+
+.game-stats__button::after {
+    position: absolute;
+    content: '';
+    transform: translateY(-50%);
+    top: 50%;
+
+    background-color: var(--font-color);
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
 }
 
 .game-stats__expand-icon {
     width: 100%;
-    height: 100%;
+    aspect-ratio: 1;
 
     background-color: var(--main-color);
     mask-image: url(../../assets/img/expand_more.svg);
@@ -234,6 +245,7 @@
     mask-size: contain;
     /* margin-right: .5rem; */
     transition: .2s;
+    z-index: 1;
 }
 
 .expanded .game-stats__expand-icon {

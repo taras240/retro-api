@@ -250,8 +250,16 @@ class UI {
   `;
   }
   expandGameItem(gameID, button) {
-    const targetGameElement = button.closest(`li`)
+    const targetGameElement = button.closest(`li`);
     targetGameElement.classList.toggle("expanded");
+
+    // targetGameElement.classList.contains("expanded") ?
+    //   targetGameElement.classList.remove("expanded") :
+    //   (
+    //     document.querySelectorAll("li.expanded")
+    //       .forEach(li => li.classList.remove("expanded")),
+    //     targetGameElement.classList.add("expanded")
+    //   )
 
     const getRecentGame = (gameID) => {
       this.showLoader();
