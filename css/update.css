@@ -452,7 +452,7 @@
       rgba(255, 0, 231, 0.7) 55%,
       transparent 70%,
       transparent 100%);
-  z-index: 2;
+  z-index: 5;
   pointer-events: none;
 }
 
