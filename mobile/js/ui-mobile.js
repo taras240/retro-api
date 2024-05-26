@@ -434,7 +434,7 @@ class Home {
                     <div class="user-info__game-description" >
                         <h2 class="user-info__game-title">${game.Title}</h2>
                         <div class="game-stats__text">${game.ConsoleName}</div>
-                        <div  class="game-stats__button"  onclick="ui.expandGameItem(${game.ID},this); event.stopPropagation()">
+                        <div  class="game-stats__button"  onclick="ui.expandGameItem(${game.GameID},this); event.stopPropagation()">
                           <i class="game-stats__icon game-stats__expand-icon"></i>
                         </div>
                         <div class="user-info_game-stats-container">
@@ -706,7 +706,7 @@ class Awards {
                     </div>
                     <div class="awards__game-description" >
                         <h2 class="awards__game-title">${game.Title}</h2>
-                        <div  class="game-stats__button"  onclick="ui.expandGameItem(${game.ID},this); event.stopPropagation()">
+                        <div  class="game-stats__button"  onclick="ui.expandGameItem(${game.AwardData},this); event.stopPropagation()">
                           <i class="game-stats__icon game-stats__expand-icon"></i>
                         </div>
                         <div class="awards__game-stats__text">${game.ConsoleName}</div>
