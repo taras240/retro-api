@@ -455,3 +455,25 @@ input[type="radio"] {
         transform: translate(-50%, -50%) rotate(360deg);
     }
 }
+
+
+
+/* *---------------POPUP-------- */
+.image-preview-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: #01080db2;
+    z-index: 10;
+}
+
+.image-preview-popup img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    image-rendering: pixelated;
+}

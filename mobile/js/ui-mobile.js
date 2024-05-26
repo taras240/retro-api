@@ -114,13 +114,13 @@ class UI {
     window.addEventListener('DOMContentLoaded', () => {
       window.dispatchEvent(new Event('hashchange'));
     });
-    app.addEventListener("touchend", () => {
+    app.addEventListener("click", () => {
       this.removeContext();
       this.removePopups();
     })
     app.addEventListener("mousedown", () => {
       this.removeContext();
-      this.removePopups();
+      // this.removePopups();
     })
   }
   clearNavbar() {
@@ -151,7 +151,7 @@ class UI {
       setTimeout(() => el.remove(), 1000);
     });
   }
-  showGameDetails(gameID) {
+  async showGameDetails(gameID) {
     this.removePopups();
     this.showLoader();
 
@@ -176,37 +176,54 @@ class UI {
     const game = GAMES_DATA[gameID];
     const gameHtml = this.gamePopupHtml(game)
     gameElement.innerHTML = gameHtml;
+    await delay(500);
+    document.querySelectorAll(".popup-info__image").forEach(img => {
+
+      img.addEventListener('click', e => {
+        e.stopPropagation();
+        const preview = document.createElement('div');
+        preview.classList.add("image-preview-popup");
+        preview.innerHTML = `
+          <img src="${img.src}" alt="">
+        `;
+        ui.content.appendChild(preview);
+        preview.addEventListener("click", e => {
+          e.stopPropagation();
+          preview.remove();
+        })
+      })
+    })
   }
   gamePopupHtml(game) {
     return `
       <button class="close-popup" onclick="ui.removePopups()">X</button>
       <div class="popup-info__preview-container">
-          <img src="https://media.retroachievements.org${game.ImageIcon}" alt="" class="popup-info__preview">
+          <img src="https://media.retroachievements.org${game?.ImageIcon}" alt="icon" class="popup-info__preview">
       </div>
-      <h2 class="popup-info__title">${game.Title}</h2>
+      <h2 class="popup-info__title">${game?.Title}</h2>
       <div class="hor-line"></div>
       <ul class="popup-info__image-list">
           <li class="popup-info__image-container">
-              <img src="https://media.retroachievements.org${game.ImageBoxArt}" alt="" class="popup-info__image">
+              <img src="https://media.retroachievements.org${game?.ImageBoxArt}" alt="" class="popup-info__image">
           </li>
           <li class="popup-info_image-container">
-              <img src="https://media.retroachievements.org${game.ImageTitle}" alt="" class="popup-info__image">
+              <img src="https://media.retroachievements.org${game?.ImageTitle}" alt="" class="popup-info__image">
           </li>
           <li class="popup-info__image-container">
-              <img src="https://media.retroachievements.org${game.ImageIngame}" alt="" class="popup-info__image">
+              <img src="https://media.retroachievements.org${game?.ImageIngame}" alt="" class="popup-info__image">
           </li>
 
       </ul>
       <div class="hor-line"></div>
       <div class="popup-info__properties">
-          <div class="popup-info__property">Platform: <span>${game.ConsoleName}</span></div>
-          <div class="popup-info__property">Developer: <span>${game.Developer} Soft</span></div>
-          <div class="popup-info__property">Genre: <span>${game.Genre}</span></div>
-          <div class="popup-info__property">Publisher: <span>${game.Publisher} Soft</span></div>
-          <div class="popup-info__property">Released: <span>${game.Released}</span></div>
-          <div class="popup-info__property">Achievements total : <span>${game.achievements_published}</span></div>
-          <div class="popup-info__property">Total points : <span>${game.points_total}</span></div>
-          <div class="popup-info__property">Total players : <span>${game.players_total}</span></div>
+          <div class="popup-info__property">Platform: <span>${game?.ConsoleName}</span></div>
+          <div class="popup-info__property">Developer: <span>${game?.Developer} Soft</span></div>
+          <div class="popup-info__property">Genre: <span>${game?.Genre}</span></div>
+          <div class="popup-info__property">Publisher: <span>${game?.Publisher} Soft</span></div>
+          <div class="popup-info__property">Released: <span>${game?.Released}</span></div>
+          <div class="popup-info__property">Achievements total : <span>${game?.achievements_published}</span></div>
+          <div class="popup-info__property">Total points : <span>${game?.points_total}</span></div>
+          <div class="popup-info__property">Total players : <span>${game?.players_total}</span></div>
 
       </div>
     `
@@ -292,7 +309,7 @@ class UI {
   }
   achivHtml(achiv, gameID) {
     return `    
-            <li class="user-info__achiv-container"  onclick="ui.showAchivDetails(${achiv.ID},${gameID})">                
+            <li class="user-info__achiv-container"  onclick="ui.showAchivDetails(${achiv.ID},${gameID}); event.stopPropagation();">                
                 <div class="user-info__achiv-preview-container">
                     <img class="user-info__achiv-preview ${achiv.isHardcoreEarned && "earned"}" src="${achiv.prevSrc}" alt="">
                 </div>
@@ -690,9 +707,9 @@ class Awards {
       <div class="section__header-container">
         <div class="section__header-title">Awards</div>
         <div class="section__control-container">
-            <button class=" simple-button" onclick="generateContextMenu(ui.awards.awardSortContext())">Sort</button>
-            <button class=" simple-button" onclick="generateContextMenu(ui.awards.awardPlatformContext())">${this.platformFilterName ?? "Platform"}</button>
-            <button class=" simple-button" onclick="generateContextMenu(ui.awards.awardTypeContext())">${this.awardFilter}</button>
+            <button class=" simple-button" onclick="generateContextMenu(ui.awards.awardSortContext(),event)">Sort</button>
+            <button class=" simple-button" onclick="generateContextMenu(ui.awards.awardPlatformContext(),event)">${this.platformFilterName ?? "Platform"}</button>
+            <button class=" simple-button" onclick="generateContextMenu(ui.awards.awardTypeContext(),event)">${this.awardFilter}</button>
         </div>
       </div>
     `;
@@ -1033,8 +1050,8 @@ class Library {
     gamesHeader.innerHTML = `
         <div class="section__header-title">Library</div>
         <div class="section__control-container">
-            <button class=" simple-button" onclick="generateContextMenu(ui.library.gamesSortContext())">Sort</button>
-            <button class="games-platform-filter simple-button" onclick="generateContextMenu(ui.library.gamesPlatformContext())">${this.platformFilter ?? "Platform"}</button>
+            <button class=" simple-button" onclick="generateContextMenu(ui.library.gamesSortContext(),event)">Sort</button>
+            <button class="games-platform-filter simple-button" onclick="generateContextMenu(ui.library.gamesPlatformContext(),event)">${this.platformFilter ?? "Platform"}</button>
             <div class="hidden-text-input__container">
             <input class="hidden-text-input__input" type="search">
             <button class="hidden-text-input__button icon-button simple-button search-icon show-searchbar__button"
@@ -1168,8 +1185,8 @@ const Test = () => {
     })
 }
 
-function generateContextMenu(structureObj) {
-
+function generateContextMenu(structureObj, event) {
+  event.stopPropagation();
   ui.removeContext();
   const contextElement = document.createElement("div");
   contextElement.classList.add("context-menu__container", "context");

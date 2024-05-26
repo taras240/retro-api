@@ -1,55 +1,36 @@
-<div class="game__section">
-    <div class="section__header-container">
-        <div class="section__header-title">Library</div>
-        <div class="section__control-container">
-            <button class=" simple-button" onclick="generateContextMenu(ui.library.gamesSortContext())">Sort</button>
-            <button class=" simple-button"
-                onclick="generateContextMenu(ui.library.gamesPlatformContext())">alldddddddddddddddd</button>
-
-            <div class="hidden-text-input__container">
-                <input class="hidden-text-input__input" type="search">
-                <button class="hidden-text-input__button icon-button simple-button search-icon show-searchbar__button"
-                    onclick="ui.library.showHiddenInput(this)"></button>
-
-            </div>
-
-        </div>
+<div class="popup-info__container popup">
+    <button class="close-popup" onclick="ui.removePopups()">X</button>
+    <div class="popup-info__preview-container">
+        <img src="https://media.retroachievements.org/Images/011233.png" alt="" class="popup-info__preview">
     </div>
-    <ul class="game-achivs__container">
-        <li class="achiv__achiv-container" onclick="ui.showAchivDetails(15406,2115)">
-            <div class="achiv__title-container">
-                <div class="achiv__preview-container">
-                    <img class="user-info__achiv-preview earned"
-                        src="https://media.retroachievements.org/Badge/356604.png" alt="">
-                </div>
-
-                <div class="achiv__achiv-description">
-                    <h2 class="achiv__achiv-title">Fun on the Beach</h2>
-                    <p class="achiv__achiv-description">Win Battle on Normal Zone (2, 3, 4 COM. COM Level 10. 3 Wins)
-
-                    </p>
-
-                </div>
-            </div>
-            <div class="achiv__icons">
-
-                <div class="game-stats ">
-                    <i class="game-stats__icon game-stats__points-icon"></i>
-                    <div class="game-stats__text">5</div>
-                </div>
-                <div class="game-stats game-stats__points">
-                    <i class="game-stats__icon game-stats__retropoints-icon"></i>
-                    <div class="game-stats__text">7</div>
-                </div>
-                <div class="game-stats game-stats__points">
-                    <i class="game-stats__icon game-stats__trending-icon"></i>
-                    <div class="game-stats__text">7%</div>
-                </div>
-                <div class="game-stats game-stats__points">
-                    <div class="game-stats__text achiv-rarity achiv-rarity__impossible">impossible</div>
-                </div>
-
-            </div>
+    <h2 class="popup-info__title">1080° Snowboarding</h2>
+    <div class="hor-line"></div>
+    <ul class="popup-info__image-list">
+        <li class="popup-info__image-container">
+            <img src="https://media.retroachievements.org/Images/034964.png" alt="" class="popup-info__image">
         </li>
+        <li class="popup-info_image-container">
+            <img src="https://media.retroachievements.org/Images/011234.png" alt="" class="popup-info__image">
+        </li>
+        <li class="popup-info__image-container">
+            <img src="https://media.retroachievements.org/Images/011235.png" alt="" class="popup-info__image">
+        </li>
+
     </ul>
+    <div class="hor-line"></div>
+    <div class="popup-info__properties">
+        <div class="popup-info__property">Platform: <span>Nintendo 64</span></div>
+        <div class="popup-info__property">Developer: <span> Soft</span></div>
+        <div class="popup-info__property">Genre: <span>Extreme Sports - Snowboarding</span></div>
+        <div class="popup-info__property">Publisher: <span>Nintendo Soft</span></div>
+        <div class="popup-info__property">Released: <span>March 31, 1998</span></div>
+        <div class="popup-info__property">Achievements total : <span>39</span></div>
+        <div class="popup-info__property">Total points : <span>421</span></div>
+        <div class="popup-info__property">Total players : <span>489</span></div>
+
+    </div>
+</div>
+
+<div class="image-preview-popup">
+    <img src="https://media.retroachievements.org/Images/011234.png" alt="">
 </div>
