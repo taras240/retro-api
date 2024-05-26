@@ -91,6 +91,7 @@ class UI {
     this.loginCard = new LoginCard();
     this.target = new Target();
     this.achievementsBlock = [new AchievementsBlock()];
+    this.createAchievementsTemplate();
     this.settings = new Settings();
     this.awards = new Awards();
     this.gameCard = new GameCard();
@@ -210,7 +211,7 @@ class UI {
       UI.switchSectionVisibility(this.achievementsBlock[1]);
     } else {
       this.achievementsBlock.push(new AchievementsBlock(true));
-      this.achievementsBlock.at(-1).parseGameAchievements(this.GAME_DATA);
+      this.GAME_DATA && this.achievementsBlock.at(-1).parseGameAchievements(this.GAME_DATA);
     }
   }
   checkForNewAchieves(lastEarnedAchieves) {
