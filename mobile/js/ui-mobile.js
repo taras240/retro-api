@@ -810,7 +810,7 @@ class Game {
     const completionProgress = ~~(100 * (earnedData.points) / this.gameData.points_total)
     earnedData.achivs == 0 && (earnedData = false);
     return `
-            <div class="section__header-container game__header-container" onclick="ui.showGameDetails(${this.gameID})">
+            <div class="section__header-container game__header-container" onclick="ui.showGameDetails(${this.gameID});event.stopPropagation();">
                 <div class="game-header__background-container">
                     <img class="game-header__background-img" src="https://media.retroachievements.org${this.gameData.ImageTitle}" alt="">
                     <div class="game-header__background-gradient"></div>
