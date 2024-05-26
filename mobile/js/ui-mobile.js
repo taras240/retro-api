@@ -1,5 +1,9 @@
 "use strict";
 class UI {
+  get favouritesGames() {
+    return config.ui?.mobile?.favouritesGames ?? {};
+  }
+
   routes = {
     '/': async () => {
       if (config.identConfirmed) {
@@ -215,6 +219,15 @@ class UI {
 
       </ul>
       <div class="hor-line"></div>
+      <div class="horizontal-buttons-container">
+      <a class="round-button icon-button download-icon simple-button game-popup__download-button"
+          href="https://www.emu-land.net/en/search_games?q=${game?.Title}" target="_blank"></a>
+      <a class="round-button icon-button redirect-icon simple-button game-popup__ra-button"
+          href="https://retroachievements.org/game/${game?.ID}" target="_blank"></a>
+      <button class="${ui.favouritesGames[game?.ID] ? "checked" : ''} round-button icon-button like-icon simple-button game-popup__like-button"
+          onclick="addGameToFavourite(${game?.ID});this.classList.toggle('checked'); event.stopPropagation()"></button>
+  </div>
+  <div class="hor-line"></div>
       <div class="popup-info__properties">
           <div class="popup-info__property">Platform: <span>${game?.ConsoleName}</span></div>
           <div class="popup-info__property">Developer: <span>${game?.Developer} Soft</span></div>
@@ -361,7 +374,7 @@ class Home {
         this.USER_INFO.retropoints = resp.TotalTruePoints;
         this.USER_INFO.hardpoints = resp.TotalPoints;
         this.USER_INFO.lastGames = resp.RecentlyPlayed;
-
+        this.USER_INFO.isInGame = resp.isInGame;
       })
       .then(() => {
         const section = this.HomeSection()
@@ -406,15 +419,16 @@ class Home {
                 <div class="user-info__rich-presence">Member since: ${this.USER_INFO.memberSince}</div>
             </div>
         </div>
+        ${this.USER_INFO.isInGame ? `
         <div class="user-info__rich-presence"> ${this.USER_INFO.richPresence}</div>
+        `: ""}
         ${this.pointsHtml()}
         <h2 class="user-info__block-header">Recently played</h2>
       </div>
-        `;
+    `;
   }
   pointsHtml() {
     return `
-            
         <div class="user-info__points-container">
           ${this.USER_INFO.softpoints > 0 ? `
             <div class="user-info__points-group">
@@ -867,6 +881,7 @@ class Game {
   }
 }
 class Library {
+
   gamesPlatformContext = () => {
     return {
       label: "Filter by platform",
@@ -1387,4 +1402,31 @@ const RAPlatforms = {
 }
 const delay = (ms) => {
   return new Promise(resolve => setTimeout(resolve, ms));
+}
+function addGameToFavourite(gameID) {
+  !config.ui.mobile.favouritesGames && (config.ui.mobile.favouritesGames = {});
+  const {
+    Title,
+    ID,
+    ImageIcon,
+    NumAchievements,
+    TotalRetropoints,
+    points_total,
+    ConsoleID,
+    ConsoleName,
+
+  } = GAMES_DATA[gameID];
+  ui.favouritesGames[gameID] ?
+    (delete config.ui.mobile.favouritesGames[gameID]) :
+    config.ui.mobile.favouritesGames[gameID] = {
+      Title,
+      ID,
+      ImageIcon,
+      NumAchievements,
+      TotalRetropoints,
+      points_total,
+      ConsoleID,
+      ConsoleName,
+    };
+  config.writeConfiguration();
 }

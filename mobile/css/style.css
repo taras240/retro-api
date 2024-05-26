@@ -149,7 +149,7 @@ li {
 }
 
 .section__control-container {
-    padding: 1rem 1rem 0.5rem;
+    padding: 0.5rem 1rem;
     scroll-snap-type: x mandatory;
     display: flex;
     align-items: center;
@@ -171,6 +171,15 @@ li {
     /* width: 100%; */
     /* background-color: transparent; */
     margin-bottom: 5rem;
+}
+
+.horizontal-buttons-container {
+    position: relative;
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 1rem;
 }
 
 /* *-----------UI Input---------------- */
@@ -249,6 +258,8 @@ li {
     pointer-events: none;
 }
 
+
+
 .icon-button {
     display: inline-block;
     /* height: 1rem;
@@ -263,6 +274,26 @@ li {
 .search-icon {
     mask-image: url(../../assets/img/search.svg);
 }
+
+.like-icon {
+    mask-image: url(../../assets/img/favorite_border.svg);
+}
+
+.like-icon.checked {
+    mask-image: url(../../assets/img/favorite.svg);
+}
+
+.download-icon {
+    mask-image: url(../../assets/img/download.svg);
+
+}
+
+.redirect-icon {
+    mask-image: url(../../assets/img/link2.svg);
+
+}
+
+.game-popup__like-button {}
 
 .simple-button:active {
     --context-font-color: var(--main-color);

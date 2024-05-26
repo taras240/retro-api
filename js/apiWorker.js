@@ -288,7 +288,8 @@ class APIWorker {
           .flatMap(RecentAchievements => Object.values(RecentAchievements)).map(achiv => {
             achiv.DateAwarded = this.toLocalTimeString(achiv.DateAwarded);
             return achiv;
-          })
+          });
+        summary.isInGame = (new Date() - new Date(summary.RecentlyPlayed[0].LastPlayed)) < 5 * 60 * 1000;
 
         return summary;
       })

@@ -1,4 +1,4 @@
-<div class="popup-info__container popup">
+<div class="popup-info__container popup" onclick="event.stopPropagation()">
     <button class="close-popup" onclick="ui.removePopups()">X</button>
     <div class="popup-info__preview-container">
         <img src="https://media.retroachievements.org/Images/011233.png" alt="" class="popup-info__preview">
@@ -18,6 +18,16 @@
 
     </ul>
     <div class="hor-line"></div>
+    <div class="horizontal-buttons-container">
+        <a class="round-button icon-button download-icon simple-button game-popup__download-button"
+            href="https://www.emu-land.net/en/search_games?id=13&q=Super+mario+bros." target="_blank"></a>
+        <a class="round-button icon-button redirect-icon simple-button game-popup__ra-button"
+            href="https://retroachievements.org/game/1683" target="_blank"></a>
+        <button class="round-button icon-button like-icon simple-button game-popup__like-button"
+            onclick="addGameToFavourite(1)"></button>
+    </div>
+    <div class="hor-line"></div>
+
     <div class="popup-info__properties">
         <div class="popup-info__property">Platform: <span>Nintendo 64</span></div>
         <div class="popup-info__property">Developer: <span> Soft</span></div>
@@ -29,8 +39,4 @@
         <div class="popup-info__property">Total players : <span>489</span></div>
 
     </div>
-</div>
-
-<div class="image-preview-popup">
-    <img src="https://media.retroachievements.org/Images/011234.png" alt="">
 </div>
