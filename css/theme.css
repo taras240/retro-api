@@ -1,0 +1,46 @@
+.update_section.section {
+    /* background-color: var(--main-color); */
+}
+
+.update_user-status {
+    position: relative;
+}
+
+.update_user-status::after {
+    content: '';
+    position: absolute;
+    height: 80%;
+    aspect-ratio: 1;
+    /* background-image: url(../assets/img/angle_border.webp); */
+    background-size: contain;
+    image-rendering: pixelated;
+    /* z-index: 1; */
+}
+
+.update_section.section::before {
+    bottom: 0;
+    right: 0;
+    transform: scaleY(-1);
+}
+
+.update_section.section::after {
+    top: 0;
+    left: 0;
+    transform: scaleX(-1);
+    display: none;
+}
+
+.update_container {
+    /* background-color: transparent; */
+}
+
+/* .update_preview-container::after {
+    content: "";
+    background-image: url(../assets/img/game-border-21.png);
+}
+
+
+.update_preview-container::after {
+    content: "";
+    background-image: url(../assets/img/game-border-20.png);
+} */

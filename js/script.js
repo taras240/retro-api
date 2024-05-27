@@ -1,4 +1,4 @@
-let config, ui, apiWorker;
+let config, ui, apiWorker, userAuthData;
 const RECENT_ACHIVES_RANGE_MINUTES = 5;
 const userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
@@ -12,6 +12,7 @@ else {
   ui = new UI();
   // Ініціалізація APIWorker 
   apiWorker = new APIWorker();
+  // userAuthData = new UserAuthData();
 }
 
 

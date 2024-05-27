@@ -1591,6 +1591,53 @@ class StatusPanel {
         ],
       },
       {
+        label: "Progressbar",
+        subMenu: [
+          {
+            type: "radio",
+            name: "context_show-progressbar",
+            id: "context_progressbar-auto",
+            label: "Auto",
+            checked: this.PROGRESSBAR_PROPERTY_NAME == "auto",
+            event: `onchange = 'ui.statusPanel.PROGRESSBAR_PROPERTY_NAME = "auto"'`,
+          },
+          {
+            type: "radio",
+            name: "context_show-progressbar",
+            id: "context_progressbar-achives",
+            label: "Cheevos",
+            checked: this.PROGRESSBAR_PROPERTY_NAME == "achives",
+            event: `onchange = 'ui.statusPanel.PROGRESSBAR_PROPERTY_NAME = "achives"'`,
+          },
+          {
+            type: "radio",
+            name: "context_show-progressbar",
+            id: "context_progressbar-points",
+            label: "Hard points",
+            checked: this.PROGRESSBAR_PROPERTY_NAME == "points",
+            event: `onchange = 'ui.statusPanel.PROGRESSBAR_PROPERTY_NAME = "points"'`,
+          },
+          {
+            type: "radio",
+            name: "context_show-progressbar",
+            id: "context_progressbar-retropoints",
+            label: "Retropoints",
+            checked: this.PROGRESSBAR_PROPERTY_NAME == "retropoints",
+            event: `onchange = 'ui.statusPanel.PROGRESSBAR_PROPERTY_NAME = "retropoints"'`,
+          },
+          {
+            type: "radio",
+            name: "context_show-progressbar",
+            id: "context_progressbar-softpoins",
+            label: "Soft points",
+            checked: this.PROGRESSBAR_PROPERTY_NAME == "softpoints",
+            event: `onchange = 'ui.statusPanel.PROGRESSBAR_PROPERTY_NAME = "softpoints"'`,
+          },
+
+
+        ],
+      },
+      {
         type: "checkbox",
         name: "context_show-platform",
         id: "context_show-platform",
@@ -1698,6 +1745,18 @@ class StatusPanel {
   set SHOW_NEW_ACHIV(value) {
     config.ui.update_section.showNewAchiv = value;
     config.writeConfiguration();
+  }
+  get CHANGE_PROGRESS_AUTO() {
+    return config.ui.update_section?.progressBarPropertyName == "auto";
+  }
+
+  get PROGRESSBAR_PROPERTY_NAME() {
+    return config.ui.update_section?.progressBarPropertyName ?? "auto";
+  }
+  set PROGRESSBAR_PROPERTY_NAME(value) {
+    config.ui.update_section.progressBarPropertyName = value;
+    config.writeConfiguration();
+    this.setProgressBarValue();
   }
   get NEW_ACHIV_DURATION() {
     const duration = config.ui.update_section?.newAchivDuration ?? 15;
@@ -1824,19 +1883,11 @@ class StatusPanel {
     //* Обчислення прогресу за балами та за кількістю досягнень
     const completionByPoints = this.stats.earnedPoints / ui.GAME_DATA.points_total || 0;
     const completionByPointsPercents = ~~(completionByPoints * 100) + "%";
-    //*Потрібно перевести ширину у відсотки від ширини прогресу по поінтах
-    const width = this.section.clientWidth || 0;
-    const completionByPointsInPixels = completionByPoints * width;
-    const completionByCount =
-      (width * this.stats.earnedAchievesCount) / (ui?.GAME_DATA?.achievements_published * completionByPointsInPixels) || 0;
-    const completionByCountPercents =
-      ~~((100 * this.stats.earnedAchievesCount) / ui?.GAME_DATA?.achievements_published) + "%";
+    const completionByCount = this.stats.earnedAchievesCount / ui?.GAME_DATA?.achievements_published;
+    const completionByCountPercents = ~~(completionByCount * 100) + "%";
 
-    //* Встановлення стилів прогресу
-    this.section.style.setProperty(
-      "--progress-points",
-      completionByPoints * 100 + "%"
-    );
+    this.setProgressBarValue();
+
     this.progressStatusText.innerText = "";
     this.startStatsAnimation();
     ui.gameCard.updateGameInfoElement({
@@ -1845,6 +1896,28 @@ class StatusPanel {
     });
     ui.gameCard.section.classList.toggle("mastered", this.stats.earnedPoints != 0 && this.stats.totalPoints === this.stats.earnedPoints);
 
+  }
+  setProgressBarValue() {
+    let value = 0;
+    switch (this.PROGRESSBAR_PROPERTY_NAME) {
+      case "points":
+        value = this.stats.earnedPoints / ui.GAME_DATA.points_total;
+        break;
+      case "retropoints":
+        value = (this.stats.earnedRetropoints / ui.GAME_DATA.TotalRetropoints);
+        break;
+      case "achives":
+        value = (this.stats.earnedAchievesCount / ui?.GAME_DATA?.achievements_published);
+        break;
+      case "softpoints":
+        value = (this.stats.earnedSoftpoints / this.stats.totalSoftPoints);
+        break;
+    }
+    //* Встановлення стилів прогресу
+    this.section.style.setProperty(
+      "--progress-points",
+      (value || 0) * 100 + "%"
+    );
   }
   updateData() {
     this.stats = {
@@ -1864,12 +1937,12 @@ class StatusPanel {
     }
     //* Підрахунок кількості досягнень та набраних балів
     Object.values(ui.ACHIEVEMENTS).forEach((achievement) => {
-      if (achievement.DateEarnedHardcore) {
+      if (achievement.isHardcoreEarned) {
         this.stats.earnedPoints += achievement.Points; // Додавання балів
         this.stats.earnedAchievesCount++;
         this.stats.earnedRetropoints += achievement.TrueRatio;
       }
-      else if (achievement.DateEarned) {
+      else if (achievement.isEarned) {
         this.stats.earnedSoftpoints += achievement.Points;
       }
     });
@@ -1985,7 +2058,7 @@ class StatusPanel {
             text: Object.values(this.statusTextValues)[currentStatusTextIndex]
           })
 
-        }, 200)
+        }, 1000)
       }, this.STATS_DURATION * 1000))
   }
   stopStatsAnimation() {
@@ -1995,10 +2068,12 @@ class StatusPanel {
   changeStatsElementValues({ className, text }) {
     this.progressStatusText.innerText = text;
     this.progressStatusText.className = `progress_points-percent progress-percent ${className}`;
-    className != "gameTime" && (this.section.style.setProperty(
-      "--progress-points",
-      this.convertToPercentage(text) || "0%"
-    ));
+    this.CHANGE_PROGRESS_AUTO && className != "gameTime" && (
+      this.section.style.setProperty(
+        "--progress-points",
+        this.convertToPercentage(text) || "0%"
+      )
+    );
   }
 
   autoscrollRPInterval;
@@ -3869,6 +3944,7 @@ class LoginCard {
     this.apiKey = document.querySelector("#login-api-key");
     this.userImage = document.querySelector(".login-user-image");
     this.submitLoginButton = this.section.querySelector(".submit-login");
+    this.linkGoogleButton = this.section.querySelector(".submit-login-google");
   }
 
   addEvents() {
@@ -3887,7 +3963,22 @@ class LoginCard {
     if (config.identConfirmed) {
       this.submitLoginButton.classList.add("verified");
     }
+    userAuthData?.isSignedIn && this.linkGoogleButton.classList.add("linked");
+    this.linkGoogleButton.addEventListener("click", () => this.linkGoogleEvent());
   }
+
+  async linkGoogleEvent() {
+    if (userAuthData?.isSignedIn) {
+      await logoutGoogle();
+      this.linkGoogleButton.classList.remove("linked");
+    }
+    else {
+      await loginWithGoogle();
+      this.linkGoogleButton.classList.add("linked");
+
+    }
+  }
+
   pasteApiKeyFromClipboard() {
     navigator.clipboard
       .readText()

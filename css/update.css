@@ -48,7 +48,7 @@
 .update_user-status {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 20px;
   justify-content: space-between;
   padding: 0 15px;
 
@@ -111,6 +111,7 @@
   position: relative;
   max-height: 75%;
   height: 100%;
+  z-index: 1;
 }
 
 .update-game-preview {
@@ -155,7 +156,7 @@
 }
 
 .update_back-side .update_preview-container::after {
-  background-image: url(../assets/img/game-border-7.webp);
+  background-image: url(../assets/img/border-8.webp);
 }
 
 .update-section-text {
@@ -171,7 +172,7 @@
   right: 20px;
   top: 50%;
   transform: translateY(-50%);
-  --animation-duration: 0.2s;
+  --animation-duration: 1s;
   /* transform: translateY(50%); */
   font-size: 2.5rem;
   text-wrap: nowrap;
@@ -180,6 +181,7 @@
   color: var(--font-color);
   opacity: 0.2;
   animation: show-stats-animation var(--animation-duration) ease-in-out forwards;
+  /* animation-delay: var(--animation-duration); */
   z-index: 2;
 }
 
@@ -193,21 +195,21 @@
 
 @keyframes show-stats-animation {
   0% {
-    margin-bottom: 150%;
+    opacity: 0;
   }
 
   100% {
-    margin-bottom: 0;
+    opacity: 0.2;
   }
 }
 
 @keyframes hide-stats-animation {
   0% {
-    margin-bottom: 0;
+    opacity: 0.2;
   }
 
   100% {
-    margin-bottom: -50%;
+    opacity: 0;
   }
 }
 

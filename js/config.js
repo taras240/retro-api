@@ -15,6 +15,7 @@ class Config {
   set API_KEY(value) {
     this._cfg.identification.RAApi_key = value;
     this.writeConfiguration();
+
   }
 
   get USER_NAME() {
@@ -206,11 +207,56 @@ class Config {
 
     }
     this._cfg = config;
+    localStorage.setItem(CONFIG_FILE_NAME, JSON.stringify(this._cfg));
     this.writeConfiguration();
   }
+  delayedWrite;
   writeConfiguration() {
-    localStorage.setItem(CONFIG_FILE_NAME, JSON.stringify(this._cfg));
+    clearTimeout(this.delayedWrite);
+    this.delayedWrite = setTimeout(() => {
+      localStorage.setItem(CONFIG_FILE_NAME, JSON.stringify(this._cfg));
+    }, 5000)
   }
+
+}
+class UserAuthData {
+  get user() {
+    return this._user ?? {};
+  }
+  set user(value) {
+    this._user = value;
+    this.isSignedIn = true;
+    ui.loginCard?.linkGoogleButton.classList.add("linked");
+    // this.getData().then((resp) => this.savedData = resp)
+  }
+  constructor() {
+    this.isSignedIn = false;
+  }
+  removeUser() {
+    userAuthData = new UserAuthData();
+  }
+  async saveData(data) {
+    if (this.isSignedIn) {
+      await saveData(data);
+    }
+  }
+  async getData() {
+    if (this.isSignedIn) {
+      const resp = await getData();
+      console.log(resp);
+      return resp;
+    }
+  }
+
+  static authConfig = {
+    apiKey: "AIzaSyCElKaoNY84fF61cRb-mUgSS0dy1OBr2P8",
+    authDomain: "retrocheevos.firebaseapp.com",
+    projectId: "retrocheevos",
+    storageBucket: "retrocheevos.appspot.com",
+    messagingSenderId: "759529169587",
+    appId: "1:759529169587:web:d570ee8023a18590f186c6",
+    measurementId: "G-KXGL1SB2LW"
+  };
 }
 const colorPresets = {
   pink: {
