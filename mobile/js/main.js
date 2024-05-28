@@ -6,9 +6,10 @@ const GAMES_DATA = {};
 let USER_INFO;
 let AWARDS;
 
-const submitRAData = () => {
+function submitRAData() {
   let userName = ui.content.querySelector("#login_user-name").value;
   let apiKey = ui.content.querySelector("#login__api-key").value;
+
   apiWorker
     .verifyUserIdent({ userName: userName, apiKey: apiKey })
     .then((userObj) => {
@@ -25,13 +26,13 @@ const submitRAData = () => {
           apiKey: apiKey,
           userObj: userObj,
         });
-        ui.goto.home();
-        location.reload(true)
+
+        // setTimeout(() => { ui.goto.home(); location.reload(true) }, 1000)
       }
     });
 
 }
-const updateLogin = ({ userName, apiKey, userObj }) => {
+function updateLogin({ userName, apiKey, userObj }) {
   config.USER_NAME = userName;
   config.API_KEY = apiKey;
   config.identConfirmed = true;
