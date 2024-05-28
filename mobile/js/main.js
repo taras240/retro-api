@@ -26,7 +26,7 @@ const submitRAData = () => {
           userObj: userObj,
         });
         ui.goto.home();
-        // ui.statusPanel.watchButton.click();
+        location.reload(true)
       }
     });
 

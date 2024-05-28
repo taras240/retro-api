@@ -43,6 +43,7 @@
     width: 100%;
     aspect-ratio: 1;
     image-rendering: pixelated;
+    border-radius: 0.5rem;
 }
 
 .game-header__description-container {

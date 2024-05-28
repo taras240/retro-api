@@ -818,7 +818,7 @@ class Game {
       <li class="achiv__achiv-container" onclick="ui.showAchivDetails(${achiv.ID}, ${this.gameID}); event.stopPropagation()">
         <div class="achiv__title-container">
             <div class="achiv__preview-container">
-                <img class="user-info__achiv-preview ${achiv.isHardcoreEarned ? "earned" : ""}"
+                <img class="user-info__achiv-preview ${achiv.isHardcoreEarned || (ui.isSoftmode && achiv.isEarned) ? "earned" : ""}"
                     src="https://media.retroachievements.org/Badge/${achiv.BadgeName}.png" alt="">
             </div>
 
@@ -851,14 +851,24 @@ class Game {
     `
   }
   SectionHeaderHtml() {
-    let earnedData = Object.values(this.gameData.Achievements).reduce((data, achiv) => {
-      achiv.isHardcoreEarned && (
-        data.achivs++,
-        data.points += achiv.Points,
-        data.retropoints += achiv.TrueRatio
-      );
-      return data;
-    }, { achivs: 0, points: 0, retropoints: 0 });
+    let earnedData = Object.values(this.gameData.Achievements)
+      .reduce((data, achiv) => {
+        if (ui.isSoftmode) {
+          achiv.isEarned && (
+            data.achivs++,
+            data.points += achiv.Points,
+            data.retropoints += achiv.isHardcoreEarned ? achiv.TrueRatio : 0
+          );
+        }
+        else {
+          achiv.isHardcoreEarned && (
+            data.achivs++,
+            data.points += achiv.Points,
+            data.retropoints += achiv.TrueRatio
+          );
+        }
+        return data;
+      }, { achivs: 0, points: 0, retropoints: 0 });
     const completionProgress = ~~(100 * (earnedData.points) / this.gameData.points_total)
     earnedData.achivs == 0 && (earnedData = false);
     return `
@@ -1258,7 +1268,6 @@ class Favourites {
     return gamesHeader;
   }
   getGameElement(game) {
-    console.log(game)
     const gameElement = document.createElement("li");
     gameElement.classList.add("awards__game-item");
     gameElement.dataset.id = game?.ID;
