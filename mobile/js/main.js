@@ -3,7 +3,8 @@ const config = new Config();
 const apiWorker = new APIWorker();
 const ui = new UI();
 const GAMES_DATA = {};
-
+let USER_INFO;
+let AWARDS;
 
 const submitRAData = () => {
   let userName = ui.content.querySelector("#login_user-name").value;

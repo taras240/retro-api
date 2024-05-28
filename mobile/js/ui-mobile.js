@@ -65,6 +65,16 @@ class UI {
         this.goto.login();
       }
     },
+    '/favourites': async () => {
+      if (config.identConfirmed) {
+        this.favourites = new Favourites();
+        this.clearNavbar()
+        this.navbar.favourites.classList.add("checked");
+      }
+      else {
+        this.goto.login();
+      }
+    },
     '/game': async (args) => {
       if (config.identConfirmed) {
         const gameID = args.gameID ? parseInt(args.gameID, 10) : false;
@@ -91,6 +101,10 @@ class UI {
     },
     "library": () => {
       history.pushState(null, null, "#/library");
+      this.updatePage();
+    },
+    "favourites": () => {
+      history.pushState(null, null, "#/favourites");
       this.updatePage();
     },
     "game": (gameID) => {
@@ -120,6 +134,7 @@ class UI {
       home: document.querySelector("#navbar_home"),
       awards: document.querySelector("#navbar_awards"),
       library: document.querySelector("#navbar_library"),
+      favourites: document.querySelector("#navbar_favourites"),
       login: document.querySelector("#navbar_login"),
     }
   }
@@ -369,34 +384,40 @@ class UI {
 
 }
 class Home {
-  USER_INFO = {};
+
   constructor() {
     this.update();
   }
-  update() {
+  async update() {
     ui.showLoader();
-    apiWorker.getUserSummary({ gamesCount: 5, achievesCount: 0 })
-      .then(resp => {
-        this.USER_INFO.userName = resp.User;
-        this.USER_INFO.status = resp.Status.toLowerCase();
-        this.USER_INFO.richPresence = resp.RichPresenceMsg;
-        this.USER_INFO.memberSince = resp.MemberSince;
-        this.USER_INFO.userImageSrc = `https://media.retroachievements.org${resp.UserPic}`;
-        this.USER_INFO.userRank = resp.Rank ? `Rank: ${resp.Rank} (Top ${~~(10000 * resp.Rank / resp.TotalRanked) / 100}%)` : "Rank is unavailable";
-        this.USER_INFO.softpoints = resp.TotalSoftcorePoints;
-        this.USER_INFO.retropoints = resp.TotalTruePoints;
-        this.USER_INFO.hardpoints = resp.TotalPoints;
-        this.USER_INFO.lastGames = resp.RecentlyPlayed;
-        this.USER_INFO.isInGame = resp.isInGame;
-      })
-      .then(() => {
-        const section = this.HomeSection()
-        ui.content.innerHTML = '';
-        ui.content.append(section);
-        ui.removeLoader();
-      })
-  }
+    if (USER_INFO) {
+      const section = this.HomeSection()
+      ui.content.innerHTML = '';
+      ui.content.append(section);
+      ui.removeLoader();
+    }
+    else {
+      await this.loadUserInfo();
+      this.update()
+    }
 
+  }
+  async loadUserInfo() {
+    const resp = await apiWorker.getUserSummary({ gamesCount: 5, achievesCount: 0 });
+    USER_INFO = {};
+    USER_INFO.userName = resp.User;
+    USER_INFO.status = resp.Status.toLowerCase();
+    USER_INFO.richPresence = resp.RichPresenceMsg;
+    USER_INFO.memberSince = resp.MemberSince;
+    USER_INFO.userImageSrc = `https://media.retroachievements.org${resp.UserPic}`;
+    USER_INFO.userRank = resp.Rank ? `Rank: ${resp.Rank} (Top ${~~(10000 * resp.Rank / resp.TotalRanked) / 100}%)` : "Rank is unavailable";
+    USER_INFO.softpoints = resp.TotalSoftcorePoints;
+    USER_INFO.retropoints = resp.TotalTruePoints;
+    USER_INFO.hardpoints = resp.TotalPoints;
+    USER_INFO.lastGames = resp.RecentlyPlayed;
+    USER_INFO.isInGame = resp.isInGame;
+
+  }
 
   HomeSection() {
     const homeSection = document.createElement("section");
@@ -407,7 +428,7 @@ class Home {
             <div class="user-info__container">
            
             <ul class="user-info__last-games-list">
-                ${this.USER_INFO.lastGames.reduce((elements, game) => {
+                ${USER_INFO.lastGames.reduce((elements, game) => {
       const gameHtml = this.gameHtml(game);
       elements += gameHtml;
       return elements;
@@ -424,17 +445,17 @@ class Home {
       <div class="section__header-container user-info__header-container">
         <div class="user-info__header">
             <div class="user-info__avatar-container">
-                <img src="${this.USER_INFO.userImageSrc}" alt="" class="user-info__avatar">
+                <img src="${USER_INFO.userImageSrc}" alt="" class="user-info__avatar">
             </div>
             <button class="button__switch-mode ${ui.isSoftmode ? "softmode" : ""}" onclick="ui.switchGameMode()">${ui.isSoftmode ? "SOFT" : "HARD"}</button>
             <div class="user-info__user-name-container">
-                <h1 class="user-info__user-name">${this.USER_INFO.userName}</h1>
-                <div class="user-info__user-rank">${this.USER_INFO.userRank}</div>
-                <div class="user-info__rich-presence">Member since: ${this.USER_INFO.memberSince}</div>
+                <h1 class="user-info__user-name">${USER_INFO.userName}</h1>
+                <div class="user-info__user-rank">${USER_INFO.userRank}</div>
+                <div class="user-info__rich-presence">Member since: ${USER_INFO.memberSince}</div>
             </div>
         </div>
-        ${this.USER_INFO.isInGame ? `
-        <div class="user-info__rich-presence"> ${this.USER_INFO.richPresence}</div>
+        ${USER_INFO.isInGame ? `
+        <div class="user-info__rich-presence"> ${USER_INFO.richPresence}</div>
         `: ""}
         ${this.pointsHtml()}
         <h2 class="user-info__block-header">Recently played</h2>
@@ -444,23 +465,23 @@ class Home {
   pointsHtml() {
     return `
         <div class="user-info__points-container">
-          ${this.USER_INFO.softpoints > 0 ? `
+          ${USER_INFO.softpoints > 0 ? `
             <div class="user-info__points-group">
               <h3 class="user-info__points-name">softpoints</h3>
-              <p class="user-info__points">${this.USER_INFO.softpoints}</p>
+              <p class="user-info__points">${USER_INFO.softpoints}</p>
             </div>
             <div class="vertical-line"></div>
           `: ""
       }
             <div class="user-info__points-group">
                 <h3 class="user-info__points-name">hardpoints</h3>
-                <p class="user-info__points">${this.USER_INFO.hardpoints}</p>
+                <p class="user-info__points">${USER_INFO.hardpoints}</p>
 
             </div>
             <div class="vertical-line"></div>
             <div class="user-info__points-group">
                 <h3 class="user-info__points-name">retropoints</h3>
-                <p class="user-info__points">${this.USER_INFO.retropoints}</p>
+                <p class="user-info__points">${USER_INFO.retropoints}</p>
 
             </div>
         </div>
@@ -506,7 +527,7 @@ class Awards {
       label: "Filter by type",
       elements: [
         {
-          label: `All (${this.awardsObj.VisibleUserAwards.length})`,
+          label: `All (${AWARDS.VisibleUserAwards.length})`,
           id: "filter_all",
           type: "radio",
           onChange: "ui.awards.awardFilter = 'award'",
@@ -541,7 +562,7 @@ class Awards {
       label: "Filter by platform",
       elements: [
         {
-          label: `All (${this.awardsObj.VisibleUserAwards.length})`,
+          label: `All (${AWARDS.VisibleUserAwards.length})`,
           id: "filter_all",
           type: "radio",
           onChange: "ui.awards.platformFilterCode = 'platform'",
@@ -654,7 +675,7 @@ class Awards {
   }
 
   applyFilter() {
-    this.awardedGames = this.awardsObj.VisibleUserAwards;
+    this.awardedGames = AWARDS.VisibleUserAwards;
     this.awardFilterName !== "award" && (this.awardedGames = this.awardedGames
       .filter(game => game.award == this.awardFilterName));
     this.platformFilterCode !== "platform" && (this.awardedGames =
@@ -679,15 +700,18 @@ class Awards {
     // achievementsCount: "achievementsCount",
     title: "title",
   };
-  awardsObj;
   awardedGames = [];
   constructor() {
-    this.update();
+    ui.showLoader();
+    this.downloadAwardsData().then(() => {
+      this.getAwardsStats();
+      this.update();
+    })
+
   }
   async update() {
     ui.showLoader();
     await delay(50);
-    !this.awardsObj && (await this.downloadAwardsData());
     this.applyFilter();
     this.applySort();
     const section = this.AwardsSection()
@@ -695,11 +719,8 @@ class Awards {
     ui.content.append(section);
     ui.removeLoader();
   }
-  async downloadAwardsData() {
-    const resp = await apiWorker.getUserAwards({});
-    this.awardsObj = resp;
-
-    const stats = this.awardsObj.VisibleUserAwards
+  getAwardsStats() {
+    const stats = AWARDS.VisibleUserAwards
       .reduce((res, game) => {
         !res.platforms[game.ConsoleID] && (res.platforms[game.ConsoleID] = { count: 0 });
         res.platforms[game.ConsoleID].name = game.ConsoleName;
@@ -713,6 +734,9 @@ class Awards {
       }, { platforms: {}, awards: {} });
     this.platformCodes = stats.platforms;
     this.awardTypes = stats.awards;
+  }
+  async downloadAwardsData() {
+    !AWARDS && (AWARDS = await apiWorker.getUserAwards({}));
   }
   AwardsSection() {
     const awardsSection = document.createElement("section");
@@ -1179,6 +1203,95 @@ class Library {
     })
   }
 }
+class Favourites {
+
+  constructor() {
+    this.update();
+  }
+
+  async update() {
+    ui.showLoader();
+    await delay(50);
+    !this.FAVOURITES && (await this.loadGamesArray());
+    // this.applyFilter();
+    // this.applySort();
+    const section = this.FavouritesSection();
+    ui.content.innerHTML = '';
+    ui.content.append(section);
+    ui.removeLoader();
+    lazyLoad({ list: this.gameList, items: this.FAVOURITES, callback: this.getGameElement })
+  }
+  async loadGamesArray() {
+    this.FAVOURITES = Object.values(ui.favouritesGames);
+    // await delay(50)
+  }
+  FavouritesSection() {
+    this.librarySection = document.createElement("section");
+    this.librarySection.classList.add("favourites__section");
+
+    this.librarySection.appendChild(this.headerElement());
+
+    this.gameList = document.createElement("ul");
+    this.gameList.classList.add("games-list");
+
+    this.librarySection.appendChild(this.gameList);
+
+    return this.librarySection;
+  }
+  headerElement() {
+
+    const gamesHeader = document.createElement("div");
+    gamesHeader.classList.add("section__header-container");
+    gamesHeader.innerHTML = `
+        <div class="section__header-title">Favourites</div>
+        <div class="section__control-container">
+        <!--  <button class=" simple-button" onclick="generateContextMenu(ui.library.gamesSortContext(),event)">Sort</button>
+            <button class="games-platform-filter simple-button" onclick="generateContextMenu(ui.library.gamesPlatformContext(),event)">${this.platformFilter ?? "Platform"}</button>
+            <div class="hidden-text-input__container">
+            <input class="hidden-text-input__input" type="search">
+            <button class="hidden-text-input__button icon-button simple-button search-icon show-searchbar__button"
+                onclick="ui.library.showHiddenInput(this)"></button> -->
+
+        </div>
+            </div>
+    `;
+    return gamesHeader;
+  }
+  getGameElement(game) {
+    console.log(game)
+    const gameElement = document.createElement("li");
+    gameElement.classList.add("awards__game-item");
+    gameElement.dataset.id = game?.ID;
+    const imgName = game?.ImageIcon.slice(game?.ImageIcon.lastIndexOf("/") + 1, game?.ImageIcon.lastIndexOf(".") + 1) + "webp";
+    gameElement.innerHTML = `    
+            <li class="awards__game-item" data-id="${game?.ID}">
+                <div class="awards__game-container"  onclick="ui.showGameDetails(${game?.ID}); event.stopPropagation()">
+                    <div class="awards__game-preview-container" onclick="ui.goto.game(${game?.ID}); event.stopPropagation()">
+                        <img class="awards__game-preview" src="../../assets/imgCache/${imgName}" alt="">
+                    </div>
+                    <div class="awards__game-description" >
+                        <h2 class="awards__game-title">${game?.Title}</h2>
+                        <div  class="game-stats__button"  onclick="ui.expandGameItem(${game?.ID},this); event.stopPropagation()">
+                          <i class="game-stats__icon game-stats__expand-icon"></i>
+                        </div>
+                        <div class="awards__game-stats__text">${game?.ConsoleName}</div>
+
+                        <div class="awards__game-stats-container" >                           
+                        <div class="game-stats ">
+                        <i class="game-stats__icon game-stats__achivs-icon"></i>
+                        <div class="game-stats__text">${game?.NumAchievements}</div>
+                        </div>
+                        <div class="game-stats game-stats__points">
+                        <i class="game-stats__icon game-stats__points-icon"></i>
+                        <div class="game-stats__text">${game?.points_total}</div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+        `;
+    return gameElement;
+  }
+}
 const Login = () => {
   const sectionUrl = './sections/login.elem';
   return fetch(sectionUrl)
@@ -1267,10 +1380,10 @@ function lazyLoad({ list, items, callback }) {
   list.parentNode.insertBefore(trigger, list.nextSibling);
 
   // Ініціалізація списку з початковими елементами
-  let itemIndex = 1;
-  const initialLoadCount = 15;
+  let itemIndex = 0;
+  const initialLoadCount = 5;
   const loadItems = (count) => {
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < count && itemIndex < items.length; i++) {
       list.appendChild(callback(items[itemIndex++]));
     }
   };

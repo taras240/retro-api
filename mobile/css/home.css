@@ -295,11 +295,11 @@
 }
 
 .achiv-rarity__standard {
-    background-color: greenyellow;
+    background-color: green;
 }
 
 .achiv-rarity__easy {
-    background-color: green;
+    background-color: greenyellow;
 }
 
 .user-info__game-achivs-container {
