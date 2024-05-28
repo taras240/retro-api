@@ -1269,13 +1269,24 @@ class AchievementsBlock {
     this.section.style.setProperty("--achiv-height", achivWidth + "px");
   }
   autoscrollInterval;
+  delayedAutoScroll;
+  showMario() {
+    const mario = document.createElement("div");
+    mario.classList.add("mario__container");
+    this.container.appendChild(mario);
+  }
   startAutoScroll(toBottom = true) {
+    clearTimeout(this.delayedAutoScroll);
     clearInterval(this.autoscrollInterval);
+    if (this.isAllEarnedAchievesVisible()) {
+      this.delayedAutoScroll = setTimeout(() => this.startAutoScroll(toBottom), 30 * 1000);
+      return;
+    }
     let refreshRateMiliSecs = 50;
 
     let scrollContainer = this.container;
     let speedInPixels = 1;
-    const pauseOnEndMilisecs = 2000;
+    const pauseOnEndMilisecs = 5000;
     // Часовий інтервал для прокручування вниз
     if (this.AUTOSCROLL) {
       this.autoscrollInterval = setInterval(() => {
@@ -1312,6 +1323,19 @@ class AchievementsBlock {
   }
   stopAutoScroll() {
     clearInterval(this.autoscrollInterval);
+  }
+  isAllEarnedAchievesVisible() {
+    let isVisible = true;
+    const top = this.container.getBoundingClientRect().top;
+    const height = this.container.getBoundingClientRect().height;
+    this.container.querySelectorAll(".earned").forEach(achiv => {
+      const achivTopPos = achiv.getBoundingClientRect().top - top;
+      const achivBottomPos = achiv.getBoundingClientRect().top - top + achiv.getBoundingClientRect().height;
+      if (achivTopPos < 0 || achivBottomPos > height) {
+        isVisible = false;
+      }
+    })
+    return isVisible;
   }
   applySorting() {
     UI.applySort({

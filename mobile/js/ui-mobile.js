@@ -3,7 +3,16 @@ class UI {
   get favouritesGames() {
     return config.ui?.mobile?.favouritesGames ?? {};
   }
-
+  get isSoftmode() {
+    return config.ui?.mobile?.isSoftMode ?? false;
+  }
+  set isSoftmode(value) {
+    config.ui.mobile.isSoftMode = value;
+  }
+  switchGameMode() {
+    this.isSoftmode = !this.isSoftmode;
+    this.home = new Home();
+  }
   routes = {
     '/': async () => {
       if (config.identConfirmed) {
@@ -95,6 +104,10 @@ class UI {
     }
   }
   constructor() {
+    (!config.ui?.mobile) && (
+      config.ui.mobile = {},
+      config.writeConfiguration()
+    )
     this.initializeElements();
     this.addEvents();
   }
@@ -226,8 +239,8 @@ class UI {
           href="https://retroachievements.org/game/${game?.ID}" target="_blank"></a>
       <button class="${ui.favouritesGames[game?.ID] ? "checked" : ''} round-button icon-button like-icon simple-button game-popup__like-button"
           onclick="addGameToFavourite(${game?.ID});this.classList.toggle('checked'); event.stopPropagation()"></button>
-  </div>
-  <div class="hor-line"></div>
+    </div>
+    <div class="hor-line"></div>
       <div class="popup-info__properties">
           <div class="popup-info__property">Platform: <span>${game?.ConsoleName}</span></div>
           <div class="popup-info__property">Developer: <span>${game?.Developer} Soft</span></div>
@@ -324,7 +337,7 @@ class UI {
     return `    
             <li class="user-info__achiv-container"  onclick="ui.showAchivDetails(${achiv.ID},${gameID}); event.stopPropagation();">                
                 <div class="user-info__achiv-preview-container">
-                    <img class="user-info__achiv-preview ${achiv.isHardcoreEarned && "earned"}" src="${achiv.prevSrc}" alt="">
+                    <img class="user-info__achiv-preview ${(achiv.isHardcoreEarned || ui.isSoftmode && achiv.isEarned) && "earned"}" src="${achiv.prevSrc}" alt="">
                 </div>
                 <div class="user-info__achiv-description">
                     <h2 class="user-info__game-title">${achiv.Title}</h2>
@@ -369,7 +382,7 @@ class Home {
         this.USER_INFO.richPresence = resp.RichPresenceMsg;
         this.USER_INFO.memberSince = resp.MemberSince;
         this.USER_INFO.userImageSrc = `https://media.retroachievements.org${resp.UserPic}`;
-        this.USER_INFO.userRank = `${resp.Rank} (Top ${~~(10000 * resp.Rank / resp.TotalRanked) / 100}%)`;
+        this.USER_INFO.userRank = resp.Rank ? `Rank: ${resp.Rank} (Top ${~~(10000 * resp.Rank / resp.TotalRanked) / 100}%)` : "Rank is unavailable";
         this.USER_INFO.softpoints = resp.TotalSoftcorePoints;
         this.USER_INFO.retropoints = resp.TotalTruePoints;
         this.USER_INFO.hardpoints = resp.TotalPoints;
@@ -413,9 +426,10 @@ class Home {
             <div class="user-info__avatar-container">
                 <img src="${this.USER_INFO.userImageSrc}" alt="" class="user-info__avatar">
             </div>
+            <button class="button__switch-mode ${ui.isSoftmode ? "softmode" : ""}" onclick="ui.switchGameMode()">${ui.isSoftmode ? "SOFT" : "HARD"}</button>
             <div class="user-info__user-name-container">
                 <h1 class="user-info__user-name">${this.USER_INFO.userName}</h1>
-                <div class="user-info__user-rank">RANK: ${this.USER_INFO.userRank}</div>
+                <div class="user-info__user-rank">${this.USER_INFO.userRank}</div>
                 <div class="user-info__rich-presence">Member since: ${this.USER_INFO.memberSince}</div>
             </div>
         </div>
@@ -471,11 +485,11 @@ class Home {
                         <div class="user-info_game-stats-container">
                             <div class="game-stats ">
                             <i class="game-stats__icon game-stats__achivs-icon"></i>
-                            <div class="game-stats__text">${game.NumAchievedHardcore} / ${game.NumPossibleAchievements}</div>
+                            <div class="game-stats__text">${ui.isSoftmode ? game.NumAchieved : game.NumAchievedHardcore} / ${game.NumPossibleAchievements}</div>
                             </div>
                             <div class="game-stats game-stats__points">
                             <i class="game-stats__icon game-stats__points-icon"></i>
-                            <div class="game-stats__text">${game.ScoreAchievedHardcore} / ${game.PossibleScore}</div>
+                            <div class="game-stats__text">${ui.isSoftmode ? game.ScoreAchieved : game.ScoreAchievedHardcore} / ${game.PossibleScore}</div>
                             </div>
                            
                         </div>

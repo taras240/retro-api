@@ -1,46 +1,17 @@
-.update_section.section {
-    /* background-color: var(--main-color); */
-}
-
-.update_user-status {
-    position: relative;
-}
-
-.update_user-status::after {
-    content: '';
+.mario__container {
     position: absolute;
-    height: 80%;
-    aspect-ratio: 1;
-    /* background-image: url(../assets/img/angle_border.webp); */
+    top: calc(var(--achiv-height) * 1.2);
+    left: -50px;
+    width: calc(var(--achiv-height));
+    aspect-ratio: 1 / 2;
+    background-image: url(../assets/img/jump.gif);
+    background-position: bottom;
     background-size: contain;
+    background-repeat: no-repeat;
+    z-index: 10;
     image-rendering: pixelated;
-    /* z-index: 1; */
 }
 
-.update_section.section::before {
-    bottom: 0;
-    right: 0;
-    transform: scaleY(-1);
-}
+/* .mario__container img{
 
-.update_section.section::after {
-    top: 0;
-    left: 0;
-    transform: scaleX(-1);
-    display: none;
-}
-
-.update_container {
-    /* background-color: transparent; */
-}
-
-/* .update_preview-container::after {
-    content: "";
-    background-image: url(../assets/img/game-border-21.png);
-}
-
-
-.update_preview-container::after {
-    content: "";
-    background-image: url(../assets/img/game-border-20.png);
 } */
