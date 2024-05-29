@@ -108,9 +108,12 @@
 
 
 .achiv-block.earned .achiv-preview {
-  filter: grayscale(0);
+  filter: grayscale(0.5);
 }
 
+.achiv-block.hardcore .achiv-preview {
+  filter: grayscale(0);
+}
 
 
 @keyframes achiv-earned-animation {
@@ -137,7 +140,7 @@
   overflow: hidden;
 }
 
-.achiv-block:not(:active) .preview-container::before {
+.achiv-block.overlay:not(:active) .preview-container::before {
   position: absolute;
   content: "";
   aspect-ratio: 1;

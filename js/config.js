@@ -215,7 +215,7 @@ class Config {
     clearTimeout(this.delayedWrite);
     this.delayedWrite = setTimeout(() => {
       localStorage.setItem(CONFIG_FILE_NAME, JSON.stringify(this._cfg));
-    }, 5000)
+    }, 1000)
   }
 
 }

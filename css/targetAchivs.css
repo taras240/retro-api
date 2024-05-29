@@ -97,13 +97,13 @@
   image-rendering: pixelated;
 }
 
-.target-achiv .prev::after {
+.target-achiv.border .prev::after {
   width: 150%;
   background-image: url(../assets/img/game-border.webp);
   z-index: 2;
 }
 
-.target-achiv .prev::before {
+.target-achiv.overlay .prev::before {
   width: 110%;
   background-image: url(../assets/img/question.webp);
   z-index: 1;

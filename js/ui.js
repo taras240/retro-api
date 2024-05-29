@@ -331,7 +331,7 @@ class UI {
       );
     // Проходимося по кожному елементу меню та генеруємо HTML
     menuItems.forEach((menuItem) => {
-      const isExpandable = menuItem.hasOwnProperty("subMenu");
+      const isExpandable = menuItem.hasOwnProperty("elements");
       let menuElement = document.createElement("li");
       menuElement.classList.add(
         "context-menu_item",
@@ -342,7 +342,7 @@ class UI {
         menuElement.innerHTML += menuItem.label;
         menuElement.appendChild(
           UI.generateContextMenu({
-            menuItems: menuItem.subMenu,
+            menuItems: menuItem.elements,
             isSubmenu: true,
             sectionCode: sectionCode,
           })
@@ -728,8 +728,64 @@ class AchievementsBlock {
   get contextMenuItems() {
     return [
       {
+        label: "Style",
+        elements: [
+          {
+            type: "checkbox",
+            name: "context-hide-unearned",
+            id: "context-hide-unearned",
+            label: "Show overlay",
+            checked: this.SHOW_PREV_OVERLAY,
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SHOW_PREV_OVERLAY = this.checked"`,
+          },
+          {
+            type: "checkbox",
+            name: "context_autoscroll-achieves",
+            id: "context_autoscroll-achieves",
+            label: "Autoscroll",
+            checked: this.AUTOSCROLL,
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].AUTOSCROLL = this.checked;"`,
+          },
+          {
+            type: "checkbox",
+            name: "context_autoscroll-achieves",
+            id: "context_smart-autoscroll-achieves",
+            label: "Smart autoscroll",
+            checked: this.SMART_AUTOSCROLL,
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SMART_AUTOSCROLL = this.checked;"`,
+          },
+          {
+            type: "checkbox",
+            name: "context_stretch-achieves",
+            id: "context_stretch-achieves",
+            label: "Stretch",
+            checked: this.ACHIV_STRETCH,
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].ACHIV_STRETCH = this.checked;"`,
+          },
+          {
+            prefix: "Min size",
+            postfix: "px",
+            type: "input-number",
+            id: "context-menu_min-size",
+            label: "Min size",
+            value: this.ACHIV_MIN_SIZE,
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].ACHIV_MIN_SIZE = this.value;"`,
+          },
+          {
+            prefix: "Max size",
+            postfix: "px",
+            type: "input-number",
+            id: "context-menu_max-size",
+            label: "Max size",
+            value: this.ACHIV_MAX_SIZE,
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].ACHIV_MAX_SIZE = this.value;"`,
+          },
+
+        ]
+      },
+      {
         label: "Sort",
-        subMenu: [
+        elements: [
           {
             type: "radio",
             name: "context-sort",
@@ -790,7 +846,7 @@ class AchievementsBlock {
       },
       {
         label: "Filter",
-        subMenu: [
+        elements: [
           {
             type: "radio",
             name: "context-filter",
@@ -842,60 +898,26 @@ class AchievementsBlock {
         ],
       },
       {
-        label: "Achieve style",
-        subMenu: [
+        label: "Elements",
+        elements: [
           {
+            label: "Show header",
             type: "checkbox",
-            name: "context_autoscroll-achieves",
-            id: "context_autoscroll-achieves",
-            label: "Autoscroll",
-            checked: this.AUTOSCROLL,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].AUTOSCROLL = this.checked;"`,
+            name: "context_hide-achivs-header",
+            id: "context_hide-achivs-header",
+            checked: this.SHOW_HEADER,
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SHOW_HEADER = this.checked;"`,
           },
           {
-            prefix: "Min size",
-            postfix: "px",
-            type: "input-number",
-            id: "context-menu_min-size",
-            label: "Min size",
-            value: this.ACHIV_MIN_SIZE,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].ACHIV_MIN_SIZE = this.value;"`,
-          },
-          {
-            prefix: "Max size",
-            postfix: "px",
-            type: "input-number",
-            id: "context-menu_max-size",
-            label: "Max size",
-            value: this.ACHIV_MAX_SIZE,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].ACHIV_MAX_SIZE = this.value;"`,
-          },
-          {
+            label: "Show background",
             type: "checkbox",
-            name: "context_stretch-achieves",
-            id: "context_stretch-achieves",
-            label: "Stretch",
-            checked: this.ACHIV_STRETCH,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].ACHIV_STRETCH = this.checked;"`,
-          },
-        ],
-      },
-      {
-        label: "Show header",
-        type: "checkbox",
-        name: "context_hide-achivs-header",
-        id: "context_hide-achivs-header",
-        checked: this.SHOW_HEADER,
-        event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SHOW_HEADER = this.checked;"`,
-      },
-      {
-        label: "Show background",
-        type: "checkbox",
-        name: "context_show-bg",
-        id: "context_show-bg",
-        checked: this.BG_VISIBILITY,
-        event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].BG_VISIBILITY = this.checked;"`,
-      },
+            name: "context_show-bg",
+            id: "context_show-bg",
+            checked: this.BG_VISIBILITY,
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].BG_VISIBILITY = this.checked;"`,
+          },]
+      }
+
     ];
   }
 
@@ -999,6 +1021,22 @@ class AchievementsBlock {
     config.ui[this.SECTION_NAME].autoscroll = value;
     value ? this.startAutoScroll() : this.stopAutoScroll();
   }
+  get SMART_AUTOSCROLL() {
+    return config?.ui[this.SECTION_NAME]?.smartAutoscroll ?? false;
+  }
+  set SMART_AUTOSCROLL(value) {
+    config.ui[this.SECTION_NAME].smartAutoscroll = value;
+    this.stopAutoScroll();
+    this.startAutoScroll();
+  }
+  get SHOW_PREV_OVERLAY() {
+    return config.ui[this.SECTION_NAME]?.showPrevOverlay ?? true;
+  }
+  set SHOW_PREV_OVERLAY(value) {
+    config.ui[this.SECTION_NAME].showPrevOverlay = value;
+    config.writeConfiguration();
+    this.container.querySelectorAll(".achiv-block").forEach(el => el.classList.toggle("overlay", value))
+  }
   get SECTION_NAME() {
     if (this.CLONE_NUMBER === 0) {
       return `achievements_section`;
@@ -1014,6 +1052,7 @@ class AchievementsBlock {
       this._cloneNumber = widget.length;
     } else return (this._cloneNumber = 0);
   }
+
   constructor(isClone = false) {
     this.CLONE_NUMBER = ui.achievementsBlock;
     this.isClone = isClone;
@@ -1121,7 +1160,7 @@ class AchievementsBlock {
 
     let achivElement = document.createElement("li");
     achivElement.classList.add("achiv-block");
-
+    this.SHOW_PREV_OVERLAY && achivElement.classList.add("overlay");
     if (isEarned) {
       achivElement.classList.add("earned");
       if (isHardcoreEarned) {
@@ -1278,7 +1317,7 @@ class AchievementsBlock {
   startAutoScroll(toBottom = true) {
     clearTimeout(this.delayedAutoScroll);
     clearInterval(this.autoscrollInterval);
-    if (this.isAllEarnedAchievesVisible()) {
+    if (this.SMART_AUTOSCROLL && this.isAllEarnedAchievesVisible()) {
       this.delayedAutoScroll = setTimeout(() => this.startAutoScroll(toBottom), 30 * 1000);
       return;
     }
@@ -1375,7 +1414,10 @@ class AchievementsBlock {
         </div>
         <h2 class="widget-header-text achivs-header-text">Achieves${this.CLONE_NUMBER === 0 ? "" : " ~"
       }</h2>
-
+      <button class="header-button header-icon" onclick="ui.settings.openSettings(ui.achievementsBlock[${this.CLONE_NUMBER}].contextMenuItems)">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"/>
+      </svg>        
+      </button>
         <button class="header-button header-icon" onclick="ui.achievementsBlock[${this.CLONE_NUMBER
       }].close();">
           <svg height="24" viewBox="0 -960 960 960" width="24">
@@ -1439,7 +1481,7 @@ class ButtonPanel {
     this.status.addEventListener("change", (e) => {
       UI.switchSectionVisibility(ui.statusPanel);
     });
-    this.settings.addEventListener("change", (e) => {
+    this.settings.addEventListener("click", (e) => {
       // UI.switchSectionVisibility(ui.settings);
       const settingsWidget = document.querySelector("#settings_section");
       settingsWidget ? settingsWidget.remove() : ui.settings.openSettings();
@@ -1533,7 +1575,7 @@ class StatusPanel {
     return [
       {
         label: "Show stats",
-        subMenu: [
+        elements: [
           {
             type: "checkbox",
             name: "context_show-points",
@@ -1616,7 +1658,7 @@ class StatusPanel {
       },
       {
         label: "Progressbar",
-        subMenu: [
+        elements: [
           {
             type: "radio",
             name: "context_show-progressbar",
@@ -1661,38 +1703,57 @@ class StatusPanel {
 
         ],
       },
+
       {
-        type: "checkbox",
-        name: "context_show-platform",
-        id: "context_show-platform",
-        label: "Platform",
-        checked: this.SHOW_PLATFORM,
-        event: `onchange="ui.statusPanel.SHOW_PLATFORM = this.checked;"`,
-      }, {
-        type: "checkbox",
-        name: "context_show-rich-presence",
-        id: "context_show-rich-presence",
-        label: "Rich presence",
-        checked: this.SHOW_RICH_PRESENCE,
-        event: `onchange="ui.statusPanel.SHOW_RICH_PRESENCE = this.checked;"`,
+        label: "Elements",
+        elements: [
+          {
+            type: "checkbox",
+            name: "context_show-platform",
+            id: "context_show-platform",
+            label: "Platform",
+            checked: this.SHOW_PLATFORM,
+            event: `onchange="ui.statusPanel.SHOW_PLATFORM = this.checked;"`,
+          }, {
+            type: "checkbox",
+            name: "context_show-rich-presence",
+            id: "context_show-rich-presence",
+            label: "Rich presence",
+            checked: this.SHOW_RICH_PRESENCE,
+            event: `onchange="ui.statusPanel.SHOW_RICH_PRESENCE = this.checked;"`,
+          },
+          {
+            type: "checkbox",
+            name: "context_show-game-border",
+            id: "context_show-game-border",
+            label: "Show game border",
+            checked: this.SHOW_GAME_PREV_BORDER,
+            event: `onchange="ui.statusPanel.SHOW_GAME_PREV_BORDER = this.checked;"`,
+          },
+        ],
       },
       {
-        type: "checkbox",
-        name: "context_show-new-cheevos",
-        id: "context_show-new-cheevos",
-        label: "Show new cheevos",
-        checked: this.SHOW_NEW_ACHIV,
-        event: `onchange="ui.statusPanel.SHOW_NEW_ACHIV = this.checked;"`,
-      },
-      {
-        prefix: "Cheevos duration",
-        postfix: "sec",
-        type: "input-number",
-        id: "context-menu_stats-earned-duration",
-        label: "Duration",
-        value: this.NEW_ACHIV_DURATION,
-        event: `onchange="ui.statusPanel.NEW_ACHIV_DURATION = this.value;"`,
-      },
+        label: "Earned Cheevo",
+        elements: [
+          {
+            type: "checkbox",
+            name: "context_show-new-cheevos",
+            id: "context_show-new-cheevos",
+            label: "Show new cheevos",
+            checked: this.SHOW_NEW_ACHIV,
+            event: `onchange="ui.statusPanel.SHOW_NEW_ACHIV = this.checked;"`,
+          },
+          {
+            prefix: "Cheevos duration",
+            postfix: "sec",
+            type: "input-number",
+            id: "context-menu_stats-earned-duration",
+            label: "Duration",
+            value: this.NEW_ACHIV_DURATION,
+            event: `onchange="ui.statusPanel.NEW_ACHIV_DURATION = this.value;"`,
+          },
+        ],
+      }
     ];
   }
   get SHOW_PLAYTIME() {
@@ -1793,6 +1854,14 @@ class StatusPanel {
 
   get AUTOSCROLL_RICHPRESENCE() {
     return true;
+  }
+  get SHOW_GAME_PREV_BORDER() {
+    return config?.ui?.update_section?.showGamePrevBorder ?? true;
+  }
+  set SHOW_GAME_PREV_BORDER(value) {
+    config.ui.update_section.showGamePrevBorder = value;
+    config.writeConfiguration();
+    this.container.classList.toggle("game-border", value);
   }
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
@@ -1919,7 +1988,7 @@ class StatusPanel {
       value: `${completionByPointsPercents} of points [${completionByCountPercents}]`,
     });
     ui.gameCard.section.classList.toggle("mastered", this.stats.earnedPoints != 0 && this.stats.totalPoints === this.stats.earnedPoints);
-
+    this.container.classList.toggle("game-border", this.SHOW_GAME_PREV_BORDER);
   }
   setProgressBarValue() {
     let value = 0;
@@ -1945,7 +2014,7 @@ class StatusPanel {
   }
   updateData() {
     this.stats = {
-      gameTitle: ui?.GAME_DATA?.Title ?? "Title",
+      gameTitle: ui?.GAME_DATA?.FixedTitle ?? "Title",
       gamePlatform: ui?.GAME_DATA?.ConsoleName ?? "Platform",
       richPresence: "Waiting...",
       imageSrc: `https://media.retroachievements.org${ui?.GAME_DATA?.ImageIcon}`,
@@ -1975,13 +2044,13 @@ class StatusPanel {
     this.setValues();
   }
   gameChangeEvent() {
-    const { ImageIcon, Title, ConsoleName } = ui.GAME_DATA;
+    const { ImageIcon, FixedTitle, ConsoleName, sufixes } = ui.GAME_DATA;
     const { gamePreview, gameTitle, gamePlatform } = this;
     gamePreview.setAttribute(
       "src",
       `https://media.retroachievements.org${ImageIcon}`
     );
-    gameTitle.innerText = Title || "Some game name";
+    gameTitle.innerHTML = `${FixedTitle || "Some game name"} ${this.generateSufixes(sufixes)}`;
     gameTitle.setAttribute(
       "href",
       "https://retroachievements.org/game/" + config.gameID
@@ -2001,6 +2070,9 @@ class StatusPanel {
     this.progresBarDelta.classList.remove("hidden");
 
     setTimeout(() => this.progresBarDelta.classList.add("hidden"), 50)
+  }
+  generateSufixes(sufixes) {
+    return sufixes?.reduce((acc, sufix) => acc += `<i class="game-card_suffix game-title_${sufix.toLowerCase()}">${sufix}</i>`, "")
   }
   newAchievementsIDs = [];
   showEarnedAchieves({ earnedAchievementIDs }) {
@@ -2499,7 +2571,7 @@ class Settings {
     return [
       {
         label: "Colors",
-        subMenu: [
+        elements: [
           {
             type: "radio",
             name: "context_color-scheme",
@@ -2630,7 +2702,7 @@ class Settings {
       },
       // {
       //   label: "Font",
-      //   subMenu: [{
+      //   elements: [{
       //     type: "range",
       //     id: "context_font-size",
       //     label: "Font size",
@@ -2792,27 +2864,31 @@ class Settings {
   }
 
   close() {
-    ui.buttons.settings.click();
+    ui.buttons.settings.checked = false;
+    this.section && this.section.remove();
   }
-  openSettings() {
-    const section = this.generateSettingsContainer()
+  openSettings(settingsItems = this.settingsItems) {
+    this.close();
+
+    this.section = this.generateSettingsContainer(settingsItems)
 
     config.ui.settings_section && (
-      config.ui.settings_section.x && (section.style.left = config.ui.settings_section.x),
-      config.ui.settings_section.y && (section.style.top = config.ui.settings_section.y)
+      config.ui.settings_section.x && (this.section.style.left = config.ui.settings_section.x),
+      config.ui.settings_section.y && (this.section.style.top = config.ui.settings_section.y)
     )
 
-    section.querySelector(".header-container").addEventListener("mousedown", (e) => {
-      UI.moveEvent(section, e);
+    this.section.querySelector(".header-container").addEventListener("mousedown", (e) => {
+      UI.moveEvent(this.section, e);
     });
 
-    section.addEventListener("click", (e) => {
-      section.querySelectorAll(".extended").forEach(el => el.classList.remove("extended"));
+    this.section.addEventListener("click", (e) => {
+      this.section.querySelectorAll(".extended").forEach(el => el.classList.remove("extended"));
     });
 
-    ui.wrapper.appendChild(section);
+    ui.wrapper.appendChild(this.section);
+    ui.buttons.settings.checked = true;
   }
-  generateSettingsContainer() {
+  generateSettingsContainer(settingsItems) {
     const settingsElement = document.createElement('section');
     settingsElement.classList.add("prefs_section", "section");
     settingsElement.id = "settings_section";
@@ -2837,12 +2913,19 @@ class Settings {
       switch (settingItem.type) {
         case "button":
           return `
-            <button class="button-input" onclick="${settingItem.onClick ?? ""}">${settingItem.label}</button>
+            <button class="button-input" ${settingItem.event ?? ""} onclick="${settingItem.onClick ?? ""}">${settingItem.label}</button>
           `;
         case "checkbox":
           return `
             <div class="checkbox-input_container">
-              <input onchange="${settingItem.onChange ?? ""}" type="checkbox" id="${settingItem.id}" ${settingItem.checked && "checked"}>
+              <input ${settingItem.event ?? "--"}  onchange="${settingItem.onChange ?? ""}" type="checkbox" id="${settingItem.id}" ${settingItem.checked && "checked"}>
+              <label class="checkbox-input" for="${settingItem.id}">${settingItem.label}</label>
+            </div>
+          `;
+        case "radio":
+          return `
+            <div class="radio-input_container">
+              <input ${settingItem.event ?? "--"} name="${settingItem.name}"  onchange="${settingItem.onChange ?? ""}" type="radio" id="${settingItem.id}" ${settingItem.checked && "checked"}>
               <label class="checkbox-input" for="${settingItem.id}">${settingItem.label}</label>
             </div>
           `;
@@ -2857,8 +2940,14 @@ class Settings {
             </button>
           `;
         case "number":
+        case "input-number":
           return `
-              <input type="number" class="text-input" id="${settingItem.id}" value="${settingItem.value}"
+          <input type="number" title="${settingItem.title ? settingItem.title : settingItem.prefix ?? ""}" class="text-input" id="${settingItem.id}" value="${settingItem.value}"
+               placeholder="${settingItem.label}" onchange="${settingItem.onChange}"/>
+            `;
+        case "text-input":
+          return `
+              <input type="text" class="text-input" id="${settingItem.id}" value="${settingItem.value}"
                placeholder="${settingItem.label}" onchange="${settingItem.onChange}"/>
             `;
         case "search":
@@ -2874,15 +2963,21 @@ class Settings {
           return "default";
       }
     }
-    this.settingsItems.forEach(setting => {
+    settingsItems.forEach(setting => {
       const settingItemsLine = document.createElement("li");
       settingItemsLine.classList.add("settings_setting-line");
       settingItemsLine.innerHTML = `
-        <h3 class="settings_setting-header">${setting.label}</h3>
-      `
-      setting.elements.forEach(settingItem => {
-        settingItemsLine.innerHTML += (generateSettingInput(settingItem));
-      })
+        <h3 class="settings_setting-header">${setting?.label}</h3>
+      `;
+      if (setting.elements) {
+        setting.elements.forEach(settingItem => {
+          settingItemsLine.innerHTML += (generateSettingInput(settingItem));
+        })
+      }
+      else {
+        settingItemsLine.innerHTML += (generateSettingInput(setting));
+      }
+
       settingsContainerElement.appendChild(settingItemsLine);
 
     })
@@ -3376,8 +3471,45 @@ class Target {
   get contextMenuItems() {
     return [
       {
+        label: "Style",
+        elements: [
+          {
+            label: "Show header",
+            type: "checkbox",
+            name: "context_hide-target-header",
+            id: "context_hide-target-header",
+            checked: this.SHOW_HEADER,
+            event: `onchange="ui.target.SHOW_HEADER = this.checked;"`,
+          },
+          {
+            type: "checkbox",
+            name: "context_autoscroll-target",
+            id: "context_autoscroll-target",
+            label: "Autoscroll",
+            checked: this.AUTOSCROLL,
+            event: `onchange="ui.target.AUTOSCROLL = this.checked;"`,
+          },
+          {
+            type: "checkbox",
+            name: "context-hide-unearned",
+            id: "context-hide-unearned",
+            label: "Show overlay",
+            checked: this.SHOW_PREV_OVERLAY,
+            event: `onchange="ui.target.SHOW_PREV_OVERLAY = this.checked"`,
+          },
+          {
+            type: "checkbox",
+            name: "context-show-border",
+            id: "context-show-border",
+            label: "Show img border",
+            checked: this.SHOW_PREV_BORDER,
+            event: `onchange="ui.target.SHOW_PREV_BORDER = this.checked"`,
+          },
+        ]
+      },
+      {
         label: "Sort",
-        subMenu: [
+        elements: [
           {
             type: "radio",
             name: "context-sort",
@@ -3447,7 +3579,7 @@ class Target {
       },
       {
         label: "Filter",
-        subMenu: [
+        elements: [
           {
             type: "radio",
             name: "context-filter",
@@ -3500,7 +3632,7 @@ class Target {
       },
       {
         label: "Clear",
-        subMenu: [
+        elements: [
           {
             type: "button",
             name: "context-clear-all",
@@ -3530,7 +3662,7 @@ class Target {
       },
       {
         label: "Fill",
-        subMenu: [
+        elements: [
           {
             type: "button",
             name: "context-fill",
@@ -3548,22 +3680,7 @@ class Target {
           },
         ],
       },
-      {
-        label: "Show header",
-        type: "checkbox",
-        name: "context_hide-target-header",
-        id: "context_hide-target-header",
-        checked: this.SHOW_HEADER,
-        event: `onchange="ui.target.SHOW_HEADER = this.checked;"`,
-      },
-      {
-        type: "checkbox",
-        name: "context_autoscroll-target",
-        id: "context_autoscroll-target",
-        label: "Autoscroll",
-        checked: this.AUTOSCROLL,
-        event: `onchange="ui.target.AUTOSCROLL = this.checked;"`,
-      },
+
     ];
   }
   get SHOW_HEADER() {
@@ -3647,7 +3764,24 @@ class Target {
   }
   set AUTOSCROLL(value) {
     config.ui.target_section.autoscroll = value;
+    config.writeConfiguration();
     value ? this.startAutoScroll() : this.stopAutoScroll();
+  }
+  get SHOW_PREV_BORDER() {
+    return config?.ui?.target_section?.showPrevBorder ?? true;
+  }
+  set SHOW_PREV_BORDER(value) {
+    config.ui.target_section.showPrevBorder = value;
+    config.writeConfiguration();
+    this.container.querySelectorAll(".target-achiv").forEach(el => el.classList.toggle("border", value))
+  }
+  get SHOW_PREV_OVERLAY() {
+    return config?.ui?.target_section?.showPrevOverlay ?? true;
+  }
+  set SHOW_PREV_OVERLAY(value) {
+    config.ui.target_section.showPrevOverlay = value;
+    config.writeConfiguration();
+    this.container.querySelectorAll(".target-achiv").forEach(el => el.classList.toggle("overlay", value))
   }
   constructor() {
     this.initializeElements();
@@ -3828,6 +3962,9 @@ class Target {
     } = ui.ACHIEVEMENTS[ID];
     let targetElement = document.createElement("li");
     targetElement.classList.add("target-achiv");
+    this.SHOW_PREV_BORDER && targetElement.classList.add("border");
+    this.SHOW_PREV_OVERLAY && targetElement.classList.add("overlay");
+
     // targetElement.setAttribute("draggable", "true");
     targetElement.dataset.type = type;
     targetElement.dataset.Points = Points;

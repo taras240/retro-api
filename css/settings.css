@@ -31,9 +31,11 @@
 /**! NEW ELEMENTS **/
 .settings_setting-line {
   display: flex;
-  column-gap: 10px;
+  gap: 10px;
   align-items: center;
-  padding: 10px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  max-width: 40vw;
 }
 
 .settings_setting-header {

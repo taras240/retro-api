@@ -30,6 +30,20 @@
   border-radius: 0 0 5px 0;
 }
 
+.update__header-button.header-icon {
+  position: absolute;
+  z-index: 10;
+  right: 0.25rem;
+  top: 0.25rem;
+  background-color: var(--main-color);
+  display: none;
+  border-radius: 0.5rem;
+}
+
+.update_section:hover .update__header-button.header-icon {
+  display: flex;
+}
+
 .update_container {
   background: var(--main-color);
   box-shadow: 0 0 3px 1px black;
@@ -149,10 +163,14 @@
   transform: translate(-50%, -50%);
   aspect-ratio: 1;
   z-index: 3;
-  background-image: url(../assets/img/game-border-5.webp);
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
+}
+
+.game-border .update_preview-container::after {
+  background-image: url(../assets/img/game-border-5.webp);
+
 }
 
 .update_back-side .update_preview-container::after {
