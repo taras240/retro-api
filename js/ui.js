@@ -1318,14 +1318,10 @@ class AchievementsBlock {
     this.stopAutoScroll();
     for (let id of earnedAchievementIDs) {
       const earnedAchivElement = this.container.querySelector(`.achiv-block[data-achiv-id="${id}"]`);
-      console.log(this.isAchieveVisible(earnedAchivElement))
-
       if (!this.isAchieveVisible(earnedAchivElement) || !ui.ACHIEVEMENTS[id].isHardcoreEarned) {
-        console.log(this.isAchieveVisible(earnedAchivElement), ui.ACHIEVEMENTS[id].isHardcoreEarned)
         earnedAchivElement.classList.add("earned", ui.ACHIEVEMENTS[id].isHardcoreEarned ? "hardcore" : "f");
       }
       else {
-
         await this.marioAction(earnedAchivElement);
       }
     }
@@ -1486,7 +1482,7 @@ class AchievementsBlock {
     let isVisible = true;
 
     this.container.querySelectorAll(".earned").forEach(achiv => {
-      !isAchieveVisible(achiv) && (isVisible = false);
+      !this.isAchieveVisible(achiv) && (isVisible = false);
     })
     return isVisible;
   }
