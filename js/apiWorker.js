@@ -242,15 +242,18 @@ class APIWorker {
     }));;
   }
   fixGameTitle(game) {
-    const ignoredWords = [/\[SUBSET.*?\]/gi, "~UNLICENSED~", "~DEMO~", "~HOMEBREW~", "~HACK~", "~PROTOTYPE~", ".HACK//", "~TEST KIT~"];
+    const ignoredWords = [/\[SUBSET.*?\]/gi, /~[^~]*~/g, ".HACK//",];
     let title = game.Title;
+
     const sufixes = ignoredWords.reduce((sufixes, word) => {
       const reg = new RegExp(word, "gi");
-      const match = game.Title.match(reg);
-      if (match) {
-        title = title.replace(reg, "");
-        let sufix = match[0];
-        sufixes.push(sufix.replace(/[~\.\.\/\[\]]/g, ""));
+      const matches = game.Title.match(reg);
+      if (matches) {
+        matches.forEach(match => {
+          title = title.replace(match, "");
+          let sufix = match;
+          sufixes.push(sufix.replace(/[~\.\.\/\[\]]/g, ""));
+        })
       }
       return sufixes;
     }, []);
