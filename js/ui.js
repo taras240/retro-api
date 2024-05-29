@@ -164,9 +164,13 @@ class UI {
   }
   updateWidgets({ earnedAchievementsIDs }) {
     //Update Achievements widgets
-    this.achievementsBlock.forEach(template =>
-      UI.updateAchievementsSection({ earnedAchievementIDs: earnedAchievementsIDs, widget: template }));
-
+    this.achievementsBlock.forEach(template => {
+      template.updateEarnedAchieves({ earnedAchievementIDs: earnedAchievementsIDs });
+      setTimeout(() =>
+        UI.updateAchievementsSection({ earnedAchievementIDs: earnedAchievementsIDs, widget: template }),
+        20 * 1000)
+    }
+    )
     //Update Target widget
     UI.updateAchievementsSection({ earnedAchievementIDs: earnedAchievementsIDs, widget: this.target });
     this.target.delayedRemove();
@@ -1309,11 +1313,126 @@ class AchievementsBlock {
   }
   autoscrollInterval;
   delayedAutoScroll;
-  showMario() {
-    const mario = document.createElement("div");
-    mario.classList.add("mario__container");
-    this.container.appendChild(mario);
+  async updateEarnedAchieves({ earnedAchievementIDs }) {
+    console.log(earnedAchievementIDs)
+    this.stopAutoScroll();
+    for (let id of earnedAchievementIDs) {
+      const earnedAchivElement = this.container.querySelector(`.achiv-block[data-achiv-id="${id}"]`);
+      console.log(this.isAchieveVisible(earnedAchivElement))
+
+      if (!this.isAchieveVisible(earnedAchivElement) || !ui.ACHIEVEMENTS[id].isHardcoreEarned) {
+        console.log(this.isAchieveVisible(earnedAchivElement), ui.ACHIEVEMENTS[id].isHardcoreEarned)
+        earnedAchivElement.classList.add("earned", ui.ACHIEVEMENTS[id].isHardcoreEarned ? "hardcore" : "f");
+      }
+      else {
+
+        await this.marioAction(earnedAchivElement);
+      }
+    }
+    this.startAutoScroll();
   }
+  async marioAction(targetElement) {
+    const walkSprites = [
+      "../assets/img/mario_sprites/mario_walk/walk_1.png",
+      "../assets/img/mario_sprites/mario_walk/walk_2.png",
+      "../assets/img/mario_sprites/mario_walk/walk_3.png",
+    ];
+    const standSprite = "../assets/img/mario_sprites/mario_jump/jump_0.png";
+    const jumpSprite = "../assets/img/mario_sprites/mario_jump/jump_1.png"
+
+    const mario = document.createElement("img");
+    mario.classList.add("mario__container");
+    mario.src = "../assets/img/mario_sprites/stand_0.webp";
+    this.container.appendChild(mario);
+
+    const marioSize = mario.getBoundingClientRect().width;
+    const targetElementDimensions = targetElement.getBoundingClientRect();
+
+    const targetPos = {
+      xPos: targetElementDimensions.left,
+      yPos: targetElementDimensions.top + marioSize,
+    }
+
+    const jumpHeight = marioSize * 2;
+    const startPos = {
+      xPos: - marioSize,
+      yPos: targetPos.yPos + jumpHeight,
+    }
+
+    let g = 10;
+    let dx = 30;
+    let dy = Math.sqrt(2 * g * jumpHeight);
+
+    mario.style.top = startPos.yPos + 'px';
+    mario.style.left = startPos.xPos + 'px';
+
+    let spriteIndex = 0;
+    const walkRight = async () => {
+      mario.classList.remove("to-left");
+      let XPos = startPos.xPos;
+
+      while (XPos < targetPos.xPos) {
+        spriteIndex >= walkSprites.length && (spriteIndex = 0);
+        XPos += dx;
+        mario.src = walkSprites[spriteIndex++];
+        XPos > targetPos.xPos && (XPos = targetPos.xPos);
+        mario.style.left = XPos + 'px';
+        await delay(100);
+      }
+      spriteIndex = 0;
+    }
+    const jump = async () => {
+      mario.src = jumpSprite;
+      let YPos = startPos.yPos;
+      while (~~dy > 0) {
+        YPos -= dy;
+        dy -= g;
+        YPos < targetPos.yPos && (
+          YPos = targetPos.yPos - 2,
+          targetElement.classList.add("earned", "hardcore")
+        )
+        mario.style.top = YPos + 'px';
+        await delay(100);
+      }
+      targetElement.classList.add("earned", "hardcore");
+      dy = 0;
+      while (YPos < startPos.yPos) {
+        YPos += dy;
+        dy += g;
+        YPos > startPos.yPos && (YPos = startPos.yPos);
+        mario.style.top = YPos + 'px';
+        await delay(100);
+      }
+      spriteIndex = 0;
+    }
+    const walkAway = async () => {
+      mario.classList.add("to-left");
+      let XPos = mario.getBoundingClientRect().left;
+      while (XPos > startPos.xPos) {
+        spriteIndex >= walkSprites.length && (spriteIndex = 0);
+        XPos -= dx;
+        mario.src = walkSprites[spriteIndex++];
+        mario.style.left = XPos + 'px';
+        await delay(50);
+      }
+      spriteIndex = 0;
+
+    }
+
+    await walkRight();
+    mario.src = standSprite;
+    await delay(500);
+    await jump();
+    mario.src = standSprite;
+    await delay(250);
+    mario.classList.add("to-left");
+    await delay(500);
+    await walkAway();
+
+    mario.remove();
+    await delay(500);
+  }
+
   startAutoScroll(toBottom = true) {
     clearTimeout(this.delayedAutoScroll);
     clearInterval(this.autoscrollInterval);
@@ -1365,15 +1484,23 @@ class AchievementsBlock {
   }
   isAllEarnedAchievesVisible() {
     let isVisible = true;
+
+    this.container.querySelectorAll(".earned").forEach(achiv => {
+      !isAchieveVisible(achiv) && (isVisible = false);
+    })
+    return isVisible;
+  }
+  isAchieveVisible(achiv) {
+    let isVisible = true;
+
     const top = this.container.getBoundingClientRect().top;
     const height = this.container.getBoundingClientRect().height;
-    this.container.querySelectorAll(".earned").forEach(achiv => {
-      const achivTopPos = achiv.getBoundingClientRect().top - top;
-      const achivBottomPos = achiv.getBoundingClientRect().top - top + achiv.getBoundingClientRect().height;
-      if (achivTopPos < 0 || achivBottomPos > height) {
-        isVisible = false;
-      }
-    })
+
+    const achivTopPos = achiv.getBoundingClientRect().top - top;
+    const achivBottomPos = achiv.getBoundingClientRect().top - top + achiv.getBoundingClientRect().height;
+    if (achivTopPos < 0 || achivBottomPos > height) {
+      isVisible = false;
+    }
     return isVisible;
   }
   applySorting() {
@@ -5528,3 +5655,6 @@ const fixTimeString = (
     return date.toLocaleDateString("uk-UA", options);
   }
 )
+const delay = (ms) => {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
