@@ -887,12 +887,13 @@ input[type="radio"]:checked+.context-menu_radio::after {
 }
 
 /* *-----------------BADGES----------- */
-.difficult-badge {
-  display: none;
+.target-achiv.show-difficult .difficult-badge,
+.achiv-details-block .difficult-badge {
+  display: inline-block;
 }
 
-.target-achiv.show-difficult .difficult-badge {
-  display: block;
+.difficult-badge {
+  display: none;
   text-transform: uppercase;
   border-radius: 5px;
   padding: 0 0.5rem;

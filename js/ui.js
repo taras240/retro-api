@@ -1205,7 +1205,6 @@ class AchievementsBlock {
       popUp.style.left = leftPos + "px";
       popUp.style.top = topPos + "px";
       this.fixDetailsPosition(popUp);
-
       requestAnimationFrame(() => popUp.classList.add("visible"));
     });
     achivElement.addEventListener("mouseleave", (e) => {
@@ -1228,13 +1227,16 @@ class AchievementsBlock {
     TrueRatio,
     NumAwardedHardcore,
     totalPlayers,
+    difficulty
   }) {
     let detailsElement = document.createElement("div");
     detailsElement.classList.add("achiv-details-block");
     detailsElement.dataset.pointStyle =
       Points < 10 ? "poor" : Points < 20 ? "normal" : "reach";
     detailsElement.innerHTML = `
-      <h3>${Title}</h3>
+      <h3>${Title}
+        <p class="difficult-badge difficult-badge__${difficulty}">${difficulty}</p>
+      </h3>
       <p>${Description}</p>
       <p>Earned by ${NumAwardedHardcore} of ${totalPlayers} players</p>
       <p class="points">${Points} [${TrueRatio}] points</p>
