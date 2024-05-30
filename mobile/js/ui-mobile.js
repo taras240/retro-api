@@ -8,6 +8,7 @@ class UI {
   }
   set isSoftmode(value) {
     config.ui.mobile.isSoftMode = value;
+    config.writeConfiguration();
   }
   switchGameMode() {
     this.isSoftmode = !this.isSoftmode;
