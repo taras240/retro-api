@@ -745,6 +745,14 @@ class AchievementsBlock {
           },
           {
             type: "checkbox",
+            name: "context-show-mario",
+            id: "context-show-mario",
+            label: "Show Mario",
+            checked: this.SHOW_MARIO,
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SHOW_MARIO = this.checked"`,
+          },
+          {
+            type: "checkbox",
             name: "context_autoscroll-achieves",
             id: "context_autoscroll-achieves",
             label: "Autoscroll",
@@ -1040,7 +1048,14 @@ class AchievementsBlock {
   set SHOW_PREV_OVERLAY(value) {
     config.ui[this.SECTION_NAME].showPrevOverlay = value;
     config.writeConfiguration();
-    this.container.querySelectorAll(".achiv-block").forEach(el => el.classList.toggle("overlay", value))
+    this.container.querySelectorAll(".achiv-block").forEach(el => el.classList.toggle("overlay", value));
+  }
+  get SHOW_MARIO() {
+    return config.ui[this.SECTION_NAME]?.showMario ?? true;
+  }
+  set SHOW_MARIO(value) {
+    config.ui[this.SECTION_NAME].showMario = value;
+    config.writeConfiguration();
   }
   get SECTION_NAME() {
     if (this.CLONE_NUMBER === 0) {
@@ -1320,7 +1335,7 @@ class AchievementsBlock {
     this.stopAutoScroll();
     earnedAchievementIDs.forEach(async id => {
       const earnedAchivElement = this.container.querySelector(`.achiv-block[data-achiv-id="${id}"]`);
-      if (!this.isAchieveVisible(earnedAchivElement) || !ui.ACHIEVEMENTS[id].isHardcoreEarned) {
+      if (!this.SHOW_MARIO || !this.isAchieveVisible(earnedAchivElement) || !ui.ACHIEVEMENTS[id].isHardcoreEarned) {
         earnedAchivElement.classList.add("earned", ui.ACHIEVEMENTS[id].isHardcoreEarned ? "hardcore" : "f");
       }
       else {
@@ -1375,7 +1390,7 @@ class AchievementsBlock {
         mario.src = walkSprites[spriteIndex++];
         XPos > targetPos.xPos && (XPos = targetPos.xPos);
         mario.style.left = XPos + 'px';
-        await delay(100);
+        await delay(70);
       }
       spriteIndex = 0;
     }
@@ -1390,7 +1405,7 @@ class AchievementsBlock {
           targetElement.classList.add("earned", "hardcore")
         )
         mario.style.top = YPos + 'px';
-        await delay(100);
+        await delay(70);
       }
       targetElement.classList.add("earned", "hardcore");
       dy = 0;
@@ -5673,4 +5688,42 @@ const fixTimeString = (
 )
 const delay = (ms) => {
   return new Promise(resolve => setTimeout(resolve, ms));
+}
+function lazyLoad({ list, items, callback }) {
+  const trigger = document.createElement("div");
+  trigger.classList.add("lazy-load_trigger")
+  list.parentNode.insertBefore(trigger, list.nextSibling);
+
+  // Ініціалізація списку з початковими елементами
+  let itemIndex = 0;
+  const initialLoadCount = 50;
+  const loadItems = (count) => {
+    for (let i = 0; i < count && itemIndex < items.length; i++) {
+      list.appendChild(callback(items[itemIndex++]));
+    }
+  };
+  loadItems(initialLoadCount);
+
+  // Callback функція для Intersection Observer
+  const loadMoreItems = (entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        loadItems(initialLoadCount);
+        // Оновлюємо спостереження
+        observer.unobserve(trigger);
+        list.appendChild(trigger);
+        observer.observe(trigger);
+      }
+    });
+  };
+  // Налаштування Intersection Observer
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 1.0
+  };
+  const observer = new IntersectionObserver(loadMoreItems, observerOptions);
+
+  // Початкове спостереження за тригером
+  observer.observe(trigger);
 }
