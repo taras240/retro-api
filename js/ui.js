@@ -1980,6 +1980,7 @@ class StatusPanel {
     return true;
   }
   get SHOW_GAME_PREV_BORDER() {
+    return false;
     return config?.ui?.update_section?.showGamePrevBorder ?? true;
   }
   set SHOW_GAME_PREV_BORDER(value) {
