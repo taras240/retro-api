@@ -812,7 +812,6 @@ class Game {
   }
   AchievementHtml(achiv) {
     const trend = ~~(1000 * achiv.NumAwardedHardcore / this.gameData.NumDistinctPlayers) / 10;
-    const rarity = trend < 1 ? "hell" : trend <= 2 ? "insane" : trend < 10 ? "nightmare" : trend < 15 ? "expert" : trend < 20 ? "standard" : "easy";
 
     return `
       <li class="achiv__achiv-container" onclick="ui.showAchivDetails(${achiv.ID}, ${this.gameID}); event.stopPropagation()">
@@ -839,7 +838,7 @@ class Game {
                   <div class="game-stats__text">${~~trend}%</div>
               </div>
               <div class="game-stats game-stats__points">
-                  <div class="game-stats__text achiv-rarity achiv-rarity__${rarity}">${rarity}</div>
+                  <div class="game-stats__text achiv-rarity achiv-rarity__${achiv.difficulty}">${achiv.difficulty}</div>
               </div>
             </div>
             </div>

@@ -164,6 +164,7 @@ class UI {
   }
   updateWidgets({ earnedAchievementsIDs }) {
     //Update Achievements widgets
+
     this.achievementsBlock.forEach(template => {
       template.updateEarnedAchieves({ earnedAchievementIDs: earnedAchievementsIDs });
       setTimeout(() =>
@@ -1316,17 +1317,16 @@ class AchievementsBlock {
   autoscrollInterval;
   delayedAutoScroll;
   async updateEarnedAchieves({ earnedAchievementIDs }) {
-    console.log(earnedAchievementIDs)
     this.stopAutoScroll();
-    for (let id of earnedAchievementIDs) {
+    earnedAchievementIDs.forEach(async id => {
       const earnedAchivElement = this.container.querySelector(`.achiv-block[data-achiv-id="${id}"]`);
       if (!this.isAchieveVisible(earnedAchivElement) || !ui.ACHIEVEMENTS[id].isHardcoreEarned) {
         earnedAchivElement.classList.add("earned", ui.ACHIEVEMENTS[id].isHardcoreEarned ? "hardcore" : "f");
       }
       else {
-        await this.marioAction(earnedAchivElement);
+        this.marioAction(earnedAchivElement);
       }
-    }
+    })
     this.startAutoScroll();
   }
   async marioAction(targetElement) {
@@ -1340,7 +1340,7 @@ class AchievementsBlock {
 
     const mario = document.createElement("img");
     mario.classList.add("mario__container");
-    mario.src = "../assets/img/mario_sprites/stand_0.webp";
+    mario.src = standSprite;
     this.container.appendChild(mario);
 
     const marioSize = mario.getBoundingClientRect().width;
@@ -1426,9 +1426,8 @@ class AchievementsBlock {
     mario.classList.add("to-left");
     await delay(500);
     await walkAway();
-
+    targetElement.classList.add("earned", "hardcore");
     mario.remove();
-    await delay(500);
   }
 
   startAutoScroll(toBottom = true) {
