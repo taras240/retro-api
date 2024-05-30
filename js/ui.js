@@ -3628,6 +3628,14 @@ class Target {
             checked: this.SHOW_PREV_BORDER,
             event: `onchange="ui.target.SHOW_PREV_BORDER = this.checked"`,
           },
+          {
+            type: "checkbox",
+            name: "context-show-difficult",
+            id: "context-show-difficult",
+            label: "Show difficult",
+            checked: this.SHOW_DIFFICULT,
+            event: `onchange="ui.target.SHOW_DIFFICULT = this.checked"`,
+          },
         ]
       },
       {
@@ -3906,6 +3914,14 @@ class Target {
     config.writeConfiguration();
     this.container.querySelectorAll(".target-achiv").forEach(el => el.classList.toggle("overlay", value))
   }
+  get SHOW_DIFFICULT() {
+    return config?.ui?.target_section?.showDifficult ?? true;
+  }
+  set SHOW_DIFFICULT(value) {
+    config.ui.target_section.showDifficult = value;
+    config.writeConfiguration();
+    this.container.querySelectorAll(".target-achiv").forEach(el => el.classList.toggle("show-difficult", value))
+  }
   constructor() {
     this.initializeElements();
     this.addEvents();
@@ -4082,12 +4098,13 @@ class Target {
       totalPlayers,
       DateEarnedHardcore,
       DisplayOrder,
+      difficulty,
     } = ui.ACHIEVEMENTS[ID];
     let targetElement = document.createElement("li");
     targetElement.classList.add("target-achiv");
     this.SHOW_PREV_BORDER && targetElement.classList.add("border");
     this.SHOW_PREV_OVERLAY && targetElement.classList.add("overlay");
-
+    this.SHOW_DIFFICULT && targetElement.classList.add("show-difficult");
     // targetElement.setAttribute("draggable", "true");
     targetElement.dataset.type = type;
     targetElement.dataset.Points = Points;
@@ -4133,6 +4150,7 @@ class Target {
                 <p class="target-description-text" title="earned by"><i class="target_description-icon  trending-icon"></i>${~~(
         (100 * NumAwardedHardcore) / totalPlayers)}%
                 </p>
+                <p class="difficult-badge difficult-badge__${difficulty}">${difficulty}</p>
               </div>             
             </div>
     `;

@@ -145,8 +145,14 @@ class APIWorker {
     return fetch(url).then((resp) => resp.json()).then(gameProgressObject => {
       gameProgressObject.TotalRetropoints = 0;
       Object.values(gameProgressObject.Achievements)
-        .forEach(achievement =>
-          gameProgressObject.TotalRetropoints += achievement.TrueRatio);
+        .forEach(achievement => {
+          gameProgressObject.TotalRetropoints += achievement.TrueRatio;
+          (!gameProgressObject.TotalRealPlayers ||
+            gameProgressObject.TotalRealPlayers < achievement.NumAwarded) && (
+              gameProgressObject.TotalRealPlayers = achievement.NumAwarded
+            )
+        });
+
       Object.getOwnPropertyNames(gameProgressObject.Achievements)
         .forEach(id =>
           this.fixAchievement(gameProgressObject.Achievements[id], gameProgressObject));
@@ -154,25 +160,6 @@ class APIWorker {
       return gameProgressObject;
     });
   }
-
-  // {
-  //   "Date": "2023-12-27 16:04:50",
-  //   "HardcoreMode": 1,
-  //   "AchievementID": 98012,
-  //   "Title": "Beginner I",
-  //   "Description": "Clear stages 01 - 05 in Quest.",
-  //   "BadgeName": "108302",
-  //   "Points": 5,
-  //   "TrueRatio": 25,
-  //   "Type": null,
-  //   "Author": "jos",
-  //   "GameTitle": "Pokemon Pinball mini",
-  //   "GameIcon": "/Images/028399.png",
-  //   "GameID": 14715,
-  //   "ConsoleName": "Pokemon Mini",
-  //   "BadgeURL": "/Badge/108302.png",
-  //   "GameURL": "/game/14715"
-  // }
 
   // Отримання недавно отриманих досягнень користувача
   getRecentAchieves({ targetUser, minutes }) {
@@ -199,50 +186,18 @@ class APIWorker {
       targetUser: targetUser,
       count: count || 50,
     });
-    // {
-    //   "GameID": 1479,
-    //   "ConsoleID": 7,
-    //   "ConsoleName": "NES/Famicom",
-    //   "Title": "Kirby's Adventure",
-    //   "ImageIcon": "/Images/060148.png",
-    //   "ImageTitle": "/Images/058502.png",
-    //   "ImageIngame": "/Images/058503.png",
-    //   "ImageBoxArt": "/Images/012398.png",
-    //   "LastPlayed": "2024-04-23 16:55:32",
-    //   "AchievementsTotal": 61,
-    //   "NumPossibleAchievements": 61,
-    //   "PossibleScore": 502,
-    //   "NumAchieved": 44,
-    //   "ScoreAchieved": 177,
-    //   "NumAchievedHardcore": 44,
-    //   "ScoreAchievedHardcore": 177
-    // }
+
     return fetch(url).then((resp) => resp.json()).then(arr => arr.map((game, index) => {
       game.ID = game.GameID;
       game.Points = game.ScoreAchievedHardcore + "/" + game.PossibleScore;
       game.NumAchievements = game.NumAchievedHardcore + "/" + game.AchievementsTotal;
       game.NumLeaderboards = "";
       game.DateEarnedHardcore = game.LastPlayed;
-      return this.fixGameTitle(game)
-      // let title = game.Title;
-      // const ignoredWords = ["~UNLICENSED~", "~DEMO~", "~HOMEBREW~", "~HACK~", "~PROTOTYPE~", ".HACK//", "~TEST KIT~"];
-
-      // const sufixes = ignoredWords.reduce((sufixes, word) => {
-      //   const reg = new RegExp(word, "gi");
-      //   if (reg.test(game.Title)) {
-      //     title = title.replace(reg, "");
-      //     sufixes.push(word.replaceAll(new RegExp("[^A-Za-z]", "gi"), ""));
-
-      //   }
-      //   return sufixes;
-      // }, [])
-      // game.sufixes = sufixes;
-      // game.FixedTitle = title.trim();
-      return game;
+      return this.fixGameTitle(game);
     }));;
   }
   fixGameTitle(game) {
-    const ignoredWords = [/\[SUBSET.*?\]/gi, /~[^~]*~/g, ".HACK//",];
+    const ignoredWords = [/\[SUBSET[^\[]*\]/gi, /~[^~]*~/g, ".HACK//",];
     let title = game.Title;
 
     const sufixes = ignoredWords.reduce((sufixes, word) => {
@@ -252,7 +207,7 @@ class APIWorker {
         matches.forEach(match => {
           title = title.replace(match, "");
           let sufix = match;
-          sufixes.push(sufix.replace(/[~\.\.\/\[\]]/g, ""));
+          sufixes.push(sufix.replace(/[~\.\[\]]|subset -|\/\//gi, ""));
         })
       }
       return sufixes;
@@ -324,27 +279,6 @@ class APIWorker {
     return fetch(url).then((resp) => resp.json()).then(obj => console.log(obj));
   }
 
-
-  // {
-  //   "Count": 100,
-  //   "Total": 1287,
-  //   "Results": [
-  //     {
-  //       "GameID": 20246,
-  //       "Title": "~Hack~ Knuckles the Echidna in Sonic the Hedgehog",
-  //       "ImageIcon": "/Images/074560.png",
-  //       "ConsoleID": 1,
-  //       "ConsoleName": "Mega Drive / Genesis",
-  //       "MaxPossible": 0,
-  //       "NumAwarded": 0,
-  //       "NumAwardedHardcore": 0,
-  //       "MostRecentAwardedDate": "2023-10-27T02:52:34+00:00",
-  //       "HighestAwardKind": "beaten-hardcore",
-  //       "HighestAwardDate": "2023-10-27T02:52:34+00:00"
-  //     }
-  // ...
-  //   ]
-  // }
   async updateCompletionProgress({ savedArray = [], completionProgress = [], batchSize = 500 }) {
     let completionOffset = await this.getUserCompelitionProgress({ count: batchSize, offset: completionProgress.length });
     completionProgress = [...completionProgress, ...completionOffset.Results];
@@ -364,16 +298,11 @@ class APIWorker {
       setTimeout(() => this.updateCompletionProgress({ savedArray: savedArray, completionProgress: completionProgress, batchSize: batchSize }), 100)
     }
   }
-
-
-
-
-
   fixAchievement(achievement, achievements) {
-    const { BadgeName, DateEarned, DateEarnedHardcore, NumAwardedHardcore, NumAwarded } = achievement;
-
+    const { BadgeName, DateEarned, DateEarnedHardcore, NumAwardedHardcore, NumAwarded, } = achievement;
+    const { NumDistinctPlayers, NumAwardedToUserHardcore, TotalRealPlayers } = achievements;
     //Додаєм кількість гравців
-    achievement.totalPlayers = achievements.NumDistinctPlayers;
+    achievement.totalPlayers = NumDistinctPlayers;
 
     // Визначаєм, чи отримано досягнення та чи є воно хардкорним
     achievement.isEarned = !!DateEarned;
@@ -385,9 +314,18 @@ class APIWorker {
     // Додаєм адресу зображення для досягнення
     achievement.prevSrc = `https://media.retroachievements.org/Badge/${BadgeName}.png`;
 
-    achievement.rateEarned = ~~(100 * NumAwarded / achievements.NumDistinctPlayers) + "%";
-    achievement.rateEarnedHardcore = ~~(100 * NumAwardedHardcore / achievements.NumDistinctPlayers) + "%";
-    //Повертаємо виправлений об'єкт
+    achievement.rateEarned = ~~(100 * NumAwarded / NumDistinctPlayers) + "%";
+    achievement.rateEarnedHardcore = ~~(100 * NumAwardedHardcore / NumDistinctPlayers) + "%";
+
+    const trend = 100 * (NumAwardedHardcore - NumAwardedToUserHardcore) / (TotalRealPlayers - NumAwardedToUserHardcore);
+    achievement.difficulty = NumDistinctPlayers < 200 ? "" :
+      trend <= 1 ? "hell" :
+        trend <= 2 ? "insane" :
+          trend < 8 ? "pro" :
+            trend < 13 ? "expert" :
+              trend < 20 ? "standard" :
+                "easy";
+
     return achievement;
   }
   toLocalTimeString(UTCTime) {

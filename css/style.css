@@ -886,28 +886,79 @@ input[type="radio"]:checked+.context-menu_radio::after {
   color: var(--context-font-color);
 }
 
-/* .buttons-block {
-  top: calc(100% - 200px);
-  left: calc(100% - 320px);
-  cursor: grab;
-  transition: 0.5s ease-in;
-  z-index: 1000;
+/* *-----------------BADGES----------- */
+.difficult-badge {
+  display: none;
 }
 
-.buttons-block_container {
-  width: 300px;
-  padding: 10px 14px 15px 10px;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
+.target-achiv.show-difficult .difficult-badge {
+  display: block;
+  text-transform: uppercase;
+  border-radius: 5px;
+  padding: 0 0.5rem;
+  /* background-color: #008000; */
+  color: #000000;
+  font-weight: 600;
+  font-size: 0.8rem;
 }
 
-.buttons-block_container > div {
-  width: calc(50% - 5px);
+.difficult-badge__hell {
+  background-color: #ff00ff;
+  box-shadow: 0 0 5px 1px #ff00ff;
+  -webkit-animation: hell-anim 6s infinite;
+  animation: hell-anim 6s infinite
 }
 
-.buttons-block:active {
-  transition: none;
-} */
+@-webkit-keyframes hell-anim {
+  0% {
+    background-color: #ff00ff;
+    box-shadow: 0 0 5px 1px #ff00ff;
+  }
+
+  50% {
+    background-color: #800080;
+    box-shadow: 0 0 5px 1px #800080;
+  }
+
+  to {
+    background-color: #ff00ff;
+    box-shadow: 0 0 5px 1px #ff00ff;
+  }
+}
+
+@keyframes hell-anim {
+  0% {
+    background-color: #ff00ff;
+    box-shadow: 0 0 5px 1px #ff00ff;
+  }
+
+  50% {
+    background-color: #800080;
+    box-shadow: 0 0 5px 1px #800080;
+  }
+
+  to {
+    background-color: #ff00ff;
+    box-shadow: 0 0 5px 1px #ff00ff;
+  }
+}
+
+.difficult-badge__insane {
+  background-color: #800080
+}
+
+.difficult-badge__pro {
+  background-color: crimson
+}
+
+.difficult-badge__expert {
+  background-color: orange
+}
+
+.difficult-badge__standard {
+  background-color: green
+}
+
+.difficult-badge__easy {
+  background-color: greenyellow
+}
