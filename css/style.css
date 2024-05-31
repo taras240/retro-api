@@ -945,21 +945,21 @@ input[type="radio"]:checked+.context-menu_radio::after {
 }
 
 .difficult-badge__insane {
-  background-color: #800080
+  background-color: #800080;
 }
 
 .difficult-badge__pro {
-  background-color: crimson
+  background-color: orange;
 }
 
 .difficult-badge__expert {
-  background-color: orange
+  background-color: crimson;
 }
 
 .difficult-badge__standard {
-  background-color: green
+  background-color: green;
 }
 
 .difficult-badge__easy {
-  background-color: greenyellow
+  background-color: greenyellow;
 }

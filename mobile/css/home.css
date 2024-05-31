@@ -286,12 +286,12 @@
     background-color: #800080;
 }
 
-.achiv-rarity__pro {
-    background-color: crimson;
+.difficult-badge__pro {
+    background-color: orange;
 }
 
-.achiv-rarity__expert {
-    background-color: orange;
+.difficult-badge__expert {
+    background-color: crimson;
 }
 
 .achiv-rarity__standard {

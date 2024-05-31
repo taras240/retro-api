@@ -298,8 +298,9 @@ class APIWorker {
       setTimeout(() => this.updateCompletionProgress({ savedArray: savedArray, completionProgress: completionProgress, batchSize: batchSize }), 100)
     }
   }
+
   fixAchievement(achievement, achievements) {
-    const { BadgeName, DateEarned, DateEarnedHardcore, NumAwardedHardcore, NumAwarded, } = achievement;
+    const { BadgeName, DateEarned, DateEarnedHardcore, NumAwardedHardcore, NumAwarded, TrueRatio } = achievement;
     const { NumDistinctPlayers, NumAwardedToUserHardcore, TotalRealPlayers } = achievements;
     //Додаєм кількість гравців
     achievement.totalPlayers = NumDistinctPlayers;
@@ -317,13 +318,14 @@ class APIWorker {
     achievement.rateEarned = ~~(100 * NumAwarded / NumDistinctPlayers) + "%";
     achievement.rateEarnedHardcore = ~~(100 * NumAwardedHardcore / NumDistinctPlayers) + "%";
 
-    const trend = 100 * (NumAwardedHardcore - NumAwardedToUserHardcore) / (TotalRealPlayers - NumAwardedToUserHardcore);
+    const trend = 100 * (NumAwardedHardcore - NumAwardedToUserHardcore * 0.5) / ((NumDistinctPlayers + TotalRealPlayers) * 0.5 - NumAwardedToUserHardcore * 0.5);
+    achievement.trend = trend;
     achievement.difficulty = NumDistinctPlayers < 200 ? "" :
-      trend <= 1 ? "hell" :
-        trend <= 2 ? "insane" :
-          trend < 8 ? "pro" :
-            trend < 13 ? "expert" :
-              trend < 20 ? "standard" :
+      trend < 1.5 && TrueRatio > 200 || TrueRatio >= 400 ? "hell" :
+        trend <= 3 && TrueRatio > 100 || TrueRatio >= 300 ? "insane" :
+          trend < 8 && TrueRatio > 24 ? "expert" :
+            trend < 13 && TrueRatio > 5 ? "pro" :
+              trend < 20 || TrueRatio > 14 ? "standard" :
                 "easy";
 
     return achievement;
