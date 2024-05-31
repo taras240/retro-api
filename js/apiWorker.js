@@ -144,6 +144,9 @@ class APIWorker {
 
     return fetch(url).then((resp) => resp.json()).then(gameProgressObject => {
       gameProgressObject.TotalRetropoints = 0;
+      gameProgressObject.progressionRetroRatio = 0;
+      let lowerWinConditionPoints = { ratio: Infinity, Points: 0, TrueRatio: 0 };
+      let progressionAchivsPoints = [];
       Object.values(gameProgressObject.Achievements)
         .forEach(achievement => {
           gameProgressObject.TotalRetropoints += achievement.TrueRatio;
@@ -151,8 +154,24 @@ class APIWorker {
             gameProgressObject.TotalRealPlayers < achievement.NumAwarded) && (
               gameProgressObject.TotalRealPlayers = achievement.NumAwarded
             )
-        });
+          achievement.type == 'progression' && (
+            progressionAchivsPoints.push({ Points: achievement.Points, TrueRatio: achievement.TrueRatio })
+          );
+          if (achievement.type == 'win_condition') {
+            const ratio = achievement.TrueRatio / achievement.Points;
+            ratio < lowerWinConditionPoints && (
+              lowerWinConditionPoints = { ratio: ratio, TrueRatio: achievement.TrueRatio, Points: achievement.Points }
+            )
+          }
+        })
+      lowerWinConditionPoints.ratio != Infinity && progressionAchivsPoints.push(lowerWinConditionPoints);
+      console.log(progressionAchivsPoints)
+      gameProgressObject.progressionRetroRatio = progressionAchivsPoints.reduce((ratio, points, _, arr) => {
+        ratio += (points.TrueRatio / points.Points) / arr.length;
+        return ~~(100 * ratio) / 100;
+      }, 0)
 
+      gameProgressObject.retroRatio = ~~(gameProgressObject.TotalRetropoints / gameProgressObject.points_total * 100) / 100;
       Object.getOwnPropertyNames(gameProgressObject.Achievements)
         .forEach(id =>
           this.fixAchievement(gameProgressObject.Achievements[id], gameProgressObject));
@@ -212,7 +231,6 @@ class APIWorker {
       }
       return sufixes;
     }, []);
-
     game.sufixes = sufixes;
     game.FixedTitle = title.trim();
     return game;

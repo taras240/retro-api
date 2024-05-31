@@ -1869,6 +1869,14 @@ class StatusPanel {
             checked: this.SHOW_GAME_PREV_BORDER,
             event: `onchange="ui.statusPanel.SHOW_GAME_PREV_BORDER = this.checked;"`,
           },
+          {
+            type: "checkbox",
+            name: "context_show-game-ratio",
+            id: "context_show-game-ratio",
+            label: "Show Retro Ratio",
+            checked: this.SHOW_GAME_RATIO,
+            event: `onchange="ui.statusPanel.SHOW_GAME_RATIO = this.checked;"`,
+          },
         ],
       },
       {
@@ -2003,6 +2011,14 @@ class StatusPanel {
     config.writeConfiguration();
     this.container.classList.toggle("game-border", value);
   }
+  get SHOW_GAME_RATIO() {
+    return config?.ui?.update_section?.showGameRatio ?? true;
+  }
+  set SHOW_GAME_RATIO(value) {
+    config.ui.update_section.showGameRatio = value;
+    config.writeConfiguration();
+    this.container.classList.toggle("show-game-ratio", value);
+  }
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
   }
@@ -2045,6 +2061,7 @@ class StatusPanel {
     this.section = document.querySelector("#update-section");
     this.container = this.section.querySelector(".update_container");
     this.gamePreview = this.section.querySelector("#game-preview"); // Іконка гри
+    this.retroRatioElement = this.section.querySelector(".update__retro-ratio")
     this.textBlock = this.section.querySelector("#update-text-block");
     this.gameTitle = this.section.querySelector("#game-title"); // Заголовок гри
     this.gamePlatform = this.section.querySelector("#game-platform"); // Платформа гри
@@ -2112,6 +2129,17 @@ class StatusPanel {
     this.gamePlatform.classList.toggle("hidden", !this.SHOW_PLATFORM);
     this.richPresence.classList.toggle("hidden", !this.SHOW_RICH_PRESENCE);
 
+    // const ratio = ui.GAME_DATA.progressionRetroRatio;
+    const ratio = ui.GAME_DATA.retroRatio;
+
+    this.retroRatioElement.innerText = ratio;
+    this.retroRatioElement.className = `update__retro-ratio difficult-badge__${ratio > 9 ? "insane" :
+      ratio > 7 ? "expert" :
+        ratio > 5 ? "pro" :
+          ratio > 3 ? "standard" :
+            "easy"
+      }`;
+
 
     //* Обчислення прогресу за балами та за кількістю досягнень
     const completionByPoints = this.stats.earnedPoints / ui.GAME_DATA.points_total || 0;
@@ -2129,6 +2157,7 @@ class StatusPanel {
     });
     ui.gameCard.section.classList.toggle("mastered", this.stats.earnedPoints != 0 && this.stats.totalPoints === this.stats.earnedPoints);
     this.container.classList.toggle("game-border", this.SHOW_GAME_PREV_BORDER);
+    this.container.classList.toggle("show-game-ratio", this.SHOW_GAME_RATIO);
   }
   setProgressBarValue() {
     let value = 0;

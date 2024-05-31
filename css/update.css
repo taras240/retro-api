@@ -358,6 +358,24 @@
   }
 }
 
+.update__retro-ratio {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* background-color: goldenrod; */
+  /* border-radius: 5px; */
+  color: black;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0 .2rem;
+  border-radius: 0 0 2px 0;
+}
+
+.show-game-ratio .update__retro-ratio {
+  display: block;
+}
+
 .update-game_header {
   text-align: start;
   display: flex;
