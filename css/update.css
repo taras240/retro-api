@@ -53,20 +53,57 @@
   cursor: grab;
   transform-style: preserve-3d;
   transition: 1s;
+  transform: rotateX(0deg);
 }
 
 .update_container.show-back {
   transform: rotateX(180deg);
+  animation: rotate-status-animation 1s ease-in-out;
+  transition: 1s;
+}
+
+@keyframes rotate-status-animation {
+  0% {
+    transform: rotateX(0deg);
+  }
+
+  80% {
+    transform: rotateX(220deg);
+  }
+
+  100% {
+    transform: rotateX(180deg);
+  }
 }
 
 .update_user-status {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 10px;
   justify-content: space-between;
   overflow: hidden;
   border-radius: 5px;
+  padding-bottom: 5px;
+}
 
+.update_user-status::before,
+.update_user-status::after {
+  content: '';
+  position: absolute;
+  bottom: 1px;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background-color: var(--font-color);
+  opacity: 0.06;
+  z-index: 10;
+}
+
+.update_user-status::before {
+  background-color: var(--main-color);
+  z-index: 9;
+  opacity: 1;
 }
 
 /**---------------- BACK SIDE ------------- */
@@ -154,21 +191,6 @@
   z-index: 2;
   filter: contrast(1);
 }
-
-/* .update_preview-container::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  height: 100%;
-  aspect-ratio: 1;
-  transform: translate(-50%, -50%);
-  background-image: url(../assets/img/glass.png);
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  z-index: 2;
-} */
 
 .update_preview-container::after {
   content: "";
@@ -370,16 +392,15 @@
 .update__retro-ratio {
   display: none;
   position: absolute;
-  top: 0;
+  bottom: 0;
   left: 0;
-  /* background-color: goldenrod; */
-  /* border-radius: 5px; */
   color: black;
   font-size: 1rem;
   font-weight: 600;
   padding: 0 .2rem;
-  border-radius: 0 0 2px 0;
+  border-radius: 0 5px 0 0;
 }
+
 
 .show-game-ratio .update__retro-ratio {
   display: block;
@@ -427,7 +448,7 @@
 }
 
 .update-text-block {
-  padding: 5px 0;
+  /* padding: 5px 0; */
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -436,6 +457,7 @@
   overflow: hidden;
   z-index: 1;
 }
+
 
 
 
@@ -453,11 +475,11 @@
 
 .progress-bar {
   position: absolute;
-  bottom: 0;
+  bottom: 1px;
   left: 0;
-  height: 5%;
+  height: 5px;
   border-radius: 5px 0 0 5px;
-  z-index: 10;
+  z-index: 11;
   width: var(--progress-points, 0%);
   /* background: linear-gradient(to right, transparent, var(--accent-color) 90%); */
   background-color: var(--accent-color);
@@ -466,14 +488,14 @@
 
 .progress-bar_delta-values {
   position: absolute;
-  bottom: 0;
+  bottom: 1px;
   left: 0;
-  height: 5%;
+  height: 5px;
   border-radius: 5px 0 0 5px;
   width: var(--progress-points, 0%);
   /* background: linear-gradient(to right, transparent, var(--selection-color) 90%); */
   background-color: var(--selection-color);
-  z-index: 9;
+  z-index: 10;
   transition: none;
 }
 

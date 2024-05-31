@@ -170,10 +170,9 @@ class APIWorker {
         progressionAchivsPoints.TrueRatio += lowerWinConditionPoints.TrueRatio
       );
       gameProgressObject.progressionRetroRatio = ~~(100 * progressionAchivsPoints.TrueRatio / progressionAchivsPoints.Points) / 100;
+
       const ratio = ~~(gameProgressObject.TotalRetropoints / gameProgressObject.points_total * 100) / 100;
-
       gameProgressObject.retroRatio = ratio;
-
       gameProgressObject.gameDifficulty = ratio > 9 ? "insane" :
         ratio > 7 ? "expert" :
           ratio > 5 ? "pro" :
@@ -345,12 +344,12 @@ class APIWorker {
 
     const trend = 100 * (NumAwardedHardcore - NumAwardedToUserHardcore * 0.5) / ((NumDistinctPlayers + TotalRealPlayers) * 0.5 - NumAwardedToUserHardcore * 0.5);
     achievement.trend = trend;
-    achievement.difficulty = NumDistinctPlayers < 200 ? "" :
+    achievement.difficulty =
       trend < 1.5 && TrueRatio > 200 || TrueRatio >= 400 ? "hell" :
         trend <= 3 && TrueRatio > 100 || TrueRatio >= 300 ? "insane" :
           trend < 8 && TrueRatio > 24 ? "expert" :
             trend < 13 && TrueRatio > 5 ? "pro" :
-              trend < 20 || TrueRatio > 14 ? "standard" :
+              trend < 20 && TrueRatio < 10 || TrueRatio > 14 ? "standard" :
                 "easy";
 
     return achievement;

@@ -1861,14 +1861,14 @@ class StatusPanel {
             checked: this.SHOW_RICH_PRESENCE,
             event: `onchange="ui.statusPanel.SHOW_RICH_PRESENCE = this.checked;"`,
           },
-          {
-            type: "checkbox",
-            name: "context_show-game-border",
-            id: "context_show-game-border",
-            label: "Show game border",
-            checked: this.SHOW_GAME_PREV_BORDER,
-            event: `onchange="ui.statusPanel.SHOW_GAME_PREV_BORDER = this.checked;"`,
-          },
+          // {
+          //   type: "checkbox",
+          //   name: "context_show-game-border",
+          //   id: "context_show-game-border",
+          //   label: "Show game border",
+          //   checked: this.SHOW_GAME_PREV_BORDER,
+          //   event: `onchange="ui.statusPanel.SHOW_GAME_PREV_BORDER = this.checked;"`,
+          // },
           {
             type: "checkbox",
             name: "context_show-game-ratio",
@@ -2133,12 +2133,7 @@ class StatusPanel {
     const ratio = ui.GAME_DATA.retroRatio;
 
     this.retroRatioElement.innerText = ratio;
-    this.retroRatioElement.className = `update__retro-ratio difficult-badge__${ratio > 9 ? "insane" :
-      ratio > 7 ? "expert" :
-        ratio > 5 ? "pro" :
-          ratio > 3 ? "standard" :
-            "easy"
-      }`;
+    this.retroRatioElement.className = `update__retro-ratio difficult-badge__${ui.GAME_DATA.gameDifficulty}`;
 
 
     //* Обчислення прогресу за балами та за кількістю досягнень
@@ -2297,7 +2292,7 @@ class StatusPanel {
 
     let currentStatusTextIndex = 0;
     let statusTextObjectLength = Object.values(this.statusTextValues).length;
-    Object.getOwnPropertyNames(this.statusTextValues)[currentStatusTextIndex] == "gameTime" && (
+    this.PROGRESSBAR_PROPERTY_NAME == "auto" && Object.getOwnPropertyNames(this.statusTextValues)[currentStatusTextIndex] == "gameTime" && (
       this.section.style.setProperty("--progress-points", "0%")
     );
 
@@ -3651,6 +3646,14 @@ class Target {
             event: `onchange="ui.target.SHOW_HEADER = this.checked;"`,
           },
           {
+            label: "Show background",
+            type: "checkbox",
+            name: "context_hide-target-bg",
+            id: "context_hide-target-bg",
+            checked: !this.HIDE_BG,
+            event: `onchange="ui.target.HIDE_BG = !this.checked;"`,
+          },
+          {
             type: "checkbox",
             name: "context_autoscroll-target",
             id: "context_autoscroll-target",
@@ -3867,6 +3870,14 @@ class Target {
     config.ui.target_section.showHeader = value;
     config.writeConfiguration();
     this.section.classList.toggle("compact", !this.SHOW_HEADER);
+  }
+  get HIDE_BG() {
+    return config?.ui.target_section?.hideBg ?? false;
+  }
+  set HIDE_BG(value) {
+    config.ui.target_section.hideBg = value;
+    config.writeConfiguration();
+    this.section.classList.toggle("hide-bg", this.HIDE_BG);
   }
   sectionCode = "-target";
   set SORT_NAME(value) {

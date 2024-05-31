@@ -11,6 +11,18 @@
   cursor: grab;
 }
 
+.target_section.hide-bg {
+  background: transparent;
+}
+
+.target_section.hide-bg:hover {
+  background: var(--main-color) !important;
+}
+
+.target_section:not(:hover) {
+  box-shadow: 0 0 5px 2px transparent;
+}
+
 .target-header_container {
   height: auto;
 }
@@ -30,15 +42,20 @@
   position: relative;
   flex-basis: 350px;
   flex-grow: 1;
-  padding: 15px 20px;
+  padding: 15px;
   display: flex;
-  gap: 20px;
+  gap: 10px;
   color: var(--font-color);
   background-color: var(--secondary-color);
   border-radius: 5px;
   overflow: hidden;
   box-shadow: 1px 1px 1px 0px #000000a1;
   transition: 0.1s;
+}
+
+.target-achiv.border {
+  padding: 15px 20px;
+  gap: 15px;
 }
 
 .target-achiv.dragged {
@@ -116,13 +133,17 @@
 }
 
 .prev-img {
-  height: 70px;
+  height: 80px;
   aspect-ratio: 1;
   filter: grayscale(1);
   image-rendering: pixelated;
   border-radius: 4px;
   overflow: hidden;
   transition: 0.2s;
+}
+
+.target-achiv.border .prev-img {
+  height: 70px;
 }
 
 .target-achiv.earned .prev-img {
