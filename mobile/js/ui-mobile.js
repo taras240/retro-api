@@ -232,6 +232,7 @@ class UI {
       <button class="close-popup" onclick="ui.removePopups()">X</button>
       <div class="popup-info__preview-container">
           <img src="https://media.retroachievements.org${game?.ImageIcon}" alt="icon" class="popup-info__preview">
+          <span class="game-header__retro-ratio  achiv-rarity__${game?.gameDifficulty}">${game?.retroRatio}</span>
       </div>
       <h2 class="popup-info__title">${game?.Title}</h2>
       <div class="hor-line"></div>
@@ -288,6 +289,7 @@ class UI {
     <button class="close-popup" onclick="ui.removePopups()"></button>
     <div class="popup-info__preview-container">
         <img src="${achiv.prevSrc}" alt="" class="popup-info__preview">
+        <span class="game-header__retro-ratio  achiv-rarity__${achiv.difficulty}">${achiv.difficulty}</span>
     </div>
     <h2 class="popup-info__title">${achiv.Title}</h2>
     <div class="hor-line"></div>
@@ -358,6 +360,7 @@ class UI {
                 <div class="user-info__achiv-description">
                     <h2 class="user-info__game-title">${achiv.Title}</h2>
                     <div class="user-info_game-stats-container">
+                        
                         <div class="game-stats ">
                         <i class="game-stats__icon game-stats__points-icon"></i>
                         <div class="game-stats__text">${achiv.Points}</div>
@@ -369,7 +372,11 @@ class UI {
                         <div class="game-stats game-stats__points">
                         <i class="game-stats__icon game-stats__trending-icon"></i>
                         <div class="game-stats__text">${achiv.rateEarnedHardcore}</div>
-                        </div>                     
+                        </div>   
+                        <div class="game-stats__difficult-container">
+                          <div class="game-stats__text achiv-rarity achiv-rarity__${achiv.difficulty}"> </div>
+                        </div>
+                  
                     </div>
                 </div>             
             </li>
@@ -876,13 +883,20 @@ class Game {
                 <div class="game-header__background-container">
                     <img class="game-header__background-img" src="https://media.retroachievements.org${this.gameData.ImageTitle}" alt="">
                     <div class="game-header__background-gradient"></div>
+                    
+
                 </div>
                 <div class="game-header__main-info">
                     <div class="game-header__icon-container">
                         <img class="game-header__icon" src="https://media.retroachievements.org${this.gameData.ImageIcon}" alt="">
-                    </div>
+                        <span class="game-header__retro-ratio  achiv-rarity__${this.gameData.gameDifficulty}">${this.gameData.retroRatio}
+                        </span>
+                        </div>
                     <div class="game-header__description-container">
-                        <h1 class="game-header__title">${this.gameData.Title}</h1>
+                        <h1 class="game-header__title">
+                          ${this.gameData.Title}                         
+                        </h1>
+                          
                         <div class="game-header__platform">${this.gameData.ConsoleName}</div>
                         ${completionProgress > 0 ? `
                           <div class="game-header__progress-container" style='--progress: ${completionProgress}%;'>

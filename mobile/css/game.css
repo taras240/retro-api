@@ -34,17 +34,35 @@
 }
 
 .game-header__icon-container {
+    position: relative;
     width: 6rem;
     height: 6rem;
     flex-shrink: 0;
+    border-radius: 0.5rem;
+    overflow: hidden;
 }
 
 .game-header__icon {
     width: 100%;
     aspect-ratio: 1;
     image-rendering: pixelated;
-    border-radius: 0.5rem;
+
 }
+
+.game-header__retro-ratio {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: inline-block;
+    ;
+    padding: 0 .25rem;
+    border-radius: 0 0.5rem 0 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: black;
+    z-index: 2;
+}
+
 
 .game-header__description-container {
     display: flex;
@@ -76,8 +94,9 @@
     z-index: 1;
     overflow: hidden;
     position: relative;
-    display: grid;
-    place-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .game-header__progress {

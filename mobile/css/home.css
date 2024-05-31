@@ -164,8 +164,10 @@
     width: 100%;
     display: flex;
     align-items: center;
-    gap: 2rem;
+    justify-content: start;
     overflow-x: scroll;
+    column-gap: 2rem;
+    flex-wrap: wrap;
 }
 
 .game-stats {
@@ -180,6 +182,13 @@
     font-size: 1rem;
 }
 
+.game-stats__difficult-container {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 1rem;
+}
+
 .game-stats__icon {
     display: inline-block;
     height: 1.4rem;
@@ -187,6 +196,11 @@
     background-color: var(--font-color);
     mask-size: contain;
     mask-repeat: no-repeat;
+}
+
+.achiv-rarity {
+    min-width: 1rem;
+    min-height: 1rem;
 }
 
 .game-stats__achivs-icon {
@@ -286,11 +300,11 @@
     background-color: #800080;
 }
 
-.difficult-badge__pro {
+.achiv-rarity__pro {
     background-color: orange;
 }
 
-.difficult-badge__expert {
+.achiv-rarity__expert {
     background-color: crimson;
 }
 
@@ -335,7 +349,7 @@
     overflow-y: hidden;
     height: 100%;
     width: 100%;
-    padding: 1rem 1rem 1rem 2rem;
+    padding: 1rem;
 }
 
 
@@ -357,7 +371,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-
+    width: 100%;
     height: 100%;
     overflow-x: scroll;
 }
@@ -413,8 +427,9 @@
 }
 
 .popup-info__preview-container {
+    position: relative;
     align-self: center;
-    height: 6rem;
+    height: 8rem;
     aspect-ratio: 1;
 }
 

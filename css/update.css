@@ -135,6 +135,15 @@
   box-shadow: 0 1px 5px 2px black;
 }
 
+.update_preview-container::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  opacity: 0.2;
+  background: linear-gradient(to bottom, transparent, var(--secondary-color), transparent);
+}
+
+
 .update-game-preview {
   height: 100%;
   aspect-ratio: 1;

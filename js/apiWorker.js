@@ -146,7 +146,7 @@ class APIWorker {
       gameProgressObject.TotalRetropoints = 0;
       gameProgressObject.progressionRetroRatio = 0;
       let lowerWinConditionPoints = { ratio: Infinity, Points: 0, TrueRatio: 0 };
-      let progressionAchivsPoints = [];
+      let progressionAchivsPoints = { Points: 0, TrueRatio: 0 };
       Object.values(gameProgressObject.Achievements)
         .forEach(achievement => {
           gameProgressObject.TotalRetropoints += achievement.TrueRatio;
@@ -154,24 +154,31 @@ class APIWorker {
             gameProgressObject.TotalRealPlayers < achievement.NumAwarded) && (
               gameProgressObject.TotalRealPlayers = achievement.NumAwarded
             )
-          achievement.type == 'progression' && (
-            progressionAchivsPoints.push({ Points: achievement.Points, TrueRatio: achievement.TrueRatio })
+          achievement.type == 'progression' || achievement.type == 'win_condition' && (
+            progressionAchivsPoints.Points += achievement.Points,
+            progressionAchivsPoints.TrueRatio += achievement.TrueRatio
           );
-          if (achievement.type == 'win_condition') {
-            const ratio = achievement.TrueRatio / achievement.Points;
-            ratio < lowerWinConditionPoints && (
-              lowerWinConditionPoints = { ratio: ratio, TrueRatio: achievement.TrueRatio, Points: achievement.Points }
-            )
-          }
+          // if (achievement.type == 'win_condition') {
+          //   const ratio = achievement.TrueRatio / achievement.Points;
+          //   ratio < lowerWinConditionPoints && (
+          //     lowerWinConditionPoints = { ratio: ratio, TrueRatio: achievement.TrueRatio, Points: achievement.Points }
+          //   )
+          // }
         })
-      lowerWinConditionPoints.ratio != Infinity && progressionAchivsPoints.push(lowerWinConditionPoints);
-      console.log(progressionAchivsPoints)
-      gameProgressObject.progressionRetroRatio = progressionAchivsPoints.reduce((ratio, points, _, arr) => {
-        ratio += (points.TrueRatio / points.Points) / arr.length;
-        return ~~(100 * ratio) / 100;
-      }, 0)
+      lowerWinConditionPoints.ratio != Infinity && (
+        progressionAchivsPoints.Points += lowerWinConditionPoints.Points,
+        progressionAchivsPoints.TrueRatio += lowerWinConditionPoints.TrueRatio
+      );
+      gameProgressObject.progressionRetroRatio = ~~(100 * progressionAchivsPoints.TrueRatio / progressionAchivsPoints.Points) / 100;
+      const ratio = ~~(gameProgressObject.TotalRetropoints / gameProgressObject.points_total * 100) / 100;
 
-      gameProgressObject.retroRatio = ~~(gameProgressObject.TotalRetropoints / gameProgressObject.points_total * 100) / 100;
+      gameProgressObject.retroRatio = ratio;
+
+      gameProgressObject.gameDifficulty = ratio > 9 ? "insane" :
+        ratio > 7 ? "expert" :
+          ratio > 5 ? "pro" :
+            ratio > 3 ? "standard" :
+              "easy"
       Object.getOwnPropertyNames(gameProgressObject.Achievements)
         .forEach(id =>
           this.fixAchievement(gameProgressObject.Achievements[id], gameProgressObject));
