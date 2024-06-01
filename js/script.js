@@ -46,7 +46,7 @@ async function updateAchievements() {
     const earnedAchievementsIDs = ui.checkForNewAchieves(achievements);
 
     if (earnedAchievementsIDs.length > 0) {
-      ui.updateWidgets({ earnedAchievementsIDs: earnedAchievementsIDs });
+      // ui.updateWidgets({ earnedAchievementsIDs: earnedAchievementsIDs });
     }
   } catch (error) {
     console.error(error); // Обробка помилок

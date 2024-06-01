@@ -77,9 +77,9 @@
   pointer-events: none;
 }
 
-.target-achiv:hover::before {
+/* .target-achiv:hover::before {
   --blick-color: rgba(255, 255, 255, 0.05);
-}
+} */
 
 .target-achiv.removed {
   display: none;
@@ -154,36 +154,47 @@
   filter: grayscale(0);
 }
 
-.target-achiv.earned.hardcore:after {
+.target-achiv.earned::after {
   content: "";
   position: absolute;
-  height: 100%;
-  aspect-ratio: 2 / 1;
-  transform: translate(50%, -50%) rotate(45deg);
-  background-image: url(../assets/img/S-rank-1.png);
-  filter: drop-shadow(5px 3px 3px black);
-  image-rendering: pixelated;
-  background-size: contain;
-  background-repeat: no-repeat;
+  right: 0;
   top: 50%;
-  right: 20px;
-  opacity: 1;
+
+  transform: translateY(-50%);
+  --color: silver;
+  background: linear-gradient(to bottom right, transparent, var(--color));
+  /* background-color: var(--color); */
+  mask-size: 2rem 2rem;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  z-index: 0;
+  width: 4rem;
+  height: 100%;
+  mask-image: url(../assets/img/earned-check.svg);
+  mask-size: contain;
+  mask-image: url(../assets/img/military_medal.svg);
+
 }
 
-.target-achiv.earned.hardcore:not(.dragged):after {
+.target-achiv.earned.hardcore::after {
+  --color: gold;
+  mask-size: contain;
+  mask-image: url(../assets/img/military_medal.svg);
+}
+
+.target-achiv.show-hard-anim::after {
   animation: target-hardcore-animation 0.3s linear forwards;
 }
 
 @keyframes target-hardcore-animation {
   0% {
-    top: 0%;
-    opacity: 0;
-    right: 0%;
+    width: 10rem;
+    right: -10rem;
   }
 
   100% {
-    top: 50%;
-    right: 12%;
+    width: 4rem;
+    right: 0;
     opacity: 1;
   }
 }
@@ -192,6 +203,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  z-index: 1;
 }
 
 .achiv-description {
@@ -243,6 +255,7 @@
   flex-wrap: wrap;
   gap: 10px;
   align-items: center;
+  z-index: 1;
 }
 
 .target-description-text {

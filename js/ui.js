@@ -173,7 +173,8 @@ class UI {
     }
     )
     //Update Target widget
-    UI.updateAchievementsSection({ earnedAchievementIDs: earnedAchievementsIDs, widget: this.target });
+    // UI.updateAchievementsSection({ earnedAchievementIDs: earnedAchievementsIDs, widget: this.target });
+    this.target.updateEarnedAchieves({ earnedAchievementIDs: earnedAchievementsIDs })
     this.target.delayedRemove();
 
     //Update Awards widget
@@ -235,6 +236,7 @@ class UI {
     this.updateAchievements(earnedAchievements);
     const achievementsIDs = earnedAchievements?.map((achievement) => achievement.AchievementID);
     this.checkForAwards(achievementsIDs);
+    this.updateWidgets({ earnedAchievementsIDs: achievementsIDs });
     return achievementsIDs;
   }
   updateAchievements(earnedAchievements) {
@@ -4080,6 +4082,15 @@ class Target {
     UI.addDraggingEventForElements(this.container)
     this.startAutoScroll();
   }
+  updateEarnedAchieves({ earnedAchievementIDs: earnedAchievementsIDs }) {
+    earnedAchievementsIDs.forEach(id => {
+      const achivElement = this.container.querySelector(`.target-achiv[data-achiv-id='${id}']`);
+      ui.ACHIEVEMENTS[id].isHardcoreEarned ?
+        achivElement?.classList.add("earned", "hardcore", "show-hard-anim") :
+        achivElement?.classList.add("earned", "show-hard-anim");
+      setTimeout(() => achivElement.classList.remove("show-hard-anim"), 5000);
+    })
+  }
   autoscrollInterval;
   startAutoScroll(toBottom = true) {
     clearInterval(this.autoscrollInterval);
@@ -4394,7 +4405,7 @@ class LoginCard {
   }
 }
 
-class Games {
+class GamesOld {
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
   }
@@ -4822,7 +4833,6 @@ class Games {
 
   }
 
-
   generateFiltersList() {
     const checkedElements = this.PLATFORMS_FILTER;
     Object.getOwnPropertyNames(this.gameFilters).forEach(platformCode => {
@@ -4951,7 +4961,42 @@ class Games {
     this.searchInputHandler();
   }
 }
-
+class Games {
+  constructor() {
+    this.initializeElements();
+    // this.addEvents();
+    // this.generateFiltersList();
+    // this.setValues();
+    // this.loadGamesArray()
+    //   .then(() => {
+    //     this.applyFilter();
+    //   })
+    this.resizer.addEventListener("mousedown", (event) => {
+      event.stopPropagation();
+      this.section.classList.add("resized");
+      UI.resizeEvent({
+        event: event,
+        section: this.section,
+        postFunc: () => "",
+      });
+    });
+    // Додавання подій для пересування вікна target
+    this.header.addEventListener("mousedown", (e) => {
+      UI.moveEvent(this.section, e);
+    });
+  }
+  initializeElements() {
+    this.section = document.querySelector("#games_section");
+    this.header = this.section.querySelector(".header-container");
+    this.container = this.section.querySelector(".games_container");
+    // this.platformsContainer = this.section.querySelector(".platforms-list_container");
+    this.searchbar = this.section.querySelector("#games_search-input");
+    this.platformFiltersList = this.section.querySelector("#games_filter-platform-list");
+    this.gamesList = this.section.querySelector("#games-list");
+    // this.platformList = this.section.querySelector(".platform-list");
+    this.resizer = this.section.querySelector(".resizer");
+  }
+}
 class Progression {
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
