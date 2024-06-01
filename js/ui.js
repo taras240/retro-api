@@ -1082,6 +1082,7 @@ class AchievementsBlock {
     this.addEvents();
     this.setValues();
   }
+
   initializeElements() {
     // Елементи блока досягнень
     this.section = this.generateNewWidget({}); // Секція блока досягнень
@@ -1361,7 +1362,7 @@ class AchievementsBlock {
     this.container.appendChild(mario);
 
     const marioSize = mario.getBoundingClientRect().width;
-    const targetElementDimensions = targetElement.getBoundingClientRect();
+    const targetElementDimensions = targetElement?.getBoundingClientRect();
 
     const targetPos = {
       xPos: targetElementDimensions.left,
@@ -1404,12 +1405,12 @@ class AchievementsBlock {
         dy -= g;
         YPos < targetPos.yPos && (
           YPos = targetPos.yPos - 2,
-          targetElement.classList.add("earned", "hardcore")
+          targetElement?.classList.add("earned", "hardcore")
         )
         mario.style.top = YPos + 'px';
         await delay(70);
       }
-      targetElement.classList.add("earned", "hardcore");
+      targetElement?.classList.add("earned", "hardcore");
       dy = 0;
       while (YPos < startPos.yPos) {
         YPos += dy;
@@ -1443,7 +1444,7 @@ class AchievementsBlock {
     mario.classList.add("to-left");
     await delay(500);
     await walkAway();
-    targetElement.classList.add("earned", "hardcore");
+    targetElement?.classList.add("earned", "hardcore");
     mario.remove();
   }
 
@@ -1760,6 +1761,14 @@ class StatusPanel {
             event: `onchange="ui.statusPanel.SHOW_PLAYTIME = this.checked;"`,
           },
           {
+            type: "checkbox",
+            name: "context_show-session-game-time",
+            id: "context_show-session-game-time",
+            label: "Session Game Time",
+            checked: this.SHOW_SESSION_GAME_TIME,
+            event: `onchange="ui.statusPanel.SHOW_SESSION_GAME_TIME = this.checked;"`,
+          },
+          {
             prefix: "Duration ",
             postfix: "sec",
             type: "input-number",
@@ -1863,14 +1872,6 @@ class StatusPanel {
             checked: this.SHOW_RICH_PRESENCE,
             event: `onchange="ui.statusPanel.SHOW_RICH_PRESENCE = this.checked;"`,
           },
-          // {
-          //   type: "checkbox",
-          //   name: "context_show-game-border",
-          //   id: "context_show-game-border",
-          //   label: "Show game border",
-          //   checked: this.SHOW_GAME_PREV_BORDER,
-          //   event: `onchange="ui.statusPanel.SHOW_GAME_PREV_BORDER = this.checked;"`,
-          // },
           {
             type: "checkbox",
             name: "context_show-game-ratio",
@@ -2021,6 +2022,13 @@ class StatusPanel {
     config.writeConfiguration();
     this.container.classList.toggle("show-game-ratio", value);
   }
+  get SHOW_SESSION_GAME_TIME() {
+    return config?.ui?.update_section?.showSessionGameTime ?? false;
+  }
+  set SHOW_SESSION_GAME_TIME(value) {
+    config.ui.update_section.showSessionGameTime = value;
+    config.writeConfiguration();
+  }
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
   }
@@ -2048,7 +2056,7 @@ class StatusPanel {
     this.SHOW_CHEEVOS && (statusObj.cheevosStats = `${this.stats.earnedAchievesCount}/${this.stats.totalAchievesCount} CHEEVOS`);
     this.SHOW_RP && (statusObj.retroPointsStats = `${this.stats.earnedRetropoints}/${this.stats.totalRetropoints} RP`);
     this.SHOW_SP && (statusObj.softPointsStats = `${this.stats.earnedSoftpoints}/${this.stats.totalSoftPoints} SP`);
-    this.SHOW_PLAYTIME && (statusObj.gameTime = `${this.formatTime(this.gameTime)}`);
+    this.SHOW_PLAYTIME && (statusObj.gameTime = `${this.formatTime(this.SHOW_SESSION_GAME_TIME ? this.sessionGameTime : this.gameTime)}`);
     return statusObj;
   }
   constructor() {
@@ -2058,6 +2066,7 @@ class StatusPanel {
     this.initializeElements();
     this.addEvents();
     this.startAutoScrollRP();
+    setTimeout(() => this.fitFontSize(), 500);
   }
   initializeElements() {
     this.section = document.querySelector("#update-section");
@@ -2100,8 +2109,9 @@ class StatusPanel {
         startWatching();
         this.gameTimeInterval = setInterval(() => {
           this.gameTime++;
+          this.sessionGameTime++;
           this.gameTime % 60 == 0 && (savePlayTime());
-          const time = this.formatTime(this.gameTime);
+          const time = this.formatTime(this.SHOW_SESSION_GAME_TIME ? this.sessionGameTime : this.gameTime);
           this.section.querySelector(`.gameTime`) && (this.section.querySelector(`.gameTime`).innerText = time);
         }, 1000)
       }
@@ -2123,7 +2133,7 @@ class StatusPanel {
       UI.resizeEvent({
         event: event,
         section: this.section,
-        postFunc: () => "",
+        postFunc: () => this.fitFontSize(),
       });
     });
   }
@@ -2155,6 +2165,7 @@ class StatusPanel {
     ui.gameCard.section.classList.toggle("mastered", this.stats.earnedPoints != 0 && this.stats.totalPoints === this.stats.earnedPoints);
     this.container.classList.toggle("game-border", this.SHOW_GAME_PREV_BORDER);
     this.container.classList.toggle("show-game-ratio", this.SHOW_GAME_RATIO);
+
   }
   setProgressBarValue() {
     let value = 0;
@@ -2224,6 +2235,7 @@ class StatusPanel {
     gamePlatform.innerText = ConsoleName || "";
     this.updateData();
     this.gameTime = config.ui.update_section.playTime[config.gameID] ? config.ui.update_section.playTime[config.gameID] : 0;
+    this.sessionGameTime = 0;
   }
   updateProgress({ earnedAchievementIDs }) {
     this.updateData();
@@ -2249,9 +2261,11 @@ class StatusPanel {
 
     //fill achiv data to html element
     const updateAchivData = (id) => {
-      const { isHardcoreEarned, Title, prevSrc, Points, TrueRatio, rateEarned, rateEarnedHardcore } = ui.ACHIEVEMENTS[id];
+      const { isHardcoreEarned, Title, prevSrc, Points, TrueRatio, rateEarned, rateEarnedHardcore, difficulty } = ui.ACHIEVEMENTS[id];
       this.backSide.imgElement.src = prevSrc;
-      this.backSide.achivTitleElement.innerText = Title;
+      this.backSide.achivTitleElement.innerHTML = Title + `
+        <p class="status__difficult-badge difficult-badge__${difficulty}">${difficulty}</p>
+      `;
       let earnedPoints = isHardcoreEarned ?
         `+${Points}HP +${TrueRatio}RP TOP${rateEarnedHardcore}`
         : `+${Points}SP TOP${rateEarned}`;
@@ -2294,9 +2308,10 @@ class StatusPanel {
 
     let currentStatusTextIndex = 0;
     let statusTextObjectLength = Object.values(this.statusTextValues).length;
-    this.PROGRESSBAR_PROPERTY_NAME == "auto" && Object.getOwnPropertyNames(this.statusTextValues)[currentStatusTextIndex] == "gameTime" && (
-      this.section.style.setProperty("--progress-points", "0%")
-    );
+    this.PROGRESSBAR_PROPERTY_NAME ==
+      "auto" && Object.getOwnPropertyNames(this.statusTextValues)[currentStatusTextIndex] == "gameTime" && (
+        this.section.style.setProperty("--progress-points", "0%")
+      );
 
 
     statusTextObjectLength > 0 && (
@@ -2405,6 +2420,12 @@ class StatusPanel {
 
     return `${hours != "00" ? hours + ":" : ""}${minutes}:${remainingSeconds}`;
   }
+  fitFontSize() {
+    const container = document.querySelector(".update_container");
+    const containerHeight = this.section.getBoundingClientRect().height;
+    container.style.fontSize = `${(containerHeight - 10) / 5.5}px`;
+  }
+
 }
 
 class Settings {
@@ -4405,7 +4426,7 @@ class LoginCard {
   }
 }
 
-class GamesOld {
+class Games_ {
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
   }

@@ -11,7 +11,7 @@
     </button>
     <div class="update_user-status card-3d">
       <div class="status_glass-effect"></div>
-
+      <div class="status__background"></div>
       <div class="progress-bar" id="status-progress-bar"></div>
       <div class="progress-bar_delta-values hidden" id="status_progress-bar-delta"></div>
       <div class="update_preview-container">
@@ -38,9 +38,11 @@
         <img class="update-game-preview" id="update_achiv-preview"
           src="https://media.retroachievements.org/Badge/276671.png" alt=" " />
       </div>
-      <div class="update-text-block">
+      <div class="update-text-block show-difficult">
         <div class="update_achiv-header">
-          <a id="update_achiv-title" target="_blank" class=" update-section-text" href="">Achiv tittle</a>
+          <a id="update_achiv-title" target="_blank" class=" update-section-text" href="">Clear Screen 1
+            <p class="status__difficult-badge difficult-badge__easy">easy</p>
+          </a>
         </div>
         <p id="update_achiv-earned-points" class="update-section-text update_achiv-points">
           +5HP +10RP TOP15%
