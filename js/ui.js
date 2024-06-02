@@ -360,11 +360,11 @@ class UI {
           case "radio":
             menuElement.innerHTML += `
             <input type="${menuItem.type}" name="${menuItem.name
-              }-${sectionCode}" id="${menuItem.id}-${sectionCode}" 
+              }${sectionCode}" id="${menuItem.id}${sectionCode}" 
              ${menuItem.checked == true ? "checked" : ""} ${menuItem.event ?? ""
               }></input>
-            <label class="context-menu_${menuItem.type}"  for="${menuItem.id
-              }-${sectionCode}">${menuItem.label}</label>
+            <label class="context-menu_${menuItem.type}" for="${menuItem.id
+              }${sectionCode}">${menuItem.label}</label>
             `;
             break;
           case "input-number":
@@ -1348,17 +1348,9 @@ class AchievementsBlock {
     this.startAutoScroll();
   }
   async marioAction(targetElement) {
-    const walkSprites = [
-      "../assets/img/mario_sprites/mario_walk/walk_1.png",
-      "../assets/img/mario_sprites/mario_walk/walk_2.png",
-      "../assets/img/mario_sprites/mario_walk/walk_3.png",
-    ];
-    const standSprite = "../assets/img/mario_sprites/mario_jump/jump_0.png";
-    const jumpSprite = "../assets/img/mario_sprites/mario_jump/jump_1.png"
-
-    const mario = document.createElement("img");
+    const mario = document.createElement("div");
     mario.classList.add("mario__container");
-    mario.src = standSprite;
+    mario.className = `mario__container stand`;
     this.container.appendChild(mario);
 
     const marioSize = mario.getBoundingClientRect().width;
@@ -1388,9 +1380,9 @@ class AchievementsBlock {
       let XPos = startPos.xPos;
 
       while (XPos < targetPos.xPos) {
-        spriteIndex >= walkSprites.length && (spriteIndex = 0);
+        spriteIndex >= 3 && (spriteIndex = 0);
         XPos += dx;
-        mario.src = walkSprites[spriteIndex++];
+        mario.className = `mario__container walk-${spriteIndex++}`;
         XPos > targetPos.xPos && (XPos = targetPos.xPos);
         mario.style.left = XPos + 'px';
         await delay(70);
@@ -1398,7 +1390,7 @@ class AchievementsBlock {
       spriteIndex = 0;
     }
     const jump = async () => {
-      mario.src = jumpSprite;
+      mario.className = `mario__container jump`;
       let YPos = startPos.yPos;
       while (~~dy > 0) {
         YPos -= dy;
@@ -1422,12 +1414,11 @@ class AchievementsBlock {
       spriteIndex = 0;
     }
     const walkAway = async () => {
-      mario.classList.add("to-left");
       let XPos = mario.getBoundingClientRect().left;
       while (XPos > startPos.xPos) {
-        spriteIndex >= walkSprites.length && (spriteIndex = 0);
+        spriteIndex >= 3 && (spriteIndex = 0);
         XPos -= dx;
-        mario.src = walkSprites[spriteIndex++];
+        mario.className = `mario__container to-left walk-${spriteIndex++}`;
         mario.style.left = XPos + 'px';
         await delay(50);
       }
@@ -1436,10 +1427,11 @@ class AchievementsBlock {
     }
 
     await walkRight();
-    mario.src = standSprite;
+    mario.className = `mario__container stand`;
     await delay(500);
     await jump();
-    mario.src = standSprite;
+    mario.className = `mario__container stand`;
+    await delay(500);
     await delay(250);
     mario.classList.add("to-left");
     await delay(500);
@@ -1753,20 +1745,20 @@ class StatusPanel {
             event: `onchange="ui.statusPanel.SHOW_SP = this.checked;"`,
           },
           {
-            type: "checkbox",
+            type: "radio",
             name: "context_game-time",
             id: "context_game-time",
             label: "Play time",
             checked: this.SHOW_PLAYTIME,
-            event: `onchange="ui.statusPanel.SHOW_PLAYTIME = this.checked;"`,
+            event: `onclick="ui.statusPanel.SHOW_PLAYTIME = this.checked;"`,
           },
           {
-            type: "checkbox",
-            name: "context_show-session-game-time",
+            type: "radio",
+            name: "context_game-time",
             id: "context_show-session-game-time",
             label: "Session Game Time",
             checked: this.SHOW_SESSION_GAME_TIME,
-            event: `onchange="ui.statusPanel.SHOW_SESSION_GAME_TIME = this.checked;"`,
+            event: `onclick="ui.statusPanel.SHOW_SESSION_GAME_TIME = this.checked;"`,
           },
           {
             prefix: "Duration ",
@@ -1778,32 +1770,7 @@ class StatusPanel {
             event: `onchange="ui.statusPanel.STATS_DURATION = this.value;"`,
           },
 
-          // {
-          //   prefix: "Min size",
-          //   postfix: "px",
-          //   type: "input-number",
-          //   id: "context-menu_min-size",
-          //   label: "Min size",
-          //   value: this.ACHIV_MIN_SIZE,
-          //   event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].ACHIV_MIN_SIZE = this.value;"`,
-          // },
-          // {
-          //   prefix: "Max size",
-          //   postfix: "px",
-          //   type: "input-number",
-          //   id: "context-menu_max-size",
-          //   label: "Max size",
-          //   value: this.ACHIV_MAX_SIZE,
-          //   event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].ACHIV_MAX_SIZE = this.value;"`,
-          // },
-          // {
-          //   type: "checkbox",
-          //   name: "context_stretch-achieves",
-          //   id: "context_stretch-achieves",
-          //   label: "Stretch",
-          //   checked: this.ACHIV_STRETCH,
-          //   event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].ACHIV_STRETCH = this.checked;"`,
-          // },
+
         ],
       },
       {
@@ -1873,12 +1840,20 @@ class StatusPanel {
             event: `onchange="ui.statusPanel.SHOW_RICH_PRESENCE = this.checked;"`,
           },
           {
-            type: "checkbox",
+            type: "radio",
             name: "context_show-game-ratio",
             id: "context_show-game-ratio",
             label: "Show Retro Ratio",
             checked: this.SHOW_GAME_RATIO,
-            event: `onchange="ui.statusPanel.SHOW_GAME_RATIO = this.checked;"`,
+            event: `onclick="ui.statusPanel.SHOW_GAME_RATIO = this.checked;"`,
+          },
+          {
+            type: "radio",
+            name: "context_show-game-ratio",
+            id: "context_show-mastery-rate",
+            label: "Show Mastery Rate",
+            checked: this.SHOW_MASTERY_RATE,
+            event: `onclick="ui.statusPanel.SHOW_MASTERY_RATE = this.checked;"`,
           },
         ],
       },
@@ -1906,14 +1881,7 @@ class StatusPanel {
       }
     ];
   }
-  get SHOW_PLAYTIME() {
-    return config.ui.update_section?.showPlayTime ?? true;
-  }
-  set SHOW_PLAYTIME(value) {
-    config.ui.update_section.showPlayTime = value;
-    config.writeConfiguration();
-    this.startStatsAnimation();
-  }
+
   get SHOW_RP() {
     return config.ui.update_section?.showRP ?? true;
   }
@@ -2018,16 +1986,62 @@ class StatusPanel {
     return config?.ui?.update_section?.showGameRatio ?? true;
   }
   set SHOW_GAME_RATIO(value) {
+    if (this.SHOW_GAME_RATIO && value) {
+      value = false;
+      document.getElementById("context_show-game-ratio").checked = false;
+    }
+    else {
+      config.ui.update_section.showMasteryRate = !value;
+    }
     config.ui.update_section.showGameRatio = value;
     config.writeConfiguration();
-    this.container.classList.toggle("show-game-ratio", value);
+    this.setValues();
+  }
+  get SHOW_MASTERY_RATE() {
+    return config?.ui?.update_section?.showMasteryRate ?? !this.SHOW_GAME_RATIO;
+  }
+  set SHOW_MASTERY_RATE(value) {
+    if (this.SHOW_MASTERY_RATE && value) {
+      value = false;
+      document.getElementById("context_show-mastery-rate").checked = false;
+    }
+    else {
+      config.ui.update_section.showGameRatio = !value;
+    }
+    config.ui.update_section.showMasteryRate = value;
+    config.writeConfiguration();
+    this.setValues();
+  }
+  get SHOW_PLAYTIME() {
+    return config.ui.update_section?.showPlayTime ?? true;
+  }
+  set SHOW_PLAYTIME(value) {
+    if (!this.SHOW_SESSION_GAME_TIME && this.SHOW_PLAYTIME && value) {
+      value = false;
+      document.getElementById("context_game-time").checked = value;
+    }
+    else {
+      config.ui.update_section.showSessionGameTime = false;
+    }
+    config.ui.update_section.showPlayTime = value;
+    config.writeConfiguration();
+    this.startStatsAnimation();
   }
   get SHOW_SESSION_GAME_TIME() {
     return config?.ui?.update_section?.showSessionGameTime ?? false;
   }
   set SHOW_SESSION_GAME_TIME(value) {
+    if (this.SHOW_SESSION_GAME_TIME && value) {
+      value = false;
+      config.ui.update_section.showPlayTime = false;
+      document.getElementById("context_show-session-game-time").checked = false;
+    }
+    else if (!this.SHOW_PLAYTIME && !this.SHOW_SESSION_GAME_TIME) {
+      config.ui.update_section.showPlayTime = true;
+    }
     config.ui.update_section.showSessionGameTime = value;
     config.writeConfiguration();
+    this.startStatsAnimation();
   }
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
@@ -2048,6 +2062,7 @@ class StatusPanel {
     earnedSoftpoints: 0,
   }
   gameTime = 0;
+  sessionGameTime = 0;
   gameTimeInterval;
 
   get statusTextValues() {
@@ -2143,8 +2158,8 @@ class StatusPanel {
 
     // const ratio = ui.GAME_DATA.progressionRetroRatio;
     const ratio = ui.GAME_DATA.retroRatio;
-
-    this.retroRatioElement.innerText = ratio;
+    const masteryRate = ui.GAME_DATA.masteryRate;
+    this.retroRatioElement.innerText = this.SHOW_MASTERY_RATE ? masteryRate : ratio;
     this.retroRatioElement.className = `update__retro-ratio difficult-badge__${ui.GAME_DATA.gameDifficulty}`;
 
 
@@ -2164,7 +2179,7 @@ class StatusPanel {
     });
     ui.gameCard.section.classList.toggle("mastered", this.stats.earnedPoints != 0 && this.stats.totalPoints === this.stats.earnedPoints);
     this.container.classList.toggle("game-border", this.SHOW_GAME_PREV_BORDER);
-    this.container.classList.toggle("show-game-ratio", this.SHOW_GAME_RATIO);
+    this.container.classList.toggle("show-game-ratio", this.SHOW_GAME_RATIO || this.SHOW_MASTERY_RATE);
 
   }
   setProgressBarValue() {
@@ -2310,7 +2325,7 @@ class StatusPanel {
     let statusTextObjectLength = Object.values(this.statusTextValues).length;
     this.PROGRESSBAR_PROPERTY_NAME ==
       "auto" && Object.getOwnPropertyNames(this.statusTextValues)[currentStatusTextIndex] == "gameTime" && (
-        this.section.style.setProperty("--progress-points", "0%")
+        this.PROGRESSBAR_PROPERTY_NAME = "achives"
       );
 
 

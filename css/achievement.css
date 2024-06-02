@@ -390,6 +390,36 @@
   aspect-ratio: 1;
   z-index: 10;
   image-rendering: pixelated;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: 50ms;
+}
+
+.mario__container.walk-0 {
+  background-image: url(../assets/img/mario_sprites/mario_walk/walk_1.png);
+
+}
+
+.mario__container.walk-1 {
+  background-image: url(../assets/img/mario_sprites/mario_walk/walk_2.png);
+
+}
+
+.mario__container.walk-2 {
+  background-image: url(../assets/img/mario_sprites/mario_walk/walk_3.png);
+
+}
+
+
+.mario__container.jump {
+  background-image: url(../assets/img/mario_sprites/mario_jump/jump_1.png);
+
+}
+
+.mario__container.stand {
+  background-image: url(../assets/img/mario_sprites/mario_jump/jump_0.png);
+
 }
 
 .mario__container.to-left {

@@ -145,6 +145,7 @@ class APIWorker {
     return fetch(url).then((resp) => resp.json()).then(gameProgressObject => {
       gameProgressObject.TotalRetropoints = 0;
       gameProgressObject.progressionRetroRatio = 0;
+      gameProgressObject.masteredCount = Infinity;
       let lowerWinConditionPoints = { ratio: Infinity, Points: 0, TrueRatio: 0 };
       let progressionAchivsPoints = { Points: 0, TrueRatio: 0 };
       Object.values(gameProgressObject.Achievements)
@@ -158,6 +159,9 @@ class APIWorker {
             progressionAchivsPoints.Points += achievement.Points,
             progressionAchivsPoints.TrueRatio += achievement.TrueRatio
           );
+          achievement.NumAwardedHardcore < gameProgressObject.masteredCount && (
+            gameProgressObject.masteredCount = achievement.NumAwardedHardcore
+          )
           // if (achievement.type == 'win_condition') {
           //   const ratio = achievement.TrueRatio / achievement.Points;
           //   ratio < lowerWinConditionPoints && (
@@ -169,6 +173,8 @@ class APIWorker {
         progressionAchivsPoints.Points += lowerWinConditionPoints.Points,
         progressionAchivsPoints.TrueRatio += lowerWinConditionPoints.TrueRatio
       );
+      gameProgressObject.masteredCount != Infinity &&
+        (gameProgressObject.masteryRate = ~~(10000 * gameProgressObject.masteredCount / gameProgressObject.TotalRealPlayers) / 100);
       gameProgressObject.progressionRetroRatio = ~~(100 * progressionAchivsPoints.TrueRatio / progressionAchivsPoints.Points) / 100;
 
       const ratio = ~~(gameProgressObject.TotalRetropoints / gameProgressObject.points_total * 100) / 100;
