@@ -2317,10 +2317,13 @@ class StatusPanel {
       this.backSide.achivTitleElement.innerHTML = `${FixedTitle} ${this.generateSufixes(sufixes)}
         <p class="status__difficult-badge difficult-badge__standard">${ConsoleName}</p>
       `;
-      let gameInfo =
-        `${points_total}HP ${TotalRetropoints}RP ${achievements_published}CHEEVOS ${masteryRate}%MASTERY`
-        ;
-      this.backSide.earnedPoints.innerText = gameInfo;
+      let gameInfo = `
+      ${points_total}<p class="status__difficult-badge difficult-badge__pro">HP</p>
+      ${TotalRetropoints}<p class="status__difficult-badge difficult-badge__pro">RP</p> 
+      ${achievements_published}<p class="status__difficult-badge difficult-badge__pro">CHEEVOS</p> 
+      ${masteryRate}%<p class="status__difficult-badge difficult-badge__pro">MASTERY</p>
+      `;
+      this.backSide.earnedPoints.innerHTML = gameInfo;
     }
 
     const processGameData = async () => {
@@ -5088,8 +5091,28 @@ class Games_ {
   }
 }
 class Games {
+  platformCodes = {
+    "1": "Genesis/Mega Drive",
+    "2": "Nintendo 64",
+    "3": "SNES/Super Famicom",
+    "4": "Game Boy",
+    "5": "Game Boy Advance",
+    "6": "Game Boy Color",
+    "7": "NES/Famicom",
+    "8": "PC Engine/TurboGrafx-16",
+    "12": "PlayStation",
+    "21": "PlayStation 2",
+    "41": "PlayStation Portable",
+    // "999": "etc.",
+  }
   constructor() {
     this.initializeElements();
+    this.loadGamesArray()
+      .then(() => {
+        this.gamesList.innerHTML = this.gamesListHeaderHtml();
+        lazyLoad({ list: this.gamesList, items: this.GAMES.all, callback: this.GameElement })
+
+      })
     // this.addEvents();
     // this.generateFiltersList();
     // this.setValues();
@@ -5122,6 +5145,90 @@ class Games {
     // this.platformList = this.section.querySelector(".platform-list");
     this.resizer = this.section.querySelector(".resizer");
   }
+  async loadGamesArray() {
+    this.GAMES = {};
+    // this.clearList();
+    for (const platformCode of Object.getOwnPropertyNames(this.platformCodes)) {
+      await this.getAllGames({ consoleCode: platformCode });
+    }
+    this.GAMES.all = Object.values(this.GAMES).flat().sort((a, b) => sortBy.title(a, b));
+  }
+  async getAllGames({ consoleCode }) {
+    try {
+      if (!(consoleCode == 0 || consoleCode == "all")) {
+        const gamesResponse = await fetch(`../json/games/${consoleCode}.json`);
+        const gamesJson = await gamesResponse.json();
+        this.GAMES[consoleCode] = gamesJson.map(game =>
+          fixGameTitle(game)
+        )
+      }
+    } catch (error) {
+      return [];
+    }
+  }
+  GameElement(game) {
+    const gameElement = document.createElement("li");
+    gameElement.classList.add("platform_game-item");
+    // {
+    //   "Title": "Addams Family, The",
+    //   "ID": 12,
+    //   "ConsoleID": 1,
+    //   "ConsoleName": "Genesis/Mega Drive",
+    //   "ImageIcon": "/Images/048141.png",
+    //   "NumAchievements": 69,
+    //   "NumLeaderboards": 1,
+    //   "Points": 450,
+    //   "DateModified": "2022-07-13 20:05:05",
+    //   "ForumTopicID": 202,
+    //   "Hashes": [
+    //     "eba5f964addea18b70336d292a08698d"
+    //   ],
+    //   "sufixes": [],
+    //   "FixedTitle": "Addams Family, The"
+    // }
+    const iconCode = game.ImageIcon.match(/\d+/g);
+    gameElement.innerHTML = `
+    <div class="game-preview_container">
+    <img src="./assets/imgCache/${iconCode}.webp"
+        onerror="this.src='https://media.retroachievements.org${game.ImageIcon}';" alt=""
+        class="game-preview_image">
+    </div>
+    <h3 class="game-description_title"><button title="open game" class="game-description_button"
+            onclick="config.gameID = ${game.ID}; getAchievements()">${game.Title}</button></h3>
+    <p title="achievements count" class="game-description  achievements-count">
+           ${game.ConsoleName}
+    </p>
+            <p title="achievements count" class="game-description  achievements-count">
+      ${game.NumAchievements}
+    </p>
+    <p title="points count" class="game-description  points-count">
+      ${game.Points}
+    </p>
+    <a title="go to RA" target="_blanc" href="https://retroachievements.org/game/${game.ID}"
+        class="game-description game-description_link">
+        <i class="game-description_icon link_icon ra-link_icon"></i>
+    </a>
+    `;
+    return gameElement;
+  }
+  gamesListHeaderHtml = () => `
+        <div class="platform_game-item header">
+            <div class="game-preview_container">
+            </div>
+            <h3 class="game-description_title">Title</h3>
+            <p title="achievements count" class="game-description  achievements-count">
+                Platform
+            </p>
+            <p title="achievements count" class="game-description  achievements-count">
+                Cheevo
+            </p>
+            <p title="points count" class="game-description  points-count">
+                Points
+            </p>
+            <p title="go to RA" class="game-description game-description_link">Link
+            </p>
+        </div>
+  `;
 }
 class Progression {
   get VISIBLE() {
@@ -5897,13 +6004,33 @@ const fixTimeString = (
     return date.toLocaleDateString("uk-UA", options);
   }
 )
+const fixGameTitle = (game) => {
+  const ignoredWords = [/\[SUBSET[^\[]*\]/gi, /~[^~]*~/g, ".HACK//",];
+  let title = game.Title;
+
+  const sufixes = ignoredWords.reduce((sufixes, word) => {
+    const reg = new RegExp(word, "gi");
+    const matches = game.Title.match(reg);
+    if (matches) {
+      matches.forEach(match => {
+        title = title.replace(match, "");
+        let sufix = match;
+        sufixes.push(sufix.replace(/[~\.\[\]]|subset -|\/\//gi, ""));
+      })
+    }
+    return sufixes;
+  }, []);
+  game.sufixes = sufixes;
+  game.FixedTitle = title.trim();
+  return game;
+}
 const delay = (ms) => {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 function lazyLoad({ list, items, callback }) {
   const trigger = document.createElement("div");
   trigger.classList.add("lazy-load_trigger")
-  list.parentNode.insertBefore(trigger, list.nextSibling);
+  list.appendChild(trigger);
 
   // Ініціалізація списку з початковими елементами
   let itemIndex = 0;

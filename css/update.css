@@ -121,9 +121,10 @@
   border-radius: inherit;
 }
 
+
 .new-game-info .update_back-side {
   gap: 5px;
-  padding: 5px 5px;
+  padding: 0;
 }
 
 .update_back-side::after {
@@ -199,6 +200,7 @@
 
 .new-game-info .update_back-side .update_preview-container {
   max-height: 100%;
+
 }
 
 .status__difficult-badge {
