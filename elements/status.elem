@@ -10,7 +10,7 @@
       </svg>
     </button>
     <div class="update_user-status card-3d">
-      <div class="status_glass-effect"></div>
+
       <div class="status__background"></div>
       <div class="progress-bar" id="status-progress-bar"></div>
       <div class="progress-bar_delta-values hidden" id="status_progress-bar-delta"></div>
@@ -48,6 +48,7 @@
           +5HP +10RP TOP15%
         </p>
       </div>
+      <div class="status_glass-effect"></div>
 
 
     </div>

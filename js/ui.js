@@ -1998,7 +1998,7 @@ class StatusPanel {
     this.setValues();
   }
   get SHOW_MASTERY_RATE() {
-    return config?.ui?.update_section?.showMasteryRate ?? !this.SHOW_GAME_RATIO;
+    return config?.ui?.update_section?.showMasteryRate ?? false;
   }
   set SHOW_MASTERY_RATE(value) {
     if (this.SHOW_MASTERY_RATE && value) {
@@ -2235,7 +2235,8 @@ class StatusPanel {
 
     this.setValues();
   }
-  gameChangeEvent() {
+  async gameChangeEvent() {
+    apiTrackerInterval && (this.showNewGameAlert(), await delay(3000));
     const { ImageIcon, FixedTitle, ConsoleName, sufixes } = ui.GAME_DATA;
     const { gamePreview, gameTitle, gamePlatform } = this;
     gamePreview.setAttribute(
@@ -2251,6 +2252,7 @@ class StatusPanel {
     this.updateData();
     this.gameTime = config.ui.update_section.playTime[config.gameID] ? config.ui.update_section.playTime[config.gameID] : 0;
     this.sessionGameTime = 0;
+
   }
   updateProgress({ earnedAchievementIDs }) {
     this.updateData();
@@ -2295,7 +2297,7 @@ class StatusPanel {
         //draw new achiv and show animation
         updateAchivData(ui.statusPanel.newAchievementsIDs.shift());
         ui.statusPanel.container.classList.add("show-back");
-
+        ui.statusPanel.startAnimation();
         //back to main information in status panel
         await delay(ui.statusPanel.NEW_ACHIV_DURATION * 1000);
         ui.statusPanel.container.classList.remove("show-back");
@@ -2307,7 +2309,49 @@ class StatusPanel {
       (this.newAchievementsIDs = earnedAchievementIDs, processAchivData())
 
   }
+  showNewGameAlert() {
+    //fill achiv data to html element
+    const updateGameData = () => {
+      const { FixedTitle, sufixes, ImageIcon, points_total, ConsoleName, TotalRetropoints, achievements_published, masteryRate, retroRatio, gameDifficulty } = ui.GAME_DATA;
+      this.backSide.imgElement.src = `https://media.retroachievements.org${ImageIcon}`;
+      this.backSide.achivTitleElement.innerHTML = `${FixedTitle} ${this.generateSufixes(sufixes)}
+        <p class="status__difficult-badge difficult-badge__standard">${ConsoleName}</p>
+      `;
+      let gameInfo =
+        `${points_total}HP ${TotalRetropoints}RP ${achievements_published}CHEEVOS ${masteryRate}%MASTERY`
+        ;
+      this.backSide.earnedPoints.innerText = gameInfo;
+    }
 
+    const processGameData = async () => {
+
+      //waiting for animation end
+      await delay(100);
+      ui.statusPanel.container.classList.add("show-back", "new-game-info");
+      ui.statusPanel.startAnimation();
+
+      //back to main information in status panel
+      await delay(this.NEW_ACHIV_DURATION * 1000);
+      ui.statusPanel.container.classList.remove("show-back");
+
+      await delay(1000);
+      ui.statusPanel.container.classList.remove("new-game-info");
+      ui.statusPanel.stopAutoScrollElement(this.backSide.achivTitleElement, true);
+      ui.statusPanel.stopAutoScrollElement(this.backSide.earnedPoints, true);
+    }
+
+    if (this.container.classList.contains("show-back")) {
+      updateGameData();
+    }
+    else {
+      updateGameData();
+      processGameData();
+      setTimeout(() => this.startAutoScrollElement(this.backSide.achivTitleElement), 4000);
+      setTimeout(() => this.startAutoScrollElement(this.backSide.earnedPoints), 4000);
+
+    }
+
+  }
   startAnimation() {
     const glassElement = this.section.querySelector(".status_glass-effect");
     glassElement.classList.remove("update");
@@ -2412,6 +2456,52 @@ class StatusPanel {
   }
   stopAutoScrollRP() {
     clearInterval(this.autoscrollRPInterval);
+  }
+  autoscrollAlertInterval = {};
+  startAutoScrollElement(element, toLeft = true) {
+    this.autoscrollAlertInterval[element.className] ? this.stopAutoScrollElement(element) : "";
+    let refreshRateMiliSecs = 50;
+    let scrollContainer = element;
+    let speedInPixels = 1;
+    const pauseOnEndMilisecs = 1000;
+    // Часовий інтервал для прокручування вниз
+    if (true) {
+      this.autoscrollAlertInterval[element.className] = setInterval(() => {
+        if (scrollContainer.clientWidth == scrollContainer.scrollWidth) {
+          this.stopAutoScrollElement(element);
+          setTimeout(() => this.startAutoScrollElement(element), 10 * 1000);
+        }
+        else if (toLeft) {
+          scrollContainer.scrollLeft += speedInPixels;
+          if (
+            scrollContainer.scrollLeft + scrollContainer.clientWidth >=
+            scrollContainer.scrollWidth
+          ) {
+            this.stopAutoScrollElement(element);
+            setTimeout(() => this.startAutoScrollElement(element, false), pauseOnEndMilisecs);
+          }
+        } else {
+          scrollContainer.scrollLeft -= speedInPixels;
+          if (scrollContainer.scrollLeft == 0) {
+            this.stopAutoScrollElement(element);
+            setTimeout(() => this.startAutoScrollElement(element, true), pauseOnEndMilisecs);
+          }
+        }
+      }, refreshRateMiliSecs);
+      // // Припиняємо прокручування при наведенні миші на контейнер
+      // scrollContainer.addEventListener("mouseenter", () => {
+      //   speedInPixels = 0; // Зупиняємо інтервал прокрутки
+      // });
+
+      // // Відновлюємо прокрутку при відведенні миші від контейнера
+      // scrollContainer.addEventListener("mouseleave", () => {
+      //   speedInPixels = 1;
+      // });
+    }
+  }
+  stopAutoScrollElement(element, reset = false) {
+    reset && (element.scrollLeft = 0);
+    clearInterval(this.autoscrollAlertInterval[element.className]);
   }
   convertToPercentage(inputString) {
     // Розбиваємо рядок за допомогою розділювача '/'

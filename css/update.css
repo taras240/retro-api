@@ -121,6 +121,11 @@
   border-radius: inherit;
 }
 
+.new-game-info .update_back-side {
+  gap: 5px;
+  padding: 5px 5px;
+}
+
 .update_back-side::after {
   content: "";
   position: absolute;
@@ -139,6 +144,11 @@
   z-index: 2;
 }
 
+.new-game-info .update_back-side::after {
+  content: none;
+  background-image: "";
+}
+
 .card-3d {
   position: absolute;
   top: 0;
@@ -154,10 +164,28 @@
   font-size: 1.6em;
   font-weight: 600;
   text-wrap: nowrap;
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+#update_achiv-title {
+  max-width: 100%;
+  overflow-x: scroll;
+  display: block;
+}
+
+.new-game-info .update_achiv-header {
+  font-size: 1.4em;
+  font-weight: 600;
 }
 
 .update_achiv-points {
   font-size: 1.6em;
+  font-weight: 600;
+}
+
+.new-game-info .update_achiv-points {
+  font-size: 1.4em;
   font-weight: 600;
 }
 
@@ -167,6 +195,10 @@
 
 .update_back-side .update_preview-container {
   max-height: 75%;
+}
+
+.new-game-info .update_back-side .update_preview-container {
+  max-height: 100%;
 }
 
 .status__difficult-badge {
@@ -226,11 +258,14 @@
 
 .game-border .update_preview-container::after {
   background-image: url(../assets/img/game-border-5.webp);
-
 }
 
 .update_back-side .update_preview-container::after {
   background-image: url(../assets/img/border-8.webp);
+}
+
+.new-game-info .update_back-side .update_preview-container::after {
+  content: none;
 }
 
 .update-section-text {
@@ -559,7 +594,7 @@
 }
 
 .status_glass-effect.update {
-  animation: status-glass-animation 3s ease-in-out forwards;
+  animation: status-glass-animation 6s ease-in-out forwards;
   animation-delay: 0s;
 }
 
