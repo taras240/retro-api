@@ -4978,7 +4978,7 @@ class Games {
   }
   async getAllGames() {
     try {
-      const gamesResponse = await fetch(`../json/games/all.json`);
+      const gamesResponse = await fetch(`./json/games/all.json`);
       const gamesJson = await gamesResponse.json();
       this.GAMES = gamesJson;
     } catch (error) {
