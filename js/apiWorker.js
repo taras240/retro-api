@@ -13,6 +13,12 @@ class APIWorker {
     }
   }
   set SAVED_COMPLETION_PROGRESS(value) {
+    console.log(value)
+    value.Results = value.Results.map(game => {
+      delete game.ConsoleName;
+      delete game.NumLeaderboards;
+      return game;
+    })
     if (!config._cfg.apiWorker) {
       config._cfg.apiWorker = {};
     }
@@ -89,28 +95,12 @@ class APIWorker {
     return fetch(url).then((resp) => resp.json()).then(arr => {
       arr.Results = arr.Results.map((game, index) => {
         game.ID = game.GameID;
-        game.Points = "";
-        game.NumAchievements = game.NumAwardedHardcore + "/" + game.MaxPossible;
-        game.NumLeaderboards = "";
-        game.DateEarnedHardcore = game.MostRecentAwardedDate;
-        let title = game.Title;
-        const ignoredWords = ["~UNLICENSED~", "~DEMO~", "~HOMEBREW~", "~HACK~", "~PROTOTYPE~", ".HACK//", "~TEST KIT~"];
+        game.NumAchievements = game.MaxPossible;
+        delete game.MaxPossible;
+        // game.NumAwardedHardcore = game.NumEarnedHardcore;
+        // delete game.NumEarnedHardcore;
+        delete game.NumLeaderboards;
 
-        const badges = ignoredWords.reduce((badges, word) => {
-          const reg = new RegExp(word, "gi");
-          if (reg.test(game.Title)) {
-            title = title.replace(reg, "");
-            badges.push(word.replaceAll(new RegExp("[^A-Za-z]", "gi"), ""));
-
-          }
-          return badges;
-        }, []);
-        if (badges.length === 0) {
-          badges.push("ORIGINAL")
-        }
-        game.HighestAwardKind ? badges.push(game.HighestAwardKind) : "";
-        game.sufixes = badges;
-        game.FixedTitle = title.trim();
         return game;
       })
       return arr;

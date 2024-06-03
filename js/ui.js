@@ -4918,17 +4918,13 @@ class Games {
   }
   games = {}
   constructor() {
-
     this.initializeElements();
-    // this.setValues();
-    this.loadGamesArray()
-      .then(() => {
-        // this.generateFiltersList();
-        //     this.applyFilter();
-        this.updateGamesList();
-
-      })
     this.addEvents();
+    this.gamesList.innerHTML = `
+    <button class="games__load-button" onclick="ui.games.loadGames()"></button>
+    `;
+    // this.setValues();
+
   }
   initializeElements() {
     this.section = document.querySelector("#games_section");
@@ -4971,15 +4967,50 @@ class Games {
     this.gamesList.innerHTML = this.gamesListHeaderHtml();
     lazyLoad({ list: this.gamesList, items: this.games, callback: this.GameElement })
   }
-  async loadGamesArray() {
-    this.GAMES = {};
-    // this.clearList();
-    await this.getAllGames();
+  loadGames() {
+    this.getAllGames()
+      .then(() => {
+        this.updateGamesList();
+      })
   }
+
   async getAllGames() {
+    this.GAMES = {};
     try {
+      // {
+      //   "GameID": 7994,
+      //   "Title": "Guitar Hero",
+      //   "ImageIcon": "/Images/070460.png",
+      //   "ConsoleID": 21,
+      //   "NumAwarded": 3,
+      //   "NumAwardedHardcore": 3,
+      //   "MostRecentAwardedDate": "2024-06-01T20:32:55+00:00",
+      //   "HighestAwardKind": null,
+      //   "HighestAwardDate": null,
+      //   "ID": 7994,
+      //   "NumAchievements": 79
+      // }
       const gamesResponse = await fetch(`./json/games/all.json`);
       const gamesJson = await gamesResponse.json();
+      const lastPlayedGames = await apiWorker.SAVED_COMPLETION_PROGRESS;
+      for (let lastGame of lastPlayedGames.Results) {
+        let gameToModify = gamesJson.find(game => lastGame.ID === game.ID);
+        if (gameToModify) {
+          lastGame.NumAwardedHardcore && (gameToModify.NumAwardedHardcore = lastGame.NumAwardedHardcore);
+          lastGame.HighestAwardKind ? (gameToModify.Award = lastGame.HighestAwardKind) : (gameToModify.Award = 'started');
+        }
+        else {
+          console.log(lastGame);
+          gameToModify = lastGame;
+          gameToModify = fixGameTitle(gameToModify);
+          gameToModify.ImageIcon = gameToModify.ImageIcon.match(/\d+/gi)[0];
+          lastGame.NumAwardedHardcore && (gameToModify.NumAwardedHardcore = lastGame.NumAwardedHardcore);
+          lastGame.HighestAwardKind ? (gameToModify.Award = lastGame.HighestAwardKind) : (gameToModify.Award = 'started');
+          gameToModify.Points = ''
+          console.log(gameToModify)
+          gamesJson.push(gameToModify)
+        }
+      }
       this.GAMES = gamesJson;
     } catch (error) {
       return [];
@@ -4998,13 +5029,16 @@ class Games {
     <h3 class="game-description_title"><button title="open game" class="game-description_button"
             onclick="config.gameID = ${game.ID}; getAchievements()">${game.FixedTitle} ${generateBadges(game.badges)}</button></h3>
     <p title="achievements count" class="game-description  achievements-count">
-           ${RAPlatforms[game.ConsoleID].match(/[^\/]*/gi)[0]}
+      ${RAPlatforms[game.ConsoleID].match(/[^\/]*/gi)[0]}
     </p>
-            <p title="achievements count" class="game-description  achievements-count">
-      ${game.NumAchievements}
+    <p title="achievements count" class="game-description  achievements-count">
+    ${game.NumAwardedHardcore ? game.NumAwardedHardcore + '\/' : ""}${game.NumAchievements}
     </p>
     <p title="points count" class="game-description  points-count">
-      ${game.Points}
+     ${game.Points}
+    </p>
+    <p title="points count" class="game-description  award-type">
+      ${game.Award ?? ''}
     </p>
     <a title="go to RA" target="_blanc" href="https://retroachievements.org/game/${game.ID}"
         class="game-description game-description_link">
@@ -5014,29 +5048,30 @@ class Games {
     return gameElement;
   }
   gamesListHeaderHtml = () => `
-        <div class="platform_game-item header">
-            <div class="game-preview_container">
-            </div>
-            <h3 class="header__game-description game-description_title ${this.SORT_NAME == sortMethods.title ?
+    <div class="platform_game-item header">
+      <div class="game-preview_container">
+      </div>
+      <h3 class="header__game-description game-description_title ${this.SORT_NAME == sortMethods.title ?
       this.REVERSE_SORT == -1 ? 'active reverse' : 'active' : ''}"
-              onclick='ui.games.SORT_NAME = sortMethods.title'>Title</h3>
-            <p title="achievements count" class=" game-description  achievements-count"
-             >
-                Platform
-            </p>
-            <p title="achievements count" class="header__game-description game-description  achievements-count ${this.SORT_NAME == sortMethods.achievementsCount ?
+        onclick='ui.games.SORT_NAME = sortMethods.title'>Title</h3>
+      <p title="achievements count" class=" game-description  achievements-count"
+        >
+          Platform
+      </p>
+      <p title="achievements count" class="header__game-description game-description  achievements-count ${this.SORT_NAME == sortMethods.achievementsCount ?
       this.REVERSE_SORT == -1 ? 'active reverse' : 'active' : ''}"
-            onclick='ui.games.SORT_NAME = sortMethods.achievementsCount'>
-                Cheevos
-            </p>
-            <p title="points count" class="header__game-description game-description  points-count ${this.SORT_NAME == sortMethods.points ?
+        onclick='ui.games.SORT_NAME = sortMethods.achievementsCount'>
+          Cheevos
+      </p>
+      <p title="points count" class="header__game-description game-description  points-count ${this.SORT_NAME == sortMethods.points ?
       this.REVERSE_SORT == -1 ? 'active reverse' : 'active' : ''}"
-              onclick='ui.games.SORT_NAME = sortMethods.points'>
-                Points
-            </p>
-            <p title="go to RA" class=" game-description game-description_link">Link
-            </p>
-        </div>
+        onclick='ui.games.SORT_NAME = sortMethods.points'>
+          Points
+      </p>
+      <p title="award type" class="header__game-description ${this.SORT_NAME == sortMethods.award ?
+      this.REVERSE_SORT == -1 ? 'active reverse' : 'active' : ''}" onclick='ui.games.SORT_NAME = sortMethods.award'>Award</p>
+      <p title="go to RA" class=" game-description game-description_link">Link</p>
+    </div>
   `;
 }
 class Progression {
@@ -5770,6 +5805,18 @@ const sortBy = {
     }
     return 0;
 
+  },
+  award: (b, a) => {
+    const awardTypes = {
+      'mastered': 5,
+      'beaten-hardcore': 4,
+      'completed': 3,
+      'beaten-softcore': 2,
+      'started': 1,
+    }
+    const awardA = awardTypes[a.Award] ?? 0;
+    const awardB = awardTypes[b.Award] ?? 0;
+    return awardA - awardB;
   }
 }
 //* Методи фільтрування для досягнень гри
@@ -5797,6 +5844,7 @@ const sortMethods = {
   default: "default",
   achievementsCount: "achievementsCount",
   title: "title",
+  award: "award",
 };
 
 const fixTimeString = (
@@ -5830,6 +5878,7 @@ const fixGameTitle = (game) => {
     return sufixes;
   }, []);
   game.sufixes = sufixes;
+  game.badges = sufixes;
   game.FixedTitle = title.trim();
   return game;
 }
