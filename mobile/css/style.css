@@ -524,3 +524,38 @@ input[type="radio"] {
     object-fit: contain;
     image-rendering: pixelated;
 }
+
+
+
+/* *-------------BADGES----------- */
+.game-badge {
+    display: inline-block;
+    font-size: 1.0rem;
+    padding: 0px 2px;
+    border-radius: 3px;
+    margin: 2px;
+    text-wrap: nowrap;
+    color: black;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.game-badge__hack {
+    background-color: crimson;
+}
+
+.game-badge__unlicensed {
+    background-color: gold;
+}
+
+.game-badge__homebrew {
+    background-color: cyan;
+}
+
+.game-badge__prototype {
+    background-color: white;
+}
+
+.game-badge__demo {
+    background-color: chocolate;
+}

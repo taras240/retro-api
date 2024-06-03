@@ -16,7 +16,9 @@
         </button>
     </div>
     <div class="games_container">
-
+        <div class="games__search-container">
+            <input type="search" name="" id="games__searchbar" class="games__searchbar" placeholder="Search">
+        </div>
         <ul class="platform-list" id="games-list" data--console-id="all" data-current-games-array-position="0">
 
             <li data-game-i-d="12" class="platform_game-item">

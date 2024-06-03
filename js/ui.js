@@ -2243,7 +2243,7 @@ class StatusPanel {
       "src",
       `https://media.retroachievements.org${ImageIcon}`
     );
-    gameTitle.innerHTML = `${FixedTitle || "Some game name"} ${this.generateSufixes(sufixes)}`;
+    gameTitle.innerHTML = `${FixedTitle || "Some game name"} ${generateBadges(sufixes)}`;
     gameTitle.setAttribute(
       "href",
       "https://retroachievements.org/game/" + config.gameID
@@ -2266,9 +2266,7 @@ class StatusPanel {
 
     setTimeout(() => this.progresBarDelta.classList.add("hidden"), 50)
   }
-  generateSufixes(sufixes) {
-    return sufixes?.reduce((acc, sufix) => acc += `<i class="game-card_suffix game-title_${sufix.toLowerCase()}">${sufix}</i>`, "")
-  }
+
   newAchievementsIDs = [];
   showEarnedAchieves({ earnedAchievementIDs }) {
 
@@ -2314,14 +2312,14 @@ class StatusPanel {
     const updateGameData = () => {
       const { FixedTitle, sufixes, ImageIcon, points_total, ConsoleName, TotalRetropoints, achievements_published, masteryRate, retroRatio, gameDifficulty } = ui.GAME_DATA;
       this.backSide.imgElement.src = `https://media.retroachievements.org${ImageIcon}`;
-      this.backSide.achivTitleElement.innerHTML = `${FixedTitle} ${this.generateSufixes(sufixes)}
-        <p class="status__difficult-badge difficult-badge__standard">${ConsoleName}</p>
+      this.backSide.achivTitleElement.innerHTML = `${FixedTitle} ${generateBadges(sufixes)}
+      <p class="game-card_suffix">${ConsoleName}</p>
       `;
       let gameInfo = `
-      ${points_total}<p class="status__difficult-badge difficult-badge__pro">HP</p>
-      ${TotalRetropoints}<p class="status__difficult-badge difficult-badge__pro">RP</p> 
-      ${achievements_published}<p class="status__difficult-badge difficult-badge__pro">CHEEVOS</p> 
-      ${masteryRate}%<p class="status__difficult-badge difficult-badge__pro">MASTERY</p>
+      <p class="status__difficult-badge difficult-badge__pro">${points_total} HP</p>
+      <p class="status__difficult-badge difficult-badge__pro">${TotalRetropoints} RP</p>
+      <p class="status__difficult-badge difficult-badge__pro">${achievements_published} CHEEVOS</p> 
+      <p class="status__difficult-badge difficult-badge__pro">${masteryRate}% MASTERY</p>
       `;
       this.backSide.earnedPoints.innerHTML = gameInfo;
     }
@@ -3512,7 +3510,7 @@ class GameCard {
     points_total,
     sufixes,
   }) {
-    this.header.innerHTML = `${FixedTitle} ${this.SHOW_BADGES ? this.generateSufixes(sufixes) : ""} `;
+    this.header.innerHTML = `${FixedTitle} ${this.SHOW_BADGES ? generateBadges(sufixes) : ""} `;
     this.header.setAttribute(
       "href",
       `https://retroachievements.org/game/${ID}`
@@ -3533,9 +3531,7 @@ class GameCard {
 
     this.generateInfo();
   }
-  generateSufixes(sufixes) {
-    return sufixes?.reduce((acc, sufix) => acc += `<i class="game-card_suffix game-title_${sufix.toLowerCase()}">${sufix}</i>`, "")
-  }
+
   generateInfo() {
     this.descriptions.innerHTML = "";
     Object.getOwnPropertyNames(this.gameInfoElements).forEach((prop) => {
@@ -4535,28 +4531,8 @@ class LoginCard {
 }
 
 class Games_ {
-  get VISIBLE() {
-    return !this.section.classList.contains("hidden");
-  }
-  get SORT_METHOD() {
-    return sortBy[this.SORT_NAME];
-  }
-  get SORT_NAME() {
-    return config._cfg.ui?.games_section?.sort_name ?? sortMethods.title;
-  }
-  set SORT_NAME(value) {
-    config._cfg.ui.games_section.sort_name = value;
-    config.writeConfiguration();
-    this.applySort()
-  }
-  set REVERSE_SORT(value) {
-    config._cfg.ui.games_section.reverse_sort = value ? -1 : 1;
-    config.writeConfiguration();
-    this.applySort()
-  }
-  get REVERSE_SORT() {
-    return config._cfg.ui?.games_section?.reverse_sort ?? -1;
-  }
+
+
 
   get GAMES_GROUP() {
     return config._cfg.ui?.games_section?.games_group ?? "all";
@@ -4634,30 +4610,7 @@ class Games_ {
     }
     this.applySort();
   }
-  applySort() {
-    this.GAMES.all = this.GAMES.all.sort((a, b) => this.SORT_METHOD(a, b) * this.REVERSE_SORT);
-    this.clearList();
-    this.fillFullList();
-  }
-  applyFilter() {
-    this.GAMES.all = [];
-    this.PLATFORMS_FILTER.forEach(platformId => {
-      this.GAMES.all = this.GAMES.all.concat(this.GAMES[platformId]);
 
-    })
-    const searchbarValue = this.searchbar.value;
-    this.searchbar.classList.toggle("empty", searchbarValue == "")
-
-    if (searchbarValue != "") {
-
-      let regex = new RegExp(searchbarValue, "i");
-
-      this.GAMES.all = this.GAMES.all.filter(game => regex.test(game?.Title));
-
-    }
-    this.applyTypesFilter();
-    this.applySort()
-  }
   applyTypesFilter() {
     const types = this.TYPES_FILTER;
     let filteredGamesArray = [];
@@ -4671,15 +4624,7 @@ class Games_ {
     })
     this.GAMES.all = filteredGamesArray;
   }
-  fillFullList = () => {
-    while (this.isEndOfListVisible({ list: this.gamesList }) && this.GAMES["all"]?.length > Number(this.gamesList.dataset.currentGamesArrayPosition)) {
-      this.fillGamesDown({ list: this.gamesList, platformID: "all" }); // Після отримання даних заповнюємо список ігор
-    }
-  }
-  clearList = () => {
-    this.gamesList.innerHTML = "";
-    this.gamesList.dataset.currentGamesArrayPosition = 0;
-  }
+
   platformCodes = {
     "Genesis/Mega Drive": "1",
     "Nintendo 64": "2",
@@ -4796,60 +4741,6 @@ class Games_ {
 
   }
 
-  isEndOfListVisible({ list }) {
-    const lastItem = list.lastElementChild;
-    // Перевіряємо, чи останній елемент списку є видимим у зоні прокрутки
-
-    return !lastItem || lastItem?.getBoundingClientRect().bottom <= window.innerHeight + 200;
-  }
-  isFirstOfListVisible({ list }) {
-    const firstItem = list.children[0];
-
-    // Перевіряємо, чи останній елемент списку є видимим у зоні прокрутки
-    return firstItem?.getBoundingClientRect().bottom > -200;
-  }
-  fillGamesDown({ list }) {
-    !list.dataset.currentGamesArrayPosition ? list.dataset.currentGamesArrayPosition = 0 : "";
-
-    let startIndex = Number(list.dataset.currentGamesArrayPosition) ?? 0;
-    let lastIndex = startIndex + this.BATCH_SIZE >= this.GAMES.all.length ?
-      this.GAMES.all.length :
-      startIndex + this.BATCH_SIZE;
-    list.dataset.currentGamesArrayPosition = lastIndex;
-    // Використовуємо збережені дані у властивості games для заповнення списку
-    for (let i = startIndex; i < lastIndex; i++) {
-      const gameElement = this.generateGameElement(this.GAMES.all[i]);
-      list.appendChild(gameElement);
-    }
-  }
-  fillGamesTop({ list }) {
-    !list.dataset.currentGamesArrayPosition ? list.dataset.currentGamesArrayPosition = 0 : "";
-
-    let startIndex = list.dataset.currentGamesArrayPosition - list.children.length - 1;
-    // Використовуємо збережені дані у властивості games для заповнення списку
-    for (let i = startIndex; i > startIndex - this.BATCH_SIZE && i >= 0; i--) {
-      const gameElement = this.generateGameElement(this.GAMES.all[i]);
-      list.prepend(gameElement);
-    }
-  }
-  clearGamesTop({ list }) {
-    if (list.children.length > this.MAX_GAMES_IN_LIST) {
-      for (let i = 0; i < this.BATCH_SIZE; i++) {
-
-        list.firstChild.remove();
-      }
-    }
-  }
-  clearGamesDown({ list }) {
-    let lastIndex = list.dataset.currentGamesArrayPosition - this.BATCH_SIZE;
-    lastIndex = lastIndex < 0 ? 0 : lastIndex;
-    if (list.children.length > this.MAX_GAMES_IN_LIST) {
-      for (let i = list.dataset.currentGamesArrayPosition; i > lastIndex; i--) {
-        list.lastChild.remove();
-      }
-      list.dataset.currentGamesArrayPosition = lastIndex;
-    }
-  }
 
 
   async getRecentGamesArray() {
@@ -4884,84 +4775,6 @@ class Games_ {
   }
 
 
-  async loadGamesArray() {
-    this.GAMES = {};
-    this.clearList();
-    for (const platformCode of Object.getOwnPropertyNames(this.platformNames)) {
-      await this.getAllGames({ consoleCode: platformCode });
-    }
-    this.GAMES.all = this.GAMES.saved = Object.values(this.GAMES).flat();
-  }
-  async getAllGames({ consoleCode }) {
-    try {
-      if (!(consoleCode == 0 || consoleCode == "all")) {
-        const gamesResponse = await fetch(`./json/games/${consoleCode}.json`);
-        const gamesJson = await gamesResponse.json();
-
-        const ignoredWords = ["~UNLICENSED~", "~DEMO~", "~HOMEBREW~", "~HACK~", "~PROTOTYPE~", ".HACK//", "~TEST KIT~"];
-
-        this.GAMES[consoleCode] = gamesJson.map(game => {
-          let title = game.Title;
-          const sufixes = ignoredWords.reduce((sufixes, word) => {
-            const reg = new RegExp(word, "gi");
-            if (reg.test(game.Title)) {
-              title = title.replace(reg, "");
-              sufixes.push(word.replaceAll(new RegExp("[^A-Za-z]", "gi"), ""));
-
-            }
-            return sufixes;
-          }, [])
-          game.sufixes = sufixes;
-          game.FixedTitle = title.trim();
-          return game;
-        })
-      }
-
-    } catch (error) {
-      return [];
-    }
-  }
-  async showMoreDescription(element) {
-    let gameListItem = element.closest(".platform_game-item");
-    if (gameListItem.classList.contains("expanded")) {
-      const gameMoreInfoElement = gameListItem.querySelector(".game-more_block");
-      gameMoreInfoElement.remove();
-    }
-    else {
-      const gameID = gameListItem.dataset.gameID;
-      const gameMoreInfoElement = document.createElement("div");
-      gameMoreInfoElement.classList.add("game-more_block");
-      const resp = await apiWorker.getGameInfo({ gameID: gameID });
-      gameMoreInfoElement.innerHTML = `
-      <img src="https://media.retroachievements.org/${resp.ImageTitle}" alt="" class="game-description_ingame-preview">
-      <img src="https://media.retroachievements.org/${resp.ImageIngame}" alt="" class="game-description_ingame-preview">
-    `;
-      gameListItem.appendChild(gameMoreInfoElement);
-    }
-    gameListItem.classList.toggle("expanded");
-
-    // {
-    //   "Title": "1942",
-    //   "GameTitle": "1942",
-    //   "ConsoleID": 7,
-    //   "ConsoleName": "NES/Famicom",
-    //   "Console": "NES/Famicom",
-    //   "ForumTopicID": 323,
-    //   "Flags": 0,
-    //   "GameIcon": "/Images/043934.png",
-    //   "ImageIcon": "/Images/043934.png",
-    //   "ImageTitle": "/Images/000549.png",
-    //   "ImageIngame": "/Images/000550.png",
-    //   "ImageBoxArt": "/Images/011488.png",
-    //   "Publisher": "Capcom",
-    //   "Developer": "Capcom, Micronics",
-    //   "Genre": "Shoot 'em Up",
-    //   "Released": "December 11, 1985"
-    // }
-
-
-  }
-
   generateFiltersList() {
     const checkedElements = this.PLATFORMS_FILTER;
     Object.getOwnPropertyNames(this.gameFilters).forEach(platformCode => {
@@ -4976,14 +4789,12 @@ class Games_ {
       this.platformFiltersList.appendChild(filterItem);
     })
   }
-  generateSufixes(sufixes) {
-    return sufixes?.reduce((acc, sufix) => acc += `<i class="game-title_suffix game-title_${sufix.toLowerCase()}">${sufix}</i>`, "")
-  }
+
   generateGameElement(game) {
     let { Title, FixedTitle, ID, GameID, sufixes, ConsoleName, ImageIcon, Points, PossibleScore, ForumTopicID, NumAchievements, AchievementsTotal, NumLeaderboards } = game;
     const imgName = game.ImageIcon.slice(ImageIcon.lastIndexOf("/") + 1, ImageIcon.lastIndexOf(".") + 1) + "webp";
     const gameElement = document.createElement("li");
-    const sufixesElements = this.generateSufixes(sufixes);
+    const sufixesElements = generateBadges(sufixes);
     gameElement.dataset.gameID = ID;
     gameElement.classList.add("platform_game-item");
     gameElement.innerHTML = `   
@@ -5039,37 +4850,7 @@ class Games_ {
       this.clearGamesDown({ list: this.gamesList });
     }
   }
-  searchInputHandler() {
-    const clearList = () => {
-      this.gamesList.innerHTML = "";
-      this.gamesList.dataset.currentGamesArrayPosition = 0;
-    }
-    const recoverGamesData = () => {
-      this.GAMES.all = this.GAMES.saved;
-      this.applyFilter();
 
-    }
-    const fillFullList = () => {
-      while (this.isEndOfListVisible({ list: this.gamesList }) && this.GAMES["all"]?.length > Number(this.gamesList.dataset.currentGamesArrayPosition)) {
-        this.fillGamesDown({ list: this.gamesList, platformID: "all" }); // Після отримання даних заповнюємо список ігор
-      }
-    }
-    recoverGamesData();
-    const searchbarValue = this.searchbar.value;
-
-    this.searchbar.classList.toggle("empty", searchbarValue == "");
-
-    let regex = new RegExp(searchbarValue, "i");
-
-    let searchGames = this.GAMES.all.filter(game => regex.test(game.Title));
-
-    this.GAMES.all = searchGames;
-
-    clearList();
-
-    fillFullList();
-
-  }
   markAllFilters() {
     if (this.PLATFORMS_FILTER.length === Object.keys(this.gameFilters).length) {
       config.ui.games_section.platformsFilter = [];
@@ -5085,12 +4866,42 @@ class Games_ {
     }
 
   }
-  clearSearchbar() {
-    this.searchbar.value = "";
-    this.searchInputHandler();
-  }
+
 }
 class Games {
+  get VISIBLE() {
+    return !this.section.classList.contains("hidden");
+  }
+  set REVERSE_SORT(value) {
+    config._cfg.ui.games_section.reverse_sort = value ? -1 : 1;
+    config.writeConfiguration();
+    this.updateGamesList();
+  }
+  get REVERSE_SORT() {
+    return config._cfg.ui?.games_section?.reverse_sort ?? -1;
+  }
+  get SORT_METHOD() {
+    return sortBy[this.SORT_NAME];
+  }
+  get SORT_NAME() {
+    // return sortMethods.title;
+    return config._cfg.ui?.games_section?.sort_name ?? sortMethods.title;
+  }
+  set SORT_NAME(value) {
+    value == this.SORT_NAME &&
+      (config._cfg.ui.games_section.reverse_sort = -1 * this.REVERSE_SORT)
+    config._cfg.ui.games_section.sort_name = value;
+    config.writeConfiguration();
+    this.updateGamesList();
+  }
+  titleFilter = '';
+  applyFilter() {
+    const titleRegex = new RegExp(this.titleFilter, 'gi');
+    this.games = this.GAMES.filter(game => game.FixedTitle.match(titleRegex))
+  }
+  applySort() {
+    this.games = this.games.sort((a, b) => this.REVERSE_SORT * this.SORT_METHOD(a, b));
+  }
   platformCodes = {
     "1": "Genesis/Mega Drive",
     "2": "Nintendo 64",
@@ -5105,21 +4916,40 @@ class Games {
     "41": "PlayStation Portable",
     // "999": "etc.",
   }
+  games = {}
   constructor() {
+
     this.initializeElements();
+    // this.setValues();
     this.loadGamesArray()
       .then(() => {
-        this.gamesList.innerHTML = this.gamesListHeaderHtml();
-        lazyLoad({ list: this.gamesList, items: this.GAMES.all, callback: this.GameElement })
+        // this.generateFiltersList();
+        //     this.applyFilter();
+        this.updateGamesList();
 
       })
-    // this.addEvents();
-    // this.generateFiltersList();
-    // this.setValues();
-    // this.loadGamesArray()
-    //   .then(() => {
-    //     this.applyFilter();
-    //   })
+    this.addEvents();
+  }
+  initializeElements() {
+    this.section = document.querySelector("#games_section");
+    this.header = this.section.querySelector(".header-container");
+    this.container = this.section.querySelector(".games_container");
+    // this.platformsContainer = this.section.querySelector(".platforms-list_container");
+    this.searchbar = this.section.querySelector("#games__searchbar");
+    this.platformFiltersList = this.section.querySelector("#games_filter-platform-list");
+    this.gamesList = this.section.querySelector("#games-list");
+    // this.platformList = this.section.querySelector(".platform-list");
+    this.resizer = this.section.querySelector(".resizer");
+  }
+  addEvents() {
+    this.searchbar.addEventListener("input", e => {
+      const searchbarValue = this.searchbar.value;
+      this.titleFilter = searchbarValue;
+      this.searchbar.classList.toggle("empty", searchbarValue == "");
+      this.updateGamesList();
+
+
+    })
     this.resizer.addEventListener("mousedown", (event) => {
       event.stopPropagation();
       this.section.classList.add("resized");
@@ -5134,34 +4964,23 @@ class Games {
       UI.moveEvent(this.section, e);
     });
   }
-  initializeElements() {
-    this.section = document.querySelector("#games_section");
-    this.header = this.section.querySelector(".header-container");
-    this.container = this.section.querySelector(".games_container");
-    // this.platformsContainer = this.section.querySelector(".platforms-list_container");
-    this.searchbar = this.section.querySelector("#games_search-input");
-    this.platformFiltersList = this.section.querySelector("#games_filter-platform-list");
-    this.gamesList = this.section.querySelector("#games-list");
-    // this.platformList = this.section.querySelector(".platform-list");
-    this.resizer = this.section.querySelector(".resizer");
+
+  updateGamesList() {
+    this.applyFilter();
+    this.applySort();
+    this.gamesList.innerHTML = this.gamesListHeaderHtml();
+    lazyLoad({ list: this.gamesList, items: this.games, callback: this.GameElement })
   }
   async loadGamesArray() {
     this.GAMES = {};
     // this.clearList();
-    for (const platformCode of Object.getOwnPropertyNames(this.platformCodes)) {
-      await this.getAllGames({ consoleCode: platformCode });
-    }
-    this.GAMES.all = Object.values(this.GAMES).flat().sort((a, b) => sortBy.title(a, b));
+    await this.getAllGames();
   }
-  async getAllGames({ consoleCode }) {
+  async getAllGames() {
     try {
-      if (!(consoleCode == 0 || consoleCode == "all")) {
-        const gamesResponse = await fetch(`../json/games/${consoleCode}.json`);
-        const gamesJson = await gamesResponse.json();
-        this.GAMES[consoleCode] = gamesJson.map(game =>
-          fixGameTitle(game)
-        )
-      }
+      const gamesResponse = await fetch(`../json/games/all.json`);
+      const gamesJson = await gamesResponse.json();
+      this.GAMES = gamesJson;
     } catch (error) {
       return [];
     }
@@ -5169,34 +4988,17 @@ class Games {
   GameElement(game) {
     const gameElement = document.createElement("li");
     gameElement.classList.add("platform_game-item");
-    // {
-    //   "Title": "Addams Family, The",
-    //   "ID": 12,
-    //   "ConsoleID": 1,
-    //   "ConsoleName": "Genesis/Mega Drive",
-    //   "ImageIcon": "/Images/048141.png",
-    //   "NumAchievements": 69,
-    //   "NumLeaderboards": 1,
-    //   "Points": 450,
-    //   "DateModified": "2022-07-13 20:05:05",
-    //   "ForumTopicID": 202,
-    //   "Hashes": [
-    //     "eba5f964addea18b70336d292a08698d"
-    //   ],
-    //   "sufixes": [],
-    //   "FixedTitle": "Addams Family, The"
-    // }
     const iconCode = game.ImageIcon.match(/\d+/g);
     gameElement.innerHTML = `
     <div class="game-preview_container">
     <img src="./assets/imgCache/${iconCode}.webp"
-        onerror="this.src='https://media.retroachievements.org${game.ImageIcon}';" alt=""
+        onerror="this.src='https://media.retroachievements.org/Images/${game.ImageIcon}.png';" alt=""
         class="game-preview_image">
     </div>
     <h3 class="game-description_title"><button title="open game" class="game-description_button"
-            onclick="config.gameID = ${game.ID}; getAchievements()">${game.Title}</button></h3>
+            onclick="config.gameID = ${game.ID}; getAchievements()">${game.FixedTitle} ${generateBadges(game.badges)}</button></h3>
     <p title="achievements count" class="game-description  achievements-count">
-           ${game.ConsoleName}
+           ${RAPlatforms[game.ConsoleID].match(/[^\/]*/gi)[0]}
     </p>
             <p title="achievements count" class="game-description  achievements-count">
       ${game.NumAchievements}
@@ -5215,17 +5017,24 @@ class Games {
         <div class="platform_game-item header">
             <div class="game-preview_container">
             </div>
-            <h3 class="game-description_title">Title</h3>
-            <p title="achievements count" class="game-description  achievements-count">
+            <h3 class="header__game-description game-description_title ${this.SORT_NAME == sortMethods.title ?
+      this.REVERSE_SORT == -1 ? 'active reverse' : 'active' : ''}"
+              onclick='ui.games.SORT_NAME = sortMethods.title'>Title</h3>
+            <p title="achievements count" class=" game-description  achievements-count"
+             >
                 Platform
             </p>
-            <p title="achievements count" class="game-description  achievements-count">
-                Cheevo
+            <p title="achievements count" class="header__game-description game-description  achievements-count ${this.SORT_NAME == sortMethods.achievementsCount ?
+      this.REVERSE_SORT == -1 ? 'active reverse' : 'active' : ''}"
+            onclick='ui.games.SORT_NAME = sortMethods.achievementsCount'>
+                Cheevos
             </p>
-            <p title="points count" class="game-description  points-count">
+            <p title="points count" class="header__game-description game-description  points-count ${this.SORT_NAME == sortMethods.points ?
+      this.REVERSE_SORT == -1 ? 'active reverse' : 'active' : ''}"
+              onclick='ui.games.SORT_NAME = sortMethods.points'>
                 Points
             </p>
-            <p title="go to RA" class="game-description game-description_link">Link
+            <p title="go to RA" class=" game-description game-description_link">Link
             </p>
         </div>
   `;
@@ -6027,6 +5836,9 @@ const fixGameTitle = (game) => {
 const delay = (ms) => {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
+function generateBadges(badges) {
+  return badges?.reduce((acc, badge) => acc += `<i class="game-card_suffix game-title_${badge.toLowerCase()}">${badge}</i> `, "")
+}
 function lazyLoad({ list, items, callback }) {
   const trigger = document.createElement("div");
   trigger.classList.add("lazy-load_trigger")
@@ -6064,4 +5876,59 @@ function lazyLoad({ list, items, callback }) {
 
   // Початкове спостереження за тригером
   observer.observe(trigger);
+}
+const RAPlatforms = {
+  "1": "Genesis/Mega Drive",
+  "2": "Nintendo 64",
+  "3": "SNES/Super Famicom",
+  "4": "Game Boy",
+  "5": "Game Boy Advance",
+  "6": "Game Boy Color",
+  "7": "NES/Famicom",
+  "8": "PC Engine/TurboGrafx-16",
+  "9": "Sega CD",
+  "10": "32X",
+  "11": "Master System",
+  "12": "PlayStation",
+  "13": "Atari Lynx",
+  "14": "Neo Geo Pocket",
+  "15": "Game Gear",
+  "17": "Atari Jaguar",
+  "18": "Nintendo DS",
+  "21": "PlayStation 2",
+  "23": "Magnavox Odyssey 2",
+  "24": "Pokemon Mini",
+  "25": "Atari 2600",
+  "27": "Arcade",
+  "28": "Virtual Boy",
+  "29": "MSX",
+  "33": "SG-1000",
+  "37": "Amstrad CPC",
+  "38": "Apple II",
+  "39": "Saturn",
+  "40": "Dreamcast",
+  "41": "PlayStation Portable",
+  "43": "3DO Interactive Multiplayer",
+  "44": "ColecoVision",
+  "45": "Intellivision",
+  "46": "Vectrex",
+  "47": "PC-8000/8800",
+  "49": "PC-FX",
+  "51": "Atari 7800",
+  "53": "WonderSwan",
+  "56": "Neo Geo CD",
+  "57": "Fairchild Channel F",
+  "63": "Watara Supervision",
+  "69": "Mega Duck",
+  "71": "Arduboy",
+  "72": "WASM-4",
+  "73": "Arcadia 2001",
+  "74": "Interton VC 4000",
+  "75": "Elektor TV Games Computer",
+  "76": "PC Engine CD/TurboGrafx-CD",
+  "77": "Atari Jaguar CD",
+  "78": "Nintendo DSi",
+  "80": "Uzebox",
+  "101": "Events",
+  "102": "Standalone"
 }

@@ -949,17 +949,17 @@ class Library {
       label: "Filter by platform",
       elements: [
         {
-          label: `All (${this.GAMES.all.length})`,
+          label: `All`,
           id: "filter_all",
           type: "radio",
           onChange: "ui.library.platformFilter = 'all'",
           checked: this.platformFilterCode === 'all',
           name: "filter-by-platform"
         },
-        ...Object.getOwnPropertyNames(this.GAMES).reduce((elems, platformCode) => {
-          if (platformCode != 'all') {
+        ...Object.getOwnPropertyNames(RAPlatforms).reduce((elems, platformCode) => {
+          if (this.GAMES.some(game => game.ConsoleID == platformCode)) {
             const filterObj = {
-              label: `${this.platformCodes[platformCode]} (${this.GAMES[platformCode].length})`,
+              label: `${RAPlatforms[platformCode]}`,
               id: `filter_code-${platformCode}`,
               type: "radio",
               onChange: `ui.library.platformFilter = ${platformCode}`,
@@ -982,7 +982,7 @@ class Library {
           label: "Title",
           id: "sort_title",
           type: "radio",
-          onChange: "ui.library.sortType = 'title'",
+          onChange: "ui.library.sortType = 'title'; ",
           checked: this.sortType === 'title',
           name: "sort-games"
         },
@@ -991,7 +991,7 @@ class Library {
           id: "sort_points-count",
           type: "radio",
           onChange: "ui.library.sortType = 'points'",
-          checked: this.awardSortType === 'points',
+          checked: this.sortType === 'points',
           name: "sort-games"
         },
         {
@@ -1038,7 +1038,7 @@ class Library {
   get platformFilter() {
     const code = config.ui?.mobile?.libraryPlatformFilter ?? "all";
 
-    return code == "all" ? "all" : this.platformCodes[code]
+    return code == "all" ? "all" : RAPlatforms[code]
   }
   get platformFilterCode() {
     const code = config.ui?.mobile?.libraryPlatformFilter ?? "all";
@@ -1051,7 +1051,7 @@ class Library {
     config.writeConfiguration();
 
     this.updateGames();
-    document.querySelector(".games-platform-filter").innerText = this.platformFilter;
+    document.querySelector(".games-platform-filter").innerText = `${this.platformFilter} (${this.games.length})`;
 
   }
   titleFilter = '';
@@ -1070,7 +1070,10 @@ class Library {
     // "999": "etc.",
   }
   applyFilter() {
-    this.games = this.GAMES[this.platformFilterCode];
+    // this.games = this.GAMES[this.platformFilterCode];
+
+    this.games = this.platformFilterCode == "all" ? this.GAMES :
+      this.GAMES.filter(game => game.ConsoleID === this.platformFilterCode);
     if (this.titleFilter) {
       let regex = new RegExp(this.titleFilter, "i");
       this.games = this.games.filter(game => regex.test(game?.Title));
@@ -1128,7 +1131,10 @@ class Library {
         <div class="section__header-title">Library</div>
         <div class="section__control-container">
             <button class=" simple-button" onclick="generateContextMenu(ui.library.gamesSortContext(),event)">Sort</button>
-            <button class="games-platform-filter simple-button" onclick="generateContextMenu(ui.library.gamesPlatformContext(),event)">${this.platformFilter ?? "Platform"}</button>
+            <button class="games-platform-filter simple-button" 
+              onclick="generateContextMenu(ui.library.gamesPlatformContext(),event)">
+              ${this.platformFilter ?? "Platform"} (${this.games.length})
+            </button>
             <div class="hidden-text-input__container">
             <input class="hidden-text-input__input" type="search">
             <button class="hidden-text-input__button icon-button simple-button search-icon show-searchbar__button"
@@ -1146,19 +1152,21 @@ class Library {
     const gameElement = document.createElement("li");
     gameElement.classList.add("awards__game-item");
     gameElement.dataset.id = game.ID;
-    const imgName = game.ImageIcon.slice(game.ImageIcon.lastIndexOf("/") + 1, game.ImageIcon.lastIndexOf(".") + 1) + "webp";
+    // const imgName = game.ImageIcon.slice(game.ImageIcon.lastIndexOf("/") + 1, game.ImageIcon.lastIndexOf(".") + 1) + "webp";
     gameElement.innerHTML = `    
             <li class="awards__game-item" data-id="${game.ID}">
                 <div class="awards__game-container"  onclick="ui.showGameDetails(${game.ID}); event.stopPropagation()">
                     <div class="awards__game-preview-container" onclick="ui.goto.game(${game.ID}); event.stopPropagation()">
-                        <img class="awards__game-preview" src="../../assets/imgCache/${imgName}" alt="">
+                        <img class="awards__game-preview" src="../../assets/imgCache/${game.ImageIcon}.webp" 
+                          onerror="this.src='https://media.retroachievements.org/Images/${game.ImageIcon}.png';" alt=""
+                        >
                     </div>
                     <div class="awards__game-description" >
-                        <h2 class="awards__game-title">${game.FixedTitle}</h2>
+                        <h2 class="awards__game-title">${game.FixedTitle} ${generateBadges(game.badges)}</h2>
                         <div  class="game-stats__button"  onclick="ui.expandGameItem(${game.ID},this); event.stopPropagation()">
                           <i class="game-stats__icon game-stats__expand-icon"></i>
                         </div>
-                        <div class="awards__game-stats__text">${game.ConsoleName}</div>
+                        <div class="awards__game-stats__text">${RAPlatforms[game.ConsoleID]}</div>
 
                         <div class="awards__game-stats-container" >                           
                         <div class="game-stats ">
@@ -1178,34 +1186,31 @@ class Library {
   async loadGamesArray() {
     this.GAMES = {};
     // this.clearList();
-    for (const platformCode of Object.getOwnPropertyNames(this.platformCodes)) {
-      await this.getAllGames({ consoleCode: platformCode });
-    }
-    this.GAMES.all = Object.values(this.GAMES).flat();
+    await this.getAllGames();
   }
-  async getAllGames({ consoleCode }) {
+  async getAllGames() {
     try {
-      if (!(consoleCode == 0 || consoleCode == "all")) {
-        const gamesResponse = await fetch(`../../json/games/${consoleCode}.json`);
-        const gamesJson = await gamesResponse.json();
 
-        const ignoredWords = ["~UNLICENSED~", "~DEMO~", "~HOMEBREW~", "~HACK~", "~PROTOTYPE~", ".HACK//", "~TEST KIT~"];
+      const gamesResponse = await fetch(`../../json/games/all.json`);
+      const gamesJson = await gamesResponse.json();
+      this.GAMES = gamesJson;
+      // const ignoredWords = ["~UNLICENSED~", "~DEMO~", "~HOMEBREW~", "~HACK~", "~PROTOTYPE~", ".HACK//", "~TEST KIT~"];
 
-        this.GAMES[consoleCode] = gamesJson.map(game => {
-          let title = game.Title;
-          const sufixes = ignoredWords.reduce((sufixes, word) => {
-            const reg = new RegExp(word, "gi");
-            if (reg.test(game.Title)) {
-              title = title.replace(reg, "");
-              sufixes.push(word.replaceAll(new RegExp("[^A-Za-z]", "gi"), ""));
-            }
-            return sufixes;
-          }, [])
-          game.sufixes = sufixes;
-          game.FixedTitle = title.trim();
-          return game;
-        })
-      }
+      // this.GAMES[consoleCode] = gamesJson.map(game => {
+      //   let title = game.Title;
+      //   const sufixes = ignoredWords.reduce((sufixes, word) => {
+      //     const reg = new RegExp(word, "gi");
+      //     if (reg.test(game.Title)) {
+      //       title = title.replace(reg, "");
+      //       sufixes.push(word.replaceAll(new RegExp("[^A-Za-z]", "gi"), ""));
+      //     }
+      //     return sufixes;
+      //   }, [])
+      //   game.sufixes = sufixes;
+      //   game.FixedTitle = title.trim();
+      //   return game;
+      // })
+
 
     } catch (error) {
       return [];
@@ -1396,15 +1401,17 @@ function generateContextMenu(structureObj, event) {
   contextElement.append(controlContainer);
   ui.app.appendChild(contextElement);
 }
-
+function generateBadges(badges) {
+  return badges?.reduce((acc, badge) => acc += `<i class="game-badge game-badge__${badge.toLowerCase()}">${badge}</i>`, "")
+}
 function lazyLoad({ list, items, callback }) {
   const trigger = document.createElement("div");
   trigger.classList.add("lazy-load_trigger")
-  list.parentNode.insertBefore(trigger, list.nextSibling);
+  list.appendChild(trigger);
 
   // Ініціалізація списку з початковими елементами
   let itemIndex = 0;
-  const initialLoadCount = 5;
+  const initialLoadCount = 20;
   const loadItems = (count) => {
     for (let i = 0; i < count && itemIndex < items.length; i++) {
       list.appendChild(callback(items[itemIndex++]));
@@ -1480,8 +1487,8 @@ const sortBy = {
   achievementsCount: (a, b) => parseInt(a.NumAchievements) - parseInt(b.NumAchievements),
 
   title: (a, b) => {
-    let nameA = a.Title?.toUpperCase();
-    let nameB = b.Title?.toUpperCase();
+    let nameA = a.Title?.toUpperCase() ?? a.FixedTitle.toUpperCase();
+    let nameB = b.Title?.toUpperCase() ?? b.FixedTitle.toUpperCase();
 
     if (nameA < nameB) {
       return -1;

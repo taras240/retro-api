@@ -14,7 +14,7 @@
   position: relative;
   border-radius: 0 0 5px 5px;
   overflow: hidden;
-  flex: 1;
+  height: 100%;
   display: flex;
   flex-direction: column;
 }
@@ -25,6 +25,7 @@
   border-right: 1px solid var(--secondary-color);
   overflow: hidden;
   text-align: center;
+  width: auto;
 }
 
 .platforms-list_item.expanded .expand-games_button {
@@ -38,10 +39,9 @@
   justify-content: flex-start;
   align-items: start;
   flex-direction: column;
-  overflow-x: visible;
+  overflow-x: hidden;
   overflow-y: scroll;
-  height: 100%;
-
+  padding-bottom: 2rem;
 }
 
 .platform_game-item.header {
@@ -50,6 +50,28 @@
   top: 0;
   border-radius: 0;
   z-index: 1;
+  transition: 0.2s;
+}
+
+.header__game-description:hover {
+  background-color: var(--secondary-color);
+  cursor: pointer;
+}
+
+.header__game-description.active::before {
+  content: '';
+  display: inline-block;
+  height: 1rem;
+  aspect-ratio: 1;
+  background-color: var(--font-color);
+  transform: scaleY(1);
+  mask-image: url(../assets/img/straight.svg);
+  mask-position: center;
+  mask-size: contain;
+}
+
+.header__game-description.active.reverse::before {
+  transform: scaleY(-1);
 }
 
 .platform-list::-webkit-scrollbar {
@@ -77,7 +99,7 @@
   padding: 5px 10px;
   display: grid;
   grid-column-gap: 1px;
-  grid-template-columns: 30px 1fr 8rem 4rem 4rem 3rem;
+  grid-template-columns: 30px 1fr 8rem 5rem 5rem 3rem;
   align-items: center;
   background-color: var(--secondary-color);
   transition: 0.2s;
@@ -351,131 +373,20 @@ input:disabled+.game-filters_checkbox {
   opacity: 0.2;
 }
 
-/*!-----------------[ SEARCHBAR ]   ---------------------*/
-
-.games_search-bar_container {
-  position: absolute;
-  width: 70%;
-  height: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  padding-top: 10px;
-  /* display: flex;
-    align-items: center;
-    flex-direction: column;
-    justify-content: center;
-    gap: 10px; */
-  /* padding: 15px 20px; */
-  z-index: 2;
-  pointer-events: none;
+/**-----------------[ SEARCHBAR ]   ---------------------*/
+.games__search-container {
+  width: 100%;
+  padding: 0 2rem;
 }
 
-.games_search-block {
-  position: relative;
-  width: 100%;
-  pointer-events: none;
-}
+.games__searchbar {
 
-.games_search-input {
-  position: relative;
-  color: var(--font-color);
   width: 100%;
-  padding: 10px 5rem 10px 15px;
-  border-radius: 15px;
-  background-color: var(--secondary-color);
+  padding: .2rem 1rem;
   font-size: 1.2rem;
-  z-index: 3;
-  transition: .2s;
-  box-shadow: 0 3px 6px 2px rgba(0, 0, 0, .3);
-  pointer-events: all;
-
-}
-
-.games_search-bar_container.extended .games_search-input {
-  box-shadow: 0 0 0 transparent;
-}
-
-.games_search-input::placeholder {
   color: var(--font-color);
-  opacity: 0.6;
-}
-
-.games_search-input.empty+.games_searchbar-clear {
-  opacity: 0;
-  visibility: hidden;
-}
-
-.games_searchbar-icon {
-  position: absolute;
-  top: 50%;
-  height: 1.8rem;
-  aspect-ratio: 1;
-  transform: translate(0, -50%);
-  mask-position: center;
-  mask-size: contain;
-  opacity: 0.4;
-  background-color: var(--font-color);
-  transition: .2s;
-  z-index: 3;
-  pointer-events: all;
-}
-
-.games_searchbar-clear {
-  right: calc(10px + 2rem);
-  mask-image: url(../assets/img/close.svg);
-
-}
-
-.games_searchbar-icon:hover {
-  opacity: .8;
-}
-
-
-.games_settings-checkbox-container {
-  right: 10px;
-  height: 1.8rem;
-  mask-image: url(../assets/img/more.svg);
-}
-
-.games_search-menu {
-  max-height: calc(100% - 20px);
-  display: none;
-  position: absolute;
-  top: 0;
-  border-radius: 15px;
-  width: 100%;
-  /* max-height: 50vh; */
-  background-color: var(--secondary-color);
-  z-index: 2;
-  margin-top: 10px;
-  padding: 50px 20px 20px;
-  overflow: scroll;
-  pointer-events: all;
-}
-
-/* .games_search-menu::before {
-    content: "";
-    position: absolute;
-    width: 95%;
-    height: 1px;
-    transform: translateX(-50%);
-    left: 50%;
-    top: 24px;
-    background-color: var(--font-color);
-    opacity: 0.3;
-} */
-
-.extended .games_search-menu {
-  display: block;
-  box-shadow: 0 4px 5px 3px rgba(0, 0, 0, 0.3);
-}
-
-.games_menu-header {
-  position: relative;
-}
-
-.games_filters-item.disabled,
-.games_filter-platform-list.disabled {
-  pointer-events: none;
-  opacity: .4;
+  border-radius: 0.5rem;
+  background-color: transparent;
+  border: 1px solid var(--secondary-color);
+  text-transform: uppercase;
 }
