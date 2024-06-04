@@ -1336,15 +1336,17 @@ class AchievementsBlock {
   delayedAutoScroll;
   async updateEarnedAchieves({ earnedAchievementIDs }) {
     this.stopAutoScroll();
-    earnedAchievementIDs.forEach(async id => {
+    for (let id of earnedAchievementIDs) {
       const earnedAchivElement = this.container.querySelector(`.achiv-block[data-achiv-id="${id}"]`);
       if (!this.SHOW_MARIO || !this.isAchieveVisible(earnedAchivElement) || !ui.ACHIEVEMENTS[id].isHardcoreEarned) {
         earnedAchivElement.classList.add("earned", ui.ACHIEVEMENTS[id].isHardcoreEarned ? "hardcore" : "f");
       }
       else {
-        this.marioAction(earnedAchivElement);
+        await this.marioAction(earnedAchivElement);
       }
-    })
+      ui.ACHIEVEMENTS[id].DateEarnedHardcore && (earnedAchivElement.dataset.DateEarnedHardcore = ui.ACHIEVEMENTS[id].DateEarnedHardcore);
+    };
+    this.applyFilter();
     this.startAutoScroll();
   }
   async marioAction(targetElement) {
@@ -1437,7 +1439,9 @@ class AchievementsBlock {
     await delay(500);
     await walkAway();
     targetElement?.classList.add("earned", "hardcore");
+
     mario.remove();
+    return '';
   }
 
   startAutoScroll(toBottom = true) {
@@ -4210,11 +4214,16 @@ class Target {
   updateEarnedAchieves({ earnedAchievementIDs: earnedAchievementsIDs }) {
     earnedAchievementsIDs.forEach(id => {
       const achivElement = this.container.querySelector(`.target-achiv[data-achiv-id='${id}']`);
-      ui.ACHIEVEMENTS[id].isHardcoreEarned ?
-        achivElement?.classList.add("earned", "hardcore", "show-hard-anim") :
+      if (ui.ACHIEVEMENTS[id].isHardcoreEarned) {
+        achivElement?.classList.add("earned", "hardcore", "show-hard-anim");
+        achivElement.dataset.DateEarnedHardcore = ui.ACHIEVEMENTS[id].DateEarnedHardcore;
+      }
+      else {
         achivElement?.classList.add("earned", "show-hard-anim");
+      }
       setTimeout(() => achivElement.classList.remove("show-hard-anim"), 5000);
-    })
+    });
+    this.applyFilter();
   }
   autoscrollInterval;
   startAutoScroll(toBottom = true) {
@@ -4303,9 +4312,7 @@ class Target {
     targetElement.dataset.Points = Points;
     targetElement.dataset.TrueRatio = TrueRatio;
     targetElement.dataset.DisplayOrder = DisplayOrder;
-    DateEarnedHardcore
-      ? (targetElement.dataset.DateEarnedHardcore = DateEarnedHardcore)
-      : "";
+    DateEarnedHardcore && (targetElement.dataset.DateEarnedHardcore = DateEarnedHardcore);
 
     targetElement.dataset.NumAwardedHardcore = NumAwardedHardcore;
     targetElement.dataset.achivId = ID;
