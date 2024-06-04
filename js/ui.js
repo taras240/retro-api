@@ -1347,6 +1347,7 @@ class AchievementsBlock {
       ui.ACHIEVEMENTS[id].DateEarnedHardcore && (earnedAchivElement.dataset.DateEarnedHardcore = ui.ACHIEVEMENTS[id].DateEarnedHardcore);
     };
     this.applyFilter();
+    this.SORT_NAME == sortMethods.latest && this.applySorting();
     this.startAutoScroll();
   }
   async marioAction(targetElement) {
@@ -2286,9 +2287,13 @@ class StatusPanel {
         <p class="status__difficult-badge difficult-badge__${difficulty}">${difficulty}</p>
       `;
       let earnedPoints = isHardcoreEarned ?
-        `+${Points}HP +${TrueRatio}RP TOP${rateEarnedHardcore}`
-        : `+${Points}SP TOP${rateEarned}`;
-      this.backSide.earnedPoints.innerText = earnedPoints;
+        `<p class="status__difficult-badge difficult-badge__pro">+${Points}HP </p>
+        <p class="status__difficult-badge difficult-badge__pro">+${TrueRatio}RP </p>
+        <p class="status__difficult-badge difficult-badge__pro">TOP${rateEarnedHardcore}</p>`
+        : `
+        <p class="status__difficult-badge difficult-badge__pro">+${Points}SP</p> 
+        <p class="status__difficult-badge difficult-badge__pro">TOP${rateEarned}</p>`;
+      this.backSide.earnedPoints.innerHTML = earnedPoints;
     }
 
     async function processAchivData() {
@@ -4224,6 +4229,7 @@ class Target {
       setTimeout(() => achivElement.classList.remove("show-hard-anim"), 5000);
     });
     this.applyFilter();
+    this.applySort();
   }
   autoscrollInterval;
   startAutoScroll(toBottom = true) {
