@@ -164,16 +164,12 @@ class UI {
   }
   updateWidgets({ earnedAchievementsIDs }) {
     //Update Achievements widgets
-
-    this.achievementsBlock.forEach(template => {
+    for (let template of this.achievementsBlock) {
       template.updateEarnedAchieves({ earnedAchievementIDs: earnedAchievementsIDs });
-      setTimeout(() =>
-        UI.updateAchievementsSection({ earnedAchievementIDs: earnedAchievementsIDs, widget: template }),
-        20 * 1000)
     }
-    )
-    //Update Target widget
-    // UI.updateAchievementsSection({ earnedAchievementIDs: earnedAchievementsIDs, widget: this.target });
+
+    // Update Target widget
+    UI.updateAchievementsSection({ earnedAchievementIDs: earnedAchievementsIDs, widget: this.target });
     this.target.updateEarnedAchieves({ earnedAchievementIDs: earnedAchievementsIDs })
     this.target.delayedRemove();
 
@@ -185,6 +181,7 @@ class UI {
 
     //Update status widget
     this.statusPanel.updateProgress({ earnedAchievementIDs: earnedAchievementsIDs });
+
 
     //Update UserInfo widget
     // setTimeout(() => ui.userInfo.update(), 2000);
@@ -1335,6 +1332,7 @@ class AchievementsBlock {
   autoscrollInterval;
   delayedAutoScroll;
   async updateEarnedAchieves({ earnedAchievementIDs }) {
+    await delay(500);
     this.stopAutoScroll();
     for (let id of earnedAchievementIDs) {
       const earnedAchivElement = this.container.querySelector(`.achiv-block[data-achiv-id="${id}"]`);
@@ -1400,12 +1398,13 @@ class AchievementsBlock {
         dy -= g;
         YPos < targetPos.yPos && (
           YPos = targetPos.yPos - 2,
-          targetElement?.classList.add("earned", "hardcore")
+          targetElement?.classList.add("earned", "hardcore", "mario-dumb")
         )
         mario.style.top = YPos + 'px';
         await delay(70);
       }
-      targetElement?.classList.add("earned", "hardcore");
+      targetElement?.classList.add("earned", "hardcore", "mario-dumb");
+      setTimeout(() => targetElement?.classList.remove("mario-dumb"), 500);
       dy = 0;
       while (YPos < startPos.yPos) {
         YPos += dy;
@@ -1425,8 +1424,6 @@ class AchievementsBlock {
         mario.style.left = XPos + 'px';
         await delay(50);
       }
-      spriteIndex = 0;
-
     }
 
     await walkRight();
@@ -1439,10 +1436,11 @@ class AchievementsBlock {
     mario.classList.add("to-left");
     await delay(500);
     await walkAway();
-    targetElement?.classList.add("earned", "hardcore");
+    // targetElement?.classList.add("earned", "hardcore");
 
     mario.remove();
-    return '';
+    await delay(100);
+    return;
   }
 
   startAutoScroll(toBottom = true) {
@@ -2275,10 +2273,6 @@ class StatusPanel {
   newAchievementsIDs = [];
   showEarnedAchieves({ earnedAchievementIDs }) {
 
-    const delay = (ms) => {
-      return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
     //fill achiv data to html element
     const updateAchivData = (id) => {
       const { isHardcoreEarned, Title, prevSrc, Points, TrueRatio, rateEarned, rateEarnedHardcore, difficulty } = ui.ACHIEVEMENTS[id];
@@ -2313,7 +2307,7 @@ class StatusPanel {
 
     this.newAchievementsIDs.length > 0 ?
       (this.newAchievementsIDs = this.newAchievementsIDs.concat(earnedAchievementIDs)) :
-      (this.newAchievementsIDs = earnedAchievementIDs, processAchivData())
+      (this.newAchievementsIDs = [...earnedAchievementIDs], processAchivData())
 
   }
   showNewGameAlert() {

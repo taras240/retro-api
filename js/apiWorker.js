@@ -189,7 +189,12 @@ class APIWorker {
       targetUser: targetUser,
       minutes: minutes,
     });
-    return fetch(url).then((resp) => resp.json());
+    return fetch(url)
+      .then((resp) => resp.json())
+      .then(achivs => achivs.map(achiv => {
+        achiv.Date = this.toLocalTimeString(achiv.Date);
+        return achiv;
+      }));
   }
 
   // Отримання інформації про гру

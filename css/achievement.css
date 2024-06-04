@@ -72,8 +72,8 @@
   z-index: 1;
 }
 
-.achiv-block.earned.hardcore {
-  animation: hardcore-earned-animation 0.25s cubic-bezier(0, .52, .96, 1.7);
+.achiv-block.mario-dumb {
+  animation: hardcore-earned-animation 0.25s forwards cubic-bezier(0, .52, .96, 1.7);
 }
 
 @keyframes hardcore-earned-animation {
@@ -106,6 +106,9 @@
   display: none;
 }
 
+.achiv-block.earned.hardcore .achiv-preview {
+  border: 1px solid gold;
+}
 
 .achiv-block.earned .achiv-preview {
   filter: grayscale(0.5);
