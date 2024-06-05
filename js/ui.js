@@ -1243,19 +1243,24 @@ class AchievementsBlock {
     TrueRatio,
     NumAwardedHardcore,
     totalPlayers,
-    difficulty
+    difficulty,
+    type
   }) {
     let detailsElement = document.createElement("div");
     detailsElement.classList.add("achiv-details-block");
     detailsElement.dataset.pointStyle =
       Points < 10 ? "poor" : Points < 20 ? "normal" : "reach";
     detailsElement.innerHTML = `
-      <h3>${Title}
+      <h3 class="achievement__header">  <i class="target_description-icon ${type ?? "none"}" title="achievement type"></i> 
+      ${Title}
         <p class="difficult-badge difficult-badge__${difficulty}">${difficulty}</p>
       </h3>
       <p>${Description}</p>
       <p>Earned by ${NumAwardedHardcore} of ${totalPlayers} players</p>
-      <p class="points">${Points} [${TrueRatio}] points</p>
+      <div class="points">
+        <p><i class="target_description-icon  points-icon"></i>${Points}</p>
+        <p><i class="target_description-icon  retropoints-icon"></i>${TrueRatio} </p>             
+      </div>
       ${DateEarnedHardcore
         ? "<p>Earned hardcore: " + fixTimeString(DateEarnedHardcore) + "</p>"
         : DateEarned
@@ -1877,18 +1882,18 @@ class StatusPanel {
         ],
       },
       {
-        label: "Earned Cheevo",
+        label: "Alerts",
         elements: [
           {
             type: "checkbox",
             name: "context_show-new-cheevos",
             id: "context_show-new-cheevos",
-            label: "Show new cheevos",
+            label: "Show alerts",
             checked: this.SHOW_NEW_ACHIV,
             event: `onchange="ui.statusPanel.SHOW_NEW_ACHIV = this.checked;"`,
           },
           {
-            prefix: "Cheevos duration",
+            prefix: "Alerts duration",
             postfix: "sec",
             type: "input-number",
             id: "context-menu_stats-earned-duration",

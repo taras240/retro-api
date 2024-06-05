@@ -279,7 +279,22 @@
 
 .achiv-details-block .points {
   position: relative;
-  padding-left: 25px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.achievement__header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.points p {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
 }
 
 /* .achiv-block:hover .achiv-details-block {
@@ -305,6 +320,7 @@
   transition: 0.2s;
 }
 
+/* 
 [data-point-style="poor"] .points::before,
 [data-point-style="normal"] .points::before,
 [data-point-style="reach"] .points::before {
@@ -337,7 +353,7 @@
 [data-point-style="reach"] .points::before {
   height: 20px;
   background-image: url(../assets/img/coins.png);
-}
+} */
 
 /**---------[ EXPANDED ACHIEVEMENT ]--------*/
 
