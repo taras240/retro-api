@@ -1732,6 +1732,14 @@ class StatusPanel {
           },
           {
             type: "checkbox",
+            name: "context_show-progression",
+            id: "context_show-progression",
+            label: "Progression Steps",
+            checked: this.SHOW_PROGRESSION,
+            event: `onchange="ui.statusPanel.SHOW_PROGRESSION = this.checked;"`,
+          },
+          {
+            type: "checkbox",
             name: "context_show-cheevos",
             id: "context_show-cheevos",
             label: "Cheevos",
@@ -1794,6 +1802,14 @@ class StatusPanel {
             label: "Cheevos",
             checked: this.PROGRESSBAR_PROPERTY_NAME == "achives",
             event: `onchange = 'ui.statusPanel.PROGRESSBAR_PROPERTY_NAME = "achives"'`,
+          },
+          {
+            type: "radio",
+            name: "context_show-progressbar",
+            id: "context_progressbar-progression",
+            label: "Progression steps",
+            checked: this.PROGRESSBAR_PROPERTY_NAME == "progression",
+            event: `onchange = 'ui.statusPanel.PROGRESSBAR_PROPERTY_NAME = "progression"'`,
           },
           {
             type: "radio",
@@ -1916,6 +1932,15 @@ class StatusPanel {
   }
   set SHOW_CHEEVOS(value) {
     config.ui.update_section.showCheevos = value;
+    config.writeConfiguration();
+    this.startStatsAnimation();
+
+  }
+  get SHOW_PROGRESSION() {
+    return config.ui.update_section?.showProgression ?? false;
+  }
+  set SHOW_PROGRESSION(value) {
+    config.ui.update_section.showProgression = value;
     config.writeConfiguration();
     this.startStatsAnimation();
 
@@ -2072,6 +2097,7 @@ class StatusPanel {
     const statusObj = {}
     this.SHOW_HP && (statusObj.progressionInPointsStats = `${this.stats.earnedPoints}/${this.stats.totalPoints} HP`);
     this.SHOW_CHEEVOS && (statusObj.cheevosStats = `${this.stats.earnedAchievesCount}/${this.stats.totalAchievesCount} CHEEVOS`);
+    this.SHOW_PROGRESSION && (statusObj.cheevosStats = `${this.stats.earnedProgressionCount}/${this.stats.totalProgressionCount} STEPS`);
     this.SHOW_RP && (statusObj.retroPointsStats = `${this.stats.earnedRetropoints}/${this.stats.totalRetropoints} RP`);
     this.SHOW_SP && (statusObj.softPointsStats = `${this.stats.earnedSoftpoints}/${this.stats.totalSoftPoints} SP`);
     this.SHOW_PLAYTIME && (statusObj.gameTime = `${this.formatTime(this.SHOW_SESSION_GAME_TIME ? this.sessionGameTime : this.gameTime)}`);
@@ -2101,6 +2127,7 @@ class StatusPanel {
     this.progressStatusText = this.section.querySelector("#status-progress-text");
     this.resizer = this.section.querySelector("#status-resizer");
     this.backSide = {
+      container: this.section.querySelector(".update_back-side"),
       imgElement: this.section.querySelector("#update_achiv-preview"),
       achivTitleElement: this.section.querySelector("#update_achiv-title"),
       earnedPoints: this.section.querySelector("#update_achiv-earned-points"),
@@ -2170,6 +2197,7 @@ class StatusPanel {
     const completionByPoints = this.stats.earnedPoints / ui.GAME_DATA.points_total || 0;
     const completionByPointsPercents = ~~(completionByPoints * 100) + "%";
     const completionByCount = this.stats.earnedAchievesCount / ui?.GAME_DATA?.achievements_published;
+
     const completionByCountPercents = ~~(completionByCount * 100) + "%";
 
     this.setProgressBarValue();
@@ -2197,6 +2225,9 @@ class StatusPanel {
       case "achives":
         value = (this.stats.earnedAchievesCount / ui?.GAME_DATA?.achievements_published);
         break;
+      case "progression":
+        value = (this.stats.earnedProgressionCount / ui?.GAME_DATA?.progressionSteps);
+        break;
       case "softpoints":
         value = (this.stats.earnedSoftpoints / this.stats.totalSoftPoints);
         break;
@@ -2216,8 +2247,10 @@ class StatusPanel {
       totalPoints: ui?.GAME_DATA?.points_total ?? 0,
       totalSoftPoints: 0,
       totalAchievesCount: ui?.GAME_DATA?.achievements_published ?? 0,
+      totalProgressionCount: ui?.GAME_DATA?.progressionSteps,
       earnedPoints: 0,
       earnedAchievesCount: 0,
+      earnedProgressionCount: 0,
       totalRetropoints: ui?.GAME_DATA?.TotalRetropoints,
       earnedRetropoints: 0,
       earnedSoftpoints: 0,
@@ -2229,17 +2262,21 @@ class StatusPanel {
         this.stats.earnedPoints += achievement.Points; // Додавання балів
         this.stats.earnedAchievesCount++;
         this.stats.earnedRetropoints += achievement.TrueRatio;
+        if (achievement.type == 'progression' || achievement.type == 'win_condition') {
+          this.stats.earnedProgressionCount++;
+        }
       }
       else if (achievement.isEarned) {
         this.stats.earnedSoftpoints += achievement.Points;
       }
+
     });
-    this.stats.totalSoftPoints = this.stats.totalPoints - this.stats.earnedPoints;
+    ui.GAME_DATA.winEarnedCount > 0 && (this.stats.earnedProgressionCount = ui?.GAME_DATA?.progressionSteps)
 
     this.setValues();
   }
   async gameChangeEvent() {
-    apiTrackerInterval && (this.showNewGameAlert(), await delay(3000));
+    apiTrackerInterval && (this.addAlertsToQuery([{ type: "new-game", value: ui.GAME_DATA }]), await delay(3000));
     const { ImageIcon, FixedTitle, ConsoleName, sufixes } = ui.GAME_DATA;
     const { gamePreview, gameTitle, gamePlatform } = this;
     gamePreview.setAttribute(
@@ -2262,20 +2299,54 @@ class StatusPanel {
     this.startAnimation();
 
     //show new achivs in statusPanel
-    this.SHOW_NEW_ACHIV && this.showEarnedAchieves({ earnedAchievementIDs: earnedAchievementIDs });
+    this.SHOW_NEW_ACHIV && this.addAlertsToQuery([...earnedAchievementIDs.map(id => { return { type: 'new-achiv', value: ui.ACHIEVEMENTS[id] } })]);
 
     //push points toggle animation
     this.progresBarDelta.classList.remove("hidden");
 
     setTimeout(() => this.progresBarDelta.classList.add("hidden"), 50)
   }
-
+  alertsQuery = []
   newAchievementsIDs = [];
-  showEarnedAchieves({ earnedAchievementIDs }) {
-
-    //fill achiv data to html element
-    const updateAchivData = (id) => {
-      const { isHardcoreEarned, Title, prevSrc, Points, TrueRatio, rateEarned, rateEarnedHardcore, difficulty } = ui.ACHIEVEMENTS[id];
+  addAlertsToQuery(elements) {
+    if (this.alertsQuery.length > 0) {
+      this.alertsQuery = [...this.alertsQuery, ...elements];
+    }
+    else {
+      this.alertsQuery = [...elements];
+      this.startAlerts();
+    }
+  }
+  async startAlerts() {
+    const updateGameData = (game) => {
+      const { FixedTitle,
+        sufixes,
+        ImageIcon,
+        points_total,
+        ConsoleName,
+        TotalRetropoints,
+        achievements_published,
+        masteryRate,
+        beatenRate,
+      } = game;
+      this.backSide.imgElement.src = `https://media.retroachievements.org${ImageIcon}`;
+      this.backSide.achivTitleElement.innerHTML = `${FixedTitle} ${generateBadges(sufixes)}
+      <i class="game-card_suffix">${ConsoleName}</i>
+      `;
+      let gameInfo = `
+      <p class="status__difficult-badge difficult-badge__pro">${points_total} HP</p>
+      <p class="status__difficult-badge difficult-badge__pro">${TotalRetropoints} RP</p>
+      <p class="status__difficult-badge difficult-badge__pro">${achievements_published} CHEEVOS</p> 
+      <p class="status__difficult-badge difficult-badge__pro">${masteryRate}% MASTERED</p>
+      ${beatenRate ? `<p class="status__difficult-badge difficult-badge__pro">${beatenRate}% BEATEN</p>` : ''}
+      `;
+      this.backSide.earnedPoints.innerHTML = gameInfo;
+      this.container.classList.add("new-game-info");
+      this.container.classList.remove("new-achiv");
+      this.backSide.container.classList.remove("hardcore");
+    }
+    const updateAchivData = (achiv) => {
+      const { isHardcoreEarned, Title, prevSrc, Points, TrueRatio, rateEarned, rateEarnedHardcore, difficulty } = achiv;
       this.backSide.imgElement.src = prevSrc;
       this.backSide.achivTitleElement.innerHTML = Title + `
         <p class="status__difficult-badge difficult-badge__${difficulty}">${difficulty}</p>
@@ -2288,74 +2359,38 @@ class StatusPanel {
         <p class="status__difficult-badge difficult-badge__pro">+${Points}SP</p> 
         <p class="status__difficult-badge difficult-badge__pro">TOP${rateEarned}</p>`;
       this.backSide.earnedPoints.innerHTML = earnedPoints;
+      this.backSide.container.classList.toggle("hardcore", achiv.isHardcoreEarned);
+      this.container.classList.remove("new-game-info", "new-achiv");
+
+      setTimeout(() => this.container.classList.add("new-achiv"), 2000)
     }
-
-    async function processAchivData() {
-      while (ui.statusPanel.newAchievementsIDs.length > 0) {
-        //waiting for animation end
-        await delay(2000);
-
-        //draw new achiv and show animation
-        updateAchivData(ui.statusPanel.newAchievementsIDs.shift());
-        ui.statusPanel.container.classList.add("show-back");
-        ui.statusPanel.startAnimation();
-        //back to main information in status panel
-        await delay(ui.statusPanel.NEW_ACHIV_DURATION * 1000);
-        ui.statusPanel.container.classList.remove("show-back");
+    const updateAlertData = (alert) => {
+      switch (alert.type) {
+        case "new-game":
+          updateGameData(alert.value);
+          break;
+        case "new-achiv":
+          updateAchivData(alert.value);
+          break;
+        default:
+          break;
       }
     }
-
-    this.newAchievementsIDs.length > 0 ?
-      (this.newAchievementsIDs = this.newAchievementsIDs.concat(earnedAchievementIDs)) :
-      (this.newAchievementsIDs = [...earnedAchievementIDs], processAchivData())
-
-  }
-  showNewGameAlert() {
-    //fill achiv data to html element
-    const updateGameData = () => {
-      const { FixedTitle, sufixes, ImageIcon, points_total, ConsoleName, TotalRetropoints, achievements_published, masteryRate, retroRatio, gameDifficulty } = ui.GAME_DATA;
-      this.backSide.imgElement.src = `https://media.retroachievements.org${ImageIcon}`;
-      this.backSide.achivTitleElement.innerHTML = `${FixedTitle} ${generateBadges(sufixes)}
-      <p class="game-card_suffix">${ConsoleName}</p>
-      `;
-      let gameInfo = `
-      <p class="status__difficult-badge difficult-badge__pro">${points_total} HP</p>
-      <p class="status__difficult-badge difficult-badge__pro">${TotalRetropoints} RP</p>
-      <p class="status__difficult-badge difficult-badge__pro">${achievements_published} CHEEVOS</p> 
-      <p class="status__difficult-badge difficult-badge__pro">${masteryRate}% MASTERY</p>
-      `;
-      this.backSide.earnedPoints.innerHTML = gameInfo;
-    }
-
-    const processGameData = async () => {
-
+    while (this.alertsQuery.length > 0) {
       //waiting for animation end
-      await delay(100);
-      ui.statusPanel.container.classList.add("show-back", "new-game-info");
-      ui.statusPanel.startAnimation();
-
+      await delay(1000);
+      updateAlertData(this.alertsQuery[0])
+      this.container.classList.add("show-back");
+      this.startAnimation();
+      setTimeout(() => this.startAutoScrollElement(this.backSide.earnedPoints), 2000);
       //back to main information in status panel
       await delay(this.NEW_ACHIV_DURATION * 1000);
-      ui.statusPanel.container.classList.remove("show-back");
-
-      await delay(1000);
-      ui.statusPanel.container.classList.remove("new-game-info");
-      ui.statusPanel.stopAutoScrollElement(this.backSide.achivTitleElement, true);
-      ui.statusPanel.stopAutoScrollElement(this.backSide.earnedPoints, true);
+      this.container.classList.remove("show-back");
+      this.alertsQuery.shift();
+      this.stopAutoScrollElement(this.backSide.earnedPoints, true)
     }
-
-    if (this.container.classList.contains("show-back")) {
-      updateGameData();
-    }
-    else {
-      updateGameData();
-      processGameData();
-      setTimeout(() => this.startAutoScrollElement(this.backSide.achivTitleElement), 4000);
-      setTimeout(() => this.startAutoScrollElement(this.backSide.earnedPoints), 4000);
-
-    }
-
   }
+
   startAnimation() {
     const glassElement = this.section.querySelector(".status_glass-effect");
     glassElement.classList.remove("update");
@@ -2463,17 +2498,20 @@ class StatusPanel {
   }
   autoscrollAlertInterval = {};
   startAutoScrollElement(element, toLeft = true) {
-    this.autoscrollAlertInterval[element.className] ? this.stopAutoScrollElement(element) : "";
+    this.autoscrollAlertInterval[element.className] ?
+      this.stopAutoScrollElement(element) : (
+        this.autoscrollAlertInterval[element.className] = {}
+      );
     let refreshRateMiliSecs = 50;
     let scrollContainer = element;
     let speedInPixels = 1;
     const pauseOnEndMilisecs = 1000;
     // Часовий інтервал для прокручування вниз
     if (true) {
-      this.autoscrollAlertInterval[element.className] = setInterval(() => {
+      this.autoscrollAlertInterval[element.className].interval = setInterval(() => {
         if (scrollContainer.clientWidth == scrollContainer.scrollWidth) {
           this.stopAutoScrollElement(element);
-          setTimeout(() => this.startAutoScrollElement(element), 10 * 1000);
+          this.autoscrollAlertInterval[element.className].timeout = setTimeout(() => this.startAutoScrollElement(element), 10 * 1000);
         }
         else if (toLeft) {
           scrollContainer.scrollLeft += speedInPixels;
@@ -2482,13 +2520,13 @@ class StatusPanel {
             scrollContainer.scrollWidth
           ) {
             this.stopAutoScrollElement(element);
-            setTimeout(() => this.startAutoScrollElement(element, false), pauseOnEndMilisecs);
+            this.autoscrollAlertInterval[element.className].timeout = setTimeout(() => this.startAutoScrollElement(element, false), pauseOnEndMilisecs);
           }
         } else {
           scrollContainer.scrollLeft -= speedInPixels;
           if (scrollContainer.scrollLeft == 0) {
             this.stopAutoScrollElement(element);
-            setTimeout(() => this.startAutoScrollElement(element, true), pauseOnEndMilisecs);
+            this.autoscrollAlertInterval[element.className].timeout = setTimeout(() => this.startAutoScrollElement(element, true), pauseOnEndMilisecs);
           }
         }
       }, refreshRateMiliSecs);
@@ -2505,7 +2543,8 @@ class StatusPanel {
   }
   stopAutoScrollElement(element, reset = false) {
     reset && (element.scrollLeft = 0);
-    clearInterval(this.autoscrollAlertInterval[element.className]);
+    clearInterval(this.autoscrollAlertInterval[element.className].interval);
+    clearTimeout(this.autoscrollAlertInterval[element.className].timeout)
   }
   convertToPercentage(inputString) {
     // Розбиваємо рядок за допомогою розділювача '/'

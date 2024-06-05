@@ -132,54 +132,70 @@ class APIWorker {
       gameID: gameID || config.gameID,
     });
 
-    return fetch(url).then((resp) => resp.json()).then(gameProgressObject => {
-      gameProgressObject.TotalRetropoints = 0;
-      gameProgressObject.progressionRetroRatio = 0;
-      gameProgressObject.masteredCount = Infinity;
-      let lowerWinConditionPoints = { ratio: Infinity, Points: 0, TrueRatio: 0 };
-      let progressionAchivsPoints = { Points: 0, TrueRatio: 0 };
-      Object.values(gameProgressObject.Achievements)
-        .forEach(achievement => {
+    return fetch(url)
+      .then((resp) => resp.json())
+      .then(async gameProgressObject => {
+        gameProgressObject.TotalRetropoints = 0;
+        gameProgressObject.progressionRetroRatio = 0;
+        gameProgressObject.beatenCount = Infinity;
+        gameProgressObject.masteredCount = Infinity;
+        let progressionAchivs = { Count: 0, WinCount: 0, WinAwardedCount: 0, WinEarnedCount: 0 };
+
+        for (let achievement of Object.values(gameProgressObject.Achievements)) {
           gameProgressObject.TotalRetropoints += achievement.TrueRatio;
-          (!gameProgressObject.TotalRealPlayers ||
-            gameProgressObject.TotalRealPlayers < achievement.NumAwarded) && (
-              gameProgressObject.TotalRealPlayers = achievement.NumAwarded
-            )
-          achievement.type == 'progression' || achievement.type == 'win_condition' && (
-            progressionAchivsPoints.Points += achievement.Points,
-            progressionAchivsPoints.TrueRatio += achievement.TrueRatio
-          );
+
+          if (!gameProgressObject.TotalRealPlayers ||
+            gameProgressObject.TotalRealPlayers < achievement.NumAwarded) {
+            gameProgressObject.TotalRealPlayers = achievement.NumAwarded
+          }
+
+          if (achievement.type === 'progression') {
+            progressionAchivs.Count++;
+            if (gameProgressObject.beatenCount > achievement.NumAwardedHardcore) {
+              gameProgressObject.beatenCount = achievement.NumAwardedHardcore
+            }
+          }
+          if (achievement.type === 'win_condition') {
+            progressionAchivs.WinCount++;
+            if (achievement.NumAwardedHardcore > progressionAchivs.WinAwardedCount) {
+              progressionAchivs.WinAwardedCount = achievement.NumAwardedHardcore;
+            }
+            if (achievement.DateEarnedHardcore) {
+              progressionAchivs.WinEarnedCount++;
+            }
+          }
           achievement.NumAwardedHardcore < gameProgressObject.masteredCount && (
             gameProgressObject.masteredCount = achievement.NumAwardedHardcore
           )
-          // if (achievement.type == 'win_condition') {
-          //   const ratio = achievement.TrueRatio / achievement.Points;
-          //   ratio < lowerWinConditionPoints && (
-          //     lowerWinConditionPoints = { ratio: ratio, TrueRatio: achievement.TrueRatio, Points: achievement.Points }
-          //   )
-          // }
-        })
-      lowerWinConditionPoints.ratio != Infinity && (
-        progressionAchivsPoints.Points += lowerWinConditionPoints.Points,
-        progressionAchivsPoints.TrueRatio += lowerWinConditionPoints.TrueRatio
-      );
-      gameProgressObject.masteredCount != Infinity &&
-        (gameProgressObject.masteryRate = ~~(10000 * gameProgressObject.masteredCount / gameProgressObject.TotalRealPlayers) / 100);
-      gameProgressObject.progressionRetroRatio = ~~(100 * progressionAchivsPoints.TrueRatio / progressionAchivsPoints.Points) / 100;
 
-      const ratio = ~~(gameProgressObject.TotalRetropoints / gameProgressObject.points_total * 100) / 100;
-      gameProgressObject.retroRatio = ratio;
-      gameProgressObject.gameDifficulty = ratio > 9 ? "insane" :
-        ratio > 7 ? "expert" :
-          ratio > 5 ? "pro" :
-            ratio > 3 ? "standard" :
-              "easy"
-      Object.getOwnPropertyNames(gameProgressObject.Achievements)
-        .forEach(id =>
-          this.fixAchievement(gameProgressObject.Achievements[id], gameProgressObject));
-      gameProgressObject = this.fixGameTitle(gameProgressObject);
-      return gameProgressObject;
-    });
+        }
+
+        gameProgressObject.winVariantCount = progressionAchivs.WinCount;
+        gameProgressObject.winEarnedCount = progressionAchivs.WinEarnedCount;
+
+        gameProgressObject.progressionSteps = progressionAchivs.WinCount > 0 ? progressionAchivs.Count + 1 : progressionAchivs.Count;
+
+        progressionAchivs.WinCount > 0 && (gameProgressObject.beatenCount = progressionAchivs.WinAwardedCount)
+
+        gameProgressObject.beatenCount != Infinity &&
+          (gameProgressObject.beatenRate = ~~(10000 * gameProgressObject.beatenCount / gameProgressObject.TotalRealPlayers) / 100);
+
+        gameProgressObject.masteredCount != Infinity &&
+          (gameProgressObject.masteryRate = ~~(10000 * gameProgressObject.masteredCount / gameProgressObject.TotalRealPlayers) / 100);
+
+        const ratio = ~~(gameProgressObject.TotalRetropoints / gameProgressObject.points_total * 100) / 100;
+        gameProgressObject.retroRatio = ratio;
+        gameProgressObject.gameDifficulty = ratio > 9 ? "insane" :
+          ratio > 7 ? "expert" :
+            ratio > 5 ? "pro" :
+              ratio > 3 ? "standard" :
+                "easy"
+        Object.getOwnPropertyNames(gameProgressObject.Achievements)
+          .forEach(id =>
+            this.fixAchievement(gameProgressObject.Achievements[id], gameProgressObject));
+        gameProgressObject = this.fixGameTitle(gameProgressObject);
+        return gameProgressObject;
+      });
   }
 
   // Отримання недавно отриманих досягнень користувача

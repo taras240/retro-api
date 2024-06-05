@@ -64,6 +64,26 @@
   transition: 1s;
 }
 
+/* .update */
+.show-back .status_glass-effect {
+  animation: status-glass-animation 1s ease-in-out forwards;
+  animation-delay: 0s;
+}
+
+@keyframes status-glass-animation {
+  0% {
+    background-position: 100% 0%;
+  }
+
+  80% {
+    background-position: -10% 0%
+  }
+
+  100% {
+    background-position: 10% 0%;
+  }
+}
+
 @keyframes rotate-status-animation {
   0% {
     transform: rotateX(0deg);
@@ -76,6 +96,43 @@
   100% {
     transform: rotateX(180deg);
   }
+}
+
+.status_glass-effect {
+  position: absolute;
+  border-radius: inherit;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background-position: 20% 0%;
+  background-repeat: no-repeat;
+  background-size: 400% 400%;
+  mix-blend-mode: color-dodge;
+  opacity: 1;
+  background-image: linear-gradient(115deg,
+      transparent 0%,
+      transparent 25%,
+      rgba(255, 0, 231, 0.7) 35%,
+      rgba(0, 231, 255, 0.7) 45%,
+      rgba(255, 0, 231, 0.7) 55%,
+      transparent 70%,
+      transparent 100%);
+  z-index: 12;
+  pointer-events: none;
+  animation: status-glass-animation-back 0.5s ease-in-out forwards;
+  animation-delay: 0s;
+}
+
+@keyframes status-glass-animation-back {
+  0% {
+    background-position: 10% 0%;
+  }
+
+  100% {
+    background-position: 120% 0%;
+  }
+
 }
 
 .update_user-status {
@@ -128,21 +185,44 @@
 }
 
 .update_back-side::after {
+  --color: silver;
   content: "";
   position: absolute;
   height: 100%;
-  aspect-ratio: 2 / 1;
-  top: 50%;
-  right: 20px;
-  transform: translate(0, -50%) rotate(45deg);
-  background-image: url(../assets/img/S-rank-1.png);
-  filter: drop-shadow(5px 3px 3px black);
+  aspect-ratio: 1;
+  right: 0px;
+  top: 50px;
+  transform: translate(-100%, -150%);
+  background-color: var(--color);
+  mask-image: url(../assets/img/military_medal.svg);
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
   image-rendering: pixelated;
   background-size: contain;
   background-repeat: no-repeat;
-  top: 50%;
-  right: -20px;
-  z-index: 2;
+  z-index: -1;
+
+}
+
+.new-achiv .update_back-side::after {
+  animation: update-achiv-anim 0.5s linear forwards;
+}
+
+.update_back-side.hardcore::after {
+  --color: gold;
+}
+
+@keyframes update-achiv-anim {
+  from {
+    transform: scale(2) translate(100%, -150%);
+
+  }
+
+  to {
+    transform: scale(1.0) translate(0, -50%);
+
+  }
 }
 
 .new-game-info .update_back-side::after {
@@ -249,7 +329,7 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  height: 140%;
+  height: 150%;
   transform: translate(-50%, -50%);
   aspect-ratio: 1;
   z-index: 3;
@@ -258,12 +338,12 @@
   background-position: center;
 }
 
-.game-border .update_preview-container::after {
-  background-image: url(../assets/img/game-border-5.webp);
+.update_back-side.hardcore .update_preview-container::after {
+  background-image: url(../assets/img/border-8.webp);
 }
 
 .update_back-side .update_preview-container::after {
-  background-image: url(../assets/img/border-8.webp);
+  background-image: url(../assets/img/game-border-5.webp);
 }
 
 .new-game-info .update_back-side .update_preview-container::after {
@@ -567,48 +647,9 @@
   transition-delay: 5s;
 }
 
-.status_glass-effect {
-  position: absolute;
-  border-radius: inherit;
-  width: 100%;
-  height: 100%;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  top: 0;
-  background-position: 110% 0%;
-  background-repeat: no-repeat;
-  background-size: 400% 400%;
-  mix-blend-mode: color-dodge;
-  opacity: 1;
-  animation: none;
-  transition: none;
-  background-image: linear-gradient(115deg,
-      transparent 0%,
-      transparent 25%,
-      rgba(255, 0, 231, 0.7) 35%,
-      rgba(0, 231, 255, 0.7) 45%,
-      rgba(255, 0, 231, 0.7) 55%,
-      transparent 70%,
-      transparent 100%);
-  z-index: 12;
-  pointer-events: none;
-}
 
-.status_glass-effect.update {
-  animation: status-glass-animation 6s ease-in-out forwards;
-  animation-delay: 0s;
-}
 
-@keyframes status-glass-animation {
-  0% {
-    background-position: 110% 0%;
-  }
 
-  100% {
-    background-position: 0% 0%;
-  }
-}
 
 .status__background {
   position: absolute;

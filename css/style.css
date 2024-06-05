@@ -514,6 +514,8 @@ input:checked+.checkbox-input::before {
   --side-panel-width: 90px;
   position: fixed;
   top: 50%;
+  height: 90vh;
+  max-height: 800px;
   width: var(--side-panel-width);
   left: calc(0px - var(--side-panel-width) - 5px);
   transform: translateY(-50%);
@@ -538,13 +540,13 @@ input:checked+.checkbox-input::before {
 .buttons-block_container,
 .buttons-block_widgets {
   align-self: baseline;
-  /* flex: 1; */
+  flex: 1;
   margin: auto 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* justify-content: space-evenly; */
-  gap: 20px;
+  justify-content: space-between;
+  /* gap: 20px; */
   width: 100%;
 }
 
@@ -627,28 +629,23 @@ input[type="checkbox"]:checked+.side-panel_login>img {
   border: 4px solid var(--font-color);
 }
 
-.side-panel_input::after,
-.side-panel_input::before {
+.side-panel_input::after {
   content: "";
   position: absolute;
-  top: 0;
-  left: 50%;
-  width: 0;
-  height: 120%;
-  transform: translateX(-50%);
-  border-bottom: 2px solid var(--font-color);
+  top: 50%;
+  left: 0;
+  width: 2px;
+  height: 0;
+  transform: translateY(-50%);
+  background-color: var(--font-color);
   transition: width 0.2s;
 }
 
-input[type="checkbox"]:checked+.side-panel_input::after,
-input[type="checkbox"]:checked+.side-panel_input::before {
-  width: 50%;
+input[type="checkbox"]:checked+.side-panel_input::after {
+  height: 100%;
 }
 
-.side-panel_input::before {
-  opacity: 0;
-  background: linear-gradient(to top, var(--font-color), transparent);
-}
+
 
 .login-icon {
   position: relative;
@@ -671,7 +668,7 @@ input[type="checkbox"]:checked+.side-panel_input::before {
 }
 
 .side-panel_settings {
-  padding: 15px 0 0;
+  padding: 10px 0;
   position: relative;
 }
 
