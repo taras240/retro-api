@@ -1329,8 +1329,7 @@ class AchievementsBlock {
           : achivWidth;
     this.section.style.setProperty("--achiv-height", achivWidth + "px");
   }
-  autoscrollInterval;
-  delayedAutoScroll;
+  autoscrollInterval = {};
   async updateEarnedAchieves({ earnedAchievementIDs }) {
     await delay(500);
     this.stopAutoScroll();
@@ -1444,10 +1443,10 @@ class AchievementsBlock {
   }
 
   startAutoScroll(toBottom = true) {
-    clearTimeout(this.delayedAutoScroll);
-    clearInterval(this.autoscrollInterval);
+    clearTimeout(this.autoscrollInterval.timeout);
+    clearInterval(this.autoscrollInterval.interval);
     if (this.SMART_AUTOSCROLL && this.isAllEarnedAchievesVisible()) {
-      this.delayedAutoScroll = setTimeout(() => this.startAutoScroll(toBottom), 30 * 1000);
+      this.autoscrollInterval.timeout = setTimeout(() => this.startAutoScroll(toBottom), 30 * 1000);
       return;
     }
     let refreshRateMiliSecs = 50;
@@ -1457,7 +1456,7 @@ class AchievementsBlock {
     const pauseOnEndMilisecs = 5000;
     // Часовий інтервал для прокручування вниз
     if (this.AUTOSCROLL) {
-      this.autoscrollInterval = setInterval(() => {
+      this.autoscrollInterval.interval = setInterval(() => {
         if (scrollContainer.scrollHeight - scrollContainer.clientHeight <= 10) {
           this.stopAutoScroll();
         }
@@ -1467,14 +1466,14 @@ class AchievementsBlock {
             scrollContainer.scrollTop + scrollContainer.clientHeight >=
             scrollContainer.scrollHeight
           ) {
-            clearInterval(this.autoscrollInterval);
-            setTimeout(() => this.startAutoScroll(false), pauseOnEndMilisecs);
+            clearInterval(this.autoscrollInterval.interval);
+            this.autoscrollInterval.timeout = setTimeout(() => this.startAutoScroll(false), pauseOnEndMilisecs);
           }
         } else {
           scrollContainer.scrollTop -= speedInPixels;
           if (scrollContainer.scrollTop === 0) {
-            clearInterval(this.autoscrollInterval);
-            setTimeout(() => this.startAutoScroll(true), pauseOnEndMilisecs);
+            clearInterval(this.autoscrollInterval.interval);
+            this.autoscrollInterval.timeout = setTimeout(() => this.startAutoScroll(true), pauseOnEndMilisecs);
           }
         }
       }, refreshRateMiliSecs);
@@ -1490,7 +1489,8 @@ class AchievementsBlock {
     }
   }
   stopAutoScroll() {
-    clearInterval(this.autoscrollInterval);
+    clearInterval(this.autoscrollInterval.interval);
+    clearTimeout(this.autoscrollInterval.timeout);
   }
   isAllEarnedAchievesVisible() {
     let isVisible = true;
