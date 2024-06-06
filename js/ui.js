@@ -2458,9 +2458,7 @@ class StatusPanel {
       await delay(this.NEW_ACHIV_DURATION * 1000);
       this.container.classList.remove("show-back");
       this.alertsQuery.shift();
-      await delay(this.NEW_ACHIV_DURATION * 500);
-      this.stopAutoScrollElement(this.backSide.earnedPoints, true)
-      await delay(this.NEW_ACHIV_DURATION * 100);
+      this.stopAutoScrollElement(this.backSide.earnedPoints, true);
     }
   }
 

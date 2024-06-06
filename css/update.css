@@ -642,7 +642,7 @@
   left: 0;
   height: 3px;
   border-radius: 5px 0 0 5px;
-  width: 80%;
+  width: var(--progress-points, 0%);
   /* background: linear-gradient(to right, transparent, var(--selection-color) 90%); */
   background-color: greenyellow;
   z-index: 10;
