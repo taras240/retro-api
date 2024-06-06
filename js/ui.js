@@ -2290,10 +2290,6 @@ class StatusPanel {
     //show new achivs in statusPanel
     if (this.SHOW_NEW_ACHIV && earnedAchievementIDs.length) {
       const checkForGameAward = () => {
-        let award = {
-          type: "new-award",
-          value: ui.GAME_DATA
-        };
         if (ui.GAME_DATA.award !== 'mastered'
           && this.stats.earnedAchievesCount == this.stats.totalAchievesCount) {
           ui.GAME_DATA.award = 'mastered';
