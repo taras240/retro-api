@@ -194,7 +194,6 @@
   top: 50px;
   transform: translate(-100%, -150%);
   background-color: var(--color);
-  mask-image: url(../assets/img/military_medal.svg);
   mask-position: center;
   mask-repeat: no-repeat;
   mask-size: contain;
@@ -205,10 +204,17 @@
 
 }
 
-.new-achiv .update_back-side::after {
+.new-award .update_back-side::after {
+  mask-image: url(../assets/img/trophy.svg);
   animation: update-achiv-anim 0.5s linear forwards;
 }
 
+.new-achiv .update_back-side::after {
+  mask-image: url(../assets/img/military_medal.svg);
+  animation: update-achiv-anim 0.5s linear forwards;
+}
+
+.update_back-side.mastered::after,
 .update_back-side.hardcore::after {
   --color: gold;
 }

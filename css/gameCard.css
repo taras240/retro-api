@@ -28,6 +28,10 @@
   text-transform: uppercase;
 }
 
+.bg_gold {
+  background-color: goldenrod;
+}
+
 .game-card_container {
   flex: 1;
   display: flex;

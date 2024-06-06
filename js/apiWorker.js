@@ -140,7 +140,12 @@ class APIWorker {
         gameProgressObject.beatenCount = Infinity;
         gameProgressObject.masteredCount = Infinity;
         let progressionAchivs = { Count: 0, WinCount: 0, WinAwardedCount: 0, WinEarnedCount: 0 };
-
+        const awards = {
+          isBeaten: true,
+          isBeatenSoftcore: true,
+          isWinEarned: false,
+          isWinEarnedSoftcore: false,
+        }
         for (let achievement of Object.values(gameProgressObject.Achievements)) {
           gameProgressObject.TotalRetropoints += achievement.TrueRatio;
 
@@ -151,11 +156,27 @@ class APIWorker {
 
           if (achievement.type === 'progression') {
             progressionAchivs.Count++;
+
+            if (!achievement.DateEarned) {
+              awards.isBeaten = false;
+              awards.isBeatenSoftcore = false;
+            }
+            else if (!achievement.DateEarnedHardcore) {
+              awards.isBeaten = false;
+            }
+
             if (gameProgressObject.beatenCount > achievement.NumAwardedHardcore) {
               gameProgressObject.beatenCount = achievement.NumAwardedHardcore
             }
           }
           if (achievement.type === 'win_condition') {
+            if (achievement.DateEarnedHardcore) {
+              awards.isWinEarned = true;
+              awards.isWinEarnedSoftcore = true;
+            }
+            else if (achievement.DateEarned) {
+              awards.isWinEarnedSoftcore = true;
+            }
             progressionAchivs.WinCount++;
             if (achievement.NumAwardedHardcore > progressionAchivs.WinAwardedCount) {
               progressionAchivs.WinAwardedCount = achievement.NumAwardedHardcore;
@@ -170,11 +191,16 @@ class APIWorker {
 
         }
 
+        if (gameProgressObject.achievements_published == gameProgressObject.NumAwardedToUserHardcore) {
+          gameProgressObject.award = 'mastered'
+        }
+        else if (awards.isBeaten && (awards.isWinEarned || progressionAchivs.WinCount == 0)) {
+          gameProgressObject.award = 'beaten';
+        }
+
         gameProgressObject.winVariantCount = progressionAchivs.WinCount;
         gameProgressObject.winEarnedCount = progressionAchivs.WinEarnedCount;
-
         gameProgressObject.progressionSteps = progressionAchivs.WinCount > 0 ? progressionAchivs.Count + 1 : progressionAchivs.Count;
-
         progressionAchivs.WinCount > 0 && (gameProgressObject.beatenCount = progressionAchivs.WinAwardedCount)
 
         gameProgressObject.beatenCount != Infinity &&

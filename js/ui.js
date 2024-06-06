@@ -269,6 +269,7 @@ class UI {
     gamePlatform.innerText = ConsoleName || "";
     this.statusPanel.updateData();
   }
+
   static updateAchievementsSection({ widget, earnedAchievementIDs }) {
     earnedAchievementIDs.forEach((id) => {
       const achievement = ui.ACHIEVEMENTS[id];
@@ -1092,8 +1093,8 @@ class AchievementsBlock {
   }
   addEvents() {
     // Додавання подій для пересування вікна ачівментсів
-    this.section.addEventListener("mousedown", (e) => {
-      UI.moveEvent(this.section, e);
+    this.section.addEventListener("mousedown", (event) => {
+      UI.moveEvent(this.section, event);
     });
     this.section.addEventListener("contextmenu", (event) => {
       ui.showContextmenu({
@@ -1115,7 +1116,7 @@ class AchievementsBlock {
         },
       });
     });
-    this.resizer.addEventListener("mouseup", (e) => {
+    this.resizer.addEventListener("mouseup", () => {
       this.startAutoScroll();
     });
     UI.addDraggingEventForElements(this.container);
@@ -1136,16 +1137,23 @@ class AchievementsBlock {
     }
   }
 
-  clearAchievementsSection() {
-    this.container.innerHTML = "";
-  }
+
   // Розбирає отримані досягнення гри та відображає їх на сторінці
   parseGameAchievements(achivs) {
+    const clearAchievementsSection = () => {
+      this.container.innerHTML = "";
+    }
+    const addAchievementsToContainer = (achievementsObject) => {
+      Object.values(achievementsObject.Achievements).forEach((achievement) => {
+        const achivElement = this.generateAchievement(achievement);
+        this.container.appendChild(achivElement);
+      });
+    }
     // Очистити вміст розділу досягнень
-    this.clearAchievementsSection();
+    clearAchievementsSection();
 
     // Відсортувати досягнення та відобразити їх
-    this.displayAchievements(achivs);
+    addAchievementsToContainer(achivs);
 
     // Підгонка розміру досягнень
     this.fitSizeVertically();
@@ -1153,137 +1161,113 @@ class AchievementsBlock {
     this.applyFilter();
     this.applySorting();
     this.startAutoScroll();
-    //Додаєм можливість перетягування елементів
-
-  }
-
-  displayAchievements(achievementsObject) {
-    Object.values(achievementsObject.Achievements).forEach((achievement) => {
-      const achivElement = this.generateAchievement(achievement);
-      this.container.appendChild(achivElement);
-    });
   }
 
   generateAchievement(achievement) {
-    const {
-      ID,
-      Points,
-      TrueRatio,
-      isEarned,
-      isHardcoreEarned,
-      prevSrc,
-      NumAwardedHardcore,
-      DateEarnedHardcore,
-      type,
-      DisplayOrder,
-    } = achievement;
-
-    let achivElement = document.createElement("li");
-    achivElement.classList.add("achiv-block");
-    this.SHOW_PREV_OVERLAY && achivElement.classList.add("overlay");
-    if (isEarned) {
-      achivElement.classList.add("earned");
-      if (isHardcoreEarned) {
-        achivElement.classList.add("hardcore");
-      }
+    //------- Achievement-----------
+    function setClasses(widget) {
+      achivElement.classList.add("achiv-block");
+      achivElement.classList.toggle("overlay", widget.SHOW_PREV_OVERLAY);
+      achivElement.classList.toggle("earned", achievement.isEarned);
+      achivElement.classList.toggle("hardcore", achievement.isHardcoreEarned);
     }
+    function setData() {
+      achivElement.dataset.achivId = achievement.ID;
+      achivElement.dataset.Points = achievement.Points;
+      achivElement.dataset.TrueRatio = achievement.TrueRatio;
+      achivElement.dataset.DisplayOrder = achievement.DisplayOrder;
+      achivElement.dataset.type = achievement.type;
+      achivElement.dataset.NumAwardedHardcore = achievement.NumAwardedHardcore;
+      achievement.DateEarnedHardcore && (achivElement.dataset.DateEarnedHardcore = achievement.DateEarnedHardcore);
 
-    achivElement.dataset.achivId = ID;
-    achivElement.dataset.Points = Points;
-    achivElement.dataset.TrueRatio = TrueRatio;
-    achivElement.dataset.DisplayOrder = DisplayOrder;
-
-    achivElement.dataset.NumAwardedHardcore = NumAwardedHardcore;
-    DateEarnedHardcore
-      ? (achivElement.dataset.DateEarnedHardcore = DateEarnedHardcore)
-      : "";
-    achivElement.dataset.type = type;
-    achivElement.innerHTML = `
+    }
+    function setHtmlCode() {
+      achivElement.innerHTML = `
       <div class="preview-container">
-        <img class="achiv-preview" src="${prevSrc}"/>
+        <img class="achiv-preview" src="${achievement.prevSrc}"/>
       </div>
-      <button class="add-to-target" onclick="ui.target.addAchieveToTarget(${ID})">
+      <button class="add-to-target" onclick="ui.target.addAchieveToTarget(${achievement.ID})">
         <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
           <path d="M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160Zm40 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
         </svg>
       </button>
-    `;
-
-    achivElement.addEventListener("mouseover", (e) => {
-      const popUp = this.generateAchivDetails(achievement);
-      ui.wrapper.querySelectorAll(".popup").forEach((popup) => popup.remove());
-      popUp.classList.add("popup");
-      ui.wrapper.appendChild(popUp);
-
+      `;
+    }
+    function setEvents() {
+      achivElement.addEventListener("mouseover", mouseOverEvent);
+      achivElement.addEventListener("mouseleave", removePopups);
+      achivElement.addEventListener("mousedown", (e) => {
+        e.stopPropagation();
+      });
+    }
+    //------- Popup-----------
+    function setPopupPosition(popup, achivElement) {
+      //Start position relative achievement element
       const rect = achivElement.getBoundingClientRect();
       const leftPos = rect.left + achivElement.offsetWidth + 8;
       const topPos = rect.top + 2;
-      popUp.style.left = leftPos + "px";
-      popUp.style.top = topPos + "px";
-      this.fixDetailsPosition(popUp);
-      requestAnimationFrame(() => popUp.classList.add("visible"));
-    });
-    achivElement.addEventListener("mouseleave", (e) => {
-      ui.wrapper.querySelectorAll(".popup").forEach((popup) => popup.remove());
-    });
-    //!----------[ CONTEXT MENU ]---------------
 
-    achivElement.addEventListener("mousedown", (e) => {
-      e.stopPropagation();
-    });
+      popup.style.left = leftPos + "px";
+      popup.style.top = topPos + "px";
+
+      //Check for collisions and fix position
+      let { left, right, top, bottom } = popup.getBoundingClientRect();
+      if (left < 0) {
+        popup.classList.remove("left-side");
+      }
+      if (right > window.innerWidth) {
+        popup.classList.add("left-side");
+      }
+      if (top < 0) {
+        popup.classList.remove("top-side");
+      } else if (bottom > window.innerHeight) {
+        popup.classList.add("top-side");
+      }
+    }
+    function mouseOverEvent() {
+      function generatePopup(achievement) {
+        let popup = document.createElement("div");
+        popup.classList.add("achiv-details-block", "popup");
+        popup.innerHTML = `
+          <h3 class="achievement__header">${achievement.Title} <p class="difficult-badge difficult-badge__${achievement.difficulty}">${achievement.difficulty}</p>
+          </h3>
+          <p>${achievement.Description}</p>
+          <p>Earned by ${achievement.NumAwardedHardcore} of ${achievement.totalPlayers} players</p>
+          <div class="points">
+            <p><i class="target_description-icon  points-icon"></i>${achievement.Points}</p>
+            <p><i class="target_description-icon  retropoints-icon"></i>${achievement.TrueRatio} </p> 
+            <i class="target_description-icon ${achievement.type ?? "none"}"></i>            
+          </div>
+          ${achievement.DateEarnedHardcore
+            ? "<p>Earned hardcore: " + fixTimeString(achievement.DateEarnedHardcore) + "</p>"
+            : achievement.DateEarned
+              ? "<p>Earned softcore: " + fixTimeString(achievement.DateEarned) + "</p>"
+              : ""
+          }
+        `;
+        return popup;
+      }
+      removePopups();
+
+      const popup = generatePopup(achievement);
+      ui.wrapper.appendChild(popup);
+
+      setPopupPosition(popup, achivElement);
+      requestAnimationFrame(() => popup.classList.add("visible"));
+    }
+    function removePopups() {
+      document.querySelectorAll(".popup").forEach((popup) => popup.remove());
+    }
+
+    const achivElement = document.createElement("li");
+    setClasses(this);
+    setData();
+    setHtmlCode();
+    setEvents();
+
     return achivElement;
   }
 
-  generateAchivDetails({
-    Title,
-    Description,
-    DateEarned,
-    DateEarnedHardcore,
-    Points,
-    TrueRatio,
-    NumAwardedHardcore,
-    totalPlayers,
-    difficulty,
-    type
-  }) {
-    let detailsElement = document.createElement("div");
-    detailsElement.classList.add("achiv-details-block");
-    detailsElement.dataset.pointStyle =
-      Points < 10 ? "poor" : Points < 20 ? "normal" : "reach";
-    detailsElement.innerHTML = `
-      <h3 class="achievement__header">  <i class="target_description-icon ${type ?? "none"}" title="achievement type"></i> 
-      ${Title}
-        <p class="difficult-badge difficult-badge__${difficulty}">${difficulty}</p>
-      </h3>
-      <p>${Description}</p>
-      <p>Earned by ${NumAwardedHardcore} of ${totalPlayers} players</p>
-      <div class="points">
-        <p><i class="target_description-icon  points-icon"></i>${Points}</p>
-        <p><i class="target_description-icon  retropoints-icon"></i>${TrueRatio} </p>             
-      </div>
-      ${DateEarnedHardcore
-        ? "<p>Earned hardcore: " + fixTimeString(DateEarnedHardcore) + "</p>"
-        : DateEarned
-          ? "<p>Earned softcore: " + fixTimeString(DateEarned) + "</p>"
-          : ""
-      }
-    `;
-    return detailsElement;
-  }
-  fixDetailsPosition(achivDetails) {
-    let { left, right, top, bottom } = achivDetails.getBoundingClientRect();
-    if (left < 0) {
-      achivDetails.classList.remove("left-side");
-    }
-    if (right > window.innerWidth) {
-      achivDetails.classList.add("left-side");
-    }
-    if (top < 0) {
-      achivDetails.classList.remove("top-side");
-    } else if (bottom > window.innerHeight) {
-      achivDetails.classList.add("top-side");
-    }
-  }
   moveToTop(element) {
     if (this.REVERSE_SORT == 1) {
       this.container.prepend(element);
@@ -2274,14 +2258,15 @@ class StatusPanel {
       else if (achievement.isEarned) {
         this.stats.earnedSoftpoints += achievement.Points;
       }
-
     });
     ui.GAME_DATA.winEarnedCount > 0 && (this.stats.earnedProgressionCount = ui?.GAME_DATA?.progressionSteps)
+    ui.GAME_DATA.earnedPoints = this.stats.earnedPoints;
+    ui.GAME_DATA.earnedRetropoints = this.stats.earnedRetropoints;
 
     this.setValues();
   }
   async gameChangeEvent() {
-    apiTrackerInterval && (this.addAlertsToQuery([{ type: "new-game", value: ui.GAME_DATA }]), await delay(3000));
+    (apiTrackerInterval && this.SHOW_NEW_ACHIV) && (this.addAlertsToQuery([{ type: "new-game", value: ui.GAME_DATA }])); //removed delay(3000)
     const { ImageIcon, FixedTitle, ConsoleName, sufixes } = ui.GAME_DATA;
     const { gamePreview, gameTitle, gamePlatform } = this;
     gamePreview.setAttribute(
@@ -2301,18 +2286,50 @@ class StatusPanel {
   }
   updateProgress({ earnedAchievementIDs }) {
     this.updateData();
-    this.startAnimation();
 
     //show new achivs in statusPanel
-    this.SHOW_NEW_ACHIV && this.addAlertsToQuery([...earnedAchievementIDs.map(id => { return { type: 'new-achiv', value: ui.ACHIEVEMENTS[id] } })]);
+    if (this.SHOW_NEW_ACHIV && earnedAchievementIDs.length) {
+      const checkForGameAward = () => {
+        let award = {
+          type: "new-award",
+          value: ui.GAME_DATA
+        };
+        if (ui.GAME_DATA.award !== 'mastered'
+          && this.stats.earnedAchievesCount == this.stats.totalAchievesCount) {
+          ui.GAME_DATA.award = 'mastered';
+          award = {
+            type: "new-award",
+            value: ui.GAME_DATA
+          }
+        }
+        else if (ui.GAME_DATA.award !== 'beaten' &&
+          this.stats.earnedProgressionCount == this.stats.totalProgressionCount) {
+          ui.GAME_DATA.award = 'beaten';
+          award = {
+            type: "new-award",
+            value: ui.GAME_DATA
+          }
+        }
+        return award;
+      }
+      const alerts = earnedAchievementIDs
+        .map(id => {
+          return {
+            type: 'new-achiv',
+            value: ui.ACHIEVEMENTS[id]
+          }
+        });
+      const award = checkForGameAward();
+      award && alerts.push(award);
+      this.addAlertsToQuery([...alerts]);
+    }
 
     //push points toggle animation
     this.progresBarDelta.classList.remove("hidden");
 
     setTimeout(() => this.progresBarDelta.classList.add("hidden"), 50)
   }
-  alertsQuery = []
-  newAchievementsIDs = [];
+  alertsQuery = [];
   addAlertsToQuery(elements) {
     if (this.alertsQuery.length > 0) {
       this.alertsQuery = [...this.alertsQuery, ...elements];
@@ -2323,6 +2340,15 @@ class StatusPanel {
     }
   }
   async startAlerts() {
+    const clearContainer = () => {
+      this.container.classList.remove("new-game-info", "new-achiv", "new-award", "beaten");
+      this.backSide.container.classList.remove("hardcore", "beaten", "mastered");
+    }
+    const glassAnimation = () => {
+      const glassElement = this.section.querySelector(".status_glass-effect");
+      glassElement.classList.remove("update");
+      setTimeout(() => glassElement.classList.add("update"), 20);
+    }
     const updateGameData = (game) => {
       const { FixedTitle,
         sufixes,
@@ -2347,8 +2373,6 @@ class StatusPanel {
       `;
       this.backSide.earnedPoints.innerHTML = gameInfo;
       this.container.classList.add("new-game-info");
-      this.container.classList.remove("new-achiv");
-      this.backSide.container.classList.remove("hardcore");
     }
     const updateAchivData = (achiv) => {
       const { isHardcoreEarned, Title, prevSrc, Points, TrueRatio, rateEarned, rateEarnedHardcore, difficulty } = achiv;
@@ -2365,17 +2389,48 @@ class StatusPanel {
         <p class="status__difficult-badge difficult-badge__pro">TOP${rateEarned}</p>`;
       this.backSide.earnedPoints.innerHTML = earnedPoints;
       this.backSide.container.classList.toggle("hardcore", achiv.isHardcoreEarned);
-      this.container.classList.remove("new-game-info", "new-achiv");
-
       setTimeout(() => this.container.classList.add("new-achiv"), 2000)
     }
+    const updateAwardData = (game) => {
+      const { FixedTitle,
+        sufixes,
+        ImageIcon,
+        points_total,
+        earnedPoints,
+        earnedRetropoints,
+        TotalRetropoints,
+        masteryRate,
+        beatenRate,
+        award,
+        ID
+      } = game;
+      // let award = 'mastered';
+      const playTimeInMinutes = ~~(config.ui.update_section.playTime[ID] / 60) ?? '--:--';
+      const awardRate = award == 'mastered' ? masteryRate : beatenRate;
+      this.backSide.imgElement.src = `https://media.retroachievements.org${ImageIcon}`;
+      this.backSide.achivTitleElement.innerHTML = `${FixedTitle} ${generateBadges(sufixes)}
+      <i class="game-card_suffix bg_gold">GAINED AWARD</i>
+      `;
+      let gameInfo = `
+      <p class="status__difficult-badge difficult-badge__pro">${award} IN ${playTimeInMinutes}MINs</p>
+      <p class="status__difficult-badge difficult-badge__pro">TOP${awardRate}%</p>
+      <p class="status__difficult-badge difficult-badge__pro">${earnedPoints}/${points_total} HP</p>
+      <p class="status__difficult-badge difficult-badge__pro">${earnedRetropoints}/${TotalRetropoints} RP</p>`;
+      this.backSide.earnedPoints.innerHTML = gameInfo;
+      this.backSide.container.classList.add(award);
+      setTimeout(() => this.container.classList.add("new-award"), 1000)
+    }
     const updateAlertData = (alert) => {
+      clearContainer();
       switch (alert.type) {
         case "new-game":
           updateGameData(alert.value);
           break;
         case "new-achiv":
           updateAchivData(alert.value);
+          break;
+        case "new-award":
+          updateAwardData(alert.value);
           break;
         default:
           break;
@@ -2386,7 +2441,7 @@ class StatusPanel {
       await delay(1000);
       updateAlertData(this.alertsQuery[0])
       this.container.classList.add("show-back");
-      this.startAnimation();
+      glassAnimation();
       setTimeout(() => this.startAutoScrollElement(this.backSide.earnedPoints), 2000);
       //back to main information in status panel
       await delay(this.NEW_ACHIV_DURATION * 1000);
@@ -2394,12 +2449,6 @@ class StatusPanel {
       this.alertsQuery.shift();
       this.stopAutoScrollElement(this.backSide.earnedPoints, true)
     }
-  }
-
-  startAnimation() {
-    const glassElement = this.section.querySelector(".status_glass-effect");
-    glassElement.classList.remove("update");
-    setTimeout(() => glassElement.classList.add("update"), 20);
   }
 
   statsAnimationInterval;
