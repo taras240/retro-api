@@ -1,5 +1,5 @@
 class UI {
-  VERSION = "0.20";
+  VERSION = "0.25";
   static AUTOCLOSE_CONTEXTMENU = false;
   static STICK_MARGIN = 10;
 
@@ -11,11 +11,12 @@ class UI {
   }
   set GAME_DATA(gameObject) {
     if (this.GAME_DATA && gameObject.ID != this.GAME_DATA?.ID) {
+
       this.notifications.pushNotification({ type: this.notifications.types.newGame, elements: gameObject });
     }
     this._gameData = gameObject;
-    this.achievementsBlock.forEach((widgetClone) =>
-      widgetClone.parseGameAchievements(this.GAME_DATA)
+    this.achievementsBlock.forEach((widget) =>
+      widget.parseGameAchievements(this.GAME_DATA)
     );
     // this.updateGameInfo(this.GAME_DATA);
     this.statusPanel.gameChangeEvent();
@@ -2265,8 +2266,11 @@ class StatusPanel {
 
     this.setValues();
   }
-  async gameChangeEvent() {
-    (apiTrackerInterval && this.SHOW_NEW_ACHIV) && (this.addAlertsToQuery([{ type: "new-game", value: ui.GAME_DATA }])); //removed delay(3000)
+  gameChangeEvent() {
+    if (ui.GAME_DATA.FixedTitle != this.stats.gameTitle && apiTrackerInterval) {
+      this.addAlertsToQuery([{ type: "new-game", value: ui.GAME_DATA }]);
+    }
+
     const { ImageIcon, FixedTitle, ConsoleName, sufixes } = ui.GAME_DATA;
     const { gamePreview, gameTitle, gamePlatform } = this;
     gamePreview.setAttribute(
@@ -2282,7 +2286,6 @@ class StatusPanel {
     this.updateData();
     this.gameTime = config.ui.update_section.playTime[config.gameID] ? config.ui.update_section.playTime[config.gameID] : 0;
     this.sessionGameTime = 0;
-
   }
   updateProgress({ earnedAchievementIDs }) {
     this.updateData();
@@ -2328,6 +2331,7 @@ class StatusPanel {
   }
   alertsQuery = [];
   addAlertsToQuery(elements) {
+    if (!this.SHOW_NEW_ACHIV) return;
     if (this.alertsQuery.length > 0) {
       this.alertsQuery = [...this.alertsQuery, ...elements];
     }
@@ -2345,6 +2349,16 @@ class StatusPanel {
       const glassElement = this.section.querySelector(".status_glass-effect");
       glassElement.classList.remove("update");
       setTimeout(() => glassElement.classList.add("update"), 20);
+    }
+    const deltaTime = (time) => {
+      const hours = ~~(time / 3600);
+      const mins = ~~((time - hours * 3600) / 60);
+      const timeStr = `
+        ${hours > 0 ? hours == 1 ? "1 hour " : hours + " hours " : ""}
+        ${hours > 0 && mins > 0 ? "and " : ""}
+        ${mins > 0 ? mins == 1 ? "1 minute" : mins + " minutes" : ""}
+      `;
+      return timeStr;
     }
     const updateGameData = (game) => {
       const { FixedTitle,
@@ -2365,8 +2379,8 @@ class StatusPanel {
       <p class="status__difficult-badge difficult-badge__pro">${points_total} HP</p>
       <p class="status__difficult-badge difficult-badge__pro">${TotalRetropoints} RP</p>
       <p class="status__difficult-badge difficult-badge__pro">${achievements_published} CHEEVOS</p> 
-      <p class="status__difficult-badge difficult-badge__pro">${masteryRate}% MASTERED</p>
-      ${beatenRate ? `<p class="status__difficult-badge difficult-badge__pro">${beatenRate}% BEATEN</p>` : ''}
+      <p class="status__difficult-badge difficult-badge__pro">${masteryRate}% MASTERED RATE</p>
+      ${beatenRate ? `<p class="status__difficult-badge difficult-badge__pro">${beatenRate}% BEATEN RATE</p>` : ''}
       `;
       this.backSide.earnedPoints.innerHTML = gameInfo;
       this.container.classList.add("new-game-info");
@@ -2402,14 +2416,14 @@ class StatusPanel {
         ID
       } = game;
       // let award = 'mastered';
-      const playTimeInMinutes = ~~(config.ui.update_section.playTime[ID] / 60) ?? '--:--';
+      const playTimeInMinutes = deltaTime(config.ui.update_section.playTime[ID]);
       const awardRate = award == 'mastered' ? masteryRate : beatenRate;
       this.backSide.imgElement.src = `https://media.retroachievements.org${ImageIcon}`;
       this.backSide.achivTitleElement.innerHTML = `${FixedTitle} ${generateBadges(sufixes)}
       <i class="game-card_suffix bg_gold">GAINED AWARD</i>
       `;
       let gameInfo = `
-      <p class="status__difficult-badge difficult-badge__pro">${award} IN ${playTimeInMinutes}MINs</p>
+      <p class="status__difficult-badge difficult-badge__pro">${award} IN ${playTimeInMinutes}</p>
       <p class="status__difficult-badge difficult-badge__pro">TOP${awardRate}%</p>
       <p class="status__difficult-badge difficult-badge__pro">${earnedPoints}/${points_total} HP</p>
       <p class="status__difficult-badge difficult-badge__pro">${earnedRetropoints}/${TotalRetropoints} RP</p>`;
@@ -2444,7 +2458,9 @@ class StatusPanel {
       await delay(this.NEW_ACHIV_DURATION * 1000);
       this.container.classList.remove("show-back");
       this.alertsQuery.shift();
+      await delay(this.NEW_ACHIV_DURATION * 500);
       this.stopAutoScrollElement(this.backSide.earnedPoints, true)
+      await delay(this.NEW_ACHIV_DURATION * 100);
     }
   }
 
@@ -2621,7 +2637,7 @@ class StatusPanel {
   }
   fitFontSize() {
     const container = document.querySelector(".update_container");
-    const containerHeight = this.section.getBoundingClientRect().height;
+    const containerHeight = config?.ui?.update_section?.height ?? this.section.getBoundingClientRect().height;
     container.style.fontSize = `${(containerHeight - 10) / 5.5}px`;
   }
 

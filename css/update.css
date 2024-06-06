@@ -150,16 +150,18 @@
 .update_user-status::after {
   content: '';
   position: absolute;
-  bottom: 1px;
+  bottom: 2px;
   left: 0;
   width: 100%;
-  height: 5px;
+  height: 3px;
   background-color: var(--font-color);
   opacity: 0.06;
   z-index: 10;
 }
 
 .update_user-status::before {
+  bottom: 0;
+  height: 7px;
   background-color: var(--main-color);
   z-index: 9;
   opacity: 1;
@@ -380,7 +382,7 @@
   /* animation-delay: var(--animation-duration); */
   z-index: 2;
   transition: var(--animation-duration);
-  margin-bottom: 6px;
+  padding-bottom: 6px;
   pointer-events: none;
 }
 
@@ -541,7 +543,7 @@
   color: black;
   font-size: 1em;
   font-weight: 600;
-  padding: 0 .2em 1px;
+  padding: 0 .2em 2px;
   border-radius: 0 5px 0 0;
   line-height: 1em;
 }
@@ -636,13 +638,13 @@
 
 .progress-bar_delta-values {
   position: absolute;
-  bottom: 1px;
+  bottom: 2px;
   left: 0;
-  height: 5px;
+  height: 3px;
   border-radius: 5px 0 0 5px;
-  width: var(--progress-points, 0%);
+  width: 80%;
   /* background: linear-gradient(to right, transparent, var(--selection-color) 90%); */
-  background-color: var(--selection-color);
+  background-color: greenyellow;
   z-index: 10;
   transition: none;
 }
