@@ -1111,14 +1111,11 @@ class Library {
     // "999": "etc.",
   }
   applyFilter() {
-    // this.games = this.GAMES[this.platformFilterCode];
-
     this.games = this.platformFilterCode == "all" ? this.GAMES :
-      this.GAMES.filter(game => game.ConsoleID === this.platformFilterCode);
+      this.GAMES.filter(game => game.ConsoleID == this.platformFilterCode);
     if (this.titleFilter) {
-      let regex = new RegExp(this.titleFilter, "i");
-      this.games = this.games.filter(game => regex.test(game?.Title));
-
+      let regex = new RegExp(this.titleFilter, "gi");
+      this.games = this.games.filter(game => game?.FixedTitle.match(regex));
     }
   }
   applySort() {
