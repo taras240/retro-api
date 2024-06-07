@@ -530,6 +530,7 @@ class Home {
 
 }
 class Awards {
+
   awardTypeContext = () => {
     return {
       label: "Filter by type",
@@ -624,6 +625,33 @@ class Awards {
       ]
     }
   }
+  awardListContext = () => {
+    return {
+      label: "Show by",
+      elements: [
+        ...Object.getOwnPropertyNames(this.listTypes).reduce((elems, type) => {
+          const typeObj = {
+            label: `${this.listTypes[type]}`,
+            id: `awards_list-type-${type}`,
+            type: "radio",
+            onChange: `ui.awards.listType = '${type}'`,
+            checked: this.listType == type,
+            name: "awards-list-type"
+          };
+          elems.push(typeObj);
+          return elems;
+        }, [])
+      ]
+    }
+  }
+  get listType() {
+    return config.ui?.mobile?.listType ?? "list";
+  }
+  set listType(value) {
+    config.ui.mobile.listType = value;
+    config.writeConfiguration();
+    this.update();
+  }
   get awardFilter() {
     const type = config.ui?.mobile?.awardsTypeFilter ?? "award";
     return this.awardTypesNames[type]
@@ -690,6 +718,11 @@ class Awards {
       this.awardedGames
         .filter(game => game.ConsoleID == this.platformFilterCode));
   }
+
+  listTypes = {
+    list: 'list',
+    grid: 'grid'
+  }
   awardTypesNames = {
     beaten: "Beaten",
     beaten_softcore: "Beaten Softcore",
@@ -751,7 +784,7 @@ class Awards {
     awardsSection.classList.add("awards__section");
     awardsSection.innerHTML = `
             ${this.headerHtml()}
-            <ul class="user-info__awards-list">
+            <ul class="user-info__awards-list ${this.listType}">
                 ${this.awardedGames.reduce((elements, game) => {
       const awardHtml = this.gameHtml(game);
       elements += awardHtml;
@@ -770,13 +803,16 @@ class Awards {
             <button class=" simple-button" onclick="generateContextMenu(ui.awards.awardSortContext(),event)">Sort</button>
             <button class=" simple-button" onclick="generateContextMenu(ui.awards.awardPlatformContext(),event)">${this.platformFilterName ?? "Platform"}</button>
             <button class=" simple-button" onclick="generateContextMenu(ui.awards.awardTypeContext(),event)">${this.awardFilter}</button>
-        </div>
+            <button class="simple-button" onclick="generateContextMenu(ui.awards.awardListContext(),event)">${this.listType}</button>
+            </div>
+        
+
       </div>
     `;
   }
   gameHtml(game) {
     return `    
-            <li class="awards__game-item" data-id="${game.AwardData}">
+            <li class="awards__game-item ${game.award}" data-id="${game.AwardData}">
                 <div class="awards__game-container"  onclick="ui.showGameDetails(${game.AwardData}); event.stopPropagation()">
                     <div class="awards__game-preview-container" onclick="ui.goto.game(${game.AwardData}); event.stopPropagation()">
                         <img class="awards__game-preview" src="https://media.retroachievements.org${game.ImageIcon}" alt="">
@@ -794,6 +830,18 @@ class Awards {
                            
                         </div>
                     </div>
+                </div>
+            </li>
+        `;
+  }
+  gameGridHtml(game) {
+    return `    
+            <li class="awards__game-item ${game.award}" data-id="${game.AwardData}">
+                <div class="awards__game-container"  onclick="ui.showGameDetails(${game.AwardData}); event.stopPropagation()">
+                    <div class="awards__game-preview-container" onclick="ui.goto.game(${game.AwardData}); event.stopPropagation()">
+                        <img class="awards__game-preview" src="https://media.retroachievements.org${game.ImageIcon}" alt="">
+                    </div>
+                    
                 </div>
             </li>
         `;
