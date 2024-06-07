@@ -5901,7 +5901,7 @@ function lazyLoad({ list, items, callback }) {
 
   // Ініціалізація списку з початковими елементами
   let itemIndex = 0;
-  const initialLoadCount = 50;
+  const initialLoadCount = 40;
   const loadItems = (count) => {
     for (let i = 0; i < count && itemIndex < items.length; i++) {
       list.appendChild(callback(items[itemIndex++]));
@@ -5917,7 +5917,7 @@ function lazyLoad({ list, items, callback }) {
         // Оновлюємо спостереження
         observer.unobserve(trigger);
         list.appendChild(trigger);
-        observer.observe(trigger);
+        itemIndex < items.length && observer.observe(trigger);
       }
     });
   };

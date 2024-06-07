@@ -27,7 +27,7 @@ function submitRAData() {
           userObj: userObj,
         });
 
-        // setTimeout(() => { ui.goto.home(); location.reload(true) }, 1000)
+        setTimeout(() => { ui.goto.home(); location.reload(true) }, 1000)
       }
     });
 

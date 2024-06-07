@@ -429,7 +429,7 @@ class Home {
 
   HomeSection() {
     const homeSection = document.createElement("section");
-    homeSection.classList.add("home__section");
+    homeSection.classList.add("home__section", "section");
     homeSection.innerHTML = `
         
             ${this.headerHtml()}
@@ -759,6 +759,8 @@ class Awards {
     ui.content.innerHTML = '';
     ui.content.append(section);
     ui.removeLoader();
+    const awardsList = section.querySelector(".user-info__awards-list");
+    lazyLoad({ list: awardsList, items: this.awardedGames, callback: this.getGameElement })
   }
   getAwardsStats() {
     const stats = AWARDS.VisibleUserAwards
@@ -780,16 +782,17 @@ class Awards {
     !AWARDS && (AWARDS = await apiWorker.getUserAwards({}));
   }
   AwardsSection() {
+    // ${this.awardedGames.reduce((elements, game) => {
+    //   const awardHtml = this.gameHtml(game);
+    //   elements += awardHtml;
+    //   return elements;
+    // }, "")}
     const awardsSection = document.createElement("section");
-    awardsSection.classList.add("awards__section");
+    awardsSection.classList.add("awards__section", "section");
     awardsSection.innerHTML = `
             ${this.headerHtml()}
             <ul class="user-info__awards-list ${this.listType}">
-                ${this.awardedGames.reduce((elements, game) => {
-      const awardHtml = this.gameHtml(game);
-      elements += awardHtml;
-      return elements;
-    }, "")}
+               
             </ul>
         </div>
         `;
@@ -810,41 +813,31 @@ class Awards {
       </div>
     `;
   }
-  gameHtml(game) {
-    return `    
-            <li class="awards__game-item ${game.award}" data-id="${game.AwardData}">
-                <div class="awards__game-container"  onclick="ui.showGameDetails(${game.AwardData}); event.stopPropagation()">
-                    <div class="awards__game-preview-container" onclick="ui.goto.game(${game.AwardData}); event.stopPropagation()">
-                        <img class="awards__game-preview" src="https://media.retroachievements.org${game.ImageIcon}" alt="">
-                    </div>
-                    <div class="awards__game-description" >
-                        <h2 class="awards__game-title">${game.Title}</h2>
-                        <div  class="game-stats__button"  onclick="ui.expandGameItem(${game.AwardData},this); event.stopPropagation()">
-                          <i class="game-stats__icon game-stats__expand-icon"></i>
-                        </div>
-                        <div class="awards__game-stats__text">${game.ConsoleName}</div>
+  getGameElement(game) {
+    const gameElement = document.createElement('li');
+    gameElement.className = `awards__game-item ${game.award}`;
+    gameElement.dataset.id = game.AwardData;
+    gameElement.innerHTML = `    
+      <div class="awards__game-container"  onclick="ui.showGameDetails(${game.AwardData}); event.stopPropagation()">
+          <div class="awards__game-preview-container" onclick="ui.goto.game(${game.AwardData}); event.stopPropagation()">
+              <img class="awards__game-preview" src="https://media.retroachievements.org${game.ImageIcon}" alt="">
+          </div>
+          <div class="awards__game-description" >
+              <h2 class="awards__game-title">${game.Title}</h2>
+              <div  class="game-stats__button"  onclick="ui.expandGameItem(${game.AwardData},this); event.stopPropagation()">
+                <i class="game-stats__icon game-stats__expand-icon"></i>
+              </div>
+              <div class="awards__game-stats__text">${game.ConsoleName}</div>
 
-                        <div class="awards__game-stats-container" >
-                            <div class="awards__game-stats__text awards__game-award-type">${this.awardTypesNames[game.award]}</div>
-                            <div class="awards__game-stats__text">${new Date(game.AwardedAt).toLocaleDateString()}</div>
-                           
-                        </div>
-                    </div>
-                </div>
-            </li>
-        `;
-  }
-  gameGridHtml(game) {
-    return `    
-            <li class="awards__game-item ${game.award}" data-id="${game.AwardData}">
-                <div class="awards__game-container"  onclick="ui.showGameDetails(${game.AwardData}); event.stopPropagation()">
-                    <div class="awards__game-preview-container" onclick="ui.goto.game(${game.AwardData}); event.stopPropagation()">
-                        <img class="awards__game-preview" src="https://media.retroachievements.org${game.ImageIcon}" alt="">
-                    </div>
-                    
-                </div>
-            </li>
-        `;
+              <div class="awards__game-stats-container" >
+                  <div class="awards__game-stats__text awards__game-award-type">${ui.awards.awardTypesNames[game.award]}</div>
+                  <div class="awards__game-stats__text">${new Date(game.AwardedAt).toLocaleDateString()}</div>
+                  
+              </div>
+          </div>
+      </div>
+  `;
+    return gameElement;
   }
 }
 class Game {
@@ -854,7 +847,7 @@ class Game {
   }
   getSectionElement() {
     const section = document.createElement("div");
-    section.classList.add("game__section");
+    section.classList.add("game__section", "section");
     section.innerHTML = `
       ${this.SectionHeaderHtml()}
       <ul class="game-achivs__container">
@@ -1127,9 +1120,6 @@ class Library {
       this.games = this.games.filter(game => regex.test(game?.Title));
 
     }
-
-
-    // console.log(this.games)
   }
   applySort() {
     this.games = this.games.sort((a, b) => this.sortTypeReverse * sortBy[this.sortType](a, b));
@@ -1160,7 +1150,7 @@ class Library {
   }
   LibrarySection() {
     this.librarySection = document.createElement("section");
-    this.librarySection.classList.add("library__section");
+    this.librarySection.classList.add("library__section", "section");
 
     this.librarySection.appendChild(this.headerElement());
 
@@ -1304,7 +1294,7 @@ class Favourites {
   }
   FavouritesSection() {
     this.librarySection = document.createElement("section");
-    this.librarySection.classList.add("favourites__section");
+    this.librarySection.classList.add("favourites__section", "section");
 
     this.librarySection.appendChild(this.headerElement());
 
@@ -1374,7 +1364,7 @@ const Login = () => {
     .then(responce => responce.text())
     .then(sectionHTML => {
       const sectionElement = document.createElement("section");
-      sectionElement.className = "login__section section";
+      sectionElement.className = "login__section";
       sectionElement.innerHTML = sectionHTML;
       return sectionElement;
     })
@@ -1459,7 +1449,7 @@ function lazyLoad({ list, items, callback }) {
 
   // Ініціалізація списку з початковими елементами
   let itemIndex = 0;
-  const initialLoadCount = 20;
+  const initialLoadCount = 40;
   const loadItems = (count) => {
     for (let i = 0; i < count && itemIndex < items.length; i++) {
       list.appendChild(callback(items[itemIndex++]));
@@ -1475,7 +1465,7 @@ function lazyLoad({ list, items, callback }) {
         // Оновлюємо спостереження
         observer.unobserve(trigger);
         list.appendChild(trigger);
-        observer.observe(trigger);
+        itemIndex < items.length && observer.observe(trigger);
       }
     });
   };

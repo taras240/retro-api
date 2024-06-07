@@ -5,7 +5,9 @@
     justify-content: flex-start;
     align-self: flex-start;
     gap: 2rem;
-    padding-bottom: 6rem;
+    flex: 1;
+    overflow: scroll;
+    width: 100%;
 }
 
 .section__header-container.user-info__header-container {
@@ -105,11 +107,14 @@
 }
 
 .user-info__last-games-list {
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: start;
     gap: 0.75rem;
     width: 100%;
+    overflow: scroll;
+    padding-bottom: 6rem;
 }
 
 .user-info__last-game-container {
@@ -118,6 +123,7 @@
     border-radius: 0.5rem;
     box-shadow: var(--item-shadow);
     overflow: hidden;
+    flex-shrink: 0;
 }
 
 .user-info__game-main-info {

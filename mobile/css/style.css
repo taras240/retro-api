@@ -116,14 +116,19 @@ li {
 
 /* *----------SECTION--------------- */
 .section-container {
-    width: 100%;
+    width: 100vw;
     flex: 1;
     /* border: 1px solid red; */
-    overflow-y: scroll;
+    overflow-y: hidden;
+    height: 100vh;
 }
 
 .section {
     height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
 }
 
 .section__header-container {
@@ -160,10 +165,12 @@ li {
 }
 
 .games-list {
+    flex: 1;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
     padding: 1rem 1rem 6rem;
+    overflow: scroll;
 }
 
 .lazy-load_trigger {
