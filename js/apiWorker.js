@@ -13,7 +13,6 @@ class APIWorker {
     }
   }
   set SAVED_COMPLETION_PROGRESS(value) {
-    console.log(value)
     value.Results = value.Results.map(game => {
       delete game.ConsoleName;
       delete game.NumLeaderboards;

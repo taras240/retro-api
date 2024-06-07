@@ -43,11 +43,9 @@ async function updateAchievements() {
     const achievements = await apiWorker.getRecentAchieves({
       minutes: RECENT_ACHIVES_RANGE_MINUTES,
     });
-    const earnedAchievementsIDs = ui.checkForNewAchieves(achievements);
 
-    if (earnedAchievementsIDs.length > 0) {
-      // ui.updateWidgets({ earnedAchievementsIDs: earnedAchievementsIDs });
-    }
+    ui.checkForNewAchieves(achievements);
+
   } catch (error) {
     console.error(error); // Обробка помилок
   }

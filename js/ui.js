@@ -18,7 +18,6 @@ class UI {
     this.achievementsBlock.forEach((widget) =>
       widget.parseGameAchievements(this.GAME_DATA)
     );
-    // this.updateGameInfo(this.GAME_DATA);
     this.statusPanel.gameChangeEvent();
     this.gameCard.updateGameCardInfo(this.GAME_DATA);
     if (this.target.AUTOFILL) {
@@ -85,7 +84,7 @@ class UI {
   }
 
   initializeElements() {
-    this.wrapper = document.querySelector(".wrapper");
+    this.app = document.querySelector(".wrapper");
     // this.about = {
     //   section: document.querySelector("#help_section"),
     // };
@@ -101,81 +100,59 @@ class UI {
     this.progression = new Progression();
     this.userInfo = new UserInfo();
     this.note = new Note();
-    this.notifications = new Notification();
+    this.notifications = new Notifications();
 
     //*  Must be last initialized to set correct values
     this.buttons = new ButtonPanel();
 
 
   }
-  //Встановлення розмірів і розміщення елементів
+
   setPositions() {
     // Проходження по кожному ідентифікатору контейнера в об'єкті config.uierw
     [...document.querySelectorAll(".section")].forEach(section => {
       const id = section.id;
       if (config.ui[id]) {
-        if (!section) return;
-        // Отримання позиції та розмірів елемента з об'єкта config.ui
+        // Getting positions and dimensions from config.ui
         const { x, y, width, height, hidden } = config.ui[id];
-        // Встановлення нових значень стилів елемента, якщо вони вказані у config.ui
-        // Якщо значення відсутнє (undefined), то стилі не змінюються
+
+        // Set positions and dimensions for widget if they are saved in config.ui
         x && (section.style.left = x);
         y && (section.style.top = y);
         width && (section.style.width = width);
         height && (section.style.height = height);
-        const isHidden = hidden ?? true;
-        if (isHidden) {
-          section.classList.add("hidden", "disposed");
-        }
 
+        const isHidden = hidden ?? true;
+        isHidden && section.classList.add("hidden", "disposed");
       }
       else {
         section.classList.add("hidden", "disposed");
       }
     })
 
-    this.buttons.games.checked = !this.games.section.classList.contains("hidden");
     document.querySelector("#background-animation").style.display =
       config.bgVisibility ? "display" : "none";
   }
   addEvents() {
-    document.addEventListener("click", (e) => {
+    document.addEventListener("click", () => {
       document.querySelectorAll(".context-menu").forEach((el) => el.remove());
     });
     document.body.addEventListener("contextmenu", (e) => {
-      e.preventDefault();
-      document.querySelector(".context-menu")?.remove();
-      // this.contextMenu ? this.contextMenu.remove() : "";
-      this.contextMenu = UI.generateContextMenu({
-        menuItems: this.settings.contextMenuItems,
-      });
-      this.wrapper.appendChild(this.contextMenu);
-
-      e.x + this.contextMenu.offsetWidth > window.innerWidth
-        ? (this.contextMenu.style.left =
-          e.x - this.contextMenu.offsetWidth + "px")
-        : (this.contextMenu.style.left = e.x + "px");
-      e.y + this.contextMenu.offsetHeight > window.innerHeight
-        ? (this.contextMenu.style.top =
-          e.y - this.contextMenu.offsetHeight + "px")
-        : (this.contextMenu.style.top = e.y + "px");
-
-      this.contextMenu.classList.remove("hidden");
+      this.showContextmenu({ event: e, menuItems: this.settings.contextMenuItems })
     });
   }
   updateWidgets({ earnedAchievementsIDs }) {
     //Update Achievements widgets
-    for (let template of this.achievementsBlock) {
-      template.updateEarnedAchieves({ earnedAchievementIDs: earnedAchievementsIDs });
-    }
+    this.achievementsBlock.forEach(template =>
+      template.updateEarnedAchieves({ earnedAchievementIDs: earnedAchievementsIDs })
+    )
 
     // Update Target widget
-    UI.updateAchievementsSection({ earnedAchievementIDs: earnedAchievementsIDs, widget: this.target });
     this.target.updateEarnedAchieves({ earnedAchievementIDs: earnedAchievementsIDs })
     this.target.delayedRemove();
 
     //Update Awards widget
-    this.awards.VISIBLE ? this.awards.updateAwards() : "";
+    this.awards.VISIBLE && this.awards.updateAwards();
 
     //Update Progression widget
     this.progression.updateEarnedCards({ gameIDArray: earnedAchievementsIDs });
@@ -183,12 +160,21 @@ class UI {
     //Update status widget
     this.statusPanel.updateProgress({ earnedAchievementIDs: earnedAchievementsIDs });
 
-
     //Update UserInfo widget
-    // setTimeout(() => ui.userInfo.update(), 2000);
+    ui.userInfo.VISIBLE && setTimeout(() => ui.userInfo.update(), 2000);
 
   }
   showContextmenu({ event, menuItems, sectionCode = "" }) {
+    const setContextPosition = () => {
+      event.x + this.contextMenu.offsetWidth > window.innerWidth
+        ? (this.contextMenu.style.left =
+          event.x - this.contextMenu.offsetWidth + "px")
+        : (this.contextMenu.style.left = event.x + "px");
+      event.y + this.contextMenu.offsetHeight > window.innerHeight
+        ? (this.contextMenu.style.top =
+          event.y - this.contextMenu.offsetHeight + "px")
+        : (this.contextMenu.style.top = event.y + "px");
+    }
     event.preventDefault();
     event.stopPropagation();
     document.querySelector(".context-menu")?.remove();
@@ -197,16 +183,9 @@ class UI {
       menuItems: menuItems,
       sectionCode: sectionCode,
     });
-    this.wrapper.appendChild(this.contextMenu);
+    this.app.appendChild(this.contextMenu);
 
-    event.x + this.contextMenu.offsetWidth > window.innerWidth
-      ? (this.contextMenu.style.left =
-        event.x - this.contextMenu.offsetWidth + "px")
-      : (this.contextMenu.style.left = event.x + "px");
-    event.y + this.contextMenu.offsetHeight > window.innerHeight
-      ? (this.contextMenu.style.top =
-        event.y - this.contextMenu.offsetHeight + "px")
-      : (this.contextMenu.style.top = event.y + "px");
+    setContextPosition();
 
     this.contextMenu.classList.remove("hidden");
   }
@@ -219,79 +198,39 @@ class UI {
     }
   }
   checkForNewAchieves(lastEarnedAchieves) {
+    const updateAchievements = (earnedAchievements) => {
+      earnedAchievements.forEach((lastAchievement) => {
+        const { HardcoreMode, Date } = lastAchievement;
+        const achievement = this.ACHIEVEMENTS[lastAchievement.AchievementID];
+        if (HardcoreMode == 1) {
+          achievement.isHardcoreEarned = true;
+          achievement.DateEarnedHardcore = Date;
+        }
+        achievement.isEarned = true;
+        achievement.DateEarned = achievement.DateEarned ?? Date;
+        this.ACHIEVEMENTS[lastAchievement.AchievementID] = achievement;
+      });
+      this.userInfo.pushAchievements({ achievements: earnedAchievements });
+      this.notifications.pushNotification({ type: this.notifications.types.earnedAchivs, elements: earnedAchievements });
+    }
     let earnedAchievements = [];
-    lastEarnedAchieves.forEach((achievement) => {
-      const savedAchievement = this.ACHIEVEMENTS[achievement.AchievementID];
-      if (savedAchievement) {
+    lastEarnedAchieves.forEach((lastAchievement) => {
+      const achievement = this.ACHIEVEMENTS[lastAchievement.AchievementID];
+      if (achievement) {
         const isHardcoreMismatch =
-          achievement.HardcoreMode === 1 && !savedAchievement?.isHardcoreEarned;
-        const isSoftCoreMismatch = !savedAchievement.isEarned;
+          lastAchievement.HardcoreMode === 1 && !achievement?.isHardcoreEarned;
+        const isSoftCoreMismatch = !achievement.isEarned;
         if (isSoftCoreMismatch || isHardcoreMismatch) {
-          earnedAchievements.push(achievement);
+          earnedAchievements.push(lastAchievement);
         }
       }
     });
-    this.updateAchievements(earnedAchievements);
+    updateAchievements(earnedAchievements);
     const achievementsIDs = earnedAchievements?.map((achievement) => achievement.AchievementID);
-    this.checkForAwards(achievementsIDs);
+
     this.updateWidgets({ earnedAchievementsIDs: achievementsIDs });
-    return achievementsIDs;
-  }
-  updateAchievements(earnedAchievements) {
-    earnedAchievements.forEach((achievement) => {
-      const { HardcoreMode, Date } = achievement;
-      const savedAchievement = this.ACHIEVEMENTS[achievement.AchievementID];
-      if (HardcoreMode == 1) {
-        savedAchievement.isHardcoreEarned = true;
-        savedAchievement.DateEarnedHardcore = Date;
-      }
-      savedAchievement.isEarned = true;
-      savedAchievement.DateEarned = savedAchievement.DateEarned ?? Date;
-      this.ACHIEVEMENTS[achievement.AchievementID] = savedAchievement;
-    });
-    this.userInfo.pushAchievements({ achievements: earnedAchievements });
-    this.notifications.pushNotification({ type: this.notifications.types.earnedAchivs, elements: earnedAchievements });
-  }
-  //TODO-------------------------------------
-  checkForAwards(achievementsIDs) {
-    // achievementsIDs.forEach
-  }
-  updateGameInfo({ Title, ConsoleName, ImageIcon, }) {
-    const { gamePreview, gameTitle, gamePlatform } = this.statusPanel;
-    gamePreview.setAttribute(
-      "src",
-      `https://media.retroachievements.org${ImageIcon}`
-    );
-    gameTitle.innerText = Title || "Some game name";
-    gameTitle.setAttribute(
-      "href",
-      "https://retroachievements.org/game/" + config.gameID
-    );
-    gamePlatform.innerText = ConsoleName || "";
-    this.statusPanel.updateData();
   }
 
-  static updateAchievementsSection({ widget, earnedAchievementIDs }) {
-    earnedAchievementIDs.forEach((id) => {
-      const achievement = ui.ACHIEVEMENTS[id];
-      const achieveElement = widget.container.querySelector(
-        `[data-achiv-id="${id}"]`
-      );
-      achieveElement.classList.add(
-        "earned",
-        achievement.isHardcoreEarned ? "hardcore" : "f"
-      );
-      achievement.DateEarnedHardcore
-        ? (achieveElement.dataset.DateEarnedHardcore =
-          achievement.DateEarnedHardcore)
-        : "";
-
-      if (widget.SORT_NAME === sortMethods.latest) {
-        widget.moveToTop(achieveElement);
-      }
-    });
-    widget?.applyFilter();
-  }
 
   static applySort({ container, itemClassName, sortMethod, reverse }) {
     const elements = [...container.querySelectorAll(itemClassName)];
@@ -427,30 +366,31 @@ class UI {
     style.setProperty("--font-color", fontColor);
     style.setProperty("--selection-color", selectionColor);
   }
-  // Функція зміни розміру вікна
-  static resizeEvent({ event, section, postFunc }) {
+  // Resizing func for widgets
+  static resizeEvent({ event, section, callback }) {
     let resizeValues = {
-      // Зберігаємо початкові розміри елемента
+      // Save start sizes
       startWidth: section.clientWidth,
       startHeight: section.clientHeight,
 
-      // Зберігаємо координати миші
+      // Save pointer position
       startX: event.clientX,
       startY: event.clientY,
     };
     const resizeHandler = (event) => {
+      // Set new sizes for widget
       UI.setSize(event, resizeValues, section);
-
-      // Підігнати розмір досягнень відповідно до нового розміру контейнера
-      postFunc ? postFunc() : "";
+      // Call callback func if exist
+      callback && callback();
     };
-    // Додаємо подію mousemove до документа
+    // Add event for mouse move
     document.addEventListener("mousemove", resizeHandler);
 
-    // Видаляємо подію mousemove з документа, коли користувач відпускає кнопку миші
+    // Remove event 'mousemove' if stop resizing and save new sizes
     document.addEventListener("mouseup", () => {
       document.removeEventListener("mousemove", resizeHandler);
       section.classList.remove("resized");
+      // Save new sizes to config file
       config.setNewPosition({
         id: section.id,
         width: section.clientWidth,
@@ -459,39 +399,121 @@ class UI {
     });
   }
   static setSize(event, resizeValues, section) {
-    // Отримуємо дані про розміри і початкові координати зміни розміру
+    // Getting start sizes for widget
     const { startWidth, startHeight, startX, startY } = resizeValues;
 
-    // Обчислюємо зміни в розмірах з урахуванням переміщення миші
+    // Calculate delta sizes
     const widthChange = event.clientX - startX;
     const heightChange = event.clientY - startY;
 
-    //Залипанн до інших віджентів
     let width = startWidth + widthChange;
     let height = startHeight + heightChange;
+
+    //Check for stick to another widgets
     let { newHeight, newWidth } = UI.stickResizingSection({
       width: width,
       height: height,
       stickySection: section,
     });
-    //Залипання до країв екрана
+
+    // Set new sizes for widget
+    section.style.width = `${newWidth}px`;
+    section.style.height = `${newHeight}px`;
+  }
+
+  static stickResizingSection({ width, height, stickySection }) {
+    const { offsetTop, offsetLeft } = stickySection;
+    let newWidth = width;
+    let newHeight = height;
     const TOLERANCE = 10;
-    const { offsetTop, offsetLeft } = section;
-    //Перевірка залипання до правого краю
+    const MARGIN = 5;
+    const conditions = [
+      // bottom-bottom
+      {
+        check: (section) =>
+          Math.abs(
+            offsetTop + height - section.offsetTop - section.clientHeight
+          ) < TOLERANCE,
+        action: (section) =>
+          (newHeight = section.offsetTop + section.clientHeight - offsetTop),
+      },
+      // bottom - top
+      {
+        check: (section) =>
+          Math.abs(offsetTop + height - section.offsetTop) < TOLERANCE,
+        action: (section) =>
+          (newHeight = section.offsetTop - offsetTop - MARGIN),
+      },
+      // right - right
+      {
+        check: (section) =>
+          Math.abs(
+            offsetLeft + width - section.offsetLeft - section.clientWidth
+          ) < TOLERANCE,
+        action: (section) =>
+          (newWidth = section.offsetLeft + section.clientWidth - offsetLeft),
+      },
+      // right - left
+      {
+        check: (section) =>
+          Math.abs(offsetLeft + width - section.offsetLeft) < TOLERANCE,
+        action: (section) =>
+          (newWidth = section.offsetLeft - offsetLeft - MARGIN),
+      },
+    ];
+
+    document.querySelectorAll(".section").forEach((section) => {
+      if (stickySection != section) {
+        conditions.forEach(({ check, action }) => check(section) && action(section));
+      }
+    });
+
+    //Check for stick to window borders
+    //Check for stick to right border
     newWidth =
       Math.abs(window.innerWidth - offsetLeft - newWidth) < TOLERANCE
         ? window.innerWidth - offsetLeft
         : newWidth;
 
-    //Перевірка залипання до нижнього краю
+    //Check for stick to bottom border
     newHeight =
       Math.abs(window.innerHeight - newHeight - offsetTop) < TOLERANCE
         ? window.innerHeight - offsetTop
         : newHeight;
 
-    // Оновлюємо ширину та висоту контейнера з урахуванням змін
-    section.style.width = `${newWidth}px`;
-    section.style.height = `${newHeight}px`;
+    return { newWidth, newHeight };
+  }
+  static moveEvent(section, e) {
+    document.querySelector("#background-animation").style.display = "none";
+    section.classList.add("dragable");
+
+    const rect = section.getBoundingClientRect(); // Отримуємо розміри та позицію вікна
+    const offsetX = e.clientX - rect.left;
+    const offsetY = e.clientY - rect.top;
+
+    const handleMouseMove = (e) => UI.setPosition(e, offsetX, offsetY, section);
+
+    const handleMouseUp = (e) => {
+      section.classList.remove("dragable");
+      ui.app.removeEventListener("mousemove", handleMouseMove);
+      ui.app.removeEventListener("mouseup", handleMouseUp);
+      section.removeEventListener("mouseleave", handleMouseUp);
+      document.querySelector("#background-animation").style.display =
+        config.bgVisibility ? "block" : "none";
+      // Здійснюємо збереження позиції після закінчення перетягування
+      config.setNewPosition({
+        id: section.id,
+        xPos: section.style.left,
+        yPos: section.style.top,
+      });
+
+      e.preventDefault();
+    };
+
+    // Додаємо обробники подій
+    ui.app.addEventListener("mousemove", handleMouseMove);
+    ui.app.addEventListener("mouseup", handleMouseUp);
+    // section.addEventListener("mouseleave", handleMouseUp);
   }
   static stickMovingSection({ x, y, stickySection }) {
     const { clientHeight, clientWidth } = stickySection;
@@ -559,116 +581,9 @@ class UI {
 
     document.querySelectorAll(".section").forEach((section) => {
       if (stickySection != section) {
-        conditions.forEach(({ check, action }) => {
-          if (check(section)) {
-            action(section);
-          }
-        });
+        conditions.forEach(({ check, action }) => check(section) && action(section));
       }
     });
-
-    return { newXPos, newYPos };
-  }
-  static stickResizingSection({ width, height, stickySection }) {
-    const { offsetTop, offsetLeft } = stickySection;
-    let newWidth = width;
-    let newHeight = height;
-    const TOLERANCE = 10;
-    const MARGIN = 5;
-    const conditions = [
-      // bottom-bottom
-      {
-        check: (section) =>
-          Math.abs(
-            offsetTop + height - section.offsetTop - section.clientHeight
-          ) < TOLERANCE,
-        action: (section) =>
-          (newHeight = section.offsetTop + section.clientHeight - offsetTop),
-      },
-      // bottom - top
-      {
-        check: (section) =>
-          Math.abs(offsetTop + height - section.offsetTop) < TOLERANCE,
-        action: (section) =>
-          (newHeight = section.offsetTop - offsetTop - MARGIN),
-      },
-      // right - right
-      {
-        check: (section) =>
-          Math.abs(
-            offsetLeft + width - section.offsetLeft - section.clientWidth
-          ) < TOLERANCE,
-        action: (section) =>
-          (newWidth = section.offsetLeft + section.clientWidth - offsetLeft),
-      },
-      // right - left
-      {
-        check: (section) =>
-          Math.abs(offsetLeft + width - section.offsetLeft) < TOLERANCE,
-        action: (section) =>
-          (newWidth = section.offsetLeft - offsetLeft - MARGIN),
-      },
-    ];
-
-    document.querySelectorAll(".section").forEach((section) => {
-      if (stickySection != section) {
-        conditions.forEach(({ check, action }) => {
-          if (check(section)) {
-            action(section);
-          }
-        });
-      }
-    });
-
-    return { newWidth, newHeight };
-  }
-  static moveEvent(section, e) {
-    document.querySelector("#background-animation").style.display = "none";
-    section.classList.add("dragable");
-
-    const rect = section.getBoundingClientRect(); // Отримуємо розміри та позицію вікна
-    const offsetX = e.clientX - rect.left;
-    const offsetY = e.clientY - rect.top;
-
-    const handleMouseMove = (e) => UI.setPosition(e, offsetX, offsetY, section);
-
-    const handleMouseUp = (e) => {
-      section.classList.remove("dragable");
-      ui.wrapper.removeEventListener("mousemove", handleMouseMove);
-      ui.wrapper.removeEventListener("mouseup", handleMouseUp);
-      section.removeEventListener("mouseleave", handleMouseUp);
-      document.querySelector("#background-animation").style.display =
-        config.bgVisibility ? "block" : "none";
-      // Здійснюємо збереження позиції після закінчення перетягування
-      config.setNewPosition({
-        id: section.id,
-        xPos: section.style.left,
-        yPos: section.style.top,
-      });
-
-      e.preventDefault();
-    };
-
-    // Додаємо обробники подій
-    ui.wrapper.addEventListener("mousemove", handleMouseMove);
-    ui.wrapper.addEventListener("mouseup", handleMouseUp);
-    // section.addEventListener("mouseleave", handleMouseUp);
-  }
-  static setPosition(e, offsetX, offsetY, section) {
-    e.preventDefault();
-    let XPos = e.clientX - offsetX;
-    let YPos = e.clientY - offsetY;
-    const { clientHeight, clientWidth } = section;
-
-    //Перевірка залипань до інших віджетів
-    let { newXPos, newYPos } = UI.stickMovingSection({
-      x: XPos,
-      y: YPos,
-      stickySection: section,
-    });
-
-    //Перевірка залипання до правого краю
-    const TOLERANCE = 10;
     newXPos =
       Math.abs(window.innerWidth - newXPos - clientWidth) < TOLERANCE
         ? window.innerWidth - clientWidth
@@ -685,6 +600,19 @@ class UI {
 
     //Перевірка залипання до верхнього краю
     newYPos = Math.abs(newYPos) < TOLERANCE ? 0 : newYPos;
+    return { newXPos, newYPos };
+  }
+  static setPosition(e, offsetX, offsetY, section) {
+    e.preventDefault();
+    let XPos = e.clientX - offsetX;
+    let YPos = e.clientY - offsetY;
+
+    //Перевірка залипань до інших віджетів
+    let { newXPos, newYPos } = UI.stickMovingSection({
+      x: XPos,
+      y: YPos,
+      stickySection: section,
+    });
 
     //Встановлення нових позицій
     section.style.left = newXPos + "px";
@@ -692,18 +620,10 @@ class UI {
   }
 
   static addDraggingEventForElements(container) {
-    // container.addEventListener("mousedown", e => e.stopPropagation())
-    const dragAndDropItems = container;
-    var list = document.getElementById("myList");
-    new Sortable(dragAndDropItems, {
+    new Sortable(container, {
       animation: 100,
       chosenClass: "dragged",
     });
-    // , {
-    //   animation: 100,
-    //   // chosenClass: "draggable",
-    //   // dragClass: "draggableClass",
-    // });
   }
 
   static switchSectionVisibility({ section }) {
@@ -1083,7 +1003,6 @@ class AchievementsBlock {
   }
 
   initializeElements() {
-    // Елементи блока досягнень
     this.section = this.generateNewWidget({}); // Секція блока досягнень
     document.querySelector(".wrapper").appendChild(this.section);
 
@@ -1112,7 +1031,7 @@ class AchievementsBlock {
       UI.resizeEvent({
         event: event,
         section: this.section,
-        postFunc: () => {
+        callback: () => {
           this.fitSizeVertically(true);
         },
       });
@@ -1251,7 +1170,7 @@ class AchievementsBlock {
       removePopups();
 
       const popup = generatePopup(achievement);
-      ui.wrapper.appendChild(popup);
+      ui.app.appendChild(popup);
 
       setPopupPosition(popup, achivElement);
       requestAnimationFrame(() => popup.classList.add("visible"));
@@ -2168,7 +2087,7 @@ class StatusPanel {
       UI.resizeEvent({
         event: event,
         section: this.section,
-        postFunc: () => this.fitFontSize(),
+        callback: () => this.fitFontSize(),
       });
     });
   }
@@ -3285,7 +3204,7 @@ class Settings {
       this.section.querySelectorAll(".extended").forEach(el => el.classList.remove("extended"));
     });
 
-    ui.wrapper.appendChild(this.section);
+    ui.app.appendChild(this.section);
     ui.buttons.settings.checked = true;
   }
   generateSettingsContainer(settingsItems) {
@@ -3598,7 +3517,6 @@ class GameCard {
       UI.resizeEvent({
         event: event,
         section: this.section,
-        postFunc: () => "",
       });
     });
   }
@@ -3695,7 +3613,6 @@ class Awards {
       UI.resizeEvent({
         event: event,
         section: this.section,
-        postFunc: () => "",
       });
     });
   }
@@ -3863,6 +3780,7 @@ class Awards {
 }
 
 class Target {
+  sectionCode = "-target";
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
   }
@@ -4113,7 +4031,7 @@ class Target {
     config.writeConfiguration();
     this.section.classList.toggle("hide-bg", this.HIDE_BG);
   }
-  sectionCode = "-target";
+
   set SORT_NAME(value) {
     config._cfg.settings.sortTargetBy = value;
     config.writeConfiguration();
@@ -4216,8 +4134,7 @@ class Target {
   constructor() {
     this.initializeElements();
     this.addEvents();
-
-    this.section.classList.toggle("compact", !this.SHOW_HEADER);
+    this.setValues();
   }
   initializeElements() {
     this.section = document.querySelector("#target_section");
@@ -4296,7 +4213,6 @@ class Target {
       UI.resizeEvent({
         event: event,
         section: this.section,
-        postFunc: () => "",
       });
     });
     // Додавання подій для пересування вікна target
@@ -4312,6 +4228,10 @@ class Target {
       });
     });
     UI.addDraggingEventForElements(this.container)
+  }
+  setValues() {
+    this.section.classList.toggle("compact", !this.SHOW_HEADER);
+    this.section.classList.toggle("hide-bg", this.HIDE_BG);
     this.startAutoScroll();
   }
   updateEarnedAchieves({ earnedAchievementIDs: earnedAchievementsIDs }) {
@@ -4331,7 +4251,7 @@ class Target {
   }
   autoscrollInterval;
   startAutoScroll(toBottom = true) {
-    clearInterval(this.autoscrollInterval);
+    this.stopAutoScroll();
     let refreshRateMiliSecs = 50;
 
     let scrollContainer = this.container;
@@ -4349,13 +4269,13 @@ class Target {
             scrollContainer.scrollTop + scrollContainer.clientHeight >=
             scrollContainer.scrollHeight
           ) {
-            clearInterval(this.autoscrollInterval);
+            this.stopAutoScroll();
             setTimeout(() => this.startAutoScroll(false), pauseOnEndMilisecs);
           }
         } else {
           scrollContainer.scrollTop -= speedInPixels;
           if (scrollContainer.scrollTop === 0) {
-            clearInterval(this.autoscrollInterval);
+            this.stopAutoScroll();
             setTimeout(() => this.startAutoScroll(true), pauseOnEndMilisecs);
           }
         }
@@ -4374,102 +4294,83 @@ class Target {
   stopAutoScroll() {
     clearInterval(this.autoscrollInterval);
   }
-  isAchievementInTargetSection({ ID, targetContainer }) {
+  isAchievementInTargetSection({ ID, targetContainer = this.container }) {
     const targetAchievements = [
       ...targetContainer.querySelectorAll(".target-achiv"),
     ].map((el) => +el.dataset.achivId);
 
     return targetAchievements.includes(ID);
   }
-  addAchieveToTarget(ID) {
-    // Перевіряємо чи ачівки нема в секції тарґет
-    if (
-      this.isAchievementInTargetSection({
-        ID: ID,
-        targetContainer: this.container,
-      })
-    ) {
+  addAchieveToTarget(id) {
+    // if achiv already exist in target - return
+    if (this.isAchievementInTargetSection({ ID: id })) {
       return;
     }
-    const {
-      Title,
-      prevSrc,
-      Description,
-      Points,
-      TrueRatio,
-      isEarned,
-      isHardcoreEarned,
-      type,
-      NumAwardedHardcore,
-      totalPlayers,
-      DateEarnedHardcore,
-      DisplayOrder,
-      difficulty,
-    } = ui.ACHIEVEMENTS[ID];
-    let targetElement = document.createElement("li");
-    targetElement.classList.add("target-achiv");
-    this.SHOW_PREV_BORDER && targetElement.classList.add("border");
-    this.SHOW_PREV_OVERLAY && targetElement.classList.add("overlay");
-    this.SHOW_DIFFICULT && targetElement.classList.add("show-difficult");
-    // targetElement.setAttribute("draggable", "true");
-    targetElement.dataset.type = type;
-    targetElement.dataset.Points = Points;
-    targetElement.dataset.TrueRatio = TrueRatio;
-    targetElement.dataset.DisplayOrder = DisplayOrder;
-    DateEarnedHardcore && (targetElement.dataset.DateEarnedHardcore = DateEarnedHardcore);
+    const achievement = ui.ACHIEVEMENTS[id];
+    const targetElement = document.createElement("li");
 
-    targetElement.dataset.NumAwardedHardcore = NumAwardedHardcore;
-    targetElement.dataset.achivId = ID;
-    if (isEarned) {
-      targetElement.classList.add("earned");
-      if (isHardcoreEarned) {
-        targetElement.classList.add("hardcore");
-      }
+    const setClassesToElement = () => {
+      targetElement.classList.add("target-achiv");
+      targetElement.classList.toggle("border", this.SHOW_PREV_BORDER);
+      targetElement.classList.toggle("overlay", this.SHOW_PREV_OVERLAY);
+      targetElement.classList.toggle("show-difficult", this.SHOW_DIFFICULT);
+      targetElement.classList.toggle("earned", achievement.isEarned);
+      targetElement.classList.toggle("hardcore", achievement.isHardcoreEarned)
+    }
+    const setDataToElement = () => {
+      targetElement.dataset.type = achievement.type;
+      targetElement.dataset.Points = achievement.Points;
+      targetElement.dataset.TrueRatio = achievement.TrueRatio;
+      targetElement.dataset.DisplayOrder = achievement.DisplayOrder;
+      achievement.DateEarnedHardcore && (targetElement.dataset.DateEarnedHardcore = achievement.DateEarnedHardcore);
+      targetElement.dataset.NumAwardedHardcore = achievement.NumAwardedHardcore;
+      targetElement.dataset.achivId = id;
+    }
+    const setElementHtml = () => {
+      targetElement.innerHTML = `
+      <button class="delete-from-target" title="remove from target" onclick="ui.target.deleteFromTarget(this)">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+          <path d="M280-440h400v-80H280v80ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+        </svg>
+      </button>
+      <div class="prev">
+                <img
+                  class="prev-img"
+                  src="${achievement.prevSrc}"
+                  alt=" "
+                />
+              </div>
+              <div class="target-achiv-details">
+                <h3 class="achiv-name"><a target="_blanc" href="https://retroachievements.org/achievement/${id}">${achievement.Title}</a></h3>
+                <p class="achiv-description">${achievement.Description}</p>
+                <div class="target-other-descriptions">       
+                <i class=" target_description-icon ${achievement.type ?? "none"}" title="achievement type"></i> 
+               
+                  <p class="target-description-text" title="points"><i class="target_description-icon  points-icon"></i>${achievement.Points}
+                  </p>
+                  
+                  <p class="target-description-text" title="retropoints"><i class="target_description-icon  retropoints-icon"></i>${achievement.TrueRatio}
+                  </p>
+                  <p class="target-description-text" title="earned by"><i class="target_description-icon  trending-icon"></i>${~~(
+          (100 * achievement.NumAwardedHardcore) / achievement.totalPlayers)}%
+                  </p>
+                  <p class="difficult-badge difficult-badge__${achievement.difficulty}">${achievement.difficulty}</p>
+                </div>             
+              </div>
+      `;
     }
 
-    targetElement.innerHTML = `
-    <button class="delete-from-target" title="remove from target" onclick="ui.target.deleteFromTarget(this)">
-      <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-        <path d="M280-440h400v-80H280v80ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
-      </svg>
-    </button>
-    <div class="prev">
-              <img
-                class="prev-img"
-                src="${prevSrc}"
-                alt=" "
-              />
-            </div>
-            <div class="target-achiv-details">
-              <h3 class="achiv-name"><a target="_blanc" href="https://retroachievements.org/achievement/${ID}">${Title}</a></h3>
-              <p class="achiv-description">${Description}</p>
-              <div class="target-other-descriptions">       
-              <i class=" target_description-icon ${type ?? "none"}" title="achievement type"></i> 
-             
-                <p class="target-description-text" title="points"><i class="target_description-icon  points-icon"></i>${Points}
-                </p>
-                
-                <p class="target-description-text" title="retropoints"><i class="target_description-icon  retropoints-icon"></i>${TrueRatio}
-                </p>
-                <p class="target-description-text" title="earned by"><i class="target_description-icon  trending-icon"></i>${~~(
-        (100 * NumAwardedHardcore) / totalPlayers)}%
-                </p>
-                <p class="difficult-badge difficult-badge__${difficulty}">${difficulty}</p>
-              </div>             
-            </div>
-    `;
+    setClassesToElement();
+    setDataToElement();
+    setElementHtml();
     this.container.appendChild(targetElement);
 
-    const conditions = {
-      progression: "progression",
-      win_condition: "win_condition",
-      missable: "missable",
-    };
+    // for one element adding only
     if (!this.isDynamicAdding) {
       this.applyFilter();
       this.applySort();
     }
-
+    // if adding earned element
     this.delayedRemove();
   }
   moveToTop(element) {
@@ -4811,7 +4712,6 @@ class Games_ {
       UI.resizeEvent({
         event: event,
         section: this.section,
-        postFunc: () => "",
       });
     });
     // Додавання подій для пересування вікна target
@@ -5063,7 +4963,6 @@ class Games {
       UI.resizeEvent({
         event: event,
         section: this.section,
-        postFunc: () => "",
       });
     });
     // Додавання подій для пересування вікна target
@@ -5208,7 +5107,6 @@ class Progression {
       UI.resizeEvent({
         event: event,
         section: this.section,
-        postFunc: () => "",
       });
     });
     this.header.addEventListener("mousedown", (e) => {
@@ -5416,7 +5314,6 @@ class Note {
       UI.resizeEvent({
         event: event,
         section: this.section,
-        postFunc: () => "",
       });
     });
     this.header.addEventListener("mousedown", (e) => {
@@ -5478,7 +5375,6 @@ class UserInfo {
       UI.resizeEvent({
         event: event,
         section: this.section,
-        postFunc: () => "",
       });
     });
   }
@@ -5601,7 +5497,7 @@ class UserInfo {
   }
 }
 
-class Notification {
+class Notifications {
   get contextMenuItems() {
     return [
       {
@@ -5711,7 +5607,6 @@ class Notification {
       UI.resizeEvent({
         event: event,
         section: this.section,
-        postFunc: () => "",
       });
     });
   }
