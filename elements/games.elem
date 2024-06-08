@@ -22,8 +22,24 @@
         </button>
     </div>
     <div class="games_container">
-        <div class="games__search-container">
-            <input type="search" name="" id="games__searchbar" class="games__searchbar" placeholder="Search">
+
+        <div class="games__filter-container">
+            <div class="games__filter-header">
+
+                <div class="checkbox-input_container">
+                    <input type="checkbox" id="games__favourites-filter"
+                        onchange="ui.games.FAVOURITES_FILTER = this.checked">
+                    <label class="checkbox-input" for="games__favourites-filter">Favourites</label>
+                </div>
+                <button class="select-button" onclick="ui.games.toggleFilterList(event,'platform')">Platforms</button>
+                <button class="select-button" onclick="ui.games.toggleFilterList(event,'award')">Awards</button>
+                <input type="search" name="" id="games__searchbar" class="games__searchbar" placeholder="Search">
+
+                <!-- <button class="games__show-filters-button icon-button ">
+                    <i class="icon expand_icon"></i>
+                </button> -->
+            </div>
+
         </div>
         <ul class="platform-list" id="games-list" data--console-id="all" data-current-games-array-position="0">
 

@@ -2372,12 +2372,15 @@ class StatusPanel {
       updateAlertData(this.alertsQuery[0])
       this.container.classList.add("show-back");
       glassAnimation();
+      setTimeout(() => this.startAutoScrollElement(this.backSide.achivTitleElement), 2000);
       setTimeout(() => this.startAutoScrollElement(this.backSide.earnedPoints), 2000);
       //back to main information in status panel
       await delay(this.NEW_ACHIV_DURATION * 1000);
       this.container.classList.remove("show-back");
       this.alertsQuery.shift();
       this.stopAutoScrollElement(this.backSide.earnedPoints, true);
+      this.stopAutoScrollElement(this.backSide.achivTitleElement, true);
+
     }
   }
 
@@ -4543,9 +4546,6 @@ class LoginCard {
 }
 
 class Games_ {
-
-
-
   get GAMES_GROUP() {
     return config._cfg.ui?.games_section?.games_group ?? "all";
   }
@@ -4880,8 +4880,111 @@ class Games_ {
 
 }
 class Games {
+  get platformFilterItems() {
+    const filters = Object.keys(this.platformCodes).reduce((items, platformCode) => {
+      const filterItem = {
+        label: this.platformCodes[platformCode],
+        name: 'filter-by-platform',
+        checked: this.PLATFORMS_FILTER.includes(platformCode),
+        onChange: `ui.games.platformCheckboxChangeEvent(this,${platformCode})`,
+        id: `filter-by-platform-${platformCode}`,
+      }
+      items.push(filterItem);
+      return items;
+    }, [])
+    return filters;
+  }
+  get awardsFilterItems() {
+    const filters = Object.keys(this.awardTypes).reduce((items, awardType) => {
+      const filterItem = {
+        label: this.awardTypes[awardType],
+        name: 'filter-by-award',
+        checked: this.AWARD_FILTER.includes(awardType),
+        onChange: `ui.games.awardCheckboxChangeEvent(this,"${awardType}")`,
+        id: `filter-by-platform-${awardType}`,
+      }
+      items.push(filterItem);
+      return items;
+    }, [])
+    return filters;
+  }
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
+  }
+  set FAVOURITES(value) {
+    this._favs = value;
+    config.ui.favouritesGames = value;
+    config.writeConfiguration();
+  }
+  get FAVOURITES() {
+    return this._favs ?? [];
+  }
+  awardCheckboxChangeEvent(checkbox, awardType) {
+    let awards = this.AWARD_FILTER;
+    checkbox.checked ?
+      awards.push(awardType) :
+      (awards = awards.filter(code => code != awardType));
+    this.AWARD_FILTER = awards;
+  }
+  platformCheckboxChangeEvent(checkbox, platformCode) {
+    let platforms = this.PLATFORMS_FILTER;
+    checkbox.checked ?
+      platforms.push(platformCode + '') :
+      (platforms = platforms.filter(code => code != platformCode));
+    this.PLATFORMS_FILTER = platforms;
+  }
+  set PLATFORMS_FILTER(value) {
+
+    let platformCodes = value.filter(code => Object.keys(this.platformCodes).includes(code));
+
+    config.ui.games_section.platformsFilter = platformCodes;
+    config.writeConfiguration();
+    this.updateGamesList();
+    // this.platformFiltersList.querySelector("#game-filters_all").checked = this.PLATFORMS_FILTER.length === Object.keys(this.gameFilters).length;
+
+  }
+  get PLATFORMS_FILTER() {
+    return config.ui?.games_section?.platformsFilter ?? ["7"];
+  }
+  set AWARD_FILTER(value) {
+    config.ui.games_section.awardFilter = value;
+    config.writeConfiguration();
+    this.updateGamesList();
+    // this.platformFiltersList.querySelector("#game-filters_all").checked = this.PLATFORMS_FILTER.length === Object.keys(this.gameFilters).length;
+
+  }
+  get AWARD_FILTER() {
+    return config.ui?.games_section?.awardFilter ?? [];
+  }
+  set FAVOURITES_FILTER(value) {
+    config.ui.games_section.favouritesFilter = value;
+    config.writeConfiguration();
+    this.updateGamesList();
+    // this.platformFiltersList.querySelector("#game-filters_all").checked = this.PLATFORMS_FILTER.length === Object.keys(this.gameFilters).length;
+
+  }
+  get FAVOURITES_FILTER() {
+    return config.ui?.games_section?.favouritesFilter ?? false;
+  }
+  get TYPES_FILTER() {
+    return config.ui?.games_section?.typesFilter ?? ["original"];
+  }
+  set TYPES_FILTER(checkbox) {
+    const type = checkbox.dataset.type ?? "";
+    const typesFilters = this.TYPES_FILTER;
+    const checked = checkbox.checked;
+    if (checked) {
+      typesFilters.push(type);
+    }
+    else {
+      const index = typesFilters.indexOf(type);
+      if (index !== -1) {
+        typesFilters.splice(index, 1);
+      }
+    }
+    config.ui.games_section.typesFilter = typesFilters;
+    config.writeConfiguration();
+    this.applyFilter();
   }
   set REVERSE_SORT(value) {
     config._cfg.ui.games_section.reverse_sort = value ? -1 : 1;
@@ -4907,8 +5010,32 @@ class Games {
   }
   titleFilter = '';
   applyFilter() {
+    //Filter by Search request
     const titleRegex = new RegExp(this.titleFilter, 'gi');
-    this.games = this.GAMES.filter(game => game.FixedTitle.match(titleRegex))
+    this.games = this.titleFilter ?
+      this.GAMES.filter(game => game.FixedTitle.match(titleRegex)) :
+      this.GAMES;
+
+    // Filter by Platform
+    this.PLATFORMS_FILTER.length > 0 && (this.games = this.games?.filter(game => {
+      let isPlatformMatch = false;
+      for (let platformCode of this.PLATFORMS_FILTER) {
+        platformCode == game.ConsoleID && (isPlatformMatch = true);
+      }
+      return isPlatformMatch;
+    }))
+
+    //Filter by Favourites
+    this.FAVOURITES_FILTER && (this.games = this.games.filter(game => this.FAVOURITES.includes(game.ID)))
+
+    //Filter by Awards
+    this.AWARD_FILTER.length > 0 && (this.games = this.games.filter(game => {
+      let isAwarded = false;
+      for (let award of this.AWARD_FILTER) {
+        award == game.Award && (isAwarded = true);
+      }
+      return isAwarded;
+    }))
   }
   applySort() {
     this.games = this.games.sort((a, b) => this.REVERSE_SORT * this.SORT_METHOD(a, b));
@@ -4927,9 +5054,18 @@ class Games {
     "41": "PlayStation Portable",
     // "999": "etc.",
   }
+  awardTypes = {
+    'mastered': 'mastered',
+    'beaten-hardcore': 'beaten',
+    'completed': 'completed',
+    'beaten-softcore': 'beaten softcore',
+    'started': 'started',
+  }
   games = {}
   constructor() {
+    this._favs = config.ui.favouritesGames ?? [];
     this.initializeElements();
+    this.setValues();
     this.addEvents();
     this.gamesList.innerHTML = `
     <button class="games__load-button" onclick="ui.games.loadGames()"></button>
@@ -4947,6 +5083,9 @@ class Games {
     this.gamesList = this.section.querySelector("#games-list");
     // this.platformList = this.section.querySelector(".platform-list");
     this.resizer = this.section.querySelector(".resizer");
+  }
+  setValues() {
+    this.section.querySelector('#games__favourites-filter').checked = this.FAVOURITES_FILTER;
   }
   addEvents() {
     this.searchbar.addEventListener("input", e => {
@@ -4987,19 +5126,6 @@ class Games {
   async getAllGames() {
     this.GAMES = {};
     try {
-      // {
-      //   "GameID": 7994,
-      //   "Title": "Guitar Hero",
-      //   "ImageIcon": "/Images/070460.png",
-      //   "ConsoleID": 21,
-      //   "NumAwarded": 3,
-      //   "NumAwardedHardcore": 3,
-      //   "MostRecentAwardedDate": "2024-06-01T20:32:55+00:00",
-      //   "HighestAwardKind": null,
-      //   "HighestAwardDate": null,
-      //   "ID": 7994,
-      //   "NumAchievements": 79
-      // }
       const gamesResponse = await fetch(`./json/games/all.json`);
       const gamesJson = await gamesResponse.json();
       const lastPlayedGames = await apiWorker.SAVED_COMPLETION_PROGRESS;
@@ -5010,15 +5136,13 @@ class Games {
           lastGame.HighestAwardKind ? (gameToModify.Award = lastGame.HighestAwardKind) : (gameToModify.Award = 'started');
         }
         else {
-          console.log(lastGame);
           gameToModify = lastGame;
           gameToModify = fixGameTitle(gameToModify);
           gameToModify.ImageIcon = gameToModify.ImageIcon.match(/\d+/gi)[0];
           lastGame.NumAwardedHardcore && (gameToModify.NumAwardedHardcore = lastGame.NumAwardedHardcore);
           lastGame.HighestAwardKind ? (gameToModify.Award = lastGame.HighestAwardKind) : (gameToModify.Award = 'started');
-          gameToModify.Points = ''
-          console.log(gameToModify)
-          gamesJson.push(gameToModify)
+          gameToModify.Points = '';
+          gamesJson.push(gameToModify);
         }
       }
       this.GAMES = gamesJson;
@@ -5029,15 +5153,20 @@ class Games {
   GameElement(game) {
     const gameElement = document.createElement("li");
     gameElement.classList.add("platform_game-item");
+    gameElement.dataset.id = game.ID;
     const iconCode = game.ImageIcon.match(/\d+/g);
-    gameElement.innerHTML = `
+    gameElement.innerHTML = `    
     <div class="game-preview_container">
-    <img src="./assets/imgCache/${iconCode}.webp"
-        onerror="this.src='https://media.retroachievements.org/Images/${game.ImageIcon}.png';" alt=""
-        class="game-preview_image">
+      <img src="./assets/imgCache/${iconCode}.webp"
+          onerror="this.src='https://media.retroachievements.org/Images/${game.ImageIcon}.png';" alt=""
+          class="game-preview_image">
     </div>
     <h3 class="game-description_title"><button title="open game" class="game-description_button"
-            onclick="config.gameID = ${game.ID}; getAchievements()">${game.FixedTitle} ${generateBadges(game.badges)}</button></h3>
+            onclick="config.gameID = ${game.ID}; getAchievements()">${game.FixedTitle} ${generateBadges(game.badges)}</button>
+    </h3>
+    <button class="favourites-button game-description icon-button games__icon-button ${ui.games.FAVOURITES.includes(game.ID) ? 'checked' : ''}" onclick="ui.games.addToFavourite(event,${game.ID})">
+      <i class="icon favourite_icon"></i>
+    </button>
     <p title="achievements count" class="game-description  achievements-count">
       ${RAPlatforms[game.ConsoleID].match(/[^\/]*/gi)[0]}
     </p>
@@ -5063,7 +5192,11 @@ class Games {
       </div>
       <h3 class="header__game-description game-description_title ${this.SORT_NAME == sortMethods.title ?
       this.REVERSE_SORT == -1 ? 'active reverse' : 'active' : ''}"
-        onclick='ui.games.SORT_NAME = sortMethods.title'>Title</h3>
+        onclick='ui.games.SORT_NAME = sortMethods.title'>Title
+      </h3>
+
+      <div class="header__game-description"><i class="icon favourite_icon checked"></i></div>
+
       <p title="achievements count" class=" game-description  achievements-count"
         >
           Platform
@@ -5083,6 +5216,60 @@ class Games {
       <p title="go to RA" class=" game-description game-description_link">Link</p>
     </div>
   `;
+  addToFavourite(event, gameID) {
+    const isFavourite = this.FAVOURITES.includes(gameID);
+    if (isFavourite) {
+      this.FAVOURITES = this.FAVOURITES.filter(id => id != gameID);
+    }
+    else {
+      this.FAVOURITES = [gameID, ...this.FAVOURITES];
+    }
+    event.target.closest('button').classList.toggle('checked', !isFavourite);
+  }
+  toggleFilterList(event, filterType) {
+    const hideFilters = () => {
+      this.section.querySelector('.games__filters-list')?.remove();
+      this.section.querySelectorAll('.games__filter-header .extended')
+        .forEach(el => el.classList.remove('extended'))
+    }
+    const filterButton = event.target.closest('button');
+
+    if (filterButton.classList.contains('extended')) {
+      hideFilters();
+    }
+    else {
+      hideFilters();
+      filterButton.classList.add('extended');
+      let list;
+      switch (filterType) {
+        case 'platform':
+          list = this.generateFiltersList(this.platformFilterItems);
+          break;
+        case 'award':
+          list = this.generateFiltersList(this.awardsFilterItems);
+          break;
+      }
+      this.section.append(list);
+      this.section.querySelector('.games__filter-container').appendChild(list);
+    }
+
+  }
+  generateFiltersList(itemsObj) {
+    const list = Object.values(itemsObj).reduce((list, item) => {
+      const isChecked = item.checked;
+      const filterItem = document.createElement("li");
+      filterItem.classList.add("checkbox-input_container");
+      filterItem.innerHTML =
+        `
+        <input ${isChecked ? "checked" : ""} onchange='${item.onChange}' type="checkbox"   name="${item.name}" id="${item.id}" ></input>
+        <label class=" checkbox-input" for="${item.id}">${item.label}</label>
+      `;
+      list.appendChild(filterItem);
+      return list;
+    }, document.createElement('ul'));
+    list.classList.add("games__filters-list");
+    return list;
+  }
 }
 class Progression {
   get VISIBLE() {

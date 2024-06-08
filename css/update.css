@@ -190,11 +190,11 @@
   --color: silver;
   content: "";
   position: absolute;
-  height: 100%;
+  height: 80%;
   aspect-ratio: 1;
   right: 0px;
-  top: 50px;
-  transform: translate(-100%, -150%);
+  top: 50%;
+  transform: translate(-100%, -200%);
   background-color: var(--color);
   mask-position: center;
   mask-repeat: no-repeat;
@@ -203,7 +203,6 @@
   background-size: contain;
   background-repeat: no-repeat;
   z-index: -1;
-
 }
 
 .new-award .update_back-side::after {
@@ -223,7 +222,7 @@
 
 @keyframes update-achiv-anim {
   from {
-    transform: scale(2) translate(100%, -150%);
+    transform: scale(2) translate(100%, -200%);
 
   }
 
@@ -261,6 +260,7 @@
   max-width: 100%;
   overflow-x: scroll;
   display: block;
+  white-space: nowrap;
 }
 
 .new-game-info .update_achiv-header {
@@ -362,6 +362,7 @@
   text-align: left;
   text-wrap: nowrap;
   overflow: hidden;
+  white-space: nowrap;
 }
 
 
