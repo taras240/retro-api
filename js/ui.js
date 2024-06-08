@@ -5179,10 +5179,17 @@ class Games {
     <p title="points count" class="game-description  award-type">
       ${game.Award ?? ''}
     </p>
-    <a title="go to RA" target="_blanc" href="https://retroachievements.org/game/${game.ID}"
-        class="game-description game-description_link">
-        <i class="game-description_icon link_icon ra-link_icon"></i>
-    </a>
+    <p class="game-description game-description__links">
+      <a title="go to RA" target="_blanc" href="https://retroachievements.org/game/${game.ID}"
+          class="game-description game-description_link">
+          <i class="game-description_icon link_icon ra-link_icon"></i>
+      </a>
+      <a title="go to download" target="_blanc" href="https://www.emu-land.net/en/search_games?q=${game?.FixedTitle}"
+          class="game-description game-description_link">
+          <i class="game-description_icon link_icon download-icon"></i>
+      </a>
+    </p>
+   
     `;
     return gameElement;
   }
@@ -5213,7 +5220,7 @@ class Games {
       </p>
       <p title="award type" class="header__game-description ${this.SORT_NAME == sortMethods.award ?
       this.REVERSE_SORT == -1 ? 'active reverse' : 'active' : ''}" onclick='ui.games.SORT_NAME = sortMethods.award'>Award</p>
-      <p title="go to RA" class=" game-description game-description_link">Link</p>
+      <p title="" class=" game-description game-description_link">Links</p>
     </div>
   `;
   addToFavourite(event, gameID) {
