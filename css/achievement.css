@@ -157,7 +157,7 @@
 
 .achiv-block .preview-container::before {
   height: calc(100%);
-  background-image: url(../assets/img/question.webp);
+  background-image: var(--overlay-closed);
   z-index: 1;
   opacity: 1;
   transition: .2s;
@@ -165,12 +165,12 @@
 }
 
 .achiv-block.earned .preview-container::before {
-  background-image: url(../assets/img/question-semiopened.webp);
+  background-image: var(--overlay-earned-soft);
 }
 
 .achiv-block.earned.hardcore .preview-container::before {
 
-  background-image: url(../assets/img/question-opened.webp);
+  background-image: var(--overlay-earned);
 }
 
 .achiv-block .add-to-target {

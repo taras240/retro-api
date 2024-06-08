@@ -656,14 +656,7 @@ class AchievementsBlock {
       {
         label: "Style",
         elements: [
-          {
-            type: "checkbox",
-            name: "context-hide-unearned",
-            id: "context-hide-unearned",
-            label: "Show overlay",
-            checked: this.SHOW_PREV_OVERLAY,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SHOW_PREV_OVERLAY = this.checked"`,
-          },
+
           {
             type: "checkbox",
             name: "context-show-mario",
@@ -715,6 +708,31 @@ class AchievementsBlock {
             event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].ACHIV_MAX_SIZE = this.value;"`,
           },
 
+        ]
+      },
+      {
+        label: "Overlay set",
+        elements: [
+          {
+            type: "checkbox",
+            name: "context-hide-unearned",
+            id: "context-hide-unearned",
+            label: "Show overlay",
+            checked: this.SHOW_PREV_OVERLAY,
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SHOW_PREV_OVERLAY = this.checked"`,
+          },
+          ...Object.keys(this.overlayTypes).reduce((items, overlayType) => {
+            const item = {
+              type: "radio",
+              name: "context-achieves-overlay",
+              id: `context-achieves-overlay-${overlayType}`,
+              label: `${this.overlayTypes[overlayType].name}`,
+              checked: this.OVERLAY_TYPE == overlayType,
+              event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].OVERLAY_TYPE = '${overlayType}'"`,
+            }
+            items.push(item);
+            return items;
+          }, []),
         ]
       },
       {
@@ -854,7 +872,51 @@ class AchievementsBlock {
 
     ];
   }
-
+  get OVERLAY_TYPE() {
+    return config?.ui[this.SECTION_NAME]?.overlayType ?? 'cd_box';
+  }
+  set OVERLAY_TYPE(value) {
+    config.ui[this.SECTION_NAME].overlayType = value;
+    config.writeConfiguration();
+    this.updateOverlay();
+  }
+  overlayTypes = {
+    mario_q: {
+      name: "Mario '?'",
+      link: "../assets/img/mario_q/overlay_sets/",
+      closedLink: "../assets/img/overlay_sets/mario_q/closed.webp",
+      earnedSoftcoreLink: "../assets/img/overlay_sets/mario_q/earned_soft.webp",
+      earnedHardcoreLink: "../assets/img/overlay_sets/mario_q/earned.webp",
+    },
+    cd_box: {
+      name: "C&D Box",
+      link: "../assets/img/cd_box/",
+      closedLink: "../assets/img/overlay_sets/cd_box/closed.png",
+      earnedSoftcoreLink: "../assets/img/overlay_sets/cd_box/earned_soft.png",
+      earnedHardcoreLink: "../assets/img/overlay_sets/cd_box/earned.png",
+    },
+    kirby: {
+      name: "Kirby",
+      link: "../assets/img/kirby/",
+      closedLink: "../assets/img/overlay_sets/kirby/closed.png",
+      earnedSoftcoreLink: "../assets/img/overlay_sets/kirby/earned_soft.png",
+      earnedHardcoreLink: "../assets/img/overlay_sets/kirby/earned.png",
+    },
+    megaman: {
+      name: "Megaman",
+      link: "../assets/img/megaman/",
+      closedLink: "../assets/img/overlay_sets/megaman/closed.png",
+      earnedSoftcoreLink: "../assets/img/overlay_sets/megaman/earned_soft.png",
+      earnedHardcoreLink: "../assets/img/overlay_sets/megaman/earned.png",
+    },
+    sonic: {
+      name: "Sonic",
+      link: "../assets/img/sonic/",
+      closedLink: "../assets/img/overlay_sets/sonic/closed.png",
+      earnedSoftcoreLink: "../assets/img/overlay_sets/sonic/earned_soft.png",
+      earnedHardcoreLink: "../assets/img/overlay_sets/sonic/earned.png",
+    }
+  }
   set SORT_NAME(value) {
     config._cfg.ui[this.SECTION_NAME].sortAchievementsBy = value;
     config.writeConfiguration();
@@ -1055,8 +1117,13 @@ class AchievementsBlock {
     if (this.AUTOSCROLL) {
       this.startAutoScroll();
     }
+    this.updateOverlay();
   }
-
+  updateOverlay() {
+    this.section.style.setProperty('--overlay-closed', `url(${this.overlayTypes[this.OVERLAY_TYPE].closedLink})`);
+    this.section.style.setProperty('--overlay-earned', `url(${this.overlayTypes[this.OVERLAY_TYPE].earnedHardcoreLink})`);
+    this.section.style.setProperty('--overlay-earned-soft', `url(${this.overlayTypes[this.OVERLAY_TYPE].earnedSoftcoreLink})`);
+  }
 
   // Розбирає отримані досягнення гри та відображає їх на сторінці
   parseGameAchievements(achivs) {
@@ -1444,6 +1511,8 @@ class AchievementsBlock {
       ? ui.buttons.achievements.click()
       : UI.switchSectionVisibility(ui.achievementsBlock[this.CLONE_NUMBER]);
   }
+
+
   generateNewWidget({ }) {
     const newWidget = document.createElement("section");
     newWidget.id = `${this.SECTION_NAME}`;
@@ -4684,76 +4753,7 @@ class Games_ {
   BATCH_SIZE = 10;
   MAX_GAMES_IN_LIST = 50;
   constructor() {
-    this.initializeElements();
-    this.addEvents();
-    this.generateFiltersList();
-    this.setValues();
-    this.loadGamesArray()
-      .then(() => {
-        this.applyFilter();
-      })
-
   }
-  initializeElements() {
-    this.section = document.querySelector("#games_section");
-    this.header = this.section.querySelector(".header-container");
-    this.container = this.section.querySelector(".games_container");
-    // this.platformsContainer = this.section.querySelector(".platforms-list_container");
-    this.searchbar = this.section.querySelector("#games_search-input");
-    this.platformFiltersList = this.section.querySelector("#games_filter-platform-list");
-    this.gamesList = this.section.querySelector("#games-list");
-    // this.platformList = this.section.querySelector(".platform-list");
-    this.resizer = this.section.querySelector(".resizer");
-  }
-  addEvents() {
-    this.resizer.addEventListener("mousedown", (event) => {
-      event.stopPropagation();
-      this.section.classList.add("resized");
-      UI.resizeEvent({
-        event: event,
-        section: this.section,
-      });
-    });
-    // Додавання подій для пересування вікна target
-    this.header.addEventListener("mousedown", (e) => {
-      UI.moveEvent(this.section, e);
-    });
-    this.section.querySelector(".games_search-bar_container").addEventListener("click", e => {
-      e.stopPropagation();
-    })
-    this.section.addEventListener("click", () => {
-      this.section.querySelector(".extended")?.classList.remove("extended");
-      this.section.querySelector("#games_settings-checkbox").checked = false;
-    });
-
-    this.searchbar.addEventListener("input", () => this.searchInputHandler());
-    this.gamesList.addEventListener("scroll", () => this.gamesListScrollHandler())
-
-  }
-  setValues() {
-    this.gamesList.innerHTML = "";
-    switch (this.SORT_NAME) {
-      case sortMethods.achievementsCount:
-        this.section.querySelector("#games_sort-achieves").checked = true;
-        break;
-      case sortMethods.points:
-        this.section.querySelector("#games_sort-points").checked = true;
-        break;
-      default:
-        this.section.querySelector("#games_sort-title").checked = true;
-        break;
-    }
-    this.TYPES_FILTER.forEach(type => {
-      const checkbox = this.section.querySelector(`#game-filters_${type.toLowerCase()}`);
-      checkbox ? checkbox.checked = true : "";
-    })
-    this.REVERSE_SORT == -1 ? this.section.querySelector("#games_sort-reverse").checked = true : "";
-    this.platformFiltersList.querySelector("#game-filters_all").checked = this.PLATFORMS_FILTER.length === Object.keys(this.gameFilters).length;
-
-  }
-
-
-
   async getRecentGamesArray() {
     const resp = await apiWorker.getRecentlyPlayedGames({});
     this.GAMES = {};
@@ -4784,84 +4784,6 @@ class Games_ {
     this.GAMES.all = this.GAMES.saved = Object.values(this.GAMES).flat();
     this.applyFilter();
   }
-
-
-  generateFiltersList() {
-    const checkedElements = this.PLATFORMS_FILTER;
-    Object.getOwnPropertyNames(this.gameFilters).forEach(platformCode => {
-      const isChecked = checkedElements.includes(platformCode);
-      const filterItem = document.createElement("li");
-      filterItem.classList.add("game-filters_item");
-      filterItem.innerHTML =
-        `
-        <input ${isChecked ? "checked" : ""} onchange='ui.games.PLATFORMS_FILTER = this' type="checkbox" data-platform-id="${platformCode}"  name="game-filters_item" id="game-filters_${platformCode}" ></input>
-        <label class="game-filters_checkbox" for="game-filters_${platformCode}">${this.platformNames[platformCode]}</label>
-      `;
-      this.platformFiltersList.appendChild(filterItem);
-    })
-  }
-
-  generateGameElement(game) {
-    let { Title, FixedTitle, ID, GameID, sufixes, ConsoleName, ImageIcon, Points, PossibleScore, ForumTopicID, NumAchievements, AchievementsTotal, NumLeaderboards } = game;
-    const imgName = game.ImageIcon.slice(ImageIcon.lastIndexOf("/") + 1, ImageIcon.lastIndexOf(".") + 1) + "webp";
-    const gameElement = document.createElement("li");
-    const sufixesElements = generateBadges(sufixes);
-    gameElement.dataset.gameID = ID;
-    gameElement.classList.add("platform_game-item");
-    gameElement.innerHTML = `   
-      <div class="game-preview_container">
-          <img src="./assets/imgCache/${imgName}"  onerror="this.src='https://media.retroachievements.org${ImageIcon}';" alt="" class="game-preview_image">
-      </div>
-      <h3 class="game-description_title"><button title="open game" class="game-description_button" 
-        onclick="config.gameID = ${ID}; getAchievements()">${FixedTitle}
-        ${sufixesElements ?? ""}
-        <i class="game-title_suffix game-title_platform">${ConsoleName}</i>
-       
-        </button></h3>
-      <div class="game-description_container">
-        <div class="game-description_block">
-            <p title="achievements count"  class="game-description  achievements-count">
-                <i class="game-description_icon achievements-icon"></i>${NumAchievements}</p>
-            <p title="points count" class="game-description  points-count">
-              <i class="game-description_icon points-icon"></i>
-            ${Points}</p>
-            <p title="leaderboards count" class="game-description  leaderboards-count">
-              <i class="game-description_icon leaderboards-icon"></i>${NumLeaderboards}</p>            
-        </div>
-        <div class="game-description_block">
-          <button class="game-description_button  expand-button" onclick="ui.games.showMoreDescription(this)">
-            <i class="game-description_icon link_icon expand_icon"></i>
-          </button>
-        </div>
-        <div class="game-description_block">
-          <a title="go to RA" target="_blanc" href="https://retroachievements.org/game/${ID}"
-                class="game-description game-description_link" >
-                <i class="game-description_icon link_icon ra-link_icon"></i>
-          </a>
-          <a title=" go to RA forum" target="_blanc" href="https://retroachievements.org/viewtopic.php?t=${ForumTopicID}"
-                class="game-description game-description_link   " ">
-        <i class="game-description_icon link_icon forum-icon"></i>
-          </a>
-          <a title=" search for downloading" target="_blanc" href="https://romhustler.org/roms/search?query=${Title}"
-                class="game-description game-description_link  " ">                
-          <i class="game-description_icon link_icon download-icon"></i></a>
-        </div>
-          
-      </div>
-    `
-    return gameElement;
-  }
-  gamesListScrollHandler() {
-    if (this.isEndOfListVisible({ list: this.gamesList })) {
-      this.fillGamesDown({ list: this.gamesList, platformID: "all" });
-      this.clearGamesTop({ list: this.gamesList });
-    }
-    if (this.isFirstOfListVisible({ list: this.gamesList })) {
-      this.fillGamesTop({ list: this.gamesList, platformID: "all" });
-      this.clearGamesDown({ list: this.gamesList });
-    }
-  }
-
   markAllFilters() {
     if (this.PLATFORMS_FILTER.length === Object.keys(this.gameFilters).length) {
       config.ui.games_section.platformsFilter = [];
@@ -4877,7 +4799,6 @@ class Games_ {
     }
 
   }
-
 }
 class Games {
   get platformFilterItems() {
