@@ -122,7 +122,7 @@
 
 .target-achiv.overlay .prev::before {
   width: 110%;
-  background-image: url(../assets/img/question.webp);
+  background-image: url(../assets/img/overlay_sets/mario_q/closed.webp);
   z-index: 1;
   opacity: 1;
   transition: .2s;

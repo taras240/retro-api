@@ -873,7 +873,7 @@ class AchievementsBlock {
     ];
   }
   get OVERLAY_TYPE() {
-    return config?.ui[this.SECTION_NAME]?.overlayType ?? 'cd_box';
+    return config?.ui[this.SECTION_NAME]?.overlayType ?? 'border';
   }
   set OVERLAY_TYPE(value) {
     config.ui[this.SECTION_NAME].overlayType = value;
@@ -881,6 +881,13 @@ class AchievementsBlock {
     this.updateOverlay();
   }
   overlayTypes = {
+    border: {
+      name: "Border",
+      link: "../assets/img/border/overlay_sets/",
+      closedLink: "../assets/img/overlay_sets/border/closed.png",
+      earnedSoftcoreLink: "../assets/img/overlay_sets/border/earned_soft.png",
+      earnedHardcoreLink: "../assets/img/overlay_sets/border/earned.png",
+    },
     mario_q: {
       name: "Mario '?'",
       link: "../assets/img/mario_q/overlay_sets/",
