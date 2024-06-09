@@ -56,7 +56,7 @@
 }
 
 .prefs_section .input:not(.target-user):placeholder-shown {
-  border-color: red;
+  border-color: crimson;
 }
 
 .number-input {
