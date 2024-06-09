@@ -1519,7 +1519,6 @@ class AchievementsBlock {
       : UI.switchSectionVisibility(ui.achievementsBlock[this.CLONE_NUMBER]);
   }
 
-
   generateNewWidget({ }) {
     const newWidget = document.createElement("section");
     newWidget.id = `${this.SECTION_NAME}`;
@@ -1534,7 +1533,7 @@ class AchievementsBlock {
               d="m668-380 152-130 120 10-176 153 52 227-102-62-46-198Zm-94-292-42-98 46-110 92 217-96-9ZM294-287l126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM173-120l65-281L20-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Zm247-340Z" />
           </svg>
         </div>
-        <h2 class="widget-header-text achivs-header-text">Achieves${this.CLONE_NUMBER === 0 ? "" : " ~"
+        <h2 class="widget-header-text achivs-header-text">Cheevos${this.CLONE_NUMBER === 0 ? "" : " ~"
       }</h2>
       <button class="header-button header-icon" onclick="ui.settings.openSettings(ui.achievementsBlock[${this.CLONE_NUMBER}].contextMenuItems)">
       <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"/>
@@ -4809,9 +4808,9 @@ class Games_ {
 }
 class Games {
   get platformFilterItems() {
-    const filters = Object.keys(this.platformCodes).reduce((items, platformCode) => {
+    const filters = Object.keys(RAPlatforms).reduce((items, platformCode) => {
       const filterItem = {
-        label: this.platformCodes[platformCode],
+        label: RAPlatforms[platformCode],
         name: 'filter-by-platform',
         checked: this.PLATFORMS_FILTER.includes(platformCode),
         onChange: `ui.games.platformCheckboxChangeEvent(this,${platformCode})`,
@@ -4863,7 +4862,7 @@ class Games {
   }
   set PLATFORMS_FILTER(value) {
 
-    let platformCodes = value.filter(code => Object.keys(this.platformCodes).includes(code));
+    let platformCodes = value.filter(code => Object.keys(RAPlatforms).includes(code));
 
     config.ui.games_section.platformsFilter = platformCodes;
     config.writeConfiguration();
