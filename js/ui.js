@@ -4808,17 +4808,27 @@ class Games_ {
 }
 class Games {
   get platformFilterItems() {
-    const filters = Object.keys(RAPlatforms).reduce((items, platformCode) => {
-      const filterItem = {
-        label: RAPlatforms[platformCode],
-        name: 'filter-by-platform',
-        checked: this.PLATFORMS_FILTER.includes(platformCode),
-        onChange: `ui.games.platformCheckboxChangeEvent(this,${platformCode})`,
-        id: `filter-by-platform-${platformCode}`,
+    const filters = Object.keys(platformsByManufacturer).reduce((items, brend) => {
+      const groupItem = {
+        label: brend,
+        type: "group",
       }
-      items.push(filterItem);
+      const platformItems = Object.keys(platformsByManufacturer[brend]).reduce((items, platformName) => {
+        const filterItem = {
+          label: platformName,
+          type: "checkbox",
+          name: 'filter-by-platform',
+          checked: this.PLATFORMS_FILTER.includes(platformsByManufacturer[brend][platformName]),
+          onChange: `ui.games.platformCheckboxChangeEvent(this,${platformsByManufacturer[brend][platformName]})`,
+          id: `filter-by-platform-${platformsByManufacturer[brend][platformName]}`,
+        }
+        items.push(filterItem);
+        return items;
+      }, []);
+      items = [...items, groupItem, ...platformItems];
       return items;
     }, [])
+
     return filters;
   }
   get awardsFilterItems() {
@@ -4968,18 +4978,7 @@ class Games {
     this.games = this.games.sort((a, b) => this.REVERSE_SORT * this.SORT_METHOD(a, b));
   }
   platformCodes = {
-    "1": "Genesis/Mega Drive",
-    "2": "Nintendo 64",
-    "3": "SNES/Super Famicom",
-    "4": "Game Boy",
-    "5": "Game Boy Advance",
-    "6": "Game Boy Color",
-    "7": "NES/Famicom",
-    "8": "PC Engine/TurboGrafx-16",
-    "12": "PlayStation",
-    "21": "PlayStation 2",
-    "41": "PlayStation Portable",
-    // "999": "etc.",
+
   }
   awardTypes = {
     'mastered': 'mastered',
@@ -5103,21 +5102,29 @@ class Games {
     <p title="points count" class="game-description  points-count">
      ${game.Points}
     </p>
-    <p title="points count" class="game-description  award-type">
-      ${game.Award ?? ''}
+    <p title="award type" class="game-description  award-type">
+      ${ui.games.awardTypes[game.Award] ?? ''}
     </p>
     <p class="game-description game-description__links">
+      <a title="google search" target="_blanc" 
+        href="https://google.com/search?q='${game?.FixedTitle}' '${RAPlatforms[game?.ConsoleID]}' ${googleQuerySite}"
+        class="game-description game-description_link">
+        <i class="game-description_icon link_icon search-icon google_link"></i>
+      </a> 
       <a title="go to RA" target="_blanc" href="https://retroachievements.org/game/${game.ID}"
           class="game-description game-description_link">
           <i class="game-description_icon link_icon ra-link_icon"></i>
       </a>
-      <a title="go to download" target="_blanc" href="https://www.emu-land.net/en/search_games?q=${game?.FixedTitle}"
-          class="game-description game-description_link">
-          <i class="game-description_icon link_icon download-icon"></i>
-      </a>
-    </p>
-   
+    </p>   
     `;
+    // <a title="emu-land search" target="_blanc" href="https://www.emu-land.net/en/search_games?id=${ELPlatforms[game.ConsoleID]}&q=${game?.FixedTitle}"
+    //     class="game-description game-description_link" ${!ELPlatforms[game.ConsoleID] ? 'disabled' : ''}>
+    //     <i class="game-description_icon link_icon download-icon el_link"></i>
+    //   </a>
+    //   <a title="CDRomance search" target="_blanc" href="https://cdromance.org/?s=${game.FixedTitle}&platform=${CDRPlatforms[game.ConsoleID]}&sorted="
+    //       class="game-description game-description_link" ${!CDRPlatforms[game.ConsoleID] ? 'disabled' : ''}>
+    //       <i class="game-description_icon link_icon download-icon cdr_link"></i>
+    //   </a> 
     return gameElement;
   }
   gamesListHeaderHtml = () => `
@@ -5190,15 +5197,22 @@ class Games {
   }
   generateFiltersList(itemsObj) {
     const list = Object.values(itemsObj).reduce((list, item) => {
-      const isChecked = item.checked;
-      const filterItem = document.createElement("li");
-      filterItem.classList.add("checkbox-input_container");
-      filterItem.innerHTML =
-        `
-        <input ${isChecked ? "checked" : ""} onchange='${item.onChange}' type="checkbox"   name="${item.name}" id="${item.id}" ></input>
-        <label class=" checkbox-input" for="${item.id}">${item.label}</label>
-      `;
-      list.appendChild(filterItem);
+      if (item.type == 'group') {
+        const groupHeader = document.createElement('li');
+        groupHeader.classList.add('filter-list__platform-header');
+        groupHeader.innerText = item.label + ': ';
+        list.appendChild(groupHeader);
+      }
+      else {
+        const isChecked = item.checked;
+        const filterItem = document.createElement("li");
+        filterItem.classList.add("checkbox-input_container");
+        filterItem.innerHTML = `
+          <input ${isChecked ? "checked" : ""} onchange='${item.onChange}' type="checkbox"   name="${item.name}" id="${item.id}" ></input>
+          <label class=" checkbox-input" for="${item.id}">${item.label}</label>
+        `;
+        list.appendChild(filterItem);
+      }
       return list;
     }, document.createElement('ul'));
     list.classList.add("games__filters-list");
@@ -6058,8 +6072,8 @@ const RAPlatforms = {
   "2": "Nintendo 64",
   "3": "SNES/Super Famicom",
   "4": "Game Boy",
-  "5": "Game Boy Advance",
-  "6": "Game Boy Color",
+  "5": "GB Advance",//"Game Boy Advance",
+  "6": "GB Color",//"Game Boy Color",
   "7": "NES/Famicom",
   "8": "PC Engine/TurboGrafx-16",
   "9": "Sega CD",
@@ -6108,3 +6122,201 @@ const RAPlatforms = {
   "101": "Events",
   "102": "Standalone"
 }
+const platformsByManufacturer = {
+  'SEGA': {
+
+    "SG-1000": "33",
+    "Master System": "11",
+    "Genesis/Mega Drive": "1",
+    "Game Gear": "15",
+    "Sega CD": "9",
+    "32X": "10",
+    "Saturn": "39",
+    "Dreamcast": "40",
+  },
+
+  'Nintendo': {
+
+    "NES/Famicom": "7",
+    "Game Boy": "4",
+    "SNES/Super Famicom": "3",
+    "Game Boy Color": "6",
+    "Nintendo 64": "2",
+    "Game Boy Advance": "5",
+    "Virtual Boy": "28",
+    "Nintendo DS": "18",
+    "Nintendo DSi": "78",
+    "Pokemon Mini": "24"
+  },
+
+  'NEC': {
+
+    "PC Engine/TurboGrafx-16": "8",
+    "PC Engine CD/TurboGrafx-CD": "76",
+    "PC-8000/8800": "47",
+    "PC-FX": "49"
+  },
+
+  'SONY': {
+
+    "PlayStation": "12",
+    "PlayStation 2": "21",
+    "PlayStation Portable": "41"
+  },
+
+  'SNK': {
+
+    "Neo Geo Pocket": "14",
+    "Neo Geo CD": "56"
+  },
+
+  'Atari': {
+
+    "Atari 2600": "25",
+    "Atari 7800": "51",
+    "Atari Lynx": "13",
+    "Atari Jaguar": "17",
+    "Atari Jaguar CD": "77"
+  },
+
+  'Other': {
+
+    "Magnavox Odyssey 2": "23",
+    "Arcade": "27",
+    "Apple II": "38",
+    "Amstrad CPC": "37",
+    "MSX": "29",
+    "3DO Interactive Multiplayer": "43",
+    "ColecoVision": "44",
+    "Intellivision": "45",
+    "Vectrex": "46",
+    "WonderSwan": "53",
+    "Fairchild Channel F": "57",
+    "Watara Supervision": "63",
+    "Mega Duck": "69",
+    "Arduboy": "71",
+    "WASM-4": "72",
+    "Arcadia 2001": "73",
+    "Interton VC 4000": "74",
+    "Elektor TV Games Computer": "75",
+    "Uzebox": "80"
+  },
+
+  'Special': {
+
+    "Events": "101",
+    "Standalone": "102"
+  }
+};
+
+const CDRPlatforms = {
+  1: "sega_genesis_roms",//: "Genesis/Mega Drive",
+  2: "n64-roms",//: "Nintendo 64",
+  3: "snes-rom",//: "SNES/Super Famicom",
+  4: "gb_roms",//: "Game Boy",
+  5: "gba-roms",//: "Game Boy Advance",
+  6: "gbc_roms",//: "Game Boy Color",
+  7: "nes-roms",//: "NES/Famicom",
+  8: "turbografx-16",//: "PC Engine/TurboGrafx-16",
+  9: "sega_cd_isos",//: "Sega CD",
+  10: "sega_genesis_roms",//!: "32X",
+  //! 11: "145",//!: "Master System",
+  12: "psx-iso",//: "PlayStation",
+  //! 13: "188",//!: "Atari Lynx",
+  //! 14: "317",//: "Neo Geo Pocket",
+  15: "game-gear",//: "Game Gear",
+  //! 17: "313",//: "Atari Jaguar",
+  18: "nds-roms", //"Nintendo DS",
+  21: "ps2-iso",// "PlayStation 2",
+  //! "23": "Magnavox Odyssey 2",
+  // 24: "319",//: "Pokemon Mini",
+  //! 25: "185",//: "Atari 2600",
+  //! "27": "Arcade",
+  //! 28: "310",//: "Virtual Boy",
+  29: "msx-roms",//: "MSX",//* 304 - MSX2
+  //! "33": "SG-1000",
+  37: "665",//: "Amstrad CPC",
+  //! "38": "Apple II",
+  //! "39": "Saturn",
+  //! "40": "Dreamcast",
+  41: "psp",// "PlayStation Portable",
+  43: "3do-iso",//: "3DO Interactive Multiplayer",
+  //! 44: "294",//: "ColecoVision",
+  //! 45: "298",//: "Intellivision",
+  //! 46: "296",//: "Vectrex",
+  //! "47": "PC-8000/8800",
+  //! "49": "PC-FX",
+  //! 51: "187",//: "Atari 7800",
+  53: "wonderswan",//: "WonderSwan",
+  56: "neo-geo-cd",//: "Neo Geo CD", //? neo geo
+  //! 57: "190",//: "Fairchild Channel F",
+  //! 63: "312",//: "Watara Supervision",
+  //! "69": "Mega Duck",
+  //! "71": "Arduboy",
+  //!"72": "WASM-4",
+  //! 73: "322",//: "Arcadia 2001",
+  //! "74": "Interton VC 4000",
+  //! "75": "Elektor TV Games Computer",
+  76: "turbografx-cd",//: "PC Engine CD/TurboGrafx-CD",
+  //! 77: "313",//: "Atari Jaguar CD", 313 (notCD)
+  // 78: "nds-roms",// "Nintendo DSi",
+  //! "80": "Uzebox",
+  // "101": "Events",
+  // "102": "Standalone"
+}
+const ELPlatforms = {
+  1: "39",//: "Genesis/Mega Drive",
+  2: "146",//: "Nintendo 64",
+  3: "37",//: "SNES/Super Famicom",
+  4: "149",//: "Game Boy",
+  5: "1173",//: "Game Boy Advance",
+  6: "149",//: "Game Boy Color",
+  7: "13",//: "NES/Famicom",
+  8: "148",//: "PC Engine/TurboGrafx-16",
+  9: "369",//: "Sega CD",
+  10: "40",//: "32X",
+  11: "145",//: "Master System",
+  12: "346",//: "PlayStation",
+  13: "188",//: "Atari Lynx",
+  14: "317",//: "Neo Geo Pocket",
+  15: "147",//: "Game Gear",
+  17: "313",//: "Atari Jaguar",
+  //! "18": "Nintendo DS", 
+  //! "21": "PlayStation 2",
+  //! "23": "Magnavox Odyssey 2",
+  24: "319",//: "Pokemon Mini",
+  25: "185",//: "Atari 2600",
+  //! "27": "Arcade",
+  28: "310",//: "Virtual Boy",
+  29: "303",//: "MSX",//* 304 - MSX2
+  //! "33": "SG-1000",
+  37: "665",//: "Amstrad CPC",
+  //! "38": "Apple II",
+  //! "39": "Saturn",
+  //! "40": "Dreamcast",
+  //! "41": "PlayStation Portable",
+  43: "372",//: "3DO Interactive Multiplayer",
+  44: "294",//: "ColecoVision",
+  45: "298",//: "Intellivision",
+  46: "296",//: "Vectrex",
+  //! "47": "PC-8000/8800",
+  //! "49": "PC-FX",
+  51: "187",//: "Atari 7800",
+  53: "315",//: "WonderSwan",
+  56: "685",//: "Neo Geo CD", //? neo geo
+  57: "190",//: "Fairchild Channel F",
+  63: "312",//: "Watara Supervision",
+  //! "69": "Mega Duck",
+  //! "71": "Arduboy",
+  //!"72": "WASM-4",
+  73: "322",//: "Arcadia 2001",
+  //! "74": "Interton VC 4000",
+  //! "75": "Elektor TV Games Computer",
+  76: "148",//: "PC Engine CD/TurboGrafx-CD",
+  77: "313",//: "Atari Jaguar CD", 313 (notCD)
+  //! "78": "Nintendo DSi",
+  //! "80": "Uzebox",
+  // "101": "Events",
+  // "102": "Standalone"
+}
+const googleQuerySite = 'site:wowroms.com/en/roms OR site:cdromance.org OR site:coolrom.com.au/roms OR site:planetemu.net OR site:emulatorgames.net OR site:romsfun.com/roms OR site:emu-land.net/en';

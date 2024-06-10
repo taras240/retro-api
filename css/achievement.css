@@ -8,7 +8,6 @@
   cursor: grab;
   display: flex;
   flex-direction: column;
-
 }
 
 .achivs:not(:hover) {
@@ -131,8 +130,6 @@
   position: relative;
 }
 
-
-
 .achiv-preview {
   position: relative;
   height: 100%;
@@ -196,7 +193,7 @@
 }
 
 .achiv-block:hover .add-to-target {
-  visibility: visible;
+  /* visibility: visible; */
   opacity: 1;
   transition: 0.2s;
 }
@@ -211,17 +208,8 @@
   transition: 0.2s;
 }
 
-.achiv-block:not(.hidden):hover {
-  --shadow-color: black;
-  /* transform: scale(1.1); */
-  z-index: 2;
-  transition: 0.2s;
+.achiv-block:not(.hidden):hover .preview-container {
   top: -5px;
-  /* left: 5px;
-  top: -5px;
-  box-shadow: -1px 1px 0 var(--shadow-color), -2px 2px 0 var(--shadow-color),
-    -3px 3px 0 var(--shadow-color), -4px 4px 0 var(--shadow-color),
-    -5px 5px 0 var(--shadow-color), -6px 6px 0 var(--shadow-color); */
 }
 
 /** ----[ TOOLTIP ]--------- */
