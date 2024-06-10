@@ -5060,6 +5060,7 @@ class Games {
         if (gameToModify) {
           lastGame.NumAwardedHardcore && (gameToModify.NumAwardedHardcore = lastGame.NumAwardedHardcore);
           lastGame.HighestAwardKind ? (gameToModify.Award = lastGame.HighestAwardKind) : (gameToModify.Award = 'started');
+          lastGame.MostRecentAwardedDate && (gameToModify.MostRecentAwardedDate = lastGame.MostRecentAwardedDate);
         }
         else {
           gameToModify = lastGame;
@@ -5918,7 +5919,10 @@ const sortBy = {
 
   truepoints: (a, b) => a.TrueRatio - b.TrueRatio,
 
-  default: (a, b) => a.DisplayOrder - b.DisplayOrder,
+  default: (a, b) => a.DisplayOrder != 0 ?
+    a.DisplayOrder - b.DisplayOrder :
+    a.achivId - b.achivId
+  ,
 
   id: (a, b) => a.ID - b.ID,
 
@@ -5957,7 +5961,11 @@ const sortBy = {
     }
     const awardA = awardTypes[a.Award] ?? 0;
     const awardB = awardTypes[b.Award] ?? 0;
-    return awardA - awardB;
+
+    const awardADate = new Date(a.MostRecentAwardedDate);
+    const awardBDate = new Date(b.MostRecentAwardedDate);
+
+    return awardA - awardB != 0 ? awardA - awardB : awardADate - awardBDate;
   }
 }
 //* Методи фільтрування для досягнень гри

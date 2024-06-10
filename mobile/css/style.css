@@ -68,6 +68,10 @@ li {
     justify-content: center;
 }
 
+.hidden.navbar__item {
+    display: none;
+}
+
 .navbar__item {
     height: 5rem;
     opacity: 0.5;

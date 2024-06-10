@@ -54,9 +54,9 @@
     bottom: 0;
     left: 0;
     display: inline-block;
-    ;
+    text-transform: uppercase;
     padding: 0 .25rem;
-    border-radius: 0 0.5rem 0 0;
+    border-radius: 0;
     font-size: 1.1rem;
     font-weight: 600;
     color: black;

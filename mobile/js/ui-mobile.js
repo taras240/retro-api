@@ -138,6 +138,7 @@ class UI {
       favourites: document.querySelector("#navbar_favourites"),
       login: document.querySelector("#navbar_login"),
     }
+    config.identConfirmed && this.navbar.login.classList.add("hidden");
   }
   addEvents() {
     window.addEventListener('hashchange', () => {
@@ -453,13 +454,13 @@ class Home {
       <div class="section__header-container user-info__header-container">
         <div class="user-info__header">
             <div class="user-info__avatar-container">
-                <img src="${USER_INFO.userImageSrc}" alt="" class="user-info__avatar">
+                <img src="${USER_INFO.userImageSrc}" alt="" class="user-info__avatar" onclick="ui.goto.login()">
             </div>
             <button class="button__switch-mode ${ui.isSoftmode ? "softmode" : ""}" onclick="ui.switchGameMode()">${ui.isSoftmode ? "SOFT" : "HARD"}</button>
             <div class="user-info__user-name-container">
                 <h1 class="user-info__user-name">${USER_INFO.userName}</h1>
                 <div class="user-info__user-rank">${USER_INFO.userRank}</div>
-                <div class="user-info__rich-presence">Member since: ${USER_INFO.memberSince}</div>
+                <div class="user-info__rich-presence">Member since: ${fixTimeString(USER_INFO.memberSince)}</div>
             </div>
         </div>
         ${USER_INFO.isInGame ? `
@@ -607,6 +608,14 @@ class Awards {
           name: "sort-awards"
         },
         {
+          label: "Type",
+          id: "sort_award-type",
+          type: "radio",
+          onChange: "ui.awards.awardSortType = 'award'",
+          checked: this.awardSortType === 'award',
+          name: "sort-awards"
+        },
+        {
           label: "Title",
           id: "sort_title",
           type: "radio",
@@ -728,6 +737,7 @@ class Awards {
     beaten_softcore: "Beaten Softcore",
     completed: "Completed",
     mastered: "Mastered",
+    event: "Event",
     award: "Award Type",
   }
   sortMethods = {
@@ -769,9 +779,12 @@ class Awards {
         res.platforms[game.ConsoleID].name = game.ConsoleName;
         res.platforms[game.ConsoleID].count++;
 
-        !res.awards[game.award] && (res.awards[game.award] = { count: 0 });
+
+        (!res.awards[game.award]) && (res.awards[game.award] = { count: 0 });
         res.awards[game.award].name = this.awardTypesNames[game.award];
         res.awards[game.award].count++;
+
+
 
         return res;
       }, { platforms: {}, awards: {} });
@@ -782,20 +795,13 @@ class Awards {
     !AWARDS && (AWARDS = await apiWorker.getUserAwards({}));
   }
   AwardsSection() {
-    // ${this.awardedGames.reduce((elements, game) => {
-    //   const awardHtml = this.gameHtml(game);
-    //   elements += awardHtml;
-    //   return elements;
-    // }, "")}
     const awardsSection = document.createElement("section");
     awardsSection.classList.add("awards__section", "section");
     awardsSection.innerHTML = `
-            ${this.headerHtml()}
-            <ul class="user-info__awards-list ${this.listType}">
-               
-            </ul>
-        </div>
-        `;
+      ${this.headerHtml()}
+      <ul class="user-info__awards-list ${this.listType}">
+      </ul>
+    `;
     return awardsSection;
   }
   headerHtml() {
@@ -803,13 +809,11 @@ class Awards {
       <div class="section__header-container">
         <div class="section__header-title">Awards</div>
         <div class="section__control-container">
-            <button class=" simple-button" onclick="generateContextMenu(ui.awards.awardSortContext(),event)">Sort</button>
-            <button class=" simple-button" onclick="generateContextMenu(ui.awards.awardPlatformContext(),event)">${this.platformFilterName ?? "Platform"}</button>
-            <button class=" simple-button" onclick="generateContextMenu(ui.awards.awardTypeContext(),event)">${this.awardFilter}</button>
-            <button class="simple-button" onclick="generateContextMenu(ui.awards.awardListContext(),event)">${this.listType}</button>
-            </div>
-        
-
+          <button class=" simple-button" onclick="generateContextMenu(ui.awards.awardSortContext(),event)">Sort</button>
+          <button class=" simple-button" onclick="generateContextMenu(ui.awards.awardPlatformContext(),event)">${this.platformFilterName ?? "Platform"}</button>
+          <button class=" simple-button" onclick="generateContextMenu(ui.awards.awardTypeContext(),event)">${this.awardFilter}</button>
+          <button class="simple-button" onclick="generateContextMenu(ui.awards.awardListContext(),event)">${this.listType}</button>
+        </div>
       </div>
     `;
   }
@@ -1389,7 +1393,33 @@ const Test = () => {
       return sectionElement;
     })
 }
+function addGameToFavourite(gameID) {
+  !config.ui.mobile.favouritesGames && (config.ui.mobile.favouritesGames = {});
+  const {
+    Title,
+    ID,
+    ImageIcon,
+    NumAchievements,
+    TotalRetropoints,
+    points_total,
+    ConsoleID,
+    ConsoleName,
 
+  } = GAMES_DATA[gameID];
+  ui.favouritesGames[gameID] ?
+    (delete config.ui.mobile.favouritesGames[gameID]) :
+    config.ui.mobile.favouritesGames[gameID] = {
+      Title,
+      ID,
+      ImageIcon,
+      NumAchievements,
+      TotalRetropoints,
+      points_total,
+      ConsoleID,
+      ConsoleName,
+    };
+  config.writeConfiguration();
+}
 function generateContextMenu(structureObj, event) {
   event.stopPropagation();
   ui.removeContext();
@@ -1459,10 +1489,15 @@ function lazyLoad({ list, items, callback }) {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         loadItems(initialLoadCount);
-        // Оновлюємо спостереження
         observer.unobserve(trigger);
-        list.appendChild(trigger);
-        itemIndex < items.length && observer.observe(trigger);
+        if (itemIndex < items.length) {
+          list.appendChild(trigger);
+          observer.observe(trigger);
+        }
+        else {
+          trigger.remove();
+        }
+
       }
     });
   };
@@ -1480,9 +1515,6 @@ function lazyLoad({ list, items, callback }) {
 
 
 
-
-
-
 //* --------------- ------------------------- ----------------------------------
 const sortMethods = {
   latest: "date",
@@ -1494,6 +1526,7 @@ const sortMethods = {
   default: "default",
   achievementsCount: "achievementsCount",
   title: "title",
+  award: "award",
 };
 const sortBy = {
   date: (a, b) => {
@@ -1533,9 +1566,25 @@ const sortBy = {
     }
     return 0;
 
+  },
+  award: (b, a) => {
+    const awardTypes = {
+      'event': 6,
+      'mastered': 5,
+      'beaten-hardcore': 4,
+      'completed': 3,
+      'beaten-softcore': 2,
+      'started': 1,
+    }
+    const awardA = awardTypes[a.award] ?? 0;
+    const awardB = awardTypes[b.award] ?? 0;
+
+    const awardADate = new Date(a.AwardedAt);
+    const awardBDate = new Date(b.AwardedAt);
+
+    return awardA - awardB != 0 ? awardA - awardB : awardADate - awardBDate;
   }
 }
-
 
 const RAPlatforms = {
   "1": "Genesis/Mega Drive",
@@ -1595,30 +1644,18 @@ const RAPlatforms = {
 const delay = (ms) => {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
-function addGameToFavourite(gameID) {
-  !config.ui.mobile.favouritesGames && (config.ui.mobile.favouritesGames = {});
-  const {
-    Title,
-    ID,
-    ImageIcon,
-    NumAchievements,
-    TotalRetropoints,
-    points_total,
-    ConsoleID,
-    ConsoleName,
 
-  } = GAMES_DATA[gameID];
-  ui.favouritesGames[gameID] ?
-    (delete config.ui.mobile.favouritesGames[gameID]) :
-    config.ui.mobile.favouritesGames[gameID] = {
-      Title,
-      ID,
-      ImageIcon,
-      NumAchievements,
-      TotalRetropoints,
-      points_total,
-      ConsoleID,
-      ConsoleName,
+const fixTimeString = (
+  (dateString) => {
+    const date = new Date(dateString);
+    const options = {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
     };
-  config.writeConfiguration();
-}
+    return date.toLocaleDateString("uk-UA", options);
+  }
+)

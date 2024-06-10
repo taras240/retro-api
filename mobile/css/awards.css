@@ -37,16 +37,42 @@
     border: 2px solid transparent;
 }
 
-.grid .awards__game-item.beaten {
+.awards__game-item {
+    border-bottom: 1px solid transparent;
+}
+
+.awards__game-item.beaten {
     border-color: silver;
 }
 
-.grid .awards__game-item.mastered {
+.awards__game-item.mastered {
     border-color: gold;
 }
 
-.grid .awards__game-item.completed {
+.awards__game-item.completed {
     border-color: brown;
+}
+
+.grid .awards__game-item.event {
+    /* border-color: violet; */
+    animation: event-award-animation 5s infinite;
+}
+
+@keyframes event-award-animation {
+    0% {
+        border-color: violet;
+        box-shadow: 0 0 5px 0px violet;
+    }
+
+    50% {
+        border-color: blueviolet;
+        box-shadow: 0 0 5px 0px blueviolet;
+    }
+
+    100% {
+        border-color: violet;
+        box-shadow: 0 0 5px 0px violet;
+    }
 }
 
 .awards__game-container {

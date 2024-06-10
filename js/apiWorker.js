@@ -118,6 +118,7 @@ class APIWorker {
           game.AwardDataExtra == "1" ? "beaten" : "beaten_softcore" :
           game.AwardDataExtra == "1" ? "mastered" : "completed";
         game.DateEarnedHardcore = game.AwardedAt;
+        game.ConsoleName == 'Events' && (game.award = "event");
         return game;
       })
       return awardsObj;
