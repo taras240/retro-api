@@ -1655,7 +1655,7 @@ class ButtonPanel {
     this.awards.checked = config.ui?.awards_section?.hidden === false ?? ui.awards.VISIBLE;
 
     this.note.checked = config.ui?.note_section?.hidden === false ?? ui.note.VISIBLE;
-
+    this.games.checked = config.ui?.games_section?.hidden === false ?? ui.note.VISIBLE;
     this.progression.checked = config.ui?.progression_section?.hidden === false ?? ui.progression.VISIBLE;
     this.user.checked = config.ui?.user_section?.hidden === false ?? ui.user.VISIBLE;
     this.notifications.checked = config.ui?.notification_section?.hidden === false ?? ui.notifications.VISIBLE;
@@ -4620,192 +4620,6 @@ class LoginCard {
   }
 }
 
-class Games_ {
-  get GAMES_GROUP() {
-    return config._cfg.ui?.games_section?.games_group ?? "all";
-  }
-  set GAMES_GROUP(value) {
-    config._cfg.ui.games_section.games_group = value;
-    config.writeConfiguration();
-    this.changeGamesGroup(this.GAMES_GROUP);
-  }
-  set PLATFORMS_FILTER(checkbox) {
-    const platformId = checkbox.dataset.platformId;
-    const checkedPlatforms = this.PLATFORMS_FILTER;
-
-    if (checkbox.checked) {
-      checkedPlatforms.push(platformId);
-    }
-    else {
-      const index = checkedPlatforms.indexOf(platformId);
-      if (index !== -1) {
-        checkedPlatforms.splice(index, 1);
-      }
-    }
-    config.ui.games_section.platformsFilter = checkedPlatforms;
-    config.writeConfiguration();
-    this.applyFilter();
-    this.platformFiltersList.querySelector("#game-filters_all").checked = this.PLATFORMS_FILTER.length === Object.keys(this.gameFilters).length;
-
-  }
-  get PLATFORMS_FILTER() {
-    return config.ui?.games_section?.platformsFilter ?? ["7"];
-  }
-  get TYPES_FILTER() {
-    return config.ui?.games_section?.typesFilter ?? ["original"];
-  }
-  set TYPES_FILTER(checkbox) {
-    const type = checkbox.dataset.type ?? "";
-    const typesFilters = this.TYPES_FILTER;
-    const checked = checkbox.checked;
-    if (checked) {
-      typesFilters.push(type);
-    }
-    else {
-      const index = typesFilters.indexOf(type);
-      if (index !== -1) {
-        typesFilters.splice(index, 1);
-      }
-    }
-    config.ui.games_section.typesFilter = typesFilters;
-    config.writeConfiguration();
-    this.applyFilter();
-  }
-
-  async changeGamesGroup(group) {
-    const recentCheckbox = this.section.querySelector("#games_sort-latest");
-    switch (group) {
-      case 'recent':
-        await this.getRecentGamesArray({});
-        recentCheckbox.closest(".games_filters-item").classList.remove("disabled");
-        recentCheckbox.click();
-        this.fillFullList();
-        this.applyFilter();
-        break;
-      case 'completion':
-        await this.getCompletionGamesArray({});
-        recentCheckbox.closest(".games_filters-item").classList.remove("disabled");
-        recentCheckbox.click();
-        this.fillFullList();
-        break;
-      default:
-        recentCheckbox.closest(".games_filters-item").classList.add("disabled");
-        this.platformFiltersList.classList.remove("disabled");
-        this.section.querySelector("#games_filter-types-list").classList.remove("disabled")
-        this.section.querySelector("#games_sort-title").click();
-        await this.loadGamesArray();
-    }
-    this.applySort();
-  }
-
-  applyTypesFilter() {
-    const types = this.TYPES_FILTER;
-    let filteredGamesArray = [];
-    types.forEach(type => {
-      filteredGamesArray = filteredGamesArray.concat(
-        this.GAMES.all
-          ?.filter(game =>
-            game?.sufixes.includes(type.toUpperCase()) || (game?.sufixes.length == 0 && type == "original")
-          )
-      );
-    })
-    this.GAMES.all = filteredGamesArray;
-  }
-
-  platformCodes = {
-    "Genesis/Mega Drive": "1",
-    "Nintendo 64": "2",
-    "SNES/Super Famicom": "3",
-    "Game Boy": "4",
-    "Game Boy Advance": "5",
-    "Game Boy Color": "6",
-    "NES/Famicom": "7",
-    "PC Engine/TurboGrafx-16": "8",
-    "PlayStation": "12",
-    "PlayStation 2": "21",
-    "PlayStation Portable": "41",
-    "etc.": "999",
-  }
-  platformNames = {
-    "1": "Genesis/Mega Drive",
-    "2": "Nintendo 64",
-    "3": "SNES/Super Famicom",
-    "4": "Game Boy",
-    "5": "Game Boy Advance",
-    "6": "Game Boy Color",
-    "7": "NES/Famicom",
-    "8": "PC Engine/TurboGrafx-16",
-    "12": "PlayStation",
-    "21": "PlayStation 2",
-    "41": "PlayStation Portable",
-    "999": "etc.",
-  }
-  gameFilters = {
-    "1": "Genesis/Mega Drive",
-    "2": "Nintendo 64",
-    "3": "SNES/Super Famicom",
-    "4": "Game Boy",
-    "5": "Game Boy Advance",
-    "6": "Game Boy Color",
-    "7": "NES/Famicom",
-    "8": "PC Engine/TurboGrafx-16",
-    "12": "PlayStation",
-    "21": "PlayStation 2",
-    "41": "PlayStation Portable",
-    "999": "etc.",
-  }
-  plaformsInfo = {};
-  GAMES = {};
-  BATCH_SIZE = 10;
-  MAX_GAMES_IN_LIST = 50;
-  constructor() {
-  }
-  async getRecentGamesArray() {
-    const resp = await apiWorker.getRecentlyPlayedGames({});
-    this.GAMES = {};
-    this.clearList();
-    resp.forEach(game => {
-      const platformCode =
-        this.platformNames.hasOwnProperty(game.ConsoleID) ? game.ConsoleID : this.platformCodes["etc."];
-      if (!this.GAMES[platformCode]) {
-        this.GAMES[platformCode] = []
-      }
-      this.GAMES[platformCode].push(game)
-    })
-    this.GAMES.all = this.GAMES.saved = Object.values(this.GAMES).flat();
-    this.applyFilter();
-  }
-  async getCompletionGamesArray() {
-    const resp = await apiWorker.SAVED_COMPLETION_PROGRESS;
-    this.GAMES = {};
-    this.clearList();
-    resp.Results.forEach(game => {
-      const platformCode =
-        this.platformNames.hasOwnProperty(game.ConsoleID) ? game.ConsoleID : this.platformCodes["etc."];
-      if (!this.GAMES[platformCode]) {
-        this.GAMES[platformCode] = []
-      }
-      this.GAMES[platformCode].push(game)
-    })
-    this.GAMES.all = this.GAMES.saved = Object.values(this.GAMES).flat();
-    this.applyFilter();
-  }
-  markAllFilters() {
-    if (this.PLATFORMS_FILTER.length === Object.keys(this.gameFilters).length) {
-      config.ui.games_section.platformsFilter = [];
-      this.platformFiltersList.querySelectorAll("[type='checkbox']").forEach(checkbox => checkbox.checked = false);
-      config.writeConfiguration();
-      this.applyFilter();
-    }
-    else {
-      config.ui.games_section.platformsFilter = [...Object.keys(this.gameFilters)];
-      this.platformFiltersList.querySelectorAll("[type='checkbox']").forEach(checkbox => checkbox.checked = true);
-      config.writeConfiguration();
-      this.applyFilter();
-    }
-
-  }
-}
 class Games {
   get platformFilterItems() {
     const filters = Object.keys(platformsByManufacturer).reduce((items, brend) => {
@@ -5353,7 +5167,7 @@ class Progression {
       card.removeEventListener("mousemove", event => addLines(event))
     });
   }
-  generateCard({ Title, ID, prevSrc, Points, TrueRatio, NumAwardedHardcore, totalPlayers, type, Description, DisplayOrder }) {
+  generateCard({ Title, ID, prevSrc, Points, TrueRatio, NumAwardedHardcore, totalPlayers, type, Description }) {
     const achivElement = document.createElement("li");
     achivElement.classList.add("horizon-list_item", "progression-achiv", type == "win_condition" ? "trophy" : "f");
 

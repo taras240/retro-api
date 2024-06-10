@@ -161,6 +161,7 @@
     background-color: var(--secondary-color);
     border-radius: 0.5rem;
     padding: 0.5rem;
+    width: 100%;
 }
 
 .achiv__title-container {
@@ -168,6 +169,10 @@
     justify-content: start;
     gap: 1rem;
     height: 7rem;
+}
+
+.achiv__title-container_small {
+    height: 6rem;
 }
 
 .achiv__preview-container {

@@ -412,39 +412,53 @@ class Home {
 
   }
   async loadUserInfo() {
-    const resp = await apiWorker.getUserSummary({ gamesCount: 5, achievesCount: 0 });
-    USER_INFO = {};
-    USER_INFO.userName = resp.User;
-    USER_INFO.status = resp.Status.toLowerCase();
-    USER_INFO.richPresence = resp.RichPresenceMsg;
-    USER_INFO.memberSince = resp.MemberSince;
-    USER_INFO.userImageSrc = `https://media.retroachievements.org${resp.UserPic}`;
-    USER_INFO.userRank = resp.Rank ? `Rank: ${resp.Rank} (Top ${~~(10000 * resp.Rank / resp.TotalRanked) / 100}%)` : "Rank is unavailable";
-    USER_INFO.softpoints = resp.TotalSoftcorePoints;
-    USER_INFO.retropoints = resp.TotalTruePoints;
-    USER_INFO.hardpoints = resp.TotalPoints;
-    USER_INFO.lastGames = resp.RecentlyPlayed;
-    USER_INFO.isInGame = resp.isInGame;
-
+    const resp = await apiWorker.getUserSummary({ gamesCount: 5, achievesCount: 8 });
+    USER_INFO = {
+      userName: resp.User,
+      status: resp.Status.toLowerCase(),
+      richPresence: resp.RichPresenceMsg,
+      memberSince: resp.MemberSince,
+      userImageSrc: `https://media.retroachievements.org${resp.UserPic}`,
+      userRank: resp.Rank ? `Rank: ${resp.Rank} (Top ${~~(10000 * resp.Rank / resp.TotalRanked) / 100}%)` : "Rank is unavailable",
+      softpoints: resp.TotalSoftcorePoints,
+      retropoints: resp.TotalTruePoints,
+      hardpoints: resp.TotalPoints,
+      lastGames: resp.RecentlyPlayed,
+      lastAchievements: resp.RecentAchievements.map(a => {
+        a.DateEarnedHardcore = a.DateAwarded;
+        return a;
+      })
+        .sort((a, b) => sortBy.date(a, b)),
+      isInGame: resp.isInGame,
+    }
   }
 
   HomeSection() {
     const homeSection = document.createElement("section");
     homeSection.classList.add("home__section", "section");
     homeSection.innerHTML = `
-        
-            ${this.headerHtml()}
-            <div class="user-info__container">
-           
-            <ul class="user-info__last-games-list">
-                ${USER_INFO.lastGames.reduce((elements, game) => {
+      ${this.headerHtml()}
+      <div class="user-info__container">
+      
+        <ul class="user-info__last-games-list">
+          <h2 class="user-info__block-header">Recently played</h2>
+          ${USER_INFO.lastGames.reduce((elements, game) => {
       const gameHtml = this.gameHtml(game);
       elements += gameHtml;
       return elements;
     }, "")}
-            </ul>
-        </div>
-        `;
+        </ul>
+        <ul class="user-info__last-games-list">
+        <h2 class="user-info__block-header">Last cheevos</h2>
+          ${USER_INFO.lastAchievements.reduce((elements, achievement) => {
+      const achievementHtml = this.achievementHtml(achievement);
+      elements += achievementHtml;
+      return elements;
+    }, "")}
+        </ul>
+        
+      </div>
+    `;
     return homeSection;
 
   }
@@ -467,7 +481,7 @@ class Home {
         <div class="user-info__rich-presence"> ${USER_INFO.richPresence}</div>
         `: ""}
         ${this.pointsHtml()}
-        <h2 class="user-info__block-header">Recently played</h2>
+        
       </div>
     `;
   }
@@ -527,6 +541,48 @@ class Home {
                 </div>
             </li>
         `;
+  }
+  achievementHtml(achiv) {
+    // {
+    //   "ID": 307869,
+    //   "GameID": 3490,
+    //   "GameTitle": "Bangai-O",
+    //   "Title": "The Planet Dan Star",
+    //   "Description": "Clear Level-01.",
+    //   "Points": 1,
+    //   "Type": "progression",
+    //   "BadgeName": "340584",
+    //   "IsAwarded": "1",
+    //   "DateAwarded": "Mon Jun 10 2024 21:54:55 GMT+0300 (за східноєвропейським літнім часом)",
+    //   "HardcoreAchieved": 1
+    // }
+
+    return `
+      <li class="achiv__achiv-container">
+        <div class="achiv__title-container achiv__title-container_small">
+            <div class="achiv__preview-container">
+                <img class="user-info__achiv-preview ${achiv.HardcoreAchieved || (ui.isSoftmode && achiv.IsAwarded) ? "earned" : ""}"
+                    src="https://media.retroachievements.org/Badge/${achiv.BadgeName}.png" alt="">
+            </div>
+
+            <div class="achiv__achiv-description">
+                <h2 class="achiv__achiv-title">${achiv.Title}</h2>
+                <p class="achiv__achiv-text">${achiv.Description}</p>
+            <div class="user-info_game-stats-container">
+              <div class="game-stats">
+                  <i class="game-stats__icon game-stats__points-icon"></i>
+                  <div class="game-stats__text">${achiv.Points}</div>
+              </div>  
+              <div class="game-stats ">
+                  <div class="game-stats__text">${fixTimeString(achiv.DateAwarded)}</div>
+              </div>  
+            </div>
+          </div>            
+        </div>
+        
+      </li>
+    
+    `
   }
 
 }
