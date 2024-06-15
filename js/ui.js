@@ -1535,9 +1535,9 @@ class AchievementsBlock {
         </div>
         <h2 class="widget-header-text achivs-header-text">Cheevos${this.CLONE_NUMBER === 0 ? "" : " ~"
       }</h2>
-      <button class="header-button header-icon" onclick="ui.settings.openSettings(ui.achievementsBlock[${this.CLONE_NUMBER}].contextMenuItems)">
-      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"/>
-      </svg>        
+      <button class="header-button header-icon tweak-button" onclick="ui.settings.openSettings(ui.achievementsBlock[${this.CLONE_NUMBER}].contextMenuItems)">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"/>
+        </svg>        
       </button>
         <button class="header-button header-icon" onclick="ui.achievementsBlock[${this.CLONE_NUMBER
       }].close();">
@@ -4903,7 +4903,7 @@ class Games {
           class="game-preview_image">
     </div>
     <h3 class="game-description_title"><button title="open game" class="game-description_button"
-            onclick="config.gameID = ${game.ID}; getAchievements()">${game.FixedTitle} ${generateBadges(game.badges)}</button>
+            onclick="ui.games.showGameInfoPopup(${game.ID})">${game.FixedTitle} ${generateBadges(game.badges)}</button>
     </h3>
     <button class="favourites-button game-description icon-button games__icon-button ${ui.games.FAVOURITES.includes(game.ID) ? 'checked' : ''}" onclick="ui.games.addToFavourite(event,${game.ID})">
       <i class="icon favourite_icon"></i>
@@ -5032,6 +5032,55 @@ class Games {
     }, document.createElement('ul'));
     list.classList.add("games__filters-list");
     return list;
+  }
+  async showGameInfoPopup(gameID = 1) {
+    document.querySelectorAll(".popup").forEach(popup => popup.remove());
+    const gamePopupElement = document.createElement("section");
+    const game = await apiWorker.getGameProgress({ gameID: gameID });
+    console.log(game);
+
+    gamePopupElement.innerHTML = `
+    <section class="section game-popup__section popup">
+        <div class="game-popup__header-container header-container">
+            <h2 class="widget-header-text"><a href="https://retroachievements.org/game/${game.ID}" target="_blank">${game.FixedTitle} ${generateBadges(game.sufixes)}</a></h2>
+            <button class="header-button header-icon" onclick="this.closest('section').remove();">
+                <svg height="24" viewBox="0 -960 960 960" width="24">
+                    <path
+                        d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+                </svg>
+            </button>
+        </div>
+        <div class="game-info__container">
+            <div class="game-info__images-container">
+                <img src="https://media.retroachievements.org${game.ImageBoxArt}" alt="" class="game__image">
+                <img src="https://media.retroachievements.org${game.ImageIngame}" alt="" class="game__image">
+                <img src="https://media.retroachievements.org${game.ImageTitle}" alt="" class="game__image">
+
+            </div>
+            <div class="game-info__descriptions-container">
+                <div class="game-description__property">Platform: <span>${game?.ConsoleName}</span></div>
+                <div class="game-description__property">Developer: <span>${game?.Developer} Soft</span></div>
+                <div class="game-description__property">Genre: <span>${game?.Genre}</span></div>
+                <div class="game-description__property">Publisher: <span>${game?.Publisher} Soft</span></div>
+                <div class="game-description__property">Released: <span>${game?.Released}</span></div>
+                <div class="game-description__property">Achievements total : <span>${game?.NumAwardedToUserHardcore} / ${game?.NumAwardedToUser} / ${game?.achievements_published}</span>
+                </div>
+                <div class="game-description__property">Total retropoints : <span>${game?.TotalRetropoints}</span></div>
+                <div class="game-description__property">Total points : <span>${game?.points_total}</span></div>
+                <div class="game-description__property">Total players : <span>${game?.masteredCount} / ${game?.beatenCount} / ${game?.players_total}</span></div>
+                <div class="game-description__property">Completion : <span>${game?.masteryRate}% / ${game?.beatenRate}%</span></div>
+
+            </div>
+            <div class="game-info__cheevos-container">
+
+            </div>
+        </div>
+    </section>
+    `;
+    ui.app.appendChild(gamePopupElement);
+  }
+  toggleFullscreen() {
+    this.section.classList.toggle("fullscreen")
   }
 }
 class Progression {

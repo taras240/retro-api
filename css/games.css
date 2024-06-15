@@ -1,4 +1,4 @@
-#games_section {
+section.section.games_setion {
   width: 500px;
   top: 20px;
   left: 0;
@@ -8,6 +8,10 @@
   min-width: 800px;
   min-height: 400px;
   z-index: 1;
+}
+
+.games_setion:hover {
+  z-index: 2;
 }
 
 .games_container {

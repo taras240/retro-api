@@ -977,7 +977,7 @@ class Game {
         }
         return data;
       }, { achivs: 0, points: 0, retropoints: 0 });
-    const completionProgress = ~~(100 * (earnedData.points) / this.gameData.points_total)
+    style = { '--progress': completionProgress + "%" }
     earnedData.achivs == 0 && (earnedData = false);
     return `
             <div class="section__header-container game__header-container" onclick="ui.showGameDetails(${this.gameID});event.stopPropagation();">

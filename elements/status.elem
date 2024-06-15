@@ -1,7 +1,7 @@
 <section id="update-section" class="update_section  section">
 
   <div class="update_container " id="update-text-block">
-    <button class="header-button header-icon update__header-button"
+    <button class="header-button header-icon tweak-button update__header-button"
       onclick="ui.settings.openSettings(ui.statusPanel.contextMenuItems)">
       <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed">
         <path d="M0 0h24v24H0V0z" fill="none" />
