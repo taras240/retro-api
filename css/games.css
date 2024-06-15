@@ -10,7 +10,7 @@ section.section.games_setion {
   z-index: 1;
 }
 
-.games_setion:hover {
+section.section.games_setion:hover {
   z-index: 2;
 }
 

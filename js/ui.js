@@ -5034,13 +5034,11 @@ class Games {
     return list;
   }
   async showGameInfoPopup(gameID = 1) {
-    document.querySelectorAll(".popup").forEach(popup => popup.remove());
+    document.querySelectorAll(".game-popup__section").forEach(popup => popup.remove());
     const gamePopupElement = document.createElement("section");
     const game = await apiWorker.getGameProgress({ gameID: gameID });
-    console.log(game);
-
     gamePopupElement.innerHTML = `
-    <section class="section game-popup__section popup">
+    <section class="section game-popup__section">
         <div class="game-popup__header-container header-container">
             <h2 class="widget-header-text"><a href="https://retroachievements.org/game/${game.ID}" target="_blank">${game.FixedTitle} ${generateBadges(game.sufixes)}</a></h2>
             <button class="header-button header-icon" onclick="this.closest('section').remove();">
