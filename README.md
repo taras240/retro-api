@@ -44,4 +44,4 @@ The application does not require installation; you can simply navigate to the li
 
 ### Feedback
 
-If you have any questions, comments, or suggestions, please contact me *https://discord.gg/G6aHM5Yy* | *khomyn@outlook.com*  or open a new issue in the Issues section on GitHub.
+If you have any questions, comments, or suggestions, please contact me *https://discord.gg/apzc6kCAbH* | *khomyn@outlook.com*  or open a new issue in the Issues section on GitHub.
