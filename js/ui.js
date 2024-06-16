@@ -5621,6 +5621,7 @@ class Notifications {
   }
 
   parseUserSummary(userInfo) {
+
     userInfo.lastGames.map(game => {
       game.DateEarnedHardcore = game.LastPlayed;
       game.type = this.types.newGame;
@@ -5638,7 +5639,7 @@ class Notifications {
       this.pushNotification({
         type: element.type,
         elements: element,
-        time: element.DateEarnedHardcore
+        time: element.DateEarnedHardcore,
       })
     );
   }
@@ -5673,8 +5674,17 @@ class Notifications {
     return timeBlockElement;
   }
   generatePopupTime(time) {
+    const toDate = (s) => {
+      const [datePart, timePart] = s.split(', ');
+
+      const [day, month, year] = datePart.split('.').map(Number);
+
+      const [hours, minutes] = timePart.split(':').map(Number);
+
+      return new Date(year, month - 1, day, hours, minutes);
+    }
     const timestampElement = document.createElement("li");
-    const popupTime = (time ? new Date(time) : new Date()).getTime();
+    const popupTime = (time ? toDate(time) : new Date()).getTime();
     timestampElement.dataset.time = popupTime;
     timestampElement.classList.add("notification_timestamp");
     !this.SHOW_TIMESTAMP ? timestampElement.classList.add("hidden") : "";
