@@ -751,10 +751,27 @@ input[type="checkbox"]:checked+.side-panel_input::after {
   position: fixed;
 }
 
+
 .context-submenu {
   left: 20px;
   top: 20px;
   position: absolute;
+}
+
+.to-top .context-submenu {
+  transform: translateY(calc(-100% + 40px));
+}
+
+.context-menu.to-top {
+  transform: translateY(-100%);
+}
+
+.context-menu.to-left {
+  transform: translateX(-100%);
+}
+
+.context-menu.to-left.to-top {
+  transform: translate(-100%, -100%);
 }
 
 .context-submenu,

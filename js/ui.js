@@ -166,15 +166,15 @@ class UI {
   }
   showContextmenu({ event, menuItems, sectionCode = "" }) {
     const setContextPosition = () => {
-      event.x + this.contextMenu.offsetWidth > window.innerWidth
-        ? (this.contextMenu.style.left =
-          event.x - this.contextMenu.offsetWidth + "px")
-        : (this.contextMenu.style.left = event.x + "px");
-      event.y + this.contextMenu.offsetHeight > window.innerHeight
-        ? (this.contextMenu.style.top =
-          event.y - this.contextMenu.offsetHeight + "px")
-        : (this.contextMenu.style.top = event.y + "px");
+      this.contextMenu.style.left = event.x + "px";
+      this.contextMenu.style.top = event.y + "px";
+
+      (window.innerWidth - event.x < this.contextMenu.offsetWidth * 3) &&
+        (this.contextMenu.classList.add("to-left"));
+      (window.innerHeight - event.y < this.contextMenu.offsetHeight * 2)
+        && (this.contextMenu.classList.add("to-top"));
     }
+
     event.preventDefault();
     event.stopPropagation();
     document.querySelector(".context-menu")?.remove();
@@ -1698,6 +1698,15 @@ class StatusPanel {
         label: "Show stats",
         elements: [
           {
+            prefix: "Duration ",
+            postfix: "sec",
+            type: "input-number",
+            id: "context-menu_stats-duration",
+            label: "Duration",
+            value: this.STATS_DURATION,
+            event: `onchange="ui.statusPanel.STATS_DURATION = this.value;"`,
+          },
+          {
             type: "checkbox",
             name: "context_show-points",
             id: "context_show-points",
@@ -1742,27 +1751,35 @@ class StatusPanel {
           {
             type: "radio",
             name: "context_game-time",
-            id: "context_game-time",
-            label: "Play time",
-            checked: this.SHOW_PLAYTIME,
-            event: `onclick="ui.statusPanel.SHOW_PLAYTIME = this.checked;"`,
+            id: "context_show-playTime",
+            label: "Game time",
+            checked: this.SHOW_TIME == "playTime",
+            event: `onclick="ui.statusPanel.SHOW_TIME = 'playTime';"`,
           },
           {
             type: "radio",
             name: "context_game-time",
-            id: "context_show-session-game-time",
+            id: "context_show-sessionTime",
             label: "Session Game Time",
-            checked: this.SHOW_SESSION_GAME_TIME,
-            event: `onclick="ui.statusPanel.SHOW_SESSION_GAME_TIME = this.checked;"`,
+            checked: this.SHOW_TIME == "sessionTime",
+            event: `onclick="ui.statusPanel.SHOW_TIME = 'sessionTime';"`,
           },
           {
-            prefix: "Duration ",
-            postfix: "sec",
+            type: "radio",
+            name: "context_game-time",
+            id: "context_show-timer",
+            label: "Timer",
+            checked: this.SHOW_TIME == "timer",
+            event: `onclick="ui.statusPanel.SHOW_TIME = 'timer';"`,
+          },
+          {
+            prefix: "Timer",
+            postfix: "min",
             type: "input-number",
-            id: "context-menu_stats-duration",
-            label: "Duration",
-            value: this.STATS_DURATION,
-            event: `onchange="ui.statusPanel.STATS_DURATION = this.value;"`,
+            id: "context-menu_stats-timer-duration",
+            label: "Timer",
+            value: ~~(this.TIMER_TIME / 60 * 100) / 100,
+            event: `onchange="ui.statusPanel.TIMER_TIME = this.value;"`,
           },
 
 
@@ -1954,6 +1971,7 @@ class StatusPanel {
     config.writeConfiguration();
     this.startStatsAnimation();
   }
+
   get SHOW_NEW_ACHIV() {
     return config.ui.update_section?.showNewAchiv ?? true;
   }
@@ -2024,35 +2042,28 @@ class StatusPanel {
     config.writeConfiguration();
     this.setValues();
   }
-  get SHOW_PLAYTIME() {
-    return config.ui.update_section?.showPlayTime ?? true;
+  get SHOW_TIME() {
+    return config.ui.update_section?.time ?? "playTime";
   }
-  set SHOW_PLAYTIME(value) {
-    if (!this.SHOW_SESSION_GAME_TIME && this.SHOW_PLAYTIME && value) {
+  set SHOW_TIME(value) {
+    if (value === config.ui.update_section.time) {
+      document.querySelector(`#context_show-${value}`).checked = false;
       value = false;
-      document.getElementById("context_game-time").checked = value;
     }
-    else {
-      config.ui.update_section.showSessionGameTime = false;
-    }
-    config.ui.update_section.showPlayTime = value;
+    config.ui.update_section.time = value;
     config.writeConfiguration();
     this.startStatsAnimation();
   }
-  get SHOW_SESSION_GAME_TIME() {
-    return config?.ui?.update_section?.showSessionGameTime ?? false;
+  get TIMER_TIME() {
+    return config.ui.update_section?.timerTime ?? 2;
   }
-  set SHOW_SESSION_GAME_TIME(value) {
-    if (this.SHOW_SESSION_GAME_TIME && value) {
-      value = false;
-      config.ui.update_section.showPlayTime = false;
-      document.getElementById("context_show-session-game-time").checked = false;
-    }
-    else if (!this.SHOW_PLAYTIME && !this.SHOW_SESSION_GAME_TIME) {
-      config.ui.update_section.showPlayTime = true;
-    }
-    config.ui.update_section.showSessionGameTime = value;
+  set TIMER_TIME(value) {
+
+    value < 1 && (value = 1);
+    value > 24 * 60 && (value = 24 * 60);
+    config.ui.update_section.timerTime = (value * 60);
     config.writeConfiguration();
+    this.timerTime = this.TIMER_TIME;
     this.startStatsAnimation();
   }
   get VISIBLE() {
@@ -2075,16 +2086,34 @@ class StatusPanel {
   }
   gameTime = 0;
   sessionGameTime = 0;
+  timerTime = this.TIMER_TIME;
   gameTimeInterval;
 
+  getActiveTime = () => {
+    let time = 0;
+
+    switch (this.SHOW_TIME) {
+      case ("playTime"):
+        time = this.gameTime;
+        break;
+      case ("sessionTime"):
+        time = this.sessionGameTime;
+        break;
+      case ("timer"):
+        time = this.timerTime;
+        break;
+    }
+
+    return this.formatTime(time);
+  }
   get statusTextValues() {
     const statusObj = {}
     this.SHOW_HP && (statusObj.progressionInPointsStats = `${this.stats.earnedPoints}/${this.stats.totalPoints} HP`);
     this.SHOW_CHEEVOS && (statusObj.cheevosStats = `${this.stats.earnedAchievesCount}/${this.stats.totalAchievesCount} CHEEVOS`);
     this.SHOW_PROGRESSION && (statusObj.cheevosStats = `${this.stats.earnedProgressionCount}/${this.stats.totalProgressionCount} STEPS`);
     this.SHOW_RP && (statusObj.retroPointsStats = `${this.stats.earnedRetropoints}/${this.stats.totalRetropoints} RP`);
-    this.SHOW_SP && (statusObj.softPointsStats = `${this.stats.earnedSoftpoints}/${this.stats.totalSoftPoints} SP`);
-    this.SHOW_PLAYTIME && (statusObj.gameTime = `${this.formatTime(this.SHOW_SESSION_GAME_TIME ? this.sessionGameTime : this.gameTime)}`);
+    this.SHOW_SP && (statusObj.softPointsStats = `${this.stats.earnedSoftpoints}/${this.stats.totalPoints - this.stats.earnedPoints} SP`);
+    this.SHOW_TIME && (statusObj.gameTime = this.getActiveTime())
     return statusObj;
   }
   constructor() {
@@ -2139,8 +2168,12 @@ class StatusPanel {
         this.gameTimeInterval = setInterval(() => {
           this.gameTime++;
           this.sessionGameTime++;
+          this.timerTime--;
+          if (this.SHOW_TIME === "timer" && this.timerTime < 0) {
+            this.section.classList.add("timer-timeout");
+          }
           this.gameTime % 60 == 0 && (savePlayTime());
-          const time = this.formatTime(this.SHOW_SESSION_GAME_TIME ? this.sessionGameTime : this.gameTime);
+          const time = this.getActiveTime();
           this.section.querySelector(`.gameTime`) && (this.section.querySelector(`.gameTime`).innerText = time);
         }, 1000)
       }
@@ -2280,6 +2313,7 @@ class StatusPanel {
     this.updateData();
     this.gameTime = config.ui.update_section.playTime[config.gameID] ? config.ui.update_section.playTime[config.gameID] : 0;
     this.sessionGameTime = 0;
+    this.timerTime = this.TIMER_TIME;
   }
   updateProgress({ earnedAchievementIDs }) {
     this.updateData();
@@ -2462,7 +2496,7 @@ class StatusPanel {
   statsAnimationInterval;
   startStatsAnimation() {
     this.stopStatsAnimation();
-
+    this.section.classList.remove("timer-timeout");
     this.progressStatusText.innerText = '';
     this.progressStatusText.className = `progress_points-percent progress-percent`;
 
@@ -2619,6 +2653,9 @@ class StatusPanel {
     return result.toFixed(2) + '%';
   }
   formatTime(seconds) {
+    const isNegative = seconds < 0;
+    isNegative && (seconds *= -1);
+
     let hours = Math.floor(seconds / 3600);
     let minutes = Math.floor((seconds % 3600) / 60);
     let remainingSeconds = seconds % 60;
@@ -2628,7 +2665,7 @@ class StatusPanel {
     minutes = (minutes < 10) ? "0" + minutes : minutes;
     remainingSeconds = (remainingSeconds < 10) ? "0" + remainingSeconds : remainingSeconds;
 
-    return `${hours != "00" ? hours + ":" : ""}${minutes}:${remainingSeconds}`;
+    return `${isNegative ? "-" : ""}${hours != "00" ? hours + ":" : ""}${minutes}:${remainingSeconds}`;
   }
   fitFontSize() {
     const container = document.querySelector(".update_container");
