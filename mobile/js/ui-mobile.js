@@ -252,7 +252,7 @@ class UI {
       <div class="hor-line"></div>
       <div class="horizontal-buttons-container">
       <a class="round-button icon-button download-icon simple-button game-popup__download-button"
-          href="https://www.emu-land.net/en/search_games?q=${game?.Title}" target="_blank"></a>
+          href="https://google.com/search?q='${game?.FixedTitle}' '${RAPlatforms[game?.ConsoleID]}' ${googleQuerySite}" target="_blank"></a>
       <a class="round-button icon-button redirect-icon simple-button game-popup__ra-button"
           href="https://retroachievements.org/game/${game?.ID}" target="_blank"></a>
       <button class="${ui.favouritesGames[game?.ID] ? "checked" : ''} round-button icon-button like-icon simple-button game-popup__like-button"
@@ -959,26 +959,37 @@ class Game {
     `
   }
   SectionHeaderHtml() {
-    let earnedData = Object.values(this.gameData.Achievements)
-      .reduce((data, achiv) => {
-        if (ui.isSoftmode) {
-          achiv.isEarned && (
-            data.achivs++,
-            data.points += achiv.Points,
-            data.retropoints += achiv.isHardcoreEarned ? achiv.TrueRatio : 0
-          );
-        }
-        else {
-          achiv.isHardcoreEarned && (
-            data.achivs++,
-            data.points += achiv.Points,
-            data.retropoints += achiv.TrueRatio
-          );
-        }
-        return data;
-      }, { achivs: 0, points: 0, retropoints: 0 });
-    style = { '--progress': completionProgress + "%" }
-    earnedData.achivs == 0 && (earnedData = false);
+    const earnedData = ui.isSoftmode ? {
+      count: this.gameData.earnedStats.soft.count,
+      points: this.gameData.earnedStats.soft.points,
+      retropoints: this.gameData.earnedStats.hard.retropoints
+    } :
+      {
+        count: this.gameData.earnedStats.hard.count,
+        points: this.gameData.earnedStats.hard.points,
+        retropoints: this.gameData.earnedStats.hard.retropoints
+      };
+    // let earnedData = Object.values(this.gameData.Achievements)
+    //   .reduce((data, achiv) => {
+    //     if (ui.isSoftmode) {
+    //       achiv.isEarned && (
+    //         data.achivs++,
+    //         data.points += achiv.Points,
+    //         data.retropoints += achiv.isHardcoreEarned ? achiv.TrueRatio : 0
+    //       );
+    //     }
+    //     else {
+    //       achiv.isHardcoreEarned && (
+    //         data.achivs++,
+    //         data.points += achiv.Points,
+    //         data.retropoints += achiv.TrueRatio
+    //       );
+    //     }
+    //     return data;
+    //   }, { achivs: 0, points: 0, retropoints: 0 });
+    // style = { '--progress': this.gameData.completionProgress + "%" }
+    // earnedData.achivs == 0 && (earnedData = false);
+    const completionProgress = ~~(100 * earnedData.count / this.gameData.achievements_published);
     return `
             <div class="section__header-container game__header-container" onclick="ui.showGameDetails(${this.gameID});event.stopPropagation();">
                 <div class="game-header__background-container">
@@ -1009,18 +1020,18 @@ class Game {
                 <div class="game-points__container">
                     <div class="user-info__points-group">
                         <h3 class="game-points__points-name">cheevos</h3>
-                        <p class="user-info__points">${earnedData ? (earnedData.achivs + '/') : ""}${this.gameData.NumAchievements}</p>
+                        <p class="user-info__points">${earnedData.count > 0 ? (earnedData.count + '/') : ""}${this.gameData.NumAchievements}</p>
                     </div>
                     <div class="vertical-line"></div>
 
                     <div class="user-info__points-group">
                         <h3 class="game-points__points-name">points</h3>
-                        <p class="user-info__points">${earnedData ? (earnedData.points + '/') : ""}${this.gameData.points_total}</p>
+                        <p class="user-info__points">${earnedData.count > 0 ? (earnedData.points + '/') : ""}${this.gameData.points_total}</p>
                     </div>
                     <div class="vertical-line"></div>
                     <div class="user-info__points-group">
                         <h3 class="game-points__points-name">retropoints</h3>
-                        <p class="user-info__points">${earnedData ? (earnedData.retropoints + '/') : ""}${this.gameData.TotalRetropoints}</p>
+                        <p class="user-info__points">${earnedData.count > 0 ? (earnedData.retropoints + '/') : ""}${this.gameData.TotalRetropoints}</p>
                     </div>
                 </div>
             </div>
@@ -1715,3 +1726,4 @@ const fixTimeString = (
     return date.toLocaleDateString("uk-UA", options);
   }
 )
+const googleQuerySite = 'site:www.romhacking.net OR site:wowroms.com/en/roms OR site:cdromance.org OR site:coolrom.com.au/roms OR site:planetemu.net OR site:emulatorgames.net OR site:romsfun.com/roms OR site:emu-land.net/en';
