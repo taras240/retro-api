@@ -1233,9 +1233,9 @@ class AchievementsBlock {
             <i class="target_description-icon ${achievement.type ?? "none"}"></i>            
           </div>
           ${achievement.DateEarnedHardcore
-            ? "<p>Earned hardcore: " + fixTimeString(achievement.DateEarnedHardcore) + "</p>"
+            ? "<p>Earned hardcore: " + achievement.DateEarnedHardcore + "</p>"
             : achievement.DateEarned
-              ? "<p>Earned softcore: " + fixTimeString(achievement.DateEarned) + "</p>"
+              ? "<p>Earned softcore: " + achievement.DateEarned + "</p>"
               : ""
           }
         `;
@@ -2265,13 +2265,13 @@ class StatusPanel {
       this.addAlertsToQuery([{ type: "new-game", value: ui.GAME_DATA }]);
     }
 
-    const { ImageIcon, FixedTitle, ConsoleName, sufixes } = ui.GAME_DATA;
+    const { ImageIcon, FixedTitle, ConsoleName, badges } = ui.GAME_DATA;
     const { gamePreview, gameTitle, gamePlatform } = this;
     gamePreview.setAttribute(
       "src",
       `https://media.retroachievements.org${ImageIcon}`
     );
-    gameTitle.innerHTML = `${FixedTitle || "Some game name"} ${generateBadges(sufixes)}`;
+    gameTitle.innerHTML = `${FixedTitle || "Some game name"} ${generateBadges(badges)}`;
     gameTitle.setAttribute(
       "href",
       "https://retroachievements.org/game/" + config.gameID
@@ -2356,7 +2356,7 @@ class StatusPanel {
     }
     const updateGameData = (game) => {
       const { FixedTitle,
-        sufixes,
+        badges,
         ImageIcon,
         points_total,
         ConsoleName,
@@ -2366,7 +2366,7 @@ class StatusPanel {
         beatenRate,
       } = game;
       this.backSide.imgElement.src = `https://media.retroachievements.org${ImageIcon}`;
-      this.backSide.achivTitleElement.innerHTML = `${FixedTitle} ${generateBadges(sufixes)}
+      this.backSide.achivTitleElement.innerHTML = `${FixedTitle} ${generateBadges(badges)}
       <i class="game-card_suffix">${ConsoleName}</i>
       `;
       let gameInfo = `
@@ -2398,7 +2398,7 @@ class StatusPanel {
     }
     const updateAwardData = (game) => {
       const { FixedTitle,
-        sufixes,
+        badges,
         ImageIcon,
         points_total,
         earnedPoints,
@@ -2413,7 +2413,7 @@ class StatusPanel {
       const playTimeInMinutes = deltaTime(config.ui.update_section.playTime[ID]);
       const awardRate = award == 'mastered' ? masteryRate : beatenRate;
       this.backSide.imgElement.src = `https://media.retroachievements.org${ImageIcon}`;
-      this.backSide.achivTitleElement.innerHTML = `${FixedTitle} ${generateBadges(sufixes)}
+      this.backSide.achivTitleElement.innerHTML = `${FixedTitle} ${generateBadges(badges)}
       <i class="game-card_suffix bg_gold">GAINED AWARD</i>
       `;
       let gameInfo = `
@@ -3611,9 +3611,9 @@ class GameCard {
     achievements_published,
     players_total,
     points_total,
-    sufixes,
+    badges,
   }) {
-    this.header.innerHTML = `${FixedTitle} ${this.SHOW_BADGES ? generateBadges(sufixes) : ""} `;
+    this.header.innerHTML = `${FixedTitle} ${this.SHOW_BADGES ? generateBadges(badges) : ""} `;
     this.header.setAttribute(
       "href",
       `https://retroachievements.org/game/${ID}`
@@ -3736,8 +3736,7 @@ class Awards {
         .map((game) => {
           // Перетворюємо строку дати на об'єкт Date
           game.awardedDate = new Date(game.AwardedAt);
-          // Генеруємо рядок часу на основі дати нагородження за допомогою функції fixTimeString
-          game.timeString = fixTimeString(game.AwardedAt);
+
           // Встановлюємо правильний тип нагороди для гри на основі додаткових даних
           game.awardeTypeFixed =
             game.AwardType === "Game Beaten"
@@ -4878,7 +4877,6 @@ class Games {
         }
         else {
           gameToModify = lastGame;
-          gameToModify = fixGameTitle(gameToModify);
           gameToModify.ImageIcon = gameToModify.ImageIcon.match(/\d+/gi)[0];
           lastGame.NumAwardedHardcore && (gameToModify.NumAwardedHardcore = lastGame.NumAwardedHardcore);
           lastGame.HighestAwardKind ? (gameToModify.Award = lastGame.HighestAwardKind) : (gameToModify.Award = 'started');
@@ -5036,11 +5034,22 @@ class Games {
   async showGameInfoPopup(gameID = 1) {
     document.querySelectorAll(".game-popup__section").forEach(popup => popup.remove());
     const gamePopupElement = document.createElement("section");
+
     const game = await apiWorker.getGameProgress({ gameID: gameID });
+    const rawgData = await apiWorker.rawgSearchGame({ gameTitle: game.FixedTitle, platformID: game.ConsoleID });
+
+    const rawgGameInfo = rawgData ? `
+    <div class="game-info__descriptions-container rawg-data-list">
+      <div class="game-description__property">Score : <span>${~~rawgData?.score}</span></div>
+      <div class="game-description__property">Comunity rating : <span>${~~(rawgData?.rating * 20)}</span></div>
+      <div class="game-description__property">Metacritic : <span>${rawgData?.metacritic ?? "-"}</span></div>
+      <p class="description-link__header"><a href="https://rawg.io" target="_blanc"/>rawg.io data</a></p>
+    </div>
+                `: "";
     gamePopupElement.innerHTML = `
     <section class="section game-popup__section">
         <div class="game-popup__header-container header-container">
-            <h2 class="widget-header-text"><a href="https://retroachievements.org/game/${game.ID}" target="_blank">${game.FixedTitle} ${generateBadges(game.sufixes)}</a></h2>
+            <h2 class="widget-header-text"><a href="https://retroachievements.org/game/${game.ID}" target="_blank">${game.FixedTitle} ${generateBadges(game.badges)}</a></h2>
             <button class="header-button header-icon" onclick="this.closest('section').remove();">
                 <svg height="24" viewBox="0 -960 960 960" width="24">
                     <path
@@ -5063,11 +5072,14 @@ class Games {
                 <div class="game-description__property">Released: <span>${game?.Released}</span></div>
                 <div class="game-description__property">Achievements total : <span>${game?.NumAwardedToUserHardcore} / ${game?.NumAwardedToUser} / ${game?.achievements_published}</span>
                 </div>
-                <div class="game-description__property">Total retropoints : <span>${game?.TotalRetropoints}</span></div>
-                <div class="game-description__property">Total points : <span>${game?.points_total}</span></div>
+                <div class="game-description__property">Total retropoints : <span>
+                ${game?.earnedStats.hard.retropoints} / ${game?.TotalRetropoints}</span></div>
+                <div class="game-description__property">Total points : <span>
+                  ${game?.earnedStats.hard.points} / ${game?.earnedStats.soft.points} / ${game?.points_total}</span></div>
                 <div class="game-description__property">Total players : <span>${game?.masteredCount} / ${game?.beatenCount} / ${game?.players_total}</span></div>
                 <div class="game-description__property">Completion : <span>${game?.masteryRate}% / ${game?.beatenRate}%</span></div>
-
+                <div class="game-description__property">RetroRatio : <span>${game?.retroRatio}</span></div>
+                ${rawgGameInfo}
             </div>
             <div class="game-info__cheevos-container">
 
@@ -5485,7 +5497,7 @@ class UserInfo {
         <img class="user_game-img" src="https://media.retroachievements.org/Badge/${achiv.BadgeName}.png" alt="">
     </div>
     <div class="user_game-title">${achiv.Title}</div>
-    <p class="user_game-description">${fixTimeString(achiv.DateAwarded ?? achiv.Date)}</p>
+    <p class="user_game-description">${achiv.DateAwarded ?? achiv.Date}</p>
     `;
     return achivElement;
   }
@@ -5764,12 +5776,21 @@ class Notifications {
 //* Методи сортування для досягнень гри
 const sortBy = {
   latest: (a, b) => {
-    // Перевіряємо, чи існують дати та обираємо найновішу
+    const toDate = (s) => {
+      const [datePart, timePart] = s.split(', ');
+
+      const [day, month, year] = datePart.split('.').map(Number);
+
+      const [hours, minutes] = timePart.split(':').map(Number);
+
+      return new Date(year, month - 1, day, hours, minutes);
+    }
+
     const dateA = a.DateEarnedHardcore
-      ? new Date(a.DateEarnedHardcore)
+      ? toDate(a.DateEarnedHardcore)
       : -Infinity;
     const dateB = b.DateEarnedHardcore
-      ? new Date(b.DateEarnedHardcore)
+      ? toDate(b.DateEarnedHardcore)
       : -Infinity;
     return dateB - dateA; // Повертає різницю дат
   },
@@ -5857,41 +5878,7 @@ const sortMethods = {
   award: "award",
 };
 
-const fixTimeString = (
-  (dateString) => {
-    const date = new Date(dateString);
-    const options = {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    };
-    return date.toLocaleDateString("uk-UA", options);
-  }
-)
-const fixGameTitle = (game) => {
-  const ignoredWords = [/\[SUBSET[^\[]*\]/gi, /~[^~]*~/g, ".HACK//",];
-  let title = game.Title;
 
-  const sufixes = ignoredWords.reduce((sufixes, word) => {
-    const reg = new RegExp(word, "gi");
-    const matches = game.Title.match(reg);
-    if (matches) {
-      matches.forEach(match => {
-        title = title.replace(match, "");
-        let sufix = match;
-        sufixes.push(sufix.replace(/[~\.\[\]]|subset -|\/\//gi, ""));
-      })
-    }
-    return sufixes;
-  }, []);
-  game.sufixes = sufixes;
-  game.badges = sufixes;
-  game.FixedTitle = title.trim();
-  return game;
-}
 const delay = (ms) => {
   return new Promise(resolve => setTimeout(resolve, ms));
 }

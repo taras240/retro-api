@@ -2,3 +2,6 @@ json/games/script.js
 json/games/searchData.js
 worker.js
 downloader.js
+json/games/rawgParser.js
+json/games/RAWGPlatforms.json
+json/games/rawg-platforms.json

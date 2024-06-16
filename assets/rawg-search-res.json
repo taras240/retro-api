@@ -1,0 +1,412 @@
+{
+    "count": 3,
+    "next": null,
+    "previous": null,
+    "results": [
+        {
+            "slug": "mario-andretti-racing",
+            "name": "Mario Andretti Racing",
+            "playtime": 0,
+            "platforms": [
+                {
+                    "platform": {
+                        "id": 27,
+                        "name": "PlayStation",
+                        "slug": "playstation1"
+                    }
+                },
+                {
+                    "platform": {
+                        "id": 167,
+                        "name": "Genesis",
+                        "slug": "genesis"
+                    }
+                }
+            ],
+            "stores": null,
+            "released": "1997-11-30",
+            "tba": false,
+            "background_image": "https://media.rawg.io/media/screenshots/9bb/9bb655e67175d4de9e97f51f725c54ef.jpg",
+            "rating": 0.0,
+            "rating_top": 0,
+            "ratings": [
+                {
+                    "id": 4,
+                    "title": "recommended",
+                    "count": 1,
+                    "percent": 50.0
+                },
+                {
+                    "id": 3,
+                    "title": "meh",
+                    "count": 1,
+                    "percent": 50.0
+                }
+            ],
+            "ratings_count": 2,
+            "reviews_text_count": 0,
+            "added": 7,
+            "added_by_status": {
+                "owned": 2,
+                "beaten": 2,
+                "toplay": 1,
+                "dropped": 2
+            },
+            "metacritic": null,
+            "suggestions_count": 275,
+            "updated": "2019-09-12T06:36:00",
+            "id": 52665,
+            "score": "7.2296696",
+            "clip": null,
+            "tags": [
+                {
+                    "id": 31,
+                    "name": "Singleplayer",
+                    "slug": "singleplayer",
+                    "language": "eng",
+                    "games_count": 209087,
+                    "image_background": "https://media.rawg.io/media/games/bc0/bc06a29ceac58652b684deefe7d56099.jpg"
+                },
+                {
+                    "id": 37796,
+                    "name": "exclusive",
+                    "slug": "exclusive",
+                    "language": "eng",
+                    "games_count": 4505,
+                    "image_background": "https://media.rawg.io/media/games/806/8060a7663364ac23e15480728938d6f3.jpg"
+                }
+            ],
+            "esrb_rating": null,
+            "user_game": null,
+            "reviews_count": 2,
+            "community_rating": 0,
+            "saturated_color": "0f0f0f",
+            "dominant_color": "0f0f0f",
+            "short_screenshots": [
+                {
+                    "id": -1,
+                    "image": "https://media.rawg.io/media/screenshots/9bb/9bb655e67175d4de9e97f51f725c54ef.jpg"
+                },
+                {
+                    "id": 728111,
+                    "image": "https://media.rawg.io/media/screenshots/18f/18fd1951ca7a47f13812ecc2f7812f6e.jpg"
+                },
+                {
+                    "id": 728112,
+                    "image": "https://media.rawg.io/media/screenshots/3ff/3ff3157bea8005eba82486f6ea226af9.jpg"
+                },
+                {
+                    "id": 728113,
+                    "image": "https://media.rawg.io/media/screenshots/2c2/2c241e68ea3a918a4933e529024e0ce3.jpg"
+                },
+                {
+                    "id": 728114,
+                    "image": "https://media.rawg.io/media/screenshots/088/0882f1df57157e03cab073691918855a.jpg"
+                },
+                {
+                    "id": 728115,
+                    "image": "https://media.rawg.io/media/screenshots/bd0/bd0045273782213d7eb6942f343f87c4.jpg"
+                },
+                {
+                    "id": 728116,
+                    "image": "https://media.rawg.io/media/screenshots/99d/99d91bfcecbdb264b5abe57f2c8b703e.jpg"
+                }
+            ],
+            "parent_platforms": [
+                {
+                    "platform": {
+                        "id": 2,
+                        "name": "PlayStation",
+                        "slug": "playstation"
+                    }
+                },
+                {
+                    "platform": {
+                        "id": 11,
+                        "name": "SEGA",
+                        "slug": "sega"
+                    }
+                }
+            ],
+            "genres": [
+                {
+                    "id": 1,
+                    "name": "Racing",
+                    "slug": "racing"
+                }
+            ]
+        },
+        {
+            "slug": "markos-magic-football",
+            "name": "Marko's Magic Football",
+            "playtime": 0,
+            "platforms": [
+                {
+                    "platform": {
+                        "id": 79,
+                        "name": "SNES",
+                        "slug": "snes"
+                    }
+                },
+                {
+                    "platform": {
+                        "id": 167,
+                        "name": "Genesis",
+                        "slug": "genesis"
+                    }
+                },
+                {
+                    "platform": {
+                        "id": 119,
+                        "name": "SEGA CD",
+                        "slug": "sega-cd"
+                    }
+                },
+                {
+                    "platform": {
+                        "id": 77,
+                        "name": "Game Gear",
+                        "slug": "game-gear"
+                    }
+                }
+            ],
+            "stores": null,
+            "released": "1995-02-01",
+            "tba": false,
+            "background_image": "https://media.rawg.io/media/games/671/671e720a23aff35e26031344f0872740.jpg",
+            "rating": 0.0,
+            "rating_top": 0,
+            "ratings": [
+                {
+                    "id": 4,
+                    "title": "recommended",
+                    "count": 2,
+                    "percent": 66.67
+                },
+                {
+                    "id": 3,
+                    "title": "meh",
+                    "count": 1,
+                    "percent": 33.33
+                }
+            ],
+            "ratings_count": 3,
+            "reviews_text_count": 0,
+            "added": 6,
+            "added_by_status": {
+                "owned": 2,
+                "beaten": 3,
+                "dropped": 1
+            },
+            "metacritic": null,
+            "suggestions_count": 471,
+            "updated": "2022-12-07T07:51:22",
+            "id": 455530,
+            "score": "-3.2457638",
+            "clip": null,
+            "tags": [],
+            "esrb_rating": {
+                "id": 2,
+                "name": "Everyone 10+",
+                "slug": "everyone-10-plus",
+                "name_en": "Everyone 10+",
+                "name_ru": "С 10 лет"
+            },
+            "user_game": null,
+            "reviews_count": 3,
+            "community_rating": 0,
+            "saturated_color": "0f0f0f",
+            "dominant_color": "0f0f0f",
+            "short_screenshots": [
+                {
+                    "id": -1,
+                    "image": "https://media.rawg.io/media/games/671/671e720a23aff35e26031344f0872740.jpg"
+                },
+                {
+                    "id": 2420701,
+                    "image": "https://media.rawg.io/media/screenshots/391/391f61a77a10d1b5e0b53807c2163586.jpg"
+                },
+                {
+                    "id": 2420702,
+                    "image": "https://media.rawg.io/media/screenshots/1f1/1f1fa6b73bcf0a5389137d5b0f530056.jpg"
+                },
+                {
+                    "id": 2420703,
+                    "image": "https://media.rawg.io/media/screenshots/dd5/dd55cc207205eeab2c77ea18165c735b.jpg"
+                },
+                {
+                    "id": 2420704,
+                    "image": "https://media.rawg.io/media/screenshots/550/550bd4739dbe807a5243958a01c51b77.jpg"
+                },
+                {
+                    "id": 3520587,
+                    "image": "https://media.rawg.io/media/screenshots/e24/e249902e99b5e2790fbf4b1b9fdfe340.jpg"
+                },
+                {
+                    "id": 3520588,
+                    "image": "https://media.rawg.io/media/screenshots/a91/a91c205036a807a908a821beeabe9a92.jpg"
+                }
+            ],
+            "parent_platforms": [
+                {
+                    "platform": {
+                        "id": 7,
+                        "name": "Nintendo",
+                        "slug": "nintendo"
+                    }
+                },
+                {
+                    "platform": {
+                        "id": 11,
+                        "name": "SEGA",
+                        "slug": "sega"
+                    }
+                }
+            ],
+            "genres": [
+                {
+                    "id": 83,
+                    "name": "Platformer",
+                    "slug": "platformer"
+                },
+                {
+                    "id": 3,
+                    "name": "Adventure",
+                    "slug": "adventure"
+                },
+                {
+                    "id": 4,
+                    "name": "Action",
+                    "slug": "action"
+                }
+            ]
+        },
+        {
+            "slug": "mary-shelleys-frankenstein",
+            "name": "Mary Shelley's Frankenstein",
+            "playtime": 0,
+            "platforms": [
+                {
+                    "platform": {
+                        "id": 79,
+                        "name": "SNES",
+                        "slug": "snes"
+                    }
+                },
+                {
+                    "platform": {
+                        "id": 167,
+                        "name": "Genesis",
+                        "slug": "genesis"
+                    }
+                },
+                {
+                    "platform": {
+                        "id": 119,
+                        "name": "SEGA CD",
+                        "slug": "sega-cd"
+                    }
+                }
+            ],
+            "stores": null,
+            "released": "1994-11-01",
+            "tba": false,
+            "background_image": "https://media.rawg.io/media/screenshots/80b/80b6ae4e753218cddb02f6650011fdcd.jpg",
+            "rating": 0.0,
+            "rating_top": 0,
+            "ratings": [
+                {
+                    "id": 1,
+                    "title": "skip",
+                    "count": 1,
+                    "percent": 100.0
+                }
+            ],
+            "ratings_count": 1,
+            "reviews_text_count": 0,
+            "added": 7,
+            "added_by_status": {
+                "owned": 3,
+                "beaten": 1,
+                "toplay": 2,
+                "dropped": 1
+            },
+            "metacritic": null,
+            "suggestions_count": 275,
+            "updated": "2019-08-28T22:01:39",
+            "id": 54279,
+            "score": "-10.42102",
+            "clip": null,
+            "tags": [
+                {
+                    "id": 31,
+                    "name": "Singleplayer",
+                    "slug": "singleplayer",
+                    "language": "eng",
+                    "games_count": 215291,
+                    "image_background": "https://media.rawg.io/media/games/4a0/4a0a1316102366260e6f38fd2a9cfdce.jpg"
+                }
+            ],
+            "esrb_rating": null,
+            "user_game": null,
+            "reviews_count": 1,
+            "community_rating": 0,
+            "saturated_color": "0f0f0f",
+            "dominant_color": "0f0f0f",
+            "short_screenshots": [
+                {
+                    "id": -1,
+                    "image": "https://media.rawg.io/media/screenshots/80b/80b6ae4e753218cddb02f6650011fdcd.jpg"
+                },
+                {
+                    "id": 739885,
+                    "image": "https://media.rawg.io/media/screenshots/c18/c1836ba0f2479bd962de73372f939ad2.jpg"
+                },
+                {
+                    "id": 739886,
+                    "image": "https://media.rawg.io/media/screenshots/fe8/fe8e1da38cc066205ddde5321b369ba8.jpg"
+                },
+                {
+                    "id": 739887,
+                    "image": "https://media.rawg.io/media/screenshots/142/142a5ad4bd92a5d3f98de41c40611521.jpg"
+                },
+                {
+                    "id": 739888,
+                    "image": "https://media.rawg.io/media/screenshots/54c/54ce30c46403e1b415967a46974de524.jpg"
+                },
+                {
+                    "id": 739889,
+                    "image": "https://media.rawg.io/media/screenshots/33e/33ead623314fe58bd670be2a7a30ff4e.jpg"
+                },
+                {
+                    "id": 739890,
+                    "image": "https://media.rawg.io/media/screenshots/ada/ada981d73df13d3ce8c24112b2a36215.jpg"
+                }
+            ],
+            "parent_platforms": [
+                {
+                    "platform": {
+                        "id": 7,
+                        "name": "Nintendo",
+                        "slug": "nintendo"
+                    }
+                },
+                {
+                    "platform": {
+                        "id": 11,
+                        "name": "SEGA",
+                        "slug": "sega"
+                    }
+                }
+            ],
+            "genres": [
+                {
+                    "id": 4,
+                    "name": "Action",
+                    "slug": "action"
+                }
+            ]
+        }
+    ],
+    "user_platforms": false
+}

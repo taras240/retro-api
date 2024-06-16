@@ -170,11 +170,10 @@ section.section.games_setion:hover {
 
 .platform-list::-webkit-scrollbar-thumb {
   background: var(--accent-color);
+  border-radius: 3px;
 }
 
-.platform-list::-webkit-scrollbar-thumb:hover {
-  background: var(selection-color);
-}
+.platform-list::-webkit-scrollbar-thumb:hover {}
 
 .platform_game-item {
 

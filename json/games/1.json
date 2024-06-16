@@ -113,7 +113,7 @@
         "ConsoleName": "Genesis\/Mega Drive",
         "ImageIcon": "\/Images\/061384.png",
         "NumAchievements": 22,
-        "NumLeaderboards": 0,
+        "NumLeaderboards": 3,
         "Points": 320,
         "DateModified": "2022-03-29 11:41:41",
         "ForumTopicID": 276,
@@ -713,7 +713,7 @@
         "NumAchievements": 23,
         "NumLeaderboards": 0,
         "Points": 260,
-        "DateModified": "2022-07-24 19:28:23",
+        "DateModified": "2024-06-12 15:15:46",
         "ForumTopicID": 16892,
         "Hashes": [
             "17ffe04bb891253e7ac3fb0952bb2edb"
@@ -1148,6 +1148,21 @@
         ]
     },
     {
+        "Title": "CrossFire",
+        "ID": 615,
+        "ConsoleID": 1,
+        "ConsoleName": "Genesis\/Mega Drive",
+        "ImageIcon": "\/Images\/093285.png",
+        "NumAchievements": 24,
+        "NumLeaderboards": 1,
+        "Points": 171,
+        "DateModified": "2024-06-04 12:08:00",
+        "ForumTopicID": 25886,
+        "Hashes": [
+            "8072f5025e9f874c0ccf0341c2081c74"
+        ]
+    },
+    {
         "Title": "Crusader of Centy | Soleil",
         "ID": 1438,
         "ConsoleID": 1,
@@ -1287,7 +1302,7 @@
         "NumAchievements": 21,
         "NumLeaderboards": 0,
         "Points": 185,
-        "DateModified": "2023-08-12 03:14:38",
+        "DateModified": "2024-06-11 01:01:46",
         "ForumTopicID": 13163,
         "Hashes": [
             "960a409245913c8adf10c4b3ed23ab04"
@@ -2237,7 +2252,7 @@
         "NumAchievements": 32,
         "NumLeaderboards": 0,
         "Points": 400,
-        "DateModified": "2023-08-22 00:06:29",
+        "DateModified": "2024-06-13 13:25:10",
         "ForumTopicID": 2066,
         "Hashes": [
             "2c03b499edcc327b6cb80e41950ac710",
@@ -2256,7 +2271,7 @@
         "NumAchievements": 31,
         "NumLeaderboards": 4,
         "Points": 477,
-        "DateModified": "2024-05-05 14:44:11",
+        "DateModified": "2024-06-10 17:38:58",
         "ForumTopicID": 1892,
         "Hashes": [
             "17ae73b8bd1f9bbf2413b15deff83c01",
@@ -2636,7 +2651,7 @@
         "NumAchievements": 24,
         "NumLeaderboards": 1,
         "Points": 400,
-        "DateModified": "2021-06-07 20:59:05",
+        "DateModified": "2024-06-10 02:59:05",
         "ForumTopicID": 10468,
         "Hashes": [
             "7643bf8341cd0b447da1f5b9284741f7"
@@ -2730,7 +2745,7 @@
         "NumAchievements": 42,
         "NumLeaderboards": 0,
         "Points": 535,
-        "DateModified": "2022-03-26 01:32:09",
+        "DateModified": "2024-06-06 20:25:03",
         "ForumTopicID": 2220,
         "Hashes": [
             "fee5032759c495abc72e405c63c90e1f"
@@ -3300,7 +3315,7 @@
         "NumAchievements": 50,
         "NumLeaderboards": 24,
         "Points": 400,
-        "DateModified": "2024-04-04 17:22:18",
+        "DateModified": "2024-06-10 18:18:13",
         "ForumTopicID": 321,
         "Hashes": [
             "73b63cac3f15bfe4a7bad170654878a9",
@@ -4627,8 +4642,7 @@
         "DateModified": "2024-05-30 04:47:09",
         "ForumTopicID": 26607,
         "Hashes": [
-            "2c6a960f66d1c87855424e6528d6eac6",
-            "110d17485c49a022cd280cf5194e7d74"
+            "2c6a960f66d1c87855424e6528d6eac6"
         ]
     },
     {
@@ -4834,7 +4848,7 @@
         "ID": 326,
         "ConsoleID": 1,
         "ConsoleName": "Genesis\/Mega Drive",
-        "ImageIcon": "\/Images\/063221.png",
+        "ImageIcon": "\/Images\/098168.png",
         "NumAchievements": 85,
         "NumLeaderboards": 23,
         "Points": 755,
@@ -4850,14 +4864,29 @@
         "ConsoleID": 1,
         "ConsoleName": "Genesis\/Mega Drive",
         "ImageIcon": "\/Images\/085573.png",
-        "NumAchievements": 24,
-        "NumLeaderboards": 39,
-        "Points": 255,
-        "DateModified": "2024-05-21 01:10:33",
+        "NumAchievements": 36,
+        "NumLeaderboards": 29,
+        "Points": 305,
+        "DateModified": "2024-06-12 23:03:52",
         "ForumTopicID": 112,
         "Hashes": [
             "1b1d9ac862c387367e904036114c4825",
             "1bc674be034e43c96b86487ac69d9293"
+        ]
+    },
+    {
+        "Title": "Sonic the Hedgehog [Subset - Perfect Bonus]",
+        "ID": 29895,
+        "ConsoleID": 1,
+        "ConsoleName": "Genesis\/Mega Drive",
+        "ImageIcon": "\/Images\/098340.png",
+        "NumAchievements": 24,
+        "NumLeaderboards": 28,
+        "Points": 325,
+        "DateModified": "2024-06-14 18:13:57",
+        "ForumTopicID": 26852,
+        "Hashes": [
+            "09dadb5071eb35050067a32462e39c5f"
         ]
     },
     {
@@ -4885,7 +4914,7 @@
         "NumAchievements": 29,
         "NumLeaderboards": 0,
         "Points": 310,
-        "DateModified": "2023-10-09 14:18:52",
+        "DateModified": "2024-06-07 10:27:28",
         "ForumTopicID": 160,
         "Hashes": [
             "62be3de2299c8189252536430260edf5",
@@ -5105,7 +5134,7 @@
         "NumAchievements": 40,
         "NumLeaderboards": 1,
         "Points": 166,
-        "DateModified": "2024-02-28 16:06:15",
+        "DateModified": "2024-06-07 02:08:37",
         "ForumTopicID": 25403,
         "Hashes": [
             "b95b8da835e866c90e6c6520def207b2"
@@ -6885,7 +6914,7 @@
         "NumAchievements": 30,
         "NumLeaderboards": 25,
         "Points": 309,
-        "DateModified": "2024-05-10 17:10:07",
+        "DateModified": "2024-06-05 01:04:39",
         "ForumTopicID": 17291,
         "Hashes": [
             "0f3bb6f4583d2d7fc8c8be599640ddb4"
@@ -6967,6 +6996,21 @@
         ]
     },
     {
+        "Title": "~Hack~ Sonic the Hedgehog 2 Recreation",
+        "ID": 9159,
+        "ConsoleID": 1,
+        "ConsoleName": "Genesis\/Mega Drive",
+        "ImageIcon": "\/Images\/093666.png",
+        "NumAchievements": 31,
+        "NumLeaderboards": 12,
+        "Points": 222,
+        "DateModified": "2024-06-13 19:12:00",
+        "ForumTopicID": 18702,
+        "Hashes": [
+            "9c2fac444e7b7b852e41d8ea8dd90475"
+        ]
+    },
+    {
         "Title": "~Hack~ Sonic the Hedgehog 2 XL",
         "ID": 10340,
         "ConsoleID": 1,
@@ -7020,7 +7064,7 @@
         "NumAchievements": 33,
         "NumLeaderboards": 0,
         "Points": 357,
-        "DateModified": "2022-12-17 17:09:50",
+        "DateModified": "2024-06-13 19:00:28",
         "ForumTopicID": 1386,
         "Hashes": [
             "07b35dcc19166dad91e9487031bfac88",
@@ -7613,7 +7657,7 @@
         "NumAchievements": 11,
         "NumLeaderboards": 0,
         "Points": 90,
-        "DateModified": "2023-01-18 10:26:10",
+        "DateModified": "2024-06-10 18:18:23",
         "ForumTopicID": 19887,
         "Hashes": [
             "a9efe6148e65ac0e14a55c31d6b1b72f"
@@ -7734,7 +7778,7 @@
         "NumAchievements": 12,
         "NumLeaderboards": 0,
         "Points": 34,
-        "DateModified": "2023-12-23 13:13:17",
+        "DateModified": "2024-06-14 22:34:59",
         "ForumTopicID": 22585,
         "Hashes": [
             "ff78730a97d6e38a9c34ce8cf6f63bdb"

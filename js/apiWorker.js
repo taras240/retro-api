@@ -92,12 +92,10 @@ class APIWorker {
       endpoint: this.endpoints.completionProgress,
     });
     return fetch(url).then((resp) => resp.json()).then(arr => {
-      arr.Results = arr.Results.map((game, index) => {
+      arr.Results = arr.Results.map((game) => {
         game.ID = game.GameID;
         game.NumAchievements = game.MaxPossible;
         delete game.MaxPossible;
-        // game.NumAwardedHardcore = game.NumEarnedHardcore;
-        // delete game.NumEarnedHardcore;
         delete game.NumLeaderboards;
 
         return game;
@@ -118,7 +116,10 @@ class APIWorker {
           game.AwardDataExtra == "1" ? "beaten" : "beaten_softcore" :
           game.AwardDataExtra == "1" ? "mastered" : "completed";
         game.DateEarnedHardcore = game.AwardedAt;
+
         game.ConsoleName == 'Events' && (game.award = "event");
+        console.log(game.AwardedAt);
+        game.timeString = this.toLocalTimeString(game.AwardedAt);
         return game;
       })
       return awardsObj;
@@ -134,12 +135,22 @@ class APIWorker {
 
     return fetch(url)
       .then((resp) => resp.json())
-      .then(async gameProgressObject => {
-        gameProgressObject.TotalRetropoints = 0;
-        gameProgressObject.progressionRetroRatio = 0;
-        gameProgressObject.beatenCount = Infinity;
-        gameProgressObject.masteredCount = Infinity;
-        let progressionAchivs = { Count: 0, WinCount: 0, WinAwardedCount: 0, WinEarnedCount: 0 };
+      .then(gameProgressObject => {
+        gameProgressObject = {
+          ...gameProgressObject,
+          TotalRealPlayers: 0,
+          TotalRetropoints: 0,
+          progressionRetroRatio: 0,
+          beatenCount: Infinity,
+          masteredCount: Infinity,
+          earnedStats: {
+            soft:
+              { count: 0, points: 0, retropoints: 0 },
+            hard:
+              { count: 0, points: 0, retropoints: 0 }
+          }
+        }
+        const progressionAchivs = { Count: 0, WinCount: 0, WinAwardedCount: 0, WinEarnedCount: 0 };
         const awards = {
           isBeaten: true,
           isBeatenSoftcore: true,
@@ -149,9 +160,19 @@ class APIWorker {
         for (let achievement of Object.values(gameProgressObject.Achievements)) {
           gameProgressObject.TotalRetropoints += achievement.TrueRatio;
 
-          if (!gameProgressObject.TotalRealPlayers ||
-            gameProgressObject.TotalRealPlayers < achievement.NumAwarded) {
+          if (gameProgressObject.TotalRealPlayers < achievement.NumAwarded) {
             gameProgressObject.TotalRealPlayers = achievement.NumAwarded
+          }
+
+          if (achievement.DateEarned) {
+            gameProgressObject.earnedStats.soft.count += 1;
+            gameProgressObject.earnedStats.soft.points += achievement.Points;
+            gameProgressObject.earnedStats.soft.retropoints += achievement.TrueRatio;
+          }
+          if (achievement.DateEarnedHardcore) {
+            gameProgressObject.earnedStats.hard.count += 1;
+            gameProgressObject.earnedStats.hard.points += achievement.Points;
+            gameProgressObject.earnedStats.hard.retropoints += achievement.TrueRatio;
           }
 
           if (achievement.type === 'progression') {
@@ -198,9 +219,13 @@ class APIWorker {
           gameProgressObject.award = 'beaten';
         }
 
-        gameProgressObject.winVariantCount = progressionAchivs.WinCount;
-        gameProgressObject.winEarnedCount = progressionAchivs.WinEarnedCount;
-        gameProgressObject.progressionSteps = progressionAchivs.WinCount > 0 ? progressionAchivs.Count + 1 : progressionAchivs.Count;
+        gameProgressObject = {
+          ...gameProgressObject,
+          winVariantCount: progressionAchivs.WinCount,
+          winEarnedCount: progressionAchivs.WinEarnedCount,
+          progressionSteps: progressionAchivs.WinCount > 0 ? progressionAchivs.Count + 1 : progressionAchivs.Count,
+        }
+
         progressionAchivs.WinCount > 0 && (gameProgressObject.beatenCount = progressionAchivs.WinAwardedCount)
 
         gameProgressObject.beatenCount != Infinity &&
@@ -215,10 +240,12 @@ class APIWorker {
           ratio > 7 ? "expert" :
             ratio > 5 ? "pro" :
               ratio > 3 ? "standard" :
-                "easy"
-        Object.getOwnPropertyNames(gameProgressObject.Achievements)
-          .forEach(id =>
-            this.fixAchievement(gameProgressObject.Achievements[id], gameProgressObject));
+                "easy";
+
+        Object.values(gameProgressObject.Achievements)
+          .map(cheevo =>
+            this.fixAchievement(cheevo, gameProgressObject));
+
         gameProgressObject = this.fixGameTitle(gameProgressObject);
         return gameProgressObject;
       });
@@ -264,26 +291,7 @@ class APIWorker {
       return this.fixGameTitle(game);
     }));;
   }
-  fixGameTitle(game) {
-    const ignoredWords = [/\[SUBSET[^\[]*\]/gi, /~[^~]*~/g, ".HACK//",];
-    let title = game.Title;
 
-    const sufixes = ignoredWords.reduce((sufixes, word) => {
-      const reg = new RegExp(word, "gi");
-      const matches = game.Title.match(reg);
-      if (matches) {
-        matches.forEach(match => {
-          title = title.replace(match, "");
-          let sufix = match;
-          sufixes.push(sufix.replace(/[~\.\[\]]|subset -|\/\//gi, ""));
-        })
-      }
-      return sufixes;
-    }, []);
-    game.sufixes = sufixes;
-    game.FixedTitle = title.trim();
-    return game;
-  }
   getUserProfile({ userName }) {
     let url = this.getUrl({
       targetUser: userName,
@@ -366,40 +374,171 @@ class APIWorker {
     }
   }
 
-  fixAchievement(achievement, achievements) {
-    const { BadgeName, DateEarned, DateEarnedHardcore, NumAwardedHardcore, NumAwarded, TrueRatio } = achievement;
-    const { NumDistinctPlayers, NumAwardedToUserHardcore, TotalRealPlayers } = achievements;
-    //Додаєм кількість гравців
-    achievement.totalPlayers = NumDistinctPlayers;
-
-    // Визначаєм, чи отримано досягнення та чи є воно хардкорним
-    achievement.isEarned = !!DateEarned;
-    achievement.isHardcoreEarned = !!DateEarnedHardcore;
-
-    achievement.isEarned && (achievement.DateEarned = this.toLocalTimeString(DateEarned));
-    achievement.isEarned && (achievement.DateEarnedHardcore = this.toLocalTimeString(DateEarnedHardcore));
-
-    // Додаєм адресу зображення для досягнення
-    achievement.prevSrc = `https://media.retroachievements.org/Badge/${BadgeName}.png`;
-
-    achievement.rateEarned = ~~(100 * NumAwarded / NumDistinctPlayers) + "%";
-    achievement.rateEarnedHardcore = ~~(100 * NumAwardedHardcore / NumDistinctPlayers) + "%";
+  fixAchievement(achievement, gameData) {
+    const { BadgeName, DateEarned, DateEarnedHardcore, NumAwardedHardcore, NumAwarded, TrueRatio, ID } = achievement;
+    const { NumDistinctPlayers, NumAwardedToUserHardcore, TotalRealPlayers } = gameData;
 
     const trend = 100 * (NumAwardedHardcore - NumAwardedToUserHardcore * 0.5) / ((NumDistinctPlayers + TotalRealPlayers) * 0.5 - NumAwardedToUserHardcore * 0.5);
-    achievement.trend = trend;
-    achievement.difficulty =
-      trend < 1.5 && TrueRatio > 200 || TrueRatio >= 400 ? "hell" :
-        trend <= 3 && TrueRatio > 100 || TrueRatio >= 300 ? "insane" :
-          trend < 8 && TrueRatio > 24 ? "expert" :
-            trend < 13 && TrueRatio > 5 ? "pro" :
-              trend < 20 && TrueRatio < 10 || TrueRatio > 14 ? "standard" :
-                "easy";
 
-    return achievement;
+    gameData.Achievements[ID] = {
+      ...achievement,
+      totalPlayers: NumDistinctPlayers,
+      isEarned: !!DateEarned,
+      isHardcoreEarned: !!DateEarnedHardcore,
+      DateEarned: DateEarned && this.toLocalTimeString(DateEarned),
+      DateEarnedHardcore: DateEarnedHardcore && this.toLocalTimeString(DateEarnedHardcore),
+      prevSrc: `https://media.retroachievements.org/Badge/${BadgeName}.png`,
+      rateEarned: ~~(100 * NumAwarded / NumDistinctPlayers) + "%",
+      rateEarnedHardcore: ~~(100 * NumAwardedHardcore / NumDistinctPlayers) + "%",
+      trend: trend,
+      difficulty:
+        trend < 1.5 && TrueRatio > 300 || TrueRatio >= 500 ? "hell" :
+          trend <= 3 && TrueRatio > 100 || TrueRatio >= 300 ? "insane" :
+            trend < 8 && TrueRatio > 24 ? "expert" :
+              trend < 13 && TrueRatio > 10 ? "pro" :
+                trend < 20 && TrueRatio > 5 || TrueRatio > 10 ? "standard" :
+                  "easy",
+    }
+  }
+  fixGameTitle(game) {
+    const ignoredWords = [/\[SUBSET[^\[]*\]/gi, /~[^~]*~/g, ".HACK//",];
+    let title = game.Title;
+
+    const badges = ignoredWords.reduce((badges, word) => {
+      const reg = new RegExp(word, "gi");
+      const matches = game.Title.match(reg);
+      if (matches) {
+        matches.forEach(match => {
+          title = title.replace(match, "");
+          let sufix = match;
+          badges.push(sufix.replace(/[~\.\[\]]|subset -|\/\//gi, ""));
+        })
+      }
+      return badges;
+    }, []);
+    game.badges = badges;
+    game.FixedTitle = title.trim();
+    return game;
   }
   toLocalTimeString(UTCTime) {
-    UTCTime += "+00:00"; // Mark time as UTC Time 
+    const UTCReg = /(\+00\:00$)|(z$)/gi;
+    !UTCReg.test(UTCTime) && (UTCTime += "+00:00"); // Mark time as UTC Time 
+
     const date = new Date(UTCTime);
-    return date.toString();
+    const options = {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    };
+    return date.toLocaleDateString("uk-UA", options);
+
   }
+
+
+  async rawgSearchGame({ gameTitle, platformID }) {
+    gameTitle = gameTitle.split("|")[0];
+    const RAWGPlatform = RAtoRAWG[platformID];
+    if (!RAWGPlatform) {
+      return false;
+    }
+
+    const baseUrl = `https://api.rawg.io/api/`;
+    const endpoint = "games";
+    let url = new URL(endpoint, baseUrl);
+
+    let params = {
+      search: gameTitle,
+      platforms: RAWGPlatform,
+      key: "179353905bcb491d975b1fc03b3c8bd6",
+    };
+    url.search = new URLSearchParams(params);
+
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        console.log(`HTTP error! status: ${response.status}`);
+        return false;
+      }
+      const data = await response.json();
+      const res = data.results ? data.results[0] : null;
+
+      const testTitle = gameTitle.replace(/[^a-z0-9]/gi, " ").trim();
+      const testRes = res?.name.replace(/[^a-z0-9]/gi, " ").trim() ?? "";
+      if (!res || testTitle !== testRes) {
+        console.log(`Game not found for title: ${gameTitle} on platform: ${platformID}`);
+        return false;
+      }
+
+      const keys = [
+        "name", "playtime", "released", "background_image", "rating",
+        "ratings", "added", "metacritic", "score", "community_rating", "genres"
+      ];
+
+      return Object.fromEntries(
+        Object.entries(res).filter(([key]) => keys.includes(key))
+      );
+    } catch (err) {
+      console.log(`Fetch error: ${err.message}`);
+      return false;
+    }
+  }
+
 }
+const RAtoRAWG = {
+  "1": 167, // "Genesis/Mega Drive" -> "Genesis"
+  "2": 83, // "Nintendo 64" -> "Nintendo 64"
+  "3": 79, // "SNES/Super Famicom" -> "SNES"
+  "4": 26, // "Game Boy" -> "Game Boy"
+  "5": 24, // "GB Advance" -> "Game Boy Advance"
+  "6": 43, // "GB Color" -> "Game Boy Color"
+  "7": 49, // "NES/Famicom" -> "NES"
+  "8": null, // "PC Engine/TurboGrafx-16" -> Not found in RAWG
+  "9": 119, // "Sega CD" -> "SEGA CD"
+  "10": 117, // "32X" -> "SEGA 32X"
+  "11": 74, // "Master System" -> "SEGA Master System"
+  "12": 27, // "PlayStation" -> "PlayStation"
+  "13": 46, // "Atari Lynx" -> "Atari Lynx"
+  "14": null, // "Neo Geo Pocket" -> Not found in RAWG
+  "15": 77, // "Game Gear" -> "Game Gear"
+  "17": 112, // "Atari Jaguar" -> "Jaguar"
+  "18": 9, // "Nintendo DS" -> "Nintendo DS"
+  "21": 15, // "PlayStation 2" -> "PlayStation 2"
+  "23": null, // "Magnavox Odyssey 2" -> Not found in RAWG
+  "24": null, // "Pokemon Mini" -> Not found in RAWG
+  "25": 23, // "Atari 2600" -> "Atari 2600"
+  "27": 12, //*neogeo "Arcade" -> Not found in RAWG
+  "28": null, // "Virtual Boy" -> Not found in RAWG
+  "29": null, // "MSX" -> Not found in RAWG
+  "33": null, // "SG-1000" -> Not found in RAWG
+  "37": null, // "Amstrad CPC" -> Not found in RAWG
+  "38": 41, // "Apple II" -> "Apple II"
+  "39": 107, // "Saturn" -> "SEGA Saturn"
+  "40": 106, // "Dreamcast" -> "Dreamcast"
+  "41": 17, // "PlayStation Portable" -> "PSP"
+  "43": 111, // "3DO Interactive Multiplayer" -> "3DO"
+  "44": null, // "ColecoVision" -> Not found in RAWG
+  "45": null, // "Intellivision" -> Not found in RAWG
+  "46": null, // "Vectrex" -> Not found in RAWG
+  "47": null, // "PC-8000/8800" -> Not found in RAWG
+  "49": null, // "PC-FX" -> Not found in RAWG
+  "51": 28, // "Atari 7800" -> "Atari 7800"
+  "53": null, // "WonderSwan" -> Not found in RAWG
+  "56": null, // "Neo Geo CD" -> Not found in RAWG
+  "57": null, // "Fairchild Channel F" -> Not found in RAWG
+  "63": null, // "Watara Supervision" -> Not found in RAWG
+  "69": null, // "Mega Duck" -> Not found in RAWG
+  "71": null, // "Arduboy" -> Not found in RAWG
+  "72": null, // "WASM-4" -> Not found in RAWG
+  "73": null, // "Arcadia 2001" -> Not found in RAWG
+  "74": null, // "Interton VC 4000" -> Not found in RAWG
+  "75": null, // "Elektor TV Games Computer" -> Not found in RAWG
+  "76": null, // "PC Engine CD/TurboGrafx-CD" -> Not found in RAWG
+  "77": null, // "Atari Jaguar CD" -> Not found in RAWG
+  "78": 13, // "Nintendo DSi" -> "Nintendo DSi"
+  "80": null, // "Uzebox" -> Not found in RAWG
+  "101": null, // "Events" -> Not applicable
+  "102": null, // "Standalone" -> Not applicable
+};

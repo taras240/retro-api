@@ -1,0 +1,65 @@
+{
+    "slug": "acid-drop",
+    "name": "Acid Drop",
+    "playtime": 0,
+    "platforms": [
+        {
+            "platform": {
+                "id": 23,
+                "name": "Atari 2600",
+                "slug": "atari-2600"
+            }
+        }
+    ],
+    "stores": null,
+    "released": "1992-01-01",
+    "tba": false,
+    "background_image": null,
+    "rating": 0,
+    "rating_top": 0,
+    "ratings": [
+        {
+            "id": 1,
+            "title": "skip",
+            "count": 1,
+            "percent": 100
+        }
+    ],
+    "ratings_count": 1,
+    "reviews_text_count": 0,
+    "added": 2,
+    "added_by_status": {
+        "beaten": 1,
+        "dropped": 1
+    },
+    "metacritic": null,
+    "suggestions_count": 0,
+    "updated": "2023-05-29T12:24:40",
+    "id": 295010,
+    "score": "60.530468",
+    "clip": null,
+    "tags": [],
+    "esrb_rating": null,
+    "user_game": null,
+    "reviews_count": 1,
+    "community_rating": 0,
+    "saturated_color": "0f0f0f",
+    "dominant_color": "0f0f0f",
+    "short_screenshots": [],
+    "parent_platforms": [
+        {
+            "platform": {
+                "id": 9,
+                "name": "Atari",
+                "slug": "atari"
+            }
+        }
+    ],
+    "genres": [
+        {
+            "id": 7,
+            "name": "Puzzle",
+            "slug": "puzzle"
+        }
+    ]
+}

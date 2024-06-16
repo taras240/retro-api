@@ -304,8 +304,8 @@ class UI {
         <div class="popup-info__property">Total players: <span>${achiv.totalPlayers}</span></div>
         <div class="popup-info__property">Earned by: <span>${achiv.NumAwarded}</span></div>
         <div class="popup-info__property">Earned harcore by: <span>${achiv.NumAwardedHardcore}</span></div>
-        ${achiv.isEarned ? `<div class="popup-info__property">Date earned : <span>${new Date(achiv.DateEarned).toLocaleDateString()}</span></div>` : ''}
-        ${achiv.isHardcoreEarned ? `<div class="popup-info__property">Date earned hardcore: <span>${new Date(achiv.DateEarnedHardcore).toLocaleDateString()}</span></div>` : ''}
+        ${achiv.isEarned ? `<div class="popup-info__property">Date earned : <span>${achiv.DateEarned}</span></div>` : ''}
+        ${achiv.isHardcoreEarned ? `<div class="popup-info__property">Date earned hardcore: <span>${achiv.DateEarnedHardcore}</span></div>` : ''}
         <div class="popup-info__property">Date created : <span>${new Date(achiv.DateCreated).toLocaleDateString()}</span></div>
         <div class="popup-info__property">Author : <span>${achiv.Author}</span></div>
     </div>
@@ -474,7 +474,7 @@ class Home {
             <div class="user-info__user-name-container">
                 <h1 class="user-info__user-name">${USER_INFO.userName}</h1>
                 <div class="user-info__user-rank">${USER_INFO.userRank}</div>
-                <div class="user-info__rich-presence">Member since: ${fixTimeString(USER_INFO.memberSince)}</div>
+                <div class="user-info__rich-presence">Member since: ${USER_INFO.memberSince}</div>
             </div>
         </div>
         ${USER_INFO.isInGame ? `
@@ -574,7 +574,7 @@ class Home {
                   <div class="game-stats__text">${achiv.Points}</div>
               </div>  
               <div class="game-stats ">
-                  <div class="game-stats__text">${fixTimeString(achiv.DateAwarded)}</div>
+                  <div class="game-stats__text">${achiv.DateAwarded}</div>
               </div>  
             </div>
           </div>            

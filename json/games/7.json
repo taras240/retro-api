@@ -160,6 +160,21 @@
         ]
     },
     {
+        "Title": "Advanced Dungeons & Dragons: Pool of Radiance",
+        "ID": 1523,
+        "ConsoleID": 7,
+        "ConsoleName": "NES\/Famicom",
+        "ImageIcon": "\/Images\/011516.png",
+        "NumAchievements": 24,
+        "NumLeaderboards": 0,
+        "Points": 280,
+        "DateModified": "2024-06-09 04:29:39",
+        "ForumTopicID": 11616,
+        "Hashes": [
+            "859542620628afcc2b7103b7a27bd72f"
+        ]
+    },
+    {
         "Title": "Adventure Island",
         "ID": 1526,
         "ConsoleID": 7,
@@ -2662,7 +2677,7 @@
         "NumAchievements": 14,
         "NumLeaderboards": 1,
         "Points": 256,
-        "DateModified": "2023-04-26 16:38:02",
+        "DateModified": "2024-06-12 23:15:13",
         "ForumTopicID": 7537,
         "Hashes": [
             "3c07d3fcac36e9f53b0982b93e6cabd5"
@@ -3381,7 +3396,7 @@
         "NumAchievements": 65,
         "NumLeaderboards": 1,
         "Points": 300,
-        "DateModified": "2023-09-21 05:46:39",
+        "DateModified": "2024-06-12 08:18:34",
         "ForumTopicID": 985,
         "Hashes": [
             "0df2cf7ece359c68492fa971bd98f4ce",
@@ -4019,22 +4034,6 @@
         ]
     },
     {
-        "Title": "Godzilla",
-        "ID": 1714,
-        "ConsoleID": 7,
-        "ConsoleName": "NES\/Famicom",
-        "ImageIcon": "\/Images\/010088.png",
-        "NumAchievements": 35,
-        "NumLeaderboards": 0,
-        "Points": 500,
-        "DateModified": "2020-02-28 15:36:15",
-        "ForumTopicID": 2978,
-        "Hashes": [
-            "cad1f1e422a087586afcd1bd4f97c66b",
-            "ceed379ad9dbcc75ccae5db3268c3d84"
-        ]
-    },
-    {
         "Title": "Godzilla 2: War of the Monsters",
         "ID": 1713,
         "ConsoleID": 7,
@@ -4047,6 +4046,22 @@
         "ForumTopicID": 6674,
         "Hashes": [
             "a54163ab8b1fe40c0cd81638357cc0d4"
+        ]
+    },
+    {
+        "Title": "Godzilla: Monster of Monsters!",
+        "ID": 1714,
+        "ConsoleID": 7,
+        "ConsoleName": "NES\/Famicom",
+        "ImageIcon": "\/Images\/010088.png",
+        "NumAchievements": 35,
+        "NumLeaderboards": 0,
+        "Points": 500,
+        "DateModified": "2020-02-28 15:36:15",
+        "ForumTopicID": 2978,
+        "Hashes": [
+            "cad1f1e422a087586afcd1bd4f97c66b",
+            "ceed379ad9dbcc75ccae5db3268c3d84"
         ]
     },
     {
@@ -4360,7 +4375,7 @@
         "ID": 5815,
         "ConsoleID": 7,
         "ConsoleName": "NES\/Famicom",
-        "ImageIcon": "\/Images\/061298.png",
+        "ImageIcon": "\/Images\/098327.png",
         "NumAchievements": 46,
         "NumLeaderboards": 1,
         "Points": 363,
@@ -4409,7 +4424,7 @@
         "NumAchievements": 31,
         "NumLeaderboards": 0,
         "Points": 241,
-        "DateModified": "2021-06-29 21:41:21",
+        "DateModified": "2024-06-11 22:08:51",
         "ForumTopicID": 1268,
         "Hashes": [
             "0ae012c45606e0dcd6af51ec4dad20b5",
@@ -4508,7 +4523,7 @@
         "NumAchievements": 37,
         "NumLeaderboards": 0,
         "Points": 326,
-        "DateModified": "2024-04-30 05:52:29",
+        "DateModified": "2024-06-05 07:03:38",
         "ForumTopicID": 26182,
         "Hashes": [
             "a3db96268386cc0efa66cc6e974a8f90",
@@ -5512,7 +5527,7 @@
         "NumAchievements": 26,
         "NumLeaderboards": 1,
         "Points": 265,
-        "DateModified": "2023-03-29 20:42:36",
+        "DateModified": "2024-06-10 19:01:56",
         "ForumTopicID": 2365,
         "Hashes": [
             "06f47a39696659d32a8b5a840484c39a",
@@ -6798,7 +6813,7 @@
         "NumAchievements": 71,
         "NumLeaderboards": 8,
         "Points": 1615,
-        "DateModified": "2023-05-27 20:29:00",
+        "DateModified": "2024-06-05 13:44:40",
         "ForumTopicID": 21251,
         "Hashes": [
             "cdce58f4690b29c8de6efa7ed28c9cf0"
@@ -7372,8 +7387,8 @@
         "ImageIcon": "\/Images\/089193.png",
         "NumAchievements": 23,
         "NumLeaderboards": 8,
-        "Points": 910,
-        "DateModified": "2024-04-16 20:16:06",
+        "Points": 960,
+        "DateModified": "2024-06-07 05:29:37",
         "ForumTopicID": 25427,
         "Hashes": [
             "946a03325c9f9db030ec606c63094578"
@@ -8644,7 +8659,7 @@
         "NumAchievements": 9,
         "NumLeaderboards": 0,
         "Points": 17,
-        "DateModified": "2024-05-29 08:50:36",
+        "DateModified": "2024-06-13 05:24:08",
         "ForumTopicID": 5758,
         "Hashes": [
             "e11377293fff45358d99aee90f98cbd6"
@@ -9101,6 +9116,21 @@
         "Hashes": [
             "bf40369da6fefb904a087699d2283218",
             "c432b613606c41bafa4a09470d75e75f"
+        ]
+    },
+    {
+        "Title": "Solar Jetman: Hunt for the Golden Warpship",
+        "ID": 1888,
+        "ConsoleID": 7,
+        "ConsoleName": "NES\/Famicom",
+        "ImageIcon": "\/Images\/091926.png",
+        "NumAchievements": 80,
+        "NumLeaderboards": 2,
+        "Points": 700,
+        "DateModified": "2024-06-09 12:42:08",
+        "ForumTopicID": 25232,
+        "Hashes": [
+            "45757bdf0d1a0e9de8f9590fb692da55"
         ]
     },
     {
@@ -9579,7 +9609,7 @@
         "NumAchievements": 51,
         "NumLeaderboards": 0,
         "Points": 463,
-        "DateModified": "2024-05-15 16:05:24",
+        "DateModified": "2024-06-10 19:37:39",
         "ForumTopicID": 325,
         "Hashes": [
             "36342b74e49d5f3164b8bac1830f9ec1",
@@ -9610,9 +9640,9 @@
         "ConsoleName": "NES\/Famicom",
         "ImageIcon": "\/Images\/047650.png",
         "NumAchievements": 52,
-        "NumLeaderboards": 81,
+        "NumLeaderboards": 91,
         "Points": 518,
-        "DateModified": "2024-05-03 02:50:07",
+        "DateModified": "2024-06-13 17:38:24",
         "ForumTopicID": 369,
         "Hashes": [
             "41303108e5ce494c40c3cb6421a2971d",
@@ -9917,7 +9947,7 @@
         "NumAchievements": 24,
         "NumLeaderboards": 0,
         "Points": 245,
-        "DateModified": "2024-05-15 21:35:45",
+        "DateModified": "2024-06-16 05:00:35",
         "ForumTopicID": 1102,
         "Hashes": [
             "1a18853b8acd338915cda7e6c59454bb",
@@ -10112,10 +10142,10 @@
         "ConsoleID": 7,
         "ConsoleName": "NES\/Famicom",
         "ImageIcon": "\/Images\/047150.png",
-        "NumAchievements": 6,
-        "NumLeaderboards": 0,
-        "Points": 60,
-        "DateModified": "2021-12-02 23:00:19",
+        "NumAchievements": 21,
+        "NumLeaderboards": 7,
+        "Points": 173,
+        "DateModified": "2024-06-08 16:41:32",
         "ForumTopicID": 5796,
         "Hashes": [
             "c203bbac3d946c9a871e273054f4b73c",
@@ -11655,7 +11685,7 @@
         "NumAchievements": 65,
         "NumLeaderboards": 0,
         "Points": 965,
-        "DateModified": "2020-03-11 11:12:30",
+        "DateModified": "2024-06-14 05:41:12",
         "ForumTopicID": 9454,
         "Hashes": [
             "d36f168e968c8b6eca738f7f41525070"
@@ -11779,7 +11809,7 @@
         "NumAchievements": 30,
         "NumLeaderboards": 0,
         "Points": 300,
-        "DateModified": "2023-05-31 03:17:18",
+        "DateModified": "2024-06-10 15:39:15",
         "ForumTopicID": 9603,
         "Hashes": [
             "31c090206a82aedb083b5b20e9e5866f"
@@ -11901,7 +11931,7 @@
         "NumAchievements": 46,
         "NumLeaderboards": 0,
         "Points": 373,
-        "DateModified": "2023-01-09 12:44:48",
+        "DateModified": "2024-06-08 17:12:30",
         "ForumTopicID": 19703,
         "Hashes": [
             "7e5594174493cb06f110fb8fc28fd5ac",
@@ -11980,7 +12010,7 @@
         "NumAchievements": 47,
         "NumLeaderboards": 7,
         "Points": 468,
-        "DateModified": "2023-08-12 20:17:22",
+        "DateModified": "2024-06-12 21:09:44",
         "ForumTopicID": 21012,
         "Hashes": [
             "ac31476e7bbdfc167b89c3bdd9429e57"
@@ -12264,6 +12294,21 @@
         ]
     },
     {
+        "Title": "~Hack~ Mini Lunar Ball",
+        "ID": 29858,
+        "ConsoleID": 7,
+        "ConsoleName": "NES\/Famicom",
+        "ImageIcon": "\/Images\/097931.png",
+        "NumAchievements": 66,
+        "NumLeaderboards": 1,
+        "Points": 459,
+        "DateModified": "2024-06-05 10:36:11",
+        "ForumTopicID": 26762,
+        "Hashes": [
+            "028ca1e31977a37ebbf7cc4e60195cbe"
+        ]
+    },
+    {
         "Title": "~Hack~ Mother: 25th Anniversary Edition",
         "ID": 5175,
         "ConsoleID": 7,
@@ -12272,7 +12317,7 @@
         "NumAchievements": 89,
         "NumLeaderboards": 0,
         "Points": 540,
-        "DateModified": "2021-11-15 08:58:15",
+        "DateModified": "2024-06-14 05:49:38",
         "ForumTopicID": 22741,
         "Hashes": [
             "f4fd2f9b5d02f09905fb125ee76fae37"
@@ -12481,7 +12526,7 @@
         "NumAchievements": 66,
         "NumLeaderboards": 0,
         "Points": 860,
-        "DateModified": "2024-03-31 23:14:56",
+        "DateModified": "2024-06-11 14:44:53",
         "ForumTopicID": 2800,
         "Hashes": [
             "143b2362eea1dcf942672ede220269c5",
@@ -13099,6 +13144,21 @@
         ]
     },
     {
+        "Title": "~Homebrew~ Adventures of Panzer, The",
+        "ID": 18372,
+        "ConsoleID": 7,
+        "ConsoleName": "NES\/Famicom",
+        "ImageIcon": "\/Images\/098541.png",
+        "NumAchievements": 11,
+        "NumLeaderboards": 0,
+        "Points": 210,
+        "DateModified": "2024-06-15 02:54:22",
+        "ForumTopicID": 26836,
+        "Hashes": [
+            "bbe584521e781e8a402087c1928c8c99"
+        ]
+    },
+    {
         "Title": "~Homebrew~ Alfonzo's Arctic Adventure",
         "ID": 17809,
         "ConsoleID": 7,
@@ -13289,7 +13349,7 @@
         "NumAchievements": 18,
         "NumLeaderboards": 1,
         "Points": 120,
-        "DateModified": "2022-10-30 12:41:46",
+        "DateModified": "2024-06-14 05:40:41",
         "ForumTopicID": 12858,
         "Hashes": [
             "9bad63db4d2b777decd0acca626d17c4"
@@ -13744,7 +13804,7 @@
         "NumAchievements": 32,
         "NumLeaderboards": 0,
         "Points": 230,
-        "DateModified": "2022-12-25 12:20:56",
+        "DateModified": "2024-06-14 05:41:54",
         "ForumTopicID": 18835,
         "Hashes": [
             "eda78197a063efd8ce8c9c8b41b6c537"
@@ -14806,7 +14866,7 @@
         ]
     },
     {
-        "Title": "~Unlicensed~ Bignose the Caveman",
+        "Title": "~Unlicensed~ Big Nose the Caveman",
         "ID": 4563,
         "ConsoleID": 7,
         "ConsoleName": "NES\/Famicom",

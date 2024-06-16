@@ -4,7 +4,8 @@
     width: 400px;
     z-index: 5;
     transform: translate(-50%, -50%);
-
+    max-height: 90vh;
+    overflow-y: scroll;
     /* height: 600px; */
 }
 
@@ -57,4 +58,15 @@
     justify-content: space-between;
     align-items: center;
     font-size: 1.1rem;
+}
+
+.rawg-data-list {
+    margin: 0;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: var(--secondary-color);
+}
+
+.description-link__header {
+    align-self: end;
 }
