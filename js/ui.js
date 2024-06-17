@@ -884,9 +884,12 @@ class AchievementsBlock {
     border: {
       name: "Border",
       link: "../assets/img/border/overlay_sets/",
-      closedLink: "../assets/img/overlay_sets/border/closed.png",
+      closedLink: "../assets/img/overlay_sets/border/closed-1.png",
       earnedSoftcoreLink: "../assets/img/overlay_sets/border/earned_soft.png",
       earnedHardcoreLink: "../assets/img/overlay_sets/border/earned.png",
+    },
+    digger: {
+      name: "Digger",
     },
     mario_q: {
       name: "Mario '?'",
@@ -1127,9 +1130,10 @@ class AchievementsBlock {
     this.updateOverlay();
   }
   updateOverlay() {
-    this.section.style.setProperty('--overlay-closed', `url(${this.overlayTypes[this.OVERLAY_TYPE].closedLink})`);
-    this.section.style.setProperty('--overlay-earned', `url(${this.overlayTypes[this.OVERLAY_TYPE].earnedHardcoreLink})`);
-    this.section.style.setProperty('--overlay-earned-soft', `url(${this.overlayTypes[this.OVERLAY_TYPE].earnedSoftcoreLink})`);
+    this.section.dataset.overlay = this.OVERLAY_TYPE;
+    // this.section.style.setProperty('--overlay-closed', `url(${this.overlayTypes[this.OVERLAY_TYPE].closedLink})`);
+    // this.section.style.setProperty('--overlay-earned', `url(${this.overlayTypes[this.OVERLAY_TYPE].earnedHardcoreLink})`);
+    // this.section.style.setProperty('--overlay-earned-soft', `url(${this.overlayTypes[this.OVERLAY_TYPE].earnedSoftcoreLink})`);
   }
 
   // Розбирає отримані досягнення гри та відображає їх на сторінці
@@ -1169,6 +1173,9 @@ class AchievementsBlock {
       achivElement.dataset.achivId = achievement.ID;
       achivElement.dataset.Points = achievement.Points;
       achivElement.dataset.TrueRatio = achievement.TrueRatio;
+      achievement.TrueRatio > 50 && (achivElement.dataset.rarity = "normal");
+      achievement.TrueRatio > 150 && (achivElement.dataset.rarity = "rare");
+      achievement.TrueRatio > 300 && (achivElement.dataset.rarity = "mythycal");
       achivElement.dataset.DisplayOrder = achievement.DisplayOrder;
       achivElement.dataset.type = achievement.type;
       achivElement.dataset.NumAwardedHardcore = achievement.NumAwardedHardcore;
@@ -4956,6 +4963,9 @@ class Games {
       ${ui.games.awardTypes[game.Award] ?? ''}
     </p>
     <p class="game-description game-description__links">
+    <button class=" game-description_link" onclick="getAchievements(${game.ID})"> 
+           <i class="game-description_icon link_icon apply-icon"></i>
+</button>
       <a title="google search" target="_blanc" 
         href="https://google.com/search?q='${game?.FixedTitle}' '${RAPlatforms[game?.ConsoleID]}' ${googleQuerySite}"
         class="game-description game-description_link">

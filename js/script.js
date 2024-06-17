@@ -20,10 +20,10 @@ else {
 let apiTrackerInterval;
 
 // Функція для отримання досягнень гри
-async function getAchievements() {
+async function getAchievements(gameID) {
   try {
     // Отримання інформації про прогрес гри від API
-    const response = await apiWorker.getGameProgress({});
+    const response = await apiWorker.getGameProgress({ gameID: gameID });
 
     ui.GAME_DATA = response;
     ui.statusPanel.watchButton.classList.remove("error");
