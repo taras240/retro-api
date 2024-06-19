@@ -182,7 +182,7 @@ section.section.games_setion:hover {
   padding: 3px 5px;
   display: grid;
   grid-column-gap: 1px;
-  grid-template-columns: 20px 1fr 3rem 8rem 6rem 6rem 6rem 5rem;
+  grid-template-columns: 20px 1fr 2rem 5rem 8rem 6rem 6rem 6rem 5rem;
   align-items: center;
   /* background-color: var(--main-color); */
   transition: 0.2s;
@@ -245,6 +245,11 @@ section.section.games_setion:hover {
 
 .game-title_original {
   display: none;
+}
+
+.game-title_genre {
+  background-color: darkslategray;
+  color: white;
 }
 
 .game-title_hack {

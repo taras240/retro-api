@@ -57,6 +57,7 @@
 }
 
 /** ------------[ ACHIEVEMENT ]------------*/
+/*--------------- OVERLAT-SETS---------------- */
 .achivs[data-overlay="border"] {
   --overlay-closed: url("../assets/img/overlay_sets/border/closed.png");
   --overlay-earned: url("../assets/img/overlay_sets/border/earned.png");
@@ -87,7 +88,6 @@
   --overlay-earned: url("../assets/img/overlay_sets/mario_q/earned.webp");
   --overlay-earned-soft: url("../assets/img/overlay_sets/mario_q/earned_soft.png");
 }
-
 
 .achivs[data-overlay="mario_q"] [data-rarity="mythycal"] {
   --overlay-closed: url("../assets/img/overlay_sets/mario_q/closed-2.png");
@@ -122,6 +122,7 @@
   --overlay-earned-soft: url("../assets/img/overlay_sets/sonic/earned_soft.png");
 }
 
+/* ---------------------------------- */
 .achiv-block {
   --height: 104px;
   position: relative;

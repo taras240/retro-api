@@ -4472,6 +4472,7 @@ class Target {
                   
                   <p class="target-description-text" title="retropoints"><i class="target_description-icon  retropoints-icon"></i>${achievement.TrueRatio}
                   </p>
+                 
                   <p class="target-description-text" title="earned by"><i class="target_description-icon  trending-icon"></i>${~~(
           (100 * achievement.NumAwardedHardcore) / achievement.totalPlayers)}%
                   </p>
@@ -4702,6 +4703,20 @@ class Games {
     }, [])
     return filters;
   }
+  get genresFilterItems() {
+    const filters = Object.keys(Genres).reduce((items, genreID) => {
+      const filterItem = {
+        label: Genres[genreID],
+        name: 'filter-by-genre',
+        checked: this.GENRE_FILTER.includes(genreID),
+        onChange: `ui.games.genreCheckboxChangeEvent(this,"${genreID}")`,
+        id: `filter-by-genre-${genreID}`,
+      }
+      items.push(filterItem);
+      return items;
+    }, [])
+    return filters;
+  }
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
   }
@@ -4712,6 +4727,14 @@ class Games {
   }
   get FAVOURITES() {
     return this._favs ?? [];
+  }
+  set COOP_FILTER(value) {
+    config.ui.games_section.coopOnly = value;
+    config.writeConfiguration();
+    this.updateGamesList();
+  }
+  get COOP_FILTER() {
+    return config.ui.games_section.coopOnly ?? false;
   }
   awardCheckboxChangeEvent(checkbox, awardType) {
     let awards = this.AWARD_FILTER;
@@ -4727,6 +4750,13 @@ class Games {
       (platforms = platforms.filter(code => code != platformCode));
     this.PLATFORMS_FILTER = platforms;
   }
+  genreCheckboxChangeEvent(checkbox, genreCode) {
+    let genres = this.GENRE_FILTER;
+    checkbox.checked ?
+      genres.push(genreCode) :
+      (genres = genres.filter(code => code != genreCode));
+    this.GENRE_FILTER = genres;
+  }
   set PLATFORMS_FILTER(value) {
 
     let platformCodes = value.filter(code => Object.keys(RAPlatforms).includes(code));
@@ -4739,6 +4769,19 @@ class Games {
   }
   get PLATFORMS_FILTER() {
     return config.ui?.games_section?.platformsFilter ?? ["7"];
+  }
+  set GENRE_FILTER(value) {
+
+    let genreCodes = value.filter(code => Object.keys(Genres).includes(code));
+
+    config.ui.games_section.genreFilter = genreCodes;
+    config.writeConfiguration();
+    this.updateGamesList();
+    // this.platformFiltersList.querySelector("#game-filters_all").checked = this.PLATFORMS_FILTER.length === Object.keys(this.gameFilters).length;
+
+  }
+  get GENRE_FILTER() {
+    return config.ui?.games_section?.genreFilter ?? [];
   }
   set AWARD_FILTER(value) {
     config.ui.games_section.awardFilter = value;
@@ -4804,12 +4847,13 @@ class Games {
   }
   titleFilter = '';
   applyFilter() {
+
     //Filter by Search request
     const titleRegex = new RegExp(this.titleFilter, 'gi');
     this.games = this.titleFilter ?
       this.GAMES.filter(game => game.FixedTitle.match(titleRegex)) :
       this.GAMES;
-
+    this.COOP_FILTER && (this.games = this.games?.filter(game => game.Coop == "true"));
     // Filter by Platform
     this.PLATFORMS_FILTER.length > 0 && (this.games = this.games?.filter(game => {
       let isPlatformMatch = false;
@@ -4818,7 +4862,13 @@ class Games {
       }
       return isPlatformMatch;
     }))
-
+    this.GENRE_FILTER.length > 0 && (this.games = this.games?.filter(game => {
+      let isGenreMatch = false;
+      for (let genreCode of this.GENRE_FILTER) {
+        game?.Genres?.includes(+genreCode) && (isGenreMatch = true);
+      }
+      return isGenreMatch;
+    }))
     //Filter by Favourites
     this.FAVOURITES_FILTER && (this.games = this.games.filter(game => this.FAVOURITES.includes(game.ID)))
 
@@ -4869,6 +4919,8 @@ class Games {
   }
   setValues() {
     this.section.querySelector('#games__favourites-filter').checked = this.FAVOURITES_FILTER;
+    this.section.querySelector('#games__coop-filter').checked = this.COOP_FILTER;
+
   }
   addEvents() {
     this.searchbar.addEventListener("input", e => {
@@ -4909,7 +4961,7 @@ class Games {
   async getAllGames() {
     this.GAMES = {};
     try {
-      const gamesResponse = await fetch(`./json/games/all.json`);
+      const gamesResponse = await fetch(`./json/games/all_ext.json`);
       const gamesJson = await gamesResponse.json();
       const lastPlayedGames = await apiWorker.SAVED_COMPLETION_PROGRESS;
       for (let lastGame of lastPlayedGames.Results) {
@@ -4944,12 +4996,22 @@ class Games {
           onerror="this.src='https://media.retroachievements.org/Images/${game.ImageIcon}.png';" alt=""
           class="game-preview_image">
     </div>
-    <h3 class="game-description_title"><button title="open game" class="game-description_button"
-            onclick="ui.games.showGameInfoPopup(${game.ID})">${game.FixedTitle} ${generateBadges(game.badges)}</button>
+    <h3 class="game-description_title">
+      <button title="open game" class="game-description_button"
+            onclick="ui.games.showGameInfoPopup(${game.ID})">
+            ${game.FixedTitle} 
+            ${generateBadges(game.badges)} 
+            ${game.Coop === "true" ? generateBadges(['coop']) : ""} 
+            ${game.Genres ? generateGenres(game.Genres) : ""}            
+      
+      </button>           
     </h3>
     <button class="favourites-button game-description icon-button games__icon-button ${ui.games.FAVOURITES.includes(game.ID) ? 'checked' : ''}" onclick="ui.games.addToFavourite(event,${game.ID})">
       <i class="icon favourite_icon"></i>
     </button>
+    <p title="Rating" class="game-description  game-rating">
+      ${game.Rating ? game.Rating : "n/a"}
+    </p>
     <p title="achievements count" class="game-description  achievements-count">
       ${RAPlatforms[game.ConsoleID].match(/[^\/]*/gi)[0]}
     </p>
@@ -4963,18 +5025,18 @@ class Games {
       ${ui.games.awardTypes[game.Award] ?? ''}
     </p>
     <p class="game-description game-description__links">
-    <button class=" game-description_link" onclick="getAchievements(${game.ID})"> 
-           <i class="game-description_icon link_icon apply-icon"></i>
-</button>
-      <a title="google search" target="_blanc" 
-        href="https://google.com/search?q='${game?.FixedTitle}' '${RAPlatforms[game?.ConsoleID]}' ${googleQuerySite}"
-        class="game-description game-description_link">
-        <i class="game-description_icon link_icon search-icon google_link"></i>
-      </a> 
-      <a title="go to RA" target="_blanc" href="https://retroachievements.org/game/${game.ID}"
+      <button class=" game-description_link" onclick="getAchievements(${game.ID})"> 
+            <i class="game-description_icon link_icon apply-icon"></i>
+      </button>
+        <a title="google search" target="_blanc" 
+          href="https://google.com/search?q='${game?.FixedTitle}' '${RAPlatforms[game?.ConsoleID]}' ${googleQuerySite}"
           class="game-description game-description_link">
-          <i class="game-description_icon link_icon ra-link_icon"></i>
-      </a>
+          <i class="game-description_icon link_icon search-icon google_link"></i>
+        </a> 
+        <a title="go to RA" target="_blanc" href="https://retroachievements.org/game/${game.ID}"
+            class="game-description game-description_link">
+            <i class="game-description_icon link_icon ra-link_icon"></i>
+        </a>
     </p>   
     `;
     // <a title="emu-land search" target="_blanc" href="https://www.emu-land.net/en/search_games?id=${ELPlatforms[game.ConsoleID]}&q=${game?.FixedTitle}"
@@ -4997,7 +5059,11 @@ class Games {
       </h3>
 
       <div class="header__game-description"><i class="icon favourite_icon checked"></i></div>
-
+ <p title="Rating" class="game-description header__game-description  game-rating ${this.SORT_NAME == sortMethods.rating ?
+      this.REVERSE_SORT == -1 ? 'active reverse' : 'active' : ''}"
+    onclick='ui.games.SORT_NAME = sortMethods.rating'>
+     Rating
+    </p>
       <p title="achievements count" class=" game-description  achievements-count"
         >
           Platform
@@ -5049,6 +5115,9 @@ class Games {
         case 'award':
           list = this.generateFiltersList(this.awardsFilterItems);
           break;
+        case 'genre':
+          list = this.generateFiltersList(this.genresFilterItems);
+          break;
       }
       this.section.append(list);
       this.section.querySelector('.games__filter-container').appendChild(list);
@@ -5083,9 +5152,9 @@ class Games {
     const gamePopupElement = document.createElement("section");
 
     const game = await apiWorker.getGameProgress({ gameID: gameID });
-    const rawgData = await apiWorker.rawgSearchGame({ gameTitle: game.FixedTitle, platformID: game.ConsoleID });
+    // const rawgData = await apiWorker.rawgSearchGame({ gameTitle: game.FixedTitle, platformID: game.ConsoleID });
 
-    const rawgGameInfo = rawgData ? `
+    const rawgGameInfo = false ? `
     <div class="game-info__descriptions-container rawg-data-list">
       <div class="game-description__property">Score : <span>${~~rawgData?.score}</span></div>
       <div class="game-description__property">Comunity rating : <span>${~~(rawgData?.rating * 20)}</span></div>
@@ -5866,7 +5935,7 @@ const sortBy = {
   id: (a, b) => a.ID - b.ID,
 
   disable: (a, b) => 0,
-
+  rating: (a, b) => b.Rating - a.Rating,
   achievementsCount: (a, b) => parseInt(a.NumAchievements) - parseInt(b.NumAchievements),
 
   title: (a, b) => {
@@ -5933,6 +6002,7 @@ const sortMethods = {
   achievementsCount: "achievementsCount",
   title: "title",
   award: "award",
+  rating: "rating",
 };
 
 
@@ -5941,6 +6011,9 @@ const delay = (ms) => {
 }
 function generateBadges(badges) {
   return badges?.reduce((acc, badge) => acc += `<i class="game-card_suffix game-title_${badge.toLowerCase()}">${badge}</i> `, "")
+}
+function generateGenres(genres) {
+  return genres?.reduce((acc, genre) => acc += `<i class="game-card_suffix game-title_genre">${Genres[genre]}</i> `, "")
 }
 function lazyLoad({ list, items, callback }) {
   const trigger = document.createElement("div");
@@ -6034,6 +6107,36 @@ const RAPlatforms = {
   "80": "Uzebox",
   "101": "Events",
   "102": "Standalone"
+}
+const Genres = {
+  "1": "Compilation",
+  "2": "Strategy",
+  "3": "Casino",
+  "4": "Music",
+  "5": "Action",
+  "6": "Platform",
+  "7": "Puzzle",
+  "8": "Quiz",
+  "9": "Shooter",
+  "10": "Vehicle Simulation",
+  "11": "Construction and Management Simulation",
+  "12": "Fighting",
+  "13": "Sports",
+  "14": "Role-Playing",
+  "15": "Racing",
+  "16": "Beat 'em Up",
+  "17": "Adventure",
+  "18": "Education",
+  "19": "Life Simulation",
+  "20": "Board Game",
+  "21": "Stealth",
+  "22": "Pinball",
+  "23": "Flight Simulator",
+  "24": "Visual Novel",
+  "25": "Horror",
+  "26": "Sandbox",
+  "27": "Party",
+  "28": "MMO"
 }
 const platformsByManufacturer = {
   'SEGA': {
