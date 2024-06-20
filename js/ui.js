@@ -4895,6 +4895,7 @@ class Games {
     'started': 'started',
   }
   games = {}
+  gamesInfo = {};
   constructor() {
     this._favs = config.ui.favouritesGames ?? [];
     this.initializeElements();
@@ -4956,10 +4957,15 @@ class Games {
       .then(() => {
         this.updateGamesList();
       })
+    this.loadGameInfo();
   }
-
+  async loadGameInfo() {
+    const infoResponce = await fetch(`./json/games/all_info.json`);
+    this.gamesInfo = await infoResponce.json();
+  }
   async getAllGames() {
     this.GAMES = {};
+
     try {
       const gamesResponse = await fetch(`./json/games/all_ext.json`);
       const gamesJson = await gamesResponse.json();
@@ -4986,67 +4992,107 @@ class Games {
     }
   }
   GameElement(game) {
+    function setPopupPosition(popup, e) {
+      //Start position relative achievement element
+      const leftPos = e.x + 100;
+      const topPos = e.y + 20;
+
+      popup.style.left = leftPos + "px";
+      popup.style.top = topPos + "px";
+
+      //Check for collisions and fix position
+      let { left, right, top, bottom } = popup.getBoundingClientRect();
+      if (left < 0) {
+        popup.classList.remove("left-side");
+      }
+      if (right > window.innerWidth) {
+        popup.classList.add("left-side");
+      }
+      if (top < 0) {
+        popup.classList.remove("top-side");
+      } else if (bottom > window.innerHeight) {
+        popup.classList.add("top-side");
+      }
+    }
+    function gameItemOnHover(e) {
+      function generatePopup() {
+        const gameElement = e.target.closest(".platform_game-item");
+        const gameID = gameElement.dataset.id;
+
+        if (!ui.games?.gamesInfo[gameID]?.Title) return;
+
+        let popup = document.createElement("div");
+        popup.classList.add("popup", "game-info__popup");
+        popup.innerHTML = `
+        <h3 class="achievement__header">${ui.games?.gamesInfo[gameID]?.Title}</h3>
+          <p>${ui.games?.gamesInfo[gameID]?.Info}</p>
+        `;
+        return popup;
+      }
+      // removePopups();
+      document.querySelectorAll(".popup").forEach((popup) => popup.remove());
+      const popup = generatePopup();
+
+      ui.app.appendChild(popup);
+      setPopupPosition(popup, e);
+      setTimeout(() => popup.classList.add("visible"), 200);
+    }
+
     const gameElement = document.createElement("li");
     gameElement.classList.add("platform_game-item");
     gameElement.dataset.id = game.ID;
     const iconCode = game.ImageIcon.match(/\d+/g);
     gameElement.innerHTML = `    
-    <div class="game-preview_container">
-      <img src="./assets/imgCache/${iconCode}.webp"
-          onerror="this.src='https://media.retroachievements.org/Images/${game.ImageIcon}.png';" alt=""
-          class="game-preview_image">
-    </div>
-    <h3 class="game-description_title">
-      <button title="open game" class="game-description_button"
-            onclick="ui.games.showGameInfoPopup(${game.ID})">
-            ${game.FixedTitle} 
-            ${generateBadges(game.badges)} 
-            ${game.Coop === "true" ? generateBadges(['coop']) : ""} 
-            ${game.Genres ? generateGenres(game.Genres) : ""}            
-      
-      </button>           
-    </h3>
-    <button class="favourites-button game-description icon-button games__icon-button ${ui.games.FAVOURITES.includes(game.ID) ? 'checked' : ''}" onclick="ui.games.addToFavourite(event,${game.ID})">
-      <i class="icon favourite_icon"></i>
-    </button>
-    <p title="Rating" class="game-description  game-rating">
-      ${game.Rating ? game.Rating : "n/a"}
-    </p>
-    <p title="achievements count" class="game-description  achievements-count">
-      ${RAPlatforms[game.ConsoleID].match(/[^\/]*/gi)[0]}
-    </p>
-    <p title="achievements count" class="game-description  achievements-count">
-    ${game.NumAwardedHardcore ? game.NumAwardedHardcore + '\/' : ""}${game.NumAchievements}
-    </p>
-    <p title="points count" class="game-description  points-count">
-     ${game.Points}
-    </p>
-    <p title="award type" class="game-description  award-type">
-      ${ui.games.awardTypes[game.Award] ?? ''}
-    </p>
-    <p class="game-description game-description__links">
-      <button class=" game-description_link" onclick="getAchievements(${game.ID})"> 
-            <i class="game-description_icon link_icon apply-icon"></i>
+      <div class="game-preview_container">
+        <img src="./assets/imgCache/${iconCode}.webp"
+            onerror="this.src='https://media.retroachievements.org/Images/${game.ImageIcon}.png';" alt=""
+            class="game-preview_image">
+      </div>
+      <h3 class="game-description_title">
+        <button title="open game" class="game-description_button"
+              onclick="ui.games.showGameInfoPopup(${game.ID})">
+              ${game.FixedTitle} 
+              ${generateBadges(game.badges)} 
+              ${game.Coop === "true" ? generateBadges(['coop']) : ""} 
+              ${game.Genres ? generateGenres(game.Genres) : ""}            
+        
+        </button>           
+      </h3>
+      <button class="favourites-button game-description icon-button games__icon-button ${ui.games.FAVOURITES.includes(game.ID) ? 'checked' : ''}" onclick="ui.games.addToFavourite(event,${game.ID})">
+        <i class="icon favourite_icon"></i>
       </button>
-        <a title="google search" target="_blanc" 
-          href="https://google.com/search?q='${game?.FixedTitle}' '${RAPlatforms[game?.ConsoleID]}' ${googleQuerySite}"
-          class="game-description game-description_link">
-          <i class="game-description_icon link_icon search-icon google_link"></i>
-        </a> 
-        <a title="go to RA" target="_blanc" href="https://retroachievements.org/game/${game.ID}"
+      <p title="Rating" class="game-description  game-rating">
+        ${game.Rating ? game.Rating : "n/a"}
+      </p>
+      <p title="achievements count" class="game-description  achievements-count">
+        ${RAPlatforms[game.ConsoleID].match(/[^\/]*/gi)[0]}
+      </p>
+      <p title="achievements count" class="game-description  achievements-count">
+      ${game.NumAwardedHardcore ? game.NumAwardedHardcore + '\/' : ""}${game.NumAchievements}
+      </p>
+      <p title="points count" class="game-description  points-count">
+      ${game.Points}
+      </p>
+      <p title="award type" class="game-description  award-type">
+        ${ui.games.awardTypes[game.Award] ?? ''}
+      </p>
+      <p class="game-description game-description__links">
+        <button class=" game-description_link" onclick="getAchievements(${game.ID})"> 
+              <i class="game-description_icon link_icon apply-icon"></i>
+        </button>
+          <a title="google search" target="_blanc" 
+            href="https://google.com/search?q='${game?.FixedTitle}' '${RAPlatforms[game?.ConsoleID]}' ${googleQuerySite}"
             class="game-description game-description_link">
-            <i class="game-description_icon link_icon ra-link_icon"></i>
-        </a>
-    </p>   
+            <i class="game-description_icon link_icon search-icon google_link"></i>
+          </a> 
+          <a title="go to RA" target="_blanc" href="https://retroachievements.org/game/${game.ID}"
+              class="game-description game-description_link">
+              <i class="game-description_icon link_icon ra-link_icon"></i>
+          </a>
+      </p>   
     `;
-    // <a title="emu-land search" target="_blanc" href="https://www.emu-land.net/en/search_games?id=${ELPlatforms[game.ConsoleID]}&q=${game?.FixedTitle}"
-    //     class="game-description game-description_link" ${!ELPlatforms[game.ConsoleID] ? 'disabled' : ''}>
-    //     <i class="game-description_icon link_icon download-icon el_link"></i>
-    //   </a>
-    //   <a title="CDRomance search" target="_blanc" href="https://cdromance.org/?s=${game.FixedTitle}&platform=${CDRPlatforms[game.ConsoleID]}&sorted="
-    //       class="game-description game-description_link" ${!CDRPlatforms[game.ConsoleID] ? 'disabled' : ''}>
-    //       <i class="game-description_icon link_icon download-icon cdr_link"></i>
-    //   </a> 
+    gameElement.addEventListener("mouseover", gameItemOnHover);
+    gameElement.addEventListener("mouseleave", () => document.querySelectorAll(".popup").forEach((popup) => popup.remove()))
     return gameElement;
   }
   gamesListHeaderHtml = () => `
@@ -5059,29 +5105,29 @@ class Games {
       </h3>
 
       <div class="header__game-description"><i class="icon favourite_icon checked"></i></div>
- <p title="Rating" class="game-description header__game-description  game-rating ${this.SORT_NAME == sortMethods.rating ?
+      <p title="Rating" class="game-description header__game-description  game-rating ${this.SORT_NAME == sortMethods.rating ?
       this.REVERSE_SORT == -1 ? 'active reverse' : 'active' : ''}"
-    onclick='ui.games.SORT_NAME = sortMethods.rating'>
-     Rating
-    </p>
-      <p title="achievements count" class=" game-description  achievements-count"
-        >
-          Platform
+      onclick='ui.games.SORT_NAME = sortMethods.rating'>
+      Rating
       </p>
-      <p title="achievements count" class="header__game-description game-description  achievements-count ${this.SORT_NAME == sortMethods.achievementsCount ?
+        <p title="achievements count" class=" game-description  achievements-count"
+          >
+            Platform
+        </p>
+        <p title="achievements count" class="header__game-description game-description  achievements-count ${this.SORT_NAME == sortMethods.achievementsCount ?
       this.REVERSE_SORT == -1 ? 'active reverse' : 'active' : ''}"
-        onclick='ui.games.SORT_NAME = sortMethods.achievementsCount'>
-          Cheevos
-      </p>
-      <p title="points count" class="header__game-description game-description  points-count ${this.SORT_NAME == sortMethods.points ?
+          onclick='ui.games.SORT_NAME = sortMethods.achievementsCount'>
+            Cheevos
+        </p>
+        <p title="points count" class="header__game-description game-description  points-count ${this.SORT_NAME == sortMethods.points ?
       this.REVERSE_SORT == -1 ? 'active reverse' : 'active' : ''}"
-        onclick='ui.games.SORT_NAME = sortMethods.points'>
-          Points
-      </p>
-      <p title="award type" class="header__game-description ${this.SORT_NAME == sortMethods.award ?
+          onclick='ui.games.SORT_NAME = sortMethods.points'>
+            Points
+        </p>
+        <p title="award type" class="header__game-description ${this.SORT_NAME == sortMethods.award ?
       this.REVERSE_SORT == -1 ? 'active reverse' : 'active' : ''}" onclick='ui.games.SORT_NAME = sortMethods.award'>Award</p>
-      <p title="" class=" game-description game-description_link">Links</p>
-    </div>
+        <p title="" class=" game-description game-description_link">Links</p>
+      </div>
   `;
   addToFavourite(event, gameID) {
     const isFavourite = this.FAVOURITES.includes(gameID);

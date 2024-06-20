@@ -279,7 +279,7 @@
 
 /** ----[ TOOLTIP ]--------- */
 
-.achiv-details-block {
+.popup {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -288,8 +288,6 @@
   margin: 1px;
   max-width: 300px;
   width: max-content;
-  left: 100%;
-  top: 10%;
   padding: 8px 16px;
   background-color: var(--secondary-color);
   background: linear-gradient(to top left,
@@ -304,18 +302,23 @@
   opacity: 0;
   transition: 0.2s;
   font-size: 1.15rem;
+  z-index: 1000;
 }
 
-.achiv-details-block h3 {
+.popup h3 {
   font-size: 1.15rem;
   font-weight: 500;
 }
 
-.achiv-details-block.left-side {
+.popup.left-side {
   transform: translateX(calc(-100% - 35px));
 }
 
-.achiv-details-block.top-side {
+.popup.left-side.top-side {
+  transform: translateX(calc(-100% - 35px)) translateY(calc(-60%));
+}
+
+.popup.top-side {
   transform: translateY(calc(-60%));
 }
 
@@ -359,15 +362,13 @@
   margin: 1px;
   max-width: 300px;
   width: max-content;
-  left: auto;
-  top: auto;
   visibility: hidden;
   opacity: 0;
   transition: opacity 0.2s;
-  z-index: 1000;
+
 }
 
-.achiv-details-block.popup.visible {
+.popup.visible {
   visibility: visible;
   opacity: 1;
   transition: 0.2s;

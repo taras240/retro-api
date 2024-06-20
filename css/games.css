@@ -479,3 +479,7 @@ section.section.games_setion:hover {
 .games__searchbar.empty:not(:focus) {
   border: 1px solid var(--secondary-color);
 }
+
+.popup.game-info__popup {
+  max-width: 500px;
+}
