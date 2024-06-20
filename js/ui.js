@@ -5033,9 +5033,11 @@ class Games {
       document.querySelectorAll(".popup").forEach((popup) => popup.remove());
       const popup = generatePopup();
 
-      ui.app.appendChild(popup);
-      setPopupPosition(popup, e);
-      setTimeout(() => popup.classList.add("visible"), 200);
+      if (popup) {
+        ui.app.appendChild(popup);
+        setPopupPosition(popup, e);
+        setTimeout(() => popup.classList.add("visible"), 200);
+      }
     }
 
     const gameElement = document.createElement("li");
