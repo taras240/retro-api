@@ -5059,12 +5059,18 @@ class Games {
               ${game.Genres ? generateGenres(game.Genres) : ""}            
         
         </button>           
-      </h3>
+      </h3>      
+      <p title="${game.Award ?? ""}" class="game-description  award-type">
+        ${game.Award ? `<i class="icon award-type__icon ${game.Award}_icon"></i>` : ""}
+      </p>
       <button class="favourites-button game-description icon-button games__icon-button ${ui.games.FAVOURITES.includes(game.ID) ? 'checked' : ''}" onclick="ui.games.addToFavourite(event,${game.ID})">
         <i class="icon favourite_icon"></i>
       </button>
       <p title="Rating" class="game-description  game-rating">
         ${game.Rating ? game.Rating : "n/a"}
+      </p>
+            <p title="Date" class="game-description  game-date">
+        ${game.Date ? game.Date : "n/a"}
       </p>
       <p title="achievements count" class="game-description  achievements-count">
         ${RAPlatforms[game.ConsoleID].match(/[^\/]*/gi)[0]}
@@ -5075,9 +5081,7 @@ class Games {
       <p title="points count" class="game-description  points-count">
       ${game.Points}
       </p>
-      <p title="award type" class="game-description  award-type">
-        ${ui.games.awardTypes[game.Award] ?? ''}
-      </p>
+
       <p class="game-description game-description__links">
         <button class=" game-description_link" onclick="getAchievements(${game.ID})"> 
               <i class="game-description_icon link_icon apply-icon"></i>
@@ -5105,29 +5109,36 @@ class Games {
       this.REVERSE_SORT == -1 ? 'active reverse' : 'active' : ''}"
         onclick='ui.games.SORT_NAME = sortMethods.title'>Title
       </h3>
-
+      <p title="award type" class="header__game-description ${this.SORT_NAME == sortMethods.award ?
+      this.REVERSE_SORT == -1 ? 'active reverse' : 'active' : ''}" onclick='ui.games.SORT_NAME = sortMethods.award'>
+        <i class="icon award_icon"></i>
+      </p>
       <div class="header__game-description"><i class="icon favourite_icon checked"></i></div>
       <p title="Rating" class="game-description header__game-description  game-rating ${this.SORT_NAME == sortMethods.rating ?
       this.REVERSE_SORT == -1 ? 'active reverse' : 'active' : ''}"
-      onclick='ui.games.SORT_NAME = sortMethods.rating'>
-      Rating
+        onclick='ui.games.SORT_NAME = sortMethods.rating'>
+          Rating
       </p>
-        <p title="achievements count" class=" game-description  achievements-count"
-          >
-            Platform
-        </p>
-        <p title="achievements count" class="header__game-description game-description  achievements-count ${this.SORT_NAME == sortMethods.achievementsCount ?
+      <p title="Date" class="game-description header__game-description  game-date ${this.SORT_NAME == sortMethods.date ?
+      this.REVERSE_SORT == -1 ? 'active reverse' : 'active' : ''}"
+        onclick='ui.games.SORT_NAME = sortMethods.date'>
+          Date
+      </p>
+      <p title="achievements count" class=" game-description  achievements-count"
+        >
+          Platform
+      </p>
+      <p title="achievements count" class="header__game-description game-description  achievements-count ${this.SORT_NAME == sortMethods.achievementsCount ?
       this.REVERSE_SORT == -1 ? 'active reverse' : 'active' : ''}"
           onclick='ui.games.SORT_NAME = sortMethods.achievementsCount'>
             Cheevos
         </p>
-        <p title="points count" class="header__game-description game-description  points-count ${this.SORT_NAME == sortMethods.points ?
+      <p title="points count" class="header__game-description game-description  points-count ${this.SORT_NAME == sortMethods.points ?
       this.REVERSE_SORT == -1 ? 'active reverse' : 'active' : ''}"
           onclick='ui.games.SORT_NAME = sortMethods.points'>
             Points
         </p>
-        <p title="award type" class="header__game-description ${this.SORT_NAME == sortMethods.award ?
-      this.REVERSE_SORT == -1 ? 'active reverse' : 'active' : ''}" onclick='ui.games.SORT_NAME = sortMethods.award'>Award</p>
+
         <p title="" class=" game-description game-description_link">Links</p>
       </div>
   `;
@@ -5968,7 +5979,15 @@ const sortBy = {
       : -Infinity;
     return dateB - dateA; // Повертає різницю дат
   },
-
+  date: (a, b) => {
+    const dateA = a.Date
+      ? new Date(a.Date)
+      : -Infinity;
+    const dateB = b.Date
+      ? new Date(b.Date)
+      : -Infinity;
+    return dateA - dateB; // Повертає різницю дат
+  },
   earnedCount: (a, b) => b.NumAwardedHardcore - a.NumAwardedHardcore,
 
   points: (a, b) => parseInt(a.Points) - parseInt(b.Points),
@@ -6010,8 +6029,8 @@ const sortBy = {
   award: (b, a) => {
     const awardTypes = {
       'mastered': 5,
-      'beaten-hardcore': 4,
-      'completed': 3,
+      'completed': 4,
+      'beaten-hardcore': 3,
       'beaten-softcore': 2,
       'started': 1,
     }
@@ -6051,6 +6070,7 @@ const sortMethods = {
   title: "title",
   award: "award",
   rating: "rating",
+  date: "date",
 };
 
 

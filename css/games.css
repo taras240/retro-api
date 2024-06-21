@@ -182,7 +182,7 @@ section.section.games_setion:hover {
   padding: 3px 5px;
   display: grid;
   grid-column-gap: 1px;
-  grid-template-columns: 20px 1fr 2rem 5rem 8rem 6rem 6rem 6rem 5rem;
+  grid-template-columns: 20px 1fr 3.5rem 2rem 5rem 8rem 8rem 6rem 6rem 5rem;
   align-items: center;
   /* background-color: var(--main-color); */
   transition: 0.2s;
@@ -345,6 +345,7 @@ section.section.games_setion:hover {
   mask-position: center;
   mask-repeat: no-repeat;
   transition: .2s;
+
 }
 
 .game-description_button {
@@ -358,6 +359,7 @@ section.section.games_setion:hover {
 }
 
 .game-description {
+  position: relative;
   text-align: center;
 }
 
@@ -406,8 +408,40 @@ section.section.games_setion:hover {
 }
 
 .favourite_icon {
-  opacity: 0.5;
   mask-image: url(../assets/img/favorite_border.svg);
+}
+
+.mastered_icon {
+  mask-image: url(../assets/img/award-mastered.svg);
+}
+
+.beaten-hardcore_icon {
+  mask-image: url(../assets/img/award-beaten.svg);
+}
+
+.completed_icon {
+  mask-image: url(../assets/img/award-completed.svg);
+}
+
+.beaten-softcore_icon {
+  mask-image: url(../assets/img/award-beaten-soft.svg);
+}
+
+.started_icon {
+  mask-image: url(../assets/img/more_horiz.svg);
+}
+
+.award-type__icon {
+  height: 1.2rem;
+}
+
+.award_icon {
+  mask-image: url(../assets/img/awards.svg);
+  opacity: 0.7;
+}
+
+.award_icon:hover {
+  opacity: 1;
 }
 
 .expand_icon {
