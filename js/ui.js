@@ -131,7 +131,7 @@ class UI {
     })
 
     document.querySelector("#background-animation").style.display =
-      config.bgVisibility ? "display" : "none";
+      config.bgVisibility ? "block" : "none";
   }
   addEvents() {
     document.addEventListener("click", () => {
@@ -5680,7 +5680,6 @@ class UserInfo {
     ui.buttons.user.click();
   }
 }
-
 class Notifications {
   get contextMenuItems() {
     return [
@@ -5957,6 +5956,45 @@ class Notifications {
           deltaSeconds < 60 * 60 * 12 ? new Date(date).toLocaleTimeString().replace(/:[^:]*$/gi, "") :
             new Date(date).toLocaleString().replace(/:[^:]*$/gi, "");
   }
+}
+document.addEventListener('keydown', checkKonamiCode);
+konamiCode = [];
+konamiCount = 0;
+removeSecretTimeout = 0;
+function checkKonamiCode(event) {
+  codes = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "KeyB", "KeyA"];
+  enteredKey = event.code;
+  if (enteredKey === codes[konamiCode.length]) {
+    konamiCode.push(enteredKey);
+    konamiCode.length === codes.length && (konamiCount = konamiCount === 1 ? 2 : 1, doMusic());
+  }
+  else {
+    konamiCode = [];
+  }
+}
+function doMusic() {
+  removeSecretTimeout && clearTimeout(removeSecretTimeout);
+  document.querySelector("#secret")?.remove();
+  let ad = document.createElement("audio");
+  konamiCode.length !== 10 && (ad = null);
+  konamiCode = [];
+  ad.id = "secret";
+  ad.innerHTML = `<source src="./assets/s/ss-${konamiCount}.m4a" type="audio/mpeg">
+ `;
+  ui.app.appendChild(ad);
+  ad.play();
+  const bcg = document.querySelector("#background-animation");
+  bcg.style.opacity = 0;
+  setTimeout(() => {
+    bcg.style.opacity = 1;
+    bcg.classList.add("secret");
+    document.querySelector("#background-animation").style.display = "block";
+  }, 2000);
+  removeSecretTimeout = setTimeout(() => {
+    bcg.classList.remove("secret");
+    document.querySelector("#background-animation").style.display =
+      config.bgVisibility ? "block" : "none";
+  }, 70 * 1000)
 }
 //* Методи сортування для досягнень гри
 const sortBy = {

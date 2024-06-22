@@ -6,6 +6,14 @@
   left: 0;
   height: 100vh;
   width: 100vw;
+  transition: 0.5s;
+  pointer-events: none;
+}
+
+#background-animation.secret {
+  transition: 0.5s;
+  z-index: 10000;
+  --stars-color: rgb(255, 0, 234);
 }
 
 #background-star {
@@ -725,6 +733,17 @@
     1589px 207px var(--stars-color), 1660px 1151px var(--stars-color);
 }
 
+
+.secret #background-star {
+  animation: animStarDown 50s ease-in-out infinite;
+}
+
+.secret #background-star:after {
+  top: -2000px;
+  left: 0;
+}
+
+
 #background-star2 {
   width: 2px;
   height: 2px;
@@ -941,6 +960,15 @@
     89px 1628px var(--stars-color), 741px 282px var(--stars-color);
 }
 
+.secret #background-star2 {
+  animation: animStarDown 70s ease-in-out infinite;
+}
+
+.secret #background-star2:after {
+  left: 0;
+  top: -2000px;
+}
+
 #background-star3 {
   width: 3px;
   height: 3px;
@@ -1057,6 +1085,16 @@
     496px 724px var(--stars-color), 768px 1216px var(--stars-color);
 }
 
+.secret #background-star3 {
+  animation: animStarDown 30s ease-in-out infinite;
+}
+
+.secret #background-star3:after {
+
+  left: 0;
+  top: -2000px;
+}
+
 /* Animation */
 
 @keyframes animStar {
@@ -1066,5 +1104,28 @@
 
   100% {
     transform: translateX(2000px);
+  }
+}
+
+@keyframes animStarDown {
+
+  0% {
+    transform: translateY(calc(2000px * sin(0deg)));
+  }
+
+  25% {
+    transform: translateY(calc(2000px * sin(90deg)));
+  }
+
+  50% {
+    transform: translateY(calc(2000px * sin(180deg)));
+  }
+
+  75% {
+    transform: translateY(calc(2000px * sin(270deg)));
+  }
+
+  100% {
+    transform: translateY(calc(2000px * sin(360deg)));
   }
 }
