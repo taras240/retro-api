@@ -1428,7 +1428,6 @@ class AchievementsBlock {
           <h3 class="achievement__header">${achievement.Title} <p class="difficult-badge difficult-badge__${achievement.difficulty}">${achievement.difficulty}</p>
           </h3>
           <p>${achievement.Description}</p>
-          <p>Earned by ${achievement.NumAwardedHardcore} of ${achievement.totalPlayers} players</p>
           <div class="points">
             <p><i class="target_description-icon  points-icon"></i>${achievement.Points}</p>
             <p><i class="target_description-icon  retropoints-icon"></i>${achievement.TrueRatio} </p> 
@@ -1440,6 +1439,10 @@ class AchievementsBlock {
               ? "<p>Earned softcore: " + achievement.DateEarned + "</p>"
               : ""
           }
+          <p>Earned by ${achievement.NumAwardedHardcore} (${achievement.NumAwarded}) of ${achievement.totalPlayers} players</p>
+          <p>Earned rate: ${achievement.rateEarnedHardcore} (${achievement.rateEarned})</p>
+          <p>Created : ${new Date(achievement.DateCreated).toLocaleDateString()} (${new Date(achievement.DateModified).toLocaleDateString()})</p>
+          <p>Created by: ${achievement.Author}</p>
         `;
         return popup;
       }
@@ -1449,7 +1452,7 @@ class AchievementsBlock {
       ui.app.appendChild(popup);
 
       setPopupPosition(popup, achivElement);
-      requestAnimationFrame(() => popup.classList.add("visible"));
+      setTimeout(() => popup.classList.add("visible"), 333);
     }
     function removePopups() {
       document.querySelectorAll(".popup").forEach((popup) => popup.remove());
@@ -4668,11 +4671,87 @@ class Target {
       `;
     }
 
+    function setEvents() {
+      targetElement.addEventListener("mouseover", mouseOverEvent);
+      targetElement.addEventListener("mouseleave", removePopups);
+      targetElement.addEventListener("mousedown", (e) => {
+        e.stopPropagation();
+      });
+    }
+    //------- Popup-----------
+    function setPopupPosition(popup, event) {
+      //Start position relative achievement element
+
+      const leftPos = event.x;
+      const topPos = event.y;
+
+      popup.style.left = leftPos + 50 + "px";
+      popup.style.top = topPos + "px";
+
+      //Check for collisions and fix position
+      let { left, right, top, bottom } = popup.getBoundingClientRect();
+      if (left < 0) {
+        popup.classList.remove("left-side");
+      }
+      if (right > window.innerWidth) {
+        popup.classList.add("left-side");
+      }
+      if (top < 0) {
+        popup.classList.remove("top-side");
+      } else if (bottom > window.innerHeight) {
+        popup.classList.add("top-side");
+      }
+    }
+
+    async function mouseOverEvent(event) {
+
+      function generatePopup(achievement) {
+        let popup = document.createElement("div");
+        popup.classList.add("achiv-details-block", "popup");
+        popup.innerHTML = `
+          <h3 class="achievement__header">${achievement.Title} <p class="difficult-badge difficult-badge__${achievement.difficulty}">${achievement.difficulty}</p>
+          </h3>
+          <p>${achievement.Description}</p>
+                   <div class="points">
+            <p><i class="target_description-icon  points-icon"></i>${achievement.Points}</p>
+            <p><i class="target_description-icon  retropoints-icon"></i>${achievement.TrueRatio} </p> 
+            <i class="target_description-icon ${achievement.type ?? "none"}"></i>            
+          </div>
+          ${achievement.DateEarnedHardcore
+            ? "<p>Earned hardcore: " + achievement.DateEarnedHardcore + "</p>"
+            : achievement.DateEarned
+              ? "<p>Earned softcore: " + achievement.DateEarned + "</p>"
+              : ""
+          }
+          <p>Earned by ${achievement.NumAwardedHardcore} (${achievement.NumAwarded}) of ${achievement.totalPlayers} players</p>
+          <p>Earned rate: ${achievement.rateEarnedHardcore} (${achievement.rateEarned})</p>
+          <p>Created : ${new Date(achievement.DateCreated).toLocaleDateString()} (${new Date(achievement.DateModified).toLocaleDateString()})</p>
+          <p>Created by: ${achievement.Author}</p>
+ 
+          
+          
+        `;
+        return popup;
+      }
+      removePopups();
+
+      const popup = generatePopup(achievement);
+      ui.app.appendChild(popup);
+
+      setPopupPosition(popup, event);
+      setTimeout(() => popup.classList.add("visible"), 333);
+    }
+    async function removePopups() {
+
+      document.querySelectorAll(".popup").forEach((popup) => popup.remove());
+    }
+
+
     setClassesToElement();
     setDataToElement();
     setElementHtml();
     this.container.appendChild(targetElement);
-
+    setEvents();
     // for one element adding only
     if (!this.isDynamicAdding) {
       this.applyFilter();
