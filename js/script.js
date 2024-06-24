@@ -42,8 +42,9 @@ function doMusic() {
   konamiCode.length !== 10 && (ad = null);
   konamiCode = [];
   ad.id = "secret";
-  ad.innerHTML = `<source src="./assets/s/ss-${konamiCount}.m4a" type="audio/mpeg">
- `;
+  ad.innerHTML = `
+    <source src="./assets/s/ss-${konamiCount}.m4a" type="audio/mpeg">
+  `;
   ui.app.appendChild(ad);
   ad.play();
   const bcg = document.querySelector("#background-animation");
@@ -53,11 +54,13 @@ function doMusic() {
     bcg.classList.add("secret");
     document.querySelector("#background-animation").style.display = "block";
   }, 2000);
+  const durationInSecs = konamiCount === 2 ? 4 * 60 : 1.1 * 60;
   removeSecretTimeout = setTimeout(() => {
     bcg.classList.remove("secret");
     document.querySelector("#background-animation").style.display =
       config.bgVisibility ? "block" : "none";
-  }, 70 * 1000)
+
+  }, durationInSecs * 1000)
 }
 // Функція для закриття About
 function openAbout() {
