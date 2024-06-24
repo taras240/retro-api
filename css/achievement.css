@@ -89,9 +89,7 @@
   --overlay-earned-soft: url("../assets/img/overlay_sets/mario_q/earned_soft.png");
 }
 
-.achivs[data-overlay="mario_q"] [data-rarity="mythycal"] {
-  --overlay-closed: url("../assets/img/overlay_sets/mario_q/closed-2.png");
-}
+
 
 .achivs[data-overlay="mario_q"] [data-rarity="rare"],
 .achivs[data-overlay="mario_q"] [data-rarity="normal"] {
@@ -120,6 +118,10 @@
   --overlay-closed: url("../assets/img/overlay_sets/sonic/closed.png");
   --overlay-earned: url("../assets/img/overlay_sets/sonic/earned.png");
   --overlay-earned-soft: url("../assets/img/overlay_sets/sonic/earned_soft.png");
+}
+
+.achivs [data-type="missable"] .preview-container::before {
+  filter: invert(1)
 }
 
 /* ---------------------------------- */
