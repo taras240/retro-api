@@ -1,5 +1,9 @@
-class UI {
+import { loadSections } from "./htmlBuilder.js";
+import { config, ui, apiWorker, userAuthData } from "./script.js";
+
+export class UI {
   VERSION = "0.25";
+  static RECENT_ACHIVES_RANGE_MINUTES = 5;
   static AUTOCLOSE_CONTEXTMENU = false;
   static STICK_MARGIN = 10;
 
@@ -54,7 +58,7 @@ class UI {
           //!-----------------------------------
           config.startOnLoad
             ? this.statusPanel.watchButton.click()
-            : getAchievements();
+            : this.getAchievements();
         }
         else {
           const section = this.loginCard.section;
@@ -231,6 +235,84 @@ class UI {
     this.updateWidgets({ earnedAchievementsIDs: achievementsIDs });
   }
 
+  // Функція для отримання досягнень гри
+  async getAchievements(gameID) {
+    try {
+      // Отримання інформації про прогрес гри від API
+      const response = await apiWorker.getGameProgress({ gameID: gameID });
+
+      this.GAME_DATA = response;
+      this.statusPanel.watchButton.classList.remove("error");
+
+    } catch (error) {
+      // Додання помилки до кнопки перегляду та зупинка перегляду
+      this.statusPanel.watchButton.classList.add("error");
+      this.stopWatching();
+      console.error(error);
+    }
+  }
+  apiTrackerInterval;
+  // Функція для оновлення досягнень
+  async updateAchievements() {
+    try {
+      // Отримання недавніх досягнень від API
+      const achievements = await apiWorker.getRecentAchieves({
+        minutes: UI.RECENT_ACHIVES_RANGE_MINUTES,
+      });
+
+      this.checkForNewAchieves(achievements);
+
+    } catch (error) {
+      console.error(error); // Обробка помилок
+    }
+  }
+
+  // Функція для початку слідкування за досягненнями
+  startWatching() {
+    // Оновлення стану та тексту кнопки слідкування
+    this.statusPanel.watchButton.classList.add("active");
+
+    // Отримання початкових досягнень
+    ui.getAchievements();
+    this.checkUpdates();
+    if (this.target.AUTOCLEAR) {
+      this.target.clearEarned();
+    }
+
+    // Встановлення інтервалу для оновлення досягнень та зміни стану кнопки
+    this.apiTrackerInterval = setInterval(() => {
+      this.checkUpdates();
+    }, config.updateDelayInMiliSecs);
+  }
+  totalPoints = 0;
+  softcorePoints = 0;
+  async checkUpdates() {
+    const responce = await apiWorker.getProfileInfo({});
+    if (responce.LastGameID != config.gameID) {
+      config.gameID = responce.LastGameID;
+      ui.getAchievements().then(() =>
+        this.userInfo.pushNewGame({ game: ui.GAME_DATA })
+      );
+    }
+    if (
+      responce.TotalPoints != this.totalPoints ||
+      responce.TotalSoftcorePoints != this.softcorePoints
+    ) {
+      this.updateAchievements();
+      this.totalPoints = responce.TotalPoints;
+      this.softcorePoints = responce.TotalSoftcorePoints;
+      this.userInfo.updatePoints({ points: responce });
+    }
+
+    this.statusPanel.richPresence.innerText = responce.RichPresenceMsg;
+  }
+
+
+  // Функція для зупинки слідкування за досягненнями
+  stopWatching() {
+    this.statusPanel.watchButton.classList.remove("active");
+    clearInterval(ui.apiTrackerInterval);
+  }
 
   static applySort({ container, itemClassName, sortMethod, reverse }) {
     const elements = [...container.querySelectorAll(itemClassName)];
@@ -645,6 +727,119 @@ class UI {
     }
 
   }
+  static sortBy = {
+    latest: (a, b) => {
+      const toDate = (s) => {
+        const [datePart, timePart] = s.split(', ');
+
+        const [day, month, year] = datePart.split('.').map(Number);
+
+        const [hours, minutes] = timePart.split(':').map(Number);
+
+        return new Date(year, month - 1, day, hours, minutes);
+      }
+
+      const dateA = a.DateEarnedHardcore
+        ? toDate(a.DateEarnedHardcore)
+        : -Infinity;
+      const dateB = b.DateEarnedHardcore
+        ? toDate(b.DateEarnedHardcore)
+        : -Infinity;
+      return dateB - dateA; // Повертає різницю дат
+    },
+    date: (a, b) => {
+      const dateA = a.Date
+        ? new Date(a.Date)
+        : -Infinity;
+      const dateB = b.Date
+        ? new Date(b.Date)
+        : -Infinity;
+      return dateA - dateB; // Повертає різницю дат
+    },
+    earnedCount: (a, b) => b.NumAwardedHardcore - a.NumAwardedHardcore,
+
+    points: (a, b) => parseInt(a.Points) - parseInt(b.Points),
+
+    truepoints: (a, b) => a.TrueRatio - b.TrueRatio,
+
+    default: (a, b) => a.DisplayOrder != 0 ?
+      a.DisplayOrder - b.DisplayOrder :
+      a.achivId - b.achivId
+    ,
+
+    id: (a, b) => a.ID - b.ID,
+
+    disable: (a, b) => 0,
+    rating: (a, b) => b.Rating - a.Rating,
+    achievementsCount: (a, b) => parseInt(a.NumAchievements) - parseInt(b.NumAchievements),
+
+    title: (a, b) => {
+      // const ignoredWords = ["~UNLICENSED~", "~DEMO~", "~HOMEBREW~", "~HACK~", "~PROTOTYPE~", ".HACK//", "~TEST", "KIT~"];
+
+      // function removeIgnoredWords(title) {
+      //   const regex = new RegExp(`(${ignoredWords.join('|')})`, 'gi');
+      //   let fixedTitle = title.replace(regex, '').trim();
+      //   return fixedTitle;
+      // }
+
+      let nameA = a.FixedTitle.toUpperCase();
+      let nameB = b.FixedTitle.toUpperCase();
+
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+      return 0;
+
+    },
+    award: (b, a) => {
+      const awardTypes = {
+        'mastered': 5,
+        'completed': 4,
+        'beaten-hardcore': 3,
+        'beaten-softcore': 2,
+        'started': 1,
+      }
+      const awardA = awardTypes[a.Award] ?? 0;
+      const awardB = awardTypes[b.Award] ?? 0;
+
+      const awardADate = new Date(a.MostRecentAwardedDate);
+      const awardBDate = new Date(b.MostRecentAwardedDate);
+
+      return awardA - awardB != 0 ? awardA - awardB : awardADate - awardBDate;
+    }
+  }
+
+  static filterBy = {
+    earned: (achievement) => achievement.DateEarnedHardcore,
+    notEarned: (achievement) => !achievement.DateEarnedHardcore,
+    missable: (achievement) => achievement.type === "missable",
+    progression: (achievement) => achievement.type === "progression" || achievement.type === "win_condition",
+    all: () => true,
+  };
+  static filterMethods = {
+    all: "all",
+    earned: "earned",
+    notEarned: "notEarned",
+    missable: "missable",
+    progression: "progression",
+  };
+  static sortMethods = {
+    latest: "latest",
+    earnedCount: "earnedCount",
+    points: "points",
+    truepoints: "truepoints",
+    disable: "disable",
+    id: "id",
+    default: "default",
+    achievementsCount: "achievementsCount",
+    title: "title",
+    award: "award",
+    rating: "rating",
+    date: "date",
+  };
 }
 
 class AchievementsBlock {
@@ -743,48 +938,48 @@ class AchievementsBlock {
             name: "context-sort",
             id: "context-sort_latest",
             label: "Latest",
-            checked: this.SORT_NAME === sortMethods.latest,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = sortMethods.latest;"`,
+            checked: this.SORT_NAME === UI.sortMethods.latest,
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = 'latest';"`,
           },
           {
             type: "radio",
             name: "context-sort",
             id: "context-sort_rarest",
             label: "Rarest",
-            checked: this.SORT_NAME === sortMethods.earnedCount,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = sortMethods.earnedCount;"`,
+            checked: this.SORT_NAME === UI.sortMethods.earnedCount,
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = 'earnedCount';"`,
           },
           {
             type: "radio",
             name: "context-sort",
             id: "context-sort_points",
             label: "Points",
-            checked: this.SORT_NAME === sortMethods.points,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = sortMethods.points;"`,
+            checked: this.SORT_NAME === UI.sortMethods.points,
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = 'points';"`,
           },
           {
             type: "radio",
             name: "context-sort",
             id: "context-sort_retropoints",
             label: "Retropoints",
-            checked: this.SORT_NAME === sortMethods.truepoints,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = sortMethods.truepoints;"`,
+            checked: this.SORT_NAME === UI.sortMethods.truepoints,
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = 'truepoints';"`,
           },
           {
             type: "radio",
             name: "context-sort",
             id: "context-sort_default",
             label: "Default",
-            checked: this.SORT_NAME === sortMethods.default,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = sortMethods.default;"`,
+            checked: this.SORT_NAME === UI.sortMethods.default,
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = 'default';"`,
           },
           {
             type: "radio",
             name: "context-sort",
             id: "context-sort_disable",
             label: "Disable",
-            checked: this.SORT_NAME === sortMethods.disable,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = sortMethods.disable;"`,
+            checked: this.SORT_NAME === UI.sortMethods.disable,
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = 'disable';"`,
           },
           {
             type: "checkbox",
@@ -804,32 +999,32 @@ class AchievementsBlock {
             name: "context-filter",
             id: "context_filter-progression",
             label: "Progression",
-            checked: this.FILTER_NAME === filterMethods.progression,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].FILTER_NAME = filterMethods.progression;"`,
+            checked: this.FILTER_NAME === UI.filterMethods.progression,
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].FILTER_NAME = 'progression';"`,
           },
           {
             type: "radio",
             name: "context-filter",
             id: "context_filter-missable",
             label: "Missable",
-            checked: this.FILTER_NAME === filterMethods.missable,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].FILTER_NAME = filterMethods.missable;"`,
+            checked: this.FILTER_NAME === UI.filterMethods.missable,
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].FILTER_NAME = 'missable';"`,
           },
           {
             type: "radio",
             name: "context-filter",
             id: "context_filter-earned",
             label: "Earned",
-            checked: this.FILTER_NAME === filterMethods.earned,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].FILTER_NAME = filterMethods.earned;"`,
+            checked: this.FILTER_NAME === UI.filterMethods.earned,
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].FILTER_NAME = 'earned';"`,
           },
           {
             type: "radio",
             name: "context-filter",
             id: "context_filter-all",
             label: "All",
-            checked: this.FILTER_NAME === filterMethods.all,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].FILTER_NAME = filterMethods.all;"`,
+            checked: this.FILTER_NAME === UI.filterMethods.all,
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].FILTER_NAME = 'all';"`,
           },
           {
             type: "checkbox",
@@ -935,11 +1130,11 @@ class AchievementsBlock {
   get SORT_NAME() {
     return (
       config?.ui[this.SECTION_NAME]?.sortAchievementsBy ||
-      sortMethods.default
+      UI.sortMethods.default
     );
   }
   get SORT_METHOD() {
-    return sortBy[this.SORT_NAME];
+    return UI.sortBy[this.SORT_NAME];
   }
   set FILTER_NAME(value) {
     config.ui[this.SECTION_NAME].filterBy = value;
@@ -947,10 +1142,10 @@ class AchievementsBlock {
     this.applyFilter();
   }
   get FILTER_NAME() {
-    return config?.ui[this.SECTION_NAME]?.filterBy || filterMethods.all;
+    return config?.ui[this.SECTION_NAME]?.filterBy || UI.filterMethods.all;
   }
   get FILTER_METHOD() {
-    return filterBy[this.FILTER_NAME];
+    return UI.filterBy[this.FILTER_NAME];
   }
   get HIDE_FILTERED() {
     return config?.ui[this.SECTION_NAME]?.hideFiltered ?? false;
@@ -1334,7 +1529,7 @@ class AchievementsBlock {
       ui.ACHIEVEMENTS[id].DateEarnedHardcore && (earnedAchivElement.dataset.DateEarnedHardcore = ui.ACHIEVEMENTS[id].DateEarnedHardcore);
     };
     this.applyFilter();
-    this.SORT_NAME == sortMethods.latest && this.applySorting();
+    this.SORT_NAME == UI.sortMethods.latest && this.applySorting();
     this.startAutoScroll();
   }
   async marioAction(targetElement) {
@@ -2166,12 +2361,12 @@ class StatusPanel {
       }
       // Перевіряємо стан кнопки та відповідно запускаємо або припиняємо автооновлення
       if (this.watchButton.classList.contains("active")) {
-        stopWatching();
+        ui.stopWatching();
         savePlayTime();
         clearInterval(this.gameTimeInterval);
       }
       else {
-        startWatching();
+        ui.startWatching();
         this.gameTimeInterval = setInterval(() => {
           this.gameTime++;
           this.sessionGameTime++;
@@ -2301,7 +2496,7 @@ class StatusPanel {
     this.setValues();
   }
   gameChangeEvent() {
-    if (ui.GAME_DATA.FixedTitle != this.stats.gameTitle && apiTrackerInterval) {
+    if (ui.GAME_DATA.FixedTitle != this.stats.gameTitle && ui.apiTrackerInterval) {
       this.addAlertsToQuery([{ type: "new-game", value: ui.GAME_DATA }]);
     }
 
@@ -2974,7 +3169,7 @@ class Settings {
             type: "button",
             label: "Check ID",
             id: "settings_check-game-id",
-            onClick: "getAchievements()",
+            onClick: "ui.getAchievements()",
           },
           {
             type: "button",
@@ -3292,7 +3487,7 @@ class Settings {
     apiWorker.getProfileInfo({}).then((resp) => {
       document.getElementById("settings_game-id-input").value = resp.LastGameID;
       config.gameID = resp.LastGameID;
-      getAchievements();
+      ui.getAchievements();
     });
   }
   selectFont(fontName) {
@@ -3301,7 +3496,7 @@ class Settings {
     this.FONT_FAMILY = this.fonts[font];
     config._cfg.fontSelectorName = font;
     config.writeConfiguration();
-    this.fontUrlInput.value = this.FONT_NAME;
+    // this.fontUrlInput.value = this.FONT_NAME;
   }
 
   close() {
@@ -3968,57 +4163,48 @@ class Target {
             name: "context-sort",
             id: "context-sort_latest",
             label: "Latest",
-            checked: this.SORT_NAME === sortMethods.latest,
-            event: `onchange="ui.target.SORT_NAME = sortMethods.latest;"`,
+            checked: this.SORT_NAME === UI.sortMethods.latest,
+            event: `onchange="ui.target.SORT_NAME = 'latest';"`,
           },
           {
             type: "radio",
             name: "context-sort",
             id: "context-sort_rarest",
             label: "Rarest",
-            checked: this.SORT_NAME === sortMethods.earnedCount,
-            event: `onchange="ui.target.SORT_NAME = sortMethods.earnedCount;"`,
+            checked: this.SORT_NAME === UI.sortMethods.earnedCount,
+            event: `onchange="ui.target.SORT_NAME = 'earnedCount';"`,
           },
           {
             type: "radio",
             name: "context-sort",
             id: "context-sort_points",
             label: "Points",
-            checked: this.SORT_NAME === sortMethods.points,
-            event: `onchange="ui.target.SORT_NAME = sortMethods.points;"`,
+            checked: this.SORT_NAME === UI.sortMethods.points,
+            event: `onchange="ui.target.SORT_NAME = 'points';"`,
           },
           {
             type: "radio",
             name: "context-sort",
             id: "context-sort_retropoints",
             label: "Retropoints",
-            checked: this.SORT_NAME === sortMethods.truepoints,
-            event: `onchange="ui.target.SORT_NAME = sortMethods.truepoints;"`,
+            checked: this.SORT_NAME === UI.sortMethods.truepoints,
+            event: `onchange="ui.target.SORT_NAME = 'truepoints';"`,
           },
           {
             type: "radio",
             name: "context-sort",
             id: "context-sort_default",
             label: "Default",
-            checked: this.SORT_NAME === sortMethods.default,
-            event: `onchange="ui.target.SORT_NAME = sortMethods.default;"`,
+            checked: this.SORT_NAME === UI.sortMethods.default,
+            event: `onchange="ui.target.SORT_NAME = 'default';"`,
           },
-          // {
-          //   type: "radio",
-          //   name: "context-sort",
-          //   id: "context-sort_id",
-          //   label: "ID",
-          //   checked: this.SORT_NAME === sortMethods.id,
-          //   event: `onchange="ui.target.SORT_NAME = sortMethods.id;"`
-
-          // },
           {
             type: "radio",
             name: "context-sort",
             id: "context-sort_dont-sort",
             label: "Disable",
-            checked: this.SORT_NAME === sortMethods.disable,
-            event: `onchange="ui.target.SORT_NAME = sortMethods.disable;"`,
+            checked: this.SORT_NAME === UI.sortMethods.disable,
+            event: `onchange="ui.target.SORT_NAME = 'disable';"`,
           },
           {
             type: "checkbox",
@@ -4038,32 +4224,32 @@ class Target {
             name: "context-filter",
             id: "context_filter-progression",
             label: "Progression",
-            checked: this.FILTER_NAME === filterMethods.progression,
-            event: `onchange="ui.target.FILTER_NAME = filterMethods.progression;"`,
+            checked: this.FILTER_NAME === UI.filterMethods.progression,
+            event: `onchange="ui.target.FILTER_NAME = 'progression';"`,
           },
           {
             type: "radio",
             name: "context-filter",
             id: "context_filter-missable",
             label: "Missable",
-            checked: this.FILTER_NAME === filterMethods.missable,
-            event: `onchange="ui.target.FILTER_NAME = filterMethods.missable;"`,
+            checked: this.FILTER_NAME === UI.filterMethods.missable,
+            event: `onchange="ui.target.FILTER_NAME = 'missable';"`,
           },
           {
             type: "radio",
             name: "context-filter",
             id: "context_filter-earned",
             label: "Earned",
-            checked: this.FILTER_NAME === filterMethods.earned,
-            event: `onchange="ui.target.FILTER_NAME = filterMethods.earned;"`,
+            checked: this.FILTER_NAME === UI.filterMethods.earned,
+            event: `onchange="ui.target.FILTER_NAME = 'earned';"`,
           },
           {
             type: "radio",
             name: "context-filter",
             id: "context_filter-all",
             label: "All",
-            checked: this.FILTER_NAME === filterMethods.all,
-            event: `onchange="ui.target.FILTER_NAME = filterMethods.all;"`,
+            checked: this.FILTER_NAME === UI.filterMethods.all,
+            event: `onchange="ui.target.FILTER_NAME = 'all';"`,
           },
           {
             type: "checkbox",
@@ -4159,10 +4345,10 @@ class Target {
     this.applySort();
   }
   get SORT_NAME() {
-    return config._cfg.settings.sortTargetBy || sortMethods.default;
+    return config._cfg.settings.sortTargetBy || UI.sortMethods.default;
   }
   get SORT_METHOD() {
-    return sortBy[this.SORT_NAME];
+    return UI.sortBy[this.SORT_NAME];
   }
   get REVERSE_SORT() {
     return config._cfg.settings.reverseSortTarget || 1;
@@ -4173,7 +4359,7 @@ class Target {
     this.applySort();
   }
   get FILTER_NAME() {
-    return config._cfg.settings.filterTargetBy || filterMethods.all;
+    return config._cfg.settings.filterTargetBy || UI.filterMethods.all;
   }
   set FILTER_NAME(value) {
     config._cfg.settings.filterTargetBy = value;
@@ -4181,7 +4367,7 @@ class Target {
     this.applyFilter();
   }
   get FILTER_METHOD() {
-    return filterBy[this.FILTER_NAME];
+    return UI.filterBy[this.FILTER_NAME];
   }
   get REVERSE_FILTER() {
     return config._cfg.settings.reverseFilterTarget ?? false;
@@ -4634,13 +4820,7 @@ class LoginCard {
             apiKey: apiKey,
             userObj: userObj,
           });
-          apiWorker
-            .getProfileInfo({ targetUser: userName })
-            .then((resp) => {
-              config.gameID = resp.LastGameID;
-            })
-            .then(() => getAchievements({}));
-          // ui.statusPanel.watchButton.click();
+          setTimeout(() => location.reload(), 1000);
         }
       });
   }
@@ -4734,7 +4914,7 @@ class Games {
     this.updateGamesList();
   }
   get COOP_FILTER() {
-    return config.ui.games_section.coopOnly ?? false;
+    return config.ui.games_section?.coopOnly ?? false;
   }
   awardCheckboxChangeEvent(checkbox, awardType) {
     let awards = this.AWARD_FILTER;
@@ -4832,11 +5012,11 @@ class Games {
     return config._cfg.ui?.games_section?.reverse_sort ?? -1;
   }
   get SORT_METHOD() {
-    return sortBy[this.SORT_NAME];
+    return UI.sortBy[this.SORT_NAME];
   }
   get SORT_NAME() {
     // return sortMethods.title;
-    return config._cfg.ui?.games_section?.sort_name ?? sortMethods.title;
+    return config._cfg.ui?.games_section?.sort_name ?? UI.sortMethods.title;
   }
   set SORT_NAME(value) {
     value == this.SORT_NAME &&
@@ -5083,7 +5263,7 @@ class Games {
       </p>
 
       <p class="game-description game-description__links">
-        <button class=" game-description_link" onclick="getAchievements(${game.ID})"> 
+        <button class=" game-description_link" onclick="ui.getAchievements(${game.ID})"> 
               <i class="game-description_icon link_icon apply-icon"></i>
         </button>
           <a title="google search" target="_blanc" 
@@ -5105,37 +5285,37 @@ class Games {
     <div class="platform_game-item header">
       <div class="game-preview_container">
       </div>
-      <h3 class="header__game-description game-description_title ${this.SORT_NAME == sortMethods.title ?
+      <h3 class="header__game-description game-description_title ${this.SORT_NAME == 'title' ?
       this.REVERSE_SORT == -1 ? 'active reverse' : 'active' : ''}"
-        onclick='ui.games.SORT_NAME = sortMethods.title'>Title
+        onclick="ui.games.SORT_NAME = 'title'">Title
       </h3>
-      <p title="award type" class="header__game-description ${this.SORT_NAME == sortMethods.award ?
-      this.REVERSE_SORT == -1 ? 'active reverse' : 'active' : ''}" onclick='ui.games.SORT_NAME = sortMethods.award'>
+      <p title="award type" class="header__game-description ${this.SORT_NAME == 'award' ?
+      this.REVERSE_SORT == -1 ? 'active reverse' : 'active' : ''}" onclick="ui.games.SORT_NAME = \'award\'">
         <i class="icon award_icon"></i>
       </p>
       <div class="header__game-description"><i class="icon favourite_icon checked"></i></div>
-      <p title="Rating" class="game-description header__game-description  game-rating ${this.SORT_NAME == sortMethods.rating ?
+      <p title="Rating" class="game-description header__game-description  game-rating ${this.SORT_NAME == 'rating' ?
       this.REVERSE_SORT == -1 ? 'active reverse' : 'active' : ''}"
-        onclick='ui.games.SORT_NAME = sortMethods.rating'>
+        onclick="ui.games.SORT_NAME = 'rating'">
           Rating
       </p>
-      <p title="Date" class="game-description header__game-description  game-date ${this.SORT_NAME == sortMethods.date ?
+      <p title="Date" class="game-description header__game-description  game-date ${this.SORT_NAME == 'date' ?
       this.REVERSE_SORT == -1 ? 'active reverse' : 'active' : ''}"
-        onclick='ui.games.SORT_NAME = sortMethods.date'>
+        onclick="ui.games.SORT_NAME = 'date'">
           Date
       </p>
       <p title="achievements count" class=" game-description  achievements-count"
         >
           Platform
       </p>
-      <p title="achievements count" class="header__game-description game-description  achievements-count ${this.SORT_NAME == sortMethods.achievementsCount ?
+      <p title="achievements count" class="header__game-description game-description  achievements-count ${this.SORT_NAME == 'achievementsCount' ?
       this.REVERSE_SORT == -1 ? 'active reverse' : 'active' : ''}"
-          onclick='ui.games.SORT_NAME = sortMethods.achievementsCount'>
+          onclick="ui.games.SORT_NAME ='achievementsCount'">
             Cheevos
         </p>
-      <p title="points count" class="header__game-description game-description  points-count ${this.SORT_NAME == sortMethods.points ?
+      <p title="points count" class="header__game-description game-description  points-count ${this.SORT_NAME == 'points' ?
       this.REVERSE_SORT == -1 ? 'active reverse' : 'active' : ''}"
-          onclick='ui.games.SORT_NAME = sortMethods.points'>
+          onclick="ui.games.SORT_NAME = 'points'">
             Points
         </p>
 
@@ -5301,9 +5481,9 @@ class Progression {
     this.notEarnedList.innerHTML = '';
     this.earnedList.innerHTML = '';
     Object.values(ui.ACHIEVEMENTS)
-      .filter(achiv => filterBy.progression(achiv))
-      .sort((a, b) => -1 * sortBy.id(a, b))
-      .sort((a, b) => -1 * sortBy.default(a, b))
+      .filter(achiv => UI.filterBy.progression(achiv))
+      .sort((a, b) => -1 * UI.sortBy.id(a, b))
+      .sort((a, b) => -1 * UI.sortBy.default(a, b))
       .forEach(achiv => {
         if (achiv.type === "progression" || achiv.type === "win_condition") {
           const achivElement = this.generateCard(achiv);
@@ -5808,7 +5988,7 @@ class Notifications {
       return achiv;
     });
     ([...userInfo.lastAchivs, ...userInfo.lastGames]
-      .sort((a, b) => -1 * sortBy.latest(a, b))
+      .sort((a, b) => -1 * UI.sortBy.latest(a, b))
     ).forEach(element =>
       this.pushNotification({
         type: element.type,
@@ -5957,159 +6137,8 @@ class Notifications {
             new Date(date).toLocaleString().replace(/:[^:]*$/gi, "");
   }
 }
-document.addEventListener('keydown', checkKonamiCode);
-konamiCode = [];
-konamiCount = 0;
-removeSecretTimeout = 0;
-function checkKonamiCode(event) {
-  codes = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "KeyB", "KeyA"];
-  enteredKey = event.code;
-  if (enteredKey === codes[konamiCode.length]) {
-    konamiCode.push(enteredKey);
-    konamiCode.length === codes.length && (konamiCount = konamiCount === 1 ? 2 : 1, doMusic());
-  }
-  else {
-    konamiCode = [];
-  }
-}
-function doMusic() {
-  removeSecretTimeout && clearTimeout(removeSecretTimeout);
-  document.querySelector("#secret")?.remove();
-  let ad = document.createElement("audio");
-  konamiCode.length !== 10 && (ad = null);
-  konamiCode = [];
-  ad.id = "secret";
-  ad.innerHTML = `<source src="./assets/s/ss-${konamiCount}.m4a" type="audio/mpeg">
- `;
-  ui.app.appendChild(ad);
-  ad.play();
-  const bcg = document.querySelector("#background-animation");
-  bcg.style.opacity = 0;
-  setTimeout(() => {
-    bcg.style.opacity = 1;
-    bcg.classList.add("secret");
-    document.querySelector("#background-animation").style.display = "block";
-  }, 2000);
-  removeSecretTimeout = setTimeout(() => {
-    bcg.classList.remove("secret");
-    document.querySelector("#background-animation").style.display =
-      config.bgVisibility ? "block" : "none";
-  }, 70 * 1000)
-}
-//* Методи сортування для досягнень гри
-const sortBy = {
-  latest: (a, b) => {
-    const toDate = (s) => {
-      const [datePart, timePart] = s.split(', ');
 
-      const [day, month, year] = datePart.split('.').map(Number);
 
-      const [hours, minutes] = timePart.split(':').map(Number);
-
-      return new Date(year, month - 1, day, hours, minutes);
-    }
-
-    const dateA = a.DateEarnedHardcore
-      ? toDate(a.DateEarnedHardcore)
-      : -Infinity;
-    const dateB = b.DateEarnedHardcore
-      ? toDate(b.DateEarnedHardcore)
-      : -Infinity;
-    return dateB - dateA; // Повертає різницю дат
-  },
-  date: (a, b) => {
-    const dateA = a.Date
-      ? new Date(a.Date)
-      : -Infinity;
-    const dateB = b.Date
-      ? new Date(b.Date)
-      : -Infinity;
-    return dateA - dateB; // Повертає різницю дат
-  },
-  earnedCount: (a, b) => b.NumAwardedHardcore - a.NumAwardedHardcore,
-
-  points: (a, b) => parseInt(a.Points) - parseInt(b.Points),
-
-  truepoints: (a, b) => a.TrueRatio - b.TrueRatio,
-
-  default: (a, b) => a.DisplayOrder != 0 ?
-    a.DisplayOrder - b.DisplayOrder :
-    a.achivId - b.achivId
-  ,
-
-  id: (a, b) => a.ID - b.ID,
-
-  disable: (a, b) => 0,
-  rating: (a, b) => b.Rating - a.Rating,
-  achievementsCount: (a, b) => parseInt(a.NumAchievements) - parseInt(b.NumAchievements),
-
-  title: (a, b) => {
-    // const ignoredWords = ["~UNLICENSED~", "~DEMO~", "~HOMEBREW~", "~HACK~", "~PROTOTYPE~", ".HACK//", "~TEST", "KIT~"];
-
-    // function removeIgnoredWords(title) {
-    //   const regex = new RegExp(`(${ignoredWords.join('|')})`, 'gi');
-    //   let fixedTitle = title.replace(regex, '').trim();
-    //   return fixedTitle;
-    // }
-
-    let nameA = a.FixedTitle.toUpperCase();
-    let nameB = b.FixedTitle.toUpperCase();
-
-    if (nameA < nameB) {
-      return -1;
-    }
-    if (nameA > nameB) {
-      return 1;
-    }
-    return 0;
-
-  },
-  award: (b, a) => {
-    const awardTypes = {
-      'mastered': 5,
-      'completed': 4,
-      'beaten-hardcore': 3,
-      'beaten-softcore': 2,
-      'started': 1,
-    }
-    const awardA = awardTypes[a.Award] ?? 0;
-    const awardB = awardTypes[b.Award] ?? 0;
-
-    const awardADate = new Date(a.MostRecentAwardedDate);
-    const awardBDate = new Date(b.MostRecentAwardedDate);
-
-    return awardA - awardB != 0 ? awardA - awardB : awardADate - awardBDate;
-  }
-}
-//* Методи фільтрування для досягнень гри
-const filterBy = {
-  earned: (achievement) => achievement.DateEarnedHardcore,
-  notEarned: (achievement) => !achievement.DateEarnedHardcore,
-  missable: (achievement) => achievement.type === "missable",
-  progression: (achievement) => achievement.type === "progression" || achievement.type === "win_condition",
-  all: () => true,
-};
-const filterMethods = {
-  all: "all",
-  earned: "earned",
-  notEarned: "notEarned",
-  missable: "missable",
-  progression: "progression",
-};
-const sortMethods = {
-  latest: "latest",
-  earnedCount: "earnedCount",
-  points: "points",
-  truepoints: "truepoints",
-  disable: "disable",
-  id: "id",
-  default: "default",
-  achievementsCount: "achievementsCount",
-  title: "title",
-  award: "award",
-  rating: "rating",
-  date: "date",
-};
 
 
 const delay = (ms) => {

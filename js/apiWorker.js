@@ -1,5 +1,6 @@
 "use strict";
-class APIWorker {
+import { config } from "./script.js";
+export class APIWorker {
   get _savedCompletionProgress() {
     return config._cfg?.apiWorker?.completionProgress ?? {}
   }
@@ -118,7 +119,6 @@ class APIWorker {
         game.DateEarnedHardcore = game.AwardedAt;
 
         game.ConsoleName == 'Events' && (game.award = "event");
-        console.log(game.AwardedAt);
         game.timeString = this.toLocalTimeString(game.AwardedAt);
         return game;
       })

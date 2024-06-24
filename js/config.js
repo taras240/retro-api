@@ -1,6 +1,6 @@
 "use strict";
 const CONFIG_FILE_NAME = "retroApiConfig";
-class Config {
+export class Config {
   //! ----------[ Login information ]------------------
   get version() {
     return this._cfg.version ?? "0";

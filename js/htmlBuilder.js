@@ -1,20 +1,23 @@
-// Об'єкт, що містить імена розділів і шляхи до них
 const sections = {
   gameCard: "./elements/gameCard.elem",
   about: "./elements/about.elem",
   target: "./elements/target.elem",
-  // achievements: "./elements/achievements.elem",
+  achievements: "./elements/progression.elem",
   login: "./elements/login.elem",
-  // panel: "./elements/panel.elem",
-  settings: "./elements/settings.elem",
+  panel: "./elements/side-panel.elem",
+  // settings: "./elements/settings.elem",
+  gamePopup: "./elements/gamePopup.elem",
   awards: "./elements/awards.elem",
   status: "./elements/status.elem",
-  tutor: "./elements/games.elem",
+  games: "./elements/games.elem",
+  note: "./elements/note.elem",
+  user: "./elements/userInfo.elem",
+  notification: "./elements/notification.elem"
 };
-
-// Функція для завантаження розділів
-async function loadSections() {
-  return;
+export async function loadSections() {
+  if (window.location.pathname !== '/test.html') {
+    return;
+  }
   try {
     // Проходимося по кожному імені розділу в об'єкті sections
     for (const sectionName in sections) {
@@ -39,4 +42,5 @@ async function loadSections() {
     // Ловимо будь-які помилки та виводимо їх в консоль
     console.error("Error loading sections:", error);
   }
+
 }
