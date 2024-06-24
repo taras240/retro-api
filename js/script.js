@@ -3,7 +3,7 @@ const RECENT_ACHIVES_RANGE_MINUTES = 5;
 const userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
 if (/android/i.test(userAgent) || (/iPhone/.test(userAgent) && !window.MSStream)) {
-  window.location.href = "/mobile/";
+  window.location.href = "./mobile/index.html";
 }
 
 else {

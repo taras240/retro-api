@@ -303,11 +303,25 @@
   transition: 0.2s;
   font-size: 1.15rem;
   z-index: 1000;
+  overflow: hidden;
 }
 
 .popup h3 {
+  position: relative;
   font-size: 1.15rem;
   font-weight: 500;
+
+}
+
+.popup::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 5px;
+  height: 100%;
+  background-color: var(--accent-color);
+  z-index: 100;
 }
 
 .popup.left-side {
@@ -466,7 +480,6 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  transition: 50ms;
 }
 
 .mario__container.walk-0 {

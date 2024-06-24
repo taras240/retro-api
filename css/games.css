@@ -204,6 +204,7 @@ section.section.games_setion:hover {
   width: 100%;
   aspect-ratio: 1;
   border-radius: 5px;
+  display: none;
 }
 
 .game-description_title {
@@ -501,12 +502,12 @@ section.section.games_setion:hover {
 .games__searchbar {
   flex: 1;
   padding: .2rem 1rem;
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: var(--font-color);
   border-radius: 0.5rem;
   background-color: transparent;
   border: 1px solid var(--accent-color);
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
   transition: .2s;
 }
 
