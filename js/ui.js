@@ -209,7 +209,27 @@ export class UI {
         if (HardcoreMode == 1) {
           achievement.isHardcoreEarned = true;
           achievement.DateEarnedHardcore = Date;
+          this.GAME_DATA.earnedStats.hard.count++;
+          this.GAME_DATA.earnedStats.hard.points += achievement.Points;
+          this.GAME_DATA.earnedStats.hard.retropoints += achievement.TrueRatio;
+          if (achievement.type == 'progression' || achievement.type == 'win_condition') {
+            this.GAME_DATA.earnedStats.hard.progressionCount++;
+          }
         }
+
+        this.GAME_DATA.earnedStats.soft.count++;
+        this.GAME_DATA.earnedStats.soft.points += achievement.Points;
+        if (achievement.type == 'progression' || achievement.type == 'win_condition') {
+          this.GAME_DATA.earnedStats.soft.progressionCount++;
+
+          if (this.GAME_DATA.earnedStats.hard.progressionCount >= this.GAME_DATA.progressionSteps) {
+            gameProgressObject.progressionAward = 'beaten';
+          }
+          else if (this.GAME_DATA.earnedStats.soft.progressionCount >= this.GAME_DATA.progressionSteps) {
+            gameProgressObject.progressionAward = 'beaten-softcore';
+          }
+        }
+
         achievement.isEarned = true;
         achievement.DateEarned = achievement.DateEarned ?? Date;
         this.ACHIEVEMENTS[lastAchievement.AchievementID] = achievement;
@@ -1537,93 +1557,116 @@ class AchievementsBlock {
   }
   async marioAction(targetElement) {
     const mario = document.createElement("div");
-    mario.classList.add("mario__container");
-    mario.className = `mario__container stand`;
+    mario.classList.add("mario__container", "stand");
     this.container.appendChild(mario);
 
     const marioSize = mario.getBoundingClientRect().width;
     const targetElementDimensions = targetElement?.getBoundingClientRect();
-
     const targetPos = {
       xPos: targetElementDimensions.left,
       yPos: targetElementDimensions.top + marioSize,
     }
-
     const jumpHeight = marioSize * 2;
+    const toLeft = targetElementDimensions.left > window.innerWidth / 2;
     const startPos = {
-      xPos: - marioSize,
+      xPos: toLeft ? window.innerWidth + marioSize : - marioSize,
       yPos: targetPos.yPos + jumpHeight,
     }
-
-    let g = 10;
+    const frameDuration = 70;
+    const g = 10;
     let dx = 30;
     let dy = Math.sqrt(2 * g * jumpHeight);
 
     mario.style.top = startPos.yPos + 'px';
     mario.style.left = startPos.xPos + 'px';
 
-    let spriteIndex = 0;
-    const walkRight = async () => {
-      mario.classList.remove("to-left");
+
+    const walkToTarget = async () => {
       let XPos = startPos.xPos;
 
-      while (XPos < targetPos.xPos) {
-        spriteIndex >= 3 && (spriteIndex = 0);
-        XPos += dx;
-        mario.className = `mario__container walk-${spriteIndex++}`;
-        XPos > targetPos.xPos && (XPos = targetPos.xPos);
+      mario.classList.remove("stand");
+      mario.classList.add("walk");
+      mario.classList.toggle("to-left", toLeft)
+      mario.style.setProperty('--frame-duration', `${frameDuration}ms`);
+
+      while (XPos !== targetPos.xPos) {
+        if (toLeft) {
+          XPos -= dx;
+          XPos < targetPos.xPos && (XPos = targetPos.xPos);
+        }
+        else {
+          XPos += dx;
+          XPos > targetPos.xPos && (XPos = targetPos.xPos);
+        }
         mario.style.left = XPos + 'px';
-        await delay(70);
+        await delay(frameDuration);
       }
-      spriteIndex = 0;
+      mario.classList.remove("walk");
+      mario.classList.add("stand");
+      await delay(500);
     }
     const jump = async () => {
-      mario.className = `mario__container jump`;
+      mario.classList.remove("stand");
+      mario.classList.add("jump");
       let YPos = startPos.yPos;
       while (~~dy > 0) {
         YPos -= dy;
         dy -= g;
-        YPos < targetPos.yPos && (
-          YPos = targetPos.yPos - 2,
-          targetElement?.classList.add("earned", "hardcore", "mario-dumb")
-        )
-        mario.style.top = YPos + 'px';
-        await delay(70);
+        if (YPos < targetPos.yPos) {
+          YPos = targetPos.yPos - 2;
+          mario.style.top = YPos + 'px';
+        }
+        else {
+          mario.style.top = YPos + 'px';
+          await delay(frameDuration);
+        }
       }
-      targetElement?.classList.add("earned", "hardcore", "mario-dumb");
-      setTimeout(() => targetElement?.classList.remove("mario-dumb"), 500);
+      collisionWithTarget();
       dy = 0;
       while (YPos < startPos.yPos) {
         YPos += dy;
         dy += g;
         YPos > startPos.yPos && (YPos = startPos.yPos);
         mario.style.top = YPos + 'px';
-        await delay(100);
+        await delay(frameDuration);
       }
-      spriteIndex = 0;
+      mario.classList.remove("jump");
+      mario.classList.add("stand");
+      await delay(500);
+      mario.classList.toggle("to-left", !toLeft);
+      await delay(500);
+    }
+    const collisionWithTarget = () => {
+      const coin = document.createElement("div");
+      coin.classList.add("coin__container");
+      this.container.appendChild(coin);
+      coin.style.top = targetElementDimensions.top - targetElementDimensions.height / 2 + "px";
+      coin.style.left = targetPos.xPos + "px";
+      targetElement?.classList.add("earned", "hardcore", "mario-dumb");
+      setTimeout(() => targetElement?.classList.remove("mario-dumb"), 500);
+      setTimeout(() => coin.remove(), 3000);
     }
     const walkAway = async () => {
       let XPos = mario.getBoundingClientRect().left;
-      while (XPos > startPos.xPos) {
-        spriteIndex >= 3 && (spriteIndex = 0);
-        XPos -= dx;
-        mario.className = `mario__container to-left walk-${spriteIndex++}`;
+      mario.style.setProperty('--frame-duration', `${frameDuration * 0.75}ms`);
+      mario.className = `mario__container walk ${!toLeft ? 'to-left' : ''} `;
+      while (XPos !== startPos.xPos) {
+        if (toLeft) {
+          XPos += dx;
+          XPos > startPos.xPos && (XPos = startPos.xPos)
+        }
+        else {
+          XPos -= dx;
+          XPos < startPos.xPos && (XPos = startPos.xPos)
+        }
         mario.style.left = XPos + 'px';
-        await delay(50);
+        await delay(frameDuration * 0.75);
       }
     }
 
-    await walkRight();
-    mario.className = `mario__container stand`;
-    await delay(500);
+    await walkToTarget();
     await jump();
-    mario.className = `mario__container stand`;
-    await delay(500);
-    await delay(250);
-    mario.classList.add("to-left");
-    await delay(500);
     await walkAway();
-    // targetElement?.classList.add("earned", "hardcore");
 
     mario.remove();
     await delay(100);
@@ -2289,6 +2332,10 @@ class StatusPanel {
     earnedRetropoints: 0,
     earnedSoftpoints: 0,
   }
+  awards = {
+    award: "",
+    progressionAward: "",
+  }
   gameTime = 0;
   sessionGameTime = 0;
   timerTime = this.TIMER_TIME;
@@ -2460,49 +2507,34 @@ class StatusPanel {
       (value || 0) * 100 + "%"
     );
   }
-  updateData() {
+  updateData(isNewGame = false) {
     this.stats = {
       gameTitle: ui?.GAME_DATA?.FixedTitle ?? "Title",
       gamePlatform: ui?.GAME_DATA?.ConsoleName ?? "Platform",
       richPresence: "Waiting...",
       imageSrc: `https://media.retroachievements.org${ui?.GAME_DATA?.ImageIcon}`,
       totalPoints: ui?.GAME_DATA?.points_total ?? 0,
-      totalSoftPoints: 0,
+      totalSoftPoints: ui.GAME_DATA.points_total - ui.GAME_DATA.earnedStats.soft.points,
       totalAchievesCount: ui?.GAME_DATA?.achievements_published ?? 0,
       totalProgressionCount: ui?.GAME_DATA?.progressionSteps,
-      earnedPoints: 0,
-      earnedAchievesCount: 0,
-      earnedProgressionCount: 0,
+      earnedPoints: ui.GAME_DATA.earnedStats.hard.points,
+      earnedAchievesCount: ui.GAME_DATA.earnedStats.hard.count,
+      earnedProgressionCount: ui.GAME_DATA.earnedStats.soft.progressionCount,
       totalRetropoints: ui?.GAME_DATA?.TotalRetropoints,
-      earnedRetropoints: 0,
-      earnedSoftpoints: 0,
+      earnedRetropoints: ui.GAME_DATA.earnedStats.hard.retropoints,
+      earnedSoftpoints: ui.GAME_DATA.earnedStats.soft.points - ui.GAME_DATA.earnedStats.hard.points,
 
     }
-    //* Підрахунок кількості досягнень та набраних балів
-    Object.values(ui.ACHIEVEMENTS).forEach((achievement) => {
-      if (achievement.isHardcoreEarned) {
-        this.stats.earnedPoints += achievement.Points; // Додавання балів
-        this.stats.earnedAchievesCount++;
-        this.stats.earnedRetropoints += achievement.TrueRatio;
-        if (achievement.type == 'progression' || achievement.type == 'win_condition') {
-          this.stats.earnedProgressionCount++;
-        }
-      }
-      else if (achievement.isEarned) {
-        this.stats.earnedSoftpoints += achievement.Points;
-      }
-    });
-    ui.GAME_DATA.winEarnedCount > 0 && (this.stats.earnedProgressionCount = ui?.GAME_DATA?.progressionSteps)
-    ui.GAME_DATA.earnedPoints = this.stats.earnedPoints;
-    ui.GAME_DATA.earnedRetropoints = this.stats.earnedRetropoints;
-
+    isNewGame && (
+      this.awards.award = ui.GAME_DATA.award,
+      this.awards.progressionAward = ui.GAME_DATA.progressionAward
+    )
     this.setValues();
   }
   gameChangeEvent() {
     if (ui.GAME_DATA.FixedTitle != this.stats.gameTitle && ui.apiTrackerInterval) {
       this.addAlertsToQuery([{ type: "new-game", value: ui.GAME_DATA }]);
     }
-
     const { ImageIcon, FixedTitle, ConsoleName, badges } = ui.GAME_DATA;
     const { gamePreview, gameTitle, gamePlatform } = this;
     gamePreview.setAttribute(
@@ -2515,7 +2547,7 @@ class StatusPanel {
       "https://retroachievements.org/game/" + config.gameID
     );
     gamePlatform.innerText = ConsoleName || "";
-    this.updateData();
+    this.updateData(true);
     this.gameTime = config.ui.update_section.playTime[config.gameID] ? config.ui.update_section.playTime[config.gameID] : 0;
     this.sessionGameTime = 0;
     this.timerTime = this.TIMER_TIME;
@@ -2527,19 +2559,41 @@ class StatusPanel {
     if (this.SHOW_NEW_ACHIV && earnedAchievementIDs.length) {
       const checkForGameAward = () => {
         let award;
-        if (ui.GAME_DATA.award !== 'mastered'
-          && this.stats.earnedAchievesCount == this.stats.totalAchievesCount) {
-          ui.GAME_DATA.award = 'mastered';
+        if (this.awards.award !== 'mastered'
+          && ui.GAME_DATA.earnedStats.hard.count === this.stats.totalAchievesCount) {
+          this.awards.award = 'mastered';
           award = {
             type: "new-award",
+            award: "mastered",
             value: ui.GAME_DATA
           }
         }
-        else if (ui.GAME_DATA.award !== 'beaten' &&
-          this.stats.earnedProgressionCount == this.stats.totalProgressionCount) {
-          ui.GAME_DATA.award = 'beaten';
+        else if (this.awards.award !== ''
+          && ui.GAME_DATA.earnedStats.soft.count === this.stats.totalAchievesCount) {
+          this.awards.award = 'completed';
           award = {
             type: "new-award",
+            award: "completed",
+            value: ui.GAME_DATA
+          }
+        }
+        if (this.stats.totalProgressionCount > 0 &&
+          this.awards.progressionAward !== 'beaten' &&
+          ui.GAME_DATA.earnedStats.hard.progressionCount >= this.stats.totalProgressionCount) {
+          this.awards.progressionAward = 'beaten';
+          award = {
+            type: "new-award",
+            award: "beaten",
+            value: ui.GAME_DATA
+          }
+        }
+        else if (this.stats.totalProgressionCount > 0 &&
+          this.awards.progressionAward == '' &&
+          ui.GAME_DATA.earnedStats.soft.progressionCount >= this.stats.totalProgressionCount) {
+          this.awards.progressionAward = 'beaten-softcore';
+          award = {
+            type: "new-award",
+            award: "beaten-softcore",
             value: ui.GAME_DATA
           }
         }
@@ -2635,31 +2689,36 @@ class StatusPanel {
       this.backSide.container.classList.toggle("hardcore", achiv.isHardcoreEarned);
       setTimeout(() => this.container.classList.add("new-achiv"), 2000)
     }
-    const updateAwardData = (game) => {
+    const updateAwardData = (game, award) => {
       const { FixedTitle,
         badges,
         ImageIcon,
         points_total,
-        earnedPoints,
-        earnedRetropoints,
+        earnedStats,
         TotalRetropoints,
         masteryRate,
         beatenRate,
-        award,
+        completedRate,
+        beatenSoftRate,
         ID
       } = game;
       // let award = 'mastered';
+      const awardRate = award == 'mastered' ? masteryRate :
+        award == 'beaten' ? beatenRate :
+          award == 'completed' ? completedRate : beatenSoftRate;
+
+      console.log(award, awardRate, completedRate, game);
       const playTimeInMinutes = deltaTime(config.ui.update_section.playTime[ID]);
-      const awardRate = award == 'mastered' ? masteryRate : beatenRate;
       this.backSide.imgElement.src = `https://media.retroachievements.org${ImageIcon}`;
       this.backSide.achivTitleElement.innerHTML = `${FixedTitle} ${generateBadges(badges)}
       <i class="game-card_suffix bg_gold">GAINED AWARD</i>
       `;
       let gameInfo = `
-      <p class="status__difficult-badge difficult-badge__pro">${award} IN ${playTimeInMinutes}</p>
-      <p class="status__difficult-badge difficult-badge__pro">TOP${awardRate}%</p>
-      <p class="status__difficult-badge difficult-badge__pro">${earnedPoints}/${points_total} HP</p>
-      <p class="status__difficult-badge difficult-badge__pro">${earnedRetropoints}/${TotalRetropoints} RP</p>`;
+        <p class="status__difficult-badge difficult-badge__pro">${award} IN ${playTimeInMinutes}</p>
+        <p class="status__difficult-badge difficult-badge__pro">TOP${awardRate}%</p>
+        <p class="status__difficult-badge difficult-badge__pro">${earnedStats.hard.points}/${points_total} HP</p>
+        <p class="status__difficult-badge difficult-badge__pro">${earnedStats.hard.retropoints}/${TotalRetropoints} RP</p>
+      `;
       this.backSide.earnedPoints.innerHTML = gameInfo;
       this.backSide.container.classList.add(award);
       setTimeout(() => this.container.classList.add("new-award"), 1000)
@@ -2674,7 +2733,7 @@ class StatusPanel {
           updateAchivData(alert.value);
           break;
         case "new-award":
-          updateAwardData(alert.value);
+          updateAwardData(alert.value, alert.award);
           break;
         default:
           break;

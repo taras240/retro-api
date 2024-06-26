@@ -473,10 +473,9 @@
 }
 
 /**---------- MARIO_ACTION-------------------- */
+.coin__container,
 .mario__container {
   position: fixed;
-  width: calc(var(--achiv-height));
-  aspect-ratio: 1;
   z-index: 10;
   image-rendering: pixelated;
   background-size: cover;
@@ -484,25 +483,23 @@
   background-repeat: no-repeat;
 }
 
-.mario__container.walk-0 {
-  background-image: url(../assets/img/mario_sprites/mario_walk/walk_1.png);
-
+.mario__container {
+  width: calc(var(--achiv-height));
+  aspect-ratio: 1;
 }
 
-.mario__container.walk-1 {
-  background-image: url(../assets/img/mario_sprites/mario_walk/walk_2.png);
-
+.coin__container {
+  --frame-duration: 50ms;
+  background-image: url(../assets/img/mario_sprites/coin/coin-0.png);
+  background-size: contain;
+  height: calc(var(--achiv-height) / 2);
+  width: var(--achiv-height);
+  animation: coin-earn-animation 750ms linear forwards,
+    coin-rotate-animation calc(var(--frame-duration) * 4) steps(4, start) infinite;
 }
-
-.mario__container.walk-2 {
-  background-image: url(../assets/img/mario_sprites/mario_walk/walk_3.png);
-
-}
-
 
 .mario__container.jump {
   background-image: url(../assets/img/mario_sprites/mario_jump/jump_1.png);
-
 }
 
 .mario__container.stand {
@@ -512,4 +509,74 @@
 
 .mario__container.to-left {
   transform: scaleX(-1);
+}
+
+.mario__container.walk {
+  --frame-duration: 70ms;
+  background-image: url(../assets/img/mario_sprites/mario_walk/walk_1.png);
+  animation: mario-walk-animation calc(var(--frame-duration) * 3) steps(3, start) infinite;
+}
+
+@keyframes mario-walk-animation {
+  0% {
+    background-image: url(../assets/img/mario_sprites/mario_walk/walk_1.png);
+  }
+
+  33.33% {
+    background-image: url(../assets/img/mario_sprites/mario_walk/walk_2.png);
+  }
+
+  66.67% {
+    background-image: url(../assets/img/mario_sprites/mario_walk/walk_3.png);
+  }
+}
+
+@keyframes coin-rotate-animation {
+  0% {
+    background-image: url(../assets/img/mario_sprites/coin/coin-0.png);
+  }
+
+  25% {
+    background-image: url(../assets/img/mario_sprites/coin/coin-1.png);
+  }
+
+  50% {
+    background-image: url(../assets/img/mario_sprites/coin/coin-2.png);
+  }
+
+  75% {
+    background-image: url(../assets/img/mario_sprites/coin/coin-3.png);
+  }
+}
+
+@keyframes coin-earn-animation {
+  0% {
+    transform: translateY(-0%);
+  }
+
+  25% {
+    transform: translateY(-185%);
+    animation-timing-function: ease-out;
+  }
+
+  50% {
+    transform: translateY(-200%);
+    animation-timing-function: ease-in;
+  }
+
+  75% {
+    transform: translateY(-180%);
+    animation-timing-function: ease-out;
+    opacity: 1;
+  }
+
+  99.9% {
+    transform: translateY(-50%);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(-50%);
+    opacity: 0;
+  }
 }

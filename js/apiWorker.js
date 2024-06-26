@@ -143,14 +143,16 @@ export class APIWorker {
           progressionRetroRatio: 0,
           beatenCount: Infinity,
           masteredCount: Infinity,
+          beatenSoftCount: Infinity,
+          completedCount: Infinity,
           earnedStats: {
             soft:
-              { count: 0, points: 0, retropoints: 0 },
+              { count: 0, points: 0, retropoints: 0, progressionCount: 0 },
             hard:
-              { count: 0, points: 0, retropoints: 0 }
+              { count: 0, points: 0, retropoints: 0, progressionCount: 0 }
           }
         }
-        const progressionAchivs = { Count: 0, WinCount: 0, WinAwardedCount: 0, WinEarnedCount: 0 };
+        const progressionAchivs = { Count: 0, WinCount: 0, WinAwardedCount: 0, WinAwardedSoftCount: 0, WinEarnedCount: 0 };
         const awards = {
           isBeaten: true,
           isBeatenSoftcore: true,
@@ -168,19 +170,23 @@ export class APIWorker {
             gameProgressObject.earnedStats.soft.count += 1;
             gameProgressObject.earnedStats.soft.points += achievement.Points;
             gameProgressObject.earnedStats.soft.retropoints += achievement.TrueRatio;
+            if (achievement.type === "progression" || achievement.type === "win_condition") { gameProgressObject.earnedStats.soft.progressionCount++; }
           }
           if (achievement.DateEarnedHardcore) {
             gameProgressObject.earnedStats.hard.count += 1;
             gameProgressObject.earnedStats.hard.points += achievement.Points;
             gameProgressObject.earnedStats.hard.retropoints += achievement.TrueRatio;
+            if (achievement.type === "progression" || achievement.type === "win_condition") { gameProgressObject.earnedStats.hard.progressionCount++; }
           }
 
           if (achievement.type === 'progression') {
             progressionAchivs.Count++;
 
+
             if (!achievement.DateEarned) {
               awards.isBeaten = false;
               awards.isBeatenSoftcore = false;
+
             }
             else if (!achievement.DateEarnedHardcore) {
               awards.isBeaten = false;
@@ -188,6 +194,9 @@ export class APIWorker {
 
             if (gameProgressObject.beatenCount > achievement.NumAwardedHardcore) {
               gameProgressObject.beatenCount = achievement.NumAwardedHardcore
+            }
+            if (gameProgressObject.beatenSoftCount > achievement.NumAwarded) {
+              gameProgressObject.beatenSoftCount = achievement.NumAwarded
             }
           }
           if (achievement.type === 'win_condition') {
@@ -202,6 +211,9 @@ export class APIWorker {
             if (achievement.NumAwardedHardcore > progressionAchivs.WinAwardedCount) {
               progressionAchivs.WinAwardedCount = achievement.NumAwardedHardcore;
             }
+            if (achievement.NumAwarded > progressionAchivs.WinAwardedSoftCount) {
+              progressionAchivs.WinAwardedSoftCount = achievement.NumAwarded;
+            }
             if (achievement.DateEarnedHardcore) {
               progressionAchivs.WinEarnedCount++;
             }
@@ -209,16 +221,11 @@ export class APIWorker {
           achievement.NumAwardedHardcore < gameProgressObject.masteredCount && (
             gameProgressObject.masteredCount = achievement.NumAwardedHardcore
           )
+          achievement.NumAwarded < gameProgressObject.completedCount && (
+            gameProgressObject.completedCount = achievement.NumAwarded
+          )
 
         }
-
-        if (gameProgressObject.achievements_published == gameProgressObject.NumAwardedToUserHardcore) {
-          gameProgressObject.award = 'mastered'
-        }
-        else if (awards.isBeaten && (awards.isWinEarned || progressionAchivs.WinCount == 0)) {
-          gameProgressObject.award = 'beaten';
-        }
-
         gameProgressObject = {
           ...gameProgressObject,
           winVariantCount: progressionAchivs.WinCount,
@@ -226,13 +233,34 @@ export class APIWorker {
           progressionSteps: progressionAchivs.WinCount > 0 ? progressionAchivs.Count + 1 : progressionAchivs.Count,
         }
 
-        progressionAchivs.WinCount > 0 && (gameProgressObject.beatenCount = progressionAchivs.WinAwardedCount)
+        if (gameProgressObject.achievements_published === gameProgressObject.NumAwardedToUserHardcore) {
+          gameProgressObject.award = 'mastered'
+        }
+        else if (gameProgressObject.achievements_published === gameProgressObject.NumAwardedToUser) {
+          gameProgressObject.award = 'completed'
+        }
+        if (awards.isBeaten && gameProgressObject.earnedStats.hard.progressionCount >= gameProgressObject.progressionSteps) {
+          gameProgressObject.progressionAward = 'beaten';
+        }
+        else if (awards.isBeatenSoftcore && gameProgressObject.earnedStats.soft.progressionCount >= gameProgressObject.progressionSteps) {
+          gameProgressObject.progressionAward = 'beaten-softcore';
+        }
+
+
+        progressionAchivs.WinCount > 0 && (
+          gameProgressObject.beatenCount = progressionAchivs.WinAwardedCount,
+          gameProgressObject.beatenSoftCount = progressionAchivs.WinAwardedSoftCount
+        )
 
         gameProgressObject.beatenCount != Infinity &&
           (gameProgressObject.beatenRate = ~~(10000 * gameProgressObject.beatenCount / gameProgressObject.TotalRealPlayers) / 100);
+        gameProgressObject.beatenSoftCount != Infinity &&
+          (gameProgressObject.beatenSoftRate = ~~(10000 * gameProgressObject.beatenSoftCount / gameProgressObject.TotalRealPlayers) / 100);
 
         gameProgressObject.masteredCount != Infinity &&
           (gameProgressObject.masteryRate = ~~(10000 * gameProgressObject.masteredCount / gameProgressObject.TotalRealPlayers) / 100);
+        gameProgressObject.completedCount != Infinity &&
+          (gameProgressObject.completedRate = ~~(10000 * gameProgressObject.completedCount / gameProgressObject.TotalRealPlayers) / 100);
 
         const ratio = ~~(gameProgressObject.TotalRetropoints / gameProgressObject.points_total * 100) / 100;
         gameProgressObject.retroRatio = ratio;
