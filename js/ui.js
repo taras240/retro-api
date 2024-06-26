@@ -5363,11 +5363,11 @@ class Games {
     gameElement.dataset.id = game.ID;
     const iconCode = game.ImageIcon.match(/\d+/g);
     gameElement.innerHTML = `    
-      <div class="game-preview_container">
+      <!--<div class="game-preview_container">
         <img src="./assets/imgCache/${iconCode}.webp"
             onerror="this.src='https://media.retroachievements.org/Images/${game.ImageIcon}.png';" alt=""
             class="game-preview_image">
-      </div>
+      </div>-->
       <h3 class="game-description_title">
         <button title="open game" class="game-description_button"
               onclick="ui.games.showGameInfoPopup(${game.ID})">
@@ -5421,8 +5421,8 @@ class Games {
   }
   gamesListHeaderHtml = () => `
     <div class="platform_game-item header">
-      <div class="game-preview_container">
-      </div>
+      <!--<div class="game-preview_container">
+      </div>-->
       <h3 class="header__game-description game-description_title ${this.SORT_NAME == 'title' ?
       this.REVERSE_SORT == -1 ? 'active reverse' : 'active' : ''}"
         onclick="ui.games.SORT_NAME = 'title'">Title

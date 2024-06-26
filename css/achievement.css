@@ -96,6 +96,10 @@
   --overlay-closed: url("../assets/img/overlay_sets/mario_q/closed.webp");
 }
 
+.achivs[data-overlay="mario_q"] [data-rarity="mythycal"] {
+  --overlay-closed: url("../assets/img/overlay_sets/mario_q/closed-2.png");
+}
+
 .achivs[data-overlay="cd_box"] {
   --overlay-closed: url("../assets/img/overlay_sets/cd_box/closed.png");
   --overlay-earned: url("../assets/img/overlay_sets/cd_box/earned.png");
@@ -123,6 +127,20 @@
 .achivs [data-type="missable"] .preview-container::before {
   filter: invert(1)
 }
+
+/* .preview-container::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0%;
+  left: 0%;
+  background: radial-gradient(ellipse, transparent 30%, rgba(255, 255, 255, 0.15) 35%);
+  background-size: 200% 100%;
+  background-position: 50% 50%;
+  transform: rotate(45deg) scale(1.6);
+  z-index: 100;
+} */
 
 /* ---------------------------------- */
 .achiv-block {
@@ -194,6 +212,7 @@
   height: var(--achiv-height);
   aspect-ratio: 1;
   position: relative;
+  overflow: hidden;
 }
 
 .achiv-preview {
