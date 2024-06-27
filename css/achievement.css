@@ -497,24 +497,53 @@
   position: fixed;
   z-index: 10;
   image-rendering: pixelated;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
 }
 
 .mario__container {
   width: calc(var(--achiv-height));
   aspect-ratio: 1;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .coin__container {
   --frame-duration: 50ms;
-  background-image: url(../assets/img/mario_sprites/coin/coin-0.png);
-  background-size: contain;
+  --coin-anim-duration: 750ms;
   height: calc(var(--achiv-height) / 2);
   width: var(--achiv-height);
-  animation: coin-earn-animation 750ms linear forwards,
+
+}
+
+.coins__coin {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url(../assets/img/mario_sprites/coin/coin-0.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  animation: coin-earn-animation var(--coin-anim-duration) linear forwards,
     coin-rotate-animation calc(var(--frame-duration) * 4) steps(4, start) infinite;
+}
+
+.coins__points {
+  position: absolute;
+  top: 0%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: calc(var(--achiv-height) / 2.5);
+  background-color: black;
+  border-radius: 3px;
+  padding: 2px;
+  color: goldenrod;
+
+  font-weight: 600;
+  opacity: 0;
+  animation: coin-points-animation 2s linear forwards;
+  animation-delay: var(--coin-anim-duration);
 }
 
 .mario__container.jump {
@@ -565,6 +594,27 @@
 
   75% {
     background-image: url(../assets/img/mario_sprites/coin/coin-3.png);
+  }
+}
+
+@keyframes coin-points-animation {
+  0% {
+    opacity: 0;
+    margin-top: 0;
+  }
+
+  20% {
+    opacity: 1;
+    margin-top: calc(0px - var(--achiv-height) * 0.2);
+  }
+
+  60% {
+    opacity: 1;
+  }
+
+  100% {
+    margin-top: calc(0px - var(--achiv-height));
+    opacity: 0;
   }
 }
 

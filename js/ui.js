@@ -1639,12 +1639,16 @@ class AchievementsBlock {
     const collisionWithTarget = () => {
       const coin = document.createElement("div");
       coin.classList.add("coin__container");
+      coin.innerHTML = `
+      <div class='coins__points'>+${targetElement.dataset.TrueRatio}RP</div>
+      <div class='coins__coin'></div>
+      `;
       this.container.appendChild(coin);
       coin.style.top = targetElementDimensions.top - targetElementDimensions.height / 2 + "px";
       coin.style.left = targetPos.xPos + "px";
       targetElement?.classList.add("earned", "hardcore", "mario-dumb");
       setTimeout(() => targetElement?.classList.remove("mario-dumb"), 500);
-      setTimeout(() => coin.remove(), 3000);
+      setTimeout(() => coin.remove(), 5000);
     }
     const walkAway = async () => {
       let XPos = mario.getBoundingClientRect().left;
@@ -4845,7 +4849,10 @@ class Target {
     });
   }
   deleteFromTarget(button) {
-    button.parentNode.remove();
+    const element = button.closest(".target-achiv");
+    element.classList.add('removing');
+
+    setTimeout(() => element.remove(), 0);
   }
   clearEarned() {
     this.container.querySelectorAll(".target-achiv").forEach((achievement) => {
