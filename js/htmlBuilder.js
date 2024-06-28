@@ -12,7 +12,8 @@ const sections = {
   games: "./elements/games.elem",
   note: "./elements/note.elem",
   user: "./elements/userInfo.elem",
-  notification: "./elements/notification.elem"
+  notification: "./elements/notification.elem",
+  stats: "./elements/stats.elem",
 };
 export async function loadSections() {
   if (window.location.pathname !== '/test.html') {

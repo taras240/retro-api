@@ -18,6 +18,7 @@ else {
   apiWorker = new APIWorker();
   window.ui = ui;
   window.config = config;
+  window.apiWorker = apiWorker;
   // userAuthData = new UserAuthData();
 }
 document.addEventListener('keydown', checkKonamiCode);

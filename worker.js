@@ -15,6 +15,7 @@ const sections = {
   note: "./elements/note.elem",
   user: "./elements/userInfo.elem",
   notifications: "./elements/notification.elem",
+  stats: "./elements/stats.elem",
 };
 
 // Функція для завантаження розділів

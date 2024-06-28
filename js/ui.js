@@ -59,6 +59,13 @@ export class UI {
           config.startOnLoad
             ? this.statusPanel.watchButton.click()
             : this.getAchievements();
+
+          setTimeout(() => {
+            apiWorker.getUserSummary({}).then(resp => {
+              this.userInfo.update({ userSummary: resp });
+              this.stats.initialSetStats({ userSummary: resp });
+            })
+          }, 3000);
         }
         else {
           const section = this.loginCard.section;
@@ -105,7 +112,7 @@ export class UI {
     this.userInfo = new UserInfo();
     this.note = new Note();
     this.notifications = new Notifications();
-
+    this.stats = new Stats();
     //*  Must be last initialized to set correct values
     this.buttons = new ButtonPanel();
 
@@ -166,6 +173,9 @@ export class UI {
 
     //Update UserInfo widget
     ui.userInfo.VISIBLE && setTimeout(() => ui.userInfo.update(), 2000);
+
+    //Update Stats widget
+    ui.stats.updateStats();
 
   }
   showContextmenu({ event, menuItems, sectionCode = "" }) {
@@ -1836,6 +1846,8 @@ class ButtonPanel {
     this.note = this.section.querySelector("#open-note-button");
     this.notifications = this.section.querySelector("#open-notifications-button");
     this.user = this.section.querySelector("#open-user-button");
+    this.stats = this.section.querySelector("#open-stats-button");
+
 
   }
   addEvents() {
@@ -1890,6 +1902,9 @@ class ButtonPanel {
     });
     this.notifications.addEventListener("change", (e) => {
       UI.switchSectionVisibility(ui.notifications);
+    });
+    this.stats.addEventListener("change", (e) => {
+      UI.switchSectionVisibility(ui.stats);
     });
   }
 
@@ -5880,7 +5895,7 @@ class UserInfo {
     this.addEvents();
     this.setValues();
     if (config.identConfirmed) {
-      setTimeout(() => this.update(), 5000);
+      // setTimeout(() => this.update({}), 5000);
     }
 
   }
@@ -5929,22 +5944,25 @@ class UserInfo {
     })
 
   }
-  update() {
-    apiWorker.getUserSummary({}).then(resp => {
-      const { User, Status, UserPic, Rank, TotalRanked, TotalPoints, TotalSoftcorePoints, TotalTruePoints, RecentlyPlayed, RecentAchievements } = resp;
-      this.USER_INFO.userName = User;
-      this.USER_INFO.status = Status.toLowerCase();
-      this.USER_INFO.userImageSrc = `https://media.retroachievements.org${UserPic}`;
-      this.USER_INFO.userRank = `${Rank} (Top ${~~(10000 * Rank / TotalRanked) / 100}%)`;
-      this.USER_INFO.softpoints = TotalSoftcorePoints;
-      this.USER_INFO.retropoints = TotalTruePoints;
-      this.USER_INFO.hardpoints = TotalPoints;
-      this.USER_INFO.lastGames = RecentlyPlayed;
-      this.USER_INFO.lastAchivs = RecentAchievements
-        .sort((a, b) => new Date(b.DateAwarded) - new Date(a.DateAwarded));
-      ui.notifications.parseUserSummary(this.USER_INFO)
+  async update({ userSummary }) {
+    if (!userSummary) {
+      userSummary = await apiWorker.getUserSummary({});
+    }
+    const { User, Status, UserPic, Rank, TotalRanked, TotalPoints,
+      TotalSoftcorePoints, TotalTruePoints, RecentlyPlayed, RecentAchievements } = userSummary;
+    this.USER_INFO.userName = User;
+    this.USER_INFO.status = Status.toLowerCase();
+    this.USER_INFO.userImageSrc = `https://media.retroachievements.org${UserPic}`;
+    this.USER_INFO.userRank = `${Rank} (Top ${~~(10000 * Rank / TotalRanked) / 100}%)`;
+    this.USER_INFO.softpoints = TotalSoftcorePoints;
+    this.USER_INFO.retropoints = TotalTruePoints;
+    this.USER_INFO.hardpoints = TotalPoints;
+    this.USER_INFO.lastGames = RecentlyPlayed;
+    this.USER_INFO.lastAchivs = RecentAchievements
+      .sort((a, b) => new Date(b.DateAwarded) - new Date(a.DateAwarded));
+    ui.notifications.parseUserSummary(this.USER_INFO)
 
-    }).then(() => this.setValues())
+    this.setValues();
 
     // this.updateMainInformation()
     //   .then(() => this.updateRecentAchives()
@@ -6306,7 +6324,104 @@ class Notifications {
             new Date(date).toLocaleString().replace(/:[^:]*$/gi, "");
   }
 }
+class Stats {
+  userSummary;
+  constructor() {
+    this.initializeElements();
+    this.addEvents();
+  }
+  initializeElements() {
+    this.section = document.querySelector("#stats_section");
+    this.rankRateElement = this.section.querySelector('#stats_rank-rate');
+    this.rankElement = this.section.querySelector('#stats_rank');
+    this.pointsElement = this.section.querySelector('#stats_points');
+    this.retropointsElement = this.section.querySelector('#stats_retropoints');
+    this.softpointsElement = this.section.querySelector('#stats_softpoints');
+    this.trueRatioElement = this.section.querySelector('#stats_true-ratio');
+    this.masteredCountElement = this.section.querySelector('#stats_mastered-count');
+    this.beatenCountElement = this.section.querySelector('#stats_beaten-count');
+    this.playedCountElement = this.section.querySelector('#stats_played-count');
 
+    this.resizer = this.section.querySelector(".resizer");
+  }
+  addEvents() {
+    this.section.addEventListener("mousedown", (e) => {
+      UI.moveEvent(this.section, e);
+    });
+    // this.section.addEventListener("contextmenu", (event) => {
+    //   ui.showContextmenu({
+    //     event: event,
+    //     menuItems: this.contextMenuItems,
+    //     sectionCode: "",
+    //   });
+    // });
+    this.resizer.addEventListener("mousedown", event => {
+      event.stopPropagation();
+      this.section.classList.add("resized");
+      UI.resizeEvent({
+        event: event,
+        section: this.section,
+      });
+    });
+  }
+  initialSetStats({ userSummary, completionProgress }) {
+    if (userSummary) {
+      this.userSummary = userSummary;
+      this.rankElement.innerText = userSummary.Rank;
+      this.rankRateElement.innerText = ~~(10000 * userSummary.Rank / userSummary.TotalRanked) / 100 + '%';
+      this.pointsElement.innerText = userSummary.TotalPoints;
+      this.softpointsElement.innerText = userSummary.TotalSoftcorePoints;
+      this.retropointsElement.innerText = userSummary.TotalTruePoints;
+      this.trueRatioElement.innerText = ~~(100 * userSummary.TotalTruePoints / userSummary.TotalPoints) / 100;
+    }
+    if (completionProgress) {
+    }
+  }
+  async updateStats() {
+    await delay(1000);
+    const userData = await apiWorker.getUserSummary({});
+
+    const setValue = (element, property) => {
+      let delta = 0;
+      let value = 0;
+      let oldValue = 0;
+      switch (property) {
+        case "rankRate":
+          value = ~~(10000 * userData.Rank / userData.TotalRanked) / 100;
+          oldValue = ~~(10000 * this.userSummary.Rank / this.userSummary.TotalRanked) / 100;
+          delta = value - oldValue;
+          value += "%";
+          break;
+        case "trueRatio":
+          value = ~~(100 * userData.TotalTruePoints / userData.TotalPoints) / 100;
+          oldValue = ~~(100 * this.userSummary.TotalTruePoints / this.userSummary.TotalPoints) / 100;
+          delta = value - oldValue;
+          break;
+        default:
+          delta = this.userSummary[property] - userData[property];
+          value = userData[property];
+      }
+
+      if (delta === 0) return;
+      const isNegativeDelta = delta < 0;
+
+      element.classList.add("delta");
+      element.classList.toggle('negative', isNegativeDelta);
+      element.dataset.delta = `${isNegativeDelta ? "" : "+"}${delta}`;
+      const delay = 5000;
+      setTimeout(() => {
+        element.innerText = value;
+        element.classList.remove("delta");
+      }, delay)
+    }
+    setValue(this.rankRateElement, "rankRate");
+    setValue(this.rankElement, "Rank");
+    setValue(this.pointsElement, "TotalPoints");
+    setValue(this.softpointsElement, "TotalSoftcorePoints");
+    setValue(this.retropointsElement, "TotalTruePoints");
+    setValue(this.trueRatioElement, "trueRatio");
+  }
+}
 
 
 

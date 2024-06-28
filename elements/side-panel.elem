@@ -1,7 +1,4 @@
 <section id="side_panel" class="buttons-block gradient-animation expanded">
-    <div id="buttons-header_container" class="header-container widget-header_container buttons-header_container">
-
-    </div>
     <div class="setting-radio-group">
         <input type="checkbox" name="open-login-button" id="open-login-button">
         </input>
@@ -61,6 +58,16 @@
                         xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
                         <path
                             d="M280-280h280v-80H280v80Zm0-160h400v-80H280v80Zm0-160h400v-80H280v80Zm-80 480q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
+                    </svg></label>
+            </div>
+            <div class="setting-radio-group">
+                <input type="checkbox" name="open-stats-button" id="open-stats-button">
+                </input>
+                <label class="side-panel_input" title="stats widget" for="open-stats-button"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                        fill="#e8eaed">
+                        <path
+                            d="M280-280h80v-200h-80v200Zm320 0h80v-400h-80v400Zm-160 0h80v-120h-80v120Zm0-200h80v-80h-80v80ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
                     </svg></label>
             </div>
             <div class="setting-radio-group">
@@ -137,12 +144,6 @@
             </div>
 
         </div>
-
-
-
-
-
-
     </div>
     <div class="setting-radio-group side-panel_settings">
         <input type="checkbox" name="open-settings-button" id="open-settings-button">

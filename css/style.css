@@ -14,6 +14,7 @@
 @import url(./userInfo.css);
 @import url(./notification.css);
 @import url(./game-popup.css);
+@import url(./stats.css);
 
 /* @import url('https://fonts.googleapis.com/css2?family=Jersey+15&display=swap'); */
 
@@ -565,6 +566,7 @@ input:checked+.checkbox-input::before {
       var(--secondary-color));
   z-index: 1000;
   transition: 0.2s;
+
 }
 
 #side_panel:hover,
@@ -583,6 +585,14 @@ input:checked+.checkbox-input::before {
   justify-content: space-between;
   /* gap: 20px; */
   width: 100%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.buttons-block_widgets {
+  overflow-y: scroll;
+  max-height: 100%;
+  gap: 0.5rem;
 }
 
 .buttons-block_container {

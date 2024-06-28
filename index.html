@@ -261,9 +261,6 @@
     </div>
   </div>
 </section><section id="side_panel" class="buttons-block gradient-animation expanded">
-    <div id="buttons-header_container" class="header-container widget-header_container buttons-header_container">
-
-    </div>
     <div class="setting-radio-group">
         <input type="checkbox" name="open-login-button" id="open-login-button">
         </input>
@@ -323,6 +320,16 @@
                         xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
                         <path
                             d="M280-280h280v-80H280v80Zm0-160h400v-80H280v80Zm0-160h400v-80H280v80Zm-80 480q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
+                    </svg></label>
+            </div>
+            <div class="setting-radio-group">
+                <input type="checkbox" name="open-stats-button" id="open-stats-button">
+                </input>
+                <label class="side-panel_input" title="stats widget" for="open-stats-button"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                        fill="#e8eaed">
+                        <path
+                            d="M280-280h80v-200h-80v200Zm320 0h80v-400h-80v400Zm-160 0h80v-120h-80v120Zm0-200h80v-80h-80v80ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
                     </svg></label>
             </div>
             <div class="setting-radio-group">
@@ -399,12 +406,6 @@
             </div>
 
         </div>
-
-
-
-
-
-
     </div>
     <div class="setting-radio-group side-panel_settings">
         <input type="checkbox" name="open-settings-button" id="open-settings-button">
@@ -739,6 +740,70 @@
 
     </ul>
     <div class="resizer" id="notification-resizer"></div>
+</section><section id="stats_section" class="stats_section  section">
+    <div class="header-container">
+        <div class="header-icon stats-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24px"
+                viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+                <path
+                    d="M280-280h80v-200h-80v200Zm320 0h80v-400h-80v400Zm-160 0h80v-120h-80v120Zm0-200h80v-80h-80v80ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
+            </svg></div>
+        <h2 class="widget-header-text">Stats</h2>
+        <div class="get-awards_button header-button header-icon" id="" title="force update"
+            onclick="ui.stats.updateStats()">
+            <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="24">
+                <path
+                    d="M204-318q-22-38-33-78t-11-82q0-134 93-228t227-94h7l-64-64 56-56 160 160-160 160-56-56 64-64h-7q-100 0-170 70.5T240-478q0 26 6 51t18 49l-60 60ZM481-40 321-200l160-160 56 56-64 64h7q100 0 170-70.5T720-482q0-26-6-51t-18-49l60-60q22 38 33 78t11 82q0 134-93 228t-227 94h-7l64 64-56 56Z" />
+            </svg>
+        </div>
+        <button class="header-button header-icon" onclick="ui.buttons.stats.click()">
+            <svg height="24" viewBox="0 -960 960 960" width="24">
+                <path
+                    d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+            </svg>
+        </button>
+    </div>
+    <ul class="stats-container">
+        <li class="stats__stat-container">
+            <h2 class="stats__title">Percentile</h2>
+            <p id="stats_rank-rate" class="stats__value stats__rank-value"></p>
+        </li>
+        <li class="stats__stat-container">
+            <h2 class="stats__title">Rank</h2>
+            <p id="stats_rank" class="stats__value stats__rank-value"></p>
+        </li>
+        <li class="stats__stat-container">
+            <h2 class="stats__title">Points</h2>
+            <p id="stats_points" class="stats__value"></p>
+
+        </li>
+        <li class="stats__stat-container">
+            <h2 class="stats__title">Retropoints</h2>
+            <p id="stats_retropoints" class="stats__value"></p>
+
+        </li>
+        <li class="stats__stat-container">
+            <h2 class="stats__title">Softpoints</h2>
+            <p id="stats_softpoints" class="stats__value"></p>
+        </li>
+        <li class="stats__stat-container">
+            <h2 class="stats__title">True Ratio</h2>
+            <p id="stats_true-ratio" class="stats__value" data-delta="+0.99"></p>
+
+        </li>
+        <!-- <li class="stats__stat-container">
+            <h2 class="stats__title">Games mastered</h2>
+            <p id="stats_mastered-count" class="stats__value">-</p>
+        </li>
+        <li class="stats__stat-container">
+            <h2 class="stats__title">Games beaten</h2>
+            <p id="stats_beaten-count" class="stats__value">-</p>
+        </li>
+        <li class="stats__stat-container">
+            <h2 class="stats__title">Games played</h2>
+            <p id="stats_played-count" class="stats__value">-</p>
+        </li> -->
+    </ul>
+    <div class="resizer" id="stats-resizer"></div>
 </section>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
