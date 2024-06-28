@@ -1930,6 +1930,7 @@ class ButtonPanel {
     this.progression.checked = config.ui?.progression_section?.hidden === false ?? ui.progression.VISIBLE;
     this.user.checked = config.ui?.user_section?.hidden === false ?? ui.user.VISIBLE;
     this.notifications.checked = config.ui?.notification_section?.hidden === false ?? ui.notifications.VISIBLE;
+    this.stats.checked = config.ui?.stats_section?.hidden === false ?? ui.stats.VISIBLE;
 
     this.userImage.src = config.userImageSrc;
   }
@@ -6325,6 +6326,9 @@ class Notifications {
   }
 }
 class Stats {
+  get VISIBLE() {
+    return !this.section.classList.contains("hidden");
+  }
   userSummary;
   constructor() {
     this.initializeElements();
