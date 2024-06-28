@@ -721,11 +721,8 @@ export class UI {
     section.style.top = newYPos + "px";
   }
 
-  static addDraggingEventForElements(container) {
-    new Sortable(container, {
-      animation: 100,
-      chosenClass: "dragged",
-    });
+  static addDraggingEventForElements(container, onDragEnd) {
+
   }
 
   static switchSectionVisibility({ section }) {
@@ -1300,7 +1297,7 @@ class AchievementsBlock {
   }
   addEvents() {
     // Додавання подій для пересування вікна ачівментсів
-    this.section.addEventListener("mousedown", (event) => {
+    this.section.querySelector(".header-container").addEventListener("mousedown", (event) => {
       UI.moveEvent(this.section, event);
     });
     this.section.addEventListener("contextmenu", (event) => {
@@ -1326,7 +1323,13 @@ class AchievementsBlock {
     this.resizer.addEventListener("mouseup", () => {
       this.startAutoScroll();
     });
-    UI.addDraggingEventForElements(this.container);
+    new Sortable(this.container, {
+      group: {
+        name: "cheevos", pull: "clone", push: "false",
+      },
+      animation: 100,
+      chosenClass: "dragged",
+    });
   }
   setValues() {
     this.section.classList.toggle("bg-visible", this.BG_VISIBILITY);
@@ -1415,6 +1418,7 @@ class AchievementsBlock {
       achivElement.addEventListener("mousedown", (e) => {
         e.stopPropagation();
       });
+
     }
     //------- Popup-----------
     function setPopupPosition(popup, achivElement) {
@@ -1574,7 +1578,7 @@ class AchievementsBlock {
     }
     const frameDuration = 70;
     const g = 10;
-    let dx = 30;
+    let dx = 20;
     let dy = Math.sqrt(2 * g * jumpHeight);
 
     mario.style.top = startPos.yPos + 'px';
@@ -4579,6 +4583,9 @@ class Target {
   }
 
   addEvents() {
+    // this.section.addEventListener("drop", (event) => {
+    //   console.log(event);
+    // })
     // Додавання подій для пересування вікна досягнень
     this.resizer.addEventListener("mousedown", (event) => {
       event.stopPropagation();
@@ -4600,7 +4607,24 @@ class Target {
         sectionCode: "",
       });
     });
-    UI.addDraggingEventForElements(this.container)
+    const dragElements = (container, onDragEnd) => {
+      new Sortable(container, {
+        group: {
+          name: "cheevos", pull: false
+        },
+        animation: 100,
+        chosenClass: "dragged",
+        onAdd: function (evt) {
+          const itemEl = evt.item;
+          const id = itemEl.dataset.achivId;
+          onDragEnd && onDragEnd(id);
+        }
+      });
+    }
+    dragElements(this.container, (id) => {
+      ui.target.addAchieveToTarget(id);
+      this.section.querySelector(".achiv-block")?.remove();
+    })
   }
   setValues() {
     this.section.classList.toggle("compact", !this.SHOW_HEADER);
@@ -4670,9 +4694,9 @@ class Target {
   isAchievementInTargetSection({ ID, targetContainer = this.container }) {
     const targetAchievements = [
       ...targetContainer.querySelectorAll(".target-achiv"),
-    ].map((el) => +el.dataset.achivId);
+    ].filter((el) => el.dataset.achivId == ID);
 
-    return targetAchievements.includes(ID);
+    return targetAchievements.length > 0;
   }
   addAchieveToTarget(id) {
     // if achiv already exist in target - return

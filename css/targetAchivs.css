@@ -32,10 +32,13 @@
   overflow: scroll;
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  justify-content: start;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-content: flex-start;
   gap: 10px;
   transition: none;
+  flex: 1;
 }
 
 .target-achiv {

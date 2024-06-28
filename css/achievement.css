@@ -58,6 +58,8 @@
 
 /** ------------[ ACHIEVEMENT ]------------*/
 /*--------------- OVERLAT-SETS---------------- */
+
+
 .achivs[data-overlay="border"] {
   --overlay-closed: url("../assets/img/overlay_sets/border/closed.png");
   --overlay-earned: url("../assets/img/overlay_sets/border/earned.png");
@@ -82,6 +84,23 @@
   --overlay-closed: url("../assets/img/overlay_sets/digger/closed.png");
 }
 
+/* .achivs[data-overlay="mario_q"] .preview-container::after {
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  background-image: url("../assets/img/overlay_sets/mario_q/q.png");
+  animation: q-animation 2s linear infinite;
+} */
+
+@keyframes q-animation {
+  from {
+    transform: translateX(80%);
+  }
+
+  to {
+    transform: translateX(-80%);
+  }
+}
 
 .achivs[data-overlay="mario_q"] {
   --overlay-closed: url("../assets/img/overlay_sets/mario_q/closed-1.png");
@@ -93,7 +112,12 @@
 
 .achivs[data-overlay="mario_q"] [data-rarity="rare"],
 .achivs[data-overlay="mario_q"] [data-rarity="normal"] {
-  --overlay-closed: url("../assets/img/overlay_sets/mario_q/closed.webp");
+  --overlay-closed: url("../assets/img/overlay_sets/mario_q/closed.png");
+}
+
+.achivs[data-overlay="mario_q"] [data-type="missable"][data-rarity="rare"],
+.achivs[data-overlay="mario_q"] [data-type="missable"][data-rarity="normal"] {
+  --overlay-closed: url("../assets/img/overlay_sets/mario_q/missable_q.png");
 }
 
 .achivs[data-overlay="mario_q"] [data-rarity="mythycal"] {
@@ -128,19 +152,7 @@
   filter: invert(1)
 }
 
-/* .preview-container::after {
-  content: '';
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0%;
-  left: 0%;
-  background: radial-gradient(ellipse, transparent 30%, rgba(255, 255, 255, 0.15) 35%);
-  background-size: 200% 100%;
-  background-position: 50% 50%;
-  transform: rotate(45deg) scale(1.6);
-  z-index: 100;
-} */
+
 
 /* ---------------------------------- */
 .achiv-block {
@@ -225,6 +237,7 @@
   overflow: hidden;
 }
 
+/* .achiv-block.overlay:not(:active) .preview-container::after, */
 .achiv-block.overlay:not(:active) .preview-container::before {
   position: absolute;
   content: "";
@@ -237,10 +250,13 @@
   image-rendering: pixelated;
 }
 
+/* .achiv-block.earned.hardcore .preview-container::after {
+  display: none;
+} */
+
 .achiv-block .preview-container::before {
   height: calc(100%);
   background-image: var(--overlay-closed);
-
   z-index: 1;
   opacity: 1;
   transition: .2s;
@@ -502,7 +518,7 @@
 .mario__container {
   width: calc(var(--achiv-height));
   aspect-ratio: 1;
-  background-size: cover;
+  background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
 }
@@ -536,7 +552,7 @@
   transform: translate(-50%, -50%);
   font-size: calc(var(--achiv-height) / 2.5);
   background-color: black;
-  border-radius: 3px;
+  border-radius: 5px;
   padding: 2px;
   color: goldenrod;
 
@@ -561,8 +577,26 @@
 
 .mario__container.walk {
   --frame-duration: 70ms;
-  background-image: url(../assets/img/mario_sprites/mario_walk/walk_1.png);
   animation: mario-walk-animation calc(var(--frame-duration) * 3) steps(3, start) infinite;
+}
+
+.mario__container.ext.walk {
+  --frame-duration: 70ms;
+  animation: mario-ext-walk-animation calc(var(--frame-duration) * 2) steps(2, start) infinite;
+}
+
+@keyframes mario-ext-walk-animation {
+  0% {
+    background-image: url(../assets/img/mario_sprites/mario_walk/m-r-0.png);
+  }
+
+  50% {
+    background-image: url(../assets/img/mario_sprites/mario_walk/m-r-1.png);
+  }
+
+  100% {
+    background-image: url(../assets/img/mario_sprites/mario_walk/m-r-0.png);
+  }
 }
 
 @keyframes mario-walk-animation {
@@ -576,6 +610,10 @@
 
   66.67% {
     background-image: url(../assets/img/mario_sprites/mario_walk/walk_3.png);
+  }
+
+  100% {
+    background-image: url(../assets/img/mario_sprites/mario_walk/walk_1.png);
   }
 }
 
