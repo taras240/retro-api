@@ -4,10 +4,15 @@
     left: 200px;
     top: 100px;
     width: 250px;
+    height: auto !important;
     min-width: fit-content;
     min-height: 100px;
     background: linear-gradient(to top left, var(--main-color), var(--secondary-color));
 
+}
+
+.hide-bg.stats_section.section:not(:hover) {
+    background: transparent;
 }
 
 /* .visible {
@@ -23,7 +28,7 @@
     flex-direction: column;
     flex: 1;
     overflow-y: scroll;
-    padding: 0.5rem 0;
+    padding: 0.5rem 0 0;
 }
 
 /* .stats-container> :nth-child(even) {
@@ -38,6 +43,10 @@
     gap: 1rem;
     width: 100%;
     padding: 0.5rem 1rem;
+}
+
+.stats__stat-container.hidden {
+    display: none;
 }
 
 .stats__stat-container::after {

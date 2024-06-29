@@ -6326,16 +6326,168 @@ class Notifications {
   }
 }
 class Stats {
+  get contextMenuItems() {
+    return [
+      {
+        label: "Show stats",
+        elements: [
+          {
+            type: "checkbox",
+            name: "context_show-points",
+            id: "context_show-points",
+            label: "Hard points",
+            checked: this.SHOW_HP,
+            event: `onchange="ui.stats.SHOW_HP = this.checked;"`,
+          },
+          {
+            type: "checkbox",
+            name: "context_show-retropoints",
+            id: "context_show-retropoints",
+            label: "Retropoints",
+            checked: this.SHOW_RP,
+            event: `onchange="ui.stats.SHOW_RP = this.checked;"`,
+          },
+          {
+            type: "checkbox",
+            name: "context_show-softpoints",
+            id: "context_show-softpoints",
+            label: "Softpoints",
+            checked: this.SHOW_SP,
+            event: `onchange="ui.stats.SHOW_SP = this.checked;"`,
+          },
+          {
+            type: "checkbox",
+            name: "context_show-rank",
+            id: "context_show-rank",
+            label: "Rank",
+            checked: this.SHOW_RANK,
+            event: `onchange="ui.stats.SHOW_RANK = this.checked;"`,
+          },
+          {
+            type: "checkbox",
+            name: "context_show-percentile",
+            id: "context_show-percentile",
+            label: "Percentile",
+            checked: this.SHOW_PERCENTILE,
+            event: `onchange="ui.stats.SHOW_PERCENTILE = this.checked;"`,
+          },
+
+          {
+            type: "checkbox",
+            name: "context_show-true-ratio",
+            id: "context_show-true-ratio",
+            label: "True Ratio",
+            checked: this.SHOW_TR,
+            event: `onchange="ui.stats.SHOW_TR = this.checked;"`,
+          },
+        ]
+      },
+      {
+        label: "Style",
+        elements: [
+          {
+            type: "checkbox",
+            name: "context_show-header",
+            id: "context_show-header",
+            label: "Show header",
+            checked: this.SHOW_HEADER,
+            event: `onchange="ui.stats.SHOW_HEADER = this.checked;"`,
+          },
+          {
+            type: "checkbox",
+            name: "context_show-bg",
+            id: "context_show-bg",
+            label: "Show background",
+            checked: this.SHOW_BG,
+            event: `onchange="ui.stats.SHOW_BG = this.checked;"`,
+          },
+        ]
+      }
+
+
+    ];
+  }
+  get SHOW_BG() {
+    return config.ui?.stats_section?.showBG ?? true;
+  }
+  set SHOW_BG(value) {
+    this.saveProppertySetting("showBG", value);
+    this.setElementsVisibility();
+  }
+  get SHOW_HEADER() {
+    return config.ui?.stats_section?.showHeader ?? true;
+  }
+  set SHOW_HEADER(value) {
+    this.saveProppertySetting("showHeader", value);
+    this.setElementsVisibility();
+  }
+  get SHOW_HP() {
+    return config.ui?.stats_section?.showHP ?? true;
+  }
+  set SHOW_HP(value) {
+    this.saveProppertySetting("showHP", value);
+    this.setElementsVisibility();
+  }
+
+  get SHOW_RP() {
+    return config.ui?.stats_section?.showRP ?? true;
+  }
+  set SHOW_RP(value) {
+    this.saveProppertySetting("showRP", value);
+    this.setElementsVisibility();
+  }
+
+  get SHOW_SP() {
+    return config.ui?.stats_section?.showSP ?? true;
+  }
+  set SHOW_SP(value) {
+    this.saveProppertySetting("showSP", value);
+    this.setElementsVisibility();
+  }
+
+  get SHOW_RANK() {
+    return config.ui?.stats_section?.showRank ?? true;
+  }
+  set SHOW_RANK(value) {
+    this.saveProppertySetting("showRank", value);
+    this.setElementsVisibility();
+  }
+  get SHOW_PERCENTILE() {
+    return config.ui?.stats_section?.showPercentile ?? true;
+  }
+  set SHOW_PERCENTILE(value) {
+    this.saveProppertySetting("showPercentile", value);
+    this.setElementsVisibility();
+  }
+  get SHOW_TR() {
+    return config.ui?.stats_section?.showTrueRatio ?? true;
+  }
+  set SHOW_TR(value) {
+    this.saveProppertySetting("showTrueRatio", value);
+    this.setElementsVisibility();
+  }
+
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
   }
+  saveProppertySetting(property, value) {
+    if (!config.ui.stats_section) {
+      config.ui.stats_section = {};
+    }
+    config.ui.stats_section[property] = value;
+    config.writeConfiguration();
+  }
   userSummary;
   constructor() {
+
     this.initializeElements();
+    this.setElementsVisibility();
     this.addEvents();
   }
   initializeElements() {
     this.section = document.querySelector("#stats_section");
+    this.header = this.section.querySelector(".header-container");
+    this.container = this.section.querySelector(".stats-container");
     this.rankRateElement = this.section.querySelector('#stats_rank-rate');
     this.rankElement = this.section.querySelector('#stats_rank');
     this.pointsElement = this.section.querySelector('#stats_points');
@@ -6348,17 +6500,29 @@ class Stats {
 
     this.resizer = this.section.querySelector(".resizer");
   }
+  setElementsVisibility() {
+    this.pointsElement.closest("li").classList.toggle("hidden", !this.SHOW_HP);
+    this.retropointsElement.closest("li").classList.toggle("hidden", !this.SHOW_RP);
+    this.softpointsElement.closest("li").classList.toggle("hidden", !this.SHOW_SP);
+    this.rankElement.closest("li").classList.toggle("hidden", !this.SHOW_RANK);
+    this.rankRateElement.closest("li").classList.toggle("hidden", !this.SHOW_PERCENTILE);
+    this.trueRatioElement.closest("li").classList.toggle("hidden", !this.SHOW_TR);
+    this.section.classList.toggle("compact", !this.SHOW_HEADER);
+    this.section.classList.toggle("hide-bg", !this.SHOW_BG);
+
+  }
   addEvents() {
-    this.section.addEventListener("mousedown", (e) => {
+    this.header.addEventListener("mousedown", (e) => {
       UI.moveEvent(this.section, e);
     });
-    // this.section.addEventListener("contextmenu", (event) => {
-    //   ui.showContextmenu({
-    //     event: event,
-    //     menuItems: this.contextMenuItems,
-    //     sectionCode: "",
-    //   });
-    // });
+    this.section.addEventListener("contextmenu", (event) => {
+      ui.showContextmenu({
+        event: event,
+        menuItems: this.contextMenuItems,
+        sectionCode: "",
+      });
+    });
+
     this.resizer.addEventListener("mousedown", event => {
       event.stopPropagation();
       this.section.classList.add("resized");
@@ -6366,6 +6530,10 @@ class Stats {
         event: event,
         section: this.section,
       });
+    });
+    new Sortable(this.container, {
+      animation: 100,
+      // chosenClass: "stats__stat-container",
     });
   }
   initialSetStats({ userSummary, completionProgress }) {
