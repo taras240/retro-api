@@ -6561,13 +6561,13 @@ class Stats {
         case "rankRate":
           value = ~~(10000 * userData.Rank / userData.TotalRanked) / 100;
           oldValue = ~~(10000 * this.userSummary.Rank / this.userSummary.TotalRanked) / 100;
-          delta = value - oldValue;
+          delta = ~~(100 * (value - oldValue)) / 100;
           value += "%";
           break;
         case "trueRatio":
           value = ~~(100 * userData.TotalTruePoints / userData.TotalPoints) / 100;
           oldValue = ~~(100 * this.userSummary.TotalTruePoints / this.userSummary.TotalPoints) / 100;
-          delta = value - oldValue;
+          delta = ~~(100 * (value - oldValue)) / 100;
           break;
         default:
           delta = userData[property] - this.userSummary[property];
