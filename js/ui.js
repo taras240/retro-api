@@ -4650,14 +4650,14 @@ class Target {
   updateEarnedAchieves({ earnedAchievementIDs: earnedAchievementsIDs }) {
     earnedAchievementsIDs.forEach(id => {
       const achivElement = this.container.querySelector(`.target-achiv[data-achiv-id='${id}']`);
-      if (ui.ACHIEVEMENTS[id].isHardcoreEarned) {
-        achivElement?.classList.add("earned", "hardcore", "show-hard-anim");
+      if (ui.ACHIEVEMENTS[id].isHardcoreEarned && achivElement) {
+        achivElement.classList.add("earned", "hardcore", "show-hard-anim");
         achivElement.dataset.DateEarnedHardcore = ui.ACHIEVEMENTS[id].DateEarnedHardcore;
       }
       else {
         achivElement?.classList.add("earned", "show-hard-anim");
       }
-      setTimeout(() => achivElement.classList.remove("show-hard-anim"), 5000);
+      setTimeout(() => achivElement?.classList.remove("show-hard-anim"), 5000);
     });
     this.applyFilter();
     this.applySort();
@@ -6402,7 +6402,7 @@ class Stats {
           delta = value - oldValue;
           break;
         default:
-          delta = this.userSummary[property] - userData[property];
+          delta = userData[property] - this.userSummary[property];
           value = userData[property];
       }
 
@@ -6424,6 +6424,8 @@ class Stats {
     setValue(this.softpointsElement, "TotalSoftcorePoints");
     setValue(this.retropointsElement, "TotalTruePoints");
     setValue(this.trueRatioElement, "trueRatio");
+
+    this.userSummary = userData;
   }
 }
 
