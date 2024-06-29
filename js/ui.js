@@ -233,10 +233,10 @@ export class UI {
           this.GAME_DATA.earnedStats.soft.progressionCount++;
 
           if (this.GAME_DATA.earnedStats.hard.progressionCount >= this.GAME_DATA.progressionSteps) {
-            gameProgressObject.progressionAward = 'beaten';
+            this.GAME_DATA.progressionAward = 'beaten';
           }
           else if (this.GAME_DATA.earnedStats.soft.progressionCount >= this.GAME_DATA.progressionSteps) {
-            gameProgressObject.progressionAward = 'beaten-softcore';
+            this.GAME_DATA.progressionAward = 'beaten-softcore';
           }
         }
 
