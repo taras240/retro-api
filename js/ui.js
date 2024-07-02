@@ -6553,13 +6553,13 @@ class Stats {
     });
   }
   initialSetStats({ userSummary, completionProgress }) {
-    this.earnedPoints = {
-      Rank: 0,
-      rankRate: 0,
-      TotalPoints: 0,
-      TotalSoftcorePoints: 0,
-      TotalTruePoints: 0,
-      trueRatio: 0,
+    this.initialData = {
+      Rank: userSummary.Rank,
+      rankRate: +(100 * userSummary.Rank / userSummary.TotalRanked).toFixed(2),
+      TotalPoints: userSummary.TotalPoints,
+      TotalSoftcorePoints: userSummary.TotalSoftcorePoints,
+      TotalTruePoints: userSummary.TotalTruePoints,
+      trueRatio: +(userSummary.TotalTruePoints / userSummary.TotalPoints).toFixed(2),
 
     }
     if (userSummary) {
@@ -6580,7 +6580,9 @@ class Stats {
     const userData = await apiWorker.getUserSummary({});
 
     const setValue = (element, property) => {
+
       let delta = 0;
+      let sessionDelta = 0;
       let value = 0;
       let oldValue = 0;
       switch (property) {
@@ -6588,22 +6590,24 @@ class Stats {
           value = (100 * userData.Rank / userData.TotalRanked).toFixed(2);
           oldValue = (100 * this.userSummary.Rank / this.userSummary.TotalRanked).toFixed(2);
           delta = +(value - oldValue).toFixed(2);
+          sessionDelta = +(value - this.initialData.rankRate).toFixed(2)
           value += "%";
           break;
         case "trueRatio":
           value = (userData.TotalTruePoints / userData.TotalPoints).toFixed(2);
           oldValue = (this.userSummary.TotalTruePoints / this.userSummary.TotalPoints).toFixed(2);
           delta = +(value - oldValue).toFixed(2);
+          sessionDelta = +(value - this.initialData.trueRatio).toFixed(2)
           break;
         default:
           delta = userData[property] - this.userSummary[property];
+          sessionDelta = userData[property] - this.initialData[property];
           value = userData[property];
       }
       if (delta === 0) return;
       const isNegativeDelta = delta < 0;
 
-      this.earnedPoints[property] += delta;
-      const isSessionNegativeDelta = this.earnedPoints[property] < 0;
+      const isSessionNegativeDelta = sessionDelta < 0;
 
       element.classList.add("delta");
       element.classList.toggle('negative', isNegativeDelta);
@@ -6611,7 +6615,7 @@ class Stats {
       const delay = 5000;
       setTimeout(() => {
         element.innerHTML = value + ` <span class="session-progress ${isSessionNegativeDelta ? "negative" : ""}">
-          ${isSessionNegativeDelta ? "" : "+"}${this.earnedPoints[property]}</span>`;
+          ${isSessionNegativeDelta ? "" : "+"}${sessionDelta}</span>`;
         element.classList.remove("delta");
       }, delay)
     }
