@@ -6402,6 +6402,14 @@ class Stats {
             event: `onchange="ui.stats.SHOW_BG = this.checked;"`,
           },
         ]
+      },
+      {
+        type: "checkbox",
+        name: "context_show-session-progress",
+        id: "context_show-session-progress",
+        label: "Show Session Progress",
+        checked: this.SHOW_SESSION_PROGRESS,
+        event: `onchange="ui.stats.SHOW_SESSION_PROGRESS = this.checked;"`,
       }
 
 
@@ -6466,7 +6474,13 @@ class Stats {
     this.saveProppertySetting("showTrueRatio", value);
     this.setElementsVisibility();
   }
-
+  get SHOW_SESSION_PROGRESS() {
+    return config.ui?.stats_section?.showSessionProgress ?? true;
+  }
+  set SHOW_SESSION_PROGRESS(value) {
+    this.saveProppertySetting("showSessionProgress", value);
+    this.setElementsVisibility();
+  }
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
   }
@@ -6477,6 +6491,7 @@ class Stats {
     config.ui.stats_section[property] = value;
     config.writeConfiguration();
   }
+  initialUserSummary;
   userSummary;
   constructor() {
 
@@ -6509,6 +6524,7 @@ class Stats {
     this.trueRatioElement.closest("li").classList.toggle("hidden", !this.SHOW_TR);
     this.section.classList.toggle("compact", !this.SHOW_HEADER);
     this.section.classList.toggle("hide-bg", !this.SHOW_BG);
+    this.container.classList.toggle("show-session-progress", this.SHOW_SESSION_PROGRESS)
 
   }
   addEvents() {
@@ -6537,14 +6553,24 @@ class Stats {
     });
   }
   initialSetStats({ userSummary, completionProgress }) {
+    this.earnedPoints = {
+      Rank: 0,
+      rankRate: 0,
+      TotalPoints: 0,
+      TotalSoftcorePoints: 0,
+      TotalTruePoints: 0,
+      trueRatio: 0,
+
+    }
     if (userSummary) {
       this.userSummary = userSummary;
+      this.initialUserSummary = userSummary;
       this.rankElement.innerText = userSummary.Rank;
-      this.rankRateElement.innerText = ~~(10000 * userSummary.Rank / userSummary.TotalRanked) / 100 + '%';
+      this.rankRateElement.innerText = (100 * userSummary.Rank / userSummary.TotalRanked).toFixed(2) + '%';
       this.pointsElement.innerText = userSummary.TotalPoints;
       this.softpointsElement.innerText = userSummary.TotalSoftcorePoints;
       this.retropointsElement.innerText = userSummary.TotalTruePoints;
-      this.trueRatioElement.innerText = ~~(100 * userSummary.TotalTruePoints / userSummary.TotalPoints) / 100;
+      this.trueRatioElement.innerText = (userSummary.TotalTruePoints / userSummary.TotalPoints).toFixed(2);
     }
     if (completionProgress) {
     }
@@ -6559,30 +6585,33 @@ class Stats {
       let oldValue = 0;
       switch (property) {
         case "rankRate":
-          value = ~~(10000 * userData.Rank / userData.TotalRanked) / 100;
-          oldValue = ~~(10000 * this.userSummary.Rank / this.userSummary.TotalRanked) / 100;
-          delta = ~~(100 * (value - oldValue)) / 100;
+          value = (100 * userData.Rank / userData.TotalRanked).toFixed(2);
+          oldValue = (100 * this.userSummary.Rank / this.userSummary.TotalRanked).toFixed(2);
+          delta = +(value - oldValue).toFixed(2);
           value += "%";
           break;
         case "trueRatio":
-          value = ~~(100 * userData.TotalTruePoints / userData.TotalPoints) / 100;
-          oldValue = ~~(100 * this.userSummary.TotalTruePoints / this.userSummary.TotalPoints) / 100;
-          delta = ~~(100 * (value - oldValue)) / 100;
+          value = (userData.TotalTruePoints / userData.TotalPoints).toFixed(2);
+          oldValue = (this.userSummary.TotalTruePoints / this.userSummary.TotalPoints).toFixed(2);
+          delta = +(value - oldValue).toFixed(2);
           break;
         default:
           delta = userData[property] - this.userSummary[property];
           value = userData[property];
       }
-
       if (delta === 0) return;
       const isNegativeDelta = delta < 0;
+
+      this.earnedPoints[property] += delta;
+      const isSessionNegativeDelta = this.earnedPoints[property] < 0;
 
       element.classList.add("delta");
       element.classList.toggle('negative', isNegativeDelta);
       element.dataset.delta = `${isNegativeDelta ? "" : "+"}${delta}`;
       const delay = 5000;
       setTimeout(() => {
-        element.innerText = value;
+        element.innerHTML = value + ` <span class="session-progress ${isSessionNegativeDelta ? "negative" : ""}">
+          ${isSessionNegativeDelta ? "" : "+"}${this.earnedPoints[property]}</span>`;
         element.classList.remove("delta");
       }, delay)
     }

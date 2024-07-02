@@ -22,7 +22,6 @@
 } */
 
 .stats-container {
-
     --flex-basis: 100%;
     display: flex;
     flex-direction: column;
@@ -99,4 +98,26 @@
 
 .stats__value.delta::after {
     opacity: 1;
+}
+
+.session-progress,
+.stats__rank-value .session-progress.negative {
+    background-color: green;
+    color: black;
+    padding: 0 5px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.session-progress.negative,
+.stats__rank-value .session-progress {
+    background-color: crimson;
+}
+
+.session-progress {
+    display: none;
+}
+
+.show-session-progress .session-progress {
+    display: inline-block;
 }
