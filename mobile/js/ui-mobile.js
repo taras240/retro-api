@@ -273,42 +273,50 @@ class UI {
       </div>
     `
   }
-  showAchivDetails(achivID, gameID) {
+  async showAchivDetails(achivID, gameID) {
     this.removePopups();
     this.showLoader();
-    const achivElement = document.createElement("div");
-    achivElement.addEventListener("touchend", e => e.stopPropagation());
+    if (GAMES_DATA[gameID]) {
+      const achivElement = document.createElement("div");
+      achivElement.addEventListener("touchend", e => e.stopPropagation());
 
-    achivElement.classList.add("popup-info__container", "popup");
-    const achiv = GAMES_DATA[gameID].Achievements[achivID];
-    const achivHtml = this.achivPopupHtml(achiv)
-    achivElement.innerHTML = achivHtml;
-    this.content.append(achivElement)
-    this.removeLoader()
+      achivElement.classList.add("popup-info__container", "popup");
+      const achiv = GAMES_DATA[gameID].Achievements[achivID];
+      const achivHtml = this.achivPopupHtml(achiv)
+      achivElement.innerHTML = achivHtml;
+      this.content.append(achivElement)
+      this.removeLoader()
+    }
+    else {
+      const gameData = await apiWorker.getGameProgress({ gameID: gameID });
+      GAMES_DATA[gameID] = gameData;
+      this.showAchivDetails(achivID, gameID);
+    }
+
   }
   achivPopupHtml(achiv) {
     return `
     <button class="close-popup" onclick="ui.removePopups()"></button>
     <div class="popup-info__preview-container">
-        <img src="${achiv.prevSrc}" alt="" class="popup-info__preview">
-        <span class="game-header__retro-ratio  achiv-rarity__${achiv.difficulty}">${achiv.difficulty}</span>
+        <img src="${achiv?.prevSrc}" alt="" class="popup-info__preview">
+        <span class="game-header__retro-ratio  achiv-rarity__${achiv?.difficulty}">${achiv?.difficulty}</span>
     </div>
-    <h2 class="popup-info__title">${achiv.Title}</h2>
+    <h2 class="popup-info__title">${achiv?.Title}</h2>
     <div class="hor-line"></div>
     <p class="popup-info__description">
-    ${achiv.Description}
+    ${achiv?.Description}
     </p>
     <div class="hor-line"></div>
     <div class="popup-info__properties">
-        <div class="popup-info__property">Points: <span>${achiv.Points}</span></div>
-        <div class="popup-info__property">Retropoints: <span>${achiv.TrueRatio}</span></div>
-        <div class="popup-info__property">Total players: <span>${achiv.totalPlayers}</span></div>
-        <div class="popup-info__property">Earned by: <span>${achiv.NumAwarded}</span></div>
-        <div class="popup-info__property">Earned harcore by: <span>${achiv.NumAwardedHardcore}</span></div>
-        ${achiv.isEarned ? `<div class="popup-info__property">Date earned : <span>${fixTimeString(achiv.DateEarned)}</span></div>` : ''}
-        ${achiv.isHardcoreEarned ? `<div class="popup-info__property">Date earned hardcore: <span>${fixTimeString(achiv.DateEarnedHardcore)}</span></div>` : ''}
-        <div class="popup-info__property">Date created : <span>${new Date(achiv.DateCreated).toLocaleDateString()}</span></div>
-        <div class="popup-info__property">Author : <span>${achiv.Author}</span></div>
+        <div class="popup-info__property">Points: <span>${achiv?.Points}</span></div>
+        <div class="popup-info__property">Retropoints: <span>${achiv?.TrueRatio}</span></div>
+        <div class="popup-info__property">Total players: <span>${achiv?.totalPlayers}</span></div>
+        <div class="popup-info__property">Earned by: <span>${achiv?.NumAwarded}</span></div>
+        <div class="popup-info__property">Earned harcore by: <span>${achiv?.NumAwardedHardcore}</span></div>
+        ${achiv?.isEarned ? `<div class="popup-info__property">Date earned : <span>${fixTimeString(achiv?.DateEarned)}</span></div>` : ''}
+        ${achiv?.isHardcoreEarned ? `<div class="popup-info__property">Date earned hardcore: <span>${fixTimeString(achiv?.DateEarnedHardcore)}</span></div>` : ''}
+        <div class="popup-info__property">Date created : <span>${new Date(achiv?.DateCreated).toLocaleDateString()}</span></div>
+        <div class="popup-info__property">Author : <span>${achiv?.Author}</span></div>
     </div>
   `;
   }
@@ -520,33 +528,34 @@ class Home {
 
   gameHtml(game) {
     return `    
-            <li class="user-info__last-game-container" data-id="${game.GameID}">
-                <div class="user-info__game-main-info"  onclick="ui.showGameDetails(${game.GameID}); event.stopPropagation()">
-                    <div class="user-info__game-preview-container" onclick="ui.goto.game(${game.GameID}); event.stopPropagation()">
-                        <img class="user-info__game-preview" src="https://media.retroachievements.org${game.ImageIcon}" alt="">
-                    </div>
+      <li class="user-info__last-game-container" data-id="${game.GameID}">
+          <div class="user-info__game-main-info"  onclick="ui.showGameDetails(${game.GameID}); event.stopPropagation()">
+              <div class="user-info__game-preview-container" onclick="ui.goto.game(${game.GameID}); event.stopPropagation()">
+                  <img class="user-info__game-preview" src="https://media.retroachievements.org${game.ImageIcon}" alt="">
+              </div>
 
 
-                    <div class="user-info__game-description" >
-                        <h2 class="user-info__game-title">${game.Title}</h2>
-                        <div class="game-stats__text">${game.ConsoleName}</div>
-                        <div  class="game-stats__button"  onclick="ui.expandGameItem(${game.GameID},this); event.stopPropagation()">
-                          <i class="game-stats__icon game-stats__expand-icon"></i>
+              <div class="user-info__game-description" >
+                  <h2 class="user-info__game-title">${game.FixedTitle} ${generateBadges(game.badges)}</h2>
+                  <div class="game-stats__text">${fixTimeString(game.LastPlayed)} | ${game.ConsoleName}</div>
+                  <div  class="game-stats__button"  onclick="ui.expandGameItem(${game.GameID},this); event.stopPropagation()">
+                    <i class="game-stats__icon game-stats__expand-icon"></i>
+                  </div>
+                  <div class="user-info_game-stats-container">
+                      <div class="game-stats ">
+                        <i class="game-stats__icon game-stats__achivs-icon"></i>
+                        <div class="game-stats__text">${ui.isSoftmode ? game.NumAchieved : game.NumAchievedHardcore} / ${game.NumPossibleAchievements}</div>
                         </div>
-                        <div class="user-info_game-stats-container">
-                            <div class="game-stats ">
-                            <i class="game-stats__icon game-stats__achivs-icon"></i>
-                            <div class="game-stats__text">${ui.isSoftmode ? game.NumAchieved : game.NumAchievedHardcore} / ${game.NumPossibleAchievements}</div>
-                            </div>
-                            <div class="game-stats game-stats__points">
-                            <i class="game-stats__icon game-stats__points-icon"></i>
-                            <div class="game-stats__text">${ui.isSoftmode ? game.ScoreAchieved : game.ScoreAchievedHardcore} / ${game.PossibleScore}</div>
-                            </div>
-                           
-                        </div>
-                    </div>
-                </div>
-            </li>
+                        <div class="game-stats game-stats__points">
+                        <i class="game-stats__icon game-stats__points-icon"></i>
+                        <div class="game-stats__text">${ui.isSoftmode ? game.ScoreAchieved : game.ScoreAchievedHardcore} / ${game.PossibleScore}</div>
+                        
+                      </div>
+                       
+                  </div>
+              </div>
+          </div>
+      </li>
         `;
   }
   achievementHtml(achiv) {
@@ -566,7 +575,8 @@ class Home {
 
     return `
       <li class="achiv__achiv-container">
-        <div class="achiv__title-container achiv__title-container_small">
+        <div class="achiv__title-container achiv__title-container_small" 
+           onclick="ui.showAchivDetails(${achiv.ID}, ${achiv.GameID}); event.stopPropagation()">
             <div class="achiv__preview-container">
                 <img class="user-info__achiv-preview ${achiv.HardcoreAchieved || (ui.isSoftmode && achiv.IsAwarded) ? "earned" : ""}"
                     src="https://media.retroachievements.org/Badge/${achiv.BadgeName}.png" alt="">
@@ -888,7 +898,9 @@ class Awards {
               <img class="awards__game-preview" src="https://media.retroachievements.org${game.ImageIcon}" alt="">
           </div>
           <div class="awards__game-description" >
-              <h2 class="awards__game-title">${game.Title}</h2>
+              <h2 class="awards__game-title">
+                ${game.FixedTitle} ${generateBadges(game.badges)}
+              </h2>
               <div  class="game-stats__button"  onclick="ui.expandGameItem(${game.AwardData},this); event.stopPropagation()">
                 <i class="game-stats__icon game-stats__expand-icon"></i>
               </div>
@@ -1207,7 +1219,7 @@ class Game {
                     </div>
                 <div class="game-header__description-container">
                     <h1 class="game-header__title">
-                      ${this.gameData.Title}                         
+                     ${this.gameData.FixedTitle} ${generateBadges(this.gameData.badges)}                       
                     </h1>
                       
                     <div class="game-header__platform">${this.gameData.ConsoleName}</div>

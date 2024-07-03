@@ -119,6 +119,7 @@ class APIWorker {
 
         game.ConsoleName == 'Events' && (game.award = "event");
         game.timeString = this.toLocalTimeString(game.AwardedAt);
+        game = this.fixGameTitle(game);
         return game;
       })
       return awardsObj;
@@ -316,6 +317,7 @@ class APIWorker {
         summary.RecentlyPlayed = summary.RecentlyPlayed.map(game => {
           game.LastPlayed = this.toLocalTimeString(game.LastPlayed);
           summary.Awarded[game.GameID] && (game = { ...game, ...summary.Awarded[game.GameID] })
+          game = this.fixGameTitle(game);
           return game;
         });
         summary.RecentAchievements = Object.values(summary.RecentAchievements)

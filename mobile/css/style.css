@@ -551,6 +551,7 @@ input[type="radio"] {
     color: black;
     font-weight: 600;
     text-transform: uppercase;
+    background-color: green;
 }
 
 .game-badge__hack {
