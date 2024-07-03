@@ -2,7 +2,7 @@ import { loadSections } from "./htmlBuilder.js";
 import { config, ui, apiWorker, userAuthData } from "./script.js";
 
 export class UI {
-  VERSION = "0.25";
+  VERSION = "0.45";
   static RECENT_ACHIVES_RANGE_MINUTES = 5;
   static AUTOCLOSE_CONTEXTMENU = false;
   static STICK_MARGIN = 10;
@@ -177,6 +177,9 @@ export class UI {
     //Update Stats widget
     ui.stats.updateStats();
 
+    if (this.settings.DISCORD_NEW_CHEEVO) {
+      earnedAchievementsIDs.forEach(id => this.sendDiscordMessage({ type: "earned-cheevo", id: id }));
+    }
   }
   showContextmenu({ event, menuItems, sectionCode = "" }) {
     const setContextPosition = () => {
@@ -308,7 +311,7 @@ export class UI {
     if (this.target.AUTOCLEAR) {
       this.target.clearEarned();
     }
-
+    this.settings.DISCORD_NEW_GAME && this.sendDiscordMessage({ type: "new-game" });
     // Встановлення інтервалу для оновлення досягнень та зміни стану кнопки
     this.apiTrackerInterval = setInterval(() => {
       this.checkUpdates();
@@ -337,7 +340,35 @@ export class UI {
     this.statusPanel.richPresence.innerText = responce.RichPresenceMsg;
   }
 
-
+  sendDiscordMessage = ({ message = "", type, id }) => {
+    const webhook = config.DISCORD_WEBHOOK;
+    if (!webhook) {
+      return;
+    }
+    switch (type) {
+      case "new-game":
+        message = `[${config.targetUser} just started new game](https://retroachievements.org/game/${config.gameID})`;
+        break;
+      case "earned-cheevo":
+        message = `[${config.targetUser} just earned new cheevo](https://retroachievements.org/achievement/${id})`;
+        break;
+    }
+    fetch(webhook, {
+      body: JSON.stringify({
+        content: message,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    })
+      .then(function (res) {
+        console.log(res);
+      })
+      .catch(function (res) {
+        console.log(res);
+      });
+  }
   // Функція для зупинки слідкування за досягненнями
   stopWatching() {
     this.statusPanel.watchButton.classList.remove("active");
@@ -2558,7 +2589,9 @@ class StatusPanel {
   gameChangeEvent() {
     if (ui.GAME_DATA.FixedTitle != this.stats.gameTitle && ui.apiTrackerInterval) {
       this.addAlertsToQuery([{ type: "new-game", value: ui.GAME_DATA }]);
+      ui.settings.DISCORD_NEW_GAME && ui.sendDiscordMessage({ type: "new-game" });
     }
+
     const { ImageIcon, FixedTitle, ConsoleName, badges } = ui.GAME_DATA;
     const { gamePreview, gameTitle, gamePlatform } = this;
     gamePreview.setAttribute(
@@ -3284,7 +3317,56 @@ class Settings {
           }
         ]
       },
+      {
+        label: "Discord",
+        elements: [
+          {
+            type: "text-input",
+            label: "paste discord webhook",
+            id: "settings_discord-hook-input",
+            value: this.DISCORD_WEBHOOK ?? "",
+            onChange: "ui.settings.DISCORD_WEBHOOK = value;",
+          },
+          {
+            type: "checkbox",
+            label: "Start game alert",
+            id: "settings_discord-start-game",
+            onChange: "ui.settings.DISCORD_NEW_GAME = this.checked;",
+            checked: this.DISCORD_NEW_GAME,
+          },
+          ,
+          {
+            type: "checkbox",
+            label: "Earn cheevo alert",
+            id: "settings_discord-new-cheevo",
+            onChange: "ui.settings.DISCORD_NEW_CHEEVO = this.checked;",
+            checked: this.DISCORD_NEW_CHEEVO,
+          },
+
+        ]
+      },
     ]
+  }
+  get DISCORD_WEBHOOK() {
+    return config.DISCORD_WEBHOOK ?? "";
+  }
+  set DISCORD_WEBHOOK(value) {
+    config.DISCORD_WEBHOOK = value;
+    config.writeConfiguration();
+  }
+  get DISCORD_NEW_GAME() {
+    return config._cfg?.discordNewGame ?? true;
+  }
+  set DISCORD_NEW_GAME(value) {
+    config._cfg.discordNewGame = value;
+    config.writeConfiguration();
+  }
+  get DISCORD_NEW_CHEEVO() {
+    return config._cfg?.discordNewCheevo ?? true;
+  }
+  set DISCORD_NEW_CHEEVO(value) {
+    config._cfg.discordNewCheevo = value;
+    config.writeConfiguration();
   }
   get VISIBLE() {
     return !this.section.classList.contains("hidden");

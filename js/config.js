@@ -33,7 +33,14 @@ export class Config {
     this._cfg.identification.identConfirmed = value;
     this.writeConfiguration();
   }
+  get DISCORD_WEBHOOK() {
+    return this._cfg.discordWebhook;
+  }
+  set DISCORD_WEBHOOK(value) {
+    this._cfg.discordWebhook = value;
+    this.writeConfiguration();
 
+  }
   get userImageSrc() {
     return this._cfg.identification.userImageSrc || "";
   }

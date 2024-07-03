@@ -63,43 +63,6 @@ function doMusic() {
 
   }, durationInSecs * 1000)
 }
-// Функція для закриття About
-function openAbout() {
-  const checkbox = document.querySelector("#open-about-button");
-  setTimeout(
-    () => (checkbox.checked = !ui.about.section.classList.contains("hidden")),
-    10
-  );
-  UI.switchSectionVisibility(ui.about);
-}
-
-
-function horizontalScroll(event) {
-  var delta = Math.max(-1, Math.min(1, (event.wheelDelta || -event.detail)));
-  var scrollSpeed = 10;
-  var scrollDistance = 10;
-  event.currentTarget.scrollLeft -= delta * scrollDistance * scrollSpeed;
-  event.preventDefault();
-}
-const authTokenGetter = () => {
-
-}
-function openTwitchBotAuth() {
-  //https://www.twitchapps.com/tmi/
-  const twitchAUTHLink = 'https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=q6batx0epp608isickayubi39itsckt&redirect_uri=https://twitchapps.com/tmi/&scope=chat%3Aread+chat%3Aedit';
-  window.open(twitchAUTHLink, '_blank');
-}
-// const client = new tmi.Client({
-//   options: { debug: true },
-//   identity: {
-//     username: 'retrocheevos',
-//     password: ''
-//   },
-//   channels: ['']
-// });
-
-// client.connect();
-
 
 
 export { config, ui, apiWorker, userAuthData }
