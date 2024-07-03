@@ -166,6 +166,7 @@ li {
     gap: 0.5rem;
     width: 100%;
     overflow-x: scroll;
+    flex-shrink: 0;
 }
 
 .games-list {

@@ -1,5 +1,5 @@
 "use strict";
- class APIWorker {
+class APIWorker {
   get _savedCompletionProgress() {
     return config._cfg?.apiWorker?.completionProgress ?? {}
   }
@@ -115,7 +115,7 @@
         game.award = game.AwardType == "Game Beaten" ?
           game.AwardDataExtra == "1" ? "beaten" : "beaten_softcore" :
           game.AwardDataExtra == "1" ? "mastered" : "completed";
-        game.DateEarnedHardcore = game.AwardedAt;
+        game.DateEarned = game.AwardedAt;
 
         game.ConsoleName == 'Events' && (game.award = "event");
         game.timeString = this.toLocalTimeString(game.AwardedAt);
@@ -320,7 +320,7 @@
         });
         summary.RecentAchievements = Object.values(summary.RecentAchievements)
           .flatMap(RecentAchievements => Object.values(RecentAchievements)).map(achiv => {
-            achiv.DateAwarded = this.toLocalTimeString(achiv.DateAwarded);
+            achiv.DateEarned = this.toLocalTimeString(achiv.DateAwarded);
             return achiv;
           });
         summary.isInGame = (new Date() - new Date(summary.RecentlyPlayed[0].LastPlayed)) < 5 * 60 * 1000;
@@ -432,8 +432,8 @@
       minute: "2-digit",
       hour12: false,
     };
+    return date;
     return date.toLocaleDateString("uk-UA", options);
-
   }
 
 

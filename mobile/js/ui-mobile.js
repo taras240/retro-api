@@ -127,6 +127,7 @@ class UI {
     this.addEvents();
   }
   initializeElements() {
+    !config.ui.mobile && (config.ui.mobile = {});
     this.sectionContainer = document.querySelector(".section-container");
     this.app = document.getElementById('app');
     this.content = document.getElementById('content');
@@ -304,8 +305,8 @@ class UI {
         <div class="popup-info__property">Total players: <span>${achiv.totalPlayers}</span></div>
         <div class="popup-info__property">Earned by: <span>${achiv.NumAwarded}</span></div>
         <div class="popup-info__property">Earned harcore by: <span>${achiv.NumAwardedHardcore}</span></div>
-        ${achiv.isEarned ? `<div class="popup-info__property">Date earned : <span>${achiv.DateEarned}</span></div>` : ''}
-        ${achiv.isHardcoreEarned ? `<div class="popup-info__property">Date earned hardcore: <span>${achiv.DateEarnedHardcore}</span></div>` : ''}
+        ${achiv.isEarned ? `<div class="popup-info__property">Date earned : <span>${fixTimeString(achiv.DateEarned)}</span></div>` : ''}
+        ${achiv.isHardcoreEarned ? `<div class="popup-info__property">Date earned hardcore: <span>${fixTimeString(achiv.DateEarnedHardcore)}</span></div>` : ''}
         <div class="popup-info__property">Date created : <span>${new Date(achiv.DateCreated).toLocaleDateString()}</span></div>
         <div class="popup-info__property">Author : <span>${achiv.Author}</span></div>
     </div>
@@ -464,17 +465,19 @@ class Home {
   }
 
   headerHtml() {
+    const retroRatio = +(USER_INFO.retropoints / USER_INFO.hardpoints).toFixed(2);
     return `
       <div class="section__header-container user-info__header-container">
         <div class="user-info__header">
             <div class="user-info__avatar-container">
                 <img src="${USER_INFO.userImageSrc}" alt="" class="user-info__avatar" onclick="ui.goto.login()">
+                <span class="game-header__retro-ratio  achiv-rarity__standard">${retroRatio}</span>
             </div>
             <button class="button__switch-mode ${ui.isSoftmode ? "softmode" : ""}" onclick="ui.switchGameMode()">${ui.isSoftmode ? "SOFT" : "HARD"}</button>
             <div class="user-info__user-name-container">
                 <h1 class="user-info__user-name">${USER_INFO.userName}</h1>
                 <div class="user-info__user-rank">${USER_INFO.userRank}</div>
-                <div class="user-info__rich-presence">Member since: ${USER_INFO.memberSince}</div>
+                <div class="user-info__rich-presence">Member since: ${new Date(USER_INFO.memberSince).toLocaleDateString()}</div>
             </div>
         </div>
         ${USER_INFO.isInGame ? `
@@ -574,7 +577,7 @@ class Home {
                   <div class="game-stats__text">${achiv.Points}</div>
               </div>  
               <div class="game-stats ">
-                  <div class="game-stats__text">${achiv.DateAwarded}</div>
+                  <div class="game-stats__text">${fixTimeString(achiv.DateEarned)}</div>
               </div>  
             </div>
           </div>            
@@ -726,7 +729,6 @@ class Awards {
     return type;
   }
   set awardFilter(value) {
-    !config.ui.mobile && (config.ui.mobile = {});
 
     config.ui.mobile.awardsTypeFilter = value;
     config.writeConfiguration()
@@ -743,7 +745,6 @@ class Awards {
     return code;
   }
   set platformFilterCode(value) {
-    !config.ui.mobile && (config.ui.mobile = {});
     config.ui.mobile.platformFilter = value;
     config.writeConfiguration()
     this.update();
@@ -754,7 +755,6 @@ class Awards {
   }
 
   set awardSortType(value) {
-    !config.ui.mobile && (config.ui.mobile = {});
     config.ui.mobile.awardSortType = value;
     config.writeConfiguration()
     this.update();
@@ -764,7 +764,6 @@ class Awards {
   }
 
   set awardSortTypeReverse(value) {
-    !config.ui.mobile && (config.ui.mobile = {});
     config.ui.mobile.awardSortTypeReverse = value ? -1 : 1;
     config.writeConfiguration()
     this.update();
@@ -809,6 +808,8 @@ class Awards {
   };
   awardedGames = [];
   constructor() {
+    !config.ui.mobile.awards && (config.ui.mobile.awards = {});
+
     ui.showLoader();
     this.downloadAwardsData().then(() => {
       this.getAwardsStats();
@@ -901,20 +902,197 @@ class Awards {
   }
 }
 class Game {
+  filterContext = () => {
+    return {
+      label: "Filter by",
+      elements: [
+
+        {
+          label: `Progression`,
+          id: "filter_progression",
+          type: "radio",
+          onChange: "ui.game.filter = 'progression'",
+          checked: this.filter === 'progression',
+          name: "filter-by-progression"
+        },
+        {
+          label: `Missable`,
+          id: "filter_missable",
+          type: "radio",
+          onChange: "ui.game.filter = 'missable'",
+          checked: this.filter === 'missable',
+          name: "filter-by-missable"
+        },
+        {
+          label: `Earned`,
+          id: "filter_earned",
+          type: "radio",
+          onChange: "ui.game.filter = 'earned'",
+          checked: this.filter === 'earned',
+          name: "filter-by-earned"
+        },
+        {
+          label: `Disable`,
+          id: "filter_all",
+          type: "radio",
+          onChange: "ui.game.filter = 'all'",
+          checked: this.filter === 'all',
+          name: "filter-by-all"
+        },
+        {
+          label: "Reverse filter",
+          id: "filter_reverse-filter",
+          type: "checkbox",
+          onChange: "ui.game.filterReverse = this.checked",
+          checked: this.filterReverse == true,
+          name: "filter-cheevos-reverse"
+        },
+      ]
+    }
+  }
+  sortContext = () => {
+    return {
+      label: "Sort by",
+      elements: [
+        {
+          label: "Earned date",
+          id: "sort_latest",
+          type: "radio",
+          onChange: "ui.game.sortType = 'date'; ",
+          checked: this.sortType === 'date',
+          name: "sort-cheevos"
+        },
+        {
+          label: "Points",
+          id: "sort_points-count",
+          type: "radio",
+          onChange: "ui.game.sortType = 'points'",
+          checked: this.sortType === 'points',
+          name: "sort-cheevos"
+        },
+        {
+          label: "Retropoits",
+          id: "sort_retropoints-count",
+          type: "radio",
+          onChange: "ui.game.sortType = 'truepoints'",
+          checked: this.sortType === 'truepoints',
+          name: "sort-cheevos"
+        },
+        {
+          label: "Rarity",
+          id: "sort_rarity-count",
+          type: "radio",
+          onChange: "ui.game.sortType = 'earnedCount'",
+          checked: this.sortType === 'earnedCount',
+          name: "sort-cheevos"
+        },
+        {
+          label: "Default",
+          id: "sort_default-count",
+          type: "radio",
+          onChange: "ui.game.sortType = 'default'",
+          checked: this.sortType === 'default',
+          name: "sort-cheevos"
+        },
+        {
+          label: "Reverse sort",
+          id: "sort_reverse-sort",
+          type: "checkbox",
+          onChange: "ui.game.sortTypeReverse = this.checked",
+          checked: this.sortTypeReverse == -1,
+          name: "sort-cheevos-reverse"
+        },
+      ]
+    }
+  }
+  cheevosListContext = () => {
+    return {
+      label: "Show by",
+      elements: [
+        ...Object.getOwnPropertyNames(this.listTypes).reduce((elems, type) => {
+          const typeObj = {
+            label: `${this.listTypes[type]}`,
+            id: `game_list-type-${type}`,
+            type: "radio",
+            onChange: `ui.game.listType = '${type}'`,
+            checked: this.listType == type,
+            name: "game-list-type"
+          };
+          elems.push(typeObj);
+          return elems;
+        }, [])
+      ]
+    }
+  }
+  get sortType() {
+    return config.ui?.mobile?.game?.sortType ?? "title";
+  }
+  set sortType(value) {
+    config.ui.mobile.game.sortType = value;
+    config.writeConfiguration();
+
+    this.updateCheevos();
+  }
+  get filter() {
+    return config.ui?.mobile?.game?.filter ?? "all";
+  }
+  set filter(value) {
+    config.ui.mobile.game.filter = value;
+    config.writeConfiguration();
+
+    this.updateCheevos();
+  }
+  get sortTypeReverse() {
+    return config.ui?.mobile?.game?.sortTypeReverse ?? 1;
+  }
+  set sortTypeReverse(value) {
+    config.ui.mobile.game.sortTypeReverse = value ? -1 : 1;
+    config.writeConfiguration();
+
+    this.updateCheevos();
+  }
+  get filterReverse() {
+    return config.ui?.mobile?.game?.filterReverse ?? false;
+  }
+  set filterReverse(value) {
+    config.ui.mobile.game.filterReverse = value;
+    config.writeConfiguration();
+
+    this.updateCheevos();
+  }
+  get listType() {
+    return config.ui?.mobile?.game.listType ?? "grid";
+  }
+  set listType(value) {
+    config.ui.mobile.game.listType = value;
+    config.writeConfiguration();
+    this.update();
+  }
+  listTypes = {
+    list: 'list',
+    grid: 'grid'
+  }
   constructor(gameID) {
+    !config.ui.mobile.game && (config.ui.mobile.game = {});
     this.gameID = gameID;
     this.update();
+  }
+  updateCheevos() {
+    this.achievements = Object.values(GAMES_DATA[this.gameID].Achievements);
+
+    this.achievements = this.achievements.filter(a => this.filterReverse ^ filterBy[this.filter](a));
+    this.achievements = this.achievements.sort((a, b) => this.sortTypeReverse * sortBy[this.sortType](a, b))
+    const cheevosList = document.querySelector(".game-achivs__container");
+    cheevosList.innerHTML = this.AchievementsListHtml();
   }
   getSectionElement() {
     const section = document.createElement("div");
     section.classList.add("game__section", "section");
     section.innerHTML = `
       ${this.SectionHeaderHtml()}
-      <ul class="game-achivs__container">
-        ${Object.values(this.gameData.Achievements).reduce((elementsHtml, achiv) => {
-      elementsHtml += this.AchievementHtml(achiv);
-      return elementsHtml;
-    }, "")}
+
+      <ul class="game-achivs__container ${this.listType}">
+       
       </ul>
     `;
     return section;
@@ -923,7 +1101,7 @@ class Game {
     const trend = ~~(1000 * achiv.NumAwardedHardcore / this.gameData.NumDistinctPlayers) / 10;
 
     return `
-      <li class="achiv__achiv-container" onclick="ui.showAchivDetails(${achiv.ID}, ${this.gameID}); event.stopPropagation()">
+      <li class="achiv__achiv-container ${achiv.isHardcoreEarned ? "hardcore" : ""}" onclick="ui.showAchivDetails(${achiv.ID}, ${this.gameID}); event.stopPropagation()">
         <div class="achiv__title-container">
             <div class="achiv__preview-container">
                 <img class="user-info__achiv-preview ${achiv.isHardcoreEarned || (ui.isSoftmode && achiv.isEarned) ? "earned" : ""}"
@@ -958,6 +1136,25 @@ class Game {
     
     `
   }
+  AchievementsListHtml() {
+    return `
+      <div class="section__control-container">
+        <button class=" simple-button" onclick="generateContextMenu(ui.game.sortContext(),event)">Sort</button>
+        <button class="games-platform-filter simple-button" 
+          onclick="generateContextMenu(ui.game.filterContext(),event)">
+          ${this.platformFilter ?? "Filter"}
+        </button>
+        <button class="games-items-type simple-button" 
+          onclick="generateContextMenu(ui.game.cheevosListContext(),event)">
+          ${this.listType ?? "List"}
+        </button>
+      </div>
+      ${this.achievements.reduce((elementsHtml, achiv) => {
+      elementsHtml += this.AchievementHtml(achiv);
+      return elementsHtml;
+    }, "")}
+    `;
+  }
   SectionHeaderHtml() {
     const earnedData = ui.isSoftmode ? {
       count: this.gameData.earnedStats.soft.count,
@@ -991,50 +1188,51 @@ class Game {
     // earnedData.achivs == 0 && (earnedData = false);
     const completionProgress = ~~(100 * earnedData.count / this.gameData.achievements_published);
     return `
-            <div class="section__header-container game__header-container" onclick="ui.showGameDetails(${this.gameID});event.stopPropagation();">
-                <div class="game-header__background-container">
-                    <img class="game-header__background-img" src="https://media.retroachievements.org${this.gameData.ImageTitle}" alt="">
-                    <div class="game-header__background-gradient"></div>
-                    
+      <div class="section__header-container game__header-container" onclick="ui.showGameDetails(${this.gameID});event.stopPropagation();">
+            <!--<div class="game-header__background-container">
+                <img class="game-header__background-img" src="https://media.retroachievements.org${this.gameData.ImageTitle}" alt="">
+                <div class="game-header__background-gradient"></div>
+                
 
-                </div>
-                <div class="game-header__main-info">
-                    <div class="game-header__icon-container">
-                        <img class="game-header__icon" src="https://media.retroachievements.org${this.gameData.ImageIcon}" alt="">
-                        <span class="game-header__retro-ratio  achiv-rarity__${this.gameData.gameDifficulty}">${this.gameData.retroRatio}
-                        </span>
-                        </div>
-                    <div class="game-header__description-container">
-                        <h1 class="game-header__title">
-                          ${this.gameData.Title}                         
-                        </h1>
-                          
-                        <div class="game-header__platform">${this.gameData.ConsoleName}</div>
-                        ${completionProgress > 0 ? `
-                          <div class="game-header__progress-container" style='--progress: ${completionProgress}%;'>
-                              <div class="game-header__progress">Progress: ${completionProgress}% </div>
-                          </div> 
-                          ` : ''}  
+            </div>-->
+            <div class="game-header__main-info">
+                <div class="game-header__icon-container">
+                    <img class="game-header__icon" src="https://media.retroachievements.org${this.gameData.ImageIcon}" alt="">
+                    <span class="game-header__retro-ratio  achiv-rarity__${this.gameData.gameDifficulty}">${this.gameData.retroRatio}
+                    </span>
                     </div>
-                </div>
-                <div class="game-points__container">
-                    <div class="user-info__points-group">
-                        <h3 class="game-points__points-name">cheevos</h3>
-                        <p class="user-info__points">${earnedData.count > 0 ? (earnedData.count + '/') : ""}${this.gameData.NumAchievements}</p>
-                    </div>
-                    <div class="vertical-line"></div>
-
-                    <div class="user-info__points-group">
-                        <h3 class="game-points__points-name">points</h3>
-                        <p class="user-info__points">${earnedData.count > 0 ? (earnedData.points + '/') : ""}${this.gameData.points_total}</p>
-                    </div>
-                    <div class="vertical-line"></div>
-                    <div class="user-info__points-group">
-                        <h3 class="game-points__points-name">retropoints</h3>
-                        <p class="user-info__points">${earnedData.count > 0 ? (earnedData.retropoints + '/') : ""}${this.gameData.TotalRetropoints}</p>
-                    </div>
+                <div class="game-header__description-container">
+                    <h1 class="game-header__title">
+                      ${this.gameData.Title}                         
+                    </h1>
+                      
+                    <div class="game-header__platform">${this.gameData.ConsoleName}</div>
+                    ${completionProgress > 0 ? `
+                      <div class="game-header__progress-container" style='--progress: ${completionProgress}%;'>
+                          <div class="game-header__progress">Progress: ${completionProgress}% </div>
+                      </div> 
+                      ` : ''}  
                 </div>
             </div>
+            <div class="game-points__container">
+                <div class="user-info__points-group">
+                    <h3 class="game-points__points-name">cheevos</h3>
+                    <p class="user-info__points">${earnedData.count > 0 ? (earnedData.count + '/') : ""}${this.gameData.NumAchievements}</p>
+                </div>
+                <div class="vertical-line"></div>
+
+                <div class="user-info__points-group">
+                    <h3 class="game-points__points-name">points</h3>
+                    <p class="user-info__points">${earnedData.count > 0 ? (earnedData.points + '/') : ""}${this.gameData.points_total}</p>
+                </div>
+                <div class="vertical-line"></div>
+                <div class="user-info__points-group">
+                    <h3 class="game-points__points-name">retropoints</h3>
+                    <p class="user-info__points">${earnedData.count > 0 ? (earnedData.retropoints + '/') : ""}${this.gameData.TotalRetropoints}</p>
+                </div>
+            </div>
+
+      </div>
     `;
   }
   update(gameID = this.gameID) {
@@ -1042,9 +1240,11 @@ class Game {
 
     if (GAMES_DATA[gameID]) {
       this.gameData = GAMES_DATA[this.gameID];
+      this.achievements = Object.values(GAMES_DATA[this.gameID].Achievements);
       const section = this.getSectionElement();
       ui.content.innerHTML = "";
       ui.content.append(section);
+      this.updateCheevos();
       ui.removeLoader();
     }
     else {
@@ -1129,8 +1329,6 @@ class Library {
     return config.ui?.mobile?.librarySortType ?? "title";
   }
   set sortType(value) {
-    !config.ui.mobile && (config.ui.mobile = {});
-
     config.ui.mobile.librarySortType = value;
     config.writeConfiguration();
 
@@ -1140,9 +1338,7 @@ class Library {
     return config.ui?.mobile?.librarysortTypeReverse ?? 1;
   }
   set sortTypeReverse(value) {
-    !config.ui.mobile && (config.ui.mobile = {});
-
-    config.ui.mobile.librarysortTypeReverse = value ? -1 : 1;
+    config.ui.mobile.library.sortTypeReverse = value ? -1 : 1;
     config.writeConfiguration();
 
     this.updateGames();
@@ -1157,9 +1353,9 @@ class Library {
     return code;
   }
   set platformFilter(value) {
-    !config.ui.mobile && (config.ui.mobile = {});
 
-    config.ui.mobile.libraryPlatformFilter = value;
+
+    config.ui.mobile.library.PlatformFilter = value;
     config.writeConfiguration();
 
     this.updateGames();
@@ -1194,6 +1390,7 @@ class Library {
 
   }
   constructor() {
+    !config.ui.mobile.library && (config.ui.mobile.library = {});
     this.update();
   }
 
@@ -1597,12 +1794,12 @@ const sortMethods = {
 };
 const sortBy = {
   date: (a, b) => {
-    // Перевіряємо, чи існують дати та обираємо найновішу
-    const dateA = a.DateEarnedHardcore
-      ? new Date(a.DateEarnedHardcore)
+
+    const dateA = a.DateEarned
+      ? new Date(a.DateEarnedHardcore ? a.DateEarnedHardcore : a.DateEarned)
       : -Infinity;
-    const dateB = b.DateEarnedHardcore
-      ? new Date(b.DateEarnedHardcore)
+    const dateB = b.DateEarned
+      ? new Date(b.DateEarnedHardcore ? b.DateEarnedHardcore : b.DateEarned)
       : -Infinity;
     return dateB - dateA; // Повертає різницю дат
   },
@@ -1613,7 +1810,12 @@ const sortBy = {
 
   truepoints: (a, b) => a.TrueRatio - b.TrueRatio,
 
-  default: (a, b) => a.DisplayOrder - b.DisplayOrder,
+  default: (a, b) => {
+    if (a.DisplayOrder === 0) {
+      return sortBy.id(a, b);
+    }
+    return a.DisplayOrder - b.DisplayOrder;
+  },
 
   id: (a, b) => a.ID - b.ID,
 
@@ -1652,7 +1854,13 @@ const sortBy = {
     return awardA - awardB != 0 ? awardA - awardB : awardADate - awardBDate;
   }
 }
-
+const filterBy = {
+  earned: (achievement) => !!achievement.DateEarnedHardcore,
+  notEarned: (achievement) => !achievement.DateEarnedHardcore,
+  missable: (achievement) => achievement.type === "missable",
+  progression: (achievement) => achievement.type === "progression" || achievement.type === "win_condition",
+  all: () => true,
+};
 const RAPlatforms = {
   "1": "Genesis/Mega Drive",
   "2": "Nintendo 64",

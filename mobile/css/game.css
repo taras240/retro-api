@@ -1,6 +1,6 @@
 .game__header-container {
     position: relative;
-    padding-bottom: 1rem;
+    padding-bottom: 0.5rem;
 }
 
 .game-header__background-container {
@@ -89,7 +89,7 @@
     font-size: 1.2rem;
     color: var(--main-color);
     font-weight: 600;
-    padding: 0.5rem 0.5rem;
+    padding: 0.2rem 0.5rem;
     background-color: var(--accent-color);
     z-index: 1;
     overflow: hidden;
@@ -125,7 +125,7 @@
 }
 
 .game-header__platform {
-    font-size: 1.1rem;
+    font-size: 1.0rem;
     text-wrap: nowrap;
     overflow-x: scroll;
     margin: auto 0;
@@ -146,13 +146,17 @@
 .game-achivs__container {
     display: flex;
     flex-direction: column;
-    padding: 1rem;
+    padding: 0 1rem;
     gap: 0.75rem;
     padding-bottom: 7rem;
     overflow: scroll;
 }
 
-
+.game-achivs__container.grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
 
 .achiv__achiv-container {
     display: flex;
@@ -162,6 +166,13 @@
     border-radius: 0.5rem;
     padding: 0.5rem;
     width: 100%;
+}
+
+.grid .achiv__achiv-container {
+    height: 7rem;
+    width: 7rem;
+    overflow: hidden;
+    padding: 0;
 }
 
 .achiv__title-container {
@@ -180,7 +191,15 @@
     padding: 0.5rem;
     height: 100%;
     aspect-ratio: 1;
+    border: 0.5rem;
 }
+
+.grid .achiv__preview-container {
+    padding: 0;
+
+}
+
+
 
 .achiv__achiv-description {
     display: flex;

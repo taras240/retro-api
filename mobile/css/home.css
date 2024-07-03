@@ -21,14 +21,17 @@
 }
 
 .user-info__avatar-container {
+    position: relative;
     height: 7rem;
     aspect-ratio: 1;
+    border-radius: 0.5rem;
+    overflow: hidden;
 }
 
 .user-info__avatar {
     height: 100%;
     aspect-ratio: 1;
-    border-radius: 15%;
+
     border: 1px solid var(--secondary-color);
 }
 
@@ -400,13 +403,17 @@
 .user-info__achiv-preview {
     height: 100%;
     aspect-ratio: 1;
-    border-radius: 15%;
+    border-radius: 0.5rem;
     image-rendering: pixelated;
     filter: grayscale(1);
 }
 
 .user-info__achiv-preview.earned {
     filter: grayscale(0.2);
+}
+
+.grid .hardcore .user-info__achiv-preview {
+    border: 2px solid goldenrod;
 }
 
 
