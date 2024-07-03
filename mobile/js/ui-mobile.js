@@ -335,9 +335,11 @@ class UI {
       achivsContainer.appendChild(achivsList);
       targetGameElement.appendChild(achivsContainer);
       if (GAMES_DATA[gameID]) {
-        Object.values(GAMES_DATA[gameID].Achievements).forEach(achiv => {
-          achivsList.innerHTML += this.achivHtml(achiv, gameID);
-        });
+        Object.values(GAMES_DATA[gameID].Achievements)
+          .sort((a, b) => sortBy.date(a, b))
+          .forEach(achiv => {
+            achivsList.innerHTML += this.achivHtml(achiv, gameID);
+          });
         this.removeLoader();
       }
       else {
@@ -345,9 +347,11 @@ class UI {
           .getGameProgress({ gameID: gameID })
           .then(gameObj => {
             GAMES_DATA[gameID] = gameObj;
-            Object.values(gameObj.Achievements).forEach(achiv => {
-              achivsList.innerHTML += this.achivHtml(achiv, gameID);
-            })
+            Object.values(gameObj.Achievements)
+              .sort((a, b) => sortBy.date(a, b))
+              .forEach(achiv => {
+                achivsList.innerHTML += this.achivHtml(achiv, gameID);
+              })
           }).then(() => this.removeLoader())
       }
     }
@@ -1326,16 +1330,16 @@ class Library {
     }
   }
   get sortType() {
-    return config.ui?.mobile?.librarySortType ?? "title";
+    return config.ui?.mobile?.library?.sortType ?? "title";
   }
   set sortType(value) {
-    config.ui.mobile.librarySortType = value;
+    config.ui.mobile.library.sortType = value;
     config.writeConfiguration();
 
     this.updateGames();
   }
   get sortTypeReverse() {
-    return config.ui?.mobile?.librarysortTypeReverse ?? 1;
+    return config.ui?.mobile?.library?.sortTypeReverse ?? 1;
   }
   set sortTypeReverse(value) {
     config.ui.mobile.library.sortTypeReverse = value ? -1 : 1;
@@ -1344,18 +1348,16 @@ class Library {
     this.updateGames();
   }
   get platformFilter() {
-    const code = config.ui?.mobile?.libraryPlatformFilter ?? "all";
+    const code = config.ui?.mobile?.library?.platformFilter ?? "all";
 
     return code == "all" ? "all" : RAPlatforms[code]
   }
   get platformFilterCode() {
-    const code = config.ui?.mobile?.libraryPlatformFilter ?? "all";
+    const code = config.ui?.mobile?.library?.platformFilter ?? "all";
     return code;
   }
   set platformFilter(value) {
-
-
-    config.ui.mobile.library.PlatformFilter = value;
+    config.ui.mobile.library.platformFilter = value;
     config.writeConfiguration();
 
     this.updateGames();
