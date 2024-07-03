@@ -365,11 +365,43 @@ class UI {
     }
     targetGameElement.querySelector(".user-info__game-achivs-container") ?? (getRecentGame(gameID))
   }
-  achivHtml(achiv, gameID) {
+  achivHtmlList(achiv, gameID) {
     return `    
             <li class="user-info__achiv-container"  onclick="ui.showAchivDetails(${achiv.ID},${gameID}); event.stopPropagation();">                
                 <div class="user-info__achiv-preview-container">
                     <img class="user-info__achiv-preview ${(achiv.isHardcoreEarned || ui.isSoftmode && achiv.isEarned) && "earned"}" src="${achiv.prevSrc}" alt="">
+                </div>
+                <div class="user-info__achiv-description">
+                    <h2 class="user-info__game-title">${achiv.Title}</h2>
+                    <div class="user-info_game-stats-container">
+                        
+                        <div class="game-stats ">
+                        <i class="game-stats__icon game-stats__points-icon"></i>
+                        <div class="game-stats__text">${achiv.Points}</div>
+                        </div>
+                        <div class="game-stats game-stats__points">
+                        <i class="game-stats__icon game-stats__retropoints-icon"></i>
+                        <div class="game-stats__text">${achiv.TrueRatio}</div>
+                        </div>    
+                        <div class="game-stats game-stats__points">
+                        <i class="game-stats__icon game-stats__trending-icon"></i>
+                        <div class="game-stats__text">${achiv.rateEarnedHardcore}</div>
+                        </div>   
+                        <div class="game-stats__difficult-container">
+                          <div class="game-stats__text achiv-rarity achiv-rarity__${achiv.difficulty}"> </div>
+                        </div>
+                  
+                    </div>
+                </div>             
+            </li>
+        `;
+  }
+  achivHtml(achiv, gameID) {
+    return `    
+            <li class="user-info__achiv-container ${achiv.isHardcoreEarned ? "hardcore" : ""}"  onclick="ui.showAchivDetails(${achiv.ID},${gameID}); event.stopPropagation();">                
+                <div class="user-info__achiv-preview-container">
+                    <img class="user-info__achiv-preview ${(achiv.isHardcoreEarned || ui.isSoftmode && achiv.isEarned) && "earned"}" src="${achiv.prevSrc}" alt="">
+                <div class="game-stats__text achiv-rarity achiv-rarity__${achiv.difficulty} achiv-rarity__circle"> </div>
                 </div>
                 <div class="user-info__achiv-description">
                     <h2 class="user-info__game-title">${achiv.Title}</h2>
@@ -483,7 +515,7 @@ class Home {
         <div class="user-info__header">
             <div class="user-info__avatar-container">
                 <img src="${USER_INFO.userImageSrc}" alt="" class="user-info__avatar" onclick="ui.goto.login()">
-                <span class="game-header__retro-ratio  achiv-rarity__standard">${retroRatio}</span>
+                ${retroRatio ? `<span class="game-header__retro-ratio  achiv-rarity__standard">${retroRatio}</span>` : ""}
             </div>
             <button class="button__switch-mode ${ui.isSoftmode ? "softmode" : ""}" onclick="ui.switchGameMode()">${ui.isSoftmode ? "SOFT" : "HARD"}</button>
             <div class="user-info__user-name-container">

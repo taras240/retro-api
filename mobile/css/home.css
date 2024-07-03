@@ -287,11 +287,24 @@
 
 .achiv-rarity {
     padding: 0 0.5rem;
-    border-radius: 5pt;
+    border-radius: 0.5rem;
     color: black;
     text-transform: uppercase;
     font-weight: 600;
 
+}
+
+.achiv-rarity__circle {
+    border-radius: 50%;
+    width: 0.75rem;
+    height: 0.75rem;
+    padding: 0;
+    /* padding: 0.25rem; */
+    min-width: 0;
+    min-height: 0;
+    position: absolute;
+    bottom: 0.5rem;
+    right: 0.5rem;
 }
 
 .achiv-rarity__hell {
@@ -352,16 +365,17 @@
     }
 
     to {
-        min-height: 60vh;
+        min-height: 10rem;
         max-height: 60vh;
     }
 }
 
 .user-info__game-achivs-list {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     align-items: start;
-    justify-content: end;
+    justify-content: space-evenly;
     gap: 0.5rem;
     overflow-y: hidden;
     height: 100%;
@@ -377,14 +391,22 @@
     gap: 1rem;
     padding: 0.75rem;
     background-color: var(--main-color);
-    border-radius: 1rem;
-    width: 100%;
-    height: 6rem;
+    border-radius: 0.5rem;
+    aspect-ratio: 1;
+    padding: 0;
     overflow: hidden;
+
+    width: 100%;
+    height: auto;
+    width: 5rem;
 }
 
 .user-info__achiv-container.secondary-color {
     background-color: var(--secondary-color) !important;
+}
+
+.user-info__achiv-container.hardcore {
+    border: 2px solid goldenrod;
 }
 
 .user-info__achiv-description {
@@ -397,6 +419,7 @@
 }
 
 .user-info__achiv-preview-container {
+    position: relative;
     height: 100%;
 }
 
