@@ -311,7 +311,7 @@ export class UI {
     if (this.target.AUTOCLEAR) {
       this.target.clearEarned();
     }
-    this.settings.DISCORD_NEW_GAME && this.sendDiscordMessage({ type: "new-game" });
+    (this.settings.DISCORD_START_SESSION || this.settings.DISCORD_NEW_GAME) && this.sendDiscordMessage({ type: "new-game" });
     // Встановлення інтервалу для оновлення досягнень та зміни стану кнопки
     this.apiTrackerInterval = setInterval(() => {
       this.checkUpdates();
@@ -3334,7 +3334,13 @@ class Settings {
             onChange: "ui.settings.DISCORD_NEW_GAME = this.checked;",
             checked: this.DISCORD_NEW_GAME,
           },
-          ,
+          {
+            type: "checkbox",
+            label: "Start session alert",
+            id: "settings_discord-start-session",
+            onChange: "ui.settings.DISCORD_START_SESSION = this.checked;",
+            checked: this.DISCORD_START_SESSION,
+          },
           {
             type: "checkbox",
             label: "Earn cheevo alert",
@@ -3366,6 +3372,13 @@ class Settings {
   }
   set DISCORD_NEW_CHEEVO(value) {
     config._cfg.discordNewCheevo = value;
+    config.writeConfiguration();
+  }
+  get DISCORD_START_SESSION() {
+    return config._cfg?.discordStartSession ?? true;
+  }
+  set DISCORD_START_SESSION(value) {
+    config._cfg.discordStartSession = value;
     config.writeConfiguration();
   }
   get VISIBLE() {
