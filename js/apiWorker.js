@@ -419,6 +419,7 @@ export class APIWorker {
       rateEarned: ~~(100 * NumAwarded / NumDistinctPlayers) + "%",
       rateEarnedHardcore: ~~(100 * NumAwardedHardcore / NumDistinctPlayers) + "%",
       trend: trend,
+      level: this.getCheevoLevel(achievement),
       difficulty:
         trend < 1.5 && TrueRatio > 300 || TrueRatio >= 500 ? "hell" :
           trend <= 3 && TrueRatio > 100 || TrueRatio >= 300 ? "insane" :
@@ -464,6 +465,21 @@ export class APIWorker {
     return date.toLocaleDateString("uk-UA", options);
 
   }
+  getCheevoLevel(cheevo) {
+    const levelNames = ['level', 'levels', 'stage', 'area', 'world', 'mission'];
+    const levelNamesString = levelNames.join("|");
+    const regexWord = new RegExp(`(${levelNamesString})\\s*(\\d+)`, 'gi');
+
+    const res = cheevo.Description.matchAll(regexWord);
+    const matches = Array.from(res);
+
+    if (matches.length > 0) {
+      const level = parseInt(matches[0][2]);
+      return Number.isInteger(level) ? level : Infinity;
+    }
+    return Infinity;
+  }
+
 
 
   async rawgSearchGame({ gameTitle, platformID }) {

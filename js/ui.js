@@ -60,12 +60,12 @@ export class UI {
             ? this.statusPanel.watchButton.click()
             : this.getAchievements();
 
-          setTimeout(() => {
-            apiWorker.getUserSummary({}).then(resp => {
-              this.userInfo.update({ userSummary: resp });
-              this.stats.initialSetStats({ userSummary: resp });
-            })
-          }, 3000);
+          // setTimeout(() => {
+          //   apiWorker.getUserSummary({}).then(resp => {
+          //     this.userInfo.update({ userSummary: resp });
+          //     this.stats.initialSetStats({ userSummary: resp });
+          //   })
+          // }, 3000);
         }
         else {
           const section = this.loginCard.section;
@@ -877,7 +877,8 @@ export class UI {
       const awardBDate = new Date(b.MostRecentAwardedDate);
 
       return awardA - awardB != 0 ? awardA - awardB : awardADate - awardBDate;
-    }
+    },
+    level: (a, b) => a.level - b.level,
   }
 
   static filterBy = {
@@ -907,6 +908,7 @@ export class UI {
     award: "award",
     rating: "rating",
     date: "date",
+    level: 'level',
   };
 }
 
@@ -1040,6 +1042,14 @@ class AchievementsBlock {
             label: "Default",
             checked: this.SORT_NAME === UI.sortMethods.default,
             event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = 'default';"`,
+          },
+          {
+            type: "radio",
+            name: "context-sort",
+            id: "context-sort_level",
+            label: "Level(if possible)",
+            checked: this.SORT_NAME === UI.sortMethods.level,
+            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = 'level';"`,
           },
           {
             type: "radio",
@@ -1447,6 +1457,8 @@ class AchievementsBlock {
       achievement.TrueRatio > 300 && (achivElement.dataset.rarity = "mythycal");
       achivElement.dataset.DisplayOrder = achievement.DisplayOrder;
       achivElement.dataset.type = achievement.type;
+      achivElement.dataset.level = achievement.level;
+
       achivElement.dataset.NumAwardedHardcore = achievement.NumAwardedHardcore;
       achievement.DateEarnedHardcore && (achivElement.dataset.DateEarnedHardcore = achievement.DateEarnedHardcore);
 
@@ -4388,6 +4400,13 @@ class Target {
             label: "Default",
             checked: this.SORT_NAME === UI.sortMethods.default,
             event: `onchange="ui.target.SORT_NAME = 'default';"`,
+          }, {
+            type: "radio",
+            name: "context-sort",
+            id: "context-sort_level",
+            label: "Level (if possible)",
+            checked: this.SORT_NAME === UI.sortMethods.level,
+            event: `onchange="ui.target.SORT_NAME = 'level';"`,
           },
           {
             type: "radio",
@@ -4843,6 +4862,7 @@ class Target {
       achievement.DateEarnedHardcore && (targetElement.dataset.DateEarnedHardcore = achievement.DateEarnedHardcore);
       targetElement.dataset.NumAwardedHardcore = achievement.NumAwardedHardcore;
       targetElement.dataset.achivId = id;
+      targetElement.dataset.level = achievement.level;
     }
     const setElementHtml = () => {
       targetElement.innerHTML = `
