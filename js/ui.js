@@ -183,7 +183,7 @@ export class UI {
         ui.stats.updateStats({ currentUserSummary: userSummary });
         ui.userInfo.update({ userSummary: userSummary });
 
-      }, 6000)
+      }, 12000)
     }
 
 

@@ -352,7 +352,7 @@ export class APIWorker {
             achiv.DateAwarded = this.toLocalTimeString(achiv.DateAwarded);
             return achiv;
           });
-        summary.isInGame = (new Date() - new Date(summary.RecentlyPlayed[0].LastPlayed)) < 5 * 60 * 1000;
+        summary.RecentlyPlayed.length && (summary.isInGame = (new Date() - new Date(summary.RecentlyPlayed[0].LastPlayed)) < 5 * 60 * 1000);
 
         return summary;
       })
