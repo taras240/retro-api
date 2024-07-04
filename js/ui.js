@@ -60,12 +60,12 @@ export class UI {
             ? this.statusPanel.watchButton.click()
             : this.getAchievements();
 
-          // setTimeout(() => {
-          //   apiWorker.getUserSummary({}).then(resp => {
-          //     this.userInfo.update({ userSummary: resp });
-          //     this.stats.initialSetStats({ userSummary: resp });
-          //   })
-          // }, 3000);
+          setTimeout(() => {
+            apiWorker.getUserSummary({}).then(resp => {
+              this.userInfo.update({ userSummary: resp });
+              this.stats.initialSetStats({ userSummary: resp });
+            })
+          }, 3000);
         }
         else {
           const section = this.loginCard.section;
