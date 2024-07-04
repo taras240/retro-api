@@ -466,18 +466,71 @@ export class APIWorker {
 
   }
   getCheevoLevel(cheevo) {
-    const levelNames = ['level', 'levels', 'stage', 'area', 'world', 'mission'];
+    let levelNumber;
+    const levelNames = [
+      'level',
+      'levels',
+      'stage',
+      'area',
+      'world',
+      'mission',
+      'chapter',
+      'section',
+      'part',
+      'zone',
+      'phase',
+      'realm',
+      'domain',
+      'episode',
+      'act',
+      'sequence',
+      'tier',
+      'floor',
+      'dimension',
+      'region',
+      'floor',
+      'scene',
+    ];
     const levelNamesString = levelNames.join("|");
-    const regexWord = new RegExp(`(${levelNamesString})\\s*(\\d+)`, 'gi');
+    const replaceWrittenNumbers = (description) => {
+      const numberMapping = {
+        'first': 1, 'second': 2, 'third': 3, 'fourth': 4, 'fifth': 5,
+        'sixth': 6, 'seventh': 7, 'eighth': 8, 'ninth': 9, 'tenth': 10,
+        '1st': 1, '2nd': 2, '3rd': 3, '4th': 4, '5th': 5,
+        '6th': 6, '7th': 7, '8th': 8, '9th': 9, '10th': 10
+      };
 
-    const res = cheevo.Description.matchAll(regexWord);
-    const matches = Array.from(res);
+      const regex = new RegExp(Object.keys(numberMapping).join("|"), 'gi');
 
-    if (matches.length > 0) {
-      const level = parseInt(matches[0][2]);
-      return Number.isInteger(level) ? level : Infinity;
+      return description.replace(regex, match => {
+        return numberMapping[match.toLowerCase()];
+      });
     }
-    return Infinity;
+
+    const checkLevel = (description, levelNames) => {
+      const regexWordSecond = new RegExp(`(${levelNamesString})\\s((\\d+-\\d+)|(\\d+))`, 'gi');
+      const regexWordFirst = new RegExp(`\\s*((\\d+-\\d+)|(\\d+))\\s(${levelNamesString})`, 'gi');
+
+      const matchesSecond = description.matchAll(regexWordSecond);
+      for (const match of matchesSecond) {
+        const level = Number(match[2].replace('-', '.'));
+        return level;
+      }
+
+      const matchesFirst = description.matchAll(regexWordFirst);
+      for (const match of matchesFirst) {
+        const level = Number(match[1].replace('-', '.'));
+        return level;
+      }
+
+      return null;
+    };
+
+    const description = replaceWrittenNumbers(cheevo.Description);
+
+    levelNumber = checkLevel(description);
+
+    return Number.isFinite(levelNumber) ? levelNumber : +cheevo.DisplayOrder > 0 ? cheevo.DisplayOrder * 100 : cheevo.ID;
   }
 
 

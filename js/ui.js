@@ -878,7 +878,9 @@ export class UI {
 
       return awardA - awardB != 0 ? awardA - awardB : awardADate - awardBDate;
     },
-    level: (a, b) => a.level - b.level,
+    level: (a, b) => {
+      return a.level - b.level
+    },
   }
 
   static filterBy = {
