@@ -171,11 +171,21 @@ export class UI {
     //Update status widget
     this.statusPanel.updateProgress({ earnedAchievementIDs: earnedAchievementsIDs });
 
-    //Update UserInfo widget
-    ui.userInfo.VISIBLE && setTimeout(() => ui.userInfo.update(), 2000);
+    //Update 
+    // ui.userInfo.VISIBLE && setTimeout(() => ui.userInfo.update(), 2000);
 
-    //Update Stats widget
-    ui.stats.updateStats();
+
+    // ui.stats.updateStats();
+    //Update Stats widget & UserInfo widget
+    if (this.userInfo.VISIBLE || this.stats.VISIBLE) {
+      setTimeout(async () => {
+        const userSummary = await apiWorker.getUserSummary({ gamesCount: 3, achievesCount: 5 });
+        ui.stats.updateStats({ currentUserSummary: userSummary });
+        ui.userInfo.update({ userSummary: userSummary });
+
+      }, 6000)
+    }
+
 
     if (this.settings.DISCORD_NEW_CHEEVO) {
       earnedAchievementsIDs.forEach(id => this.sendDiscordMessage({ type: "earned-cheevo", id: id }));
@@ -6670,9 +6680,10 @@ class Stats {
     if (completionProgress) {
     }
   }
-  async updateStats() {
-    await delay(1000);
-    const userData = await apiWorker.getUserSummary({});
+  async updateStats({ currentUserSummary }) {
+    if (!currentUserSummary) {
+      currentUserSummary = await apiWorker.getUserSummary({ gamesCount: "0", achievesCount: 0 });
+    };
 
     const setValue = (element, property) => {
 
@@ -6682,22 +6693,22 @@ class Stats {
       let oldValue = 0;
       switch (property) {
         case "rankRate":
-          value = (100 * userData.Rank / userData.TotalRanked).toFixed(2);
+          value = (100 * currentUserSummary.Rank / currentUserSummary.TotalRanked).toFixed(2);
           oldValue = (100 * this.userSummary.Rank / this.userSummary.TotalRanked).toFixed(2);
           delta = +(value - oldValue).toFixed(2);
           sessionDelta = +(value - this.initialData.rankRate).toFixed(2)
           value += "%";
           break;
         case "trueRatio":
-          value = (userData.TotalTruePoints / userData.TotalPoints).toFixed(2);
+          value = (currentUserSummary.TotalTruePoints / currentUserSummary.TotalPoints).toFixed(2);
           oldValue = (this.userSummary.TotalTruePoints / this.userSummary.TotalPoints).toFixed(2);
           delta = +(value - oldValue).toFixed(2);
           sessionDelta = +(value - this.initialData.trueRatio).toFixed(2)
           break;
         default:
-          delta = userData[property] - this.userSummary[property];
-          sessionDelta = userData[property] - this.initialData[property];
-          value = userData[property];
+          delta = currentUserSummary[property] - this.userSummary[property];
+          sessionDelta = currentUserSummary[property] - this.initialData[property];
+          value = currentUserSummary[property];
       }
       if (delta === 0) return;
       const isNegativeDelta = delta < 0;
@@ -6721,7 +6732,7 @@ class Stats {
     setValue(this.retropointsElement, "TotalTruePoints");
     setValue(this.trueRatioElement, "trueRatio");
 
-    this.userSummary = userData;
+    this.userSummary = currentUserSummary;
   }
 }
 
