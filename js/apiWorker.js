@@ -466,71 +466,39 @@ export class APIWorker {
 
   }
   getCheevoLevel(cheevo) {
-    let levelNumber;
     const levelNames = [
-      'level',
-      'levels',
-      'stage',
-      'area',
-      'world',
-      'mission',
-      'chapter',
-      'section',
-      'part',
-      'zone',
-      'phase',
-      'realm',
-      'domain',
-      'episode',
-      'act',
-      'sequence',
-      'tier',
-      'floor',
-      'dimension',
-      'region',
-      'floor',
-      'scene',
+      'level', 'levels', 'stage', 'area', 'world', 'mission', 'chapter', 'section', 'part',
+      'zone', 'phase', 'realm', 'domain', 'episode', 'act', 'sequence', 'tier', 'floor',
+      'dimension', 'region', 'scene', 'screen'
     ];
-    const levelNamesString = levelNames.join("|");
-    const replaceWrittenNumbers = (description) => {
-      const numberMapping = {
-        'first': 1, 'second': 2, 'third': 3, 'fourth': 4, 'fifth': 5,
-        'sixth': 6, 'seventh': 7, 'eighth': 8, 'ninth': 9, 'tenth': 10,
-        '1st': 1, '2nd': 2, '3rd': 3, '4th': 4, '5th': 5,
-        '6th': 6, '7th': 7, '8th': 8, '9th': 9, '10th': 10
-      };
 
-      const regex = new RegExp(Object.keys(numberMapping).join("|"), 'gi');
-
-      return description.replace(regex, match => {
-        return numberMapping[match.toLowerCase()];
-      });
-    }
-
-    const checkLevel = (description, levelNames) => {
-      const regexWordSecond = new RegExp(`(${levelNamesString})\\s((\\d+-\\d+)|(\\d+))`, 'gi');
-      const regexWordFirst = new RegExp(`\\s*((\\d+-\\d+)|(\\d+))\\s(${levelNamesString})`, 'gi');
-
-      const matchesSecond = description.matchAll(regexWordSecond);
-      for (const match of matchesSecond) {
-        const level = Number(match[2]?.replace('-', '.'));
-        return level;
-      }
-
-      const matchesFirst = description.matchAll(regexWordFirst);
-      for (const match of matchesFirst) {
-        const level = Number(match[1]?.replace('-', '.'));
-        return level;
-      }
-
-      return null;
+    const numberMapping = {
+      'one': '1', 'first': '1', 'two': '2', 'second': '2', 'three': '3', 'third': '3', 'fourth': '4', 'fifth': '5',
+      'sixth': '6', 'seventh': '7', 'eighth': '8', 'ninth': '9', 'tenth': '10',
     };
 
+    function replaceWrittenNumbers(description) {
+      description = description.replaceAll(/(\d)(st|nd|rd|th)/gi, (_, p1) => p1);
+      const regex = new RegExp(Object.keys(numberMapping).join("|"), 'gi');
+      return description.replace(regex, match => numberMapping[match.toLowerCase()]);
+    }
+
+    function checkLevel(description) {
+      const levelNamesString = levelNames.join("|");
+      const regex = new RegExp(`(?:${levelNamesString})\\s*((\\d+-\\d+)|(\\d+))|((\\d+-\\d+)|(\\d+))\\s*(?:${levelNamesString})`, 'gi');
+      const match = regex.exec(description);
+      if (match) {
+        const levelString = match[1] || match[4];
+        return Number(levelString.replace('-', '.'));
+      }
+      return null;
+    }
+
     const description = replaceWrittenNumbers(cheevo.Description);
+    const levelNumber = checkLevel(description);
 
-    levelNumber = checkLevel(description);
-
-    return Number.isFinite(levelNumber) ? levelNumber : +cheevo.DisplayOrder > 0 ? cheevo.DisplayOrder * 100 : cheevo.ID;
+    return Number.isFinite(levelNumber) ? levelNumber :
+      (+cheevo.DisplayOrder > 0 ? cheevo.DisplayOrder * 100 : cheevo.ID);
   }
 
 
