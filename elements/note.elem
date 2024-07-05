@@ -14,7 +14,7 @@
             </svg>
         </button>
     </div>
-    <div class="note-container">
+    <div class="note-container content-container">
         <textarea placeholder="Your notes will be here" name="note_textaria" class="note-textaria" id="note_textarea"
             cols="auto" rows="auto"></textarea>
     </div>

@@ -20,7 +20,7 @@
             </svg>
         </button>
     </div>
-    <ul class="stats-container">
+    <ul class="stats-container content-container">
         <li class="stats__stat-container">
             <h2 class="stats__title">Percentile</h2>
             <p id="stats_rank-rate" class="stats__value stats__rank-value"></p>

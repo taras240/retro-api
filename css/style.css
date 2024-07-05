@@ -208,6 +208,7 @@ a:hover {
 }
 
 .header-container {
+  position: relative;
   cursor: grab;
   display: flex;
   justify-content: space-between;
@@ -215,6 +216,31 @@ a:hover {
   padding: 0 10px;
   width: 100%;
   border-bottom: 0px solid var(--font-color);
+  background-color: var(--secondary-color);
+  border-radius: 5px 5px 0 0;
+  z-index: 1;
+}
+
+.header-container::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background-color: var(--secondary-color);
+
+  z-index: -1;
+}
+
+.content-container {
+  border-radius: 5px;
+  background-color: var(--main-color);
+  z-index: 1;
+}
+
+.hide-bg:not(:hover) .content-container {
+  background-color: transparent;
 }
 
 .achievements_section .header-container {

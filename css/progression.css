@@ -7,6 +7,10 @@
     /* background: transparent !important; */
 }
 
+.progression_section .header-container::after {
+    display: none;
+}
+
 .progression_container {
     --height: 400px;
     display: flex;

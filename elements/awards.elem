@@ -22,7 +22,7 @@
                 </svg>
             </button>
         </div>
-        <ul class="awards-content_container">
+        <ul class="awards-content_container content-container">
         </ul>
     </div>
     <div class="resizer" id="awards-resizer"></div>

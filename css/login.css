@@ -39,8 +39,13 @@
   height: 200px;
 }
 
-.header-container {
+.header-container.login-header_container {
   display: flex;
+  background-color: transparent;
+}
+
+.header-container.login-header_container::after {
+  display: none;
 }
 
 .login-header {

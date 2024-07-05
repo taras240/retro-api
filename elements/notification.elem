@@ -14,7 +14,7 @@
             </svg>
         </button>
     </div>
-    <ul class="notification-container">
+    <ul class="notification-container content-container">
 
     </ul>
     <div class="resizer" id="notification-resizer"></div>

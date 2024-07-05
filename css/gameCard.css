@@ -78,13 +78,14 @@
   object-position: center;
   user-select: none;
   image-rendering: auto;
+  border-radius: 5px;
 }
 
 .game-card-description {
-  background-color: var(--main-color);
+  /* background-color: var(--main-color);
   background: linear-gradient(to top left,
       var(--main-color),
-      var(--secondary-color));
+      var(--secondary-color)); */
 }
 
 .game-card-info {
@@ -92,7 +93,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
+  padding: 0.5rem 1rem;
   /* border-top: 1px solid rgba(255, 255, 255, 0.13); */
 }
 

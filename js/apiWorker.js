@@ -469,7 +469,7 @@ export class APIWorker {
     const levelNames = [
       'level', 'levels', 'stage', 'area', 'world', 'mission', 'chapter', 'section', 'part',
       'zone', 'phase', 'realm', 'domain', 'episode', 'act', 'sequence', 'tier', 'floor',
-      'dimension', 'region', 'scene', 'screen', 'complete'
+      'dimension', 'region', 'scene', 'screen', 'complete', 'round\\s'
     ];
 
     const numberMapping = {
@@ -507,8 +507,8 @@ export class APIWorker {
       const d = "\\d{1,2}(?!\\d|\\s*%)";
       const regex = new RegExp(`(?:${levelNamesString})\\s*((${d}-${d})|(${d}))|((${d}-${d})|(${d}))\\s*(?:${levelNamesString})`, 'gi');
       const match = regex.exec(description);
+
       if (match) {
-        console.log(match)
         const levelString = match[1] || match[4];
         return parseFloat(levelString.replace('-', '.'));
       }

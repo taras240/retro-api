@@ -28,7 +28,7 @@
             </svg>
         </button>
     </div>
-    <div class="games_container">
+    <div class="games_container content-container">
 
         <div class="games__filter-container">
             <div class="games__filter-header">

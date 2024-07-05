@@ -1,4 +1,5 @@
 import { loadSections } from "./htmlBuilder.js";
+
 import { config, ui, apiWorker, userAuthData } from "./script.js";
 
 export class UI {
@@ -1295,7 +1296,7 @@ class AchievementsBlock {
   set BG_VISIBILITY(value) {
     config.ui[this.SECTION_NAME].bgVisibility = value;
     config.writeConfiguration();
-    this.section.classList.toggle("bg-visible", this.BG_VISIBILITY);
+    this.section.classList.toggle("hide-bg", !this.BG_VISIBILITY);
   }
   get SHOW_HEADER() {
     return config?.ui[this.SECTION_NAME]?.showHeader ?? true;
@@ -1405,7 +1406,7 @@ class AchievementsBlock {
     });
   }
   setValues() {
-    this.section.classList.toggle("bg-visible", this.BG_VISIBILITY);
+    this.section.classList.toggle("hide-bg", !this.BG_VISIBILITY);
     this.section.classList.toggle("compact", !this.SHOW_HEADER);
     if (config.ui[this.SECTION_NAME]) {
       this.section.style.top = config.ui[this.SECTION_NAME].y ?? "0px";
@@ -1891,7 +1892,7 @@ class AchievementsBlock {
           </svg>
         </button>
       </div>
-      <ul class="achievements-container"></ul>
+      <ul class="achievements-container content-container"></ul>
       <div class="resizer" id="achivs-resizer${this.CLONE_NUMBER}"></div>
     `;
     return newWidget;
@@ -3769,11 +3770,11 @@ class Settings {
           </svg>
         </button>
       </div>
-      <div class="settings_container"></div>
+      <div class="settings_container "></div>
     `;
 
     const settingsContainerElement = document.createElement("ul");
-    settingsContainerElement.classList.add("settings_container");
+    settingsContainerElement.classList.add("settings_container", "content-container");
     const generateSettingInput = (settingItem) => {
       switch (settingItem.type) {
         case "button":
@@ -4898,35 +4899,35 @@ class Target {
         </svg>
       </button>
       <div class="prev">
-                <img
-                  class="prev-img"
-                  src="${achievement.prevSrc}"
-                  alt=" "
-                />
-              </div>
-              <div class="target-achiv-details">
-                <h3 class="achiv-name">
-                  <a target="_blanc" href="https://retroachievements.org/achievement/${id}">
-                  ${achievement.level < 1000 ? `<p class="game-card_suffix suffix-bold bg_gold"> ${achievement.level?.toString()?.replace(".", "-")} </p>` : ""}
-                    ${achievement.Title}
-                  </a>
-                </h3>
-                <p class="achiv-description">${achievement.Description}</p>
-                <div class="target-other-descriptions">       
-                <i class=" target_description-icon ${achievement.type ?? "none"}" title="achievement type"></i> 
-               
-                  <p class="target-description-text" title="points"><i class="target_description-icon  points-icon"></i>${achievement.Points}
-                  </p>
-                  
-                  <p class="target-description-text" title="retropoints"><i class="target_description-icon  retropoints-icon"></i>${achievement.TrueRatio}
-                  </p>
-                 
-                  <p class="target-description-text" title="earned by"><i class="target_description-icon  trending-icon"></i>${~~(
+          <img
+            class="prev-img"
+            src="${achievement.prevSrc}"
+            alt=" "
+          />
+        </div>
+        <div class="target-achiv-details">
+          <h3 class="achiv-name">
+            <a target="_blanc" href="https://retroachievements.org/achievement/${id}">
+            ${achievement.level < 1000 ? `<p class="game-card_suffix suffix-bold bg_gold"> LVL ${achievement.level?.toString()?.replace(".", "-")} </p>` : ""}
+              ${achievement.Title}
+            </a>
+          </h3>
+          <p class="achiv-description">${achievement.Description}</p>
+          <div class="target-other-descriptions">       
+          <i class=" target_description-icon ${achievement.type ?? "none"}" title="achievement type"></i> 
+          
+            <p class="target-description-text" title="points"><i class="target_description-icon  points-icon"></i>${achievement.Points}
+            </p>
+            
+            <p class="target-description-text" title="retropoints"><i class="target_description-icon  retropoints-icon"></i>${achievement.TrueRatio}
+            </p>
+            
+            <p class="target-description-text" title="earned by"><i class="target_description-icon  trending-icon"></i>${~~(
           (100 * achievement.NumAwardedHardcore) / achievement.totalPlayers)}%
-                  </p>
-                  <p class="difficult-badge difficult-badge__${achievement.difficulty}">${achievement.difficulty}</p>
-                </div>             
-              </div>
+            </p>
+            <p class="difficult-badge difficult-badge__${achievement.difficulty}">${achievement.difficulty}</p>
+          </div>             
+        </div>
       `;
     }
 
@@ -7202,3 +7203,4 @@ const ELPlatforms = {
   // "102": "Standalone"
 }
 const googleQuerySite = 'site:www.romhacking.net OR site:wowroms.com/en/roms OR site:cdromance.org OR site:coolrom.com.au/roms OR site:planetemu.net OR site:emulatorgames.net OR site:romsfun.com/roms OR site:emu-land.net/en';
+

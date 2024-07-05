@@ -22,7 +22,7 @@
     </button>
 
   </div>
-  <ul class="target-container"></ul>
+  <ul class="target-container content-container"></ul>
   <!-- <div class="target-empty-list">Target is empty</div> -->
   <div class="resizer" id="target-resizer"></div>
 </section>
