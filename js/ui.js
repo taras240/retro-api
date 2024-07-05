@@ -1524,6 +1524,7 @@ class AchievementsBlock {
       function generatePopup(achievement) {
         let popup = document.createElement("div");
         popup.classList.add("achiv-details-block", "popup");
+        const trueRatio = achievement.TrueRatio / achievement.Points;
         popup.innerHTML = `
           <h3 class="achievement__header">${achievement.Title} <p class="difficult-badge difficult-badge__${achievement.difficulty}">${achievement.difficulty}</p>
           </h3>
@@ -1531,6 +1532,10 @@ class AchievementsBlock {
           <div class="points">
             <p><i class="target_description-icon  points-icon"></i>${achievement.Points}</p>
             <p><i class="target_description-icon  retropoints-icon"></i>${achievement.TrueRatio} </p> 
+             <p class="target-description-text" title="true ratio">
+              <i class="target_description-icon  ${trueRatio > 13 ? "difficult-badge__hell" : ""}  rarity-icon"></i>
+              ${trueRatio.toFixed(2)}
+            </p>
             <i class="target_description-icon ${achievement.type ?? "none"}"></i>            
           </div>
           ${achievement.DateEarnedHardcore
@@ -4892,6 +4897,7 @@ class Target {
       targetElement.dataset.level = achievement.level;
     }
     const setElementHtml = () => {
+      const trueRatio = achievement.TrueRatio / achievement.Points;
       targetElement.innerHTML = `
       <button class="delete-from-target" title="remove from target" onclick="ui.target.deleteFromTarget(this)">
         <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
@@ -4924,6 +4930,10 @@ class Target {
             
             <p class="target-description-text" title="earned by"><i class="target_description-icon  trending-icon"></i>${~~(
           (100 * achievement.NumAwardedHardcore) / achievement.totalPlayers)}%
+            </p>
+             <p class="target-description-text" title="true ratio">
+              <i class="target_description-icon  ${trueRatio > 13 ? "difficult-badge__hell" : ""}  rarity-icon"></i>
+              ${trueRatio.toFixed(2)}
             </p>
             <p class="difficult-badge difficult-badge__${achievement.difficulty}">${achievement.difficulty}</p>
           </div>             

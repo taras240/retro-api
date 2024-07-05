@@ -313,6 +313,10 @@
   -webkit-mask-image: url(../assets/img/progression.svg);
 }
 
+.rarity-icon {
+  mask-image: url(../assets/img/diamond.svg);
+}
+
 .delete-from-target:hover {
   opacity: 1;
   transition: 0.2s;
