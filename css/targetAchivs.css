@@ -56,6 +56,11 @@
   transition: 0.1s;
 }
 
+.target-achiv.highlight {
+  border: 2px solid greenyellow;
+  /* box-shadow: 0 0 5px 2px var(--font-color); */
+}
+
 .target-achiv.border {
   padding: 15px 20px;
   gap: 15px;

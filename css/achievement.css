@@ -167,6 +167,22 @@
   z-index: 1;
 }
 
+.achiv-block.highlight::after {
+  content: "";
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  max-width: 25%;
+  max-height: 25%;
+
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background-color: greenyellow;
+  box-shadow: 0 0 5px 1px black;
+  z-index: 10;
+}
+
 .achiv-block.mario-dumb {
   animation: hardcore-earned-animation 0.25s forwards cubic-bezier(0, .52, .96, 1.7);
 }

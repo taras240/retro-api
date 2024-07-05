@@ -348,6 +348,16 @@ export class UI {
     }
 
     this.statusPanel.richPresence.innerText = responce.RichPresenceMsg;
+
+    const currentLevel = parseCurrentGameLevel(responce.RichPresenceMsg);
+
+    if (currentLevel) {
+      this.target.highlightCurrentLevel(currentLevel);
+      this.achievementsBlock.forEach(widget =>
+        widget.highlightCurrentLevel(currentLevel)
+      )
+    }
+
   }
 
   sendDiscordMessage = ({ message = "", type, id }) => {
@@ -1816,6 +1826,20 @@ class AchievementsBlock {
       isVisible = false;
     }
     return isVisible;
+  }
+  highlightCurrentLevel(currentLevel) {
+    [...this.container.querySelectorAll(".achiv-block")].forEach(cheevo => {
+      cheevo.classList.remove("highlight");
+
+      cheevo.dataset.level == currentLevel && cheevo.classList.add("highlight");
+
+      if (!Number.isInteger(currentLevel)) {
+        const mainLevel = parseInt(currentLevel);
+        cheevo.dataset.level == mainLevel && cheevo.classList.add("highlight");
+      }
+
+
+    })
   }
   applySorting() {
     UI.applySort({
@@ -5015,6 +5039,17 @@ class Target {
       reverse: this.REVERSE_SORT,
     });
   }
+  highlightCurrentLevel(currentLevel) {
+    [...this.container.querySelectorAll('.target-achiv')].forEach(cheevo => {
+      cheevo.classList.remove("highlight");
+      cheevo.dataset.level == currentLevel && cheevo.classList.add("highlight");
+      if (!Number.isInteger(currentLevel)) {
+        const mainLevel = parseInt(currentLevel);
+        cheevo.dataset.level == mainLevel && cheevo.classList.add("highlight");
+      }
+    });
+
+  }
   deleteFromTarget(button) {
     const element = button.closest(".target-achiv");
     element.classList.add('removing');
@@ -6807,6 +6842,78 @@ function lazyLoad({ list, items, callback }) {
   // Початкове спостереження за тригером
   observer.observe(trigger);
 }
+const parseCurrentGameLevel = (richPresence) => {
+  let levelNumber;
+  const levelNames = [
+    'level',
+    'levels',
+    'stage',
+    'area',
+    'world',
+    'mission',
+    'chapter',
+    'section',
+    'part',
+    'zone',
+    'phase',
+    'realm',
+    'domain',
+    'episode',
+    'act',
+    'sequence',
+    'tier',
+    'floor',
+    'dimension',
+    'region',
+    'floor',
+    'scene',
+    '🚩',
+    'in',
+  ];
+  const levelNamesString = levelNames.join("|");
+  const replaceWrittenNumbers = (inputStr) => {
+    const numberMapping = {
+      'first': 1, 'second': 2, 'third': 3, 'fourth': 4, 'fifth': 5,
+      'sixth': 6, 'seventh': 7, 'eighth': 8, 'ninth': 9, 'tenth': 10,
+      '1st': 1, '2nd': 2, '3rd': 3, '4th': 4, '5th': 5,
+      '6th': 6, '7th': 7, '8th': 8, '9th': 9, '10th': 10
+    };
+
+    const regex = new RegExp(Object.keys(numberMapping).join("|"), 'gi');
+
+    return inputStr.replace(regex, match => {
+      return numberMapping[match.toLowerCase()];
+    });
+  }
+
+  const checkLevel = (inputStr, levelNames) => {
+    const regexWordSecond = new RegExp(`(${levelNamesString})(\\s|-\\s*|:\\s*)((\\d+-\\d+)|(\\d+))`, 'gi');
+
+    const regexWordFirst = new RegExp(`\\s*((\\d+-\\d+)|(\\d+))\\s(${levelNamesString})`, 'gi');
+
+    const matchesSecond = inputStr.matchAll(regexWordSecond);
+    for (const match of matchesSecond) {
+      const level = Number(match[3]?.replace('-', '.'));
+      return level;
+    }
+
+    // const matchesFirst = inputStr.matchAll(regexWordFirst);
+    // for (const match of matchesFirst) {
+    //   const level = Number(match[1]?.replace('-', '.'));
+    //   return level;
+    // }
+
+    return null;
+  };
+
+  const inputStr = replaceWrittenNumbers(richPresence);
+
+  levelNumber = checkLevel(inputStr);
+
+  return Number.isFinite(levelNumber) ? levelNumber : false;
+
+}
+
 const RAPlatforms = {
   "1": "Genesis/Mega Drive",
   "2": "Nintendo 64",

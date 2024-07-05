@@ -513,13 +513,13 @@ export class APIWorker {
 
       const matchesSecond = description.matchAll(regexWordSecond);
       for (const match of matchesSecond) {
-        const level = Number(match[2].replace('-', '.'));
+        const level = Number(match[2]?.replace('-', '.'));
         return level;
       }
 
       const matchesFirst = description.matchAll(regexWordFirst);
       for (const match of matchesFirst) {
-        const level = Number(match[1].replace('-', '.'));
+        const level = Number(match[1]?.replace('-', '.'));
         return level;
       }
 
