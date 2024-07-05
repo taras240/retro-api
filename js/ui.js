@@ -4905,7 +4905,12 @@ class Target {
                 />
               </div>
               <div class="target-achiv-details">
-                <h3 class="achiv-name"><a target="_blanc" href="https://retroachievements.org/achievement/${id}">${achievement.Title}</a></h3>
+                <h3 class="achiv-name">
+                  <a target="_blanc" href="https://retroachievements.org/achievement/${id}">
+                  ${achievement.level < 1000 ? `<p class="game-card_suffix suffix-bold bg_gold"> ${achievement.level?.toString()?.replace(".", "-")} </p>` : ""}
+                    ${achievement.Title}
+                  </a>
+                </h3>
                 <p class="achiv-description">${achievement.Description}</p>
                 <div class="target-other-descriptions">       
                 <i class=" target_description-icon ${achievement.type ?? "none"}" title="achievement type"></i> 

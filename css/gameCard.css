@@ -24,8 +24,14 @@
   text-wrap: nowrap;
   background-color: chartreuse;
   color: black;
-  font-weight: 600;
+  font-weight: bold;
   text-transform: uppercase;
+}
+
+.game-card_suffix.suffix-bold {
+  font-weight: bold;
+  font-size: 0.9em;
+  padding: 0 0.4rem;
 }
 
 .bg_gold {

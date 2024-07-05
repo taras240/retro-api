@@ -469,13 +469,32 @@ export class APIWorker {
     const levelNames = [
       'level', 'levels', 'stage', 'area', 'world', 'mission', 'chapter', 'section', 'part',
       'zone', 'phase', 'realm', 'domain', 'episode', 'act', 'sequence', 'tier', 'floor',
-      'dimension', 'region', 'scene', 'screen'
+      'dimension', 'region', 'scene', 'screen', 'complete'
     ];
 
     const numberMapping = {
-      'one': '1', 'first': '1', 'two': '2', 'second': '2', 'three': '3', 'third': '3', 'fourth': '4', 'fifth': '5',
-      'sixth': '6', 'seventh': '7', 'eighth': '8', 'ninth': '9', 'tenth': '10',
+      'one': '1', 'first': '1',
+      'two': '2', 'second': '2',
+      'three': '3', 'third': '3',
+      'four': '4', 'fourth': '4',
+      'five': '5', 'fifth': '5',
+      'six': '6', 'sixth': '6',
+      'seven': '7', 'seventh': '7',
+      'eight': '8', 'eighth': '8',
+      'nine': '9', 'ninth': '9',
+      'ten': '10', 'tenth': '10',
+      'eleven': '11', 'eleventh': '11',
+      'twelve': '12', 'twelfth': '12',
+      'thirteen': '13', 'thirteenth': '13',
+      'fourteen': '14', 'fourteenth': '14',
+      'fifteen': '15', 'fifteenth': '15',
+      'sixteen': '16', 'sixteenth': '16',
+      'seventeen': '17', 'seventeenth': '17',
+      'eighteen': '18', 'eighteenth': '18',
+      'nineteen': '19', 'nineteenth': '19',
+      'twenty': '20', 'twentieth': '20'
     };
+
 
     function replaceWrittenNumbers(description) {
       description = description.replaceAll(/(\d)(st|nd|rd|th)/gi, (_, p1) => p1);
@@ -485,11 +504,13 @@ export class APIWorker {
 
     function checkLevel(description) {
       const levelNamesString = levelNames.join("|");
-      const regex = new RegExp(`(?:${levelNamesString})\\s*((\\d+-\\d+)|(\\d+))|((\\d+-\\d+)|(\\d+))\\s*(?:${levelNamesString})`, 'gi');
+      const d = "\\d{1,2}(?!\\d|\\s*%)";
+      const regex = new RegExp(`(?:${levelNamesString})\\s*((${d}-${d})|(${d}))|((${d}-${d})|(${d}))\\s*(?:${levelNamesString})`, 'gi');
       const match = regex.exec(description);
       if (match) {
+        console.log(match)
         const levelString = match[1] || match[4];
-        return Number(levelString.replace('-', '.'));
+        return parseFloat(levelString.replace('-', '.'));
       }
       return null;
     }
@@ -498,7 +519,7 @@ export class APIWorker {
     const levelNumber = checkLevel(description);
 
     return Number.isFinite(levelNumber) ? levelNumber :
-      (+cheevo.DisplayOrder > 0 ? cheevo.DisplayOrder * 100 : cheevo.ID);
+      (+cheevo.DisplayOrder > 0 ? cheevo.DisplayOrder * 1000 : cheevo.ID);
   }
 
 
