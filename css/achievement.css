@@ -4,7 +4,8 @@
   min-height: 60px;
   min-width: 90px;
   background: none;
-  background-color: transparent;
+  background-color: var(--main-color);
+
   cursor: grab;
   display: flex;
   flex-direction: column;
@@ -14,10 +15,10 @@
   box-shadow: 0 0 5px 2px transparent;
 }
 
-.achivs:hover,
-.achivs.bg-visible {
-  background: var(--background-gradient);
-  /* background-color: var(--main-color); */
+
+.achivs.hide-bg:not(:hover) {
+  /* background: var(--background-gradient); */
+  background-color: transparent;
 }
 
 .achievements-container {
