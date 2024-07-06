@@ -786,7 +786,36 @@ export class UI {
   static addDraggingEventForElements(container, onDragEnd) {
 
   }
-
+  static generateAchievementPopup(achievement) {
+    let popup = document.createElement("div");
+    popup.classList.add("achiv-details-block", "popup");
+    const trueRatio = achievement.TrueRatio / achievement.Points;
+    popup.innerHTML = `
+      <h3 class="achievement__header">${achievement.Title} <p class="difficult-badge difficult-badge__${achievement.difficulty}">${achievement.difficulty}</p>
+      </h3>
+      <p>${achievement.Description}</p>
+      <div class="points">
+        <p><i class="target_description-icon  points-icon"></i>${achievement.Points}</p>
+        <p><i class="target_description-icon  retropoints-icon"></i>${achievement.TrueRatio} </p> 
+         <p class="target-description-text" title="true ratio">
+          <i class="target_description-icon  ${trueRatio > 13 ? "difficult-badge__hell" : ""}  rarity-icon"></i>
+          ${trueRatio.toFixed(2)}
+        </p>
+        <i class="target_description-icon ${achievement.type ?? "none"}"></i>            
+      </div>
+      ${achievement.DateEarnedHardcore
+        ? "<p>Earned hardcore: " + achievement.DateEarnedHardcore + "</p>"
+        : achievement.DateEarned
+          ? "<p>Earned softcore: " + achievement.DateEarned + "</p>"
+          : ""
+      }
+      <p>Earned by ${achievement.NumAwardedHardcore} (${achievement.NumAwarded}) of ${achievement.totalPlayers} players</p>
+      <p>Earned rate: ${achievement.rateEarnedHardcore} (${achievement.rateEarned})</p>
+      <p>Created : ${new Date(achievement.DateCreated).toLocaleDateString()} (${new Date(achievement.DateModified).toLocaleDateString()})</p>
+      <p>Created by: ${achievement.Author}</p>
+    `;
+    return popup;
+  }
   static switchSectionVisibility({ section }) {
     if (section.classList.contains("hidden")) {
       section.classList.remove("disposed");
@@ -1521,39 +1550,9 @@ class AchievementsBlock {
       }
     }
     function mouseOverEvent() {
-      function generatePopup(achievement) {
-        let popup = document.createElement("div");
-        popup.classList.add("achiv-details-block", "popup");
-        const trueRatio = achievement.TrueRatio / achievement.Points;
-        popup.innerHTML = `
-          <h3 class="achievement__header">${achievement.Title} <p class="difficult-badge difficult-badge__${achievement.difficulty}">${achievement.difficulty}</p>
-          </h3>
-          <p>${achievement.Description}</p>
-          <div class="points">
-            <p><i class="target_description-icon  points-icon"></i>${achievement.Points}</p>
-            <p><i class="target_description-icon  retropoints-icon"></i>${achievement.TrueRatio} </p> 
-             <p class="target-description-text" title="true ratio">
-              <i class="target_description-icon  ${trueRatio > 13 ? "difficult-badge__hell" : ""}  rarity-icon"></i>
-              ${trueRatio.toFixed(2)}
-            </p>
-            <i class="target_description-icon ${achievement.type ?? "none"}"></i>            
-          </div>
-          ${achievement.DateEarnedHardcore
-            ? "<p>Earned hardcore: " + achievement.DateEarnedHardcore + "</p>"
-            : achievement.DateEarned
-              ? "<p>Earned softcore: " + achievement.DateEarned + "</p>"
-              : ""
-          }
-          <p>Earned by ${achievement.NumAwardedHardcore} (${achievement.NumAwarded}) of ${achievement.totalPlayers} players</p>
-          <p>Earned rate: ${achievement.rateEarnedHardcore} (${achievement.rateEarned})</p>
-          <p>Created : ${new Date(achievement.DateCreated).toLocaleDateString()} (${new Date(achievement.DateModified).toLocaleDateString()})</p>
-          <p>Created by: ${achievement.Author}</p>
-        `;
-        return popup;
-      }
       removePopups();
 
-      const popup = generatePopup(achievement);
+      const popup = UI.generateAchievementPopup(achievement);
       ui.app.appendChild(popup);
 
       setPopupPosition(popup, achivElement);
@@ -4974,38 +4973,9 @@ class Target {
     }
 
     async function mouseOverEvent(event) {
-
-      function generatePopup(achievement) {
-        let popup = document.createElement("div");
-        popup.classList.add("achiv-details-block", "popup");
-        popup.innerHTML = `
-          <h3 class="achievement__header">${achievement.Title} <p class="difficult-badge difficult-badge__${achievement.difficulty}">${achievement.difficulty}</p>
-          </h3>
-          <p>${achievement.Description}</p>
-                   <div class="points">
-            <p><i class="target_description-icon  points-icon"></i>${achievement.Points}</p>
-            <p><i class="target_description-icon  retropoints-icon"></i>${achievement.TrueRatio} </p> 
-            <i class="target_description-icon ${achievement.type ?? "none"}"></i>            
-          </div>
-          ${achievement.DateEarnedHardcore
-            ? "<p>Earned hardcore: " + achievement.DateEarnedHardcore + "</p>"
-            : achievement.DateEarned
-              ? "<p>Earned softcore: " + achievement.DateEarned + "</p>"
-              : ""
-          }
-          <p>Earned by ${achievement.NumAwardedHardcore} (${achievement.NumAwarded}) of ${achievement.totalPlayers} players</p>
-          <p>Earned rate: ${achievement.rateEarnedHardcore} (${achievement.rateEarned})</p>
-          <p>Created : ${new Date(achievement.DateCreated).toLocaleDateString()} (${new Date(achievement.DateModified).toLocaleDateString()})</p>
-          <p>Created by: ${achievement.Author}</p>
- 
-          
-          
-        `;
-        return popup;
-      }
       removePopups();
 
-      const popup = generatePopup(achievement);
+      const popup = UI.generateAchievementPopup(achievement);
       ui.app.appendChild(popup);
 
       setPopupPosition(popup, event);

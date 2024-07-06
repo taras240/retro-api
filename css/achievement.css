@@ -322,30 +322,32 @@
 /** ----[ TOOLTIP ]--------- */
 
 .popup {
+  position: absolute;
+  max-width: 25rem;
+  width: fit-content;
+
+  margin: 1px;
+  padding: 8px 16px;
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   gap: 4px;
-  position: absolute;
-  margin: 1px;
-  max-width: 300px;
-  width: max-content;
-  padding: 8px 16px;
+
   background-color: var(--secondary-color);
   background: linear-gradient(to top left,
       var(--main-color),
       var(--secondary-color));
   box-shadow: 0 0 2px 0 black;
-  /* border: 1px solid var(--font-color); */
+
   border-radius: 8px;
-  line-height: 1.5rem;
-  pointer-events: none;
+  overflow: hidden;
+
   visibility: hidden;
   opacity: 0;
-  transition: 0.2s;
   font-size: 1.15rem;
   z-index: 1000;
-  overflow: hidden;
+  transition: opacity 0.2s;
 }
 
 .popup h3 {
@@ -396,74 +398,20 @@
   gap: 1rem;
 }
 
-.achievement__header {
-  /* display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.5rem; */
-}
-
 .points p {
   display: flex;
   align-items: center;
   gap: 0.2rem;
 }
 
-/* .achiv-block:hover .achiv-details-block {
-  visibility: visible;
-  opacity: 1;
-  transition: 0.2s;
-} */
-.achiv-details-block.popup {
-  margin: 1px;
-  max-width: 300px;
-  width: max-content;
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity 0.2s;
 
-}
+
 
 .popup.visible {
   visibility: visible;
   opacity: 1;
   transition: 0.2s;
 }
-
-/* 
-[data-point-style="poor"] .points::before,
-[data-point-style="normal"] .points::before,
-[data-point-style="reach"] .points::before {
-  content: "";
-  position: absolute;
-  height: 15px;
-  aspect-ratio: 1 / 1;
-  left: 0;
-  bottom: 0;
-  filter: drop-shadow(3px 3px 3px black);
-  image-rendering: pixelated;
-  background-size: contain;
-  background-repeat: no-repeat;
-  opacity: 1;
-}
-
-[data-point-style="poor"] .points::before {
-  left: 5px;
-  background-image: url(../assets/img/coins-less.png);
-}
-
-[data-point-style="normal"] .points::before {
-  transform: rotateY(180deg);
-  bottom: -2px;
-  left: 5px;
-  height: 20px;
-  background-image: url(../assets/img/coins-middle.png);
-}
-
-[data-point-style="reach"] .points::before {
-  height: 20px;
-  background-image: url(../assets/img/coins.png);
-} */
 
 /**---------[ EXPANDED ACHIEVEMENT ]--------*/
 
