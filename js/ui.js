@@ -5368,7 +5368,8 @@ class Games {
       .join('');
     const titleRegex = new RegExp(searchRequest, 'gi');
     this.games = this.titleFilter ?
-      this.GAMES.filter(game => game.FixedTitle.match(titleRegex)) :
+      this.GAMES.filter(game =>
+        `${game.FixedTitle} ${game.badges?.join(' ')} ${RAPlatforms[game.ConsoleID]}`.match(titleRegex)) :
       this.GAMES;
     this.COOP_FILTER && (this.games = this.games?.filter(game => game.Coop == "true"));
     // Filter by Platform
