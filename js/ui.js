@@ -384,7 +384,7 @@ export class UI {
       method: "POST",
     })
       .then(function (res) {
-        console.log(res);
+
       })
       .catch(function (res) {
         console.log(res);
@@ -5361,8 +5361,12 @@ class Games {
   titleFilter = '';
   applyFilter() {
 
-    //Filter by Search request
-    const titleRegex = new RegExp(this.titleFilter, 'gi');
+    //Filter by Search request   
+    const searchRequest = this.titleFilter
+      .split(/\s/)
+      .map(word => `(?=.*${word})`)
+      .join('');
+    const titleRegex = new RegExp(searchRequest, 'gi');
     this.games = this.titleFilter ?
       this.GAMES.filter(game => game.FixedTitle.match(titleRegex)) :
       this.GAMES;
