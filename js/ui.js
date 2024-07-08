@@ -4690,64 +4690,8 @@ class Target {
     this.header = document.querySelector(".target-header_container");
     this.container = document.querySelector(".target-container");
 
-    this.autoclearCheckbox = document.querySelector(
-      `#context-autoclear${this.sectionCode}`
-    );
-    this.autoClearInput = document.querySelector(
-      `#context-autoclear-delay${this.sectionCode}`
-    );
-    this.autofillCheckbox = document.querySelector(
-      `#context-autofill${this.sectionCode}`
-    );
+    this.searchInput = this.section.querySelector("#target__searchbar");
 
-    this.sortByLatestRadio = document.querySelector(
-      `#context-sort_latest${this.sectionCode}`
-    );
-
-    this.sortByPointsRadio = document.querySelector(
-      `#context-sort_points${this.sectionCode}`
-    );
-    this.sortByTruepointsRadio = document.querySelector(
-      `#context-sort_retropoints${this.sectionCode}`
-    );
-    this.sortByRarestRadio = document.querySelector(
-      `#context-sort_rarest${this.sectionCode}`
-    );
-
-    this.sortByIdRadio = document.querySelector(
-      `#context-sort_id${this.sectionCode}`
-    );
-    this.sortByDefaultRadio = document.querySelector(
-      `#context-sort_default${this.sectionCode}`
-    );
-    this.sortByDisableRadio = document.querySelector(
-      `#context-sort_dont-sort${this.sectionCode}`
-    );
-    this.sortReverseCheckbox = document.querySelector(
-      `#context-reverse-sort${this.sectionCode}`
-    );
-
-    this.filterByMissableRadio = document.querySelector(
-      `#context_filter-missable${this.sectionCode}`
-    );
-    this.filterByEarnedRadio = document.querySelector(
-      `#context_filter-earned${this.sectionCode}`
-    );
-    this.filterByAllRadio = document.querySelector(
-      `#context_filter-all${this.sectionCode}`
-    );
-    this.filterReverseCheckbox = document.querySelector(
-      `#context-reverse-filter${this.sectionCode}`
-    );
-    this.hideFilteredCheckbox = document.querySelector(
-      `#context-hide-filtered${this.sectionCode}`
-    );
-    this.clearAllAchivementsButton = document.querySelector(
-      `#context-clear-all${this.sectionCode}`
-    );
-    this.fillAchivementsButton = document.querySelector(
-      `#context-fill${this.sectionCode}`
-    );
     // this.moveToTopCheckbox = document.querySelector("#target-move-to-top");
 
     this.resizer = document.querySelector("#target-resizer");
@@ -4796,6 +4740,31 @@ class Target {
       ui.target.addAchieveToTarget(id);
       this.section.querySelector(".achiv-block")?.remove();
     })
+    this.searchInput?.addEventListener("input", this.searchHandler)
+  }
+  searchHandler(event) {
+    event.stopPropagation();
+    const clearPrevQuery = () => {
+      [...ui.target.container.querySelectorAll('.target-achiv')].forEach(target => {
+        const id = target.dataset.achivId;
+        const description = target.querySelector(".achiv-description");
+        description && (description.innerText = ui.ACHIEVEMENTS[id].Description);
+      })
+    }
+    const markQuery = (query) => {
+      const regex = new RegExp(`(${query})`, 'gi');
+      [...ui.target.container.querySelectorAll('.achiv-description')].forEach(description => {
+        description.innerHTML = description.innerHTML.replace(regex, (g1) => `<span class="highlight-text">${g1}</span>`)
+      })
+    }
+    clearPrevQuery();
+    const query = event.target.value;
+    query && markQuery(query);
+    const firstHighlight = document.querySelector('.highlight-text');
+    if (firstHighlight) {
+      firstHighlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
   }
   setValues() {
     this.section.classList.toggle("compact", !this.SHOW_HEADER);

@@ -498,7 +498,11 @@ export class APIWorker {
 
     function replaceWrittenNumbers(description) {
       description = description.replaceAll(/(\d)(st|nd|rd|th)/gi, (_, p1) => p1);
-      const regex = new RegExp(Object.keys(numberMapping).join("|"), 'gi');
+      const regex = new RegExp(
+        Object
+          .keys(numberMapping)
+          .map(num => `\\b${num}\\b`)
+          .join("|"), 'gi');
       return description.replace(regex, match => numberMapping[match.toLowerCase()]);
     }
 

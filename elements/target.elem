@@ -6,6 +6,7 @@
           d="M480-400q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm-40-240v-200h80v200h-80Zm0 520v-200h80v200h-80Zm200-320v-80h200v80H640Zm-520 0v-80h200v80H120Z" />
       </svg>
     </div>
+
     <h2 class="widget-header-text">Target</h2>
     <button class="header-button header-icon tweak-button"
       onclick="ui.settings.openSettings(ui.target.contextMenuItems)">
@@ -15,6 +16,8 @@
           d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z" />
       </svg>
     </button>
+    <input type="search" name="" id="target__searchbar" class="text-input target__search-bar" placeholder="Search...">
+
     <button class="header-icon header-button " onclick="ui.target.close()">
       <svg height="24" viewBox="0 -960 960 960" width="24">
         <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />

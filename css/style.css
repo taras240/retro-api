@@ -1048,3 +1048,12 @@ input[type="radio"]:checked+.context-menu_radio::after {
 .difficult-badge__easy {
   background-color: greenyellow;
 }
+
+.highlight-text {
+  background-color: orangered;
+  color: black;
+  font-size: 1.1em;
+  font-weight: bold;
+  padding: 0 .2rem;
+  border-radius: 3px;
+}
