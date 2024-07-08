@@ -33,68 +33,72 @@ export class UI {
   }
 
   constructor() {
-    loadSections()
-      .then(() => {
-        // Ініціалізація елементів
-        this.initializeElements();
-
-        //Встановлення розмірів і розміщення елементів
-        this.setPositions();
-
-        this.addEvents();
-        //Оновлення кольорів
-        UI.updateColors();
-
-        //Оновлення ачівментсів
-        if (config.identConfirmed) {
-          if (config.version != this.VERSION) {
-            setTimeout(() => {
-              // UI.switchSectionVisibility({
-              //   section: document
-              //     .querySelector("#help_section")
-              // })
-              config.version = this.VERSION;
-            }, 1500);
-          }
-          //!-----------------------------------
-          config.startOnLoad
-            ? this.statusPanel.watchButton.click()
-            : this.getAchievements();
-
-          setTimeout(() => {
-            apiWorker.getUserSummary({}).then(resp => {
-              this.userInfo.update({ userSummary: resp });
-              this.stats.initialSetStats({ userSummary: resp });
-            })
-          }, 3000);
-        }
-        else {
-          const section = this.loginCard.section;
-          section.classList.remove("disposed");
-          setTimeout(() => section.classList.remove("hidden"), 100);
-          config.setNewPosition({
-            id: section.id,
-            hidden: false,
-          })
-          // UI.switchSectionVisibility({ section: this.loginCard.section })
-        }
-        // Вимкнення вікна завантаження
-        setTimeout(
-          () =>
-            document.querySelector(".loading-section").classList.add("hidden"),
-          1000
-        );
-      })
-      .catch((err) => {
-        setTimeout(
-          () =>
-            document.querySelector(".loading-section").classList.add("hidden"),
-          1000
-        );
-        console.log(err);
-      });
+    this.initUI();
   }
+  async initUI() {
+    await loadSections();
+    const localSet = config.ui?.local ?? "en";
+    const langResp = await fetch(`./json/lang/${localSet}.json`);
+    this.lang = await langResp.json();
+    // Ініціалізація елементів
+    this.initializeElements();
 
+    //Встановлення розмірів і розміщення елементів
+    this.setPositions();
+
+    this.addEvents();
+    //Оновлення кольорів
+    UI.updateColors();
+
+    //Оновлення ачівментсів
+    if (config.identConfirmed) {
+      if (config.version != this.VERSION) {
+        setTimeout(() => {
+          // UI.switchSectionVisibility({
+          //   section: document
+          //     .querySelector("#help_section")
+          // })
+          config.version = this.VERSION;
+        }, 1500);
+      }
+      //!-----------------------------------
+      config.startOnLoad
+        ? this.statusPanel.watchButton.click()
+        : this.getAchievements();
+
+      setTimeout(() => {
+        apiWorker.getUserSummary({}).then(resp => {
+          this.userInfo.update({ userSummary: resp });
+          this.stats.initialSetStats({ userSummary: resp });
+        })
+      }, 3000);
+    }
+    else {
+      const section = this.loginCard.section;
+      section.classList.remove("disposed");
+      setTimeout(() => section.classList.remove("hidden"), 100);
+      config.setNewPosition({
+        id: section.id,
+        hidden: false,
+      })
+      // UI.switchSectionVisibility({ section: this.loginCard.section })
+    }
+    // Вимкнення вікна завантаження
+    setTimeout(
+      () =>
+        document.querySelector(".loading-section").classList.add("hidden"),
+      1000
+    );
+
+    // .catch((err) => {
+    //   setTimeout(
+    //     () =>
+    //       document.querySelector(".loading-section").classList.add("hidden"),
+    //     1000
+    //   );
+    //   console.log(err);
+    // });
+  }
   initializeElements() {
     this.app = document.querySelector(".wrapper");
     // this.about = {
@@ -961,14 +965,14 @@ class AchievementsBlock {
   get contextMenuItems() {
     return [
       {
-        label: "Style",
+        label: ui.lang.style,
         elements: [
 
           {
             type: "checkbox",
             name: "context-show-mario",
             id: "context-show-mario",
-            label: "Show Mario",
+            label: ui.lang.showMario,
             checked: this.SHOW_MARIO,
             event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SHOW_MARIO = this.checked"`,
           },
@@ -976,41 +980,41 @@ class AchievementsBlock {
             type: "checkbox",
             name: "context_autoscroll-achieves",
             id: "context_autoscroll-achieves",
-            label: "Autoscroll",
+            label: ui.lang.autoscroll,
             checked: this.AUTOSCROLL,
             event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].AUTOSCROLL = this.checked;"`,
           },
-          {
-            type: "checkbox",
-            name: "context_autoscroll-achieves",
-            id: "context_smart-autoscroll-achieves",
-            label: "Smart autoscroll",
-            checked: this.SMART_AUTOSCROLL,
-            event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SMART_AUTOSCROLL = this.checked;"`,
-          },
+          // {
+          //   type: "checkbox",
+          //   name: "context_autoscroll-achieves",
+          //   id: "context_smart-autoscroll-achieves",
+          //   label: "Smart autoscroll",
+          //   checked: this.SMART_AUTOSCROLL,
+          //   event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SMART_AUTOSCROLL = this.checked;"`,
+          // },
           {
             type: "checkbox",
             name: "context_stretch-achieves",
             id: "context_stretch-achieves",
-            label: "Stretch",
+            label: ui.lang.stretch,
             checked: this.ACHIV_STRETCH,
             event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].ACHIV_STRETCH = this.checked;"`,
           },
           {
-            prefix: "Min size",
+            prefix: ui.lang.minSize,
             postfix: "px",
             type: "input-number",
             id: "context-menu_min-size",
-            label: "Min size",
+            label: ui.lang.minSize,
             value: this.ACHIV_MIN_SIZE,
             event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].ACHIV_MIN_SIZE = this.value;"`,
           },
           {
-            prefix: "Max size",
+            prefix: ui.lang.maxSize,
             postfix: "px",
             type: "input-number",
             id: "context-menu_max-size",
-            label: "Max size",
+            label: ui.lang.maxSize,
             value: this.ACHIV_MAX_SIZE,
             event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].ACHIV_MAX_SIZE = this.value;"`,
           },
@@ -1018,13 +1022,13 @@ class AchievementsBlock {
         ]
       },
       {
-        label: "Overlay set",
+        label: ui.lang.overlaySet,
         elements: [
           {
             type: "checkbox",
             name: "context-hide-unearned",
             id: "context-hide-unearned",
-            label: "Show overlay",
+            label: ui.lang.showOverlay,
             checked: this.SHOW_PREV_OVERLAY,
             event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SHOW_PREV_OVERLAY = this.checked"`,
           },
@@ -1043,13 +1047,13 @@ class AchievementsBlock {
         ]
       },
       {
-        label: "Sort",
+        label: ui.lang.sort,
         elements: [
           {
             type: "radio",
             name: "context-sort",
             id: "context-sort_latest",
-            label: "Latest",
+            label: ui.lang.latest,
             checked: this.SORT_NAME === UI.sortMethods.latest,
             event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = 'latest';"`,
           },
@@ -1057,7 +1061,7 @@ class AchievementsBlock {
             type: "radio",
             name: "context-sort",
             id: "context-sort_rarest",
-            label: "Rarest",
+            label: ui.lang.rarest,
             checked: this.SORT_NAME === UI.sortMethods.earnedCount,
             event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = 'earnedCount';"`,
           },
@@ -1065,7 +1069,7 @@ class AchievementsBlock {
             type: "radio",
             name: "context-sort",
             id: "context-sort_points",
-            label: "Points",
+            label: ui.lang.points,
             checked: this.SORT_NAME === UI.sortMethods.points,
             event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = 'points';"`,
           },
@@ -1073,7 +1077,7 @@ class AchievementsBlock {
             type: "radio",
             name: "context-sort",
             id: "context-sort_retropoints",
-            label: "Retropoints",
+            label: ui.lang.retropoints,
             checked: this.SORT_NAME === UI.sortMethods.truepoints,
             event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = 'truepoints';"`,
           },
@@ -1081,7 +1085,7 @@ class AchievementsBlock {
             type: "radio",
             name: "context-sort",
             id: "context-sort_default",
-            label: "Default",
+            label: ui.lang.default,
             checked: this.SORT_NAME === UI.sortMethods.default,
             event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = 'default';"`,
           },
@@ -1089,7 +1093,7 @@ class AchievementsBlock {
             type: "radio",
             name: "context-sort",
             id: "context-sort_level",
-            label: "Level(if possible)",
+            label: ui.lang.level,
             checked: this.SORT_NAME === UI.sortMethods.level,
             event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = 'level';"`,
           },
@@ -1097,7 +1101,7 @@ class AchievementsBlock {
             type: "radio",
             name: "context-sort",
             id: "context-sort_disable",
-            label: "Disable",
+            label: ui.lang.disable,
             checked: this.SORT_NAME === UI.sortMethods.disable,
             event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SORT_NAME = 'disable';"`,
           },
@@ -1105,20 +1109,20 @@ class AchievementsBlock {
             type: "checkbox",
             name: "context-reverse-sort",
             id: "context-reverse-sort",
-            label: "Reverse",
+            label: ui.lang.reverse,
             checked: this.REVERSE_SORT == -1,
             event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].REVERSE_SORT = this.checked"`,
           },
         ],
       },
       {
-        label: "Filter",
+        label: ui.lang.filter,
         elements: [
           {
             type: "radio",
             name: "context-filter",
             id: "context_filter-progression",
-            label: "Progression",
+            label: ui.lang.progression,
             checked: this.FILTER_NAME === UI.filterMethods.progression,
             event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].FILTER_NAME = 'progression';"`,
           },
@@ -1126,7 +1130,7 @@ class AchievementsBlock {
             type: "radio",
             name: "context-filter",
             id: "context_filter-missable",
-            label: "Missable",
+            label: ui.lang.missable,
             checked: this.FILTER_NAME === UI.filterMethods.missable,
             event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].FILTER_NAME = 'missable';"`,
           },
@@ -1134,7 +1138,7 @@ class AchievementsBlock {
             type: "radio",
             name: "context-filter",
             id: "context_filter-earned",
-            label: "Earned",
+            label: ui.lang.earned,
             checked: this.FILTER_NAME === UI.filterMethods.earned,
             event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].FILTER_NAME = 'earned';"`,
           },
@@ -1142,7 +1146,7 @@ class AchievementsBlock {
             type: "radio",
             name: "context-filter",
             id: "context_filter-all",
-            label: "All",
+            label: ui.lang.all,
             checked: this.FILTER_NAME === UI.filterMethods.all,
             event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].FILTER_NAME = 'all';"`,
           },
@@ -1150,7 +1154,7 @@ class AchievementsBlock {
             type: "checkbox",
             name: "context-reverse-filter",
             id: "context-reverse-filter",
-            label: "Reverse",
+            label: ui.lang.reverse,
             checked: this.REVERSE_FILTER,
             event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].REVERSE_FILTER = this.checked;"`,
           },
@@ -1158,17 +1162,17 @@ class AchievementsBlock {
             type: "checkbox",
             name: "context-hide-filtered",
             id: "context-hide-filtered",
-            label: "Hide filtered",
+            label: ui.lang.hideFiltered,
             checked: this.HIDE_FILTERED,
             event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].HIDE_FILTERED = this.checked;"`,
           },
         ],
       },
       {
-        label: "Elements",
+        label: ui.lang.elements,
         elements: [
           {
-            label: "Show header",
+            label: ui.lang.showHeader,
             type: "checkbox",
             name: "context_hide-achivs-header",
             id: "context_hide-achivs-header",
@@ -1176,7 +1180,7 @@ class AchievementsBlock {
             event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].SHOW_HEADER = this.checked;"`,
           },
           {
-            label: "Show background",
+            label: ui.lang.showBackground,
             type: "checkbox",
             name: "context_show-bg",
             id: "context_show-bg",
@@ -1343,6 +1347,7 @@ class AchievementsBlock {
     value ? this.startAutoScroll() : this.stopAutoScroll();
   }
   get SMART_AUTOSCROLL() {
+    return false;
     return config?.ui[this.SECTION_NAME]?.smartAutoscroll ?? false;
   }
   set SMART_AUTOSCROLL(value) {
@@ -3053,11 +3058,11 @@ class Settings {
   get settingsItems() {
     return [
       {
-        label: "Style",
+        label: ui.lang.style,
         elements: [
           {
             type: "select",
-            label: "Select colors",
+            label: ui.lang.selectColors,
             id: "settings_colors-selector",
             selectValues: [
               {
@@ -3176,7 +3181,7 @@ class Settings {
           },
           {
             type: "checkbox",
-            label: "Show bg",
+            label: ui.lang.showBgAnimation,
             id: "settings_show-bg",
             onChange: "ui.settings.BG_ANIMATION = this.checked;",
             checked: this.BG_ANIMATION,
@@ -3184,7 +3189,7 @@ class Settings {
         ]
       },
       {
-        label: "Custom colors",
+        label: ui.lang.customColors,
         elements: [
           {
             type: "color",
@@ -3224,11 +3229,11 @@ class Settings {
         ]
       },
       {
-        label: "Font family",
+        label: ui.lang.fontFamily,
         elements: [
           {
             type: "select",
-            label: "Select font",
+            label: ui.lang.selectFont,
             id: "settings_font-family",
             selectValues: [
               {
@@ -3291,7 +3296,7 @@ class Settings {
           },
           {
             type: "search",
-            label: "paste url here",
+            label: ui.lang.pasteHere,
             id: "settings_font-input",
             value: "",
             onChange: "ui.settings.FONT_FAMILY = this.value; this.value = '';",
@@ -3299,11 +3304,11 @@ class Settings {
         ]
       },
       {
-        label: "Font size (base in px)",
+        label: ui.lang.fontSizeBase,
         elements: [
           {
             type: "number",
-            label: "font size",
+            label: ui.lang.fontSize,
             id: "settings_font-size-input",
             value: this.FONT_SIZE,
             onChange: "ui.settings.FONT_SIZE = this.value;",
@@ -3311,7 +3316,7 @@ class Settings {
         ]
       },
       {
-        label: "Update delay (in secs)",
+        label: ui.lang.updateDelaySecs,
         elements: [
           {
             type: "number",
@@ -3323,7 +3328,7 @@ class Settings {
         ]
       },
       {
-        label: "Target user",
+        label: ui.lang.targetUser,
         elements: [
           {
             type: "search",
@@ -3335,23 +3340,23 @@ class Settings {
         ]
       },
       {
-        label: "Game ID",
+        label: ui.lang.gameID,
         elements: [
           {
             type: "button",
-            label: "Check ID",
+            label: ui.lang.checkGameID,
             id: "settings_check-game-id",
             onClick: "ui.getAchievements()",
           },
           {
             type: "button",
-            label: "Get last ID",
+            label: ui.lang.getLastID,
             id: "settings_get-last-id",
             onClick: "ui.settings.getLastGameID()",
           },
           {
             type: "number",
-            label: "game id",
+            label: ui.lang.gameID,
             id: "settings_game-id-input",
             value: config.gameID,
             onChange: "config.gameID = this.value;",
@@ -3359,11 +3364,11 @@ class Settings {
         ]
       },
       {
-        label: "Autoupdate",
+        label: ui.lang.autoupdate,
         elements: [
           {
             type: "checkbox",
-            label: "Start on load",
+            label: ui.lang.startOnLoad,
             id: "settings_start-on-load",
             onChange: "ui.settings.START_ON_LOAD = this.checked;",
             checked: this.START_ON_LOAD,
@@ -3404,7 +3409,34 @@ class Settings {
 
         ]
       },
+      {
+        label: "Language",
+        elements: [
+          {
+            type: "radio",
+            label: "English",
+            id: "settings_lang-en",
+            onChange: "ui.settings.LANG = 'en';",
+            checked: this.LANG === 'en',
+          },
+          {
+            type: "radio",
+            label: "Українська",
+            id: "settings_lang-ua",
+            onChange: "ui.settings.LANG = 'ua';",
+            checked: this.LANG === 'ua',
+          }
+        ]
+      },
     ]
+  }
+  get LANG() {
+    return config.ui?.local ?? "en"
+  }
+  set LANG(value) {
+    config.ui.local = value;
+    config.writeConfiguration();
+    setTimeout(() => location.reload(), 1000)
   }
   get DISCORD_WEBHOOK() {
     return config.DISCORD_WEBHOOK ?? "";
@@ -3440,7 +3472,7 @@ class Settings {
   get contextMenuItems() {
     return [
       {
-        label: "Colors",
+        label: ui.lang.selectColors,
         elements: [
           {
             type: "radio",
@@ -3595,7 +3627,7 @@ class Settings {
       // },
 
       {
-        label: "Show bg-animation",
+        label: ui.lang.showBgAnimation,
         type: "checkbox",
         name: "context_show-bg-animation",
         id: "context_show-bg-animation",
@@ -3603,7 +3635,7 @@ class Settings {
         event: `onchange="ui.settings.BG_ANIMATION = this.checked;"`,
       },
       {
-        label: "Start on load",
+        label: ui.lang.startOnLoad,
         type: "checkbox",
         name: "context_show-start-on-load",
         id: "context_show-start-on-load",
@@ -4337,10 +4369,10 @@ class Target {
   get contextMenuItems() {
     return [
       {
-        label: "Style",
+        label: ui.lang.style,
         elements: [
           {
-            label: "Show header",
+            label: ui.lang.showHeader,
             type: "checkbox",
             name: "context_hide-target-header",
             id: "context_hide-target-header",
@@ -4348,7 +4380,7 @@ class Target {
             event: `onchange="ui.target.SHOW_HEADER = this.checked;"`,
           },
           {
-            label: "Show background",
+            label: ui.lang.showBackground,
             type: "checkbox",
             name: "context_hide-target-bg",
             id: "context_hide-target-bg",
@@ -4359,7 +4391,7 @@ class Target {
             type: "checkbox",
             name: "context_autoscroll-target",
             id: "context_autoscroll-target",
-            label: "Autoscroll",
+            label: ui.lang.autoscroll,
             checked: this.AUTOSCROLL,
             event: `onchange="ui.target.AUTOSCROLL = this.checked;"`,
           },
@@ -4367,7 +4399,7 @@ class Target {
             type: "checkbox",
             name: "context-hide-unearned",
             id: "context-hide-unearned",
-            label: "Show overlay",
+            label: ui.lang.showOverlay,
             checked: this.SHOW_PREV_OVERLAY,
             event: `onchange="ui.target.SHOW_PREV_OVERLAY = this.checked"`,
           },
@@ -4375,7 +4407,7 @@ class Target {
             type: "checkbox",
             name: "context-show-border",
             id: "context-show-border",
-            label: "Show img border",
+            label: ui.lang.showImageBorder,
             checked: this.SHOW_PREV_BORDER,
             event: `onchange="ui.target.SHOW_PREV_BORDER = this.checked"`,
           },
@@ -4383,20 +4415,20 @@ class Target {
             type: "checkbox",
             name: "context-show-difficult",
             id: "context-show-difficult",
-            label: "Show difficult",
+            label: ui.lang.showDifficult,
             checked: this.SHOW_DIFFICULT,
             event: `onchange="ui.target.SHOW_DIFFICULT = this.checked"`,
           },
         ]
       },
       {
-        label: "Sort",
+        label: ui.lang.sort,
         elements: [
           {
             type: "radio",
             name: "context-sort",
             id: "context-sort_latest",
-            label: "Latest",
+            label: ui.lang.latest,
             checked: this.SORT_NAME === UI.sortMethods.latest,
             event: `onchange="ui.target.SORT_NAME = 'latest';"`,
           },
@@ -4404,7 +4436,7 @@ class Target {
             type: "radio",
             name: "context-sort",
             id: "context-sort_rarest",
-            label: "Rarest",
+            label: ui.lang.rarest,
             checked: this.SORT_NAME === UI.sortMethods.earnedCount,
             event: `onchange="ui.target.SORT_NAME = 'earnedCount';"`,
           },
@@ -4412,7 +4444,7 @@ class Target {
             type: "radio",
             name: "context-sort",
             id: "context-sort_points",
-            label: "Points",
+            label: ui.lang.points,
             checked: this.SORT_NAME === UI.sortMethods.points,
             event: `onchange="ui.target.SORT_NAME = 'points';"`,
           },
@@ -4420,7 +4452,7 @@ class Target {
             type: "radio",
             name: "context-sort",
             id: "context-sort_retropoints",
-            label: "Retropoints",
+            label: ui.lang.retropoints,
             checked: this.SORT_NAME === UI.sortMethods.truepoints,
             event: `onchange="ui.target.SORT_NAME = 'truepoints';"`,
           },
@@ -4428,14 +4460,15 @@ class Target {
             type: "radio",
             name: "context-sort",
             id: "context-sort_default",
-            label: "Default",
+            label: ui.lang.default,
             checked: this.SORT_NAME === UI.sortMethods.default,
             event: `onchange="ui.target.SORT_NAME = 'default';"`,
-          }, {
+          },
+          {
             type: "radio",
             name: "context-sort",
             id: "context-sort_level",
-            label: "Level (if possible)",
+            label: ui.lang.level,
             checked: this.SORT_NAME === UI.sortMethods.level,
             event: `onchange="ui.target.SORT_NAME = 'level';"`,
           },
@@ -4443,7 +4476,7 @@ class Target {
             type: "radio",
             name: "context-sort",
             id: "context-sort_dont-sort",
-            label: "Disable",
+            label: ui.lang.disable,
             checked: this.SORT_NAME === UI.sortMethods.disable,
             event: `onchange="ui.target.SORT_NAME = 'disable';"`,
           },
@@ -4451,20 +4484,20 @@ class Target {
             type: "checkbox",
             name: "context-reverse-sort",
             id: "context-reverse-sort",
-            label: "Reverse",
+            label: ui.lang.reverse,
             checked: this.REVERSE_SORT == -1,
             event: `onchange="ui.target.REVERSE_SORT = this.checked"`,
           },
         ],
       },
       {
-        label: "Filter",
+        label: ui.lang.filter,
         elements: [
           {
             type: "radio",
             name: "context-filter",
             id: "context_filter-progression",
-            label: "Progression",
+            label: ui.lang.progression,
             checked: this.FILTER_NAME === UI.filterMethods.progression,
             event: `onchange="ui.target.FILTER_NAME = 'progression';"`,
           },
@@ -4472,7 +4505,7 @@ class Target {
             type: "radio",
             name: "context-filter",
             id: "context_filter-missable",
-            label: "Missable",
+            label: ui.lang.missable,
             checked: this.FILTER_NAME === UI.filterMethods.missable,
             event: `onchange="ui.target.FILTER_NAME = 'missable';"`,
           },
@@ -4480,7 +4513,7 @@ class Target {
             type: "radio",
             name: "context-filter",
             id: "context_filter-earned",
-            label: "Earned",
+            label: ui.lang.earned,
             checked: this.FILTER_NAME === UI.filterMethods.earned,
             event: `onchange="ui.target.FILTER_NAME = 'earned';"`,
           },
@@ -4488,7 +4521,7 @@ class Target {
             type: "radio",
             name: "context-filter",
             id: "context_filter-all",
-            label: "All",
+            label: ui.lang.all,
             checked: this.FILTER_NAME === UI.filterMethods.all,
             event: `onchange="ui.target.FILTER_NAME = 'all';"`,
           },
@@ -4496,7 +4529,7 @@ class Target {
             type: "checkbox",
             name: "context-reverse-filter",
             id: "context-reverse-filter",
-            label: "Reverse",
+            label: ui.lang.reverse,
             checked: this.REVERSE_FILTER,
             event: `onchange="ui.target.REVERSE_FILTER = this.checked;"`,
           },
@@ -4504,57 +4537,57 @@ class Target {
             type: "checkbox",
             name: "context-hide-filtered",
             id: "context-hide-filtered",
-            label: "Hide filtered",
+            label: ui.lang.hideFiltered,
             checked: this.HIDE_FILTERED,
             event: `onchange="ui.target.HIDE_FILTERED = this.checked;"`,
           },
         ],
       },
       {
-        label: "Clear",
+        label: ui.lang.clear,
         elements: [
           {
             type: "button",
             name: "context-clear-all",
             id: "context-clear-all",
-            label: "Clear All",
+            label: ui.lang.clearAll,
             event: `onclick="ui.target.clearAllAchivements();"`,
           },
           {
             type: "checkbox",
             name: "context-autoclear",
             id: "context-autoclear",
-            label: "Autoclear earned",
+            label: ui.lang.autoclearEarned,
             checked: this.AUTOCLEAR,
             event: `onchange="ui.target.AUTOCLEAR = this.checked;"`,
           },
           {
-            prefix: "Delay",
+            prefix: ui.lang.clearDelay,
             postfix: "sec",
             type: "input-number",
             name: "context-autoclear-delay",
             id: "context-autoclear-delay",
-            label: "Delay",
+            label: ui.lang.clearDelay,
             value: this.AUTOCLEAR_DELAY,
             event: `onchange="ui.target.AUTOCLEAR_DELAY = this.value;"`,
           },
         ],
       },
       {
-        label: "Fill",
+        label: ui.lang.fill,
         elements: [
           {
             type: "button",
             name: "context-fill",
             id: "context-fill",
-            label: "Fill",
+            label: ui.lang.fillAll,
             event: `onclick="ui.target.fillItems()"`,
           },
           {
             type: "checkbox",
             name: "context-autofill",
             id: "context-autofill",
-            label: "Autofill",
+            label: ui.lang.autofill,
             checked: this.AUTOFILL,
             event: `onchange="ui.target.AUTOFILL = this.checked;"`,
           },
@@ -4740,7 +4773,7 @@ class Target {
       ui.target.addAchieveToTarget(id);
       this.section.querySelector(".achiv-block")?.remove();
     })
-    this.searchInput?.addEventListener("input", this.searchHandler)
+    this.searchInput?.addEventListener("change", this.searchHandler)
   }
   searchHandler(event) {
     event.stopPropagation();
@@ -4748,22 +4781,30 @@ class Target {
       [...ui.target.container.querySelectorAll('.target-achiv')].forEach(target => {
         const id = target.dataset.achivId;
         const description = target.querySelector(".achiv-description");
-        description && (description.innerText = ui.ACHIEVEMENTS[id].Description);
+        description && (description.innerText = ui.ACHIEVEMENTS[id]?.Description);
       })
     }
     const markQuery = (query) => {
       const regex = new RegExp(`(${query})`, 'gi');
-      [...ui.target.container.querySelectorAll('.achiv-description')].forEach(description => {
-        description.innerHTML = description.innerHTML.replace(regex, (g1) => `<span class="highlight-text">${g1}</span>`)
+      [...ui.target.container.querySelectorAll('.achiv-description')].reverse().forEach(description => {
+        if (description.innerText.match(regex)) {
+          ui.target.moveToTop(description.closest('.target-achiv'));
+          description.innerHTML = description.innerHTML.replace(regex, (g1) => `<span class="highlight-text">${g1}</span>`)
+
+        }
       })
     }
     clearPrevQuery();
+    ui.target.applySort();
     const query = event.target.value;
-    query && markQuery(query);
-    const firstHighlight = document.querySelector('.highlight-text');
-    if (firstHighlight) {
-      firstHighlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (query) {
+      markQuery(query);
+      const firstHighlight = document.querySelector('.highlight-text');
+      if (firstHighlight) {
+        firstHighlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
     }
+
 
   }
   setValues() {

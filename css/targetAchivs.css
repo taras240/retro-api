@@ -342,10 +342,15 @@
 .text-input.target__search-bar {
   background-color: var(--main-color);
   max-width: 6rem;
-  padding-right: 0;
+  /* min-width: 0;
+  padding: 0; */
+  padding-right: 0.5rem;
+
+  /* opacity: 0; */
 }
 
 .text-input.target__search-bar:focus {
   background-color: var(--main-color);
   max-width: 10rem;
+  opacity: 1;
 }
