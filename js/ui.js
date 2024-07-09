@@ -2056,14 +2056,14 @@ class StatusPanel {
   get contextMenuItems() {
     return [
       {
-        label: "Show stats",
+        label: ui.lang.showStats,
         elements: [
           {
-            prefix: "Duration ",
-            postfix: "sec",
+            prefix: ui.lang.duration,
+            postfix: ui.lang.sec,
             type: "input-number",
             id: "context-menu_stats-duration",
-            label: "Duration",
+            label: ui.lang.duration,
             value: this.STATS_DURATION,
             event: `onchange="ui.statusPanel.STATS_DURATION = this.value;"`,
           },
@@ -2071,7 +2071,7 @@ class StatusPanel {
             type: "checkbox",
             name: "context_show-points",
             id: "context_show-points",
-            label: "Hard points",
+            label: ui.lang.points,
             checked: this.SHOW_HP,
             event: `onchange="ui.statusPanel.SHOW_HP = this.checked;"`,
           },
@@ -2080,7 +2080,7 @@ class StatusPanel {
             type: "checkbox",
             name: "context_show-retropoints",
             id: "context_show-retropoints",
-            label: "Retropoints",
+            label: ui.lang.retropoints,
             checked: this.SHOW_RP,
             event: `onchange="ui.statusPanel.SHOW_RP = this.checked;"`,
           },
@@ -2088,7 +2088,7 @@ class StatusPanel {
             type: "checkbox",
             name: "context_show-progression",
             id: "context_show-progression",
-            label: "Progression Steps",
+            label: ui.lang.progression,
             checked: this.SHOW_PROGRESSION,
             event: `onchange="ui.statusPanel.SHOW_PROGRESSION = this.checked;"`,
           },
@@ -2096,7 +2096,7 @@ class StatusPanel {
             type: "checkbox",
             name: "context_show-cheevos",
             id: "context_show-cheevos",
-            label: "Cheevos",
+            label: ui.lang.cheevos,
             checked: this.SHOW_CHEEVOS,
             event: `onchange="ui.statusPanel.SHOW_CHEEVOS = this.checked;"`,
           },
@@ -2105,7 +2105,7 @@ class StatusPanel {
             type: "checkbox",
             name: "context_show-softpoints",
             id: "context_show-softpoints",
-            label: "Soft points",
+            label: ui.lang.softpoints,
             checked: this.SHOW_SP,
             event: `onchange="ui.statusPanel.SHOW_SP = this.checked;"`,
           },
@@ -2113,7 +2113,7 @@ class StatusPanel {
             type: "radio",
             name: "context_game-time",
             id: "context_show-playTime",
-            label: "Game time",
+            label: ui.lang.gameTime,
             checked: this.SHOW_TIME == "playTime",
             event: `onclick="ui.statusPanel.SHOW_TIME = 'playTime';"`,
           },
@@ -2121,7 +2121,7 @@ class StatusPanel {
             type: "radio",
             name: "context_game-time",
             id: "context_show-sessionTime",
-            label: "Session Game Time",
+            label: ui.lang.sessionGameTime,
             checked: this.SHOW_TIME == "sessionTime",
             event: `onclick="ui.statusPanel.SHOW_TIME = 'sessionTime';"`,
           },
@@ -2129,16 +2129,16 @@ class StatusPanel {
             type: "radio",
             name: "context_game-time",
             id: "context_show-timer",
-            label: "Timer",
+            label: ui.lang.timer,
             checked: this.SHOW_TIME == "timer",
             event: `onclick="ui.statusPanel.SHOW_TIME = 'timer';"`,
           },
           {
-            prefix: "Timer",
-            postfix: "min",
+            prefix: ui.lang.timer,
+            postfix: ui.lang.min,
             type: "input-number",
             id: "context-menu_stats-timer-duration",
-            label: "Timer",
+            label: ui.lang.timer,
             value: ~~(this.TIMER_TIME / 60 * 100) / 100,
             event: `onchange="ui.statusPanel.TIMER_TIME = this.value;"`,
           },
@@ -2147,13 +2147,13 @@ class StatusPanel {
         ],
       },
       {
-        label: "Progressbar",
+        label: ui.lang.progressbar,
         elements: [
           {
             type: "radio",
             name: "context_show-progressbar",
             id: "context_progressbar-auto",
-            label: "Auto",
+            label: ui.lang.auto,
             checked: this.PROGRESSBAR_PROPERTY_NAME == "auto",
             event: `onchange = 'ui.statusPanel.PROGRESSBAR_PROPERTY_NAME = "auto"'`,
           },
@@ -2161,7 +2161,7 @@ class StatusPanel {
             type: "radio",
             name: "context_show-progressbar",
             id: "context_progressbar-achives",
-            label: "Cheevos",
+            label: ui.lang.cheevos,
             checked: this.PROGRESSBAR_PROPERTY_NAME == "achives",
             event: `onchange = 'ui.statusPanel.PROGRESSBAR_PROPERTY_NAME = "achives"'`,
           },
@@ -2169,7 +2169,7 @@ class StatusPanel {
             type: "radio",
             name: "context_show-progressbar",
             id: "context_progressbar-progression",
-            label: "Progression steps",
+            label: ui.lang.progression,
             checked: this.PROGRESSBAR_PROPERTY_NAME == "progression",
             event: `onchange = 'ui.statusPanel.PROGRESSBAR_PROPERTY_NAME = "progression"'`,
           },
@@ -2177,7 +2177,7 @@ class StatusPanel {
             type: "radio",
             name: "context_show-progressbar",
             id: "context_progressbar-points",
-            label: "Hard points",
+            label: ui.lang.points,
             checked: this.PROGRESSBAR_PROPERTY_NAME == "points",
             event: `onchange = 'ui.statusPanel.PROGRESSBAR_PROPERTY_NAME = "points"'`,
           },
@@ -2185,7 +2185,7 @@ class StatusPanel {
             type: "radio",
             name: "context_show-progressbar",
             id: "context_progressbar-retropoints",
-            label: "Retropoints",
+            label: ui.lang.retropoints,
             checked: this.PROGRESSBAR_PROPERTY_NAME == "retropoints",
             event: `onchange = 'ui.statusPanel.PROGRESSBAR_PROPERTY_NAME = "retropoints"'`,
           },
@@ -2193,7 +2193,7 @@ class StatusPanel {
             type: "radio",
             name: "context_show-progressbar",
             id: "context_progressbar-softpoins",
-            label: "Soft points",
+            label: ui.lang.softpoints,
             checked: this.PROGRESSBAR_PROPERTY_NAME == "softpoints",
             event: `onchange = 'ui.statusPanel.PROGRESSBAR_PROPERTY_NAME = "softpoints"'`,
           },
@@ -2203,20 +2203,21 @@ class StatusPanel {
       },
 
       {
-        label: "Elements",
+        label: ui.lang.elements,
         elements: [
           {
             type: "checkbox",
             name: "context_show-platform",
             id: "context_show-platform",
-            label: "Platform",
+            label: ui.lang.platform,
             checked: this.SHOW_PLATFORM,
             event: `onchange="ui.statusPanel.SHOW_PLATFORM = this.checked;"`,
-          }, {
+          },
+          {
             type: "checkbox",
             name: "context_show-rich-presence",
             id: "context_show-rich-presence",
-            label: "Rich presence",
+            label: ui.lang.richPresence,
             checked: this.SHOW_RICH_PRESENCE,
             event: `onchange="ui.statusPanel.SHOW_RICH_PRESENCE = this.checked;"`,
           },
@@ -2224,7 +2225,7 @@ class StatusPanel {
             type: "radio",
             name: "context_show-game-ratio",
             id: "context_show-game-ratio",
-            label: "Show Retro Ratio",
+            label: ui.lang.showRetroRatio,
             checked: this.SHOW_GAME_RATIO,
             event: `onclick="ui.statusPanel.SHOW_GAME_RATIO = this.checked;"`,
           },
@@ -2232,29 +2233,29 @@ class StatusPanel {
             type: "radio",
             name: "context_show-game-ratio",
             id: "context_show-mastery-rate",
-            label: "Show Mastery Rate",
+            label: ui.lang.showMasteryRate,
             checked: this.SHOW_MASTERY_RATE,
             event: `onclick="ui.statusPanel.SHOW_MASTERY_RATE = this.checked;"`,
           },
         ],
       },
       {
-        label: "Alerts",
+        label: ui.lang.alerts,
         elements: [
           {
             type: "checkbox",
             name: "context_show-new-cheevos",
             id: "context_show-new-cheevos",
-            label: "Show alerts",
+            label: ui.lang.showAlerts,
             checked: this.SHOW_NEW_ACHIV,
             event: `onchange="ui.statusPanel.SHOW_NEW_ACHIV = this.checked;"`,
           },
           {
-            prefix: "Alerts duration",
-            postfix: "sec",
+            prefix: ui.lang.duration,
+            postfix: ui.lang.sec,
             type: "input-number",
             id: "context-menu_stats-earned-duration",
-            label: "Duration",
+            label: ui.lang.duration,
             value: this.NEW_ACHIV_DURATION,
             event: `onchange="ui.statusPanel.NEW_ACHIV_DURATION = this.value;"`,
           },
@@ -3380,28 +3381,28 @@ class Settings {
         elements: [
           {
             type: "text-input",
-            label: "paste discord webhook",
+            label: ui.lang.pasteWebhook,
             id: "settings_discord-hook-input",
             value: this.DISCORD_WEBHOOK ?? "",
             onChange: "ui.settings.DISCORD_WEBHOOK = value;",
           },
           {
             type: "checkbox",
-            label: "Start game alert",
+            label: ui.lang.startGameAlert,
             id: "settings_discord-start-game",
             onChange: "ui.settings.DISCORD_NEW_GAME = this.checked;",
             checked: this.DISCORD_NEW_GAME,
           },
           {
             type: "checkbox",
-            label: "Start session alert",
+            label: ui.lang.startSession,
             id: "settings_discord-start-session",
             onChange: "ui.settings.DISCORD_START_SESSION = this.checked;",
             checked: this.DISCORD_START_SESSION,
           },
           {
             type: "checkbox",
-            label: "Earn cheevo alert",
+            label: ui.lang.earnCheevoAlert,
             id: "settings_discord-new-cheevo",
             onChange: "ui.settings.DISCORD_NEW_CHEEVO = this.checked;",
             checked: this.DISCORD_NEW_CHEEVO,
@@ -3912,7 +3913,7 @@ class GameCard {
   get contexMenuSettingsItems() {
     return [
       {
-        label: "Show title badges",
+        label: ui.lang.showTitleBadges,
         type: "checkbox",
         name: "game-card_show-badges",
         id: "game-card_show-badges",
@@ -3924,7 +3925,7 @@ class GameCard {
 
   _contextMenuPropertiesItems = [
     {
-      label: "Platform",
+      label: ui.lang.platform,
       type: "checkbox",
       name: "context_show-platform",
       id: "context_show-platform",
@@ -3932,7 +3933,7 @@ class GameCard {
       checked: true,
     },
     {
-      label: "Developer",
+      label: ui.lang.developer,
       type: "checkbox",
       name: "context_show-developer",
       id: "context_show-developer",
@@ -3940,7 +3941,7 @@ class GameCard {
       checked: true,
     },
     {
-      label: "Publisher",
+      label: ui.lang.publisher,
       type: "checkbox",
       name: "context_show-publisher",
       id: "context_show-publisher",
@@ -3948,7 +3949,7 @@ class GameCard {
       checked: true,
     },
     {
-      label: "Genre",
+      label: ui.lang.genre,
       type: "checkbox",
       name: "context_show-genre",
       id: "context_show-genre",
@@ -3956,7 +3957,7 @@ class GameCard {
       checked: true,
     },
     {
-      label: "Released",
+      label: ui.lang.released,
       type: "checkbox",
       name: "context_show-released",
       id: "context_show-released",
@@ -3964,7 +3965,7 @@ class GameCard {
       checked: true,
     },
     {
-      label: "Points",
+      label: ui.lang.points,
       type: "checkbox",
       name: "context_show-points",
       id: "context_show-points",
@@ -3972,7 +3973,7 @@ class GameCard {
       checked: true,
     },
     {
-      label: "Players",
+      label: ui.lang.players,
       type: "checkbox",
       name: "context_show-players",
       id: "context_show-players",
@@ -3980,7 +3981,7 @@ class GameCard {
       checked: true,
     },
     {
-      label: "Completion",
+      label: ui.lang.completion,
       type: "checkbox",
       name: "context_show-completion",
       id: "context_show-completion",
@@ -3988,7 +3989,7 @@ class GameCard {
       checked: true,
     },
     {
-      label: "Achievements",
+      label: ui.lang.cheevos,
       type: "checkbox",
       name: "context_show-achievements",
       id: "context_show-achievements",
@@ -3997,15 +3998,15 @@ class GameCard {
     },
   ];
   gameInfoElements = {
-    Platform: { title: "Platform", id: "game-card-platform" },
-    Developer: { title: "Developer", id: "game-card-developer" },
-    Publisher: { title: "Publisher", id: "game-card-publisher" },
-    Genre: { title: "Genre", id: "game-card-genre" },
-    Released: { title: "Released", id: "game-card-released" },
-    Completion: { title: "Completion", id: "game-card-completion", value: "" },
-    Points: { title: "Points", id: "game-card-points-total" },
-    Players: { title: "Players", id: "#game-card-players-total" },
-    Achievements: { title: "Achievements", id: "game-card-achivs-count" },
+    Platform: { title: ui.lang.platform, id: "game-card-platform" },
+    Developer: { title: ui.lang.developer, id: "game-card-developer" },
+    Publisher: { title: ui.lang.publisher, id: "game-card-publisher" },
+    Genre: { title: ui.lang.genre, id: "game-card-genre" },
+    Released: { title: ui.lang.released, id: "game-card-released" },
+    Completion: { title: ui.lang.completion, id: "game-card-completion", value: "" },
+    Points: { title: ui.lang.points, id: "game-card-points-total" },
+    Players: { title: ui.lang.players, id: "#game-card-players-total" },
+    Achievements: { title: ui.lang.cheevos, id: "game-card-achivs-count" },
   };
   updateGameInfoElement({ name, value, visibility, checkbox }) {
     if (this.gameInfoElements.hasOwnProperty(name)) {
@@ -4013,13 +4014,13 @@ class GameCard {
         visibility = checkbox.checked ? "visible" : "hidden";
         this.gameInfoElements[name].visibility = visibility;
         this.contextMenuPropertiesItems.map((menuItem) => {
-          menuItem.label == name ? (menuItem.checked = checkbox.checked) : "";
+          menuItem.id == checkbox.id ? (menuItem.checked = checkbox.checked) : "";
         });
         if (!config.ui.hasOwnProperty("game_section")) {
           config.ui.game_section = [];
         }
         config.ui.game_section.gameInfoElements = this.gameInfoElements;
-        config.ui.game_section.contextMenuPropertiesItems = this.contextMenuPropertiesItems;
+        config.ui.game_section.contextMenuItems = this.contextMenuPropertiesItems;
         config.writeConfiguration();
       }
       value ? (this.gameInfoElements[name].value = value) : "";
@@ -4034,12 +4035,27 @@ class GameCard {
     this.addEvents();
   }
   loadSavedData() {
-    config.ui?.game_section?.gameInfoElements
-      ? (this.gameInfoElements = config.ui.game_section.gameInfoElements)
-      : "";
-    config.ui?.game_section?.contextMenuItems
-      ? (this.contextMenuPropertiesItems = config.ui.game_section.contextMenuItems)
-      : "";
+    this.loadSavedGameInfo();
+    this.loadSavedContextData();
+  }
+  loadSavedGameInfo() {
+    if (config.ui?.game_section?.gameInfoElements) {
+      const savedData = config.ui.game_section.gameInfoElements;
+      Object.keys(savedData).forEach(key => {
+        this.gameInfoElements[key].visibility = savedData[key].visibility;
+      })
+    }
+  }
+  loadSavedContextData() {
+    if (config.ui?.game_section?.contextMenuItems) {
+      const savedData = config.ui.game_section.contextMenuItems;
+      savedData.forEach(el => {
+        this._contextMenuPropertiesItems
+          .find(property =>
+            property.id === el.id).checked = el.checked;
+
+      })
+    }
   }
   initializeElements() {
     // Знаходимо контейнер для інформації про гру
@@ -6492,13 +6508,13 @@ class Stats {
   get contextMenuItems() {
     return [
       {
-        label: "Show stats",
+        label: ui.lang.showStats,
         elements: [
           {
             type: "checkbox",
             name: "context_show-points",
             id: "context_show-points",
-            label: "Hard points",
+            label: ui.lang.points,
             checked: this.SHOW_HP,
             event: `onchange="ui.stats.SHOW_HP = this.checked;"`,
           },
@@ -6506,7 +6522,7 @@ class Stats {
             type: "checkbox",
             name: "context_show-retropoints",
             id: "context_show-retropoints",
-            label: "Retropoints",
+            label: ui.lang.retropoints,
             checked: this.SHOW_RP,
             event: `onchange="ui.stats.SHOW_RP = this.checked;"`,
           },
@@ -6514,7 +6530,7 @@ class Stats {
             type: "checkbox",
             name: "context_show-softpoints",
             id: "context_show-softpoints",
-            label: "Softpoints",
+            label: ui.lang.softpoints,
             checked: this.SHOW_SP,
             event: `onchange="ui.stats.SHOW_SP = this.checked;"`,
           },
@@ -6522,7 +6538,7 @@ class Stats {
             type: "checkbox",
             name: "context_show-rank",
             id: "context_show-rank",
-            label: "Rank",
+            label: ui.lang.rank,
             checked: this.SHOW_RANK,
             event: `onchange="ui.stats.SHOW_RANK = this.checked;"`,
           },
@@ -6530,7 +6546,7 @@ class Stats {
             type: "checkbox",
             name: "context_show-percentile",
             id: "context_show-percentile",
-            label: "Percentile",
+            label: ui.lang.percentile,
             checked: this.SHOW_PERCENTILE,
             event: `onchange="ui.stats.SHOW_PERCENTILE = this.checked;"`,
           },
@@ -6539,20 +6555,20 @@ class Stats {
             type: "checkbox",
             name: "context_show-true-ratio",
             id: "context_show-true-ratio",
-            label: "True Ratio",
+            label: ui.lang.trueRatio,
             checked: this.SHOW_TR,
             event: `onchange="ui.stats.SHOW_TR = this.checked;"`,
           },
         ]
       },
       {
-        label: "Style",
+        label: ui.lang.style,
         elements: [
           {
             type: "checkbox",
             name: "context_show-header",
             id: "context_show-header",
-            label: "Show header",
+            label: ui.lang.showHeader,
             checked: this.SHOW_HEADER,
             event: `onchange="ui.stats.SHOW_HEADER = this.checked;"`,
           },
@@ -6560,7 +6576,7 @@ class Stats {
             type: "checkbox",
             name: "context_show-bg",
             id: "context_show-bg",
-            label: "Show background",
+            label: ui.lang.showBackground,
             checked: this.SHOW_BG,
             event: `onchange="ui.stats.SHOW_BG = this.checked;"`,
           },
@@ -6570,7 +6586,7 @@ class Stats {
         type: "checkbox",
         name: "context_show-session-progress",
         id: "context_show-session-progress",
-        label: "Show Session Progress",
+        label: ui.lang.showSessionProgress,
         checked: this.SHOW_SESSION_PROGRESS,
         event: `onchange="ui.stats.SHOW_SESSION_PROGRESS = this.checked;"`,
       }
@@ -6657,7 +6673,6 @@ class Stats {
   initialUserSummary;
   userSummary;
   constructor() {
-
     this.initializeElements();
     this.setElementsVisibility();
     this.addEvents();
@@ -6666,12 +6681,17 @@ class Stats {
     this.section = document.querySelector("#stats_section");
     this.header = this.section.querySelector(".header-container");
     this.container = this.section.querySelector(".stats-container");
+
+    this.generateStatsElements();
+
     this.rankRateElement = this.section.querySelector('#stats_rank-rate');
     this.rankElement = this.section.querySelector('#stats_rank');
     this.pointsElement = this.section.querySelector('#stats_points');
     this.retropointsElement = this.section.querySelector('#stats_retropoints');
     this.softpointsElement = this.section.querySelector('#stats_softpoints');
     this.trueRatioElement = this.section.querySelector('#stats_true-ratio');
+
+
     this.masteredCountElement = this.section.querySelector('#stats_mastered-count');
     this.beatenCountElement = this.section.querySelector('#stats_beaten-count');
     this.playedCountElement = this.section.querySelector('#stats_played-count');
@@ -6791,6 +6811,29 @@ class Stats {
     setValue(this.trueRatioElement, "trueRatio");
 
     this.userSummary = currentUserSummary;
+  }
+  statusProperties = {
+    percentile: { label: ui.lang.percentile, id: "stats_rank-rate", class: 'stats__rank-value' },
+    rank: { label: ui.lang.rank, id: "stats_rank", class: 'stats__rank-value' },
+    points: { label: ui.lang.points, id: "stats_points", },
+    retropoints: { label: ui.lang.retropoints, id: "stats_retropoints", },
+    trueRatio: { label: ui.lang.trueRatio, id: "stats_true-ratio", },
+    softpoints: { label: ui.lang.softpoints, id: "stats_softpoints", }
+  }
+  generateStatsElements() {
+    const statusHtml = Object.values(this.statusProperties)
+      .reduce((html, stat) => {
+        const elHtml = `
+        <li class="stats__stat-container">
+            <h2 class="stats__title">${stat.label}</h2>
+            <p id="${stat.id}" class="stats__value ${stat.class}"></p>
+        </li>
+        `;
+        html += elHtml;
+        return html;
+      }, '');
+
+    this.container.innerHTML = statusHtml;
   }
 }
 
