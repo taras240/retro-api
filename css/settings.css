@@ -1,5 +1,5 @@
 /** -----[ Settings Section ]--------*/
-.prefs_section {
+.section.prefs_section {
   display: flex;
   flex-direction: column;
   width: auto;
@@ -16,7 +16,7 @@
 
 /**------------- header -------------*/
 .widget-header-text.prefs-header {
-  font-size: 1.5rem;
+  /* font-size: 1.5rem; */
 }
 
 .input-container {

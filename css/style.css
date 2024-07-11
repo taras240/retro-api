@@ -258,7 +258,7 @@ a:hover {
 .widget-header-text {
   text-align: center;
   padding: 5px;
-  font-weight: 600;
+  /* font-weight: bold; */
   font-size: 1.4rem;
   flex: 1;
 }
@@ -402,6 +402,25 @@ a:hover {
   width: 25px;
   border-color: var(--accent-color);
 }
+
+/** Scrollable */
+.scrollable::-webkit-scrollbar {
+  width: auto;
+  height: auto;
+}
+
+.scrollable::-webkit-scrollbar-track {
+  background: var(--secondary-color);
+  cursor: default;
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+  background: var(--accent-color);
+  border-radius: 3px;
+  cursor: default;
+}
+
+.scrollable::-webkit-scrollbar-thumb:hover {}
 
 /**---------[ Input Styles ]-----------------------*/
 

@@ -6091,12 +6091,12 @@ class Note {
     this.section = document.querySelector("#note_section");
     this.header = this.section.querySelector(".header-container");
     this.resizer = this.section.querySelector("#note-resizer");
-    this.textaria = this.section.querySelector(".note-textaria");
+    this.textarea = this.section.querySelector(".note-textaria");
   }
   generateTabs() {
     const tabsHtml = this.notesTabs.reduce((tabsHtml, tab) => {
       const tabHtml = `
-        <div class="checkbox-input_container">
+        <div class="checkbox-input_container" onmousedown="event.stopPropagation()">
           <input  onchange="${tab.onChange}" type="radio" id="${tab.id}" ${tab.checked ? "checked" : ""} name="${tab.name}">
           <label class="radio-tab" for="${tab.id}">${tab.label}</label>
         </div>
@@ -6110,18 +6110,7 @@ class Note {
   }
   addEvents() {
     this.delayedSave = {};
-    this.textaria.addEventListener("input", event => {
-      const noteID = this.CURRENT_TAB == "main" ? 'main' : config.gameID;
-      const noteText = this.textaria.value;
-
-      clearTimeout(this.delayedSave[noteID]);
-
-      this.delayedSave[noteID] = setTimeout(() => {
-        this.saveNoteValue({ id: noteID, value: noteText })
-      },
-        this.AUTOSAVE_INTERVAL_MILISECS);
-
-    })
+    this.textarea.addEventListener("input", this.textInputHandler)
     this.resizer.addEventListener("mousedown", event => {
       event.stopPropagation();
       this.section.classList.add("resized");
@@ -6133,6 +6122,18 @@ class Note {
     this.header.addEventListener("mousedown", (e) => {
       UI.moveEvent(this.section, e);
     });
+  }
+  textInputHandler(event) {
+    const noteID = ui.note.CURRENT_TAB == "main" ? 'main' : config.gameID;
+    const noteText = ui.note.textarea.value;
+
+    clearTimeout(ui.note.delayedSave[noteID]);
+
+    ui.note.delayedSave[noteID] = setTimeout(() => {
+      ui.note.saveNoteValue({ id: noteID, value: noteText })
+    },
+      ui.note.AUTOSAVE_INTERVAL_MILISECS);
+
   }
   saveNoteValue({ id, value }) {
     switch (id) {
@@ -6150,17 +6151,40 @@ class Note {
   switchActiveTab() {
     switch (this.CURRENT_TAB) {
       case 'main':
-        this.textaria.value = this.NOTES_VALUE;
+        this.textarea.value = this.NOTES_VALUE;
         break;
       case 'game':
-        this.textaria.value = this.GAME_NOTES_VALUE;
+        this.textarea.value = this.GAME_NOTES_VALUE;
         break;
     }
   }
   updateGame() {
     if (this.CURRENT_TAB === 'game') {
-      this.textaria.value = this.GAME_NOTES_VALUE;
+      this.textarea.value = this.GAME_NOTES_VALUE;
     }
+  }
+  async copyNoteText() {
+    const selectedText = this.textarea.value.substring(this.textarea.selectionStart, this.textarea.selectionEnd)
+    const text = selectedText ? selectedText : this.textarea.value;
+    try {
+      await navigator.clipboard.writeText(text);
+      this.textInputHandler();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  async pasteTextToNote() {
+    try {
+      const text = await navigator.clipboard.readText();
+      this.textarea.value += text;
+      this.textInputHandler();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  clearTextNote() {
+    this.textarea.value = '';
+    this.textInputHandler();
   }
 }
 
