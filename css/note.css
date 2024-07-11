@@ -13,7 +13,58 @@
     position: relative;
     flex: 1;
     padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
 
+.note__tabs-container {
+    /* margin: 0 1rem; */
+    display: flex;
+    gap: 2px;
+    align-items: end;
+    overflow: hidden;
+    /* border-bottom: 1px solid var(--accent-color); */
+}
+
+.radio-tab {
+    position: relative;
+    display: inline-block;
+    padding: 0.1rem .4rem;
+    margin-top: 0.2rem;
+    background-color: black;
+    border-radius: 5px 5px 0 0;
+    border: 1px solid transparent;
+    color: gray;
+    transition: 0.2s;
+    /* overflow-x: hidden;
+    overflow-y: visible; */
+}
+
+input:checked+.radio-tab {
+    margin-top: 0;
+    padding: 0.2rem .5rem;
+    border-color: var(--accent-color);
+    border-bottom: 1px solid transparent;
+    z-index: 2;
+    color: white;
+}
+
+input:checked+.radio-tab::before,
+input:checked+.radio-tab::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    right: 100%;
+    width: 3rem;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--accent-color));
+    z-index: 0;
+}
+
+input:checked+.radio-tab::after {
+    background: linear-gradient(to left, transparent, var(--accent-color));
+    right: auto;
+    left: 100%;
 }
 
 .note-textaria {
@@ -22,9 +73,9 @@
     color: greenyellow;
     text-wrap: wrap;
     width: 100%;
-    height: 100%;
+    flex: 1;
     padding: 20px;
     font-size: 1.3rem;
     resize: none;
-    border-radius: 5px;
+    border-radius: 0 5px 5px 5px;
 }

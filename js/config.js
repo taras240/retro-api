@@ -83,7 +83,7 @@ export class Config {
     return this._cfg.settings.updateDelay * 1000;
   }
   set updateDelay(value) {
-    let delay = parseInt(value) > 0 ? value : 5;
+    let delay = parseInt(value) > 0 ? value : 10;
     this._cfg.settings.updateDelay = delay;
     this.writeConfiguration();
   }

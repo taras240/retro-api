@@ -570,6 +570,8 @@ input:checked+.checkbox-input::before {
 
 }
 
+
+
 /** ------------------------------------------------*/
 /** -------[ WIDGETS SECTION ]----------------------*/
 .buttons-block {
@@ -775,6 +777,7 @@ input[type="checkbox"]:checked+.side-panel_input::after {
   }
 }
 
+
 /**----------------[ CONTEXT-MENU ]-----------------*/
 .context-menu.hidden {
   visibility: hidden;
@@ -970,6 +973,8 @@ input[type="radio"]:checked+.context-menu_radio::after {
   background-color: transparent;
   color: var(--context-font-color);
 }
+
+
 
 /* *-----------------BADGES----------- */
 .target-achiv.show-difficult .difficult-badge,

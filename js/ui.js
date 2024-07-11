@@ -30,6 +30,7 @@ export class UI {
       this.target.fillItems();
     }
     this.progression.fillCards();
+    this.note.updateGame();
   }
 
   constructor() {
@@ -3426,6 +3427,13 @@ class Settings {
             id: "settings_lang-ua",
             onChange: "ui.settings.LANG = 'ua';",
             checked: this.LANG === 'ua',
+          },
+          {
+            type: "radio",
+            label: "Japanese",
+            id: "settings_lang-jp",
+            onChange: "ui.settings.LANG = 'jp';",
+            checked: this.LANG === 'jp',
           }
         ]
       },
@@ -4429,6 +4437,14 @@ class Target {
           },
           {
             type: "checkbox",
+            name: "context-show-level",
+            id: "context-show-level",
+            label: ui.lang.showLevel,
+            checked: this.SHOW_LEVEL,
+            event: `onchange="ui.target.SHOW_LEVEL = this.checked"`,
+          },
+          {
+            type: "checkbox",
             name: "context-show-difficult",
             id: "context-show-difficult",
             label: ui.lang.showDifficult,
@@ -4728,6 +4744,14 @@ class Target {
     config.writeConfiguration();
     this.container.querySelectorAll(".target-achiv").forEach(el => el.classList.toggle("show-difficult", value))
   }
+  get SHOW_LEVEL() {
+    return config?.ui?.target_section?.showLevel ?? true;
+  }
+  set SHOW_LEVEL(value) {
+    config.ui.target_section.showLevel = value;
+    config.writeConfiguration();
+    this.container.querySelectorAll(".target-achiv").forEach(el => el.classList.toggle("show-level", value))
+  }
   constructor() {
     this.initializeElements();
     this.addEvents();
@@ -4908,6 +4932,7 @@ class Target {
       targetElement.classList.toggle("border", this.SHOW_PREV_BORDER);
       targetElement.classList.toggle("overlay", this.SHOW_PREV_OVERLAY);
       targetElement.classList.toggle("show-difficult", this.SHOW_DIFFICULT);
+      targetElement.classList.toggle("show-level", this.SHOW_LEVEL);
       targetElement.classList.toggle("earned", achievement.isEarned);
       targetElement.classList.toggle("hardcore", achievement.isHardcoreEarned)
     }
@@ -4939,7 +4964,7 @@ class Target {
         <div class="target-achiv-details">
           <h3 class="achiv-name">
             <a target="_blanc" href="https://retroachievements.org/achievement/${id}">
-            ${achievement.level < 1000 ? `<p class="game-card_suffix suffix-bold bg_gold"> LVL ${achievement.level?.toString()?.replace(".", "-")} </p>` : ""}
+            ${achievement.level < 1000 ? `<p class="target-level-badge game-card_suffix suffix-bold bg_gold"> LVL ${achievement.level?.toString()?.replace(".", "-")} </p>` : ""}
               ${achievement.Title}
             </a>
           </h3>
@@ -6006,7 +6031,27 @@ class Note {
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
   }
-  AUTOSAVE_INTERVAL_MILISECS = 3000;
+  AUTOSAVE_INTERVAL_MILISECS = 2000;
+  get notesTabs() {
+    return [
+      {
+        type: "radio",
+        name: "note__tabs",
+        id: "notes__main-tab",
+        label: ui.lang.mainNote,
+        checked: this.CURRENT_TAB === 'main',
+        onChange: `ui.note.CURRENT_TAB = 'main'`,
+      },
+      {
+        type: "radio",
+        name: "note__tabs",
+        id: "notes__game-tab",
+        label: ui.lang.gameNote,
+        checked: this.CURRENT_TAB === 'game',
+        onChange: `ui.note.CURRENT_TAB = 'game'`,
+      },
+    ]
+  }
   get NOTES_VALUE() {
     return config._cfg.ui?.note_section?.notes ?? "";
   }
@@ -6014,10 +6059,33 @@ class Note {
     config._cfg.ui.note_section.notes = value;
     config.writeConfiguration();
   }
+  get GAME_NOTES_VALUE() {
+    if (!config._cfg.ui.note_section.game_notes) {
+      config._cfg.ui.note_section.game_notes = {};
+    }
+    return config._cfg.ui?.note_section?.game_notes[config.gameID] ?? "";
+  }
+  set GAME_NOTES_VALUE(value) {
+    config._cfg.ui.note_section.game_notes[config.gameID] = value;
+    config.writeConfiguration();
+  }
+  get CURRENT_TAB() {
+    return config._cfg.ui?.note_section?.currentTab ?? "main";
+  }
+  set CURRENT_TAB(value) {
+    config._cfg.ui.note_section.currentTab = value;
+    config.writeConfiguration();
+    this.switchActiveTab();
+  }
   constructor() {
+    if (!config._cfg.ui.note_section) {
+      config._cfg.ui.note_section = {};
+    }
     this.initializeElements();
+    this.generateTabs();
     this.addEvents();
     this.setValues();
+
   }
   initializeElements() {
     this.section = document.querySelector("#note_section");
@@ -6025,13 +6093,31 @@ class Note {
     this.resizer = this.section.querySelector("#note-resizer");
     this.textaria = this.section.querySelector(".note-textaria");
   }
+  generateTabs() {
+    const tabsHtml = this.notesTabs.reduce((tabsHtml, tab) => {
+      const tabHtml = `
+        <div class="checkbox-input_container">
+          <input  onchange="${tab.onChange}" type="radio" id="${tab.id}" ${tab.checked ? "checked" : ""} name="${tab.name}">
+          <label class="radio-tab" for="${tab.id}">${tab.label}</label>
+        </div>
+      `;
+      tabsHtml += tabHtml;
+      return tabsHtml;
+    }, '');
 
+    this.section.querySelector(".note__tabs-container").innerHTML = tabsHtml;
+
+  }
   addEvents() {
-    this.delayedSave;
-    this.textaria.addEventListener("input", e => {
-      clearTimeout(this.delayedSave);
-      this.delayedSave = setTimeout(() => {
-        this.NOTES_VALUE = this.textaria.value;
+    this.delayedSave = {};
+    this.textaria.addEventListener("input", event => {
+      const noteID = this.CURRENT_TAB == "main" ? 'main' : config.gameID;
+      const noteText = this.textaria.value;
+
+      clearTimeout(this.delayedSave[noteID]);
+
+      this.delayedSave[noteID] = setTimeout(() => {
+        this.saveNoteValue({ id: noteID, value: noteText })
       },
         this.AUTOSAVE_INTERVAL_MILISECS);
 
@@ -6048,8 +6134,33 @@ class Note {
       UI.moveEvent(this.section, e);
     });
   }
+  saveNoteValue({ id, value }) {
+    switch (id) {
+      case "main":
+        this.NOTES_VALUE = value;
+        break;
+      default:
+        config._cfg.ui.note_section.game_notes[id] = value;
+        config.writeConfiguration();
+    }
+  }
   setValues() {
-    this.textaria.value = this.NOTES_VALUE;
+    this.switchActiveTab();
+  }
+  switchActiveTab() {
+    switch (this.CURRENT_TAB) {
+      case 'main':
+        this.textaria.value = this.NOTES_VALUE;
+        break;
+      case 'game':
+        this.textaria.value = this.GAME_NOTES_VALUE;
+        break;
+    }
+  }
+  updateGame() {
+    if (this.CURRENT_TAB === 'game') {
+      this.textaria.value = this.GAME_NOTES_VALUE;
+    }
   }
 }
 

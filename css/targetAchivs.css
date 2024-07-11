@@ -354,3 +354,11 @@
   max-width: 10rem;
   opacity: 1;
 }
+
+.target-level-badge {
+  display: none;
+}
+
+.show-level .target-level-badge {
+  display: inline;
+}

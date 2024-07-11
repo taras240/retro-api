@@ -80,5 +80,8 @@
     "pasteWebhook": "Вставте вебхук",
     "startGameAlert": "Початок гри",
     "startSession": "Початок ігрової сесії",
-    "earnCheevoAlert": "Здобуття досягнення"
+    "earnCheevoAlert": "Здобуття досягнення",
+    "mainNote": "Нотатки",
+    "gameNote": "Нотатки гри",
+    "showLevel": "Показувати рівень"
 }

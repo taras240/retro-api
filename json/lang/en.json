@@ -80,5 +80,8 @@
     "pasteWebhook": "Paste Webhook",
     "startGameAlert": "Game Start Alert",
     "startSession": "Start Session Alert",
-    "earnCheevoAlert": "Achievement Alert"
+    "earnCheevoAlert": "Achievement Alert",
+    "mainNote": "Note",
+    "gameNote": "Game Note",
+    "showLevel": "Show Level"
 }
