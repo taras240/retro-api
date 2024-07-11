@@ -191,11 +191,6 @@ export class UI {
 
       }, 12000)
     }
-
-
-    if (this.settings.DISCORD_NEW_CHEEVO) {
-      earnedAchievementsIDs.forEach(id => this.sendDiscordMessage({ type: "earned-cheevo", id: id }));
-    }
   }
   showContextmenu({ event, menuItems, sectionCode = "" }) {
     const setContextPosition = () => {
@@ -366,17 +361,20 @@ export class UI {
 
   }
 
-  sendDiscordMessage = ({ message = "", type, id }) => {
+  sendDiscordMessage({ message = "", type, id }) {
     const webhook = config.DISCORD_WEBHOOK;
     if (!webhook) {
       return;
     }
     switch (type) {
       case "new-game":
-        message = `[${config.targetUser} just started new game](https://retroachievements.org/game/${config.gameID})`;
+        message = `[${config.targetUser} launched ${ui.GAME_DATA.Title}](https://retroachievements.org/game/${config.gameID})`;
+        break;
+      case "award":
+        message = `[${config.targetUser} ${message} ${ui.GAME_DATA.Title}](https://retroachievements.org/game/${id})`;
         break;
       case "earned-cheevo":
-        message = `[${config.targetUser} just earned new cheevo](https://retroachievements.org/achievement/${id})`;
+        message = `[${config.targetUser} earned new cheevo ${ui.ACHIEVEMENTS[id].isEarnedHardcore ? 'hardcore' : "softcore"}](https://retroachievements.org/achievement/${id})`;
         break;
     }
     fetch(webhook, {
@@ -2724,7 +2722,15 @@ class StatusPanel {
           }
         });
       const award = checkForGameAward();
-      award && alerts.push(award);
+      if (ui.settings.DISCORD_NEW_CHEEVO) {
+        for (let id of earnedAchievementIDs) {
+          ui.sendDiscordMessage({ type: "earned-cheevo", id: id });
+        }
+      }
+      if (award) {
+        alerts.push(award);
+        ui.settings.DISCORD_NEW_AWARD && ui.sendDiscordMessage({ message: award.award, type: "award", id: config.gameID })
+      }
       this.addAlertsToQuery([...alerts]);
     }
 
@@ -2824,7 +2830,6 @@ class StatusPanel {
         award == 'beaten' ? beatenRate :
           award == 'completed' ? completedRate : beatenSoftRate;
 
-      console.log(award, awardRate, completedRate, game);
       const playTimeInMinutes = deltaTime(config.ui.update_section.playTime[ID]);
       this.backSide.imgElement.src = `https://media.retroachievements.org${ImageIcon}`;
       this.backSide.achivTitleElement.innerHTML = `${FixedTitle} ${generateBadges(badges)}
@@ -3408,6 +3413,13 @@ class Settings {
             onChange: "ui.settings.DISCORD_NEW_CHEEVO = this.checked;",
             checked: this.DISCORD_NEW_CHEEVO,
           },
+          {
+            type: "checkbox",
+            label: ui.lang.earnAwardAlert,
+            id: "settings_discord-new-award",
+            onChange: "ui.settings.DISCORD_NEW_AWARD = this.checked;",
+            checked: this.DISCORD_NEW_AWARD,
+          },
 
         ]
       },
@@ -3468,6 +3480,14 @@ class Settings {
     config._cfg.discordNewCheevo = value;
     config.writeConfiguration();
   }
+  get DISCORD_NEW_AWARD() {
+    return config._cfg?.discordNewAward ?? true;
+  }
+  set DISCORD_NEW_AWARD(value) {
+    config._cfg.discordNewAward = value;
+    config.writeConfiguration();
+  }
+
   get DISCORD_START_SESSION() {
     return config._cfg?.discordStartSession ?? true;
   }

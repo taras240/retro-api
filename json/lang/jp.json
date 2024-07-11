@@ -81,6 +81,7 @@
     "startGameAlert": "ゲーム開始アラート",
     "startSession": "セッション開始アラート",
     "earnCheevoAlert": "実績アラート",
+    "earnAwardAlert": "アワードアラート",
     "mainNote": "メインノート",
     "gameNote": "ゲームノート",
     "showLevel": "レベルを表示"
