@@ -6105,7 +6105,7 @@ class Note {
       return tabsHtml;
     }, '');
 
-    this.section.querySelector(".note__tabs-container").innerHTML = tabsHtml;
+    document.querySelector(".note__tabs-container").innerHTML = tabsHtml;
 
   }
   addEvents() {
