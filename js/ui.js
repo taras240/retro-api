@@ -2730,6 +2730,7 @@ class StatusPanel {
       if (award) {
         alerts.push(award);
         ui.settings.DISCORD_NEW_AWARD && ui.sendDiscordMessage({ message: award.award, type: "award", id: config.gameID })
+        setTimeout(() => ui.stats.updateChart(), 4000);
       }
       this.addAlertsToQuery([...alerts]);
     }
@@ -6714,6 +6715,14 @@ class Stats {
             checked: this.SHOW_TR,
             event: `onchange="ui.stats.SHOW_TR = this.checked;"`,
           },
+          {
+            type: "checkbox",
+            name: "context_show-completion-chart",
+            id: "context_show-completion-chart",
+            label: ui.lang.completionChart,
+            checked: this.SHOW_COMPLETION_CHART,
+            event: `onchange="ui.stats.SHOW_COMPLETION_CHART = this.checked;"`,
+          },
         ]
       },
       {
@@ -6815,6 +6824,14 @@ class Stats {
     this.saveProppertySetting("showSessionProgress", value);
     this.setElementsVisibility();
   }
+  get SHOW_COMPLETION_CHART() {
+    return config.ui?.stats_section?.completionChart ?? true;
+  }
+  set SHOW_COMPLETION_CHART(value) {
+    this.saveProppertySetting("completionChart", value);
+    this.setElementsVisibility();
+    this.updateChart();
+  }
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
   }
@@ -6845,7 +6862,7 @@ class Stats {
     this.retropointsElement = this.section.querySelector('#stats_retropoints');
     this.softpointsElement = this.section.querySelector('#stats_softpoints');
     this.trueRatioElement = this.section.querySelector('#stats_true-ratio');
-
+    this.completionElement = this.section.querySelector(".stats__chart-container");
 
     this.masteredCountElement = this.section.querySelector('#stats_mastered-count');
     this.beatenCountElement = this.section.querySelector('#stats_beaten-count');
@@ -6860,6 +6877,7 @@ class Stats {
     this.rankElement.closest("li").classList.toggle("hidden", !this.SHOW_RANK);
     this.rankRateElement.closest("li").classList.toggle("hidden", !this.SHOW_PERCENTILE);
     this.trueRatioElement.closest("li").classList.toggle("hidden", !this.SHOW_TR);
+    this.completionElement.classList.toggle("hidden", !this.SHOW_COMPLETION_CHART);
     this.section.classList.toggle("compact", !this.SHOW_HEADER);
     this.section.classList.toggle("hide-bg", !this.SHOW_BG);
     this.container.classList.toggle("show-session-progress", this.SHOW_SESSION_PROGRESS)
@@ -6912,6 +6930,7 @@ class Stats {
     }
     if (completionProgress) {
     }
+    setTimeout(() => this.updateChart(), 1000);
   }
   async updateStats({ currentUserSummary }) {
     if (!currentUserSummary) {
@@ -6967,6 +6986,29 @@ class Stats {
 
     this.userSummary = currentUserSummary;
   }
+  async updateChart() {
+    if (!this.SHOW_COMPLETION_CHART) return;
+    const chartContainer = this.section.querySelector(".stats__chart-container");
+    const completionData = await apiWorker.SAVED_COMPLETION_PROGRESS;//"beaten-hardcore"
+    const allGames = completionData?.Results ?? [];
+    const allGamesCount = allGames.length;
+    const masteryRate = allGames.filter(g => g.HighestAwardKind === 'mastered').length / allGamesCount * 100;
+    const completionRate = allGames.filter(g => g.HighestAwardKind === 'completed').length / allGamesCount * 100;
+    const beatenRate = allGames.filter(g => g.HighestAwardKind === 'beaten-hardcore').length / allGamesCount * 100;
+    const beatenSoftRate = allGames.filter(g => g.HighestAwardKind === 'beaten-softcore').length / allGamesCount * 100;
+
+    chartContainer.style.setProperty('--m', masteryRate + '%');
+    chartContainer.style.setProperty('--c', completionRate + '%');
+    chartContainer.style.setProperty('--b', beatenRate + '%');
+    chartContainer.style.setProperty('--b-s', beatenSoftRate + '%');
+
+    this.section.querySelector('.legend__value-mastered').innerText = masteryRate.toFixed(2) + '%';
+    this.section.querySelector('.legend__value-completed').innerText = completionRate.toFixed(2) + '%';
+    this.section.querySelector('.legend__value-beaten').innerText = beatenRate.toFixed(2) + '%';
+    this.section.querySelector('.legend__value-beaten-soft').innerText = beatenSoftRate.toFixed(2) + '%';
+    this.section.querySelector('.legend__value-progress').innerText = (100 - masteryRate - completionRate - beatenRate - beatenSoftRate).toFixed(2) + '%';
+
+  }
   statusProperties = {
     percentile: { label: ui.lang.percentile, id: "stats_rank-rate", class: 'stats__rank-value' },
     rank: { label: ui.lang.rank, id: "stats_rank", class: 'stats__rank-value' },
@@ -6987,8 +7029,22 @@ class Stats {
         html += elHtml;
         return html;
       }, '');
-
-    this.container.innerHTML = statusHtml;
+    const pieChartHtml = `
+    <li class="stats__stat-container stats__chart-container">
+    <h2 class="stats__title">Completion progress</h2>
+    <div class="round-stat__container circle">
+        <div class="round-stat__total" id="sector"></div>
+        <div class="round-stat__legend">
+            <div class="legend__award legend__mastered">mastered: <span class="legend__value-mastered">0%</span></div>
+            <div class="legend__award legend__completed">completed: <span class="legend__value-completed">0%</div>
+            <div class="legend__award legend__beaten">beaten: <span class="legend__value-beaten">0%</div>
+            <div class="legend__award legend__beaten-soft">beaten soft: <span class="legend__value-beaten-soft">0%</div>
+            <div class="legend__award legend__started">in progress: <span class="legend__value-progress">0%</div>
+        </div>
+    </div>
+    </li>
+    `;
+    this.container.innerHTML = statusHtml + pieChartHtml;
   }
 }
 

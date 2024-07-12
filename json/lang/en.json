@@ -76,6 +76,7 @@
     "trueRatio": "True Ratio",
     "percentile": "Percentile",
     "rank": "Rank",
+    "completionChart": "Completion Chart",
     "showSessionProgress": "Show Session Progress",
     "pasteWebhook": "Paste Webhook",
     "startGameAlert": "Game Start Alert",

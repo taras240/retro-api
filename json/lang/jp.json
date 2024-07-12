@@ -75,6 +75,7 @@
     "completion": "完了",
     "trueRatio": "真の比率",
     "percentile": "パーセンタイル",
+    "completionChart": "Completion Chart",
     "rank": "ランク",
     "showSessionProgress": "セッションの進捗を表示",
     "pasteWebhook": "Webhookを貼り付け",

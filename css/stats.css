@@ -5,7 +5,7 @@
     top: 100px;
     width: 250px;
     height: auto !important;
-    min-width: fit-content;
+    min-width: 250px;
     min-height: 100px;
     background: linear-gradient(to top left, var(--main-color), var(--secondary-color));
 
@@ -120,4 +120,118 @@
 
 .show-session-progress .session-progress {
     display: inline-block;
+}
+
+.stats__chart-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.round-stat__container {
+    --line-width: 30%;
+    --m-color: gold;
+    --c-color: red;
+    --b-color: lime;
+    --b-s-color: cornflowerblue;
+    --s-color: black;
+
+    position: relative;
+    background-color: var(--main-color);
+    width: calc(100% - 0.5rem);
+    aspect-ratio: 1;
+    margin: 1rem 0.5rem 0.5rem;
+
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.round-stat__container::after {
+    content: "";
+    position: absolute;
+    width: calc(100% - var(--line-width));
+    aspect-ratio: 1;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
+    background-color: var(--main-color);
+}
+
+.round-stat__total {
+    width: 100%;
+    height: 100%;
+    background: conic-gradient(var(--m-color) 0%, var(--m-color) calc(var(--m)),
+            var(--c-color) calc(var(--m)), var(--c-color) calc(var(--m) + var(--c)),
+            var(--b-color) calc(var(--m) + var(--c)), var(--b-color) calc(var(--m) + var(--c) + var(--b)),
+            var(--b-s-color) calc(var(--m) + var(--c) + var(--b)), var(--b-s-color) calc(var(--m) + var(--c) + var(--b) + var(--b-s)),
+            var(--s-color) calc(var(--m) + var(--c) + var(--b) + var(--b-s)));
+}
+
+.round-stat__legend {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1rem;
+    z-index: 2;
+    background-color: var(--secondary-color);
+    border-radius: 5px;
+}
+
+.legend__award {
+    position: relative;
+    text-transform: capitalize;
+    text-wrap: nowrap;
+
+    padding: 0 0.5rem 0 1.25rem;
+
+    width: fit-content;
+}
+
+.legend__award::before {
+    content: '';
+    position: absolute;
+    left: .25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+}
+
+/* .legend__mastered::after {
+    content: var(--m);
+}
+
+.legend__completed::after {
+    content: var(--c);
+}
+
+.legend__beaten::after {
+    content: var(--b);
+}
+
+.legend__beaten-soft::after {
+    content: var(--b-s);
+} */
+
+.legend__mastered::before {
+    background-color: var(--m-color);
+}
+
+.legend__completed::before {
+    background-color: var(--c-color);
+}
+
+.legend__beaten::before {
+    background-color: var(--b-color);
+}
+
+.legend__beaten-soft::before {
+    background-color: var(--b-s-color);
+}
+
+.legend__started::before {
+    background-color: var(--s-color);
 }
