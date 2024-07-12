@@ -317,8 +317,7 @@ export class UI {
     this.statusPanel.watchButton.classList.add("active");
 
     // Отримання початкових досягнень
-    ui.getAchievements();
-    this.checkUpdates();
+    this.checkUpdates(true);
     if (this.target.AUTOCLEAR) {
       this.target.clearEarned();
     }
@@ -330,13 +329,20 @@ export class UI {
   }
   totalPoints = 0;
   softcorePoints = 0;
-  async checkUpdates() {
+  async checkUpdates(isStart = false) {
+
     const responce = await apiWorker.getProfileInfo({});
-    if (responce.LastGameID != config.gameID) {
+
+    if (responce.LastGameID != config.gameID || isStart) {
       config.gameID = responce.LastGameID;
       ui.getAchievements().then(() =>
         this.userInfo.pushNewGame({ game: ui.GAME_DATA })
       );
+      if (isStart) {
+        this.totalPoints = responce.TotalPoints;
+        this.softcorePoints = responce.TotalSoftcorePoints;
+        this.userInfo.updatePoints({ points: responce });
+      }
     }
     if (
       responce.TotalPoints != this.totalPoints ||
@@ -361,26 +367,72 @@ export class UI {
 
   }
 
-  sendDiscordMessage({ message = "", type, id }) {
+  async sendDiscordMessage({ message = "", type, id }) {
+    const messageElements = {};
     const webhook = config.DISCORD_WEBHOOK;
     if (!webhook) {
       return;
     }
+
     switch (type) {
       case "new-game":
-        message = `[${config.targetUser} launched ${ui.GAME_DATA.Title}](https://retroachievements.org/game/${config.gameID})`;
+        messageElements.header = `${config.targetUser} launched game: \n${ui.GAME_DATA.Title}`
+        messageElements.description = `
+        Platform: ${ui.GAME_DATA.ConsoleName}
+        Realeased: ${ui.GAME_DATA.Released}
+        Achievements: ${ui.GAME_DATA.NumAwardedToUserHardcore} / ${ui.GAME_DATA.achievements_published}
+        Retropoints:  ${ui.GAME_DATA.earnedStats.hard.retropoints} / ${ui.GAME_DATA.TotalRetropoints}
+        `;
+        messageElements.color = 65280;
+        messageElements.url = `https://retroachievements.org/game/${config.gameID}`;
+        messageElements.image = 'https://media.retroachievements.org' + ui.GAME_DATA.ImageIcon;
         break;
       case "award":
-        message = `[${config.targetUser} ${message} ${ui.GAME_DATA.Title}](https://retroachievements.org/game/${id})`;
+        await delay(2000);
+        messageElements.header = `${config.targetUser} ${message.toUpperCase()} game: \n${ui.GAME_DATA.Title}`
+        messageElements.description = `
+        Platform: ${ui.GAME_DATA.ConsoleName}
+        Realeased: ${ui.GAME_DATA.Released}
+        Achievements: ${ui.GAME_DATA.NumAwardedToUserHardcore} / ${ui.GAME_DATA.achievements_published}
+        Retropoints:  ${ui.GAME_DATA.earnedStats.hard.retropoints} / ${ui.GAME_DATA.TotalRetropoints}
+        `;
+        messageElements.color = 16766720;
+        messageElements.url = `https://retroachievements.org/game/${config.gameID}`;
+        messageElements.image = 'https://media.retroachievements.org' + ui.GAME_DATA.ImageIcon;
         break;
       case "earned-cheevo":
-        message = `[${config.targetUser} earned new cheevo ${ui.ACHIEVEMENTS[id].isEarnedHardcore ? 'hardcore' : "softcore"}](https://retroachievements.org/achievement/${id})`;
+        messageElements.header = `${config.targetUser}  earned ${ui.ACHIEVEMENTS[id].isHardcoreEarned ? 'hardcore' : "softcore"} cheevo: \n${ui.ACHIEVEMENTS[id].Title}`
+        messageElements.description = `
+        Description: ${ui.ACHIEVEMENTS[id].Description}
+        Points: ${ui.ACHIEVEMENTS[id].Points}
+        Retropoints:  ${ui.ACHIEVEMENTS[id].TrueRatio}
+        `;
+        messageElements.color = ui.ACHIEVEMENTS[id].isHardcoreEarned ? 16766720 : 12632256;
+        messageElements.url = `https://retroachievements.org/achievement/${id}`;
+        messageElements.image = ui.ACHIEVEMENTS[id].prevSrc;
         break;
     }
+    const embedMessage = {
+      username: 'RETROCHEEVOS',
+      avatar_url: 'https://taras240.github.io/retro-api/assets/img/overlay_sets/mario_q/q.png',
+      embeds: [
+        {
+          thumbnail: {
+            url: messageElements.image
+          },
+          title: messageElements.header,
+          url: messageElements.url,
+          color: messageElements.color,
+          description: messageElements.description,
+          footer: {
+            text: 'https://retrocheevos.vercel.app',
+          },
+          timestamp: new Date().toISOString(),
+        }
+      ]
+    };
     fetch(webhook, {
-      body: JSON.stringify({
-        content: message,
-      }),
+      body: JSON.stringify(embedMessage),
       headers: {
         "Content-Type": "application/json",
       },
