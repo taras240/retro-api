@@ -378,10 +378,10 @@ export class UI {
       case "new-game":
         messageElements.header = `${config.targetUser} launched game: \n${ui.GAME_DATA.Title}`
         messageElements.description = `
-        Platform: ${ui.GAME_DATA.ConsoleName}
-        Realeased: ${ui.GAME_DATA.Released}
-        Achievements: ${ui.GAME_DATA.NumAwardedToUserHardcore} / ${ui.GAME_DATA.achievements_published}
-        Retropoints:  ${ui.GAME_DATA.earnedStats.hard.retropoints} / ${ui.GAME_DATA.TotalRetropoints}
+          Platform: ${ui.GAME_DATA.ConsoleName}
+          Realeased: ${ui.GAME_DATA.Released}
+          Achievements: ${ui.GAME_DATA.NumAwardedToUserHardcore} / ${ui.GAME_DATA.achievements_published}
+          Retropoints:  ${ui.GAME_DATA.earnedStats.hard.retropoints} / ${ui.GAME_DATA.TotalRetropoints}
         `;
         messageElements.color = 65280;
         messageElements.url = `https://retroachievements.org/game/${config.gameID}`;
@@ -391,10 +391,10 @@ export class UI {
         await delay(2000);
         messageElements.header = `${config.targetUser} ${message.toUpperCase()} game: \n${ui.GAME_DATA.Title}`
         messageElements.description = `
-        Platform: ${ui.GAME_DATA.ConsoleName}
-        Realeased: ${ui.GAME_DATA.Released}
-        Achievements: ${ui.GAME_DATA.NumAwardedToUserHardcore} / ${ui.GAME_DATA.achievements_published}
-        Retropoints:  ${ui.GAME_DATA.earnedStats.hard.retropoints} / ${ui.GAME_DATA.TotalRetropoints}
+          Platform: ${ui.GAME_DATA.ConsoleName}
+          Realeased: ${ui.GAME_DATA.Released}
+          Achievements: ${ui.GAME_DATA.NumAwardedToUserHardcore} / ${ui.GAME_DATA.achievements_published}
+          Retropoints:  ${ui.GAME_DATA.earnedStats.hard.retropoints} / ${ui.GAME_DATA.TotalRetropoints}
         `;
         messageElements.color = 16766720;
         messageElements.url = `https://retroachievements.org/game/${config.gameID}`;
@@ -403,9 +403,9 @@ export class UI {
       case "earned-cheevo":
         messageElements.header = `${config.targetUser}  earned ${ui.ACHIEVEMENTS[id].isHardcoreEarned ? 'hardcore' : "softcore"} cheevo: \n${ui.ACHIEVEMENTS[id].Title}`
         messageElements.description = `
-        Description: ${ui.ACHIEVEMENTS[id].Description}
-        Points: ${ui.ACHIEVEMENTS[id].Points}
-        Retropoints:  ${ui.ACHIEVEMENTS[id].TrueRatio}
+          Description: ${ui.ACHIEVEMENTS[id].Description}
+          Points: ${ui.ACHIEVEMENTS[id].Points}
+          Retropoints:  ${ui.ACHIEVEMENTS[id].TrueRatio}
         `;
         messageElements.color = ui.ACHIEVEMENTS[id].isHardcoreEarned ? 16766720 : 12632256;
         messageElements.url = `https://retroachievements.org/achievement/${id}`;
@@ -423,7 +423,7 @@ export class UI {
           title: messageElements.header,
           url: messageElements.url,
           color: messageElements.color,
-          description: messageElements.description,
+          description: messageElements.description.replace(/\n[ \t]*/g, '\n'),
           footer: {
             text: 'https://retrocheevos.vercel.app',
           },
@@ -2612,7 +2612,7 @@ class StatusPanel {
       UI.resizeEvent({
         event: event,
         section: this.section,
-        callback: () => this.fitFontSize(),
+        callback: () => this.fitFontSize(true),
       });
     });
   }
@@ -3106,10 +3106,12 @@ class StatusPanel {
 
     return `${isNegative ? "-" : ""}${hours != "00" ? hours + ":" : ""}${minutes}:${remainingSeconds}`;
   }
-  fitFontSize() {
-    const container = document.querySelector(".update_container");
-    const containerHeight = config?.ui?.update_section?.height ?? this.section.getBoundingClientRect().height;
-    container.style.fontSize = `${(containerHeight - 10) / 5.5}px`;
+  fitFontSize(isDynamic = false) {
+    const container = this.section.querySelector(".update_container");
+    let containerHeight = config.ui['update-section']?.height ?? this.section.getBoundingClientRect().height;
+    isDynamic && (containerHeight = this.section.getBoundingClientRect().height)
+    const fontSize = `${(parseInt(containerHeight) - 10) / 5.5}px`;
+    container.style.fontSize = fontSize;
   }
 
 }
