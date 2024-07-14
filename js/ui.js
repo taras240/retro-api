@@ -5170,7 +5170,6 @@ class Target {
     });
   }
   highlightCurrentLevel(currentLevel) {
-    console.log(currentLevel);
     [...this.container.querySelectorAll('.target-achiv')].forEach(cheevo => {
       cheevo.classList.remove("highlight");
       cheevo.classList.remove("passed");
@@ -7115,9 +7114,11 @@ class Stats {
       }, '');
     const pieChartHtml = `
     <li class="stats__stat-container stats__chart-container">
-    <h2 class="stats__title">Completion progress</h2>
-    <div class="round-stat__container circle">
+    <h2 class="stats__title">${ui.lang.completionChart}</h2>
+    <div class="round-stat__container ">
+      <div class="circle">
         <div class="round-stat__total" id="sector"></div>
+      </div>
         <div class="round-stat__legend">
             <div class="legend__award legend__mastered">mastered: <span class="legend__value-mastered">0%</span></div>
             <div class="legend__award legend__completed">completed: <span class="legend__value-completed">0%</div>
