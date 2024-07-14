@@ -16,7 +16,13 @@
 @import url(./game-popup.css);
 @import url(./stats.css);
 
-/* @import url('https://fonts.googleapis.com/css2?family=Jersey+15&display=swap'); */
+/* @import url('../assets/fonts/bucky_ohare_nes.ttf'); */
+/* @font-face {
+  font-family: 'OHare';
+  src: url('../assets/fonts/bucky_ohare_nes.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+} */
 
 p,
 h1,
@@ -26,6 +32,7 @@ button,
 div,
 li {
   font-family: var(--font-family);
+
   font-size: 1rem;
 }
 
@@ -153,7 +160,7 @@ a:hover {
   /* background-color: var(--main-color); */
   background: var(--background-gradient);
   z-index: 1;
-  box-shadow: 0 0 5px 2px black;
+
   transition: 0.2s ease-out;
 }
 
@@ -174,6 +181,7 @@ a:hover {
 
 .section:hover {
   z-index: 101;
+  box-shadow: 0 0 5px 2px black;
 }
 
 .section.resized {
@@ -219,6 +227,7 @@ a:hover {
   background-color: var(--secondary-color);
   border-radius: 5px 5px 0 0;
   z-index: 1;
+  font-family: "OHair", system-ui;
 }
 
 .header-container::after {

@@ -57,8 +57,17 @@
 }
 
 .target-achiv.highlight {
-  border: 2px solid greenyellow;
+  border: 1px solid greenyellow;
   /* box-shadow: 0 0 5px 2px var(--font-color); */
+}
+
+.target-achiv:not(.earned).passed {
+  border: 1px solid red;
+  /* box-shadow: 0 0 5px 2px var(--font-color); */
+}
+
+.hide-passed .target-achiv.passed {
+  display: none;
 }
 
 .target-achiv.border {

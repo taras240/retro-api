@@ -8,6 +8,7 @@
     min-width: 250px;
     min-height: 100px;
     background: linear-gradient(to top left, var(--main-color), var(--secondary-color));
+    cursor: grab;
 
 }
 

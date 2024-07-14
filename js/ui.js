@@ -425,7 +425,7 @@ export class UI {
           color: messageElements.color,
           description: messageElements.description.replace(/\n[ \t]*/g, '\n'),
           footer: {
-            text: 'https://retrocheevos.vercel.app',
+            text: 'retrocheevos.vercel.app',
           },
           timestamp: new Date().toISOString(),
         }
@@ -4648,6 +4648,14 @@ class Target {
             checked: this.HIDE_FILTERED,
             event: `onchange="ui.target.HIDE_FILTERED = this.checked;"`,
           },
+          {
+            type: "checkbox",
+            name: "context-hide-passed-levels",
+            id: "context-hide-passed-levels",
+            label: "**Hide passed levels**",
+            checked: this.HIDE_PASSED_LEVELS,
+            event: `onchange="ui.target.HIDE_PASSED_LEVELS = this.checked;"`,
+          },
         ],
       },
       {
@@ -4827,6 +4835,15 @@ class Target {
     config.writeConfiguration();
     this.container.querySelectorAll(".target-achiv").forEach(el => el.classList.toggle("show-level", value))
   }
+  get HIDE_PASSED_LEVELS() {
+    return config?.ui?.target_section?.hidePassedLevels ?? true;
+  }
+  set HIDE_PASSED_LEVELS(value) {
+    config.ui.target_section.hidePassedLevels = value;
+    config.writeConfiguration();
+    this.section.classList.toggle("hide-passed", value);
+    // this.container.querySelectorAll(".target-achiv").forEach(el => el.classList.toggle("show-level", value))
+  }
   constructor() {
     this.initializeElements();
     this.addEvents();
@@ -4925,6 +4942,7 @@ class Target {
   setValues() {
     this.section.classList.toggle("compact", !this.SHOW_HEADER);
     this.section.classList.toggle("hide-bg", this.HIDE_BG);
+    this.section.classList.toggle("hide-passed", this.HIDE_PASSED_LEVELS);
     this.startAutoScroll();
   }
   updateEarnedAchieves({ earnedAchievementIDs: earnedAchievementsIDs }) {
@@ -5152,12 +5170,24 @@ class Target {
     });
   }
   highlightCurrentLevel(currentLevel) {
+    console.log(currentLevel);
     [...this.container.querySelectorAll('.target-achiv')].forEach(cheevo => {
       cheevo.classList.remove("highlight");
-      cheevo.dataset.level == currentLevel && cheevo.classList.add("highlight");
+      cheevo.classList.remove("passed");
+      const cheevoLevel = cheevo.dataset.level;
+      cheevoLevel == currentLevel && cheevo.classList.add("highlight");
+      //set highlight
       if (!Number.isInteger(currentLevel)) {
         const mainLevel = parseInt(currentLevel);
         cheevo.dataset.level == mainLevel && cheevo.classList.add("highlight");
+      }
+
+      //set passed
+      if (!Number.isInteger(+cheevoLevel)) {
+        cheevoLevel < currentLevel && cheevo.classList.add("passed");
+      }
+      else {
+        cheevoLevel < parseInt(currentLevel) && cheevo.classList.add("passed");
       }
     });
 
@@ -6938,7 +6968,7 @@ class Stats {
 
   }
   addEvents() {
-    this.header.addEventListener("mousedown", (e) => {
+    this.section.addEventListener("mousedown", (e) => {
       UI.moveEvent(this.section, e);
     });
     this.section.addEventListener("contextmenu", (event) => {
@@ -6957,10 +6987,10 @@ class Stats {
         section: this.section,
       });
     });
-    new Sortable(this.container, {
-      animation: 100,
-      // chosenClass: "stats__stat-container",
-    });
+    // new Sortable(this.container, {
+    //   animation: 100,
+    //   // chosenClass: "stats__stat-container",
+    // });
   }
   initialSetStats({ userSummary, completionProgress }) {
     this.initialData = {
