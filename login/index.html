@@ -80,7 +80,9 @@
         const userNameInput = document.querySelector("#login__ra-username");
         const apiKeyInput = document.querySelector("#login__ra-api");
         const submitButton = document.querySelector("#submit-login");
-        submitButton.addEventListener('click', submitLogin)
+        submitButton.addEventListener('click', submitLogin);
+        userNameInput.value = config.USER_NAME ?? "";
+        apiKeyInput.value = config.API_KEY ?? "";
     </script>
 </body>
 
