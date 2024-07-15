@@ -1,0 +1,240 @@
+body {
+    background-color: black;
+    max-height: 100vh;
+    /* overflow: hidden; */
+}
+
+* {
+    font-family: system-ui;
+}
+
+.login__section {
+    --light-pos: 0%;
+    --anim-duration: 30s;
+    position: absolute;
+    max-width: 1100px;
+    max-height: 800px;
+    width: 60vw;
+    height: 90vh;
+    border-radius: 1rem;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    /* overflow: hidden; */
+    max-width: 800px;
+    max-height: 900px;
+    min-width: 400px;
+    min-height: 400px;
+}
+
+.login__section::after,
+.login__section::before {
+    content: '';
+    position: absolute;
+    width: 30%;
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    /* background: linear-gradient(-45deg, #c39c30 50%, #3663d8 50%); */
+    border-radius: 50%;
+    filter: blur(50px);
+    z-index: -1;
+    /* opacity: 0.5; */
+}
+
+.login__section::before {
+    top: calc(100% - var(--light-pos));
+    left: calc(100% - var(--light-pos));
+    background-color: #3663d8;
+    animation: lights-animation var(--anim-duration) linear infinite;
+    animation-delay: calc(var(--anim-duration) / -2);
+    /* background: linear-gradient(-45deg, #c39c30 50%, #3663d8 50%); */
+}
+
+.login__section::after {
+    top: var(--light-pos);
+    left: var(--light-pos);
+    background-color: #c39c30;
+    animation: lights-animation var(--anim-duration) linear infinite;
+
+}
+
+@keyframes lights-animation {
+    0% {
+        top: 10%;
+        left: 10%;
+        /* left: 0; */
+    }
+
+    25% {
+        top: 90%;
+        left: 10%;
+    }
+
+    50% {
+        top: 90%;
+        left: 90%;
+    }
+
+    75% {
+        top: 10%;
+        left: 90%;
+    }
+
+    100% {
+        top: 10%;
+        left: 10%;
+    }
+}
+
+.login__container {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    border-radius: 1rem;
+    border: 1px solid rgb(29, 29, 29);
+    display: flex;
+    justify-content: center;
+    padding: 1rem;
+
+}
+
+
+
+.login-form__container {
+    color: white;
+
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+
+.ra-img__container {
+    max-width: 400px;
+    display: grid;
+    place-items: center;
+    position: relative;
+}
+
+.ra-img__container:after {
+    content: 'TRACKER';
+    font-weight: bold;
+    font-size: 1.3rem;
+    color: white;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(20%, -20%);
+    border: 1px solid gold;
+    padding: .2rem 1rem;
+    background-color: rgba(0, 0, 0, 1);
+    border-radius: 5px;
+
+}
+
+.ra-img {
+    width: 50%;
+
+}
+
+.login__input-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    max-width: 400px;
+    width: 80%;
+    position: relative;
+}
+
+.login__input-label {
+    position: absolute;
+    top: 0;
+    left: 2rem;
+    transform: translateY(-50%);
+    padding: 0 .5rem;
+    border-radius: 50px;
+
+    background-color: #32363f;
+    color: white;
+    justify-self: start;
+}
+
+:focus+.login__input-label {
+    background-color: #3e63dd;
+}
+
+.login__input {
+    padding: 0.75rem;
+    border-radius: 50rem;
+    background-color: rgba(0, 0, 0, 0.50);
+    color: white;
+    text-align: center;
+    font-size: 1.5rem;
+
+    border: 1px solid transparent;
+    border-color: #32363f;
+    /* width: 50%; */
+    transition: .2s;
+    width: 100%;
+}
+
+.login__input:focus {
+    border-color: #3e63dd;
+    /* background-color: #3e63dd; */
+}
+
+.login__get-api {
+    color: white;
+    margin-right: 2rem;
+    text-decoration: none;
+    padding: 0 0.2rem;
+    background-color: transparent;
+    border-radius: 5px;
+    align-self: flex-end;
+}
+
+.login__get-api:hover {
+    text-decoration: underline;
+}
+
+.login__button-input {
+    border-color: #32363f44;
+    max-width: 400px;
+    width: 80%;
+}
+
+.login__button-input.error {
+    background-color: crimson;
+}
+
+.login__button-input.verified {
+    background-color: #3e63dd;
+}
+
+.login__button-input:active {
+    border-color: #3e63dd;
+    background-color: #3e63dd;
+}
+
+
+
+.login__text-input {}
+
+.login-description__container {
+
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+}
+
+.login__header {
+    font-size: 3rem;
+    text-align: center;
+}
+
+.login__description {
+    font-size: 1.3rem;
+    text-align: center;
+}

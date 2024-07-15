@@ -365,6 +365,7 @@
   width: 5px;
   height: 100%;
   background-color: var(--accent-color);
+  box-shadow: 0 0 5px 0px var(--accent-color);
   z-index: 100;
 }
 

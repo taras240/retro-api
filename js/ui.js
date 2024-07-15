@@ -335,9 +335,9 @@ export class UI {
 
     if (responce.LastGameID != config.gameID || isStart) {
       config.gameID = responce.LastGameID;
-      ui.getAchievements().then(() =>
-        this.userInfo.pushNewGame({ game: ui.GAME_DATA })
-      );
+      await ui.getAchievements();
+      this.userInfo.pushNewGame({ game: ui.GAME_DATA })
+
       if (isStart) {
         this.totalPoints = responce.TotalPoints;
         this.softcorePoints = responce.TotalSoftcorePoints;
@@ -5267,7 +5267,7 @@ class LoginCard {
       this.submitLoginButton.classList.add("verified");
     }
     userAuthData?.isSignedIn && this.linkGoogleButton.classList.add("linked");
-    this.linkGoogleButton.addEventListener("click", () => this.linkGoogleEvent());
+    // this.linkGoogleButton.addEventListener("click", () => this.linkGoogleEvent());
   }
 
   async linkGoogleEvent() {

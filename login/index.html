@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retrocheevos Login</title>
+    <link rel="stylesheet" href="reset.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <section class="login__section">
+        <div class="login__container">
+            <div class="login-form__container">
+                <div class="login__header-container">
+                    <div class="ra-img__container">
+                        <img src="./ra-logo.png" alt="" srcset="" class="ra-img">
+                    </div>
+                    <h1 class="login__header">Retrocheevos</h1>
+                    <p class="login__description">Unofficial retroachivements.org tracker</p>
+                </div>
+                <div class="login__input-container">
+
+                    <input type="text" name="" id="login__ra-username" class="login__input login__text-input">
+                    <label for="login__ra-username" class="login__input-label">RA Username:</label>
+                </div>
+                <div class="login__input-container">
+                    <input type="password" id="login__ra-api" class="login__input login__text-input">
+                    <label for="login__ra-api" class="login__input-label">RA API key:</label>
+                    <a class="login__get-api" title="go to retroachievements settings"
+                        href="https://retroachievements.org/controlpanel.php" target="_blank">Get API key</a>
+                </div>
+                <button class="login__input login__button-input" id="submit-login">Submit</button>
+            </div>
+
+        </div>
+    </section>
+
+    <script type="module">
+        import { Config } from '../js/config.js';
+        const config = new Config();
+
+        const submitLogin = () => {
+            let userName = userNameInput.value;
+            let apiKey = apiKeyInput.value;
+            verifyUserIdent({ userName: userName, apiKey: apiKey })
+                .then((userObj) => {
+                    if (!userObj.ID) errorLogin();
+                    else {
+                        updateLogin({
+                            userName: userName,
+                            apiKey: apiKey,
+                            userObj: userObj,
+                        });
+                        setTimeout(() => window.location.href = "../", 1000);
+                    }
+                })
+                .catch(() => errorLogin());
+        }
+        const updateLogin = ({ userName, apiKey, userObj }) => {
+            config.USER_NAME = userName;
+            config.API_KEY = apiKey;
+            config.identConfirmed = true;
+            config.userImageSrc = `https://media.retroachievements.org${userObj?.UserPic}`;
+            document.querySelector("#submit-login").classList.remove("error");
+            document.querySelector("#submit-login").classList.add("verified");
+        }
+
+        const errorLogin = () => {
+            config.identConfirmed = false;
+            document.querySelector("#submit-login").classList.remove("verified");
+            document.querySelector("#submit-login").classList.add("error");
+        }
+        const verifyUserIdent = ({ userName, apiKey }) => {
+            let url = `https://retroachievements.org/API/API_GetUserProfile.php?u=${userName}&y=${userName}&y=${apiKey}`;
+            return fetch(url).then((resp) => resp.json());
+        }
+
+        const userNameInput = document.querySelector("#login__ra-username");
+        const apiKeyInput = document.querySelector("#login__ra-api");
+        const submitButton = document.querySelector("#submit-login");
+        submitButton.addEventListener('click', submitLogin)
+    </script>
+</body>
+
+</html>

@@ -9,9 +9,9 @@ const userAgent = navigator.userAgent || navigator.vendor || window.opera;
 if (/android/i.test(userAgent) || (/iPhone/.test(userAgent) && !window.MSStream)) {
   window.location.href = "./mobile/index.html";
 }
-
 else {
   config = new Config();
+
   // Ініціалізація UI
   ui = new UI();
   // Ініціалізація APIWorker 
@@ -20,6 +20,10 @@ else {
   window.config = config;
   window.apiWorker = apiWorker;
   // userAuthData = new UserAuthData();
+}
+if (!config.identConfirmed) {
+  console.log('redirect to login')
+  window.location.href = "./login";
 }
 document.addEventListener('keydown', checkKonamiCode);
 let konamiCode = [];
