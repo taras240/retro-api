@@ -75,13 +75,13 @@ export class UI {
       }, 3000);
     }
     else {
-      const section = this.loginCard.section;
-      section.classList.remove("disposed");
-      setTimeout(() => section.classList.remove("hidden"), 100);
-      config.setNewPosition({
-        id: section.id,
-        hidden: false,
-      })
+      // const section = this.loginCard.section;
+      // section.classList.remove("disposed");
+      // setTimeout(() => section.classList.remove("hidden"), 100);
+      // config.setNewPosition({
+      //   id: section.id,
+      //   hidden: false,
+      // })
       // UI.switchSectionVisibility({ section: this.loginCard.section })
     }
     // Вимкнення вікна завантаження
@@ -2001,9 +2001,9 @@ class ButtonPanel {
     //   UI.moveEvent(this.section, e);
     // });
 
-    this.login.addEventListener("change", (e) => {
-      UI.switchSectionVisibility(ui.loginCard);
-    });
+    // this.login.addEventListener("change", (e) => {
+    //   UI.switchSectionVisibility(ui.loginCard);
+    // });
     this.achievements.addEventListener("change", (e) => {
       UI.switchSectionVisibility(ui.achievementsBlock[0]);
     });
@@ -2055,7 +2055,7 @@ class ButtonPanel {
 
     // this.settings.checked = config.ui?.settings_section?.hidden === false ?? ui.settings.VISIBLE;
 
-    this.login.checked = config.ui?.login_section?.hidden === false ?? ui.loginCard.VISIBLE;
+    // this.login.checked = config.ui?.login_section?.hidden === false ?? ui.loginCard.VISIBLE;
 
     this.target.checked = config.ui?.target_section?.hidden === false ?? ui.target.VISIBLE;
 
@@ -5236,9 +5236,9 @@ class LoginCard {
     return !this.section.classList.contains("hidden");
   }
   constructor() {
-    this.initializeElements();
-    this.addEvents();
-    this.setValues();
+    // this.initializeElements();
+    // this.addEvents();
+    // this.setValues();
   }
   initializeElements() {
     this.section = document.querySelector("#login_section");
