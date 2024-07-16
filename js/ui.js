@@ -74,16 +74,7 @@ export class UI {
         })
       }, 3000);
     }
-    else {
-      // const section = this.loginCard.section;
-      // section.classList.remove("disposed");
-      // setTimeout(() => section.classList.remove("hidden"), 100);
-      // config.setNewPosition({
-      //   id: section.id,
-      //   hidden: false,
-      // })
-      // UI.switchSectionVisibility({ section: this.loginCard.section })
-    }
+
     // Вимкнення вікна завантаження
     setTimeout(
       () =>
@@ -105,7 +96,6 @@ export class UI {
     // this.about = {
     //   section: document.querySelector("#help_section"),
     // };
-    this.loginCard = new LoginCard();
     this.target = new Target();
     this.achievementsBlock = [new AchievementsBlock()];
     this.createAchievementsTemplate();
@@ -1974,7 +1964,6 @@ class ButtonPanel {
     this.header = this.section.querySelector("#buttons-header_container");
     this.settings = this.section.querySelector("#open-settings-button");
     this.achievements = this.section.querySelector("#open-achivs-button");
-    this.login = this.section.querySelector("#open-login-button");
     // this.about = this.section.querySelector("#open-about-button");
     this.gameCard = this.section.querySelector("#open-game-card-button");
     this.target = this.section.querySelector("#open-target-button");
@@ -2001,9 +1990,7 @@ class ButtonPanel {
     //   UI.moveEvent(this.section, e);
     // });
 
-    // this.login.addEventListener("change", (e) => {
-    //   UI.switchSectionVisibility(ui.loginCard);
-    // });
+
     this.achievements.addEventListener("change", (e) => {
       UI.switchSectionVisibility(ui.achievementsBlock[0]);
     });
@@ -2054,8 +2041,6 @@ class ButtonPanel {
       config.ui?.achievements_section?.hidden === false ?? ui.achievementsBlock[0].VISIBLE;
 
     // this.settings.checked = config.ui?.settings_section?.hidden === false ?? ui.settings.VISIBLE;
-
-    // this.login.checked = config.ui?.login_section?.hidden === false ?? ui.loginCard.VISIBLE;
 
     this.target.checked = config.ui?.target_section?.hidden === false ?? ui.target.VISIBLE;
 
@@ -5228,107 +5213,6 @@ class Target {
 
   close() {
     ui.buttons.target.click();
-  }
-}
-
-class LoginCard {
-  get VISIBLE() {
-    return !this.section.classList.contains("hidden");
-  }
-  constructor() {
-    // this.initializeElements();
-    // this.addEvents();
-    // this.setValues();
-  }
-  initializeElements() {
-    this.section = document.querySelector("#login_section");
-    this.header = document.querySelector(".login-header_container");
-    this.userName = document.querySelector("#login-user-name");
-    this.apiKey = document.querySelector("#login-api-key");
-    this.userImage = document.querySelector(".login-user-image");
-    this.submitLoginButton = this.section.querySelector(".submit-login");
-    this.linkGoogleButton = this.section.querySelector(".submit-login-google");
-  }
-
-  addEvents() {
-    this.section.addEventListener("mousedown", (e) => {
-      UI.moveEvent(this.section, e);
-    });
-  }
-  setValues() {
-    // Встановити ключ API з об'єкта ідентифікації користувача
-    this.apiKey.value = config.API_KEY;
-
-    // Встановити значення логіну та API з об'єкта ідентифікації користувача
-    this.userName.value = config.USER_NAME;
-    this.userImage.src = config.userImageSrc;
-
-    if (config.identConfirmed) {
-      this.submitLoginButton.classList.add("verified");
-    }
-    userAuthData?.isSignedIn && this.linkGoogleButton.classList.add("linked");
-    // this.linkGoogleButton.addEventListener("click", () => this.linkGoogleEvent());
-  }
-
-  async linkGoogleEvent() {
-    if (userAuthData?.isSignedIn) {
-      await logoutGoogle();
-      this.linkGoogleButton.classList.remove("linked");
-    }
-    else {
-      await loginWithGoogle();
-      this.linkGoogleButton.classList.add("linked");
-
-    }
-  }
-
-  pasteApiKeyFromClipboard() {
-    navigator.clipboard
-      .readText()
-      .then((clipboardText) => {
-        // Вставити значення з буферу обміну в поле вводу або куди-небудь інде
-        this.apiKey.value = clipboardText;
-        config.API_KEY = this.apiKey.value;
-      })
-      .catch((err) => {
-        console.error("Не вдалося отримати доступ до буферу обміну:", err);
-      });
-  }
-
-  submitLogin() {
-    let userName = this.userName.value;
-    let apiKey = this.apiKey.value;
-    apiWorker
-      .verifyUserIdent({ userName: userName, apiKey: apiKey })
-      .then((userObj) => {
-        if (!userObj.ID) this.errorLogin();
-        else {
-          this.updateLogin({
-            userName: userName,
-            apiKey: apiKey,
-            userObj: userObj,
-          });
-          setTimeout(() => location.reload(), 1000);
-        }
-      });
-  }
-  updateLogin({ userName, apiKey, userObj }) {
-    config.USER_NAME = userName;
-    config.API_KEY = apiKey;
-    config.identConfirmed = true;
-    config.userImageSrc = `https://media.retroachievements.org${userObj?.UserPic}`;
-    this.userImage.src = config.userImageSrc;
-    document.querySelector("#submit-login").classList.remove("error");
-    document.querySelector("#submit-login").classList.add("verified");
-  }
-
-  errorLogin() {
-    config.identConfirmed = false;
-    document.querySelector("#submit-login").classList.remove("verified");
-    document.querySelector("#submit-login").classList.add("error");
-  }
-  close() {
-    ui.buttons.login.click();
   }
 }
 
