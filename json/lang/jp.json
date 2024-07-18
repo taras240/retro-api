@@ -85,5 +85,6 @@
     "earnAwardAlert": "アワードアラート",
     "mainNote": "メインノート",
     "gameNote": "ゲームノート",
-    "showLevel": "レベルを表示"
+    "showLevel": "レベルを表示",
+    "showUpdateBlink": "Show Update Blink"
 }

@@ -3,10 +3,11 @@ import { loadSections } from "./htmlBuilder.js";
 import { config, ui, apiWorker, userAuthData } from "./script.js";
 
 export class UI {
-  VERSION = "0.45";
-  static RECENT_ACHIVES_RANGE_MINUTES = 5;
+  VERSION = "0.46";
+  RECENT_ACHIVES_RANGE_MINUTES = Math.ceil(config.updateDelay * 5 / 60);
   static AUTOCLOSE_CONTEXTMENU = false;
   static STICK_MARGIN = 10;
+  // static isTest = true;
 
   get ACHIEVEMENTS() {
     return this.GAME_DATA.Achievements;
@@ -45,27 +46,18 @@ export class UI {
     this.initializeElements();
 
     //Встановлення розмірів і розміщення елементів
-    this.setPositions();
+    // this.setPositions();
 
     this.addEvents();
     //Оновлення кольорів
     UI.updateColors();
 
     //Оновлення ачівментсів
-    if (config.identConfirmed) {
-      if (config.version != this.VERSION) {
-        setTimeout(() => {
-          // UI.switchSectionVisibility({
-          //   section: document
-          //     .querySelector("#help_section")
-          // })
-          config.version = this.VERSION;
-        }, 1500);
-      }
+    if (config.identConfirmed && !UI.isTest) {
       //!-----------------------------------
       config.startOnLoad
         ? this.statusPanel.watchButton.click()
-        : this.getAchievements();
+        : this.getAchievements(await this.getLastGameID());
 
       setTimeout(() => {
         apiWorker.getUserSummary({}).then(resp => {
@@ -81,21 +73,9 @@ export class UI {
         document.querySelector(".loading-section").classList.add("hidden"),
       1000
     );
-
-    // .catch((err) => {
-    //   setTimeout(
-    //     () =>
-    //       document.querySelector(".loading-section").classList.add("hidden"),
-    //     1000
-    //   );
-    //   console.log(err);
-    // });
   }
   initializeElements() {
     this.app = document.querySelector(".wrapper");
-    // this.about = {
-    //   section: document.querySelector("#help_section"),
-    // };
     this.target = new Target();
     this.achievementsBlock = [new AchievementsBlock()];
     this.createAchievementsTemplate();
@@ -109,36 +89,31 @@ export class UI {
     this.note = new Note();
     this.notifications = new Notifications();
     this.stats = new Stats();
-    //*  Must be last initialized to set correct values
+
     this.buttons = new ButtonPanel();
 
 
   }
 
-  setPositions() {
-    // Проходження по кожному ідентифікатору контейнера в об'єкті config.uierw
-    [...document.querySelectorAll(".section")].forEach(section => {
-      const id = section.id;
-      if (config.ui[id]) {
-        // Getting positions and dimensions from config.ui
-        const { x, y, width, height, hidden } = config.ui[id];
+  static applyPosition({ widget }) {
+    const id = widget.section.id;
+    if (config.ui[id]) {
+      // Getting positions and dimensions from config.ui
+      const { x, y, width, height, hidden } = config.ui[id];
 
-        // Set positions and dimensions for widget if they are saved in config.ui
-        x && (section.style.left = x);
-        y && (section.style.top = y);
-        width && (section.style.width = width);
-        height && (section.style.height = height);
+      // Set positions and dimensions for widget if they are saved in config.ui
+      x && (widget.section.style.left = x);
+      y && (widget.section.style.top = y);
+      width && (widget.section.style.width = width);
+      height && (widget.section.style.height = height);
 
-        const isHidden = hidden ?? true;
-        isHidden && section.classList.add("hidden", "disposed");
-      }
-      else {
-        section.classList.add("hidden", "disposed");
-      }
-    })
-
-    document.querySelector("#background-animation").style.display =
-      config.bgVisibility ? "block" : "none";
+      const isHidden = hidden ?? true;
+      isHidden && widget.section.classList.add("hidden", "disposed");
+    }
+    else {
+      widget.section.classList.add("hidden", "disposed");
+    }
+    widget.widgetIcon && (widget.widgetIcon.checked = config.ui?.[widget.section?.id]?.hidden === false ?? !widget.VISIBLE);
   }
   addEvents() {
     document.addEventListener("click", () => {
@@ -268,7 +243,11 @@ export class UI {
 
     this.updateWidgets({ earnedAchievementsIDs: achievementsIDs });
   }
-
+  async getLastGameID() {
+    const gameID = Object.values(await apiWorker.getRecentlyPlayedGames({ count: 1 }))[0]?.ID;
+    config.gameID = gameID;
+    return gameID;
+  }
   // Функція для отримання досягнень гри
   async getAchievements(gameID) {
     try {
@@ -291,11 +270,10 @@ export class UI {
     try {
       // Отримання недавніх досягнень від API
       const achievements = await apiWorker.getRecentAchieves({
-        minutes: UI.RECENT_ACHIVES_RANGE_MINUTES,
+        minutes: ui.RECENT_ACHIVES_RANGE_MINUTES,
       });
 
       this.checkForNewAchieves(achievements);
-
     } catch (error) {
       console.error(error); // Обробка помилок
     }
@@ -320,9 +298,8 @@ export class UI {
   totalPoints = 0;
   softcorePoints = 0;
   async checkUpdates(isStart = false) {
-
+    this.statusPanel.blinkUpdate();
     const responce = await apiWorker.getProfileInfo({});
-
     if (responce.LastGameID != config.gameID || isStart) {
       config.gameID = responce.LastGameID;
       await ui.getAchievements();
@@ -338,9 +315,10 @@ export class UI {
       responce.TotalPoints != this.totalPoints ||
       responce.TotalSoftcorePoints != this.softcorePoints
     ) {
-      this.updateAchievements();
       this.totalPoints = responce.TotalPoints;
       this.softcorePoints = responce.TotalSoftcorePoints;
+
+      this.updateAchievements();
       this.userInfo.updatePoints({ points: responce });
     }
 
@@ -861,8 +839,9 @@ export class UI {
     `;
     return popup;
   }
-  static switchSectionVisibility({ section }) {
-    if (section.classList.contains("hidden")) {
+  static switchSectionVisibility({ section, visible = false }) {
+    if (section.classList.contains("hidden") || visible) {
+      //set visible
       section.classList.remove("disposed");
       setTimeout(() => section.classList.remove("hidden"), 100);
       config.setNewPosition({
@@ -871,6 +850,7 @@ export class UI {
       })
     }
     else {
+      //set hidden
       section.classList.add("hidden")
       setTimeout(() => section.classList.add("disposed"), 300);
       config.setNewPosition({
@@ -1002,6 +982,10 @@ export class UI {
 class AchievementsBlock {
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
+  }
+  set VISIBLE(value) {
+    UI.switchSectionVisibility({ section: this.section, visible: value })
+    this.widgetIcon && (this.widgetIcon.checked = value);
   }
   get contextMenuItems() {
     return [
@@ -1437,12 +1421,14 @@ class AchievementsBlock {
 
   initializeElements() {
     this.section = this.generateNewWidget({}); // Секція блока досягнень
+    !this.isClone && (this.widgetIcon = document.querySelector("#open-achivs-button"));
     document.querySelector(".wrapper").appendChild(this.section);
 
     this.container = this.section.querySelector(`.achievements-container`); //Контейнер  з досягненнями
     this.resizer = this.section.querySelector(
       `#achivs-resizer${this.CLONE_NUMBER}`
     ); // Ресайзер блока досягнень
+
   }
   addEvents() {
     // Додавання подій для пересування вікна ачівментсів
@@ -1481,6 +1467,8 @@ class AchievementsBlock {
     });
   }
   setValues() {
+    UI.applyPosition({ widget: this });
+
     this.section.classList.toggle("hide-bg", !this.BG_VISIBILITY);
     this.section.classList.toggle("compact", !this.SHOW_HEADER);
     if (config.ui[this.SECTION_NAME]) {
@@ -1976,8 +1964,6 @@ class ButtonPanel {
     this.notifications = this.section.querySelector("#open-notifications-button");
     this.user = this.section.querySelector("#open-user-button");
     this.stats = this.section.querySelector("#open-stats-button");
-
-
   }
   addEvents() {
     // Отримуємо посилання на панель
@@ -1986,77 +1972,13 @@ class ButtonPanel {
     // Додаємо подію для відслідковування руху миші touchmove 
     document.addEventListener("touchstart", (e) => this.touchVisibilityHandler(e));
     document.addEventListener("mousemove", (e) => this.positionVisibilityHandler(e));
-    // this.header.addEventListener("mousedown", (e) => {
-    //   UI.moveEvent(this.section, e);
-    // });
-
-
-    this.achievements.addEventListener("change", (e) => {
-      UI.switchSectionVisibility(ui.achievementsBlock[0]);
-    });
-    this.status.addEventListener("change", (e) => {
-      UI.switchSectionVisibility(ui.statusPanel);
-    });
     this.settings.addEventListener("click", (e) => {
       // UI.switchSectionVisibility(ui.settings);
       const settingsWidget = document.querySelector("#settings_section");
       settingsWidget ? settingsWidget.remove() : ui.settings.openSettings();
     });
-    this.awards.addEventListener("change", (e) => {
-      UI.switchSectionVisibility(ui.awards);
-    });
-    this.target.addEventListener("change", (e) => {
-      UI.switchSectionVisibility(ui.target);
-    });
-    this.gameCard.addEventListener("change", (e) => {
-      UI.switchSectionVisibility(ui.gameCard);
-    });
-    this.games.addEventListener("change", (e) => {
-      UI.switchSectionVisibility(ui.games);
-    });
-    // this.about.addEventListener("change", (e) => {
-    //   UI.switchSectionVisibility(ui.about);
-    // });
-    this.progression.addEventListener("change", (e) => {
-
-      UI.switchSectionVisibility(ui.progression);
-    });
-    this.note.addEventListener("change", (e) => {
-      UI.switchSectionVisibility(ui.note);
-    });
-    this.user.addEventListener("change", (e) => {
-      UI.switchSectionVisibility(ui.userInfo);
-    });
-    this.notifications.addEventListener("change", (e) => {
-      UI.switchSectionVisibility(ui.notifications);
-    });
-    this.stats.addEventListener("change", (e) => {
-      UI.switchSectionVisibility(ui.stats);
-    });
   }
-
   setValues() {
-    // Встановлення початкових індикаторів віджетів
-    this.achievements.checked =
-      config.ui?.achievements_section?.hidden === false ?? ui.achievementsBlock[0].VISIBLE;
-
-    // this.settings.checked = config.ui?.settings_section?.hidden === false ?? ui.settings.VISIBLE;
-
-    this.target.checked = config.ui?.target_section?.hidden === false ?? ui.target.VISIBLE;
-
-    this.gameCard.checked = config.ui?.game_section?.hidden === false ?? ui.gameCard.VISIBLE;
-
-    this.status.checked = config.ui?.["update-section"]?.hidden === false ?? ui.statusPanel.VISIBLE;
-
-    this.awards.checked = config.ui?.awards_section?.hidden === false ?? ui.awards.VISIBLE;
-
-    this.note.checked = config.ui?.note_section?.hidden === false ?? ui.note.VISIBLE;
-    this.games.checked = config.ui?.games_section?.hidden === false ?? ui.note.VISIBLE;
-    this.progression.checked = config.ui?.progression_section?.hidden === false ?? ui.progression.VISIBLE;
-    this.user.checked = config.ui?.user_section?.hidden === false ?? ui.user.VISIBLE;
-    this.notifications.checked = config.ui?.notification_section?.hidden === false ?? ui.notifications.VISIBLE;
-    this.stats.checked = config.ui?.stats_section?.hidden === false ?? ui.stats.VISIBLE;
-
     this.userImage.src = config.userImageSrc;
   }
   touchVisibilityHandler(e) {
@@ -2296,10 +2218,24 @@ class StatusPanel {
             event: `onchange="ui.statusPanel.NEW_ACHIV_DURATION = this.value;"`,
           },
         ],
-      }
+      },
+      {
+        type: "checkbox",
+        name: "context_show-update-blink",
+        id: "context_show-update-blink",
+        label: ui.lang.showUpdateBlink,
+        checked: this.BLINK_ON_UPDATE,
+        event: `onchange="ui.statusPanel.BLINK_ON_UPDATE = this.checked;"`,
+      },
     ];
   }
-
+  get BLINK_ON_UPDATE() {
+    return config.ui.update_section?.showUpdateBlink ?? false;
+  }
+  set BLINK_ON_UPDATE(value) {
+    config.ui.update_section.showUpdateBlink = value;
+    config.writeConfiguration();
+  }
   get SHOW_RP() {
     return config.ui.update_section?.showRP ?? true;
   }
@@ -2467,7 +2403,11 @@ class StatusPanel {
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
   }
+  set VISIBLE(value) {
 
+    UI.switchSectionVisibility({ section: this.section, visible: value })
+    this.widgetIcon && (this.widgetIcon.checked = value);
+  }
   stats = {
     gameTitle: ui?.GAME_DATA?.Title ?? "Title",
     gamePlatform: ui?.GAME_DATA?.ConsoleName ?? "Platform",
@@ -2525,10 +2465,13 @@ class StatusPanel {
     this.initializeElements();
     this.addEvents();
     this.startAutoScrollRP();
+    UI.applyPosition({ widget: this });
+
     setTimeout(() => this.fitFontSize(), 500);
   }
   initializeElements() {
     this.section = document.querySelector("#update-section");
+    this.widgetIcon = document.querySelector("#open-status-button");
     this.container = this.section.querySelector(".update_container");
     this.gamePreview = this.section.querySelector("#game-preview"); // Іконка гри
     this.retroRatioElement = this.section.querySelector(".update__retro-ratio")
@@ -2547,6 +2490,7 @@ class StatusPanel {
       achivTitleElement: this.section.querySelector("#update_achiv-title"),
       earnedPoints: this.section.querySelector("#update_achiv-earned-points"),
     }
+
   }
   addEvents() {
     this.watchButton.addEventListener("mousedown", (e) => {
@@ -2602,6 +2546,7 @@ class StatusPanel {
     });
   }
   setValues() {
+
     this.gamePlatform.classList.toggle("hidden", !this.SHOW_PLATFORM);
     this.richPresence.classList.toggle("hidden", !this.SHOW_RICH_PRESENCE);
 
@@ -3098,7 +3043,12 @@ class StatusPanel {
     const fontSize = `${(parseInt(containerHeight) - 10) / 5.5}px`;
     container.style.fontSize = fontSize;
   }
-
+  blinkUpdate() {
+    if (this.BLINK_ON_UPDATE) {
+      this.section.classList.add("blink");
+      setTimeout(() => this.section.classList.remove("blink"), 1000);
+    }
+  }
 }
 
 class Settings {
@@ -3961,6 +3911,11 @@ class GameCard {
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
   }
+  set VISIBLE(value) {
+
+    UI.switchSectionVisibility({ section: this.section, visible: value })
+    this.widgetIcon && (this.widgetIcon.checked = value);
+  }
   get SHOW_BADGES() {
     return config.ui?.game_section?.showBadges ?? true;
   }
@@ -4101,6 +4056,8 @@ class GameCard {
     this.loadSavedData();
     this.initializeElements();
     this.addEvents();
+    UI.applyPosition({ widget: this });
+
   }
   loadSavedData() {
     this.loadSavedGameInfo();
@@ -4128,7 +4085,7 @@ class GameCard {
   initializeElements() {
     // Знаходимо контейнер для інформації про гру
     this.section = document.querySelector(".game-card_section");
-
+    this.widgetIcon = document.querySelector("#open-game-card-button");
     // Знаходимо заголовок гри
     this.header = document.querySelector("#game-card-header");
 
@@ -4251,6 +4208,10 @@ class Awards {
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
   }
+  set VISIBLE(value) {
+    UI.switchSectionVisibility({ section: this.section, visible: value })
+    this.widgetIcon && (this.widgetIcon.checked = value);
+  }
   awardTypes = {
     mastery: "mastery",
     completion: "completion",
@@ -4260,10 +4221,12 @@ class Awards {
   constructor() {
     this.initializeElements();
     this.addEvents();
+    UI.applyPosition({ widget: this });
 
   }
   initializeElements() {
-    this.section = document.querySelector(".awards_section"); // Контейнер інформації про гру
+    this.section = document.querySelector(".awards_section");
+    this.widgetIcon = document.querySelector("#open-awards-button");
     this.header = document.querySelector(".awards-header_container");
     this.container = document.querySelector(".awards-content_container");
     this.resizer = document.querySelector("#awards-resizer");
@@ -4449,6 +4412,10 @@ class Target {
   sectionCode = "-target";
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
+  }
+  set VISIBLE(value) {
+    UI.switchSectionVisibility({ section: this.section, visible: value })
+    this.widgetIcon && (this.widgetIcon.checked = value);
   }
   get contextMenuItems() {
     return [
@@ -4836,7 +4803,7 @@ class Target {
   }
   initializeElements() {
     this.section = document.querySelector("#target_section");
-
+    this.widgetIcon = document.querySelector("#open-target-button");
     this.header = document.querySelector(".target-header_container");
     this.container = document.querySelector(".target-container");
 
@@ -4925,6 +4892,8 @@ class Target {
 
   }
   setValues() {
+    UI.applyPosition({ widget: this });
+
     this.section.classList.toggle("compact", !this.SHOW_HEADER);
     this.section.classList.toggle("hide-bg", this.HIDE_BG);
     this.section.classList.toggle("hide-passed", this.HIDE_PASSED_LEVELS);
@@ -5272,6 +5241,10 @@ class Games {
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
   }
+  set VISIBLE(value) {
+    UI.switchSectionVisibility({ section: this.section, visible: value })
+    this.widgetIcon && (this.widgetIcon.checked = value);
+  }
   set FAVOURITES(value) {
     this._favs = value;
     config.ui.favouritesGames = value;
@@ -5461,11 +5434,14 @@ class Games {
     this.gamesList.innerHTML = `
     <button class="games__load-button" onclick="ui.games.loadGames()"></button>
     `;
+    UI.applyPosition({ widget: this });
+
     // this.setValues();
 
   }
   initializeElements() {
     this.section = document.querySelector("#games_section");
+    this.widgetIcon = document.querySelector("#open-games-button");
     this.header = this.section.querySelector(".header-container");
     this.container = this.section.querySelector(".games_container");
     // this.platformsContainer = this.section.querySelector(".platforms-list_container");
@@ -5825,17 +5801,24 @@ class Games {
     this.section.classList.toggle("fullscreen")
   }
 }
+
 class Progression {
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
   }
+  set VISIBLE(value) {
+    UI.switchSectionVisibility({ section: this.section, visible: value })
+    this.widgetIcon && (this.widgetIcon.checked = value);
+  }
   constructor() {
     this.initializeElements();
     this.addEvents();
+    UI.applyPosition({ widget: this });
 
   }
   initializeElements() {
     this.section = document.querySelector("#progression_section");
+    this.widgetIcon = document.querySelector("#open-progression-button");
     this.header = this.section.querySelector(".header-container");
     this.notEarnedList = this.section.querySelector("#not-earned_progression-list");
     this.earnedList = this.section.querySelector("#earned_progression-list");
@@ -6019,6 +6002,10 @@ class Note {
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
   }
+  set VISIBLE(value) {
+    UI.switchSectionVisibility({ section: this.section, visible: value })
+    this.widgetIcon && (this.widgetIcon.checked = value);
+  }
   AUTOSAVE_INTERVAL_MILISECS = 2000;
   get notesTabs() {
     return [
@@ -6073,10 +6060,12 @@ class Note {
     this.generateTabs();
     this.addEvents();
     this.setValues();
+    UI.applyPosition({ widget: this });
 
   }
   initializeElements() {
     this.section = document.querySelector("#note_section");
+    this.widgetIcon = document.querySelector("#open-note-button");
     this.header = this.section.querySelector(".header-container");
     this.resizer = this.section.querySelector("#note-resizer");
     this.textarea = this.section.querySelector(".note-textaria");
@@ -6180,6 +6169,10 @@ class UserInfo {
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
   }
+  set VISIBLE(value) {
+    UI.switchSectionVisibility({ section: this.section, visible: value })
+    this.widgetIcon && (this.widgetIcon.checked = value);
+  }
   USER_INFO = config._cfg.ui?.userInfoData ?? {
     userName: config.USER_NAME ?? "userName",
     status: "Offline",
@@ -6200,10 +6193,12 @@ class UserInfo {
     if (config.identConfirmed) {
       // setTimeout(() => this.update({}), 5000);
     }
+    UI.applyPosition({ widget: this });
 
   }
   initializeElements() {
     this.section = document.querySelector("#user_section");
+    this.widgetIcon = document.querySelector("#open-user-button");
     this.userNameElement = this.section.querySelector(".user_user-name");
     this.userImg = this.section.querySelector(".user-preview");
     this.connectionStatus = this.section.querySelector(".user_online-indicator")
@@ -6386,6 +6381,10 @@ class Notifications {
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
   }
+  set VISIBLE(value) {
+    UI.switchSectionVisibility({ section: this.section, visible: value })
+    this.widgetIcon && (this.widgetIcon.checked = value);
+  }
   get SHOW_TIMESTAMP() {
     return config?.ui.notification_section?.showTimestamp ?? true;
   }
@@ -6436,10 +6435,12 @@ class Notifications {
         timeStamp.innerText = this.getDeltaTime(timeStamp.dataset.time);
       })
     }, 1 * 1000 * 60)
+    UI.applyPosition({ widget: this });
   }
 
   initializeElements() {
     this.section = document.querySelector("#notification_section");
+    this.widgetIcon = document.querySelector("#open-notifications-button");
     this.container = this.section.querySelector(".notification-container");
     this.resizer = this.section.querySelector(".resizer");
   }
@@ -6792,7 +6793,7 @@ class Stats {
     this.setElementsVisibility();
   }
   get SHOW_COMPLETION_CHART() {
-    return config.ui?.stats_section?.completionChart ?? true;
+    return config.ui?.stats_section?.completionChart ?? false;
   }
   set SHOW_COMPLETION_CHART(value) {
     this.saveProppertySetting("completionChart", value);
@@ -6801,6 +6802,10 @@ class Stats {
   }
   get VISIBLE() {
     return !this.section.classList.contains("hidden");
+  }
+  set VISIBLE(value) {
+    UI.switchSectionVisibility({ section: this.section, visible: value })
+    this.widgetIcon && (this.widgetIcon.checked = value);
   }
   saveProppertySetting(property, value) {
     if (!config.ui.stats_section) {
@@ -6815,9 +6820,11 @@ class Stats {
     this.initializeElements();
     this.setElementsVisibility();
     this.addEvents();
+    UI.applyPosition({ widget: this });
   }
   initializeElements() {
     this.section = document.querySelector("#stats_section");
+    this.widgetIcon = document.querySelector("#open-stats-button");
     this.header = this.section.querySelector(".header-container");
     this.container = this.section.querySelector(".stats-container");
 

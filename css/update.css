@@ -31,6 +31,36 @@
   z-index: 2;
 }
 
+.update_section::after {
+  content: "";
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background-color: var(--font-color);
+  border-radius: 50%;
+  top: 5px;
+  right: 5px;
+  opacity: 0;
+}
+
+.update_section.blink::after {
+  animation: update-blink 1s;
+}
+
+@keyframes update-blink {
+  0% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
 #status-resizer {
   border-radius: 0 0 5px 0;
 }

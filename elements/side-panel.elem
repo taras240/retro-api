@@ -9,7 +9,8 @@
         <div class="buttons-block_widgets">
 
             <div class="setting-radio-group">
-                <input type="checkbox" name="open-status-button" id="open-status-button">
+                <input type="checkbox" onchange="ui.statusPanel.VISIBLE = this.checked" name="open-status-button"
+                    id="open-status-button">
                 </input>
                 <label class="side-panel_input" title="status widget" for="open-status-button"><svg
                         xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
@@ -18,7 +19,8 @@
                     </svg></label>
             </div>
             <div class="setting-radio-group">
-                <input type="checkbox" name="open-user-button" id="open-user-button">
+                <input type="checkbox" onchange="ui.userInfo.VISIBLE = this.checked" name="open-user-button"
+                    id="open-user-button">
                 </input>
                 <label class="side-panel_input" title="userInfo widget" for="open-user-button"><svg
                         xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
@@ -28,7 +30,8 @@
                     </svg></label>
             </div>
             <div class="setting-radio-group side-panel_achieves-group">
-                <input type="checkbox" name="open-achivs-button" id="open-achivs-button">
+                <input type="checkbox" onchange="ui.achievementsBlock[0].VISIBLE = this.checked"
+                    name="open-achivs-button" id="open-achivs-button">
                 </input>
                 <label class="side-panel_input" title="achieves widget" for="open-achivs-button"><svg
                         xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
@@ -42,7 +45,8 @@
                     </svg></button>
             </div>
             <div class="setting-radio-group">
-                <input type="checkbox" name="open-target-button" id="open-target-button">
+                <input type="checkbox" onchange="ui.target.VISIBLE = this.checked" name="open-target-button"
+                    id="open-target-button">
                 </input>
                 <label class="side-panel_input" title="target widget" for="open-target-button"><svg
                         xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
@@ -52,7 +56,8 @@
                     </svg></label>
             </div>
             <div class="setting-radio-group">
-                <input type="checkbox" name="open-game-card-button" id="open-game-card-button">
+                <input type="checkbox" name="open-game-card-button" id="open-game-card-button"
+                    onchange="ui.gameCard.VISIBLE = this.checked">
                 </input>
                 <label class="side-panel_input" title="game-card widget" for="open-game-card-button"><svg
                         xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
@@ -61,7 +66,8 @@
                     </svg></label>
             </div>
             <div class="setting-radio-group">
-                <input type="checkbox" name="open-stats-button" id="open-stats-button">
+                <input type="checkbox" onchange="ui.stats.VISIBLE = this.checked" name="open-stats-button"
+                    id="open-stats-button">
                 </input>
                 <label class="side-panel_input" title="stats widget" for="open-stats-button"><svg
                         xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
@@ -71,7 +77,8 @@
                     </svg></label>
             </div>
             <div class="setting-radio-group">
-                <input type="checkbox" name="open-awards-button" id="open-awards-button">
+                <input type="checkbox" onchange="ui.awards.VISIBLE = this.checked" name="open-awards-button"
+                    id="open-awards-button">
                 </input>
                 <label class="side-panel_input" title="awards widget" for="open-awards-button"><svg
                         xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
@@ -80,7 +87,8 @@
                     </svg></label>
             </div>
             <div class="setting-radio-group">
-                <input type="checkbox" name="open-games-button" id="open-games-button">
+                <input type="checkbox" onchange="ui.games.VISIBLE = this.checked" name="open-games-button"
+                    id="open-games-button">
                 </input>
                 <label class="side-panel_input" title="games widget" for="open-games-button"><svg
                         xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
@@ -89,7 +97,8 @@
                     </svg></label>
             </div>
             <div class=" setting-radio-group">
-                <input type="checkbox" name="open-progression-button" id="open-progression-button">
+                <input type="checkbox" onchange="ui.progression.VISIBLE = this.checked" name="open-progression-button"
+                    id="open-progression-button">
                 </input>
                 <label class="side-panel_input" title="progression widget" for="open-progression-button">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
@@ -99,7 +108,8 @@
                 </label>
             </div>
             <div class="setting-radio-group">
-                <input type="checkbox" name="open-note-button" id="open-note-button">
+                <input type="checkbox" onchange="ui.note.VISIBLE = this.checked" name="open-note-button"
+                    id="open-note-button">
                 </input>
                 <label class="side-panel_input" title="note widget" for="open-note-button" onclick="">
 
@@ -111,7 +121,8 @@
                 </label>
             </div>
             <div class="setting-radio-group">
-                <input type="checkbox" name="open-notifications-button" id="open-notifications-button">
+                <input type="checkbox" onchange="ui.notifications.VISIBLE = this.checked"
+                    name="open-notifications-button" id="open-notifications-button">
                 </input>
                 <label class="side-panel_input" title="notifications widget" for="open-notifications-button" onclick="">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
@@ -121,17 +132,6 @@
                     </svg>
                 </label>
             </div>
-            <!-- <div class="setting-radio-group">
-                <input type="checkbox" name="open-about-button" id="open-about-button">
-                </input>
-                <label class="side-panel_input" title="about widget" for="open-about-button" onclick="">
-
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                        <path
-                            d="M424-320q0-81 14.5-116.5T500-514q41-36 62.5-62.5T584-637q0-41-27.5-68T480-732q-51 0-77.5 31T365-638l-103-44q21-64 77-111t141-47q105 0 161.5 58.5T698-641q0 50-21.5 85.5T609-475q-49 47-59.5 71.5T539-320H424Zm56 240q-33 0-56.5-23.5T400-160q0-33 23.5-56.5T480-240q33 0 56.5 23.5T560-160q0 33-23.5 56.5T480-80Z" />
-                    </svg>
-                </label>
-            </div> -->
             <div class="setting-radio-group">
                 <a class="side-panel_input side-panel_link" title="to discord" href="https://discord.gg/apzc6kCAbH"
                     target="_blank">

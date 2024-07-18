@@ -85,5 +85,6 @@
     "earnAwardAlert": "Award Alert",
     "mainNote": "Note",
     "gameNote": "Game Note",
-    "showLevel": "Show Level"
+    "showLevel": "Show Level",
+    "showUpdateBlink": "Show Update Blink"
 }

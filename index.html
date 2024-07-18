@@ -186,83 +186,6 @@
         <ul class="horizon_list earned" id="earned_progression-list"></ul>
     </div>
     <div class="resizer" id="progression-resizer"></div>
-</section><section id="login_section" class="login_section section">
-  <div class="header-container login-header_container">
-    <div class="header-icon">
-      <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-        <path
-          d="M480-120v-80h280v-560H480v-80h280q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H480Zm-80-160-55-58 102-102H120v-80h327L345-622l55-58 200 200-200 200Z" />
-      </svg>
-    </div>
-    <h2 class="widget-header-text">RA Login</h2>
-    <div class="header-icon header-button" onclick="ui.loginCard.close()">
-      <svg height="24" viewBox="0 -960 960 960" width="24">
-        <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-      </svg>
-    </div>
-  </div>
-  <img class="login-user-image" title="ra account image" onerror="this.src='./assets/img/account.svg';"
-    alt="ra account image" />
-  <div class="login-container">
-    <div class="login-form-container">
-      <div class="user-ident-input">
-        <div class="form-input-container">
-          <label for="login-user-name">User name:</label>
-          <input type="text" class="text-input login-input" name="login-input" id="login-user-name"
-            placeholder="Enter user name" />
-        </div>
-        <div class="form-input-container">
-          <label for="login-api-key">API Key:</label>
-          <div class="login-api-container">
-            <div class="api-input">
-              <input type="password" class="text-input login-api-key login-input" name="api-key" id="login-api-key"
-                placeholder="Enter API Key" />
-              <button class="paste-api-key svg-button" title="paste from clipboard"
-                onclick="ui.loginCard.pasteApiKeyFromClipboard()">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                  <path
-                    d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h167q11-35 43-57.5t70-22.5q40 0 71.5 22.5T594-840h166q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560h-80v120H280v-120h-80v560Zm280-560q17 0 28.5-11.5T520-800q0-17-11.5-28.5T480-840q-17 0-28.5 11.5T440-800q0 17 11.5 28.5T480-760Z" />
-                </svg>
-              </button>
-            </div>
-
-            <a class="ra-settings-link" title="go to retroachievements settings"
-              href="https://retroachievements.org/controlpanel.php" target="_blank">
-              Where is the API key located?
-              <svg class="link-icon" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                <path d="m216-160-56-56 464-464H360v-80h400v400h-80v-264L216-160Z" />
-              </svg>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-button-container">
-        <button id="submit-login" class="submit-login" onclick="ui.loginCard.submitLogin()">
-          Сonfirm
-        </button>
-        <!--<button id="submit-login-google" class="submit-login-google">
-          <p class="login-text">Link Google</p>
-          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
-            <path
-              d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-              fill="#4285F4" />
-            <path
-              d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-              fill="#34A853" />
-            <path
-              d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-              fill="#FBBC05" />
-            <path
-              d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-              fill="#EA4335" />
-            <path d="M1 1h22v22H1z" fill="none" />
-          </svg>
-        </button>-->
-      </div>
-
-    </div>
-  </div>
 </section><section id="side_panel" class="buttons-block gradient-animation expanded">
     <div class="setting-radio-group">
         <!--<input type="checkbox" style="display: none;" name="open-login-button" id="open-login-button">
@@ -274,7 +197,8 @@
         <div class="buttons-block_widgets">
 
             <div class="setting-radio-group">
-                <input type="checkbox" name="open-status-button" id="open-status-button">
+                <input type="checkbox" onchange="ui.statusPanel.VISIBLE = this.checked" name="open-status-button"
+                    id="open-status-button">
                 </input>
                 <label class="side-panel_input" title="status widget" for="open-status-button"><svg
                         xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
@@ -283,7 +207,8 @@
                     </svg></label>
             </div>
             <div class="setting-radio-group">
-                <input type="checkbox" name="open-user-button" id="open-user-button">
+                <input type="checkbox" onchange="ui.userInfo.VISIBLE = this.checked" name="open-user-button"
+                    id="open-user-button">
                 </input>
                 <label class="side-panel_input" title="userInfo widget" for="open-user-button"><svg
                         xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
@@ -293,7 +218,8 @@
                     </svg></label>
             </div>
             <div class="setting-radio-group side-panel_achieves-group">
-                <input type="checkbox" name="open-achivs-button" id="open-achivs-button">
+                <input type="checkbox" onchange="ui.achievementsBlock[0].VISIBLE = this.checked"
+                    name="open-achivs-button" id="open-achivs-button">
                 </input>
                 <label class="side-panel_input" title="achieves widget" for="open-achivs-button"><svg
                         xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
@@ -307,7 +233,8 @@
                     </svg></button>
             </div>
             <div class="setting-radio-group">
-                <input type="checkbox" name="open-target-button" id="open-target-button">
+                <input type="checkbox" onchange="ui.target.VISIBLE = this.checked" name="open-target-button"
+                    id="open-target-button">
                 </input>
                 <label class="side-panel_input" title="target widget" for="open-target-button"><svg
                         xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
@@ -317,7 +244,8 @@
                     </svg></label>
             </div>
             <div class="setting-radio-group">
-                <input type="checkbox" name="open-game-card-button" id="open-game-card-button">
+                <input type="checkbox" name="open-game-card-button" id="open-game-card-button"
+                    onchange="ui.gameCard.VISIBLE = this.checked">
                 </input>
                 <label class="side-panel_input" title="game-card widget" for="open-game-card-button"><svg
                         xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
@@ -326,7 +254,8 @@
                     </svg></label>
             </div>
             <div class="setting-radio-group">
-                <input type="checkbox" name="open-stats-button" id="open-stats-button">
+                <input type="checkbox" onchange="ui.stats.VISIBLE = this.checked" name="open-stats-button"
+                    id="open-stats-button">
                 </input>
                 <label class="side-panel_input" title="stats widget" for="open-stats-button"><svg
                         xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
@@ -336,7 +265,8 @@
                     </svg></label>
             </div>
             <div class="setting-radio-group">
-                <input type="checkbox" name="open-awards-button" id="open-awards-button">
+                <input type="checkbox" onchange="ui.awards.VISIBLE = this.checked" name="open-awards-button"
+                    id="open-awards-button">
                 </input>
                 <label class="side-panel_input" title="awards widget" for="open-awards-button"><svg
                         xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
@@ -345,7 +275,8 @@
                     </svg></label>
             </div>
             <div class="setting-radio-group">
-                <input type="checkbox" name="open-games-button" id="open-games-button">
+                <input type="checkbox" onchange="ui.games.VISIBLE = this.checked" name="open-games-button"
+                    id="open-games-button">
                 </input>
                 <label class="side-panel_input" title="games widget" for="open-games-button"><svg
                         xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
@@ -354,7 +285,8 @@
                     </svg></label>
             </div>
             <div class=" setting-radio-group">
-                <input type="checkbox" name="open-progression-button" id="open-progression-button">
+                <input type="checkbox" onchange="ui.progression.VISIBLE = this.checked" name="open-progression-button"
+                    id="open-progression-button">
                 </input>
                 <label class="side-panel_input" title="progression widget" for="open-progression-button">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
@@ -364,7 +296,8 @@
                 </label>
             </div>
             <div class="setting-radio-group">
-                <input type="checkbox" name="open-note-button" id="open-note-button">
+                <input type="checkbox" onchange="ui.note.VISIBLE = this.checked" name="open-note-button"
+                    id="open-note-button">
                 </input>
                 <label class="side-panel_input" title="note widget" for="open-note-button" onclick="">
 
@@ -376,7 +309,8 @@
                 </label>
             </div>
             <div class="setting-radio-group">
-                <input type="checkbox" name="open-notifications-button" id="open-notifications-button">
+                <input type="checkbox" onchange="ui.notifications.VISIBLE = this.checked"
+                    name="open-notifications-button" id="open-notifications-button">
                 </input>
                 <label class="side-panel_input" title="notifications widget" for="open-notifications-button" onclick="">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
@@ -386,17 +320,6 @@
                     </svg>
                 </label>
             </div>
-            <!-- <div class="setting-radio-group">
-                <input type="checkbox" name="open-about-button" id="open-about-button">
-                </input>
-                <label class="side-panel_input" title="about widget" for="open-about-button" onclick="">
-
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                        <path
-                            d="M424-320q0-81 14.5-116.5T500-514q41-36 62.5-62.5T584-637q0-41-27.5-68T480-732q-51 0-77.5 31T365-638l-103-44q21-64 77-111t141-47q105 0 161.5 58.5T698-641q0 50-21.5 85.5T609-475q-49 47-59.5 71.5T539-320H424Zm56 240q-33 0-56.5-23.5T400-160q0-33 23.5-56.5T480-240q33 0 56.5 23.5T560-160q0 33-23.5 56.5T480-80Z" />
-                    </svg>
-                </label>
-            </div> -->
             <div class="setting-radio-group">
                 <a class="side-panel_input side-panel_link" title="to discord" href="https://discord.gg/apzc6kCAbH"
                     target="_blank">

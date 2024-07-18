@@ -85,5 +85,6 @@
     "earnAwardAlert": "Здобуття нагороди",
     "mainNote": "Нотатки",
     "gameNote": "Нотатки гри",
-    "showLevel": "Показувати рівень"
+    "showLevel": "Показувати рівень",
+    "showUpdateBlink": "Показувати спалах при оновленні"
 }

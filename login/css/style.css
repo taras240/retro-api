@@ -7,7 +7,7 @@ body {
     --accent-color: #3e63dd;
     --yellow-color: #c39c30;
     --blue-color: #3663d8;
-    /* overflow: hidden; */
+    overflow: hidden;
 }
 
 * {

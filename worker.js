@@ -6,7 +6,7 @@ const sections = {
   // about: "./elements/about.elem",
   target: "./elements/target.elem",
   progression: "./elements/progression.elem",
-  login: "./elements/login.elem",
+  // login: "./elements/login.elem",
   panel: "./elements/side-panel.elem",
   // settings: "./elements/settings.elem",
   awards: "./elements/awards.elem",
