@@ -1,10 +1,10 @@
 {
     "embeds": [
         {
-            "type": "link",
+            "type": "embed",
             "url": "https://www.retrocheevos.vercel.app/",
             "title": "Retrocheevos",
-            "description": "Your cheevohunt companion. "
+            "description": "Your ultimate companion for hunting achievements."
         }
     ]
 }
