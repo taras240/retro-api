@@ -1,0 +1,12 @@
+{
+    "version": "1.0",
+    "type": "rich",
+    "provider_name": "Retrocheevos",
+    "provider_url": "https://retrocheevos.vercel.app",
+    "title": "Retrocheevos",
+    "author_name": "taras240",
+    "author_url": "https://mysite.com/author",
+    "html": "<div style=\"border-left: 5px solid goldenrod; padding:10px;\"><h2 style=\"font-size: 1.4rem; text-transform: uppercase;\">retrocheevos</h2><p style=\"font-size: 1.1rem; \">Your cheevohunter companion</p></div>",
+    "width": 400,
+    "height": 100
+}
