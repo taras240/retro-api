@@ -17,7 +17,7 @@ section.section.games_setion:hover {
 .games_container {
   width: 100%;
   position: relative;
-  border-radius: 0 0 5px 5px;
+  border-radius: 0 0 var(--border-radius) var(--border-radius);
   overflow: hidden;
   height: 100%;
   display: flex;

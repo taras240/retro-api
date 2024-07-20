@@ -22,8 +22,6 @@
 .section.update_section {
   box-shadow: 0 0 0 transparent;
   background: transparent;
-  border-radius: 5px;
-
 }
 
 .update_section .resizer {
@@ -61,10 +59,6 @@
   }
 }
 
-#status-resizer {
-  border-radius: 0 0 5px 0;
-}
-
 .update__header-button.header-icon {
   position: absolute;
   z-index: 10;
@@ -79,7 +73,7 @@
   box-shadow: 0 0 3px 1px black;
   height: 100%;
   position: relative;
-  border-radius: 5px;
+  border-radius: var(--border-radius);
   cursor: grab;
   transform-style: preserve-3d;
   transition: 1s;
@@ -155,7 +149,7 @@
 
 .status_glass-effect {
   position: absolute;
-  border-radius: inherit;
+  border-radius: var(--border-radius);
   width: 100%;
   height: 100%;
   left: 0;
@@ -189,7 +183,7 @@
   gap: 5px;
   justify-content: space-between;
   overflow: hidden;
-  border-radius: 5px;
+  border-radius: var(--border-radius);
   padding-bottom: 5px;
 }
 
@@ -224,7 +218,7 @@
   padding: 5px 20px;
   transform: rotateX(180deg);
   background-color: var(--secondary-color);
-  border-radius: inherit;
+  border-radius: var(--border-radius);
 }
 
 
@@ -676,7 +670,7 @@
   bottom: 1px;
   left: 0;
   height: 5px;
-  border-radius: 5px 0 0 5px;
+  /* border-radius: var(--border-radius) 0 0 var(--border-radius); */
   z-index: 11;
   width: var(--progress-points, 0%);
   /* background: linear-gradient(to right, transparent, var(--accent-color) 90%); */
@@ -689,7 +683,7 @@
   bottom: 2px;
   left: 0;
   height: 3px;
-  border-radius: 5px 0 0 5px;
+  /* border-radius: 5px 0 0 5px; */
   width: var(--progress-points, 0%);
   /* background: linear-gradient(to right, transparent, var(--selection-color) 90%); */
   background-color: greenyellow;

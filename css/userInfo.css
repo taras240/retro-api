@@ -14,7 +14,7 @@
 }
 
 .user_header-container {
-    border-radius: 5px 5px 0 0;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -210,10 +210,4 @@
     position: absolute;
     top: 15px;
     right: 15px;
-}
-
-.user_resizer.resizer {
-    /* border-radius: 0 0 20px 0; */
-    /* margin-right: 2px;
-    margin-bottom: 2px; */
 }

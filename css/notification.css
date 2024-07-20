@@ -57,7 +57,7 @@
     background-color: var(--secondary-color);
     padding: 2px;
     /* border: 2px solid gold; */
-    border-radius: 5px;
+    border-radius: var(--border-radius);
     transition: transform 0.2s;
 }
 

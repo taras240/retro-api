@@ -77,7 +77,8 @@ export class Config {
     this.writeConfiguration();
   }
   get updateDelay() {
-    return this._cfg.settings.updateDelay;
+    const delay = this._cfg.settings.updateDelay;
+    return delay < 5 ? 5 : delay;
   }
   get updateDelayInMiliSecs() {
     return this._cfg.settings.updateDelay * 1000;

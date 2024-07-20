@@ -414,53 +414,6 @@
   transition: 0.2s;
 }
 
-/**---------[ EXPANDED ACHIEVEMENT ]--------*/
-
-.achiv-block.expanded {
-  padding: 5px;
-  /* background-color: var(--main-color); */
-  display: flex;
-  aspect-ratio: auto;
-  align-items: center;
-  border-radius: 5px;
-}
-
-.achiv-block.expanded .achiv-details-block {
-  width: calc(300px + var(--achiv-height));
-  min-height: calc(var(--achiv-height));
-  background-color: var(--secondary-color);
-  top: 50%;
-  left: 0px;
-  margin: 0;
-  transform: translateY(-50%);
-  padding-left: calc(5px + var(--achiv-height));
-  padding-right: 5px;
-  visibility: visible;
-  opacity: 1;
-  border: transparent;
-}
-
-.achiv-block.expanded .achiv-details-block.left-side {
-  left: auto;
-  right: 0;
-  padding-left: 5px;
-  padding-right: var(--achiv-height);
-}
-
-.achiv-block.expanded:hover {
-  box-shadow: 0 0 0;
-}
-
-.achiv-block.expanded .preview-container {
-  position: relative;
-  height: calc(var(--achiv-height) - 15px);
-  aspect-ratio: 1;
-  flex-shrink: 1;
-  flex-grow: 1;
-  z-index: 2;
-  box-shadow: 0 0 5px 2px black;
-}
-
 /**---------- MARIO_ACTION-------------------- */
 .coin__container,
 .mario__container {

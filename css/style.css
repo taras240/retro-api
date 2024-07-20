@@ -1,10 +1,9 @@
 @import url(./reset.css);
 @import url(./background.css);
 @import url(./settings.css);
-@import url(./login.css);
+@import url(./side-panel.css);
 @import url(./gameCard.css);
 @import url(./achievement.css);
-@import url(./help.css);
 @import url(./targetAchivs.css);
 @import url(./awards.css);
 @import url(./update.css);
@@ -68,7 +67,10 @@ img {
   --font-color: #eee;
   --selection-color: #008000;
   --shadow-color: #000000;
+  --yellow-color: #c39c30;
+  --blue-color: #3663d8;
 
+  --border-radius: 8px;
   --box-shadows: 1px 1px 0 var(--shadow-color), 2px 2px 0 var(--shadow-color),
     3px 3px 0 var(--shadow-color), 4px 4px 0 var(--shadow-color);
   --box-shadow-hover: 1px 1px 0 var(--shadow-color),
@@ -84,6 +86,7 @@ body {
 }
 
 a {
+
   border-radius: 2px;
   color: inherit;
   transition: 0.2s;
@@ -92,7 +95,7 @@ a {
 a:hover {
   color: var(--main-color);
   background-color: var(--font-color);
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 .wrapper {
@@ -154,13 +157,12 @@ a:hover {
       var(--main-color));
   position: absolute;
   visibility: visible;
-  border-radius: 5px;
+  border-radius: var(--border-radius);
   user-select: none;
   opacity: 1;
   /* background-color: var(--main-color); */
   background: var(--background-gradient);
   z-index: 1;
-
   transition: 0.2s ease-out;
 }
 
@@ -225,7 +227,7 @@ a:hover {
   width: 100%;
   border-bottom: 0px solid var(--font-color);
   background-color: var(--secondary-color);
-  border-radius: 5px 5px 0 0;
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
   z-index: 1;
   font-family: "OHair", system-ui;
 }
@@ -243,7 +245,7 @@ a:hover {
 }
 
 .content-container {
-  border-radius: 5px;
+  border-radius: var(--border-radius);
   background-color: var(--main-color);
   z-index: 1;
 }
@@ -316,71 +318,6 @@ a:hover {
   padding: 3px;
 }
 
-.achivs-settings-block.checked {}
-
-.header-settings-container {
-  display: none;
-}
-
-.widget-settings_header-container {
-  display: flex;
-  align-items: center;
-  padding: 0 10px;
-}
-
-.checked .header-settings-container {
-  display: block;
-  position: fixed;
-  top: 50vh;
-  left: 50vw;
-  transform: translate(-50%, -50%);
-  background-color: var(--main-color);
-  width: 350px;
-  border-radius: 5px;
-  overflow: hidden;
-  z-index: 2000;
-  box-shadow: 0px 4px 9px 0px black;
-  visibility: hidden;
-  opacity: 0;
-  transition: 0.2s ease-in;
-}
-
-.checked .header-settings-container {
-  visibility: visible;
-  opacity: 1;
-  pointer-events: all;
-}
-
-.header-settings-item {
-  padding: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 15px;
-}
-
-.header-settings-item:nth-child(even) {
-  background-color: var(--secondary-color);
-}
-
-.header-setting-label {
-  flex: 1;
-  text-align: left;
-  font-weight: 600;
-  font-size: 1rem;
-}
-
-.number-input.free-width {
-  min-width: auto;
-}
-
-.setting-input-values {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  justify-content: end;
-  gap: 10px;
-}
 
 /**---------[ Resizer ]---------------------------- */
 .resizer {
@@ -389,7 +326,7 @@ a:hover {
   right: 0px;
   width: 0px;
   aspect-ratio: 1;
-  border-radius: 0 0 5px 0;
+  border-radius: 0 0 var(--border-radius) 0;
   background-color: transparent;
   cursor: nwse-resize;
   transition: 0.1s;
@@ -599,213 +536,6 @@ input:checked+.checkbox-input::before {
 }
 
 
-
-/** ------------------------------------------------*/
-/** -------[ WIDGETS SECTION ]----------------------*/
-.buttons-block {
-  --side-panel-width: 90px;
-  position: fixed;
-  top: 50%;
-  height: 90vh;
-  max-height: 800px;
-  width: var(--side-panel-width);
-  left: calc(0px - var(--side-panel-width) - 5px);
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  border-radius: 0 10px 10px 0;
-  padding: 0px;
-  /* height: 90vh; */
-  background: linear-gradient(to bottom,
-      var(--accent-color),
-      var(--main-color),
-      var(--secondary-color));
-  z-index: 1000;
-  transition: 0.2s;
-
-}
-
-#side_panel:hover,
-#side_panel.expanded {
-  left: 0;
-}
-
-.buttons-block_container,
-.buttons-block_widgets {
-  align-self: baseline;
-  flex: 1;
-  margin: auto 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  /* gap: 20px; */
-  width: 100%;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-
-.buttons-block_widgets {
-  overflow-y: scroll;
-  max-height: 100%;
-  gap: 0.5rem;
-}
-
-.buttons-block_container {
-  flex: 1;
-  justify-content: space-between;
-  padding: 15px 0;
-}
-
-.buttons-block_container .setting-radio-group {
-  width: 100%;
-}
-
-.side-panel_link:hover {
-  background-color: transparent;
-  text-decoration: none;
-
-}
-
-.side-panel_input,
-.side-panel_login {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 30px;
-
-  transition: 0.2s;
-  cursor: pointer;
-  opacity: 0.5;
-}
-
-.side-panel_achieves-group {
-  display: flex;
-  position: relative;
-}
-
-.side-panel_button {
-  position: absolute;
-  background-color: transparent;
-  width: 15px;
-  height: 15px;
-  right: 20%;
-  top: -15%;
-  opacity: 0.8;
-}
-
-.side-panel_login img,
-.side-panel_input svg {
-  width: 100%;
-  aspect-ratio: 1;
-  fill: var(--font-color);
-  border-radius: 10px;
-  overflow: hidden;
-  transition: 0.2s;
-}
-
-.side-panel_login:hover>img {
-  transform: scale(1.05);
-}
-
-.side-panel_input:hover>svg {
-  transform: scale(1.25);
-}
-
-.side-panel_input:active>svg {
-  transform: scale(1.1);
-}
-
-.side-panel_login:active>img {
-  transform: scale(1);
-}
-
-input[type="checkbox"]:checked+.side-panel_input {
-  opacity: 1;
-}
-
-input[type="checkbox"]:checked+.side-panel_login>img {
-  border: 4px solid var(--font-color);
-}
-
-.side-panel_input::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 2px;
-  height: 0;
-  transform: translateY(-50%);
-  background-color: var(--font-color);
-  transition: width 0.2s;
-}
-
-input[type="checkbox"]:checked+.side-panel_input::after {
-  height: 100%;
-}
-
-
-
-.login-icon {
-  position: relative;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 1;
-  padding: 10px;
-  opacity: 1;
-}
-
-.login-icon::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 5%;
-  width: 90%;
-  height: 1px;
-  background-color: var(--font-color);
-  opacity: 0.15;
-}
-
-.side-panel_settings {
-  padding: 10px 0;
-  position: relative;
-}
-
-.side-panel_settings::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 5%;
-  width: 90%;
-  height: 1px;
-  background-color: var(--font-color);
-  opacity: 0.15;
-}
-
-.buttons-block.gradient-animation {
-  background-image: linear-gradient(to bottom,
-      var(--secondary-color),
-      var(--main-color),
-      var(--secondary-color));
-  background-size: 300% 300%;
-  animation: gradientAnimation 10s linear infinite;
-}
-
-@keyframes gradientAnimation {
-
-  0%,
-  100% {
-    background-position: 50% 100%;
-  }
-
-  50% {
-    background-position: 50% 0%;
-  }
-}
-
-
 /**----------------[ CONTEXT-MENU ]-----------------*/
 .context-menu.hidden {
   visibility: hidden;
@@ -852,7 +582,7 @@ input[type="checkbox"]:checked+.side-panel_input::after {
       var(--main-color),
       var(--secondary-color));
   box-shadow: 0 0 2px 0 black;
-  border-radius: 4px;
+  border-radius: var(--border-radius);
   /* overflow: hidden; */
   font-size: 1.15rem;
   min-width: 150px;
@@ -900,12 +630,12 @@ input[type="checkbox"]:checked+.side-panel_input::after {
   background-color: var(--main-color);
 } */
 .context-menu_item:last-child {
-  border-radius: 0 0 4px 4px;
+  border-radius: 0 0 var(--border-radius) var(--border-radius);
   border-bottom: none;
 }
 
 .context-menu_item:first-child {
-  border-radius: 4px 4px 0 0;
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
 }
 
 .context-menu_item:hover {

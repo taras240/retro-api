@@ -292,13 +292,13 @@ export class UI {
     (this.settings.DISCORD_START_SESSION || this.settings.DISCORD_NEW_GAME) && this.sendDiscordMessage({ type: "new-game" });
     // Встановлення інтервалу для оновлення досягнень та зміни стану кнопки
     this.apiTrackerInterval = setInterval(() => {
+      this.statusPanel.blinkUpdate();
       this.checkUpdates();
     }, config.updateDelayInMiliSecs);
   }
   totalPoints = 0;
   softcorePoints = 0;
   async checkUpdates(isStart = false) {
-    this.statusPanel.blinkUpdate();
     const responce = await apiWorker.getProfileInfo({});
     if (responce.LastGameID != config.gameID || isStart) {
       config.gameID = responce.LastGameID;
@@ -345,7 +345,7 @@ export class UI {
     switch (type) {
       case "new-game":
         messageElements.header = `${config.targetUser} launched game: \n${ui.GAME_DATA.Title}`
-        messageElements.description = `
+        messageElements.description = `          
           Platform: ${ui.GAME_DATA.ConsoleName}
           Realeased: ${ui.GAME_DATA.Released}
           Achievements: ${ui.GAME_DATA.NumAwardedToUserHardcore} / ${ui.GAME_DATA.achievements_published}
@@ -371,6 +371,7 @@ export class UI {
       case "earned-cheevo":
         messageElements.header = `${config.targetUser}  earned ${ui.ACHIEVEMENTS[id].isHardcoreEarned ? 'hardcore' : "softcore"} cheevo: \n${ui.ACHIEVEMENTS[id].Title}`
         messageElements.description = `
+          Game: [${ui.GAME_DATA.Title}](https://retroachievements.org/game/${ui.GAME_DATA.ID})
           Description: ${ui.ACHIEVEMENTS[id].Description}
           Points: ${ui.ACHIEVEMENTS[id].Points}
           Retropoints:  ${ui.ACHIEVEMENTS[id].TrueRatio}
@@ -396,8 +397,12 @@ export class UI {
             text: 'retrocheevos.vercel.app',
           },
           timestamp: new Date().toISOString(),
-        }
-      ]
+
+        },
+
+      ],
+
+
     };
     fetch(webhook, {
       body: JSON.stringify(embedMessage),
@@ -4865,16 +4870,24 @@ class Target {
       [...ui.target.container.querySelectorAll('.target-achiv')].forEach(target => {
         const id = target.dataset.achivId;
         const description = target.querySelector(".achiv-description");
+        const header = target.querySelector('.achiv-name a');
         description && (description.innerText = ui.ACHIEVEMENTS[id]?.Description);
+        header && (header.innerText = ui.ACHIEVEMENTS[id]?.Title);
       })
     }
     const markQuery = (query) => {
       const regex = new RegExp(`(${query})`, 'gi');
-      [...ui.target.container.querySelectorAll('.achiv-description')].reverse().forEach(description => {
+      [...ui.target.container.querySelectorAll('.target-achiv')].reverse().forEach(cheevo => {
+        const description = cheevo.querySelector('.achiv-description');
+        const header = cheevo.querySelector('.achiv-name a');
+        if (header.innerText.match(regex)) {
+          ui.target.moveToTop(description.closest('.target-achiv'));
+          header.innerHTML = header.innerHTML.replace(regex, (g1) => `<span class="highlight-text">${g1}</span>`)
+
+        }
         if (description.innerText.match(regex)) {
           ui.target.moveToTop(description.closest('.target-achiv'));
           description.innerHTML = description.innerHTML.replace(regex, (g1) => `<span class="highlight-text">${g1}</span>`)
-
         }
       })
     }
@@ -5010,8 +5023,8 @@ class Target {
         </div>
         <div class="target-achiv-details">
           <h3 class="achiv-name">
+          ${achievement.level < 1000 ? `<p class="target-level-badge game-card_suffix suffix-bold bg_gold"> LVL ${achievement.level?.toString()?.replace(".", "-")} </p>` : ""}
             <a target="_blanc" href="https://retroachievements.org/achievement/${id}">
-            ${achievement.level < 1000 ? `<p class="target-level-badge game-card_suffix suffix-bold bg_gold"> LVL ${achievement.level?.toString()?.replace(".", "-")} </p>` : ""}
               ${achievement.Title}
             </a>
           </h3>

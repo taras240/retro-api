@@ -40,7 +40,7 @@
     padding: 0rem .5rem;
     /* margin-top: 0.2rem; */
     background-color: var(--main-color);
-    border-radius: 5px 5px 0 0;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
     border: 1px solid transparent;
     opacity: 0.5;
     transition: 0.2s;
@@ -88,7 +88,7 @@ input:checked+.radio-tab::after {
     padding: 20px;
     font-size: 1.3rem;
     resize: none;
-    border-radius: 5px 5px 5px 5px;
+    border-radius: var(--border-radius);
 
 }
 
