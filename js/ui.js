@@ -91,7 +91,7 @@ export class UI {
     this.stats = new Stats();
 
     this.buttons = new ButtonPanel();
-
+    this.aotw = new Aotw();
 
   }
 
@@ -155,6 +155,13 @@ export class UI {
         ui.userInfo.update({ userSummary: userSummary });
 
       }, 12000)
+    }
+
+    try {
+      this.aotw.checkCheevo({ earnedAchievementIDs: earnedAchievementsIDs });
+    }
+    catch (e) {
+      console.log(e)
     }
   }
   showContextmenu({ event, menuItems, sectionCode = "" }) {
@@ -5945,7 +5952,6 @@ class Progression {
       card.addEventListener("mousemove", event => {
         addLines(event);
       });
-
     });
     card.addEventListener("mouseleave", event => {
       card.style.transform = '';
@@ -7037,7 +7043,180 @@ class Stats {
   }
 }
 
+class Aotw {
+  get VISIBLE() {
+    return !this.section.classList.contains("hidden");
+  }
+  set VISIBLE(value) {
+    UI.switchSectionVisibility({ section: this.section, visible: value })
+    this.widgetIcon && (this.widgetIcon.checked = value);
+  }
+  aotwObj;
+  autoremove;
+  constructor() {
+    this.generateAotwElement().then(() => {
+      this.initializeElements()
+      this.addEvents();
+      if (this.aotwObj && !this.aotwObj.wasShown) {
+        setTimeout(() => this.doAnim(), 2000);
+        this.aotwObj.wasShown = true;
+        config.aotw = this.aotwObj;
 
+      }
+      // this.addGlowEffectToCard(this.section)
+    })
+  }
+  initializeElements() {
+    this.section = document.querySelector(".aotw_section");
+  }
+  addEvents() {
+    this.section.addEventListener('mouseover', () => this.stopAutoRemove())
+  }
+  setValues() {
+    // UI.applyPosition({ widget: this });
+    UI.switchSectionVisibility({ section: this.section, visible: true })
+  }
+  stopAutoRemove() {
+    this.autoremove && clearTimeout(this.autoremove);
+  }
+  doAnim() {
+    this.section.classList.remove("show-aotw", "hide-aotw", "disposed");
+    setTimeout(() => this.section.classList.add("show-aotw"), 100);
+    this.autoremove = setTimeout(() => this.section.classList.add("hide-aotw"), 10 * 1000)
+  }
+  addGlowEffectToCard(card) {
+    var marker = card.querySelector('.marker');
+    let bounds;
+    function addLines(e) {
+      var xPos = e.offsetX;
+      var yPos = e.offsetY;
+
+      var height = card.offsetHeight;
+      var width = card.offsetWidth;
+
+      var lp = Math.abs(Math.floor(100 / width * xPos) - 100);
+      var tp = Math.abs(Math.floor(100 / height * yPos) - 100);
+
+      marker.style.backgroundPosition = `${lp}% ${tp}%`;
+    }
+
+    card.addEventListener("mouseenter", event => {
+      bounds = marker.getBoundingClientRect();
+      marker.classList.remove("hidden");
+      marker.addEventListener("mousemove", event => {
+        addLines(event);
+      });
+    });
+    card.addEventListener("mouseleave", event => {
+      card.style.transform = '';
+      card.style.background = '';
+      marker.classList.add("hidden")
+      card.removeEventListener("mousemove", event => addLines(event))
+    });
+  }
+  checkCheevo({ earnedAchievementIDs }) {
+    earnedAchievementIDs?.forEach(id => {
+      if (id == this.aotwObj.ID) {
+        ui.ACHIEVEMENTS[id].isEarned && (this.section.classList.add('earned'),
+          this.aotwObj.isEarned = true,
+          this.doAnim()
+        );
+        ui.ACHIEVEMENTS[id].isHardcoreEarned && (
+          this.section.classList.add('earned', 'hardcore'),
+          this.aotwObj.isEarnedHardcore = true
+        )
+        config.aotw = this.aotwObj;
+      }
+    })
+
+  }
+  async getAotwObject() {
+    if (!config.aotw) {
+      const aotwObj = await apiWorker.getAotW();
+      config.aotw = aotwObj;
+    }
+    this.aotwObj = config.aotw;
+    return this.aotwObj;
+  }
+  showGameInfo() {
+    ui.games.showGameInfoPopup(this.aotwObj.GameID);
+  }
+  async generateAotwElement() {
+    const cheevo = await this.getAotwObject();
+    const aotwSection = document.createElement("section");
+    aotwSection.classList.add("section", "aotw_section", "disposed", "compact");
+    aotwSection.classList.toggle("earned", cheevo.isEarned);
+    aotwSection.classList.toggle("hardcore", cheevo.isEarnedHardcore);
+    aotwSection.id = 'aotw_section';
+    aotwSection.innerHTML = `
+      <div class="header-container">
+          <div class="header-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                  <path
+                      d="M424-320q0-81 14.5-116.5T500-514q41-36 62.5-62.5T584-637q0-41-27.5-68T480-732q-51 0-77.5 31T365-638l-103-44q21-64 77-111t141-47q105 0 161.5 58.5T698-641q0 50-21.5 85.5T609-475q-49 47-59.5 71.5T539-320H424Zm56 240q-33 0-56.5-23.5T400-160q0-33 23.5-56.5T480-240q33 0 56.5 23.5T560-160q0 33-23.5 56.5T480-80Z">
+                  </path>
+              </svg>
+          </div>
+
+          <h2 class="widget-header-text">
+          <a class="" target="_blanc"
+                      href="https://retroachievements.org/achievement/${cheevo.ID}">
+          AotW</a></h2>
+          <button class="header-button header-icon" onclick="ui.aotw.showGameInfo()">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M440-280h80v-240h-80v240Zm40-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg>
+          </button>
+          <div class="header-button header-icon" onclick="event.target.closest('section').classList.add('hide-aotw')">
+              <svg height="24" viewBox="0 -960 960 960" width="24">
+                  <path
+                      d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z">
+                  </path>
+              </svg>
+          </div>
+      </div>
+      <div class="aotw-card" data-id="4800">
+          <div class="aotw-backside aotw-side"></div>
+          <div class="aotw__container aotw-side">
+              <div class="progression_descriptions aotw_descriptions">
+                  <p class="progression-description-text" title="points">
+                    <i class="progression_description-icon game-description_icon points-icon"></i>
+                    ${cheevo.Points}
+                  </p>
+                  <p class="progression-description-text" title="points">
+                    <i class="progression_description-icon game-description_icon retropoints-icon"></i>
+                    ${cheevo.TrueRatio}
+                  </p>
+                  <p class="progression-description-text" title="earned by">
+                    <i class="progression_description-icon game-description_icon trending-icon"></i>
+                    ${(100 * cheevo.UnlocksHardcoreCount / cheevo.TotalPlayers).toFixed(2)}%
+                  </p>
+                  <p class="progression-description-text" title="earned by"> 
+                    <i class="progression_description-icon game-description_icon rarity-icon"></i>
+                    ${(cheevo.TrueRatio / cheevo.Points).toFixed(2)}
+                  </p>
+                  ${cheevo.Type ? `
+                    <div class="progression_description-icon condition ${cheevo.Type}" title="achievement type">
+                    </div>` : ""}
+              </div>
+              <div class="progression-achiv_prev-container">
+                  <img class="progression-achiv_prev-img" src="https://media.retroachievements.org/${cheevo.BadgeURL}"
+                      alt=" ">
+              </div>
+              <h3 class="progression_achiv-name">
+                  <a class="progression_achiv-link" target="_blanc"
+                      href="https://retroachievements.org/achievement/${cheevo.ID}">${cheevo.Title}</a>
+              </h3>
+              <div class="progression-details">
+              ${cheevo.Description}
+              </div>
+
+              <div class="marker hidden"></div>
+          </div>
+        
+      </div>
+    `;
+    ui.app.appendChild(aotwSection);
+  }
+}
 
 const delay = (ms) => {
   return new Promise(resolve => setTimeout(resolve, ms));

@@ -1,29 +1,29 @@
 <section class="awards_section section " id="awards_section">
-    <div class="awards_container">
-        <div class="awards-header_container header-container">
-            <div class="header-icon awards-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24"
-                    viewBox="0 -960 960 960" width="24">
-                    <path
-                        d="M280-120v-80h160v-124q-49-11-87.5-41.5T296-442q-75-9-125.5-65.5T120-640v-40q0-33 23.5-56.5T200-760h80v-80h400v80h80q33 0 56.5 23.5T840-680v40q0 76-50.5 132.5T664-442q-18 46-56.5 76.5T520-324v124h160v80H280Zm0-408v-152h-80v40q0 38 22 68.5t58 43.5Zm200 128q50 0 85-35t35-85v-240H360v240q0 50 35 85t85 35Zm200-128q36-13 58-43.5t22-68.5v-40h-80v152Zm-200-52Z" />
-                </svg></div>
-            <h2 class="widget-header-text"> User awards</h2>
-            <div class="get-awards_button header-button header-icon" id="awards-button" title="force reload"
-                onclick="ui.awards.updateAwards()">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                    <path
-                        d="M204-318q-22-38-33-78t-11-82q0-134 93-228t227-94h7l-64-64 56-56 160 160-160 160-56-56 64-64h-7q-100 0-170 70.5T240-478q0 26 6 51t18 49l-60 60ZM481-40 321-200l160-160 56 56-64 64h7q100 0 170-70.5T720-482q0-26-6-51t-18-49l60-60q22 38 33 78t11 82q0 134-93 228t-227 94h-7l64 64-56 56Z" />
-                </svg>
-            </div>
 
-            <button class="header-button header-icon" onclick="ui.awards.close()">
-                <svg height="24" viewBox="0 -960 960 960" width="24">
-                    <path
-                        d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-                </svg>
-            </button>
+    <div class="awards-header_container header-container">
+        <div class="header-icon awards-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24"
+                viewBox="0 -960 960 960" width="24">
+                <path
+                    d="M280-120v-80h160v-124q-49-11-87.5-41.5T296-442q-75-9-125.5-65.5T120-640v-40q0-33 23.5-56.5T200-760h80v-80h400v80h80q33 0 56.5 23.5T840-680v40q0 76-50.5 132.5T664-442q-18 46-56.5 76.5T520-324v124h160v80H280Zm0-408v-152h-80v40q0 38 22 68.5t58 43.5Zm200 128q50 0 85-35t35-85v-240H360v240q0 50 35 85t85 35Zm200-128q36-13 58-43.5t22-68.5v-40h-80v152Zm-200-52Z" />
+            </svg></div>
+        <h2 class="widget-header-text"> User awards</h2>
+        <div class="get-awards_button header-button header-icon" id="awards-button" title="force reload"
+            onclick="ui.awards.updateAwards()">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                <path
+                    d="M204-318q-22-38-33-78t-11-82q0-134 93-228t227-94h7l-64-64 56-56 160 160-160 160-56-56 64-64h-7q-100 0-170 70.5T240-478q0 26 6 51t18 49l-60 60ZM481-40 321-200l160-160 56 56-64 64h7q100 0 170-70.5T720-482q0-26-6-51t-18-49l60-60q22 38 33 78t11 82q0 134-93 228t-227 94h-7l64 64-56 56Z" />
+            </svg>
         </div>
-        <ul class="awards-content_container content-container">
-        </ul>
+
+        <button class="header-button header-icon" onclick="ui.awards.close()">
+            <svg height="24" viewBox="0 -960 960 960" width="24">
+                <path
+                    d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+            </svg>
+        </button>
     </div>
+    <!-- <div class="awards_container"></div> -->
+    <ul class="awards-content_container content-container">
+    </ul>
     <div class="resizer" id="awards-resizer"></div>
 </section>

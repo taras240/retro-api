@@ -2,15 +2,22 @@
     top: 50%;
     left: 50%;
     width: 400px;
-    z-index: 5;
+    z-index: 15;
     transform: translate(-50%, -50%);
     max-height: 90vh;
     overflow-y: scroll;
     /* height: 600px; */
 }
 
+.game-popup__section .header-container {
+    cursor: default;
+}
+
 .game-info__container {
-    padding: 0 1rem 1rem;
+    padding: 1rem;
+    background-color: var(--main-color);
+    border-radius: 5px;
+    z-index: 2;
 }
 
 .game-info__images-container {

@@ -2,95 +2,85 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="./favicon.ico">
-    <title>RAchievements</title>
-    <link rel="stylesheet" href="./css/style-compiled.css" />
-    <link rel="alternate" type="application/json+oembed" href="https://retrocheevos.vercel.app/oembed.json"
-        title="Retrocheevos">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="./favicon.ico">
+  <title>RAchievements</title>
+  <link rel="stylesheet" href="./css/style-compiled.css" />
 </head>
 
 <body data-color-preset="default">
-    <div class="loading-section" id="loading-section">
+  <div class="loading-section" id="loading-section">
+  </div>
+  <div class="background" id="background-animation">
+    <div id='background-star'></div>
+    <div id='background-star2'></div>
+    <div id='background-star3'></div>
+  </div>
+  <div class="wrapper"><section class="game-card_section section " id="game_section">
+  <div class="game-card-header_container header-container">
+    <h2 class="widget-header-text"><a id="game-card-header" href="#" target="_blank"> Some Game Name</a></h2>
+  </div>
+  <div class="game-card_container content-container">
+    <div class="game-card_image-container">
+      <img id="game-card-image" class="game-card_image" src="" onerror="this.src='./assets/img/missable.svg';" alt=" ">
     </div>
-    <div class="background" id="background-animation">
-        <div id='background-star'></div>
-        <div id='background-star2'></div>
-        <div id='background-star3'></div>
+    <div class="game-card-description">
     </div>
-    <div class="wrapper">
-        <section class="game-card_section section " id="game_section">
-            <div class="game-card-header_container header-container">
-                <h2 class="widget-header-text"><a id="game-card-header" href="#" target="_blank"> Some Game Name</a>
-                </h2>
-            </div>
-            <div class="game-card_container content-container">
-                <div class="game-card_image-container">
-                    <img id="game-card-image" class="game-card_image" src=""
-                        onerror="this.src='./assets/img/missable.svg';" alt=" ">
-                </div>
-                <div class="game-card-description">
-                </div>
-            </div>
-            <div class="resizer" id="game-card-resizer"></div>
-        </section>
-        <section id="target_section" class="target_section section ">
-            <div class="header-container target-header_container">
-                <div class="header-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                        <path
-                            d="M480-400q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm-40-240v-200h80v200h-80Zm0 520v-200h80v200h-80Zm200-320v-80h200v80H640Zm-520 0v-80h200v80H120Z" />
-                    </svg>
-                </div>
+  </div>
+  <div class="resizer" id="game-card-resizer"></div>
+</section><section id="target_section" class="target_section section ">
+  <div class="header-container target-header_container">
+    <div class="header-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+        <path
+          d="M480-400q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm-40-240v-200h80v200h-80Zm0 520v-200h80v200h-80Zm200-320v-80h200v80H640Zm-520 0v-80h200v80H120Z" />
+      </svg>
+    </div>
 
-                <h2 class="widget-header-text">Target</h2>
-                <button class="header-button header-icon tweak-button"
-                    onclick="ui.settings.openSettings(ui.target.contextMenuItems)">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"
-                        fill="#e8eaed">
-                        <path d="M0 0h24v24H0V0z" fill="none" />
-                        <path
-                            d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z" />
-                    </svg>
-                </button>
-                <input type="search" name="" id="target__searchbar" class="text-input target__search-bar"
-                    placeholder="Search...">
+    <h2 class="widget-header-text">Target</h2>
+    <button class="header-button header-icon tweak-button"
+      onclick="ui.settings.openSettings(ui.target.contextMenuItems)">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed">
+        <path d="M0 0h24v24H0V0z" fill="none" />
+        <path
+          d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z" />
+      </svg>
+    </button>
+    <input type="search" name="" id="target__searchbar" class="text-input target__search-bar" placeholder="Search...">
 
-                <button class="header-icon header-button " onclick="ui.target.close()">
-                    <svg height="24" viewBox="0 -960 960 960" width="24">
-                        <path
-                            d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-                    </svg>
-                </button>
+    <button class="header-icon header-button " onclick="ui.target.close()">
+      <svg height="24" viewBox="0 -960 960 960" width="24">
+        <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+      </svg>
+    </button>
 
-            </div>
-            <ul class="target-container content-container"></ul>
-            <!-- <div class="target-empty-list">Target is empty</div> -->
-            <div class="resizer" id="target-resizer"></div>
-        </section>
-        <section class="progression_section section" id="progression_section">
-            <div class="header-container">
-                <div class="header-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"
-                        style="transform: scaleX(-1);">
-                        <path
-                            d="M680-160v-640q33 0 56.5 23.5T760-720v480q0 33-23.5 56.5T680-160ZM160-80q-33 0-56.5-23.5T80-160v-640q0-33 23.5-56.5T160-880h360q33 0 56.5 23.5T600-800v640q0 33-23.5 56.5T520-80H160Zm680-160v-480q25 0 42.5 17.5T900-660v360q0 25-17.5 42.5T840-240Zm-680 80h360v-640H160v640Zm0-640v640-640Z" />
-                    </svg>
-                </div>
+  </div>
+  <ul class="target-container content-container"></ul>
+  <!-- <div class="target-empty-list">Target is empty</div> -->
+  <div class="resizer" id="target-resizer"></div>
+</section><section class="progression_section section" id="progression_section">
+    <div class="header-container">
+        <div class="header-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"
+                style="transform: scaleX(-1);">
+                <path
+                    d="M680-160v-640q33 0 56.5 23.5T760-720v480q0 33-23.5 56.5T680-160ZM160-80q-33 0-56.5-23.5T80-160v-640q0-33 23.5-56.5T160-880h360q33 0 56.5 23.5T600-800v640q0 33-23.5 56.5T520-80H160Zm680-160v-480q25 0 42.5 17.5T900-660v360q0 25-17.5 42.5T840-240Zm-680 80h360v-640H160v640Zm0-640v640-640Z" />
+            </svg>
+        </div>
 
-                <h2 class="widget-header-text">Progression</h2>
-                <div class="header-button header-icon" onclick="ui.progression.close()">
-                    <svg height="24" viewBox="0 -960 960 960" width="24">
-                        <path
-                            d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z">
-                        </path>
-                    </svg>
-                </div>
-            </div>
-            <div class="progression_container">
-                <ul class="horizon_list not-earned" id="not-earned_progression-list">
-                    <!-- <li class="horizon-list_item progression-achiv" data-type="null" data--points="10" data--true-ratio="47"
+        <h2 class="widget-header-text">Progression</h2>
+        <div class="header-button header-icon" onclick="ui.progression.close()">
+            <svg height="24" viewBox="0 -960 960 960" width="24">
+                <path
+                    d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z">
+                </path>
+            </svg>
+        </div>
+    </div>
+    <div class="progression_container">
+        <ul class="horizon_list not-earned" id="not-earned_progression-list">
+            <!-- <li class="horizon-list_item progression-achiv" data-type="null" data--points="10" data--true-ratio="47"
                 data--display-order="6" data--num-awarded-hardcore="20" data-achiv-id="56855">
 
                 <div class="progression-achiv_prev-container">
@@ -192,342 +182,328 @@
  -->
 
 
-                </ul>
-                <ul class="horizon_list earned" id="earned_progression-list"></ul>
-            </div>
-            <div class="resizer" id="progression-resizer"></div>
-        </section>
-        <section id="side_panel" class="buttons-block gradient-animation expanded">
+        </ul>
+        <ul class="horizon_list earned" id="earned_progression-list"></ul>
+    </div>
+    <div class="resizer" id="progression-resizer"></div>
+</section><section id="side_panel" class="buttons-block gradient-animation expanded">
+
+    <div class="setting-radio-group">
+        <button class="side-panel_login login-icon" onclick="window.location.href = './login'" title="login"> <img
+                id="side-panel-user-image" src="" onerror="this.src='./assets/img/account.svg';" alt=""></b>
+    </div>
+    <div class="buttons-block_container">
+        <div class="buttons-block_widgets">
 
             <div class="setting-radio-group">
-                <button class="side-panel_login login-icon" onclick="window.location.href = './login'" title="login">
-                    <img id="side-panel-user-image" src="" onerror="this.src='./assets/img/account.svg';" alt=""></b>
-            </div>
-            <div class="buttons-block_container">
-                <div class="buttons-block_widgets">
-
-                    <div class="setting-radio-group">
-                        <input type="checkbox" onchange="ui.statusPanel.VISIBLE = this.checked"
-                            name="open-status-button" id="open-status-button">
-                        </input>
-                        <label class="side-panel_input" title="status widget" for="open-status-button"><svg
-                                xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                                <path
-                                    d="M300-840q52 0 99 22t81 62q34-40 81-62t99-22q94 0 157 63t63 157q0 5-.5 10t-.5 10h-80q1-5 1-10v-10q0-60-40-100t-100-40q-47 0-87 26.5T518-666h-76q-15-41-55-67.5T300-760q-60 0-100 40t-40 100v10q0 5 1 10H81q0-5-.5-10t-.5-10q0-94 63-157t157-63Zm-88 480h112q32 31 70 67t86 79q48-43 86-79t70-67h113q-38 42-90 91T538-158l-58 52-58-52q-69-62-120.5-111T212-360Zm230 40q13 0 22.5-7.5T478-347l54-163 35 52q5 8 14 13t19 5h320v-80H623l-69-102q-6-9-15.5-13.5T518-640q-13 0-22.5 7.5T482-613l-54 162-34-51q-5-8-14-13t-19-5H40v80h297l69 102q6 9 15.5 13.5T442-320Zm38-167Z" />
-                            </svg></label>
-                    </div>
-                    <div class="setting-radio-group">
-                        <input type="checkbox" onchange="ui.userInfo.VISIBLE = this.checked" name="open-user-button"
-                            id="open-user-button">
-                        </input>
-                        <label class="side-panel_input" title="userInfo widget" for="open-user-button"><svg
-                                xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                                fill="#e8eaed">
-                                <path
-                                    d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Zm80-80h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T560-640q0-33-23.5-56.5T480-720q-33 0-56.5 23.5T400-640q0 33 23.5 56.5T480-560Zm0-80Zm0 400Z" />
-                            </svg></label>
-                    </div>
-                    <div class="setting-radio-group side-panel_achieves-group">
-                        <input type="checkbox" onchange="ui.achievementsBlock[0].VISIBLE = this.checked"
-                            name="open-achivs-button" id="open-achivs-button">
-                        </input>
-                        <label class="side-panel_input" title="achieves widget" for="open-achivs-button"><svg
-                                xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                                <path
-                                    d="m668-380 152-130 120 10-176 153 52 227-102-62-46-198Zm-94-292-42-98 46-110 92 217-96-9ZM294-287l126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM173-120l65-281L20-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Zm247-340Z" />
-                            </svg></label>
-                        <button class="side-panel_input side-panel_button"
-                            onclick="ui.createAchievementsTemplate()"><svg xmlns="http://www.w3.org/2000/svg"
-                                height="24" viewBox="0 -960 960 960" width="24">
-                                <path
-                                    d="m668-380 152-130 120 10-176 153 52 227-102-62-46-198Zm-94-292-42-98 46-110 92 217-96-9ZM294-287l126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM173-120l65-281L20-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Zm247-340Z" />
-                            </svg></button>
-                    </div>
-                    <div class="setting-radio-group">
-                        <input type="checkbox" onchange="ui.target.VISIBLE = this.checked" name="open-target-button"
-                            id="open-target-button">
-                        </input>
-                        <label class="side-panel_input" title="target widget" for="open-target-button"><svg
-                                xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                                <path
-                                    d="M480-400q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm-40-240v-200h80v200h-80Zm0 520v-200h80v200h-80Zm200-320v-80h200v80H640Zm-520 0v-80h200v80H120Z">
-                                </path>
-                            </svg></label>
-                    </div>
-                    <div class="setting-radio-group">
-                        <input type="checkbox" name="open-game-card-button" id="open-game-card-button"
-                            onchange="ui.gameCard.VISIBLE = this.checked">
-                        </input>
-                        <label class="side-panel_input" title="game-card widget" for="open-game-card-button"><svg
-                                xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                                <path
-                                    d="M280-280h280v-80H280v80Zm0-160h400v-80H280v80Zm0-160h400v-80H280v80Zm-80 480q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
-                            </svg></label>
-                    </div>
-                    <div class="setting-radio-group">
-                        <input type="checkbox" onchange="ui.stats.VISIBLE = this.checked" name="open-stats-button"
-                            id="open-stats-button">
-                        </input>
-                        <label class="side-panel_input" title="stats widget" for="open-stats-button"><svg
-                                xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                                fill="#e8eaed">
-                                <path
-                                    d="M280-280h80v-200h-80v200Zm320 0h80v-400h-80v400Zm-160 0h80v-120h-80v120Zm0-200h80v-80h-80v80ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
-                            </svg></label>
-                    </div>
-                    <div class="setting-radio-group">
-                        <input type="checkbox" onchange="ui.awards.VISIBLE = this.checked" name="open-awards-button"
-                            id="open-awards-button">
-                        </input>
-                        <label class="side-panel_input" title="awards widget" for="open-awards-button"><svg
-                                xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                                <path
-                                    d="M280-120v-80h160v-124q-49-11-87.5-41.5T296-442q-75-9-125.5-65.5T120-640v-40q0-33 23.5-56.5T200-760h80v-80h400v80h80q33 0 56.5 23.5T840-680v40q0 76-50.5 132.5T664-442q-18 46-56.5 76.5T520-324v124h160v80H280Zm0-408v-152h-80v40q0 38 22 68.5t58 43.5Zm200 128q50 0 85-35t35-85v-240H360v240q0 50 35 85t85 35Zm200-128q36-13 58-43.5t22-68.5v-40h-80v152Zm-200-52Z" />
-                            </svg></label>
-                    </div>
-                    <div class="setting-radio-group">
-                        <input type="checkbox" onchange="ui.games.VISIBLE = this.checked" name="open-games-button"
-                            id="open-games-button">
-                        </input>
-                        <label class="side-panel_input" title="games widget" for="open-games-button"><svg
-                                xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                                <path
-                                    d="M160-240q-33 0-56.5-23.5T80-320v-320q0-33 23.5-56.5T160-720h640q33 0 56.5 23.5T880-640v320q0 33-23.5 56.5T800-240H160Zm0-80h640v-320H160v320Zm120-40h80v-80h80v-80h-80v-80h-80v80h-80v80h80v80Zm300 0q25 0 42.5-17.5T640-420q0-25-17.5-42.5T580-480q-25 0-42.5 17.5T520-420q0 25 17.5 42.5T580-360Zm120-120q25 0 42.5-17.5T760-540q0-25-17.5-42.5T700-600q-25 0-42.5 17.5T640-540q0 25 17.5 42.5T700-480ZM160-320v-320 320Z" />
-                            </svg></label>
-                    </div>
-                    <div class=" setting-radio-group">
-                        <input type="checkbox" onchange="ui.progression.VISIBLE = this.checked"
-                            name="open-progression-button" id="open-progression-button">
-                        </input>
-                        <label class="side-panel_input" title="progression widget" for="open-progression-button">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                                <path
-                                    d="M680-160v-640q33 0 56.5 23.5T760-720v480q0 33-23.5 56.5T680-160ZM160-80q-33 0-56.5-23.5T80-160v-640q0-33 23.5-56.5T160-880h360q33 0 56.5 23.5T600-800v640q0 33-23.5 56.5T520-80H160Zm680-160v-480q25 0 42.5 17.5T900-660v360q0 25-17.5 42.5T840-240Zm-680 80h360v-640H160v640Zm0-640v640-640Z" />
-                            </svg>
-                        </label>
-                    </div>
-                    <div class="setting-radio-group">
-                        <input type="checkbox" onchange="ui.note.VISIBLE = this.checked" name="open-note-button"
-                            id="open-note-button">
-                        </input>
-                        <label class="side-panel_input" title="note widget" for="open-note-button" onclick="">
-
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                                fill="#e8eaed">
-                                <path
-                                    d="M280-280h84l240-238-86-86-238 238v86Zm352-266 42-44q6-6 6-14t-6-14l-56-56q-6-6-14-6t-14 6l-44 42 86 86ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h168q13-36 43.5-58t68.5-22q38 0 68.5 22t43.5 58h168q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm280-590q13 0 21.5-8.5T510-820q0-13-8.5-21.5T480-850q-13 0-21.5 8.5T450-820q0 13 8.5 21.5T480-790ZM200-200v-560 560Z" />
-                            </svg>
-                        </label>
-                    </div>
-                    <div class="setting-radio-group">
-                        <input type="checkbox" onchange="ui.notifications.VISIBLE = this.checked"
-                            name="open-notifications-button" id="open-notifications-button">
-                        </input>
-                        <label class="side-panel_input" title="notifications widget" for="open-notifications-button"
-                            onclick="">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                                fill="#e8eaed">
-                                <path
-                                    d="M160-200v-80h80v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h80v80H160Zm320-300Zm0 420q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80ZM320-280h320v-280q0-66-47-113t-113-47q-66 0-113 47t-47 113v280Z" />
-                            </svg>
-                        </label>
-                    </div>
-                    <div class="setting-radio-group">
-                        <a class="side-panel_input side-panel_link" title="to discord"
-                            href="https://discord.gg/apzc6kCAbH" target="_blank">
-                            <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M18.8943 4.34399C17.5183 3.71467 16.057 3.256 14.5317 3C14.3396 3.33067 14.1263 3.77866 13.977 4.13067C12.3546 3.89599 10.7439 3.89599 9.14391 4.13067C8.99457 3.77866 8.77056 3.33067 8.58922 3C7.05325 3.256 5.59191 3.71467 4.22552 4.34399C1.46286 8.41865 0.716188 12.3973 1.08952 16.3226C2.92418 17.6559 4.69486 18.4666 6.4346 19C6.86126 18.424 7.24527 17.8053 7.57594 17.1546C6.9466 16.92 6.34927 16.632 5.77327 16.2906C5.9226 16.184 6.07194 16.0667 6.21061 15.9493C9.68793 17.5387 13.4543 17.5387 16.889 15.9493C17.0383 16.0667 17.177 16.184 17.3263 16.2906C16.7503 16.632 16.153 16.92 15.5236 17.1546C15.8543 17.8053 16.2383 18.424 16.665 19C18.4036 18.4666 20.185 17.6559 22.01 16.3226C22.4687 11.7787 21.2836 7.83202 18.8943 4.34399ZM8.05593 13.9013C7.01058 13.9013 6.15725 12.952 6.15725 11.7893C6.15725 10.6267 6.98925 9.67731 8.05593 9.67731C9.11191 9.67731 9.97588 10.6267 9.95454 11.7893C9.95454 12.952 9.11191 13.9013 8.05593 13.9013ZM15.065 13.9013C14.0196 13.9013 13.1652 12.952 13.1652 11.7893C13.1652 10.6267 13.9983 9.67731 15.065 9.67731C16.121 9.67731 16.985 10.6267 16.9636 11.7893C16.9636 12.952 16.1317 13.9013 15.065 13.9013Z"
-                                    stroke="#000000" stroke-linejoin="round" />
-                            </svg>
-                        </a>
-                    </div>
-
-                </div>
-            </div>
-            <div class="setting-radio-group side-panel_settings">
-                <input type="checkbox" name="open-settings-button" id="open-settings-button">
+                <input type="checkbox" onchange="ui.statusPanel.VISIBLE = this.checked" name="open-status-button"
+                    id="open-status-button">
                 </input>
-                <label class="side-panel_input " title="settings widget" for="open-settings-button"><svg
+                <label class="side-panel_input" title="status widget" for="open-status-button"><svg
                         xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
                         <path
-                            d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm70-80h79l14-106q31-8 57.5-23.5T639-327l99 41 39-68-86-65q5-14 7-29.5t2-31.5q0-16-2-31.5t-7-29.5l86-65-39-68-99 42q-22-23-48.5-38.5T533-694l-13-106h-79l-14 106q-31 8-57.5 23.5T321-633l-99-41-39 68 86 64q-5 15-7 30t-2 32q0 16 2 31t7 30l-86 65 39 68 99-42q22 23 48.5 38.5T427-266l13 106Zm42-180q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Zm-2-140Z" />
+                            d="M300-840q52 0 99 22t81 62q34-40 81-62t99-22q94 0 157 63t63 157q0 5-.5 10t-.5 10h-80q1-5 1-10v-10q0-60-40-100t-100-40q-47 0-87 26.5T518-666h-76q-15-41-55-67.5T300-760q-60 0-100 40t-40 100v10q0 5 1 10H81q0-5-.5-10t-.5-10q0-94 63-157t157-63Zm-88 480h112q32 31 70 67t86 79q48-43 86-79t70-67h113q-38 42-90 91T538-158l-58 52-58-52q-69-62-120.5-111T212-360Zm230 40q13 0 22.5-7.5T478-347l54-163 35 52q5 8 14 13t19 5h320v-80H623l-69-102q-6-9-15.5-13.5T518-640q-13 0-22.5 7.5T482-613l-54 162-34-51q-5-8-14-13t-19-5H40v80h297l69 102q6 9 15.5 13.5T442-320Zm38-167Z" />
                     </svg></label>
             </div>
-        </section>
-        <section class="awards_section section " id="awards_section">
-            <div class="awards_container">
-                <div class="awards-header_container header-container">
-                    <div class="header-icon awards-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24"
-                            viewBox="0 -960 960 960" width="24">
-                            <path
-                                d="M280-120v-80h160v-124q-49-11-87.5-41.5T296-442q-75-9-125.5-65.5T120-640v-40q0-33 23.5-56.5T200-760h80v-80h400v80h80q33 0 56.5 23.5T840-680v40q0 76-50.5 132.5T664-442q-18 46-56.5 76.5T520-324v124h160v80H280Zm0-408v-152h-80v40q0 38 22 68.5t58 43.5Zm200 128q50 0 85-35t35-85v-240H360v240q0 50 35 85t85 35Zm200-128q36-13 58-43.5t22-68.5v-40h-80v152Zm-200-52Z" />
-                        </svg></div>
-                    <h2 class="widget-header-text"> User awards</h2>
-                    <div class="get-awards_button header-button header-icon" id="awards-button" title="force reload"
-                        onclick="ui.awards.updateAwards()">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                            <path
-                                d="M204-318q-22-38-33-78t-11-82q0-134 93-228t227-94h7l-64-64 56-56 160 160-160 160-56-56 64-64h-7q-100 0-170 70.5T240-478q0 26 6 51t18 49l-60 60ZM481-40 321-200l160-160 56 56-64 64h7q100 0 170-70.5T720-482q0-26-6-51t-18-49l60-60q22 38 33 78t11 82q0 134-93 228t-227 94h-7l64 64-56 56Z" />
-                        </svg>
-                    </div>
-
-                    <button class="header-button header-icon" onclick="ui.awards.close()">
-                        <svg height="24" viewBox="0 -960 960 960" width="24">
-                            <path
-                                d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-                        </svg>
-                    </button>
-                </div>
-                <ul class="awards-content_container content-container">
-                </ul>
-            </div>
-            <div class="resizer" id="awards-resizer"></div>
-        </section>
-        <section id="update-section" class="update_section  section">
-
-            <div class="update_container " id="update-text-block">
-                <button class="header-button header-icon tweak-button update__header-button"
-                    onclick="ui.settings.openSettings(ui.statusPanel.contextMenuItems)">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"
+            <div class="setting-radio-group">
+                <input type="checkbox" onchange="ui.userInfo.VISIBLE = this.checked" name="open-user-button"
+                    id="open-user-button">
+                </input>
+                <label class="side-panel_input" title="userInfo widget" for="open-user-button"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                         fill="#e8eaed">
-                        <path d="M0 0h24v24H0V0z" fill="none" />
                         <path
-                            d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z" />
-                    </svg>
-                </button>
-                <div class="update_user-status card-3d">
-                    <div class="update_preview-container">
-                        <img class="update-game-preview" id="game-preview" src="./assets/img/icon.png" alt=" " />
-                        <p class="update__retro-ratio">2.3</p>
-                        <button id="watching-button" class="update-button checked"
-                            title="autoupdate achievements"></button>
-                    </div>
-                    </button>
-                    <div class="update-text-block">
-                        <div class="update-game_header">
-                            <a id="game-title" target="_blank" class=" update-section-text" href="">Game tittle</a>
-                        </div>
-                        <p id="game-platform" class="update-game-platform update-section-text">Console</p>
-
-                        <div id="rich-presence" class="update-section-text rich-presence_text">Waiting...</div>
-
-                    </div>
-                    <div class="status__background"></div>
-                    <div class="progress-bar" id="status-progress-bar"></div>
-                    <div class="progress-bar_delta-values hidden" id="status_progress-bar-delta"></div>
-
-
-                    <div class="progress-percent progress_points-percent" id="status-progress-text">0%</div>
-
-                </div>
-                <div class="update_back-side card-3d">
-                    <div class="update_preview-container">
-                        <img class="update-game-preview" id="update_achiv-preview"
-                            src="https://media.retroachievements.org/Badge/276671.png" alt=" " />
-                    </div>
-                    <div class="update-text-block show-difficult">
-                        <div class="update_achiv-header">
-                            <a id="update_achiv-title" target="_blank" class=" update-section-text" href="">Clear Screen
-                                1
-                                <p class="status__difficult-badge difficult-badge__easy">easy</p>
-                            </a>
-                        </div>
-                        <p id="update_achiv-earned-points" class="update-section-text update_achiv-points">
-                            +5HP +10RP TOP15%
-                        </p>
-                    </div>
-                    <div class="status_glass-effect"></div>
-
-
-                </div>
-
+                            d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Zm80-80h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T560-640q0-33-23.5-56.5T480-720q-33 0-56.5 23.5T400-640q0 33 23.5 56.5T480-560Zm0-80Zm0 400Z" />
+                    </svg></label>
             </div>
-
-            <div class="resizer" id="status-resizer"></div>
-        </section>
-        <section class="section games_setion " id="games_section">
-
-            <div class="games-header_container header-container">
-                <div class="header-icon games-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24"
-                        viewBox="0 -960 960 960" width="24">
+            <div class="setting-radio-group side-panel_achieves-group">
+                <input type="checkbox" onchange="ui.achievementsBlock[0].VISIBLE = this.checked"
+                    name="open-achivs-button" id="open-achivs-button">
+                </input>
+                <label class="side-panel_input" title="achieves widget" for="open-achivs-button"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                        <path
+                            d="m668-380 152-130 120 10-176 153 52 227-102-62-46-198Zm-94-292-42-98 46-110 92 217-96-9ZM294-287l126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM173-120l65-281L20-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Zm247-340Z" />
+                    </svg></label>
+                <button class="side-panel_input side-panel_button" onclick="ui.createAchievementsTemplate()"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                        <path
+                            d="m668-380 152-130 120 10-176 153 52 227-102-62-46-198Zm-94-292-42-98 46-110 92 217-96-9ZM294-287l126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM173-120l65-281L20-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Zm247-340Z" />
+                    </svg></button>
+            </div>
+            <div class="setting-radio-group">
+                <input type="checkbox" onchange="ui.target.VISIBLE = this.checked" name="open-target-button"
+                    id="open-target-button">
+                </input>
+                <label class="side-panel_input" title="target widget" for="open-target-button"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                        <path
+                            d="M480-400q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm-40-240v-200h80v200h-80Zm0 520v-200h80v200h-80Zm200-320v-80h200v80H640Zm-520 0v-80h200v80H120Z">
+                        </path>
+                    </svg></label>
+            </div>
+            <div class="setting-radio-group">
+                <input type="checkbox" name="open-game-card-button" id="open-game-card-button"
+                    onchange="ui.gameCard.VISIBLE = this.checked">
+                </input>
+                <label class="side-panel_input" title="game-card widget" for="open-game-card-button"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                        <path
+                            d="M280-280h280v-80H280v80Zm0-160h400v-80H280v80Zm0-160h400v-80H280v80Zm-80 480q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
+                    </svg></label>
+            </div>
+            <div class="setting-radio-group">
+                <input type="checkbox" onchange="ui.stats.VISIBLE = this.checked" name="open-stats-button"
+                    id="open-stats-button">
+                </input>
+                <label class="side-panel_input" title="stats widget" for="open-stats-button"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                        fill="#e8eaed">
+                        <path
+                            d="M280-280h80v-200h-80v200Zm320 0h80v-400h-80v400Zm-160 0h80v-120h-80v120Zm0-200h80v-80h-80v80ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
+                    </svg></label>
+            </div>
+            <div class="setting-radio-group">
+                <input type="checkbox" onchange="ui.awards.VISIBLE = this.checked" name="open-awards-button"
+                    id="open-awards-button">
+                </input>
+                <label class="side-panel_input" title="awards widget" for="open-awards-button"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                        <path
+                            d="M280-120v-80h160v-124q-49-11-87.5-41.5T296-442q-75-9-125.5-65.5T120-640v-40q0-33 23.5-56.5T200-760h80v-80h400v80h80q33 0 56.5 23.5T840-680v40q0 76-50.5 132.5T664-442q-18 46-56.5 76.5T520-324v124h160v80H280Zm0-408v-152h-80v40q0 38 22 68.5t58 43.5Zm200 128q50 0 85-35t35-85v-240H360v240q0 50 35 85t85 35Zm200-128q36-13 58-43.5t22-68.5v-40h-80v152Zm-200-52Z" />
+                    </svg></label>
+            </div>
+            <div class="setting-radio-group">
+                <input type="checkbox" onchange="ui.games.VISIBLE = this.checked" name="open-games-button"
+                    id="open-games-button">
+                </input>
+                <label class="side-panel_input" title="games widget" for="open-games-button"><svg
+                        xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
                         <path
                             d="M160-240q-33 0-56.5-23.5T80-320v-320q0-33 23.5-56.5T160-720h640q33 0 56.5 23.5T880-640v320q0 33-23.5 56.5T800-240H160Zm0-80h640v-320H160v320Zm120-40h80v-80h80v-80h-80v-80h-80v80h-80v80h80v80Zm300 0q25 0 42.5-17.5T640-420q0-25-17.5-42.5T580-480q-25 0-42.5 17.5T520-420q0 25 17.5 42.5T580-360Zm120-120q25 0 42.5-17.5T760-540q0-25-17.5-42.5T700-600q-25 0-42.5 17.5T640-540q0 25 17.5 42.5T700-480ZM160-320v-320 320Z" />
-                    </svg></div>
-                <h2 class="widget-header-text"> RA Games Library</h2>
-                <div class="get-awards_button header-button header-icon" id="" title="force reload"
-                    onclick="ui.games.loadGames()">
+                    </svg></label>
+            </div>
+            <div class=" setting-radio-group">
+                <input type="checkbox" onchange="ui.progression.VISIBLE = this.checked" name="open-progression-button"
+                    id="open-progression-button">
+                </input>
+                <label class="side-panel_input" title="progression widget" for="open-progression-button">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
                         <path
-                            d="M204-318q-22-38-33-78t-11-82q0-134 93-228t227-94h7l-64-64 56-56 160 160-160 160-56-56 64-64h-7q-100 0-170 70.5T240-478q0 26 6 51t18 49l-60 60ZM481-40 321-200l160-160 56 56-64 64h7q100 0 170-70.5T720-482q0-26-6-51t-18-49l60-60q22 38 33 78t11 82q0 134-93 228t-227 94h-7l64 64-56 56Z" />
+                            d="M680-160v-640q33 0 56.5 23.5T760-720v480q0 33-23.5 56.5T680-160ZM160-80q-33 0-56.5-23.5T80-160v-640q0-33 23.5-56.5T160-880h360q33 0 56.5 23.5T600-800v640q0 33-23.5 56.5T520-80H160Zm680-160v-480q25 0 42.5 17.5T900-660v360q0 25-17.5 42.5T840-240Zm-680 80h360v-640H160v640Zm0-640v640-640Z" />
                     </svg>
-                </div>
-                <button class="header-button header-icon fullscreen-button" onclick="ui.games.toggleFullscreen()">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"
-                        fill="#e8eaed">
-                        <path d="M0 0h24v24H0V0z" fill="none" />
-                        <path
-                            d="M19 12h-2v3h-3v2h5v-5zM7 9h3V7H5v5h2V9zm14-6H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16.01H3V4.99h18v14.02z" />
-                    </svg>
-                </button>
-                <button class="header-button header-icon" onclick="ui.buttons.games.click()">
-                    <svg height="24" viewBox="0 -960 960 960" width="24">
-                        <path
-                            d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-                    </svg>
-                </button>
+                </label>
             </div>
-            <div class="games_container content-container">
+            <div class="setting-radio-group">
+                <input type="checkbox" onchange="ui.note.VISIBLE = this.checked" name="open-note-button"
+                    id="open-note-button">
+                </input>
+                <label class="side-panel_input" title="note widget" for="open-note-button" onclick="">
 
-                <div class="games__filter-container">
-                    <div class="games__filter-header">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                        fill="#e8eaed">
+                        <path
+                            d="M280-280h84l240-238-86-86-238 238v86Zm352-266 42-44q6-6 6-14t-6-14l-56-56q-6-6-14-6t-14 6l-44 42 86 86ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h168q13-36 43.5-58t68.5-22q38 0 68.5 22t43.5 58h168q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm280-590q13 0 21.5-8.5T510-820q0-13-8.5-21.5T480-850q-13 0-21.5 8.5T450-820q0 13 8.5 21.5T480-790ZM200-200v-560 560Z" />
+                    </svg>
+                </label>
+            </div>
+            <div class="setting-radio-group">
+                <input type="checkbox" onchange="ui.notifications.VISIBLE = this.checked"
+                    name="open-notifications-button" id="open-notifications-button">
+                </input>
+                <label class="side-panel_input" title="notifications widget" for="open-notifications-button" onclick="">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                        fill="#e8eaed">
+                        <path
+                            d="M160-200v-80h80v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h80v80H160Zm320-300Zm0 420q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80ZM320-280h320v-280q0-66-47-113t-113-47q-66 0-113 47t-47 113v280Z" />
+                    </svg>
+                </label>
+            </div>
+            <div class="setting-radio-group">
+                <a class="side-panel_input side-panel_link" title="to discord" href="https://discord.gg/apzc6kCAbH"
+                    target="_blank">
+                    <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M18.8943 4.34399C17.5183 3.71467 16.057 3.256 14.5317 3C14.3396 3.33067 14.1263 3.77866 13.977 4.13067C12.3546 3.89599 10.7439 3.89599 9.14391 4.13067C8.99457 3.77866 8.77056 3.33067 8.58922 3C7.05325 3.256 5.59191 3.71467 4.22552 4.34399C1.46286 8.41865 0.716188 12.3973 1.08952 16.3226C2.92418 17.6559 4.69486 18.4666 6.4346 19C6.86126 18.424 7.24527 17.8053 7.57594 17.1546C6.9466 16.92 6.34927 16.632 5.77327 16.2906C5.9226 16.184 6.07194 16.0667 6.21061 15.9493C9.68793 17.5387 13.4543 17.5387 16.889 15.9493C17.0383 16.0667 17.177 16.184 17.3263 16.2906C16.7503 16.632 16.153 16.92 15.5236 17.1546C15.8543 17.8053 16.2383 18.424 16.665 19C18.4036 18.4666 20.185 17.6559 22.01 16.3226C22.4687 11.7787 21.2836 7.83202 18.8943 4.34399ZM8.05593 13.9013C7.01058 13.9013 6.15725 12.952 6.15725 11.7893C6.15725 10.6267 6.98925 9.67731 8.05593 9.67731C9.11191 9.67731 9.97588 10.6267 9.95454 11.7893C9.95454 12.952 9.11191 13.9013 8.05593 13.9013ZM15.065 13.9013C14.0196 13.9013 13.1652 12.952 13.1652 11.7893C13.1652 10.6267 13.9983 9.67731 15.065 9.67731C16.121 9.67731 16.985 10.6267 16.9636 11.7893C16.9636 12.952 16.1317 13.9013 15.065 13.9013Z"
+                            stroke="#000000" stroke-linejoin="round" />
+                    </svg>
+                </a>
+            </div>
 
-                        <div class="checkbox-input_container">
-                            <input type="checkbox" id="games__favourites-filter"
-                                onchange="ui.games.FAVOURITES_FILTER = this.checked">
-                            <label class="checkbox-input" for="games__favourites-filter">Favourites</label>
-                        </div>
-                        <div class="checkbox-input_container">
-                            <input type="checkbox" id="games__coop-filter"
-                                onchange="ui.games.COOP_FILTER = this.checked">
-                            <label class="checkbox-input" for="games__coop-filter">Coop</label>
-                        </div>
-                        <button class="select-button"
-                            onclick="ui.games.toggleFilterList(event,'platform')">Platforms</button>
-                        <button class="select-button" onclick="ui.games.toggleFilterList(event,'award')">Awards</button>
-                        <button class="select-button" onclick="ui.games.toggleFilterList(event,'genre')">Genres</button>
-                        <input type="search" name="" id="games__searchbar" class="games__searchbar"
-                            placeholder="Search">
+        </div>
+    </div>
+    <div class="setting-radio-group side-panel_settings">
+        <input type="checkbox" name="open-settings-button" id="open-settings-button">
+        </input>
+        <label class="side-panel_input " title="settings widget" for="open-settings-button"><svg
+                xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                <path
+                    d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm70-80h79l14-106q31-8 57.5-23.5T639-327l99 41 39-68-86-65q5-14 7-29.5t2-31.5q0-16-2-31.5t-7-29.5l86-65-39-68-99 42q-22-23-48.5-38.5T533-694l-13-106h-79l-14 106q-31 8-57.5 23.5T321-633l-99-41-39 68 86 64q-5 15-7 30t-2 32q0 16 2 31t7 30l-86 65 39 68 99-42q22 23 48.5 38.5T427-266l13 106Zm42-180q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Zm-2-140Z" />
+            </svg></label>
+    </div>
+</section><section class="awards_section section " id="awards_section">
 
-                        <!-- <button class="games__show-filters-button icon-button ">
+    <div class="awards-header_container header-container">
+        <div class="header-icon awards-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24"
+                viewBox="0 -960 960 960" width="24">
+                <path
+                    d="M280-120v-80h160v-124q-49-11-87.5-41.5T296-442q-75-9-125.5-65.5T120-640v-40q0-33 23.5-56.5T200-760h80v-80h400v80h80q33 0 56.5 23.5T840-680v40q0 76-50.5 132.5T664-442q-18 46-56.5 76.5T520-324v124h160v80H280Zm0-408v-152h-80v40q0 38 22 68.5t58 43.5Zm200 128q50 0 85-35t35-85v-240H360v240q0 50 35 85t85 35Zm200-128q36-13 58-43.5t22-68.5v-40h-80v152Zm-200-52Z" />
+            </svg></div>
+        <h2 class="widget-header-text"> User awards</h2>
+        <div class="get-awards_button header-button header-icon" id="awards-button" title="force reload"
+            onclick="ui.awards.updateAwards()">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                <path
+                    d="M204-318q-22-38-33-78t-11-82q0-134 93-228t227-94h7l-64-64 56-56 160 160-160 160-56-56 64-64h-7q-100 0-170 70.5T240-478q0 26 6 51t18 49l-60 60ZM481-40 321-200l160-160 56 56-64 64h7q100 0 170-70.5T720-482q0-26-6-51t-18-49l60-60q22 38 33 78t11 82q0 134-93 228t-227 94h-7l64 64-56 56Z" />
+            </svg>
+        </div>
+
+        <button class="header-button header-icon" onclick="ui.awards.close()">
+            <svg height="24" viewBox="0 -960 960 960" width="24">
+                <path
+                    d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+            </svg>
+        </button>
+    </div>
+    <!-- <div class="awards_container"></div> -->
+    <ul class="awards-content_container content-container">
+    </ul>
+    <div class="resizer" id="awards-resizer"></div>
+</section><section id="update-section" class="update_section  section">
+
+  <div class="update_container " id="update-text-block">
+    <button class="header-button header-icon tweak-button update__header-button"
+      onclick="ui.settings.openSettings(ui.statusPanel.contextMenuItems)">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed">
+        <path d="M0 0h24v24H0V0z" fill="none" />
+        <path
+          d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z" />
+      </svg>
+    </button>
+    <div class="update_user-status card-3d">
+      <div class="update_preview-container">
+        <img class="update-game-preview" id="game-preview" src="./assets/img/icon.png" alt=" " />
+        <p class="update__retro-ratio">2.3</p>
+        <button id="watching-button" class="update-button checked" title="autoupdate achievements"></button>
+      </div>
+      </button>
+      <div class="update-text-block">
+        <div class="update-game_header">
+          <a id="game-title" target="_blank" class=" update-section-text" href="">Game tittle</a>
+        </div>
+        <p id="game-platform" class="update-game-platform update-section-text">Console</p>
+
+        <div id="rich-presence" class="update-section-text rich-presence_text">Waiting...</div>
+
+      </div>
+      <div class="status__background"></div>
+      <div class="progress-bar" id="status-progress-bar"></div>
+      <div class="progress-bar_delta-values hidden" id="status_progress-bar-delta"></div>
+
+
+      <div class="progress-percent progress_points-percent" id="status-progress-text">0%</div>
+
+    </div>
+    <div class="update_back-side card-3d">
+      <div class="update_preview-container">
+        <img class="update-game-preview" id="update_achiv-preview"
+          src="https://media.retroachievements.org/Badge/276671.png" alt=" " />
+      </div>
+      <div class="update-text-block show-difficult">
+        <div class="update_achiv-header">
+          <a id="update_achiv-title" target="_blank" class=" update-section-text" href="">Clear Screen 1
+            <p class="status__difficult-badge difficult-badge__easy">easy</p>
+          </a>
+        </div>
+        <p id="update_achiv-earned-points" class="update-section-text update_achiv-points">
+          +5HP +10RP TOP15%
+        </p>
+      </div>
+      <div class="status_glass-effect"></div>
+
+
+    </div>
+
+  </div>
+
+  <div class="resizer" id="status-resizer"></div>
+</section><section class="section games_setion " id="games_section">
+
+    <div class="games-header_container header-container">
+        <div class="header-icon games-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960"
+                width="24">
+                <path
+                    d="M160-240q-33 0-56.5-23.5T80-320v-320q0-33 23.5-56.5T160-720h640q33 0 56.5 23.5T880-640v320q0 33-23.5 56.5T800-240H160Zm0-80h640v-320H160v320Zm120-40h80v-80h80v-80h-80v-80h-80v80h-80v80h80v80Zm300 0q25 0 42.5-17.5T640-420q0-25-17.5-42.5T580-480q-25 0-42.5 17.5T520-420q0 25 17.5 42.5T580-360Zm120-120q25 0 42.5-17.5T760-540q0-25-17.5-42.5T700-600q-25 0-42.5 17.5T640-540q0 25 17.5 42.5T700-480ZM160-320v-320 320Z" />
+            </svg></div>
+        <h2 class="widget-header-text"> RA Games Library</h2>
+        <div class="get-awards_button header-button header-icon" id="" title="force reload"
+            onclick="ui.games.loadGames()">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                <path
+                    d="M204-318q-22-38-33-78t-11-82q0-134 93-228t227-94h7l-64-64 56-56 160 160-160 160-56-56 64-64h-7q-100 0-170 70.5T240-478q0 26 6 51t18 49l-60 60ZM481-40 321-200l160-160 56 56-64 64h7q100 0 170-70.5T720-482q0-26-6-51t-18-49l60-60q22 38 33 78t11 82q0 134-93 228t-227 94h-7l64 64-56 56Z" />
+            </svg>
+        </div>
+        <button class="header-button header-icon fullscreen-button" onclick="ui.games.toggleFullscreen()">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed">
+                <path d="M0 0h24v24H0V0z" fill="none" />
+                <path
+                    d="M19 12h-2v3h-3v2h5v-5zM7 9h3V7H5v5h2V9zm14-6H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16.01H3V4.99h18v14.02z" />
+            </svg>
+        </button>
+        <button class="header-button header-icon" onclick="ui.buttons.games.click()">
+            <svg height="24" viewBox="0 -960 960 960" width="24">
+                <path
+                    d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+            </svg>
+        </button>
+    </div>
+    <div class="games_container content-container">
+
+        <div class="games__filter-container">
+            <div class="games__filter-header">
+
+                <div class="checkbox-input_container">
+                    <input type="checkbox" id="games__favourites-filter"
+                        onchange="ui.games.FAVOURITES_FILTER = this.checked">
+                    <label class="checkbox-input" for="games__favourites-filter">Favourites</label>
+                </div>
+                <div class="checkbox-input_container">
+                    <input type="checkbox" id="games__coop-filter" onchange="ui.games.COOP_FILTER = this.checked">
+                    <label class="checkbox-input" for="games__coop-filter">Coop</label>
+                </div>
+                <button class="select-button" onclick="ui.games.toggleFilterList(event,'platform')">Platforms</button>
+                <button class="select-button" onclick="ui.games.toggleFilterList(event,'award')">Awards</button>
+                <button class="select-button" onclick="ui.games.toggleFilterList(event,'genre')">Genres</button>
+                <input type="search" name="" id="games__searchbar" class="games__searchbar" placeholder="Search">
+
+                <!-- <button class="games__show-filters-button icon-button ">
                     <i class="icon expand_icon"></i>
                 </button> -->
-                    </div>
+            </div>
 
+        </div>
+        <ul class="platform-list" id="games-list" data--console-id="all" data-current-games-array-position="0">
+
+            <li data-game-i-d="12" class="platform_game-item">
+                <div class="game-preview_container">
+                    <img src="./assets/imgCache/048141.webp"
+                        onerror="this.src='https://media.retroachievements.org/Images/048141.png';" alt=""
+                        class="game-preview_image">
                 </div>
-                <ul class="platform-list" id="games-list" data--console-id="all" data-current-games-array-position="0">
-
-                    <li data-game-i-d="12" class="platform_game-item">
-                        <div class="game-preview_container">
-                            <img src="./assets/imgCache/048141.webp"
-                                onerror="this.src='https://media.retroachievements.org/Images/048141.png';" alt=""
-                                class="game-preview_image">
-                        </div>
-                        <h3 class="game-description_title"><button title="open game" class="game-description_button"
-                                onclick="config.gameID = 12; getAchievements()">Addams Family, The</button></h3>
-                        <p title="achievements count" class="game-description  achievements-count">
-                            <i class="game-description_icon achievements-icon"></i>69
-                        </p>
-                        <p title="points count" class="game-description  points-count">
-                            <i class="game-description_icon points-icon"></i>
-                            450
-                        </p>
-                        <a title="go to RA" target="_blanc" href="https://retroachievements.org/game/12"
-                            class="game-description game-description_link">
-                            <i class="game-description_icon link_icon ra-link_icon"></i>
-                        </a>
-                        <!-- <div class="game-description_block">
+                <h3 class="game-description_title"><button title="open game" class="game-description_button"
+                        onclick="config.gameID = 12; getAchievements()">Addams Family, The</button></h3>
+                <p title="achievements count" class="game-description  achievements-count">
+                    <i class="game-description_icon achievements-icon"></i>69
+                </p>
+                <p title="points count" class="game-description  points-count">
+                    <i class="game-description_icon points-icon"></i>
+                    450
+                </p>
+                <a title="go to RA" target="_blanc" href="https://retroachievements.org/game/12"
+                    class="game-description game-description_link">
+                    <i class="game-description_icon link_icon ra-link_icon"></i>
+                </a>
+                <!-- <div class="game-description_block">
                     <button class="game-description_button  expand-button" onclick="ui.games.showMoreDescription(this)">
                         <i class="game-description_icon link_icon expand_icon"></i>
                     </button>
@@ -544,219 +520,212 @@
                   <i class=" game-description_icon link_icon download-icon"></i></a>
                 </div> -->
 
-                    </li>
-                    <li data-game-i-d="3684" class="platform_game-item">
-                        <div class="game-preview_container">
-                            <img src="./assets/imgCache/020895.webp"
-                                onerror="this.src='https://media.retroachievements.org/Images/020895.png';" alt=""
-                                class="game-preview_image">
-                        </div>
-                        <h3 class="game-description_title"><button title="open game" class="game-description_button"
-                                onclick="config.gameID = 3684; getAchievements()">Advanced Busterhawk: Gley
-                                Lancer</button></h3>
-
-                        <p title="achievements count" class="game-description  achievements-count">
-                            <i class="game-description_icon achievements-icon"></i>44
-                        </p>
-                        <p title="points count" class="game-description  points-count">
-                            <i class="game-description_icon points-icon"></i>
-                            595
-                        </p>
-                        <a title="go to RA" target="_blanc" href="https://retroachievements.org/game/3684"
-                            class="game-description game-description_link">
-                            <i class="game-description_icon link_icon ra-link_icon"></i>
-                        </a>
-
-                    </li>
-                    <li data-game-i-d="168" class="platform_game-item">
-                        <div class="game-preview_container">
-                            <img src="./assets/imgCache/061855.webp"
-                                onerror="this.src='https://media.retroachievements.org/Images/061855.png';" alt=""
-                                class="game-preview_image">
-                        </div>
-                        <h3 class="game-description_title"><button title="open game" class="game-description_button"
-                                onclick="config.gameID = 168; getAchievements()">Adventures of Batman &amp; Robin,
-                                The</button></h3>
-                        <p title="achievements count" class="game-description  achievements-count">
-                            <i class="game-description_icon achievements-icon"></i>13
-                        </p>
-                        <p title="points count" class="game-description  points-count">
-                            <i class="game-description_icon points-icon"></i>
-                            240
-                        </p>
-                        <a title="go to RA" target="_blanc" href="https://retroachievements.org/game/168"
-                            class="game-description game-description_link">
-                            <i class="game-description_icon link_icon ra-link_icon"></i>
-                        </a>
-                    </li>
-
-                </ul>
-
-
-                </ul>
-            </div>
-            <div class="resizer" id="games-resizer"></div>
-
-
-
-
-        </section>
-        <section id="note_section" class="note_section  section">
-            <div class="header-container note-header">
-
-                <div class="header-icon note-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24px"
-                        viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                        <path
-                            d="M280-280h84l240-238-86-86-238 238v86Zm352-266 42-44q6-6 6-14t-6-14l-56-56q-6-6-14-6t-14 6l-44 42 86 86ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h168q13-36 43.5-58t68.5-22q38 0 68.5 22t43.5 58h168q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm280-590q13 0 21.5-8.5T510-820q0-13-8.5-21.5T480-850q-13 0-21.5 8.5T450-820q0 13 8.5 21.5T480-790ZM200-200v-560 560Z" />
-                    </svg></div>
-
-                <h2 class="widget-header-text note-header-text">
-                    <div class="note__tabs-container">
-                    </div>
-                </h2>
-
-                <button class="header-button header-icon" onclick="ui.buttons.note.click()">
-                    <svg height="24" viewBox="0 -960 960 960" width="24">
-                        <path
-                            d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-                    </svg>
-                </button>
-            </div>
-            <div class="note-container content-container">
-                <div class="note__controls">
-                    <button title="copy" class="note__control-button copy-icon"
-                        onclick="ui.note.copyNoteText()"></button>
-                    <button title="paste" class="note__control-button paste-icon"
-                        onclick="ui.note.pasteTextToNote()"></button>
-                    <button title="DELETE ALL" class="note__control-button clear-icon"
-                        onclick="ui.note.clearTextNote()"></button>
+            </li>
+            <li data-game-i-d="3684" class="platform_game-item">
+                <div class="game-preview_container">
+                    <img src="./assets/imgCache/020895.webp"
+                        onerror="this.src='https://media.retroachievements.org/Images/020895.png';" alt=""
+                        class="game-preview_image">
                 </div>
+                <h3 class="game-description_title"><button title="open game" class="game-description_button"
+                        onclick="config.gameID = 3684; getAchievements()">Advanced Busterhawk: Gley
+                        Lancer</button></h3>
 
-                <textarea placeholder="Your notes will be here" name="note_textaria" class="note-textaria scrollable"
-                    id="note_textarea" cols="auto" rows="auto"></textarea>
-            </div>
-            <div class="resizer" id="note-resizer"></div>
-        </section>
-        <section class="user_section section" id="user_section">
-            <div class="user_header-container">
-                <button class="user_update-button header-button header-icon" onclick="ui.userInfo.update({})">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                        <path
-                            d="M204-318q-22-38-33-78t-11-82q0-134 93-228t227-94h7l-64-64 56-56 160 160-160 160-56-56 64-64h-7q-100 0-170 70.5T240-478q0 26 6 51t18 49l-60 60ZM481-40 321-200l160-160 56 56-64 64h7q100 0 170-70.5T720-482q0-26-6-51t-18-49l60-60q22 38 33 78t11 82q0 134-93 228t-227 94h-7l64 64-56 56Z" />
-                    </svg>
-                </button>
-                <button class="user_close-button header-button header-icon" onclick="ui.userInfo.close()">
-                    <svg height="24" viewBox="0 -960 960 960" width="24">
-                        <path
-                            d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-                    </svg>
-                </button>
-                <div class="user_preview-container">
-                    <div class="user_online-indicator online"></div>
-                    <img class="user-preview" src="" onerror="this.src='./assets/img/account.svg';" alt="">
+                <p title="achievements count" class="game-description  achievements-count">
+                    <i class="game-description_icon achievements-icon"></i>44
+                </p>
+                <p title="points count" class="game-description  points-count">
+                    <i class="game-description_icon points-icon"></i>
+                    595
+                </p>
+                <a title="go to RA" target="_blanc" href="https://retroachievements.org/game/3684"
+                    class="game-description game-description_link">
+                    <i class="game-description_icon link_icon ra-link_icon"></i>
+                </a>
+
+            </li>
+            <li data-game-i-d="168" class="platform_game-item">
+                <div class="game-preview_container">
+                    <img src="./assets/imgCache/061855.webp"
+                        onerror="this.src='https://media.retroachievements.org/Images/061855.png';" alt=""
+                        class="game-preview_image">
                 </div>
-                <h2 class="user_user-name"></h2>
-                <div class="user_rank-container">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                        <path
-                            d="M160-200h160v-320H160v320Zm240 0h160v-560H400v560Zm240 0h160v-240H640v240ZM80-120v-480h240v-240h320v320h240v400H80Z" />
-                    </svg>
-                    <p class="user_rank"></p>
-                </div>
-                <div class="user_points-container">
-                    <p class="user_softcore-points user_points"></p>
-                    <p class="user_hardcore-points user_points"></p>
-                    <p class="user_retropoints user_points"></p>
-                    <p class="user_softcore-points user_points-description">softpoints</p>
-                    <p class="user_hardcore-points user_points-description">hardpoints</p>
-                    <p class="user_retropoints user_points-description">truepoints</p>
-                </div>
+                <h3 class="game-description_title"><button title="open game" class="game-description_button"
+                        onclick="config.gameID = 168; getAchievements()">Adventures of Batman &amp; Robin,
+                        The</button></h3>
+                <p title="achievements count" class="game-description  achievements-count">
+                    <i class="game-description_icon achievements-icon"></i>13
+                </p>
+                <p title="points count" class="game-description  points-count">
+                    <i class="game-description_icon points-icon"></i>
+                    240
+                </p>
+                <a title="go to RA" target="_blanc" href="https://retroachievements.org/game/168"
+                    class="game-description game-description_link">
+                    <i class="game-description_icon link_icon ra-link_icon"></i>
+                </a>
+            </li>
+
+        </ul>
+
+
+        </ul>
+    </div>
+    <div class="resizer" id="games-resizer"></div>
+
+
+
+
+</section><section id="note_section" class="note_section  section">
+    <div class="header-container note-header">
+
+        <div class="header-icon note-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24px"
+                viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+                <path
+                    d="M280-280h84l240-238-86-86-238 238v86Zm352-266 42-44q6-6 6-14t-6-14l-56-56q-6-6-14-6t-14 6l-44 42 86 86ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h168q13-36 43.5-58t68.5-22q38 0 68.5 22t43.5 58h168q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm280-590q13 0 21.5-8.5T510-820q0-13-8.5-21.5T480-850q-13 0-21.5 8.5T450-820q0 13 8.5 21.5T480-790ZM200-200v-560 560Z" />
+            </svg></div>
+
+        <h2 class="widget-header-text note-header-text">
+            <div class="note__tabs-container">
             </div>
-            <div class="user_content-container">
-                <h3 class="user_last-header">Last achievements</h3>
-                <ul class="user_lastitems-list user_last-achivs-list">
-                    <li></li>
-                </ul>
-                <h3 class="user_last-header">Last games</h3>
-                <ul class="user_lastitems-list user_last-games-list">
-                    <li></li>
-                </ul>
+        </h2>
 
-            </div>
-            <div class="user_resizer resizer" id="user-info-resizer"></div>
-        </section>
-        <section id="notification_section" class="notification_section bg-visible section">
-            <div class="header-container">
-                <div class="header-icon notification-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24px"
-                        viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                        <path
-                            d="M160-200v-80h80v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h80v80H160Zm320-300Zm0 420q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80ZM320-280h320v-280q0-66-47-113t-113-47q-66 0-113 47t-47 113v280Z" />
-                    </svg></div>
-                <h2 class="widget-header-text">Last activity</h2>
+        <button class="header-button header-icon" onclick="ui.buttons.note.click()">
+            <svg height="24" viewBox="0 -960 960 960" width="24">
+                <path
+                    d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+            </svg>
+        </button>
+    </div>
+    <div class="note-container content-container">
+        <div class="note__controls">
+            <button title="copy" class="note__control-button copy-icon" onclick="ui.note.copyNoteText()"></button>
+            <button title="paste" class="note__control-button paste-icon" onclick="ui.note.pasteTextToNote()"></button>
+            <button title="DELETE ALL" class="note__control-button clear-icon" onclick="ui.note.clearTextNote()"></button>
+        </div>
 
-                <button class="header-button header-icon" onclick="ui.buttons.notifications.click()">
-                    <svg height="24" viewBox="0 -960 960 960" width="24">
-                        <path
-                            d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-                    </svg>
-                </button>
-            </div>
-            <ul class="notification-container content-container">
+        <textarea placeholder="Your notes will be here" name="note_textaria" class="note-textaria scrollable"
+            id="note_textarea" cols="auto" rows="auto"></textarea>
+    </div>
+    <div class="resizer" id="note-resizer"></div>
+</section><section class="user_section section" id="user_section">
+    <div class="user_header-container">
+        <button class="user_update-button header-button header-icon" onclick="ui.userInfo.update({})">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                <path
+                    d="M204-318q-22-38-33-78t-11-82q0-134 93-228t227-94h7l-64-64 56-56 160 160-160 160-56-56 64-64h-7q-100 0-170 70.5T240-478q0 26 6 51t18 49l-60 60ZM481-40 321-200l160-160 56 56-64 64h7q100 0 170-70.5T720-482q0-26-6-51t-18-49l60-60q22 38 33 78t11 82q0 134-93 228t-227 94h-7l64 64-56 56Z" />
+            </svg>
+        </button>
+        <button class="user_close-button header-button header-icon" onclick="ui.userInfo.close()">
+            <svg height="24" viewBox="0 -960 960 960" width="24">
+                <path
+                    d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+            </svg>
+        </button>
+        <div class="user_preview-container">
+            <div class="user_online-indicator online"></div>
+            <img class="user-preview" src="" onerror="this.src='./assets/img/account.svg';" alt="">
+        </div>
+        <h2 class="user_user-name"></h2>
+        <div class="user_rank-container">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                <path
+                    d="M160-200h160v-320H160v320Zm240 0h160v-560H400v560Zm240 0h160v-240H640v240ZM80-120v-480h240v-240h320v320h240v400H80Z" />
+            </svg>
+            <p class="user_rank"></p>
+        </div>
+        <div class="user_points-container">
+            <p class="user_softcore-points user_points"></p>
+            <p class="user_hardcore-points user_points"></p>
+            <p class="user_retropoints user_points"></p>
+            <p class="user_softcore-points user_points-description">softpoints</p>
+            <p class="user_hardcore-points user_points-description">hardpoints</p>
+            <p class="user_retropoints user_points-description">truepoints</p>
+        </div>
+    </div>
+    <div class="user_content-container">
+        <h3 class="user_last-header">Last achievements</h3>
+        <ul class="user_lastitems-list user_last-achivs-list">
+            <li></li>
+        </ul>
+        <h3 class="user_last-header">Last games</h3>
+        <ul class="user_lastitems-list user_last-games-list">
+            <li></li>
+        </ul>
 
-            </ul>
-            <div class="resizer" id="notification-resizer"></div>
-        </section>
-        <section id="stats_section" class="stats_section  section">
-            <div class="header-container">
-                <div class="header-icon stats-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24px"
-                        viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                        <path
-                            d="M280-280h80v-200h-80v200Zm320 0h80v-400h-80v400Zm-160 0h80v-120h-80v120Zm0-200h80v-80h-80v80ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
-                    </svg></div>
-                <h2 class="widget-header-text">Stats</h2>
-                <div class="get-awards_button header-button header-icon" id="" title="force update"
-                    onclick="ui.stats.updateStats({})">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="24">
-                        <path
-                            d="M204-318q-22-38-33-78t-11-82q0-134 93-228t227-94h7l-64-64 56-56 160 160-160 160-56-56 64-64h-7q-100 0-170 70.5T240-478q0 26 6 51t18 49l-60 60ZM481-40 321-200l160-160 56 56-64 64h7q100 0 170-70.5T720-482q0-26-6-51t-18-49l60-60q22 38 33 78t11 82q0 134-93 228t-227 94h-7l64 64-56 56Z" />
-                    </svg>
-                </div>
-                <button class="header-button header-icon" onclick="ui.buttons.stats.click()">
-                    <svg height="24" viewBox="0 -960 960 960" width="24">
-                        <path
-                            d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-                    </svg>
-                </button>
-            </div>
-            <ul class="stats-container content-container">
-                <li class="stats__stat-container">
-                    <h2 class="stats__title">Percentile</h2>
-                    <p id="stats_rank-rate" class="stats__value stats__rank-value"></p>
-                </li>
-                <li class="stats__stat-container">
-                    <h2 class="stats__title">Rank</h2>
-                    <p id="stats_rank" class="stats__value stats__rank-value"></p>
-                </li>
-                <li class="stats__stat-container">
-                    <h2 class="stats__title">Points</h2>
-                    <p id="stats_points" class="stats__value"></p>
+    </div>
+    <div class="user_resizer resizer" id="user-info-resizer"></div>
+</section><section id="notification_section" class="notification_section bg-visible section">
+    <div class="header-container">
+        <div class="header-icon notification-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24px"
+                viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+                <path
+                    d="M160-200v-80h80v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h80v80H160Zm320-300Zm0 420q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80ZM320-280h320v-280q0-66-47-113t-113-47q-66 0-113 47t-47 113v280Z" />
+            </svg></div>
+        <h2 class="widget-header-text">Last activity</h2>
 
-                </li>
-                <li class="stats__stat-container">
-                    <h2 class="stats__title">Retropoints</h2>
-                    <p id="stats_retropoints" class="stats__value"></p>
+        <button class="header-button header-icon" onclick="ui.buttons.notifications.click()">
+            <svg height="24" viewBox="0 -960 960 960" width="24">
+                <path
+                    d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+            </svg>
+        </button>
+    </div>
+    <ul class="notification-container content-container">
 
-                </li>
-                <li class="stats__stat-container">
-                    <h2 class="stats__title">Softpoints</h2>
-                    <p id="stats_softpoints" class="stats__value"></p>
-                </li>
-                <li class="stats__stat-container">
-                    <h2 class="stats__title">True Ratio</h2>
-                    <p id="stats_true-ratio" class="stats__value" data-delta="+0.99"></p>
+    </ul>
+    <div class="resizer" id="notification-resizer"></div>
+</section><section id="stats_section" class="stats_section  section">
+    <div class="header-container">
+        <div class="header-icon stats-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24px"
+                viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+                <path
+                    d="M280-280h80v-200h-80v200Zm320 0h80v-400h-80v400Zm-160 0h80v-120h-80v120Zm0-200h80v-80h-80v80ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
+            </svg></div>
+        <h2 class="widget-header-text">Stats</h2>
+        <div class="get-awards_button header-button header-icon" id="" title="force update"
+            onclick="ui.stats.updateStats({})">
+            <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="24">
+                <path
+                    d="M204-318q-22-38-33-78t-11-82q0-134 93-228t227-94h7l-64-64 56-56 160 160-160 160-56-56 64-64h-7q-100 0-170 70.5T240-478q0 26 6 51t18 49l-60 60ZM481-40 321-200l160-160 56 56-64 64h7q100 0 170-70.5T720-482q0-26-6-51t-18-49l60-60q22 38 33 78t11 82q0 134-93 228t-227 94h-7l64 64-56 56Z" />
+            </svg>
+        </div>
+        <button class="header-button header-icon" onclick="ui.buttons.stats.click()">
+            <svg height="24" viewBox="0 -960 960 960" width="24">
+                <path
+                    d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+            </svg>
+        </button>
+    </div>
+    <ul class="stats-container content-container">
+        <li class="stats__stat-container">
+            <h2 class="stats__title">Percentile</h2>
+            <p id="stats_rank-rate" class="stats__value stats__rank-value"></p>
+        </li>
+        <li class="stats__stat-container">
+            <h2 class="stats__title">Rank</h2>
+            <p id="stats_rank" class="stats__value stats__rank-value"></p>
+        </li>
+        <li class="stats__stat-container">
+            <h2 class="stats__title">Points</h2>
+            <p id="stats_points" class="stats__value"></p>
 
-                </li>
-                <!-- <li class="stats__stat-container">
+        </li>
+        <li class="stats__stat-container">
+            <h2 class="stats__title">Retropoints</h2>
+            <p id="stats_retropoints" class="stats__value"></p>
+
+        </li>
+        <li class="stats__stat-container">
+            <h2 class="stats__title">Softpoints</h2>
+            <p id="stats_softpoints" class="stats__value"></p>
+        </li>
+        <li class="stats__stat-container">
+            <h2 class="stats__title">True Ratio</h2>
+            <p id="stats_true-ratio" class="stats__value" data-delta="+0.99"></p>
+
+        </li>
+        <!-- <li class="stats__stat-container">
             <h2 class="stats__title">Games mastered</h2>
             <p id="stats_mastered-count" class="stats__value">-</p>
         </li>
@@ -768,13 +737,13 @@
             <h2 class="stats__title">Games played</h2>
             <p id="stats_played-count" class="stats__value">-</p>
         </li> -->
-            </ul>
-            <div class="resizer" id="stats-resizer"></div>
-        </section>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
-    <!-- <script type="module" src="./js/script.js"></script> -->
-    <script src="./dist/bundle.min.js"></script>
+    </ul>
+    <div class="resizer" id="stats-resizer"></div>
+</section>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+  <!-- <script type="module" src="./js/script.js"></script> -->
+  <script src="./dist/bundle.min.js"></script>
 </body>
 
 </html>

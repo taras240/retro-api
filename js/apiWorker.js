@@ -42,6 +42,7 @@ export class APIWorker {
     completionProgress: "API_GetUserCompletionProgress.php",
     gameList: "API_GetGameList.php",
     userSummary: "API_GetUserSummary.php",
+    achievementOfTheWeek: "API_GetAchievementOfTheWeek.php"
   };
 
   // Генерує URL для запиту до API
@@ -69,9 +70,27 @@ export class APIWorker {
 
     return url;
   }
-
-  // Конструктор класу
-  constructor() { }
+  getAotW() {
+    let url = this.getUrl({ endpoint: this.endpoints.achievementOfTheWeek });
+    return fetch(url)
+      .then((resp) => resp.json())
+      .then(aotwOrig => {
+        const userEarned = aotwOrig.Unlocks
+          .find(user => user.User.toLowerCase() === config.targetUser?.toLowerCase()?.trim())
+        return {
+          ...aotwOrig.Achievement,
+          ConsoleName: aotwOrig.Console.Title,
+          ForumTopic: aotwOrig.ForumTopic.ID,
+          GameID: aotwOrig.Game.ID,
+          GameTitle: aotwOrig.Game.Title,
+          StartAt: aotwOrig.StartAt,
+          TotalPlayers: aotwOrig.TotalPlayers,
+          UnlocksHardcoreCount: aotwOrig.UnlocksHardcoreCount,
+          isEarned: !!userEarned,
+          isEarnedHardcore: !!userEarned && !!userEarned.HardcoreMode
+        }
+      });
+  }
   getUserGameRank({ targetUser, gameID }) {
     let url = this.getUrl({ endpoint: this.endpoints.userRankAndScore });
     return fetch(url).then((resp) => resp.json());

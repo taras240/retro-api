@@ -14,6 +14,7 @@
 @import url(./notification.css);
 @import url(./game-popup.css);
 @import url(./stats.css);
+@import url(./aotw.css);
 
 /* @import url('../assets/fonts/bucky_ohare_nes.ttf'); */
 /* @font-face {
@@ -182,7 +183,7 @@ a:hover {
 }
 
 .section:hover {
-  z-index: 101;
+  z-index: 10;
   box-shadow: 0 0 5px 2px black;
 }
 
@@ -228,7 +229,7 @@ a:hover {
   border-bottom: 0px solid var(--font-color);
   background-color: var(--secondary-color);
   border-radius: var(--border-radius) var(--border-radius) 0 0;
-  z-index: 1;
+  z-index: -1;
   font-family: "OHair", system-ui;
 }
 

@@ -102,6 +102,24 @@ export class Config {
     this._cfg.settings.targetMoveToTop = value;
     this.writeConfiguration();
   }
+  get aotw() {
+    function isActualDate(dateString) {
+      const now = new Date();
+      const oneWeekAgo = new Date();
+      oneWeekAgo.setDate(now.getDate() - 7);
+
+      const eventStartDate = new Date(dateString)
+      return eventStartDate > oneWeekAgo;
+    }
+    const aotw = this._cfg.aotw;
+
+    const isActual = aotw && isActualDate(aotw.StartAt)
+    return isActual ? this._cfg.aotw : false;
+  }
+  set aotw(aotw) {
+    this._cfg.aotw = aotw;
+    this.writeConfiguration();
+  }
   get ui() {
     return this._cfg.ui;
   }

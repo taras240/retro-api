@@ -305,8 +305,6 @@
 .marker.hidden {
     visibility: hidden;
     background-position: 100% 100%;
-
-
 }
 
 .earned .progression-achiv:last-child .marker.hidden {

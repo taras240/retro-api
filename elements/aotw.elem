@@ -1,0 +1,53 @@
+<section class="section" id="aotw_section">
+    <div class="header-container">
+        <div class="header-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                <path
+                    d="M424-320q0-81 14.5-116.5T500-514q41-36 62.5-62.5T584-637q0-41-27.5-68T480-732q-51 0-77.5 31T365-638l-103-44q21-64 77-111t141-47q105 0 161.5 58.5T698-641q0 50-21.5 85.5T609-475q-49 47-59.5 71.5T539-320H424Zm56 240q-33 0-56.5-23.5T400-160q0-33 23.5-56.5T480-240q33 0 56.5 23.5T560-160q0 33-23.5 56.5T480-80Z">
+                </path>
+            </svg>
+        </div>
+
+        <h2 class="widget-header-text">AotW</h2>
+        <div class="header-button header-icon" onclick="event.target.closest('section').remove()">
+            <svg height="24" viewBox="0 -960 960 960" width="24">
+                <path
+                    d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z">
+                </path>
+            </svg>
+        </div>
+    </div>
+    <div class="aotw-card" data-id="4800">
+        <div class="aotw__container">
+            <div class="progression_descriptions">
+                <p class="progression-description-text" title="points"><i
+                        class="progression_description-icon game-description_icon points-icon"></i>25
+                </p>
+                <p class="progression-description-text" title="points"><i
+                        class="progression_description-icon game-description_icon retropoints-icon"></i>116
+
+                </p>
+                <p class="progression-description-text" title="earned by"><i
+                        class="progression_description-icon game-description_icon trending-icon"></i>4%</p>
+                <p class="progression-description-text" title="earned by"> <i
+                        class="progression_description-icon game-description_icon rarity-icon"></i>
+                    2.65</p>
+                <div class="progression_description-icon condition win_condition" title="achievement type">
+                </div>
+            </div>
+            <div class="progression-achiv_prev-container">
+                <img class="progression-achiv_prev-img" src="https://media.retroachievements.org/Badge/261758.png"
+                    alt=" ">
+            </div>
+            <h3 class="progression_achiv-name">
+                <a class="progression_achiv-link" progression="_blanc"
+                    href="https://retroachievements.org/achievement/56855">Mort-ified!!</a>
+            </h3>
+            <div class="progression-details">
+                Complete the game without saving Alyssa (Bad Ending)
+            </div>
+
+            <div class="marker hidden" style="position: absolute; background-position: 100% 91%;"></div>
+        </div>
+    </div>
+</section>

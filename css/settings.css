@@ -8,6 +8,10 @@
   z-index: 1000;
 }
 
+.section.prefs_section:hover {
+  z-index: 101;
+}
+
 .prefs_section.section {
   background: linear-gradient(to top left,
       var(--main-color),

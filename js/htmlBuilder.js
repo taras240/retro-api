@@ -14,6 +14,7 @@ const sections = {
   user: "./elements/userInfo.elem",
   notification: "./elements/notification.elem",
   stats: "./elements/stats.elem",
+  // aotw: "./elements/aotw.elem",
 };
 export async function loadSections() {
   if (window.location.pathname !== '/test.html') {
