@@ -61,7 +61,7 @@
   /* box-shadow: 0 0 5px 2px var(--font-color); */
 }
 
-.target-achiv:not(.hardcore).passed {
+.highlight-passed .target-achiv:not(.hardcore).passed {
   border: 1px solid red;
   /* box-shadow: 0 0 5px 2px var(--font-color); */
 }
@@ -176,11 +176,9 @@
   position: absolute;
   right: 0;
   top: 50%;
-
   transform: translateY(-50%);
   --color: silver;
   background: linear-gradient(to bottom right, transparent, var(--color));
-  /* background-color: var(--color); */
   mask-size: 2rem 2rem;
   mask-repeat: no-repeat;
   mask-position: center;
@@ -190,7 +188,6 @@
   mask-image: url(../assets/img/earned-check.svg);
   mask-size: contain;
   mask-image: url(../assets/img/military_medal.svg);
-
 }
 
 .target-achiv.earned.hardcore::after {

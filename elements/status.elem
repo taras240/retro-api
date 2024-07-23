@@ -20,9 +20,23 @@
         <div class="update-game_header">
           <a id="game-title" target="_blank" class=" update-section-text" href="">Game tittle</a>
         </div>
-        <p id="game-platform" class="update-game-platform update-section-text">Console</p>
+        <div class="update__game-info">
+          <p id="game-platform" class="update-game-platform update-section-text">Console</p>
+          <div id="rich-presence" class="update-section-text rich-presence_text">Waiting...</div>
+        </div>
+        <div class="update-progres" id="status_progression">
+          <div class="progres-description">Description</div>
 
-        <div id="rich-presence" class="update-section-text rich-presence_text">Waiting...</div>
+          <div class="progres-container">
+            <div class="progres-step checked">
+              <div class="progres-point"></div>
+            </div>
+            <div class="progres-step progres-step__win">
+              <div class="progres-point progres-point__win"></div>
+            </div>
+
+          </div>
+        </div>
 
       </div>
       <div class="status__background"></div>

@@ -61,8 +61,8 @@ export class UI {
 
       setTimeout(() => {
         apiWorker.getUserSummary({}).then(resp => {
-          this.userInfo.update({ userSummary: resp });
-          this.stats.initialSetStats({ userSummary: resp });
+          this.userInfo?.update({ userSummary: resp });
+          this.stats?.initialSetStats({ userSummary: resp });
         })
       }, 3000);
     }
@@ -85,7 +85,7 @@ export class UI {
     this.statusPanel = new StatusPanel();
     this.games = new Games();
     this.progression = new Progression();
-    this.userInfo = new UserInfo();
+    // this.userInfo = new UserInfo();
     this.note = new Note();
     this.notifications = new Notifications();
     this.stats = new Stats();
@@ -142,9 +142,6 @@ export class UI {
     //Update status widget
     this.statusPanel.updateProgress({ earnedAchievementIDs: earnedAchievementsIDs });
 
-    //Update 
-    // ui.userInfo.VISIBLE && setTimeout(() => ui.userInfo.update(), 2000);
-
 
     // ui.stats.updateStats();
     //Update Stats widget & UserInfo widget
@@ -157,12 +154,10 @@ export class UI {
       }, 12000)
     }
 
-    try {
-      this.aotw.checkCheevo({ earnedAchievementIDs: earnedAchievementsIDs });
-    }
-    catch (e) {
-      console.log(e)
-    }
+
+    this.aotw?.checkCheevo({ earnedAchievementIDs: earnedAchievementsIDs });
+
+
   }
   showContextmenu({ event, menuItems, sectionCode = "" }) {
     const setContextPosition = () => {
@@ -230,7 +225,7 @@ export class UI {
         achievement.DateEarned = achievement.DateEarned ?? Date;
         this.ACHIEVEMENTS[lastAchievement.AchievementID] = achievement;
       });
-      this.userInfo.pushAchievements({ achievements: earnedAchievements });
+      this.userInfo?.pushAchievements({ achievements: earnedAchievements });
       this.notifications.pushNotification({ type: this.notifications.types.earnedAchivs, elements: earnedAchievements });
     }
     let earnedAchievements = [];
@@ -310,12 +305,12 @@ export class UI {
     if (responce.LastGameID != config.gameID || isStart) {
       config.gameID = responce.LastGameID;
       await ui.getAchievements();
-      this.userInfo.pushNewGame({ game: ui.GAME_DATA })
+      this.userInfo?.pushNewGame({ game: ui.GAME_DATA })
 
       if (isStart) {
         this.totalPoints = responce.TotalPoints;
         this.softcorePoints = responce.TotalSoftcorePoints;
-        this.userInfo.updatePoints({ points: responce });
+        this.userInfo?.updatePoints({ points: responce });
       }
     }
     if (
@@ -326,7 +321,7 @@ export class UI {
       this.softcorePoints = responce.TotalSoftcorePoints;
 
       this.updateAchievements();
-      this.userInfo.updatePoints({ points: responce });
+      this.userInfo?.updatePoints({ points: responce });
     }
 
     this.statusPanel.richPresence.innerText = responce.RichPresenceMsg;
@@ -376,7 +371,10 @@ export class UI {
         messageElements.image = 'https://media.retroachievements.org' + ui.GAME_DATA.ImageIcon;
         break;
       case "earned-cheevo":
-        messageElements.header = `${config.targetUser}  earned ${ui.ACHIEVEMENTS[id].isHardcoreEarned ? 'hardcore' : "softcore"} cheevo: \n${ui.ACHIEVEMENTS[id].Title}`
+        const isAotW = config.aotw?.ID == id;
+        messageElements.header = `${config.targetUser}  earned ${ui.ACHIEVEMENTS[id].isHardcoreEarned
+          ? 'hardcore' : "softcore"} ${isAotW ?
+            "Achievement of the Week" : "cheevo"}: \n${ui.ACHIEVEMENTS[id].Title}`
         messageElements.description = `
           Game: [${ui.GAME_DATA.Title}](https://retroachievements.org/game/${ui.GAME_DATA.ID})
           Description: ${ui.ACHIEVEMENTS[id].Description}
@@ -2176,6 +2174,23 @@ class StatusPanel {
         label: ui.lang.elements,
         elements: [
           {
+            type: "radio",
+            name: "context_description-variant-radio",
+            id: "context_show-progression-description",
+            label: "Show Progression",
+            checked: this.STATUS_DESCRIPTION_VARIANT === "progression",
+            event: `onchange="ui.statusPanel.STATUS_DESCRIPTION_VARIANT = 'progression';"`,
+          },
+          {
+            type: "radio",
+            name: "context_description-variant-radio",
+            id: "context_show-game-info-description",
+            label: "Show GameInfo",
+            checked: this.STATUS_DESCRIPTION_VARIANT === "gameInfo",
+            event: `onchange="ui.statusPanel.STATUS_DESCRIPTION_VARIANT = 'gameInfo';"`,
+          },
+
+          {
             type: "checkbox",
             name: "context_show-platform",
             id: "context_show-platform",
@@ -2207,6 +2222,7 @@ class StatusPanel {
             checked: this.SHOW_MASTERY_RATE,
             event: `onclick="ui.statusPanel.SHOW_MASTERY_RATE = this.checked;"`,
           },
+
         ],
       },
       {
@@ -2420,6 +2436,20 @@ class StatusPanel {
     UI.switchSectionVisibility({ section: this.section, visible: value })
     this.widgetIcon && (this.widgetIcon.checked = value);
   }
+
+  get STATUS_DESCRIPTION_VARIANT() {
+    return config?.ui?.update_section?.statusDescriptionVariant ?? "progression";
+  }
+  set STATUS_DESCRIPTION_VARIANT(value) {
+    const statusVariants = {
+      gameInfo: "show-game-info",
+      progression: "show-game-progress"
+    }
+    config.ui.update_section.statusDescriptionVariant = value;
+    config.writeConfiguration();
+    Object.values(statusVariants).forEach(value => this.section.classList.remove(value))
+    this.section.classList.add(statusVariants[value]);
+  }
   stats = {
     gameTitle: ui?.GAME_DATA?.Title ?? "Title",
     gamePlatform: ui?.GAME_DATA?.ConsoleName ?? "Platform",
@@ -2502,6 +2532,8 @@ class StatusPanel {
       achivTitleElement: this.section.querySelector("#update_achiv-title"),
       earnedPoints: this.section.querySelector("#update_achiv-earned-points"),
     }
+    this.progressionElement = this.section.querySelector("#status_progression");
+
 
   }
   addEvents() {
@@ -2587,7 +2619,7 @@ class StatusPanel {
     ui.gameCard.section.classList.toggle("mastered", this.stats.earnedPoints != 0 && this.stats.totalPoints === this.stats.earnedPoints);
     this.container.classList.toggle("game-border", this.SHOW_GAME_PREV_BORDER);
     this.container.classList.toggle("show-game-ratio", this.SHOW_GAME_RATIO || this.SHOW_MASTERY_RATE);
-
+    this.STATUS_DESCRIPTION_VARIANT = this.STATUS_DESCRIPTION_VARIANT;
   }
   setProgressBarValue() {
     let value = 0;
@@ -2613,6 +2645,85 @@ class StatusPanel {
       "--progress-points",
       (value || 0) * 100 + "%"
     );
+  }
+  generateProgression() {
+    const addPopups = () => {
+      this.progressionElement.querySelectorAll(".progres-point").forEach(point => {
+        const achievement = ui.ACHIEVEMENTS[point?.dataset?.id]
+
+        function setEvents() {
+          point.addEventListener("mouseover", mouseOverEvent);
+          point.addEventListener("mouseleave", removePopups);
+        }
+        function setPopupPosition(popup, point) {
+          //Start position relative achievement element
+          const rect = point.getBoundingClientRect();
+          const leftPos = rect.left + point.offsetWidth + 8;
+          const topPos = rect.top + 2;
+
+          popup.style.left = leftPos + "px";
+          popup.style.top = topPos + "px";
+
+          //Check for collisions and fix position
+          let { left, right, top, bottom } = popup.getBoundingClientRect();
+          if (left < 0) {
+            popup.classList.remove("left-side");
+          }
+          if (right > window.innerWidth) {
+            popup.classList.add("left-side");
+          }
+          if (top < 0) {
+            popup.classList.remove("top-side");
+          } else if (bottom > window.innerHeight) {
+            popup.classList.add("top-side");
+          }
+        }
+        function mouseOverEvent() {
+          removePopups();
+
+          const popup = UI.generateAchievementPopup(achievement);
+          ui.app.appendChild(popup);
+
+          setPopupPosition(popup, point);
+          setTimeout(() => popup.classList.add("visible"), 333);
+        }
+        function removePopups() {
+          document.querySelectorAll(".popup").forEach((popup) => popup.remove());
+        }
+        setEvents();
+      })
+    }
+
+
+    let stepPointsHtml = '';
+    let winPointsHtml = '';
+    const progressionCheevos = Object.values(ui.ACHIEVEMENTS)
+      .filter(a => UI.filterBy.progression(a))
+      .sort((a, b) => UI.sortBy.default(a, b));
+    const totalSteps = +ui.GAME_DATA?.progressionSteps;
+    const currentStep = progressionCheevos.find(a => !a.isHardcoreEarned);
+    progressionCheevos.forEach(cheevo => {
+      cheevo.type === 'progression' ? stepPointsHtml += `
+      <div class="progres-step ${cheevo.isHardcoreEarned ? "checked" : ""}">
+        <div class="progres-point ${cheevo.type === 'win_condition' ? "win" : ""}" data-id="${cheevo.ID}"></div>
+      </div>
+    `: winPointsHtml += `
+      <div class="progres-point win ${cheevo.isHardcoreEarned ? "checked" : ""}" data-id="${cheevo.ID}"></div>
+    `;
+    });
+    const description = totalSteps === 0 ? "Progressin not awailable" : currentStep ? currentStep.Description :
+      "You have passed the game";
+    const progressionHtml = `
+       <div class="progres-description">${description}</div>
+          <div class="progres-container">
+            ${stepPointsHtml}
+            ${winPointsHtml ? `<div class="progres-step__win">
+              ${winPointsHtml}` : ""}
+            </div>
+        </div>
+    `;
+    this.progressionElement.innerHTML = progressionHtml;
+    addPopups();
   }
   updateData(isNewGame = false) {
     this.stats = {
@@ -2656,6 +2767,9 @@ class StatusPanel {
       "https://retroachievements.org/game/" + config.gameID
     );
     gamePlatform.innerText = ConsoleName || "";
+    // ! progression
+    this.generateProgression();
+
     this.updateData(true);
     this.gameTime = config.ui.update_section.playTime[config.gameID] ? config.ui.update_section.playTime[config.gameID] : 0;
     this.sessionGameTime = 0;
@@ -2663,7 +2777,6 @@ class StatusPanel {
   }
   updateProgress({ earnedAchievementIDs }) {
     this.updateData();
-
     //show new achivs in statusPanel
     if (this.SHOW_NEW_ACHIV && earnedAchievementIDs.length) {
       const checkForGameAward = () => {
@@ -2727,6 +2840,8 @@ class StatusPanel {
         setTimeout(() => ui.stats.updateChart(), 4000);
       }
       this.addAlertsToQuery([...alerts]);
+
+      this.generateProgression();
     }
 
     //push points toggle animation
@@ -4474,14 +4589,7 @@ class Target {
             checked: this.SHOW_PREV_BORDER,
             event: `onchange="ui.target.SHOW_PREV_BORDER = this.checked"`,
           },
-          {
-            type: "checkbox",
-            name: "context-show-level",
-            id: "context-show-level",
-            label: ui.lang.showLevel,
-            checked: this.SHOW_LEVEL,
-            event: `onchange="ui.target.SHOW_LEVEL = this.checked"`,
-          },
+
           {
             type: "checkbox",
             name: "context-show-difficult",
@@ -4612,13 +4720,35 @@ class Target {
             checked: this.HIDE_FILTERED,
             event: `onchange="ui.target.HIDE_FILTERED = this.checked;"`,
           },
+
+        ],
+      },
+      {
+        label: ui.lang.level,
+        elements: [
+          {
+            type: "checkbox",
+            name: "context-show-level",
+            id: "context-show-level",
+            label: ui.lang.showLevel,
+            checked: this.SHOW_LEVEL,
+            event: `onchange="ui.target.SHOW_LEVEL = this.checked"`,
+          },
           {
             type: "checkbox",
             name: "context-hide-passed-levels",
             id: "context-hide-passed-levels",
-            label: "**Hide passed levels**",
+            label: ui.lang.hidePassedLevels,
             checked: this.HIDE_PASSED_LEVELS,
             event: `onchange="ui.target.HIDE_PASSED_LEVELS = this.checked;"`,
+          },
+          {
+            type: "checkbox",
+            name: "context-highlight-passed",
+            id: "context-highlight-passed",
+            label: ui.lang.highLightPassedLevels,
+            checked: this.HIGHLIGHT_PASSED_LEVELS,
+            event: `onchange="ui.target.HIGHLIGHT_PASSED_LEVELS = this.checked;"`,
           },
         ],
       },
@@ -4672,7 +4802,6 @@ class Target {
           },
         ],
       },
-
     ];
   }
   get SHOW_HEADER() {
@@ -4808,6 +4937,15 @@ class Target {
     this.section.classList.toggle("hide-passed", value);
     // this.container.querySelectorAll(".target-achiv").forEach(el => el.classList.toggle("show-level", value))
   }
+  get HIGHLIGHT_PASSED_LEVELS() {
+    return config?.ui?.target_section?.highlightPassedLevels ?? true;
+  }
+  set HIGHLIGHT_PASSED_LEVELS(value) {
+    config.ui.target_section.highlightPassedLevels = value;
+    config.writeConfiguration();
+    this.section.classList.toggle("highlight-passed", value);
+    // this.container.querySelectorAll(".target-achiv").forEach(el => el.classList.toggle("show-level", value))
+  }
   constructor() {
     this.initializeElements();
     this.addEvents();
@@ -4917,6 +5055,7 @@ class Target {
     this.section.classList.toggle("compact", !this.SHOW_HEADER);
     this.section.classList.toggle("hide-bg", this.HIDE_BG);
     this.section.classList.toggle("hide-passed", this.HIDE_PASSED_LEVELS);
+    this.section.classList.toggle("highlight-passed", this.HIGHLIGHT_PASSED_LEVELS);
     this.startAutoScroll();
   }
   updateEarnedAchieves({ earnedAchievementIDs: earnedAchievementsIDs }) {

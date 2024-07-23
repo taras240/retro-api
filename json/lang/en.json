@@ -86,5 +86,7 @@
     "mainNote": "Note",
     "gameNote": "Game Note",
     "showLevel": "Show Level",
-    "showUpdateBlink": "Show Update Blink"
+    "showUpdateBlink": "Show Update Blink",
+    "highLightPassedLevels": "Highlight Passed Levels",
+    "hidePassedLevels": "Hide Passed Levels"
 }

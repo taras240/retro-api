@@ -13,7 +13,7 @@ const sections = {
   status: "./elements/status.elem",
   games: "./elements/games.elem",
   note: "./elements/note.elem",
-  user: "./elements/userInfo.elem",
+  // user: "./elements/userInfo.elem",
   notifications: "./elements/notification.elem",
   stats: "./elements/stats.elem",
 };

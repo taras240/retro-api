@@ -71,7 +71,7 @@ img {
   --yellow-color: #c39c30;
   --blue-color: #3663d8;
 
-  --border-radius: 8px;
+  --border-radius: 5px;
   --box-shadows: 1px 1px 0 var(--shadow-color), 2px 2px 0 var(--shadow-color),
     3px 3px 0 var(--shadow-color), 4px 4px 0 var(--shadow-color);
   --box-shadow-hover: 1px 1px 0 var(--shadow-color),

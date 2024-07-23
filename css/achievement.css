@@ -374,11 +374,11 @@
 }
 
 .popup.left-side.top-side {
-  transform: translateX(calc(-100% - 35px)) translateY(calc(-60%));
+  transform: translateX(calc(-100% - 35px)) translateY(calc(-90%));
 }
 
 .popup.top-side {
-  transform: translateY(calc(-60%));
+  transform: translateY(calc(-90%));
 }
 
 .achiv-title {

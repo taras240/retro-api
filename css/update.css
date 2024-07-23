@@ -10,8 +10,28 @@
   width: 500px;
   z-index: 1;
   perspective: 1500px;
-
   /* transition: 0.2s !important; */
+}
+
+.update_section .update__game-info {
+  display: none;
+}
+
+.update_section .update-progres {
+  display: none;
+}
+
+.update_section.show-game-info .update__game-info {
+  flex: 1;
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: column;
+  width: auto;
+  font-size: inherit;
+}
+
+.update_section.show-game-progress .update-progres {
+  display: flex;
 }
 
 .timer-timeout .update_container {
@@ -614,6 +634,8 @@
   flex-shrink: 0;
 }
 
+
+
 .update-game_header a:hover {
   text-decoration: underline;
   background-color: var(--secondary-color);
@@ -648,8 +670,6 @@
   font-size: inherit;
   padding: 0.2rem;
 }
-
-
 
 
 .update-section-text.rich-presence_text {
@@ -698,3 +718,160 @@
 
 
 .status__background {}
+
+/*! PROGRESSION TREE */
+
+.update-progres {
+  --progress: 2;
+  /* --font-color: white;
+  --main-color: rgb(54, 54, 54);
+  --accent-color: rgb(58, 143, 255); */
+  background-color: var(--main-color);
+  /* background-color: red; */
+  width: 100%;
+  height: 3em;
+  /* padding-right: 5rem; */
+  color: var(--font-color);
+  /* overflow: hidden; */
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: space-between;
+  font-size: inherit;
+}
+
+.progres-description {
+  font-size: 1em;
+  text-wrap: nowrap;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.progres-container {
+  --color: var(--font-color);
+  --width: calc(100% / 5);
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: end;
+  justify-content: start;
+  font-size: inherit;
+
+}
+
+.checked.progres-step {
+  --color: var(--accent-color);
+}
+
+.progres-step__win:has(.checked) {
+  --color: goldenrod;
+}
+
+.progres-step,
+.progres-step__win {
+  position: relative;
+  width: var(--width);
+  max-width: 5em;
+  background-color: transparent;
+  display: flex;
+  justify-content: end;
+  font-size: inherit;
+
+}
+
+.progres-step:first-child,
+.progres-step__win:first-child {
+  width: auto;
+}
+
+.progres-step:first-child {
+  width: auto;
+}
+
+.progres-point {
+  position: relative;
+  background-color: var(--main-color);
+  /* margin-left: auto; */
+  height: 1.3em;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 2px solid var(--color);
+  display: grid;
+  place-items: center;
+  z-index: 2;
+  font-size: inherit;
+}
+
+.progres-point.win {
+  border: none;
+
+}
+
+.checked .progres-point:not(.win) {
+  background-color: var(--color);
+}
+
+.progres-step:not(:first-child)::before,
+.progres-step__win:not(:first-child)::before {
+  content: "";
+  position: absolute;
+  transform: translateY(-50%);
+  top: 50%;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--color);
+  z-index: 1;
+}
+
+.progres-step__win {
+  display: flex;
+  align-self: center;
+  justify-content: end;
+}
+
+.progres-step .progres-point::before {
+  content: '';
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  height: 30%;
+  aspect-ratio: 1;
+}
+
+.progres-step .progres-point::before {
+  border-radius: 50%;
+  background-color: var(--font-color);
+}
+
+.progres-point.win::before {
+  content: '';
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  height: 30%;
+  aspect-ratio: 1;
+  height: 120%;
+  background-color: var(--font-color);
+  mask-image: url(../assets/img/flag.svg);
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  mask-position: center;
+}
+
+.progres-step.checked .progres-point:not(.win):before {
+  height: 100%;
+  border-radius: 50%;
+  background-color: var(--font-color);
+  mask-image: url(../assets/img/check.svg);
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  mask-position: center;
+}
+
+.progres-point.checked.win:before {
+  background-color: goldenrod;
+}

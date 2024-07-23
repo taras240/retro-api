@@ -179,12 +179,15 @@ export class APIWorker {
           isWinEarnedSoftcore: false,
         }
         for (let achievement of Object.values(gameProgressObject.Achievements)) {
+          //get TotalRetropoints
           gameProgressObject.TotalRetropoints += achievement.TrueRatio;
 
+          //get TotalRealplayers
           if (gameProgressObject.TotalRealPlayers < achievement.NumAwarded) {
             gameProgressObject.TotalRealPlayers = achievement.NumAwarded
           }
 
+          // Earned STATS
           if (achievement.DateEarned) {
             gameProgressObject.earnedStats.soft.count += 1;
             gameProgressObject.earnedStats.soft.points += achievement.Points;
@@ -198,51 +201,29 @@ export class APIWorker {
             if (achievement.type === "progression" || achievement.type === "win_condition") { gameProgressObject.earnedStats.hard.progressionCount++; }
           }
 
+          //Progression stats
           if (achievement.type === 'progression') {
             progressionAchivs.Count++;
 
+            !achievement.DateEarned && (awards.isBeatenSoftcore = false);
+            !achievement.DateEarnedHardcore && (awards.isBeaten = false);
 
-            if (!achievement.DateEarned) {
-              awards.isBeaten = false;
-              awards.isBeatenSoftcore = false;
+            gameProgressObject.beatenCount = Math.min(achievement.NumAwardedHardcore, gameProgressObject.beatenCount);
+            gameProgressObject.beatenSoftCount = Math.min(achievement.NumAwarded, gameProgressObject.beatenSoftCount);
 
-            }
-            else if (!achievement.DateEarnedHardcore) {
-              awards.isBeaten = false;
-            }
-
-            if (gameProgressObject.beatenCount > achievement.NumAwardedHardcore) {
-              gameProgressObject.beatenCount = achievement.NumAwardedHardcore
-            }
-            if (gameProgressObject.beatenSoftCount > achievement.NumAwarded) {
-              gameProgressObject.beatenSoftCount = achievement.NumAwarded
-            }
           }
-          if (achievement.type === 'win_condition') {
-            if (achievement.DateEarnedHardcore) {
-              awards.isWinEarned = true;
-              awards.isWinEarnedSoftcore = true;
-            }
-            else if (achievement.DateEarned) {
-              awards.isWinEarnedSoftcore = true;
-            }
+          else if (achievement.type === 'win_condition') {
             progressionAchivs.WinCount++;
-            if (achievement.NumAwardedHardcore > progressionAchivs.WinAwardedCount) {
-              progressionAchivs.WinAwardedCount = achievement.NumAwardedHardcore;
-            }
-            if (achievement.NumAwarded > progressionAchivs.WinAwardedSoftCount) {
-              progressionAchivs.WinAwardedSoftCount = achievement.NumAwarded;
-            }
-            if (achievement.DateEarnedHardcore) {
-              progressionAchivs.WinEarnedCount++;
-            }
+            progressionAchivs.WinAwardedCount = Math.max(achievement.NumAwardedHardcore, progressionAchivs.WinAwardedCount);
+            progressionAchivs.WinAwardedSoftCount = Math.max(achievement.NumAwarded, progressionAchivs.WinAwardedSoftCount);
+
+            achievement.DateEarnedHardcore && progressionAchivs.WinEarnedCount++;
+
+            awards.isWinEarned = !!achievement.DateEarnedHardcore;
+            awards.isWinEarnedSoftcore = !!achievement.DateEarned;
           }
-          achievement.NumAwardedHardcore < gameProgressObject.masteredCount && (
-            gameProgressObject.masteredCount = achievement.NumAwardedHardcore
-          )
-          achievement.NumAwarded < gameProgressObject.completedCount && (
-            gameProgressObject.completedCount = achievement.NumAwarded
-          )
+          gameProgressObject.masteredCount = Math.min(achievement.NumAwardedHardcore, gameProgressObject.masteredCount);
+          gameProgressObject.completedCount = Math.min(achievement.NumAwarded, gameProgressObject.completedCount);
 
         }
         gameProgressObject = {
@@ -252,18 +233,17 @@ export class APIWorker {
           progressionSteps: progressionAchivs.WinCount > 0 ? progressionAchivs.Count + 1 : progressionAchivs.Count,
         }
 
-        if (gameProgressObject.achievements_published === gameProgressObject.NumAwardedToUserHardcore) {
-          gameProgressObject.award = 'mastered'
-        }
-        else if (gameProgressObject.achievements_published === gameProgressObject.NumAwardedToUser) {
-          gameProgressObject.award = 'completed'
-        }
-        if (awards.isBeaten && gameProgressObject.earnedStats.hard.progressionCount >= gameProgressObject.progressionSteps) {
-          gameProgressObject.progressionAward = 'beaten';
-        }
-        else if (awards.isBeatenSoftcore && gameProgressObject.earnedStats.soft.progressionCount >= gameProgressObject.progressionSteps) {
-          gameProgressObject.progressionAward = 'beaten-softcore';
-        }
+        gameProgressObject.award =
+          (gameProgressObject.achievements_published === gameProgressObject.NumAwardedToUserHardcore) ? 'mastered' :
+            (gameProgressObject.achievements_published === gameProgressObject.NumAwardedToUser) ? 'completed' :
+              gameProgressObject.award;
+
+
+        gameProgressObject.progressionAward =
+          (awards.isBeaten && gameProgressObject.earnedStats.hard.progressionCount >= gameProgressObject.progressionSteps) ? 'beaten' :
+            (awards.isBeatenSoftcore && gameProgressObject.earnedStats.soft.progressionCount >= gameProgressObject.progressionSteps) ? 'beaten-softcore' :
+              gameProgressObject.progressionAward;
+
 
 
         progressionAchivs.WinCount > 0 && (
@@ -283,12 +263,14 @@ export class APIWorker {
 
         const ratio = ~~(gameProgressObject.TotalRetropoints / gameProgressObject.points_total * 100) / 100;
         gameProgressObject.retroRatio = ratio;
+
+        //set Difficult
         gameProgressObject.gameDifficulty = ratio > 9 ? "insane" :
           ratio > 7 ? "expert" :
             ratio > 5 ? "pro" :
               ratio > 3 ? "standard" :
                 "easy";
-
+        //add missed fields for ACHIEVEMENTS
         Object.values(gameProgressObject.Achievements)
           .map(cheevo =>
             this.fixAchievement(cheevo, gameProgressObject));
