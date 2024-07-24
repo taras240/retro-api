@@ -759,12 +759,12 @@
 
 }
 
-.checked.progres-step {
+.progres-step.checked {
   --color: var(--accent-color);
 }
 
 .progres-step__win:has(.checked) {
-  --color: goldenrod;
+  --color: var(--accent-color);
 }
 
 .progres-step,
@@ -776,7 +776,6 @@
   display: flex;
   justify-content: end;
   font-size: inherit;
-
 }
 
 .progres-step:first-child,
@@ -800,11 +799,19 @@
   place-items: center;
   z-index: 2;
   font-size: inherit;
+  transition: color 2s;
 }
 
 .progres-point.win {
   border: none;
+  background-color: var(--main-color);
+  width: 0.75rem;
+}
 
+
+.progres-point:hover {
+  scale: 1.1;
+  transition: 0.2s;
 }
 
 .checked .progres-point:not(.win) {
@@ -839,12 +846,10 @@
   left: 50%;
   height: 30%;
   aspect-ratio: 1;
-}
-
-.progres-step .progres-point::before {
   border-radius: 50%;
   background-color: var(--font-color);
 }
+
 
 .progres-point.win::before {
   content: '';
@@ -860,6 +865,7 @@
   mask-repeat: no-repeat;
   mask-size: contain;
   mask-position: center;
+  overflow: visible;
 }
 
 .progres-step.checked .progres-point:not(.win):before {
@@ -873,5 +879,26 @@
 }
 
 .progres-point.checked.win:before {
-  background-color: goldenrod;
+  background-color: gold;
+}
+
+.progres-point.focus::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 1.6em;
+  aspect-ratio: 1;
+  background-color: transparent;
+  border-radius: 50%;
+  border: 1px dashed var(--font-color);
+  z-index: 2;
+  animation: rotate-animation 5s linear infinite;
+}
+
+@keyframes rotate-animation {
+  to {
+    transform: translate(-50%, -50%) rotateZ(360deg);
+  }
 }

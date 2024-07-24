@@ -145,11 +145,11 @@ export class UI {
 
     // ui.stats.updateStats();
     //Update Stats widget & UserInfo widget
-    if (this.userInfo.VISIBLE || this.stats.VISIBLE) {
+    if (this.userInfo?.VISIBLE || this.stats.VISIBLE) {
       setTimeout(async () => {
         const userSummary = await apiWorker.getUserSummary({ gamesCount: 3, achievesCount: 5 });
         ui.stats.updateStats({ currentUserSummary: userSummary });
-        ui.userInfo.update({ userSummary: userSummary });
+        ui.userInfo?.update({ userSummary: userSummary });
 
       }, 12000)
     }
@@ -2647,53 +2647,22 @@ class StatusPanel {
     );
   }
   generateProgression() {
-    const addPopups = () => {
+    const setEvents = () => {
       this.progressionElement.querySelectorAll(".progres-point").forEach(point => {
-        const achievement = ui.ACHIEVEMENTS[point?.dataset?.id]
+        const achievement = ui.ACHIEVEMENTS[point?.dataset?.id];
+        const descriptionElement = ui.statusPanel.progressionElement.querySelector(".progres-description");
+        let descriptionTemp = descriptionElement.innerText;
 
-        function setEvents() {
-          point.addEventListener("mouseover", mouseOverEvent);
-          point.addEventListener("mouseleave", removePopups);
-        }
-        function setPopupPosition(popup, point) {
-          //Start position relative achievement element
-          const rect = point.getBoundingClientRect();
-          const leftPos = rect.left + point.offsetWidth + 8;
-          const topPos = rect.top + 2;
-
-          popup.style.left = leftPos + "px";
-          popup.style.top = topPos + "px";
-
-          //Check for collisions and fix position
-          let { left, right, top, bottom } = popup.getBoundingClientRect();
-          if (left < 0) {
-            popup.classList.remove("left-side");
-          }
-          if (right > window.innerWidth) {
-            popup.classList.add("left-side");
-          }
-          if (top < 0) {
-            popup.classList.remove("top-side");
-          } else if (bottom > window.innerHeight) {
-            popup.classList.add("top-side");
-          }
-        }
         function mouseOverEvent() {
-          removePopups();
-
-          const popup = UI.generateAchievementPopup(achievement);
-          ui.app.appendChild(popup);
-
-          setPopupPosition(popup, point);
-          setTimeout(() => popup.classList.add("visible"), 333);
+          descriptionElement.innerText = achievement.Description;
         }
-        function removePopups() {
-          document.querySelectorAll(".popup").forEach((popup) => popup.remove());
+        function mouseLeaveEvent() {
+          descriptionElement.innerText = descriptionTemp;
         }
-        setEvents();
+        point.addEventListener("mouseover", mouseOverEvent);
+        point.addEventListener("mouseleave", mouseLeaveEvent);
       })
     }
-
 
     let stepPointsHtml = '';
     let winPointsHtml = '';
@@ -2704,8 +2673,8 @@ class StatusPanel {
     const currentStep = progressionCheevos.find(a => !a.isHardcoreEarned);
     progressionCheevos.forEach(cheevo => {
       cheevo.type === 'progression' ? stepPointsHtml += `
-      <div class="progres-step ${cheevo.isHardcoreEarned ? "checked" : ""}">
-        <div class="progres-point ${cheevo.type === 'win_condition' ? "win" : ""}" data-id="${cheevo.ID}"></div>
+      <div class="progres-step ${cheevo.isHardcoreEarned ? "checked" : ""}"  data-id="${cheevo.ID}">
+        <div class="progres-point ${cheevo.isHardcoreEarned ? "checked" : ""}" data-id="${cheevo.ID}"></div>
       </div>
     `: winPointsHtml += `
       <div class="progres-point win ${cheevo.isHardcoreEarned ? "checked" : ""}" data-id="${cheevo.ID}"></div>
@@ -2723,7 +2692,18 @@ class StatusPanel {
         </div>
     `;
     this.progressionElement.innerHTML = progressionHtml;
-    addPopups();
+    setEvents();
+    this.updateProgressionBlock({});
+  }
+  updateProgressionBlock({ earnedAchievementIDs = [] }) {
+    earnedAchievementIDs.forEach(id => {
+      [...this.progressionElement.querySelectorAll(`[data-id="${id}"]`)].
+        forEach(el => el.classList.toggle("checked", ui.ACHIEVEMENTS[id].isHardcoreEarned));
+    })
+    this.progressionElement.querySelectorAll(".progres-point")
+      .forEach(point => point.classList.remove("focus"));
+    this.progressionElement.querySelector(".progres-point:not(.checked)")?.
+      classList.add("focus");
   }
   updateData(isNewGame = false) {
     this.stats = {
@@ -2841,7 +2821,8 @@ class StatusPanel {
       }
       this.addAlertsToQuery([...alerts]);
 
-      this.generateProgression();
+      // this.generateProgression();
+      this.updateProgressionBlock({ earnedAchievementIDs: earnedAchievementIDs })
     }
 
     //push points toggle animation
