@@ -2646,18 +2646,16 @@ class StatusPanel {
       (value || 0) * 100 + "%"
     );
   }
-  generateProgression() {
+  generateProgressionBlock() {
     const setEvents = () => {
       this.progressionElement.querySelectorAll(".progres-point").forEach(point => {
         const achievement = ui.ACHIEVEMENTS[point?.dataset?.id];
-        const descriptionElement = ui.statusPanel.progressionElement.querySelector(".progres-description");
-        let descriptionTemp = descriptionElement.innerText;
-
+        const descriptionElement = this.progressionElement.querySelector(".progres-description");
         function mouseOverEvent() {
           descriptionElement.innerText = achievement.Description;
         }
-        function mouseLeaveEvent() {
-          descriptionElement.innerText = descriptionTemp;
+        const mouseLeaveEvent = () => {
+          this.updateProgressionBlock({});
         }
         point.addEventListener("mouseover", mouseOverEvent);
         point.addEventListener("mouseleave", mouseLeaveEvent);
@@ -2669,8 +2667,6 @@ class StatusPanel {
     const progressionCheevos = Object.values(ui.ACHIEVEMENTS)
       .filter(a => UI.filterBy.progression(a))
       .sort((a, b) => UI.sortBy.default(a, b));
-    const totalSteps = +ui.GAME_DATA?.progressionSteps;
-    const currentStep = progressionCheevos.find(a => !a.isHardcoreEarned);
     progressionCheevos.forEach(cheevo => {
       cheevo.type === 'progression' ? stepPointsHtml += `
       <div class="progres-step ${cheevo.isHardcoreEarned ? "checked" : ""}"  data-id="${cheevo.ID}">
@@ -2680,10 +2676,8 @@ class StatusPanel {
       <div class="progres-point win ${cheevo.isHardcoreEarned ? "checked" : ""}" data-id="${cheevo.ID}"></div>
     `;
     });
-    const description = totalSteps === 0 ? "Progressin not awailable" : currentStep ? currentStep.Description :
-      "You have passed the game";
     const progressionHtml = `
-       <div class="progres-description">${description}</div>
+       <div class="progres-description"></div>
           <div class="progres-container">
             ${stepPointsHtml}
             ${winPointsHtml ? `<div class="progres-step__win">
@@ -2700,10 +2694,14 @@ class StatusPanel {
       [...this.progressionElement.querySelectorAll(`[data-id="${id}"]`)].
         forEach(el => el.classList.toggle("checked", ui.ACHIEVEMENTS[id].isHardcoreEarned));
     })
-    this.progressionElement.querySelectorAll(".progres-point")
-      .forEach(point => point.classList.remove("focus"));
-    this.progressionElement.querySelector(".progres-point:not(.checked)")?.
-      classList.add("focus");
+    const points = this.progressionElement.querySelectorAll(".progres-point");
+    points.forEach(point => point.classList.remove("focus"));
+
+    const focusCheevo = this.progressionElement.querySelector(".progres-point:not(.checked)");
+    const focusID = focusCheevo?.dataset?.id;
+    focusCheevo?.classList.add("focus");
+    const description = points?.length === 0 ? "Progression is not awailable" : focusID ? ui.ACHIEVEMENTS[focusID].Description : "You have passed the game";
+    this.progressionElement.querySelector(".progres-description").innerText = description;
   }
   updateData(isNewGame = false) {
     this.stats = {
@@ -2748,7 +2746,7 @@ class StatusPanel {
     );
     gamePlatform.innerText = ConsoleName || "";
     // ! progression
-    this.generateProgression();
+    this.generateProgressionBlock();
 
     this.updateData(true);
     this.gameTime = config.ui.update_section.playTime[config.gameID] ? config.ui.update_section.playTime[config.gameID] : 0;
@@ -2821,7 +2819,6 @@ class StatusPanel {
       }
       this.addAlertsToQuery([...alerts]);
 
-      // this.generateProgression();
       this.updateProgressionBlock({ earnedAchievementIDs: earnedAchievementIDs })
     }
 
