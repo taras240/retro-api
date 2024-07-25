@@ -883,11 +883,11 @@ export class UI {
       }
 
       const dateA = a.DateEarnedHardcore
-        ? toDate(a.DateEarnedHardcore)
-        : -Infinity;
+        ? toDate(a.DateEarnedHardcore) : a.DateEarned ? toDate(a.DateEarned)
+          : -Infinity;
       const dateB = b.DateEarnedHardcore
-        ? toDate(b.DateEarnedHardcore)
-        : -Infinity;
+        ? toDate(b.DateEarnedHardcore) : b.DateEarned ? toDate(b.DateEarned)
+          : -Infinity;
       return dateB - dateA; // Повертає різницю дат
     },
     date: (a, b) => {
@@ -1547,6 +1547,7 @@ class AchievementsBlock {
 
       achivElement.dataset.NumAwardedHardcore = achievement.NumAwardedHardcore;
       achievement.DateEarnedHardcore && (achivElement.dataset.DateEarnedHardcore = achievement.DateEarnedHardcore);
+      achievement.DateEarned && (achivElement.dataset.DateEarned = achievement.DateEarned);
 
     }
     function setHtmlCode() {
@@ -1616,12 +1617,58 @@ class AchievementsBlock {
   }
 
   moveToTop(element) {
-    if (this.REVERSE_SORT == 1) {
-      this.container.prepend(element);
-    } else {
-      this.container.append(element);
+    const toEnd = this.REVERSE_SORT === -1;
+    const dur = 1000;
+
+    this.container.style.setProperty("--duration", `${dur}ms`);
+
+    const targetElement = element;
+    const firstElement = this.container.querySelector(".achiv-block");
+    const lastElement = this.container.querySelector(".achiv-block:last-child");
+
+    const shrinkElement = document.createElement("li");
+    const growElement = document.createElement("li");
+
+    shrinkElement.classList.add("shrink-element");
+    growElement.classList.add("grow-element")
+
+    const targetPos = {
+      xPos: toEnd ? lastElement.offsetLeft : firstElement.offsetLeft,
+      yPos: toEnd ? lastElement.offsetTop : firstElement.offsetTop
     }
-    this.applyFilter();
+    const curPos = {
+      xPos: targetElement.offsetLeft,
+      yPos: targetElement.offsetTop
+    }
+
+    targetElement.style.left = curPos.xPos + 'px';
+    targetElement.style.top = curPos.yPos + 'px';
+    targetElement.classList.add("move");
+    toEnd ? this.container.append(growElement) : this.container.prepend(growElement);
+    this.container.insertBefore(shrinkElement, targetElement);
+
+    setTimeout(() => {
+      targetElement.style.left = targetPos.xPos + 'px';
+      targetElement.style.top = targetPos.yPos + 'px';
+    }, 50);
+
+    setTimeout(() => {
+      growElement.remove();
+      shrinkElement.remove();
+      targetElement.classList.remove("move");
+      targetElement.style.left = 'auto';
+      targetElement.style.top = 'auto';
+      toEnd ? this.container.append(targetElement) : this.container.prepend(targetElement);
+      this.applyFilter();
+    }, dur);
+
+    // if (this.REVERSE_SORT == 1) {
+    //   this.container.prepend(element);
+    // } else {
+    //   this.container.append(element);
+    // }
+    // this.applyFilter();
+
   }
   // Автопідбір розміру значків ачівментсів
   fitSizeVertically(isLoadDynamic = false) {
@@ -1677,10 +1724,11 @@ class AchievementsBlock {
       else {
         await this.marioAction(earnedAchivElement);
       }
+      this.SORT_NAME == UI.sortMethods.latest && this.moveToTop(earnedAchivElement);
       ui.ACHIEVEMENTS[id].DateEarnedHardcore && (earnedAchivElement.dataset.DateEarnedHardcore = ui.ACHIEVEMENTS[id].DateEarnedHardcore);
     };
     this.applyFilter();
-    this.SORT_NAME == UI.sortMethods.latest && this.applySorting();
+    // this.SORT_NAME == UI.sortMethods.latest && this.applySorting();
     this.startAutoScroll();
   }
   async marioAction(targetElement) {
@@ -2515,6 +2563,7 @@ class StatusPanel {
     this.section = document.querySelector("#update-section");
     this.widgetIcon = document.querySelector("#open-status-button");
     this.container = this.section.querySelector(".update_container");
+    this.guideLink = this.section.querySelector("#update-game-guide");
     this.gamePreview = this.section.querySelector("#game-preview"); // Іконка гри
     this.retroRatioElement = this.section.querySelector(".update__retro-ratio")
     this.textBlock = this.section.querySelector("#update-text-block");
@@ -2732,22 +2781,31 @@ class StatusPanel {
       this.addAlertsToQuery([{ type: "new-game", value: ui.GAME_DATA }]);
       ui.settings.DISCORD_NEW_GAME && ui.sendDiscordMessage({ type: "new-game" });
     }
-
+    //main information
     const { ImageIcon, FixedTitle, ConsoleName, badges } = ui.GAME_DATA;
     const { gamePreview, gameTitle, gamePlatform } = this;
     gamePreview.setAttribute(
       "src",
       `https://media.retroachievements.org${ImageIcon}`
     );
-    gameTitle.innerHTML = `${FixedTitle || "Some game name"} ${generateBadges(badges)}`;
+    gameTitle.innerHTML = `${FixedTitle || "Some game name"} ${generateBadges(badges)} <span class="title-platform-badge">${generateBadges([ConsoleName.split("\/")[0]])}</span>`;
+
     gameTitle.setAttribute(
       "href",
       "https://retroachievements.org/game/" + config.gameID
     );
-    gamePlatform.innerText = ConsoleName || "";
-    // ! progression
-    this.generateProgressionBlock();
+    this.guideLink.setAttribute('href', ui.GAME_DATA?.GuideURL);
+    this.guideLink.classList.toggle("hidden", !ui.GAME_DATA?.GuideURL);
 
+
+
+    setTimeout(() => this.startAutoScrollElement(gameTitle, true, 10 * 1000), 5000);
+
+
+    gamePlatform.innerText = ConsoleName || "";
+    // progressionBlock
+    this.generateProgressionBlock();
+    //progress & status
     this.updateData(true);
     this.gameTime = config.ui.update_section.playTime[config.gameID] ? config.ui.update_section.playTime[config.gameID] : 0;
     this.sessionGameTime = 0;
@@ -2819,8 +2877,8 @@ class StatusPanel {
       }
       this.addAlertsToQuery([...alerts]);
 
-      this.updateProgressionBlock({ earnedAchievementIDs: earnedAchievementIDs })
     }
+    this.updateProgressionBlock({ earnedAchievementIDs: earnedAchievementIDs })
 
     //push points toggle animation
     this.progresBarDelta.classList.remove("hidden");
@@ -3067,7 +3125,7 @@ class StatusPanel {
     clearInterval(this.autoscrollRPInterval);
   }
   autoscrollAlertInterval = {};
-  startAutoScrollElement(element, toLeft = true) {
+  startAutoScrollElement(element, toLeft = true, pause = 1000) {
     this.autoscrollAlertInterval[element.className] ?
       this.stopAutoScrollElement(element) : (
         this.autoscrollAlertInterval[element.className] = {}
@@ -3075,13 +3133,13 @@ class StatusPanel {
     let refreshRateMiliSecs = 50;
     let scrollContainer = element;
     let speedInPixels = 1;
-    const pauseOnEndMilisecs = 1000;
+    const pauseOnEndMilisecs = pause;
     // Часовий інтервал для прокручування вниз
     if (true) {
       this.autoscrollAlertInterval[element.className].interval = setInterval(() => {
         if (scrollContainer.clientWidth == scrollContainer.scrollWidth) {
           this.stopAutoScrollElement(element);
-          this.autoscrollAlertInterval[element.className].timeout = setTimeout(() => this.startAutoScrollElement(element), 10 * 1000);
+          this.autoscrollAlertInterval[element.className].timeout = setTimeout(() => this.startAutoScrollElement(element, true, pauseOnEndMilisecs), 10 * 1000);
         }
         else if (toLeft) {
           scrollContainer.scrollLeft += speedInPixels;
@@ -3090,13 +3148,13 @@ class StatusPanel {
             scrollContainer.scrollWidth
           ) {
             this.stopAutoScrollElement(element);
-            this.autoscrollAlertInterval[element.className].timeout = setTimeout(() => this.startAutoScrollElement(element, false), pauseOnEndMilisecs);
+            this.autoscrollAlertInterval[element.className].timeout = setTimeout(() => this.startAutoScrollElement(element, false, pauseOnEndMilisecs), pauseOnEndMilisecs);
           }
         } else {
           scrollContainer.scrollLeft -= speedInPixels;
           if (scrollContainer.scrollLeft == 0) {
             this.stopAutoScrollElement(element);
-            this.autoscrollAlertInterval[element.className].timeout = setTimeout(() => this.startAutoScrollElement(element, true), pauseOnEndMilisecs);
+            this.autoscrollAlertInterval[element.className].timeout = setTimeout(() => this.startAutoScrollElement(element, true, pauseOnEndMilisecs), pauseOnEndMilisecs);
           }
         }
       }, refreshRateMiliSecs);
@@ -5126,6 +5184,8 @@ class Target {
       targetElement.dataset.TrueRatio = achievement.TrueRatio;
       targetElement.dataset.DisplayOrder = achievement.DisplayOrder;
       achievement.DateEarnedHardcore && (targetElement.dataset.DateEarnedHardcore = achievement.DateEarnedHardcore);
+      achievement.DateEarned && (targetElement.dataset.DateEarned = achievement.DateEarned);
+
       targetElement.dataset.NumAwardedHardcore = achievement.NumAwardedHardcore;
       targetElement.dataset.achivId = id;
       targetElement.dataset.level = achievement.level;
@@ -5700,14 +5760,14 @@ class Games {
         return popup;
       }
       // removePopups();
-      document.querySelectorAll(".popup").forEach((popup) => popup.remove());
-      const popup = generatePopup();
+      // document.querySelectorAll(".popup").forEach((popup) => popup.remove());
+      // const popup = generatePopup();
 
-      if (popup) {
-        ui.app.appendChild(popup);
-        setPopupPosition(popup, e);
-        setTimeout(() => popup.classList.add("visible"), 200);
-      }
+      // if (popup) {
+      //   ui.app.appendChild(popup);
+      //   setPopupPosition(popup, e);
+      //   setTimeout(() => popup.classList.add("visible"), 200);
+      // }
     }
 
     const gameElement = document.createElement("li");

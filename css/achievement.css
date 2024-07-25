@@ -147,8 +147,6 @@
 .achiv-block {
   --height: 104px;
   position: relative;
-  left: 0;
-  top: 0;
   aspect-ratio: 1;
   cursor: default;
   box-shadow: 0 0 0 black;
@@ -592,5 +590,36 @@
   100% {
     transform: translateY(-50%);
     opacity: 0;
+  }
+}
+
+.achiv-block.move {
+  position: absolute !important;
+  transition: var(--duration) !important;
+  z-index: 5;
+}
+
+.grow-element {
+  visibility: hidden;
+  width: 0;
+  animation: grow-anim var(--duration) linear forwards;
+}
+
+@keyframes grow-anim {
+  to {
+    width: var(--achiv-height);
+  }
+}
+
+.shrink-element {
+  opacity: 0;
+  height: 20px;
+  width: var(--achiv-height);
+  animation: shrink-anim var(--duration) linear forwards;
+}
+
+@keyframes shrink-anim {
+  to {
+    width: 0px;
   }
 }
