@@ -1,8 +1,7 @@
-<section id="update-section" class="update_section  section">
-
-  <div class="update_container " id="update-text-block">
-    <div class="update__header-buttons">
-      <a id="update-game-guide"
+<section id="update-section" class="status__section  section">
+  <div class="status__container " id="update-text-block">
+    <div class="status__header-buttons">
+      <a id="status-game-guide"
         class="header-button header-link-icon header-icon tweak-button guide-icon update__header-button" target="_blank"
         href="">
         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
@@ -18,59 +17,53 @@
             d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z" />
         </svg>
       </button>
-
     </div>
 
-    <div class="update_user-status card-3d">
-      <div class="update_preview-container">
-        <img class="update-game-preview" id="game-preview" src="./assets/img/icon.png" alt=" " />
-        <p class="update__retro-ratio">2.3</p>
-        <button id="watching-button" class="update-button checked" title="autoupdate achievements"></button>
+    <div class="status__user-status card-3d">
+      <div class="status__preview-container">
+        <img class="status__game-preview" id="game-preview" src="./assets/img/icon.png" alt=" " />
+        <p class="status__retro-ratio">2.3</p>
+        <button id="watching-button" class="status__watch-button checked" title="autoupdate achievements"></button>
       </div>
       </button>
-      <div class="update-text-block update-main-information">
-        <div class="update-game_header">
-          <a id="game-title" target="_blank" class="update-section-text update-game-title" href="">Game tittle</a>
+      <div class="status__text-block status__main-information">
+        <div class="status__game-title-container">
+          <a id="game-title" target="_blank" class="status__text status__game-title" href="">Game tittle</a>
         </div>
-        <div class="update__game-info">
-          <p id="game-platform" class="update-game-platform update-section-text">Console</p>
-          <div id="rich-presence" class="update-section-text rich-presence_text">Waiting...</div>
+        <div class="status__game-info">
+          <p id="game-platform" class="status__game-platform status__text">Console</p>
+          <div id="rich-presence" class="status__text rich-presence_text">Waiting...</div>
         </div>
-        <div class="update-progres" id="status_progression">
-          <div class="progres-description">Description</div>
-
-          <div class="progres-container">
+        <div class="status__progres" id="status_progression">
+          <div class="status__progres-description">Description</div>
+          <div class="status__progres-container">
             <div class="progres-step checked">
               <div class="progres-point"></div>
             </div>
             <div class="progres-step progres-step__win">
               <div class="progres-point progres-point__win"></div>
             </div>
-
           </div>
         </div>
-
       </div>
       <div class="status__background"></div>
-      <div class="progress-bar" id="status-progress-bar"></div>
-      <div class="progress-bar_delta-values hidden" id="status_progress-bar-delta"></div>
-
-
+      <div class="status__progress-bar" id="status-progress-bar"></div>
+      <div class="status__progress-bar_delta-values hidden" id="status_progress-bar-delta"></div>
       <div class="progress-percent progress_points-percent" id="status-progress-text">0%</div>
 
     </div>
-    <div class="update_back-side card-3d">
-      <div class="update_preview-container">
-        <img class="update-game-preview" id="update_achiv-preview"
+    <div class="status__back-side card-3d">
+      <div class="status__preview-container">
+        <img class="status__game-preview" id="update_achiv-preview"
           src="https://media.retroachievements.org/Badge/276671.png" alt=" " />
       </div>
-      <div class="update-text-block show-difficult">
-        <div class="update_achiv-header">
-          <a id="update_achiv-title" target="_blank" class=" update-section-text" href="">Clear Screen 1
+      <div class="status__text-block show-difficult">
+        <div class="status__achiv-header">
+          <a id="update_achiv-title" target="_blank" class="status__text" href="">Clear Screen 1
             <p class="status__difficult-badge difficult-badge__easy">easy</p>
           </a>
         </div>
-        <p id="update_achiv-earned-points" class="update-section-text update_achiv-points">
+        <p id="update_achiv-earned-points" class="status__text status__achiv-points">
           +5HP +10RP TOP15%
         </p>
       </div>

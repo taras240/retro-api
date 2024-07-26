@@ -6,7 +6,7 @@
 @import url(./achievement.css);
 @import url(./targetAchivs.css);
 @import url(./awards.css);
-@import url(./update.css);
+@import url(./status.css);
 @import url(./games.css);
 @import url(./progression.css);
 @import url(./note.css);
@@ -87,10 +87,10 @@ body {
 }
 
 a {
-
   border-radius: 2px;
   color: inherit;
-  transition: 0.2s;
+  background-color: transparent;
+  transition: background-color 200ms, color 200ms;
 }
 
 a:hover {
@@ -161,10 +161,11 @@ a:hover {
   border-radius: var(--border-radius);
   user-select: none;
   opacity: 1;
-  /* background-color: var(--main-color); */
   background: var(--background-gradient);
   z-index: 1;
-  transition: 0.2s ease-out;
+  transition-property: opacity, box-shadow;
+  transition-duration: 200ms;
+  transition-timing-function: ease-in;
 }
 
 .section.disposed {
@@ -173,7 +174,6 @@ a:hover {
 
 .section.dragable {
   z-index: 101;
-  transition: none !important;
 }
 
 .section.hidden {
@@ -187,9 +187,7 @@ a:hover {
   box-shadow: 0 0 5px 2px black;
 }
 
-.section.resized {
-  transition: none;
-}
+.section.resized {}
 
 /**---------FULSCREEN_MODE----------- */
 .section.fullscreen {
@@ -211,7 +209,7 @@ a:hover {
 /**--------[ Header Style ]---------------*/
 .tweak-button {
   opacity: 0;
-  transition: .1s;
+  transition: opacity .1s;
 }
 
 .section:hover .tweak-button {
@@ -330,7 +328,7 @@ a:hover {
   border-radius: 0 0 var(--border-radius) 0;
   background-color: transparent;
   cursor: nwse-resize;
-  transition: 0.1s;
+  transition: width 0.1s;
   z-index: 2;
 }
 

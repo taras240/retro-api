@@ -5,7 +5,6 @@
   min-width: 90px;
   background: none;
   background-color: var(--main-color);
-
   cursor: grab;
   display: flex;
   flex-direction: column;

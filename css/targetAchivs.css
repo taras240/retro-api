@@ -281,13 +281,13 @@
 .target_description-icon {
   display: inline-block;
   position: relative;
-  height: 1.1rem;
+  height: 1em;
   aspect-ratio: 1;
   background-color: var(--font-color);
   mask-size: contain;
-  mask-position: center;
+  mask-position: center bottom;
   mask-repeat: no-repeat;
-  transition: .2s;
+  /* transition: color .2s; */
 }
 
 .target_description-icon.none {

@@ -2562,10 +2562,10 @@ class StatusPanel {
   initializeElements() {
     this.section = document.querySelector("#update-section");
     this.widgetIcon = document.querySelector("#open-status-button");
-    this.container = this.section.querySelector(".update_container");
-    this.guideLink = this.section.querySelector("#update-game-guide");
+    this.container = this.section.querySelector(".status__container");
+    this.guideLink = this.section.querySelector("#status-game-guide");
     this.gamePreview = this.section.querySelector("#game-preview"); // Іконка гри
-    this.retroRatioElement = this.section.querySelector(".update__retro-ratio")
+    this.retroRatioElement = this.section.querySelector(".status__retro-ratio")
     this.textBlock = this.section.querySelector("#update-text-block");
     this.gameTitle = this.section.querySelector("#game-title"); // Заголовок гри
     this.gamePlatform = this.section.querySelector("#game-platform"); // Платформа гри
@@ -2576,7 +2576,7 @@ class StatusPanel {
     this.progressStatusText = this.section.querySelector("#status-progress-text");
     this.resizer = this.section.querySelector("#status-resizer");
     this.backSide = {
-      container: this.section.querySelector(".update_back-side"),
+      container: this.section.querySelector(".status__back-side"),
       imgElement: this.section.querySelector("#update_achiv-preview"),
       achivTitleElement: this.section.querySelector("#update_achiv-title"),
       earnedPoints: this.section.querySelector("#update_achiv-earned-points"),
@@ -2647,7 +2647,7 @@ class StatusPanel {
     const ratio = ui.GAME_DATA.retroRatio;
     const masteryRate = ui.GAME_DATA.masteryRate;
     this.retroRatioElement.innerText = this.SHOW_MASTERY_RATE ? masteryRate : ratio;
-    this.retroRatioElement.className = `update__retro-ratio difficult-badge__${ui.GAME_DATA.gameDifficulty}`;
+    this.retroRatioElement.className = `status__retro-ratio difficult-badge__${ui.GAME_DATA.gameDifficulty}`;
 
 
     //* Обчислення прогресу за балами та за кількістю досягнень
@@ -2699,7 +2699,7 @@ class StatusPanel {
     const setEvents = () => {
       this.progressionElement.querySelectorAll(".progres-point").forEach(point => {
         const achievement = ui.ACHIEVEMENTS[point?.dataset?.id];
-        const descriptionElement = this.progressionElement.querySelector(".progres-description");
+        const descriptionElement = this.progressionElement.querySelector(".status__progres-description");
         function mouseOverEvent() {
           descriptionElement.innerText = achievement.Description;
         }
@@ -2726,8 +2726,8 @@ class StatusPanel {
     `;
     });
     const progressionHtml = `
-       <div class="progres-description"></div>
-          <div class="progres-container">
+       <div class="status__progres-description"></div>
+          <div class="status__progres-container">
             ${stepPointsHtml}
             ${winPointsHtml ? `<div class="progres-step__win">
               ${winPointsHtml}` : ""}
@@ -2750,7 +2750,7 @@ class StatusPanel {
     const focusID = focusCheevo?.dataset?.id;
     focusCheevo?.classList.add("focus");
     const description = points?.length === 0 ? "Progression is not awailable" : focusID ? ui.ACHIEVEMENTS[focusID].Description : "You have passed the game";
-    this.progressionElement.querySelector(".progres-description").innerText = description;
+    this.progressionElement.querySelector(".status__progres-description").innerText = description;
   }
   updateData(isNewGame = false) {
     this.stats = {
@@ -3200,7 +3200,7 @@ class StatusPanel {
     return `${isNegative ? "-" : ""}${hours != "00" ? hours + ":" : ""}${minutes}:${remainingSeconds}`;
   }
   fitFontSize(isDynamic = false) {
-    const container = this.section.querySelector(".update_container");
+    const container = this.section.querySelector(".status__container");
     let containerHeight = config.ui['update-section']?.height ?? this.section.getBoundingClientRect().height;
     isDynamic && (containerHeight = this.section.getBoundingClientRect().height)
     const fontSize = `${(parseInt(containerHeight) - 10) / 5.5}px`;
@@ -4269,6 +4269,7 @@ class GameCard {
     this.playersCount = document.querySelector("#game-card-players-total");
     this.pointsCount = document.querySelector("#game-card-points-total");
 
+    this.iconsContainer = this.section.querySelector(".game-card__icons-container");
     // Знаходимо елемент, який відповідає за ресайз блоку
     this.resizer = document.querySelector("#game-card-resizer");
   }
@@ -4307,7 +4308,7 @@ class GameCard {
       });
     });
   }
-  updateGameCardInfo({
+  async updateGameCardInfo({
     Title,
     FixedTitle,
     ID,
@@ -4317,12 +4318,17 @@ class GameCard {
     Publisher,
     Genre,
     Released,
+    TotalRetropoints,
     achievements_published,
     players_total,
     points_total,
     badges,
+    retroRatio
   }) {
-    this.header.innerHTML = `${FixedTitle} ${this.SHOW_BADGES ? generateBadges(badges) : ""} `;
+    function generateGenres(genres) {
+      return genres?.reduce((acc, genre) => acc += `<i class="game-card_suffix">${Genres[genre]}</i> `, "")
+    }
+    this.header.innerHTML = `${FixedTitle.replaceAll(/\,\s*the$/gi, "")}`;
     this.header.setAttribute(
       "href",
       `https://retroachievements.org/game/${ID}`
@@ -4331,7 +4337,8 @@ class GameCard {
       "src",
       `https://media.retroachievements.org${ImageBoxArt}`
     );
-
+    const gameInfoData = await loadGameInfo(ID);
+    const genres = gameInfoData.Genres;
     this.gameInfoElements.Platform.value = ConsoleName;
     this.gameInfoElements.Developer.value = Developer;
     this.gameInfoElements.Publisher.value = Publisher;
@@ -4341,7 +4348,39 @@ class GameCard {
     this.gameInfoElements.Players.value = players_total;
     this.gameInfoElements.Achievements.value = achievements_published;
 
+    this.iconsContainer.innerHTML = `
+      <p class="game-info-header game-card__icon-block" title="earned by">
+          <i class="target_description-icon  achievements-icon"></i>
+          ${achievements_published}
+        </p>
+
+        <p class="game-info-header game-card__icon-block" title="points">
+          <i class="target_description-icon  points-icon"></i>
+          ${points_total}
+        </p>
+
+        <p class="game-info-header game-card__icon-block" title="retropoints">
+          <i class="target_description-icon  retropoints-icon"></i>
+          ${TotalRetropoints}
+        </p>
+
+        <p class="game-info-header game-card__icon-block" title="true ratio">
+          <i class="target_description-icon rarity-icon"></i>
+          ${retroRatio}
+        </p>
+    `;
+
     this.generateInfo();
+    const badgesContainer = this.section.querySelector(".game-card__genres-container");
+    badgesContainer.innerHTML = "";
+    if (this.SHOW_BADGES) {
+      badgesContainer.innerHTML = `
+      ${badges ? generateBadges(badges) : ""}
+    `;
+      badgesContainer.innerHTML += `
+      ${genres ? generateGenres(genres) : Genre ? generateBadges(Genre.split(",")) : ""}
+    `;
+    }
   }
 
   generateInfo() {
@@ -4360,6 +4399,7 @@ class GameCard {
       `;
       this.descriptions.appendChild(gameInfo);
     });
+
   }
   close() {
     //gkfdsgkgfsd
@@ -7798,3 +7838,8 @@ const ELPlatforms = {
 }
 const googleQuerySite = 'site:www.romhacking.net OR site:wowroms.com/en/roms OR site:cdromance.org OR site:coolrom.com.au/roms OR site:planetemu.net OR site:emulatorgames.net OR site:romsfun.com/roms OR site:emu-land.net/en';
 
+const loadGameInfo = async (gameID) => {
+  const infoResponce = await fetch(`./json/games/all_ext.json`);
+  const games = await infoResponce.json();
+  return gameID ? games.find(g => g.ID == gameID) : games;
+}

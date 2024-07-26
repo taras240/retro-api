@@ -62,12 +62,12 @@
 
 .stats__title {
     font-size: 1.1rem;
-    font-weight: bold;
+    font-weight: 500;
     text-wrap: nowrap;
 }
 
 .stats__value {
-    font-size: 1.0rem;
+    font-size: 1.1rem;
     font-weight: normal;
     text-wrap: nowrap;
 }

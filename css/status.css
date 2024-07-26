@@ -1,6 +1,4 @@
-.update_section {
-  position: absolute;
-  background-color: var(--secondary-color);
+.section.status__section {
   top: calc(100vh - 100px);
   left: 30%;
   height: 70px;
@@ -8,16 +6,45 @@
   min-height: 75px;
   max-height: 150px;
   width: 500px;
-  z-index: 1;
   perspective: 1500px;
-  /* transition: 0.2s !important; */
+  background: transparent;
 }
 
-.update_section .update__game-info {
+.status__section::after {
+  content: "";
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 5px;
+  height: 5px;
+  background-color: var(--main-color);
+  border-radius: 50%;
+  opacity: 0.5;
+}
+
+.status__section.blink::after {
+  animation: update-blink 1s;
+}
+
+@keyframes update-blink {
+  0% {
+    background-color: var(--main-color);
+  }
+
+  50% {
+    background-color: var(--font-color);
+  }
+
+  100% {
+    background-color: var(--main-color);
+  }
+}
+
+.status__section .status__game-info {
   display: none;
 }
 
-.update_section .update-progres {
+.status__section .status__progres {
   display: none;
 }
 
@@ -25,7 +52,7 @@
   display: none;
 }
 
-.update_section.show-game-info .update__game-info {
+.show-game-info .status__game-info {
   flex: 1;
   display: flex;
   justify-content: space-evenly;
@@ -34,59 +61,17 @@
   font-size: inherit;
 }
 
-.update_section.show-game-progress .title-platform-badge {
+.show-game-progress .title-platform-badge {
   display: inline;
 }
 
-.update_section.show-game-progress .update-progres {
+.show-game-progress .status__progres {
   display: flex;
 }
 
-.timer-timeout .update_container {
-  background: rgb(134, 0, 27);
-}
 
-.section.update_section {
-  box-shadow: 0 0 0 transparent;
-  background: transparent;
-}
 
-.update_section .resizer {
-  overflow: visible;
-  z-index: 2;
-}
-
-.update_section::after {
-  content: "";
-  position: absolute;
-  width: 5px;
-  height: 5px;
-  background-color: var(--font-color);
-  border-radius: 50%;
-  top: 5px;
-  right: 5px;
-  opacity: 0;
-}
-
-.update_section.blink::after {
-  animation: update-blink 1s;
-}
-
-@keyframes update-blink {
-  0% {
-    opacity: 0;
-  }
-
-  50% {
-    opacity: 0.5;
-  }
-
-  100% {
-    opacity: 0;
-  }
-}
-
-.update__header-buttons {
+.status__header-buttons {
   position: absolute;
   z-index: 10;
   right: 0.25rem;
@@ -97,7 +82,7 @@
   opacity: 0;
 }
 
-.update_section:hover .update__header-buttons {
+.status__section:hover .status__header-buttons {
   opacity: 1;
 }
 
@@ -109,23 +94,25 @@
   display: none;
 }
 
-.update_container {
-  background: var(--main-color);
-  box-shadow: 0 0 3px 1px black;
-  height: 100%;
+.status__container {
   position: relative;
+  background: var(--main-color);
+  height: 100%;
   border-radius: var(--border-radius);
   cursor: grab;
   transform-style: preserve-3d;
-  transition: 1s;
   transform: rotateX(0deg);
   font-size: 16px;
+  transition: transform 1s;
 }
 
-.update_container.show-back {
+.timer-timeout .status__container {
+  background: rgb(134, 0, 27);
+}
+
+.status__container.show-back {
   transform: rotateX(180deg);
   animation: rotate-status-animation 1s ease-in-out;
-  transition: 1s;
 }
 
 /* .update */
@@ -190,14 +177,11 @@
 
 .status_glass-effect {
   position: absolute;
-  border-radius: var(--border-radius);
-  width: 100%;
-  height: 100%;
   left: 0;
   top: 0;
-  background-repeat: no-repeat;
-  background-size: 200% 200%;
-  mix-blend-mode: color-dodge;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--border-radius);
   opacity: 1;
   background-image: linear-gradient(120deg,
       transparent 0%,
@@ -209,19 +193,16 @@
       var(--accent-color) 50%,
       transparent 60%,
       transparent 100%);
-  z-index: 12;
-  pointer-events: none;
+  background-repeat: no-repeat;
+  background-size: 200% 200%;
+  mix-blend-mode: color-dodge;
   animation: status-glass-animation-back 0.5s ease-in-out forwards;
   animation-delay: 0s;
+  pointer-events: none;
+  z-index: 12;
 }
 
-#game-title {
-  overflow-x: scroll;
-  max-width: 100%;
-}
-
-
-.update_user-status {
+.status__user-status {
   position: relative;
   display: flex;
   align-items: center;
@@ -232,8 +213,8 @@
   padding-bottom: 5px;
 }
 
-.update_user-status::before,
-.update_user-status::after {
+.status__user-status::before,
+.status__user-status::after {
   content: '';
   position: absolute;
   bottom: 2px;
@@ -245,7 +226,7 @@
   z-index: 10;
 }
 
-.update_user-status::before {
+.status__user-status::before {
   bottom: 0;
   height: 7px;
   background-color: var(--main-color);
@@ -254,7 +235,7 @@
 }
 
 /**---------------- BACK SIDE ------------- */
-.update_back-side {
+.status__back-side {
   position: relative;
   display: flex;
   align-items: center;
@@ -267,19 +248,19 @@
 }
 
 
-.new-game-info .update_back-side {
+.new-game-info .status__back-side {
   gap: 5px;
   padding: 0;
 }
 
-.update_back-side::after {
+.status__back-side::after {
   --color: silver;
   content: "";
   position: absolute;
-  height: 80%;
-  aspect-ratio: 1;
   right: 0px;
   top: 50%;
+  height: 80%;
+  aspect-ratio: 1;
   transform: translate(-100%, -200%);
   background-color: var(--color);
   mask-position: center;
@@ -291,25 +272,24 @@
   z-index: -1;
 }
 
-.new-award .update_back-side::after {
+.new-award .status__back-side::after {
   mask-image: url(../assets/img/trophy.svg);
   animation: update-achiv-anim 0.5s linear forwards;
 }
 
-.new-achiv .update_back-side::after {
+.new-achiv .status__back-side::after {
   mask-image: url(../assets/img/military_medal.svg);
   animation: update-achiv-anim 0.5s linear forwards;
 }
 
-.update_back-side.mastered::after,
-.update_back-side.hardcore::after {
+.status__back-side.mastered::after,
+.status__back-side.hardcore::after {
   --color: gold;
 }
 
 @keyframes update-achiv-anim {
   from {
     transform: scale(2) translate(100%, -200%);
-
   }
 
   to {
@@ -318,7 +298,7 @@
   }
 }
 
-.new-game-info .update_back-side::after {
+.new-game-info .status__back-side::after {
   content: none;
   background-image: "";
 }
@@ -334,7 +314,7 @@
   font-size: inherit;
 }
 
-.update_achiv-header {
+.status__achiv-header {
   font-size: 1.6em;
   font-weight: 600;
   text-wrap: nowrap;
@@ -349,30 +329,30 @@
   white-space: nowrap;
 }
 
-.new-game-info .update_achiv-header {
+.new-game-info .status__achiv-header {
   font-size: 1.4em;
   font-weight: 600;
 }
 
-.update_achiv-points {
+.status__achiv-points {
   font-size: 1.6em;
   font-weight: 600;
 }
 
-.new-game-info .update_achiv-points {
+.new-game-info .status__achiv-points {
   font-size: 1.4em;
   font-weight: 600;
 }
 
-.update_preview-container {
+.status__preview-container {
   font-size: inherit;
 }
 
-.update_back-side .update_preview-container {
+.status__back-side .status__preview-container {
   max-height: 75%;
 }
 
-.new-game-info .update_back-side .update_preview-container {
+.new-game-info .status__back-side .status__preview-container {
   max-height: 100%;
 
 }
@@ -389,7 +369,7 @@
 }
 
 /**---------------- BACK SIDE ------------- */
-.update_preview-container {
+.status__preview-container {
   position: relative;
   /* max-height: 75%; */
   height: 100%;
@@ -398,7 +378,7 @@
   box-shadow: 0 1px 5px 2px black;
 }
 
-.update_preview-container::before {
+.status__preview-container::before {
   content: "";
   width: 100%;
   height: 100%;
@@ -407,7 +387,7 @@
 }
 
 
-.update-game-preview {
+.status__game-preview {
   height: 100%;
   aspect-ratio: 1;
   object-fit: fill;
@@ -418,7 +398,7 @@
   filter: contrast(1);
 }
 
-.update_preview-container::after {
+.status__preview-container::after {
   content: "";
   position: absolute;
   top: 50%;
@@ -432,19 +412,19 @@
   background-position: center;
 }
 
-.update_back-side.hardcore .update_preview-container::after {
+.status__back-side.hardcore .status__preview-container::after {
   background-image: url(../assets/img/border-8.webp);
 }
 
-.update_back-side .update_preview-container::after {
+.update_status__backback-side .status__preview-container::after {
   background-image: url(../assets/img/game-border-5.webp);
 }
 
-.new-game-info .update_back-side .update_preview-container::after {
+.new-game-info .status__back-side .status__preview-container::after {
   content: none;
 }
 
-.update-section-text {
+.status__text {
   text-align: left;
   text-wrap: nowrap;
   overflow: hidden;
@@ -462,15 +442,13 @@
   font-size: 2.5em;
   text-wrap: nowrap;
   word-wrap: none;
-  font-weight: 600;
+  font-weight: bold;
   color: var(--font-color);
   opacity: 0.2;
-  /* animation: show-stats-animation var(--animation-duration) ease-in-out forwards; */
-  /* animation-delay: var(--animation-duration); */
-  z-index: 2;
-  transition: var(--animation-duration);
   padding-bottom: 6px;
   pointer-events: none;
+  z-index: 2;
+  transition: color var(--animation-duration);
 }
 
 .progress-percent.hidden {
@@ -479,32 +457,9 @@
 
 .progress-percent.hide {
   color: var(--main-color);
-  /* animation: hide-stats-animation var(--animation-duration) ease-in-out forwards; */
 }
 
-@keyframes show-stats-animation {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 0.2;
-  }
-}
-
-@keyframes hide-stats-animation {
-  from {
-    opacity: 0.2;
-  }
-
-  to {
-    opacity: 0;
-  }
-}
-
-
-
-.update-button {
+.status__watch-button {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -514,133 +469,74 @@
   border-radius: 50%;
   overflow: hidden;
   background-color: var(--secondary-color);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 0 10px 2px var(--secondary-color);
-  z-index: 10;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 0 5px 1px var(--secondary-color);
   opacity: 0;
-  transition: 0.2s;
+  transition: transform 200ms, opacity 200ms;
+  z-index: 10;
 }
 
-.section:hover .update-button {
+.section:hover .status__watch-button {
   opacity: 1;
 }
 
-.update-button:hover {
-  box-shadow: 0 0 10px 4px var(--secondary-color);
+.status__watch-button:hover {
   transform: translate(-50%, -50%) scale(1.1);
 }
 
-.update-button:active {
+.status__watch-button:active {
   background-color: var(--accent-color);
-  box-shadow: 0 0 10px 4px var(--accent-color);
   transform: translate(-50%, -50%) scale(1.05);
 }
 
-.update-button::after {
+.status__watch-button::after {
   content: "";
   position: absolute;
   height: 80%;
   aspect-ratio: 1;
   background-color: var(--font-color);
   mask-image: url(../assets/img/play.svg);
-  -webkit-mask-image: url(../assets/img/play.svg);
   mask-repeat: no-repeat;
-  -webkit-mask-repeat: no-repeat;
   mask-size: contain;
-  -webkit-mask-size: contain;
   mask-position: center;
-  -webkit-mask-position: center;
   opacity: 0.6;
-  transition: .2s;
+  transition: opacity 200ms;
 }
 
-.update-button:hover::after {
+.status__watch-button:hover::after {
   opacity: 1;
-
 }
 
-.update-button.active::after {
+.status__watch-button.active::after {
   mask-image: url(../assets/img/pause.svg);
-  -webkit-mask-image: url(../assets/img/pause.svg);
 }
 
-@keyframes tickAnimation {
-  0% {
-    background-color: var(--selection-color);
-  }
-
-  50% {
-    background-color: var(--accent-color);
-  }
-
-  100% {
-    background-color: var(--selection-color);
-  }
-}
-
-
-.update-button svg {
-  fill: var(--font-color);
-  width: 26px;
-  height: 26px;
-}
-
-.update-button.active svg,
-.update-button.error svg {
-  fill: black;
-}
-
-.update-button.active svg {
-  animation: updateTickAnimation 2s linear infinite;
-}
-
-.update-button:not(.active) svg {
-  opacity: 0.8;
-  animation: endTickAnimation 0.5s linear;
-}
-
-.update-button.error {
+.status__watch-button.error {
   background-color: red;
   border-color: transparent;
 }
 
-@keyframes updateTickAnimation {
-  from {
-    transform: rotate(0deg);
-  }
 
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes endTickAnimation {
-  to {
-    transform: rotate(180deg);
-  }
-}
-
-.update__retro-ratio {
+.status__retro-ratio {
   display: none;
   position: absolute;
   bottom: 0;
   left: 0;
   color: black;
   font-size: 1em;
-  font-weight: 600;
+  font-weight: bold;
   padding: 0 .2em 2px;
   border-radius: 0 5px 0 0;
   line-height: 1em;
 }
 
 
-.show-game-ratio .update__retro-ratio {
+.show-game-ratio .status__retro-ratio {
   display: block;
 }
 
-.update-game_header {
+.status__game-title-container {
   text-align: start;
   display: flex;
   flex-direction: row;
@@ -650,43 +546,35 @@
   font-size: inherit;
 }
 
-.update-game_header a {
+.status__game-title {
   position: relative;
   color: var(--font-color);
   font-size: 1.2em;
-  font-weight: 600;
+  font-weight: bold;
   padding: 0 2px;
-  border-radius: 8px;
   flex-shrink: 0;
+  overflow-x: scroll;
+  max-width: 100%;
 }
 
 
-
-.update-game_header a:hover {
-  text-decoration: underline;
-  background-color: var(--secondary-color);
-  color: var(--font-color);
-}
-
-.update-game-platform {
+.status__game-platform {
   flex-shrink: 1;
   color: var(--font-color);
   background-color: var(--secondary-color);
   align-self: flex-start;
-  padding: 0px 8px;
-  border-radius: 5px;
-  font-weight: 600;
+  padding: 0 8px;
+  border-radius: 3px;
+  font-weight: medium;
   font-size: 1.0em;
-  opacity: 0.8;
 }
 
-.update-game-platform.hidden {
+.status__game-platform.hidden {
   display: none;
 }
 
-.update-text-block {
+.status__text-block {
   position: relative;
-  /* padding: 5px 0; */
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -699,7 +587,7 @@
 }
 
 
-.update-section-text.rich-presence_text {
+.status__text.rich-presence_text {
   flex-grow: 0;
   overflow: scroll;
   text-wrap: nowrap;
@@ -711,44 +599,37 @@
   display: none;
 }
 
-.progress-bar {
+.status__progress-bar {
   position: absolute;
   bottom: 1px;
   left: 0;
   height: 5px;
-  /* border-radius: var(--border-radius) 0 0 var(--border-radius); */
   z-index: 11;
   width: var(--progress-points, 0%);
-  /* background: linear-gradient(to right, transparent, var(--accent-color) 90%); */
   background-color: var(--accent-color);
   transition: width 2s ease-in-out;
 }
 
-.progress-bar_delta-values {
+.status__progress-bar_delta-values {
   position: absolute;
   bottom: 2px;
   left: 0;
   height: 3px;
-  /* border-radius: 5px 0 0 5px; */
   width: var(--progress-points, 0%);
-  /* background: linear-gradient(to right, transparent, var(--selection-color) 90%); */
   background-color: greenyellow;
   z-index: 10;
   transition: none;
 }
 
-.progress-bar_delta-values.hidden {
+.status__progress-bar_delta-values.hidden {
   opacity: 0;
   transition: .2s;
   transition-delay: 5s;
 }
 
-
-.status__background {}
-
 /*! PROGRESSION TREE */
 
-.update-progres {
+.status__progres {
   --progress: 2;
   width: 100%;
   height: 3em;
@@ -760,14 +641,14 @@
   font-size: inherit;
 }
 
-.progres-description {
+.status__progres-description {
   font-size: 1em;
   text-wrap: nowrap;
   white-space: nowrap;
   overflow: hidden;
 }
 
-.progres-container {
+.status__progres-container {
   --color: var(--font-color);
   --width: calc(100% / 5);
   width: 100%;
@@ -919,16 +800,4 @@
   to {
     transform: rotateZ(360deg);
   }
-}
-
-.update-main-information::after {
-  /* content: '';
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  background-image: url(../assets/img/nes-logo.png);
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center right;
-  opacity: 0.2; */
 }
