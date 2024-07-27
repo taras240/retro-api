@@ -287,5 +287,8 @@
 
 .apply-icon {
     mask-image: url(../assets/img/check.svg);
+}
 
+.close-icon {
+    mask-image: url(../assets/img/close.svg);
 }

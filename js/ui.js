@@ -7,7 +7,7 @@ export class UI {
   RECENT_ACHIVES_RANGE_MINUTES = Math.ceil(config.updateDelay * 5 / 60);
   static AUTOCLOSE_CONTEXTMENU = false;
   static STICK_MARGIN = 10;
-  // static isTest = true;
+  static isTest = true;
 
   get ACHIEVEMENTS() {
     return this.GAME_DATA.Achievements;
@@ -4621,6 +4621,14 @@ class Target {
         label: ui.lang.style,
         elements: [
           {
+            type: "checkbox",
+            name: "context-show-difficult",
+            id: "context-show-difficult",
+            label: "**Show Events**",
+            checked: this.SHOW_EVENTS,
+            event: `onchange="ui.target.SHOW_EVENTS = this.checked"`,
+          },
+          {
             label: ui.lang.showHeader,
             type: "checkbox",
             name: "context_hide-target-header",
@@ -5017,10 +5025,19 @@ class Target {
     this.section.classList.toggle("highlight-passed", value);
     // this.container.querySelectorAll(".target-achiv").forEach(el => el.classList.toggle("show-level", value))
   }
+  get SHOW_EVENTS() {
+    return config.ui.target_section?.showEvents ?? true;
+  }
+  set SHOW_EVENTS(value) {
+    config.ui.target_section.showEvents = value;
+    config.writeConfiguration();
+    this.section.classList.toggle("show-events", value);
+  }
   constructor() {
     this.initializeElements();
     this.addEvents();
     this.setValues();
+    this.showAotwEvent({ cheevo: config.aotw })
   }
   initializeElements() {
     this.section = document.querySelector("#target_section");
@@ -5123,6 +5140,7 @@ class Target {
   setValues() {
     UI.applyPosition({ widget: this });
 
+    this.section.classList.toggle("show-events", this.SHOW_EVENTS);
     this.section.classList.toggle("compact", !this.SHOW_HEADER);
     this.section.classList.toggle("hide-bg", this.HIDE_BG);
     this.section.classList.toggle("hide-passed", this.HIDE_PASSED_LEVELS);
@@ -5410,8 +5428,57 @@ class Target {
     this.applyFilter();
     this.applySort();
     this.isDynamicAdding = false;
-  }
 
+    config.aotw && this.container.querySelector(`.target-achiv[data-achiv-id='${config.aotw?.ID}']`)?.classList.add("target__aotw");
+
+  }
+  showAotwEvent({ cheevo }) {
+    if (!cheevo || cheevo.wasShown) return;
+    this.container.querySelector(`.target-achiv[data-achiv-id='${cheevo.ID}']`)?.classList.add("target__aotw")
+    const aotwElement = document.createElement("div");
+    aotwElement.classList.add("target__aotw-container", "target__aotw", "show-difficult", "show-level");
+    aotwElement.innerHTML = `
+      <button class="description-icon close-icon target__hide-aotw" onclick="this.closest('.target__aotw').remove()"></button>
+      <div class="prev">
+        <img class="prev-img" src="https://media.retroachievements.org${cheevo.BadgeURL}" alt=" ">
+      </div>
+      <div class="target-achiv-details">
+        <h3 class="achiv-name">
+          <p class="badge badge-bold"> AotW Event </p>
+          <a target="_blanc" href="https://retroachievements.org/achievement/${cheevo.ID}">
+            ${cheevo.Title}
+          </a>
+          in
+          <a target="_blanc" href="https://retroachievements.org/game/${cheevo.GameID}">
+            ${cheevo.GameTitle}
+          </a>
+        </h3>
+        <p class="achiv-description">${cheevo.Description}</p>
+        <div class="target-other-descriptions">
+          <i class=" description-icon none" title="achievement type"></i>
+
+          <p class="target-description-text" title="points"><i class="description-icon  points-icon"></i>
+            ${cheevo.Points}
+          </p>
+
+          <p class="target-description-text" title="retropoints"><i class="description-icon  retropoints-icon"></i>
+          ${cheevo.TrueRatio}
+          </p>
+
+          <p class="target-description-text" title="earned by"><i class="description-icon  trending-icon"></i>
+            ${(cheevo.UnlocksHardcoreCount / cheevo.TotalPlayers).toFixed(2)}%
+          </p>
+          <p class="target-description-text" title="true ratio">
+            <i class="description-icon    rarity-icon"></i>
+            ${(cheevo.TrueRatio / cheevo.Points).toFixed(2)}
+          </p>
+        </div>
+      </div>
+    `;
+    this.section.querySelector(".target__aotw-container")?.remove();
+    this.section.insertBefore(aotwElement, this.container);
+    config.aotw = { ...cheevo, wasShown: true };
+  }
   close() {
     ui.buttons.target.click();
   }
@@ -7269,13 +7336,12 @@ class Aotw {
     this.generateAotwElement().then(() => {
       this.initializeElements()
       this.addEvents();
-      if (this.aotwObj && !this.aotwObj.wasShown) {
-        setTimeout(() => this.doAnim(), 2000);
-        this.aotwObj.wasShown = true;
-        config.aotw = this.aotwObj;
-
-      }
-      // this.addGlowEffectToCard(this.section)
+      ui.target.showAotwEvent({ cheevo: this.aotwObj });
+      // if (this.aotwObj && !this.aotwObj.wasShown) {
+      //   // setTimeout(() => this.doAnim(), 2000);
+      //   this.aotwObj.wasShown = true;
+      //   config.aotw = this.aotwObj;
+      // }
     })
   }
   initializeElements() {
