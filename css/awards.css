@@ -7,6 +7,10 @@
   height: 600px;
   min-height: 90px;
   max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
   background-color: var(--main-color);
   visibility: visible;
   opacity: 1;
@@ -15,7 +19,6 @@
 .awards_section.hidden {
   visibility: hidden;
   opacity: 0;
-  /* transition: 0.2s; */
 }
 
 .awards_container {
@@ -40,7 +43,6 @@
 
 .get-awards_button:hover {
   opacity: 1;
-  /* transition: 0.2s; */
 }
 
 .get-awards_button:active {
@@ -204,7 +206,7 @@
 
 .awarded-game:hover::after {
   opacity: 1;
-  transition: 0.2s;
+  transition: opacity 0.2s;
 }
 
 .awarded-game.beatenSoftcore::after {

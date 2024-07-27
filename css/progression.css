@@ -147,23 +147,6 @@
     border-radius: 10px 10px 0 0;
 }
 
-.progression_description-icon {
-    padding-left: 1.2rem;
-    mask-position: center;
-    height: 100%;
-    aspect-ratio: 1;
-    background-color: white;
-}
-
-.retropoints-icon {
-    mask-image: url(../assets/img/bolt.svg);
-}
-
-.trending-icon {
-    mask-image: url(../assets/img/trending.svg);
-}
-
-
 .progression-achiv_prev-container {
     flex-shrink: 1;
     flex-grow: 0;
@@ -246,6 +229,8 @@
 
 .progression-description-text {
     margin-left: 5px;
+    display: flex;
+    align-items: center;
 }
 
 .progression_achiv-number {

@@ -31,29 +31,6 @@
   text-align: center;
 }
 
-.game-card_suffix {
-  display: inline-block;
-  font-size: 0.8em;
-  padding: 0px 2px;
-  border-radius: 3px;
-  margin: 2px;
-  text-wrap: nowrap;
-  background-color: chartreuse;
-  color: black;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-
-.game-card_suffix.suffix-bold {
-  font-weight: 700;
-  font-size: 0.9em;
-  padding: 0 0.4rem;
-}
-
-.bg_gold {
-  background-color: goldenrod;
-}
-
 .game-card_container {
   flex: 1;
   display: flex;
@@ -84,7 +61,6 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.25rem 1rem;
-  /* background: linear-gradient(to bottom, transparent 5%, var(--accent-color)); */
   background: rgba(0, 0, 0, 0.5);
   z-index: 1;
 }

@@ -278,19 +278,8 @@
   gap: 2px
 }
 
-.target_description-icon {
-  display: inline-block;
-  position: relative;
-  height: 1em;
-  aspect-ratio: 1;
-  background-color: var(--font-color);
-  mask-size: contain;
-  mask-position: center bottom;
-  mask-repeat: no-repeat;
-  /* transition: color .2s; */
-}
 
-.target_description-icon.none {
+.description-icon.none {
   display: none;
 }
 
@@ -302,25 +291,6 @@
 
 .condition.none {
   display: none;
-}
-
-.win_condition {
-  mask-image: url(../assets/img/win-condition.svg);
-  -webkit-mask-image: url(../assets/img/win-condition.svg);
-}
-
-.missable {
-  mask-image: url(../assets/img/missable.svg);
-  -webkit-mask-image: url(../assets/img/missable.svg);
-}
-
-.progression {
-  mask-image: url(../assets/img/progression.svg);
-  -webkit-mask-image: url(../assets/img/progression.svg);
-}
-
-.rarity-icon {
-  mask-image: url(../assets/img/diamond.svg);
 }
 
 .delete-from-target:hover {
@@ -354,4 +324,8 @@
 
 .show-level .target-level-badge {
   display: inline;
+}
+
+.target-achiv:not(.show-difficult) .difficult-badge {
+  display: none;
 }

@@ -824,17 +824,17 @@ export class UI {
     popup.classList.add("achiv-details-block", "popup");
     const trueRatio = achievement.TrueRatio / achievement.Points;
     popup.innerHTML = `
-      <h3 class="achievement__header">${achievement.Title} <p class="difficult-badge difficult-badge__${achievement.difficulty}">${achievement.difficulty}</p>
+      <h3 class="achievement__header">${achievement.Title} <p class="badge difficult-badge__${achievement.difficulty}">${achievement.difficulty}</p>
       </h3>
       <p>${achievement.Description}</p>
       <div class="points">
-        <p><i class="target_description-icon  points-icon"></i>${achievement.Points}</p>
-        <p><i class="target_description-icon  retropoints-icon"></i>${achievement.TrueRatio} </p> 
+        <p><i class="description-icon  points-icon"></i>${achievement.Points}</p>
+        <p><i class="description-icon  retropoints-icon"></i>${achievement.TrueRatio} </p> 
          <p class="target-description-text" title="true ratio">
-          <i class="target_description-icon  ${trueRatio > 13 ? "difficult-badge__hell" : ""}  rarity-icon"></i>
+          <i class="description-icon  ${trueRatio > 13 ? "difficult-badge__hell" : ""}  rarity-icon"></i>
           ${trueRatio.toFixed(2)}
         </p>
-        <i class="target_description-icon ${achievement.type ?? "none"}"></i>            
+        <i class="description-icon ${achievement.type ?? "none"}"></i>            
       </div>
       ${achievement.DateEarnedHardcore
         ? "<p>Earned hardcore: " + achievement.DateEarnedHardcore + "</p>"
@@ -1555,11 +1555,6 @@ class AchievementsBlock {
       <div class="preview-container">
         <img class="achiv-preview" src="${achievement.prevSrc}"/>
       </div>
-      <button class="add-to-target" onclick="ui.target.addAchieveToTarget(${achievement.ID})">
-        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-          <path d="M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160Zm40 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
-        </svg>
-      </button>
       `;
     }
     function setEvents() {
@@ -2929,14 +2924,14 @@ class StatusPanel {
       } = game;
       this.backSide.imgElement.src = `https://media.retroachievements.org${ImageIcon}`;
       this.backSide.achivTitleElement.innerHTML = `${FixedTitle} ${generateBadges(badges)}
-      <i class="game-card_suffix">${ConsoleName}</i>
+      <i class="badge">${ConsoleName}</i>
       `;
       let gameInfo = `
-      <p class="status__difficult-badge difficult-badge__pro">${points_total} HP</p>
-      <p class="status__difficult-badge difficult-badge__pro">${TotalRetropoints} RP</p>
-      <p class="status__difficult-badge difficult-badge__pro">${achievements_published} CHEEVOS</p> 
-      <p class="status__difficult-badge difficult-badge__pro">${masteryRate}% MASTERED RATE</p>
-      ${beatenRate ? `<p class="status__difficult-badge difficult-badge__pro">${beatenRate}% BEATEN RATE</p>` : ''}
+      <p class="badge difficult-badge__pro">${points_total} HP</p>
+      <p class="badge difficult-badge__pro">${TotalRetropoints} RP</p>
+      <p class="badge difficult-badge__pro">${achievements_published} CHEEVOS</p> 
+      <p class="badge difficult-badge__pro">${masteryRate}% MASTERED RATE</p>
+      ${beatenRate ? `<p class="badge difficult-badge__pro">${beatenRate}% BEATEN RATE</p>` : ''}
       `;
       this.backSide.earnedPoints.innerHTML = gameInfo;
       this.container.classList.add("new-game-info");
@@ -2945,15 +2940,15 @@ class StatusPanel {
       const { isHardcoreEarned, Title, prevSrc, Points, TrueRatio, rateEarned, rateEarnedHardcore, difficulty } = achiv;
       this.backSide.imgElement.src = prevSrc;
       this.backSide.achivTitleElement.innerHTML = Title + `
-        <p class="status__difficult-badge difficult-badge__${difficulty}">${difficulty}</p>
+        <p class="badge difficult-badge__${difficulty}">${difficulty}</p>
       `;
       let earnedPoints = isHardcoreEarned ?
-        `<p class="status__difficult-badge difficult-badge__pro">+${Points}HP </p>
-        <p class="status__difficult-badge difficult-badge__pro">+${TrueRatio}RP </p>
-        <p class="status__difficult-badge difficult-badge__pro">TOP${rateEarnedHardcore}</p>`
+        `<p class="badge difficult-badge__pro">+${Points}HP </p>
+        <p class="badge difficult-badge__pro">+${TrueRatio}RP </p>
+        <p class="badge difficult-badge__pro">TOP${rateEarnedHardcore}</p>`
         : `
-        <p class="status__difficult-badge difficult-badge__pro">+${Points}SP</p> 
-        <p class="status__difficult-badge difficult-badge__pro">TOP${rateEarned}</p>`;
+        <p class="badge difficult-badge__pro">+${Points}SP</p> 
+        <p class="badge difficult-badge__pro">TOP${rateEarned}</p>`;
       this.backSide.earnedPoints.innerHTML = earnedPoints;
       this.backSide.container.classList.toggle("hardcore", achiv.isHardcoreEarned);
       setTimeout(() => this.container.classList.add("new-achiv"), 2000)
@@ -2979,13 +2974,13 @@ class StatusPanel {
       const playTimeInMinutes = deltaTime(config.ui.update_section.playTime[ID]);
       this.backSide.imgElement.src = `https://media.retroachievements.org${ImageIcon}`;
       this.backSide.achivTitleElement.innerHTML = `${FixedTitle} ${generateBadges(badges)}
-      <i class="game-card_suffix bg_gold">GAINED AWARD</i>
+      <i class="badge badge_gold">GAINED AWARD</i>
       `;
       let gameInfo = `
-        <p class="status__difficult-badge difficult-badge__pro">${award} IN ${playTimeInMinutes}</p>
-        <p class="status__difficult-badge difficult-badge__pro">TOP${awardRate}%</p>
-        <p class="status__difficult-badge difficult-badge__pro">${earnedStats.hard.points}/${points_total} HP</p>
-        <p class="status__difficult-badge difficult-badge__pro">${earnedStats.hard.retropoints}/${TotalRetropoints} RP</p>
+        <p class="badge difficult-badge__pro">${award} IN ${playTimeInMinutes}</p>
+        <p class="badge difficult-badge__pro">TOP${awardRate}%</p>
+        <p class="badge difficult-badge__pro">${earnedStats.hard.points}/${points_total} HP</p>
+        <p class="badge difficult-badge__pro">${earnedStats.hard.retropoints}/${TotalRetropoints} RP</p>
       `;
       this.backSide.earnedPoints.innerHTML = gameInfo;
       this.backSide.container.classList.add(award);
@@ -4326,7 +4321,7 @@ class GameCard {
     retroRatio
   }) {
     function generateGenres(genres) {
-      return genres?.reduce((acc, genre) => acc += `<i class="game-card_suffix">${Genres[genre]}</i> `, "")
+      return genres?.reduce((acc, genre) => acc += `<i class="badge">${Genres[genre]}</i> `, "")
     }
     this.header.innerHTML = `${FixedTitle.replaceAll(/\,\s*the$/gi, "")}`;
     this.header.setAttribute(
@@ -4350,22 +4345,22 @@ class GameCard {
 
     this.iconsContainer.innerHTML = `
       <p class="game-info-header game-card__icon-block" title="earned by">
-          <i class="target_description-icon  achievements-icon"></i>
+          <i class="description-icon  achievements-icon"></i>
           ${achievements_published}
         </p>
 
         <p class="game-info-header game-card__icon-block" title="points">
-          <i class="target_description-icon  points-icon"></i>
+          <i class="description-icon  points-icon"></i>
           ${points_total}
         </p>
 
         <p class="game-info-header game-card__icon-block" title="retropoints">
-          <i class="target_description-icon  retropoints-icon"></i>
+          <i class="description-icon  retropoints-icon"></i>
           ${TotalRetropoints}
         </p>
 
         <p class="game-info-header game-card__icon-block" title="true ratio">
-          <i class="target_description-icon rarity-icon"></i>
+          <i class="description-icon rarity-icon"></i>
           ${retroRatio}
         </p>
     `;
@@ -5103,12 +5098,12 @@ class Target {
         const header = cheevo.querySelector('.achiv-name a');
         if (header.innerText.match(regex)) {
           ui.target.moveToTop(description.closest('.target-achiv'));
-          header.innerHTML = header.innerHTML.replace(regex, (g1) => `<span class="highlight-text">${g1}</span>`)
+          header.innerHTML = header.innerHTML.replace(regex, (g1) => `<span class="badge highlight-badge">${g1}</span>`)
 
         }
         if (description.innerText.match(regex)) {
           ui.target.moveToTop(description.closest('.target-achiv'));
-          description.innerHTML = description.innerHTML.replace(regex, (g1) => `<span class="highlight-text">${g1}</span>`)
+          description.innerHTML = description.innerHTML.replace(regex, (g1) => `<span class="badge highlight-badge">${g1}</span>`)
         }
       })
     }
@@ -5117,7 +5112,7 @@ class Target {
     const query = event.target.value;
     if (query) {
       markQuery(query);
-      const firstHighlight = document.querySelector('.highlight-text');
+      const firstHighlight = document.querySelector('.badge.highlight-badge');
       if (firstHighlight) {
         firstHighlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
@@ -5247,29 +5242,29 @@ class Target {
         </div>
         <div class="target-achiv-details">
           <h3 class="achiv-name">
-          ${achievement.level < 1000 ? `<p class="target-level-badge game-card_suffix suffix-bold bg_gold"> LVL ${achievement.level?.toString()?.replace(".", "-")} </p>` : ""}
+          ${achievement.level < 1000 ? `<p class="target-level-badge badge badge-bold badge_gold"> LVL ${achievement.level?.toString()?.replace(".", "-")} </p>` : ""}
             <a target="_blanc" href="https://retroachievements.org/achievement/${id}">
               ${achievement.Title}
             </a>
           </h3>
           <p class="achiv-description">${achievement.Description}</p>
           <div class="target-other-descriptions">       
-          <i class=" target_description-icon ${achievement.type ?? "none"}" title="achievement type"></i> 
+          <i class=" description-icon ${achievement.type ?? "none"}" title="achievement type"></i> 
           
-            <p class="target-description-text" title="points"><i class="target_description-icon  points-icon"></i>${achievement.Points}
+            <p class="target-description-text" title="points"><i class="description-icon  points-icon"></i>${achievement.Points}
             </p>
             
-            <p class="target-description-text" title="retropoints"><i class="target_description-icon  retropoints-icon"></i>${achievement.TrueRatio}
+            <p class="target-description-text" title="retropoints"><i class="description-icon  retropoints-icon"></i>${achievement.TrueRatio}
             </p>
             
-            <p class="target-description-text" title="earned by"><i class="target_description-icon  trending-icon"></i>${~~(
+            <p class="target-description-text" title="earned by"><i class="description-icon  trending-icon"></i>${~~(
           (100 * achievement.NumAwardedHardcore) / achievement.totalPlayers)}%
             </p>
              <p class="target-description-text" title="true ratio">
-              <i class="target_description-icon  ${trueRatio > 13 ? "difficult-badge__hell" : ""}  rarity-icon"></i>
+              <i class="description-icon  ${trueRatio > 13 ? "difficult-badge__hell" : ""}  rarity-icon"></i>
               ${trueRatio.toFixed(2)}
             </p>
-            <p class="difficult-badge difficult-badge__${achievement.difficulty}">${achievement.difficulty}</p>
+            <p class="badge difficult-badge__${achievement.difficulty}">${achievement.difficulty}</p>
           </div>             
         </div>
       `;
@@ -5831,10 +5826,10 @@ class Games {
         </button>           
       </h3>      
       <p title="${game.Award ?? ""}" class="game-description  award-type">
-        ${game.Award ? `<i class="icon award-type__icon ${game.Award}_icon"></i>` : ""}
+        ${game.Award ? `<i class="description-icon award-type__icon ${game.Award}_icon"></i>` : ""}
       </p>
       <button class="favourites-button game-description icon-button games__icon-button ${ui.games.FAVOURITES.includes(game.ID) ? 'checked' : ''}" onclick="ui.games.addToFavourite(event,${game.ID})">
-        <i class="icon favourite_icon"></i>
+        <i class="description-icon favourite_icon"></i>
       </button>
       <p title="Rating" class="game-description  game-rating">
         ${game.Rating ? game.Rating : "n/a"}
@@ -5854,16 +5849,16 @@ class Games {
 
       <p class="game-description game-description__links">
         <button class=" game-description_link" onclick="ui.getAchievements(${game.ID})"> 
-              <i class="game-description_icon link_icon apply-icon"></i>
+              <i class="description-icon link_icon apply-icon"></i>
         </button>
           <a title="google search" target="_blanc" 
             href="https://google.com/search?q='${game?.FixedTitle}' '${RAPlatforms[game?.ConsoleID]}' ${googleQuerySite}"
             class="game-description game-description_link">
-            <i class="game-description_icon link_icon search-icon google_link"></i>
+            <i class="description-icon link_icon search-icon google_link"></i>
           </a> 
           <a title="go to RA" target="_blanc" href="https://retroachievements.org/game/${game.ID}"
               class="game-description game-description_link">
-              <i class="game-description_icon link_icon ra-link_icon"></i>
+              <i class="description-icon link_icon ra-link_icon"></i>
           </a>
       </p>   
     `;
@@ -5881,9 +5876,9 @@ class Games {
       </h3>
       <p title="award type" class="header__game-description ${this.SORT_NAME == 'award' ?
       this.REVERSE_SORT == -1 ? 'active reverse' : 'active' : ''}" onclick="ui.games.SORT_NAME = \'award\'">
-        <i class="icon award_icon"></i>
+        <i class="description-icon award_icon"></i>
       </p>
-      <div class="header__game-description"><i class="icon favourite_icon checked"></i></div>
+      <div class="header__game-description"><i class="description-icon favourite_icon checked"></i></div>
       <p title="Rating" class="game-description header__game-description  game-rating ${this.SORT_NAME == 'rating' ?
       this.REVERSE_SORT == -1 ? 'active reverse' : 'active' : ''}"
         onclick="ui.games.SORT_NAME = 'rating'">
@@ -5909,7 +5904,7 @@ class Games {
             Points
         </p>
 
-        <p title="" class=" game-description game-description_link">Links</p>
+        <p title="" class="game-description">Links</p>
       </div>
   `;
   addToFavourite(event, gameID) {
@@ -6187,16 +6182,16 @@ class Progression {
     <div class="progression-achiv_container">
         <div class="progression_descriptions">
             <p class="progression-description-text" title="points"><i
-                    class="progression_description-icon game-description_icon points-icon"></i>${Points}
+                    class="description-icon points-icon"></i>${Points}
 
             </p>
             <p class="progression-description-text" title="points"><i
-                    class="progression_description-icon game-description_icon retropoints-icon"></i>${TrueRatio}
+                    class="description-icon retropoints-icon"></i>${TrueRatio}
 
             </p>
             <p class="progression-description-text" title="earned by"><i
-                    class="progression_description-icon game-description_icon trending-icon"></i>${~~(NumAwardedHardcore / totalPlayers * 100)}%</p>
-            <div class="progression_description-icon condition ${type}" title="achievement type">
+                    class="description-icon trending-icon"></i>${~~(NumAwardedHardcore / totalPlayers * 100)}%</p>
+            <div class="description-icon condition ${type}" title="achievement type">
         </div>
         </div> 
         <div class="progression-achiv_prev-container">
@@ -7395,19 +7390,19 @@ class Aotw {
           <div class="aotw__container aotw-side">
               <div class="progression_descriptions aotw_descriptions">
                   <p class="progression-description-text" title="points">
-                    <i class="progression_description-icon game-description_icon points-icon"></i>
+                    <i class="progression_description-icon description-icon points-icon"></i>
                     ${cheevo.Points}
                   </p>
                   <p class="progression-description-text" title="points">
-                    <i class="progression_description-icon game-description_icon retropoints-icon"></i>
+                    <i class="progression_description-icon description-icon retropoints-icon"></i>
                     ${cheevo.TrueRatio}
                   </p>
                   <p class="progression-description-text" title="earned by">
-                    <i class="progression_description-icon game-description_icon trending-icon"></i>
+                    <i class="progression_description-icon description-icon trending-icon"></i>
                     ${(100 * cheevo.UnlocksHardcoreCount / cheevo.TotalPlayers).toFixed(2)}%
                   </p>
                   <p class="progression-description-text" title="earned by"> 
-                    <i class="progression_description-icon game-description_icon rarity-icon"></i>
+                    <i class="progression_description-icon description-icon rarity-icon"></i>
                     ${(cheevo.TrueRatio / cheevo.Points).toFixed(2)}
                   </p>
                   ${cheevo.Type ? `
@@ -7439,10 +7434,10 @@ const delay = (ms) => {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 function generateBadges(badges) {
-  return badges?.reduce((acc, badge) => acc += `<i class="game-card_suffix game-title_${badge.toLowerCase()}">${badge}</i> `, "")
+  return badges?.reduce((acc, badge) => acc += `<i class="badge game-title_${badge.toLowerCase()}">${badge}</i> `, "")
 }
 function generateGenres(genres) {
-  return genres?.reduce((acc, genre) => acc += `<i class="game-card_suffix game-title_genre">${Genres[genre]}</i> `, "")
+  return genres?.reduce((acc, genre) => acc += `<i class="badge game-title_genre">${Genres[genre]}</i> `, "")
 }
 function lazyLoad({ list, items, callback }) {
   const trigger = document.createElement("div");
