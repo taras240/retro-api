@@ -6,6 +6,7 @@ export class UI {
   VERSION = "0.49";
   RECENT_ACHIVES_RANGE_MINUTES = Math.ceil(config.updateDelay * 5 / 60);
   IS_WATCHING = false;
+  CURRENT_LEVEL;
   static AUTOCLOSE_CONTEXTMENU = false;
   static STICK_MARGIN = 10;
   // static isTest = true;
@@ -398,14 +399,14 @@ export class UI {
     this.statusPanel.richPresence.innerText = responce.RichPresenceMsg;
 
     const currentLevel = parseCurrentGameLevel(responce.RichPresenceMsg);
-
+    this.CURRENT_LEVEL = currentLevel;
     if (currentLevel) {
       this.target.highlightCurrentLevel(currentLevel);
       this.achievementsBlock.forEach(widget =>
         widget.highlightCurrentLevel(currentLevel)
       )
+      this.statusPanel.highlightCurrentLevel(currentLevel);
     }
-
   }
 
   async sendDiscordMessage({ message = "", type, id }) {
@@ -2783,11 +2784,11 @@ class StatusPanel {
       .sort((a, b) => UI.sortBy.default(a, b));
     progressionCheevos.forEach(cheevo => {
       cheevo.type === 'progression' ? stepPointsHtml += `
-      <div class="progres-step ${cheevo.isHardcoreEarned ? "checked" : ""}"  data-id="${cheevo.ID}">
-        <div class="progres-point ${cheevo.isHardcoreEarned ? "checked" : ""}" data-id="${cheevo.ID}"></div>
+      <div class="progres-step ${cheevo.isHardcoreEarned ? "hardcore" : ""} ${cheevo.isEarned ? "softcore" : ""}"  data-id="${cheevo.ID}">
+        <div class="progres-point ${cheevo.isHardcoreEarned ? "hardcore" : ""} ${cheevo.isEarned ? "softcore" : ""}" data-id="${cheevo.ID}"></div>
       </div>
     `: winPointsHtml += `
-      <div class="progres-point win ${cheevo.isHardcoreEarned ? "checked" : ""}" data-id="${cheevo.ID}"></div>
+      <div class="progres-point win ${cheevo.isHardcoreEarned ? "hardcore" : ""} ${cheevo.isEarned ? "softcore" : ""}" data-id="${cheevo.ID}"></div>
     `;
     });
     const progressionHtml = `
@@ -2806,16 +2807,38 @@ class StatusPanel {
   updateProgressionBlock({ earnedAchievementIDs = [] }) {
     earnedAchievementIDs.forEach(id => {
       [...this.progressionElement.querySelectorAll(`[data-id="${id}"]`)].
-        forEach(el => el.classList.toggle("checked", ui.ACHIEVEMENTS[id].isHardcoreEarned));
+        forEach(el => {
+          el.classList.toggle("hardcore", ui.ACHIEVEMENTS[id].isHardcoreEarned);
+          el.classList.toggle("softcore", ui.ACHIEVEMENTS[id].isEarned);
+        });
     })
     const points = this.progressionElement.querySelectorAll(".progres-point");
     points.forEach(point => point.classList.remove("focus"));
 
-    const focusCheevo = this.progressionElement.querySelector(".progres-point:not(.checked)");
+    const focusCheevo = this.progressionElement.querySelector(".progres-point:not(.hardcore)");
     const focusID = focusCheevo?.dataset?.id;
     focusCheevo?.classList.add("focus");
     const description = points?.length === 0 ? "Progression is not awailable" : focusID ? ui.ACHIEVEMENTS[focusID].Description : "You have passed the game";
     this.progressionElement.querySelector(".status__progres-description").innerText = description;
+  }
+
+  highlightCurrentLevel(currentLevel) {
+    this.progressionElement.querySelectorAll(".progres-point")
+      .forEach(point => point.classList.remove("current-level"));
+
+    const progressionCheevos = Object.values(ui.ACHIEVEMENTS)
+      ?.filter(a => UI.filterBy.progression(a))
+      ?.sort((a, b) => UI.sortBy.level(a, b));
+
+    let currentLevelCheevo =
+      progressionCheevos.find(a => a.level === currentLevel) ||
+      progressionCheevos.find(a => a.level === ~~currentLevel) ||
+      progressionCheevos.find(a => a.level > ~~currentLevel);
+
+    currentLevelCheevo && this.progressionElement
+      .querySelectorAll(`.progres-point[data-id="${currentLevelCheevo?.ID}"]`)
+      .forEach(el => el.classList.add("current-level"));
+
   }
   updateData(isNewGame = false) {
     this.stats = {
