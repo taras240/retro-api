@@ -22,7 +22,6 @@
             </svg>
         </button>
     </div>
-    <!-- <div class="awards_container"></div> -->
     <ul class="awards-content_container content-container">
     </ul>
     <div class="resizer" id="awards-resizer"></div>

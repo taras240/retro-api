@@ -3,8 +3,9 @@ import { loadSections } from "./htmlBuilder.js";
 import { config, ui, apiWorker, userAuthData } from "./script.js";
 
 export class UI {
-  VERSION = "0.46";
+  VERSION = "0.49";
   RECENT_ACHIVES_RANGE_MINUTES = Math.ceil(config.updateDelay * 5 / 60);
+  IS_WATCHING = false;
   static AUTOCLOSE_CONTEXTMENU = false;
   static STICK_MARGIN = 10;
   // static isTest = true;
@@ -16,22 +17,26 @@ export class UI {
     return this._gameData;
   }
   set GAME_DATA(gameObject) {
-    if (this.GAME_DATA && gameObject.ID != this.GAME_DATA?.ID) {
-
-      this.notifications.pushNotification({ type: this.notifications.types.newGame, elements: gameObject });
-    }
+    const isNewGame = this.GAME_DATA && gameObject.ID != this.GAME_DATA?.ID;
     this._gameData = gameObject;
+
+
+
+    this.statusPanel.gameChangeEvent(isNewGame);
     this.achievementsBlock.forEach((widget) =>
-      widget.parseGameAchievements(this.GAME_DATA)
+      widget?.parseGameAchievements(this.GAME_DATA)
     );
-    this.statusPanel.gameChangeEvent();
-    this.gameCard.updateGameCardInfo(this.GAME_DATA);
-    if (this.target.AUTOFILL) {
-      this.target.clearAllAchivements();
-      this.target.fillItems();
-    }
-    this.progression.fillCards();
-    this.note.updateGame();
+
+    this.gameCard?.updateGameCardInfo(this.GAME_DATA);
+
+    this.target.gameChangeEvent();
+
+    this.progression?.fillCards();
+
+    this.note?.updateGame();
+
+    isNewGame && this.notifications?.pushNotification({ type: this.notifications.types.newGame, elements: gameObject });
+
   }
 
   constructor() {
@@ -142,21 +147,18 @@ export class UI {
     //Update status widget
     this.statusPanel.updateProgress({ earnedAchievementIDs: earnedAchievementsIDs });
 
-
-    // ui.stats.updateStats();
     //Update Stats widget & UserInfo widget
-    if (this.userInfo?.VISIBLE || this.stats.VISIBLE) {
+    if (this.userInfo?.VISIBLE || this.stats?.VISIBLE) {
       setTimeout(async () => {
         const userSummary = await apiWorker.getUserSummary({ gamesCount: 3, achievesCount: 5 });
         ui.stats.updateStats({ currentUserSummary: userSummary });
         ui.userInfo?.update({ userSummary: userSummary });
-
       }, 12000)
     }
-
-
-    this.aotw?.checkCheevo({ earnedAchievementIDs: earnedAchievementsIDs });
-
+    try {
+      this.addAlerts({ earnedAchievementIDs: earnedAchievementsIDs });
+      this.aotw?.checkCheevo({ earnedAchievementIDs: earnedAchievementsIDs });
+    } catch (e) { console.log(e) }
 
   }
   showContextmenu({ event, menuItems, sectionCode = "" }) {
@@ -245,6 +247,72 @@ export class UI {
 
     this.updateWidgets({ earnedAchievementsIDs: achievementsIDs });
   }
+  addAlerts({ earnedAchievementIDs = [] }) {
+    if (earnedAchievementIDs.length) {
+      const checkForGameAward = () => {
+        let award;
+        if (this.GAME_DATA.award !== 'mastered'
+          && this.GAME_DATA.earnedStats.hard.count === this.GAME_DATA.NumAchievements) {
+          this.GAME_DATA.award = 'mastered';
+          award = {
+            type: "new-award",
+            award: "mastered",
+            value: this.GAME_DATA
+          }
+        }
+        else if (this.GAME_DATA.award !== ''
+          && this.GAME_DATA.earnedStats.soft.count === this.GAME_DATA.NumAchievements) {
+          this.GAME_DATA.award = 'completed';
+          award = {
+            type: "new-award",
+            award: "completed",
+            value: this.GAME_DATA
+          }
+        }
+        if (this.GAME_DATA.progressionSteps > 0 &&
+          this.GAME_DATA.progressionAward !== 'beaten' &&
+          this.GAME_DATA.earnedStats.hard.progressionCount >= this.GAME_DATA.progressionSteps) {
+          this.GAME_DATA.progressionAward = 'beaten';
+          award = {
+            type: "new-award",
+            award: "beaten",
+            value: this.GAME_DATA
+          }
+        }
+        else if (this.GAME_DATA.progressionSteps > 0 &&
+          this.GAME_DATA.progressionAward == '' &&
+          this.GAME_DATA.earnedStats.soft.progressionCount >= this.GAME_DATA.progressionSteps) {
+          this.GAME_DATA.progressionAward = 'beaten-softcore';
+          award = {
+            type: "new-award",
+            award: "beaten-softcore",
+            value: this.GAME_DATA
+          }
+        }
+        return award;
+      }
+      const statusBarAlerts = earnedAchievementIDs
+        .map(id => {
+          return {
+            type: 'new-achiv',
+            value: ui.ACHIEVEMENTS[id]
+          }
+        });
+      const statusBarAwardAlert = checkForGameAward();
+      if (this.settings.DISCORD_NEW_CHEEVO) {
+        for (let id of earnedAchievementIDs) {
+          this.sendDiscordMessage({ type: "earned-cheevo", id: id });
+        }
+      }
+      if (statusBarAwardAlert) {
+        statusBarAlerts.push(statusBarAwardAlert);
+        this.settings.DISCORD_NEW_AWARD && this.sendDiscordMessage({ message: statusBarAwardAlert.award, type: "award", id: config.gameID })
+        setTimeout(() => ui.stats.updateChart(), 4000);
+      }
+      this.statusPanel.addAlertsToQuery([...statusBarAlerts]);
+
+    }
+  }
   async getLastGameID() {
     const gameID = Object.values(await apiWorker.getRecentlyPlayedGames({ count: 1 }))[0]?.ID;
     config.gameID = gameID;
@@ -281,18 +349,15 @@ export class UI {
     }
   }
 
-  // Функція для початку слідкування за досягненнями
   startWatching() {
-    // Оновлення стану та тексту кнопки слідкування
-    this.statusPanel.watchButton.classList.add("active");
+    this.statusPanel?.watchButton?.classList.add("active");
 
-    // Отримання початкових досягнень
+    //Updating current game and getting cheevos
     this.checkUpdates(true);
-    if (this.target.AUTOCLEAR) {
-      this.target.clearEarned();
-    }
-    (this.settings.DISCORD_START_SESSION || this.settings.DISCORD_NEW_GAME) && this.sendDiscordMessage({ type: "new-game" });
-    // Встановлення інтервалу для оновлення досягнень та зміни стану кнопки
+
+    ui.IS_WATCHING = true;
+
+    //Set autoupdate interval
     this.apiTrackerInterval = setInterval(() => {
       this.statusPanel.blinkUpdate();
       this.checkUpdates();
@@ -304,8 +369,14 @@ export class UI {
     const responce = await apiWorker.getProfileInfo({});
     if (responce.LastGameID != config.gameID || isStart) {
       config.gameID = responce.LastGameID;
-      await ui.getAchievements();
+      await this.getAchievements();
       this.userInfo?.pushNewGame({ game: ui.GAME_DATA })
+
+      if (this.settings.DISCORD_NEW_GAME ||
+        (isStart && this.settings.DISCORD_START_SESSION)) {
+        ui.sendDiscordMessage({ type: "new-game" });
+      }
+
 
       if (isStart) {
         this.totalPoints = responce.TotalPoints;
@@ -350,7 +421,7 @@ export class UI {
         messageElements.description = `          
           Platform: ${ui.GAME_DATA.ConsoleName}
           Realeased: ${ui.GAME_DATA.Released}
-          Achievements: ${ui.GAME_DATA.NumAwardedToUserHardcore} / ${ui.GAME_DATA.achievements_published}
+          Achievements: ${ui.GAME_DATA.NumAwardedToUserHardcore} / ${ui.GAME_DATA.NumAchievements}
           Retropoints:  ${ui.GAME_DATA.earnedStats.hard.retropoints} / ${ui.GAME_DATA.TotalRetropoints}
         `;
         messageElements.color = 65280;
@@ -363,7 +434,7 @@ export class UI {
         messageElements.description = `
           Platform: ${ui.GAME_DATA.ConsoleName}
           Realeased: ${ui.GAME_DATA.Released}
-          Achievements: ${ui.GAME_DATA.NumAwardedToUserHardcore} / ${ui.GAME_DATA.achievements_published}
+          Achievements: ${ui.GAME_DATA.NumAwardedToUserHardcore} / ${ui.GAME_DATA.NumAchievements}
           Retropoints:  ${ui.GAME_DATA.earnedStats.hard.retropoints} / ${ui.GAME_DATA.TotalRetropoints}
         `;
         messageElements.color = 16766720;
@@ -425,6 +496,7 @@ export class UI {
   }
   // Функція для зупинки слідкування за досягненнями
   stopWatching() {
+    ui.IS_WATCHING = false;
     this.statusPanel.watchButton.classList.remove("active");
     clearInterval(ui.apiTrackerInterval);
   }
@@ -2498,7 +2570,7 @@ class StatusPanel {
     richPresence: "Waiting...",
     imageSrc: `https://media.retroachievements.org${ui?.GAME_DATA?.ImageIcon}`,
     totalPoints: ui?.GAME_DATA?.points_total ?? 0,
-    totalAchievesCount: ui?.GAME_DATA?.achievements_published ?? 0,
+    totalAchievesCount: ui?.GAME_DATA?.NumAchievements ?? 0,
     totalSoftpoints: 0,
     earnedPoints: 0,
     earnedAchievesCount: 0,
@@ -2633,7 +2705,6 @@ class StatusPanel {
     });
   }
   setValues() {
-
     this.gamePlatform.classList.toggle("hidden", !this.SHOW_PLATFORM);
     this.richPresence.classList.toggle("hidden", !this.SHOW_RICH_PRESENCE);
 
@@ -2647,7 +2718,7 @@ class StatusPanel {
     //* Обчислення прогресу за балами та за кількістю досягнень
     const completionByPoints = this.stats.earnedPoints / ui.GAME_DATA.points_total || 0;
     const completionByPointsPercents = ~~(completionByPoints * 100) + "%";
-    const completionByCount = this.stats.earnedAchievesCount / ui?.GAME_DATA?.achievements_published;
+    const completionByCount = this.stats.earnedAchievesCount / ui?.GAME_DATA?.NumAchievements;
 
     const completionByCountPercents = ~~(completionByCount * 100) + "%";
 
@@ -2674,7 +2745,7 @@ class StatusPanel {
         value = (this.stats.earnedRetropoints / ui.GAME_DATA.TotalRetropoints);
         break;
       case "achives":
-        value = (this.stats.earnedAchievesCount / ui?.GAME_DATA?.achievements_published);
+        value = (this.stats.earnedAchievesCount / ui?.GAME_DATA?.NumAchievements);
         break;
       case "progression":
         value = (this.stats.earnedProgressionCount / ui?.GAME_DATA?.progressionSteps);
@@ -2754,7 +2825,7 @@ class StatusPanel {
       imageSrc: `https://media.retroachievements.org${ui?.GAME_DATA?.ImageIcon}`,
       totalPoints: ui?.GAME_DATA?.points_total ?? 0,
       totalSoftPoints: ui.GAME_DATA.points_total - ui.GAME_DATA.earnedStats.soft.points,
-      totalAchievesCount: ui?.GAME_DATA?.achievements_published ?? 0,
+      totalAchievesCount: ui?.GAME_DATA?.NumAchievements ?? 0,
       totalProgressionCount: ui?.GAME_DATA?.progressionSteps,
       earnedPoints: ui.GAME_DATA.earnedStats.hard.points,
       earnedAchievesCount: ui.GAME_DATA.earnedStats.hard.count,
@@ -2770,37 +2841,39 @@ class StatusPanel {
     )
     this.setValues();
   }
-  gameChangeEvent() {
-    if (ui.GAME_DATA.FixedTitle != this.stats.gameTitle && ui.apiTrackerInterval) {
-      this.addAlertsToQuery([{ type: "new-game", value: ui.GAME_DATA }]);
-      ui.settings.DISCORD_NEW_GAME && ui.sendDiscordMessage({ type: "new-game" });
+  gameChangeEvent(isNewGame = false) {
+    const fillStatusbarData = () => {
+      //main information
+      const { ImageIcon, FixedTitle, ConsoleName, badges } = ui.GAME_DATA;
+      const { gamePreview, gameTitle, gamePlatform } = this;
+
+      gamePreview.setAttribute(
+        "src",
+        `https://media.retroachievements.org${ImageIcon}`
+      );
+
+      gameTitle.innerHTML = `${FixedTitle || "Some game name"} ${generateBadges(badges)} <span class="title-platform-badge">${generateBadges([ConsoleName.split("\/")[0]])}</span>`;
+      gameTitle.setAttribute(
+        "href",
+        "https://retroachievements.org/game/" + config.gameID
+      );
+      setTimeout(() => this.startAutoScrollElement(gameTitle, true, 10 * 1000), 5000);
+
+      this.guideLink.setAttribute('href', ui.GAME_DATA?.GuideURL);
+      this.guideLink.classList.toggle("hidden", !ui.GAME_DATA?.GuideURL);
+
+      gamePlatform.innerText = ConsoleName || "";
     }
-    //main information
-    const { ImageIcon, FixedTitle, ConsoleName, badges } = ui.GAME_DATA;
-    const { gamePreview, gameTitle, gamePlatform } = this;
-    gamePreview.setAttribute(
-      "src",
-      `https://media.retroachievements.org${ImageIcon}`
-    );
-    gameTitle.innerHTML = `${FixedTitle || "Some game name"} ${generateBadges(badges)} <span class="title-platform-badge">${generateBadges([ConsoleName.split("\/")[0]])}</span>`;
+    if (isNewGame && ui.IS_WATCHING) {
+      this.addAlertsToQuery([{ type: "new-game", value: ui.GAME_DATA }])
+    }
+    fillStatusbarData();
 
-    gameTitle.setAttribute(
-      "href",
-      "https://retroachievements.org/game/" + config.gameID
-    );
-    this.guideLink.setAttribute('href', ui.GAME_DATA?.GuideURL);
-    this.guideLink.classList.toggle("hidden", !ui.GAME_DATA?.GuideURL);
-
-
-
-    setTimeout(() => this.startAutoScrollElement(gameTitle, true, 10 * 1000), 5000);
-
-
-    gamePlatform.innerText = ConsoleName || "";
     // progressionBlock
     this.generateProgressionBlock();
-    //progress & status
+
     this.updateData(true);
+
     this.gameTime = config.ui.update_section.playTime[config.gameID] ? config.ui.update_section.playTime[config.gameID] : 0;
     this.sessionGameTime = 0;
     this.timerTime = this.TIMER_TIME;
@@ -2808,70 +2881,7 @@ class StatusPanel {
   updateProgress({ earnedAchievementIDs }) {
     this.updateData();
     //show new achivs in statusPanel
-    if (this.SHOW_NEW_ACHIV && earnedAchievementIDs.length) {
-      const checkForGameAward = () => {
-        let award;
-        if (this.awards.award !== 'mastered'
-          && ui.GAME_DATA.earnedStats.hard.count === this.stats.totalAchievesCount) {
-          this.awards.award = 'mastered';
-          award = {
-            type: "new-award",
-            award: "mastered",
-            value: ui.GAME_DATA
-          }
-        }
-        else if (this.awards.award !== ''
-          && ui.GAME_DATA.earnedStats.soft.count === this.stats.totalAchievesCount) {
-          this.awards.award = 'completed';
-          award = {
-            type: "new-award",
-            award: "completed",
-            value: ui.GAME_DATA
-          }
-        }
-        if (this.stats.totalProgressionCount > 0 &&
-          this.awards.progressionAward !== 'beaten' &&
-          ui.GAME_DATA.earnedStats.hard.progressionCount >= this.stats.totalProgressionCount) {
-          this.awards.progressionAward = 'beaten';
-          award = {
-            type: "new-award",
-            award: "beaten",
-            value: ui.GAME_DATA
-          }
-        }
-        else if (this.stats.totalProgressionCount > 0 &&
-          this.awards.progressionAward == '' &&
-          ui.GAME_DATA.earnedStats.soft.progressionCount >= this.stats.totalProgressionCount) {
-          this.awards.progressionAward = 'beaten-softcore';
-          award = {
-            type: "new-award",
-            award: "beaten-softcore",
-            value: ui.GAME_DATA
-          }
-        }
-        return award;
-      }
-      const alerts = earnedAchievementIDs
-        .map(id => {
-          return {
-            type: 'new-achiv',
-            value: ui.ACHIEVEMENTS[id]
-          }
-        });
-      const award = checkForGameAward();
-      if (ui.settings.DISCORD_NEW_CHEEVO) {
-        for (let id of earnedAchievementIDs) {
-          ui.sendDiscordMessage({ type: "earned-cheevo", id: id });
-        }
-      }
-      if (award) {
-        alerts.push(award);
-        ui.settings.DISCORD_NEW_AWARD && ui.sendDiscordMessage({ message: award.award, type: "award", id: config.gameID })
-        setTimeout(() => ui.stats.updateChart(), 4000);
-      }
-      this.addAlertsToQuery([...alerts]);
 
-    }
     this.updateProgressionBlock({ earnedAchievementIDs: earnedAchievementIDs })
 
     //push points toggle animation
@@ -2917,7 +2927,7 @@ class StatusPanel {
         points_total,
         ConsoleName,
         TotalRetropoints,
-        achievements_published,
+        NumAchievements,
         masteryRate,
         beatenRate,
       } = game;
@@ -2928,7 +2938,7 @@ class StatusPanel {
       let gameInfo = `
       <p class="badge difficult-badge__pro">${points_total} HP</p>
       <p class="badge difficult-badge__pro">${TotalRetropoints} RP</p>
-      <p class="badge difficult-badge__pro">${achievements_published} CHEEVOS</p> 
+      <p class="badge difficult-badge__pro">${NumAchievements} CHEEVOS</p> 
       <p class="badge difficult-badge__pro">${masteryRate}% MASTERED RATE</p>
       ${beatenRate ? `<p class="badge difficult-badge__pro">${beatenRate}% BEATEN RATE</p>` : ''}
       `;
@@ -4313,7 +4323,7 @@ class GameCard {
     Genre,
     Released,
     TotalRetropoints,
-    achievements_published,
+    NumAchievements,
     players_total,
     points_total,
     badges,
@@ -4340,12 +4350,12 @@ class GameCard {
     this.gameInfoElements.Released.value = Released;
     this.gameInfoElements.Points.value = points_total;
     this.gameInfoElements.Players.value = players_total;
-    this.gameInfoElements.Achievements.value = achievements_published;
+    this.gameInfoElements.Achievements.value = NumAchievements;
 
     this.iconsContainer.innerHTML = `
       <p class="game-info-header game-card__icon-block" title="earned by">
           <i class="description-icon  achievements-icon"></i>
-          ${achievements_published}
+          ${NumAchievements}
         </p>
 
         <p class="game-info-header game-card__icon-block" title="points">
@@ -5146,6 +5156,10 @@ class Target {
     this.section.classList.toggle("highlight-passed", this.HIGHLIGHT_PASSED_LEVELS);
     this.startAutoScroll();
   }
+  gameChangeEvent() {
+    this.AUTOCLEAR && this.clearEarned();
+    this.AUTOFILL && this.fillItems();
+  }
   updateEarnedAchieves({ earnedAchievementIDs: earnedAchievementsIDs }) {
     earnedAchievementsIDs.forEach(id => {
       const achivElement = this.container.querySelector(`.target-achiv[data-achiv-id='${id}']`);
@@ -5467,7 +5481,7 @@ class Target {
           </p>
 
           <p class="target-description-text" title="earned by"><i class="description-icon  trending-icon"></i>
-            ${(cheevo.UnlocksHardcoreCount / cheevo.TotalPlayers).toFixed(2)}%
+            ${(100 * cheevo.UnlocksHardcoreCount / cheevo.TotalPlayers).toFixed(2)}%
           </p>
           <p class="target-description-text" title="true ratio">
             <i class="description-icon    rarity-icon"></i>
@@ -6081,7 +6095,7 @@ class Games {
                 <div class="game-description__property">Genre: <span>${game?.Genre}</span></div>
                 <div class="game-description__property">Publisher: <span>${game?.Publisher} Soft</span></div>
                 <div class="game-description__property">Released: <span>${game?.Released}</span></div>
-                <div class="game-description__property">Achievements total : <span>${game?.NumAwardedToUserHardcore} / ${game?.NumAwardedToUser} / ${game?.achievements_published}</span>
+                <div class="game-description__property">Achievements total : <span>${game?.NumAwardedToUserHardcore} / ${game?.NumAwardedToUser} / ${game?.NumAchievements}</span>
                 </div>
                 <div class="game-description__property">Total retropoints : <span>
                 ${game?.earnedStats.hard.retropoints} / ${game?.TotalRetropoints}</span></div>
@@ -6864,7 +6878,7 @@ class Notifications {
           </p>
           <p class="notification_description-text" title="retropoints">
             <i class="notification_description-icon  achievements-icon"></i>
-            ${gameObject.achievements_published ?? gameObject.AchievementsTotal}
+            ${gameObject.NumAchievements ?? gameObject.AchievementsTotal}
           </p>
           <p class="notification_description-text" title="earned by">
             <i class="notification_description-icon  players-icon"></i>

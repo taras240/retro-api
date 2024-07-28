@@ -131,16 +131,17 @@ export class APIWorker {
       endpoint: this.endpoints.userAwards,
     });
     return fetch(url).then((resp) => resp.json()).then(awardsObj => {
-      awardsObj.VisibleUserAwards = awardsObj.VisibleUserAwards.map(game => {
-        game.award = game.AwardType == "Game Beaten" ?
-          game.AwardDataExtra == "1" ? "beaten" : "beaten_softcore" :
-          game.AwardDataExtra == "1" ? "mastered" : "completed";
-        game.DateEarnedHardcore = game.AwardedAt;
+      awardsObj.VisibleUserAwards = awardsObj.VisibleUserAwards.map(game => ({
+        ...game,
+        DateEarnedHardcore: game.AwardedAt,
+        timeString: this.toLocalTimeString(game.AwardedAt),
+        award:
+          game.ConsoleName == 'Events' ? "event" :
+            game.AwardType == "Game Beaten" ?
+              game.AwardDataExtra == "1" ? "beaten" : "beaten_softcore" :
+              game.AwardDataExtra == "1" ? "mastered" : "completed",
 
-        game.ConsoleName == 'Events' && (game.award = "event");
-        game.timeString = this.toLocalTimeString(game.AwardedAt);
-        return game;
-      })
+      }))
       return awardsObj;
     });
   }
@@ -234,8 +235,8 @@ export class APIWorker {
         }
 
         gameProgressObject.award =
-          (gameProgressObject.achievements_published === gameProgressObject.NumAwardedToUserHardcore) ? 'mastered' :
-            (gameProgressObject.achievements_published === gameProgressObject.NumAwardedToUser) ? 'completed' :
+          (gameProgressObject.NumAchievements === gameProgressObject.NumAwardedToUserHardcore) ? 'mastered' :
+            (gameProgressObject.NumAchievements === gameProgressObject.NumAwardedToUser) ? 'completed' :
               gameProgressObject.award;
 
 
@@ -312,11 +313,13 @@ export class APIWorker {
     });
 
     return fetch(url).then((resp) => resp.json()).then(arr => arr.map((game, index) => {
-      game.ID = game.GameID;
-      game.Points = game.ScoreAchievedHardcore + "/" + game.PossibleScore;
-      game.NumAchievements = game.NumAchievedHardcore + "/" + game.AchievementsTotal;
-      game.NumLeaderboards = "";
-      game.DateEarnedHardcore = game.LastPlayed;
+      game = {
+        ...game,
+        ID: game.GameID,
+        Points: game.ScoreAchievedHardcore + "/" + game.PossibleScore,
+        NumAchievements: game.NumAchievedHardcore + "/" + game.AchievementsTotal,
+        DateEarnedHardcore: game.LastPlayed //for sort methods
+      }
       return this.fixGameTitle(game);
     }));;
   }
@@ -441,8 +444,8 @@ export class APIWorker {
       if (matches) {
         matches.forEach(match => {
           title = title.replace(match, "");
-          let sufix = match;
-          badges.push(sufix.replace(/[~\.\[\]]|subset -|\/\//gi, ""));
+          let badge = match;
+          badges.push(badge.replace(/[~\.\[\]]|subset -|\/\//gi, ""));
         })
       }
       return badges;
