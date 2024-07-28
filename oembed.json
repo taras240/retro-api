@@ -1,10 +1,10 @@
 {
-    "embeds": [
-        {
-            "type": "embed",
-            "url": "https://www.retrocheevos.vercel.app/",
-            "title": "Retrocheevos",
-            "description": "Your ultimate companion for hunting achievements."
-        }
-    ]
+    "version": "1.0",
+    "type": "embed",
+    "title": "Retrocheevos",
+    "url": "https://retrocheevos.vercel.app/",
+    "author_name": "Taras Khomyn",
+    "provider_name": "retrocheevos.vercel.app",
+    "provider_url": "https://retrocheevos.vercel.app/",
+    "description": "Your ultimate companion for hunting achievements"
 }

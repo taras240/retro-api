@@ -260,6 +260,7 @@
 
 .target-achiv .prev {
   position: relative;
+  align-self: center;
 }
 
 .target-other-descriptions {

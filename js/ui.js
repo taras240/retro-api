@@ -7,7 +7,7 @@ export class UI {
   RECENT_ACHIVES_RANGE_MINUTES = Math.ceil(config.updateDelay * 5 / 60);
   static AUTOCLOSE_CONTEXTMENU = false;
   static STICK_MARGIN = 10;
-  static isTest = true;
+  // static isTest = true;
 
   get ACHIEVEMENTS() {
     return this.GAME_DATA.Achievements;
@@ -822,7 +822,6 @@ export class UI {
   static generateAchievementPopup(achievement) {
     let popup = document.createElement("div");
     popup.classList.add("achiv-details-block", "popup");
-    const trueRatio = achievement.TrueRatio / achievement.Points;
     popup.innerHTML = `
       <h3 class="achievement__header">${achievement.Title} <p class="badge difficult-badge__${achievement.difficulty}">${achievement.difficulty}</p>
       </h3>
@@ -831,8 +830,8 @@ export class UI {
         <p><i class="description-icon  points-icon"></i>${achievement.Points}</p>
         <p><i class="description-icon  retropoints-icon"></i>${achievement.TrueRatio} </p> 
          <p class="target-description-text" title="true ratio">
-          <i class="description-icon  ${trueRatio > 13 ? "difficult-badge__hell" : ""}  rarity-icon"></i>
-          ${trueRatio.toFixed(2)}
+          <i class="description-icon  ${achievement.retroRatio > 13 ? "difficult-badge__hell" : ""}  rarity-icon"></i>
+          ${achievement.retroRatio}
         </p>
         <i class="description-icon ${achievement.type ?? "none"}"></i>            
       </div>
@@ -5244,7 +5243,7 @@ class Target {
       targetElement.dataset.level = achievement.level;
     }
     const setElementHtml = () => {
-      const trueRatio = achievement.TrueRatio / achievement.Points;
+
       targetElement.innerHTML = `
       <button class="delete-from-target" title="remove from target" onclick="ui.target.deleteFromTarget(this)">
         <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
@@ -5275,12 +5274,12 @@ class Target {
             <p class="target-description-text" title="retropoints"><i class="description-icon  retropoints-icon"></i>${achievement.TrueRatio}
             </p>
             
-            <p class="target-description-text" title="earned by"><i class="description-icon  trending-icon"></i>${~~(
-          (100 * achievement.NumAwardedHardcore) / achievement.totalPlayers)}%
+            <p class="target-description-text" title="earned by"><i class="description-icon  trending-icon"></i>
+            ${achievement.rateEarnedHardcore}
             </p>
              <p class="target-description-text" title="true ratio">
-              <i class="description-icon  ${trueRatio > 13 ? "difficult-badge__hell" : ""}  rarity-icon"></i>
-              ${trueRatio.toFixed(2)}
+              <i class="description-icon  ${achievement.retroRatio > 13 ? "difficult-badge__hell" : ""}  rarity-icon"></i>
+              ${achievement.retroRatio}
             </p>
             <p class="badge difficult-badge__${achievement.difficulty}">${achievement.difficulty}</p>
           </div>             
@@ -5434,11 +5433,13 @@ class Target {
   }
   showAotwEvent({ cheevo }) {
     if (!cheevo || cheevo.wasShown) return;
+    this.section.querySelector(`.target__aotw-container`)?.remove();
     this.container.querySelector(`.target-achiv[data-achiv-id='${cheevo.ID}']`)?.classList.add("target__aotw")
     const aotwElement = document.createElement("div");
     aotwElement.classList.add("target__aotw-container", "target__aotw", "show-difficult", "show-level");
     aotwElement.innerHTML = `
-      <button class="description-icon close-icon target__hide-aotw" onclick="this.closest('.target__aotw').remove()"></button>
+      <button class="description-icon close-icon target__hide-aotw" 
+        onclick="ui.target.hideAotw()"></button>
       <div class="prev">
         <img class="prev-img" src="https://media.retroachievements.org${cheevo.BadgeURL}" alt=" ">
       </div>
@@ -5477,7 +5478,10 @@ class Target {
     `;
     this.section.querySelector(".target__aotw-container")?.remove();
     this.section.insertBefore(aotwElement, this.container);
-    config.aotw = { ...cheevo, wasShown: true };
+  }
+  hideAotw() {
+    this.section.querySelector(`.target__aotw-container`)?.remove();
+    config.aotw = { ...config?.aotw, wasShown: true };
   }
   close() {
     ui.buttons.target.click();

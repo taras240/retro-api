@@ -404,7 +404,7 @@ export class APIWorker {
   }
 
   fixAchievement(achievement, gameData) {
-    const { BadgeName, DateEarned, DateEarnedHardcore, NumAwardedHardcore, NumAwarded, TrueRatio, ID } = achievement;
+    const { BadgeName, DateEarned, DateEarnedHardcore, NumAwardedHardcore, NumAwarded, TrueRatio, ID, Points } = achievement;
     const { NumDistinctPlayers, NumAwardedToUserHardcore, TotalRealPlayers } = gameData;
 
     const trend = 100 * (NumAwardedHardcore - NumAwardedToUserHardcore * 0.5) / ((NumDistinctPlayers + TotalRealPlayers) * 0.5 - NumAwardedToUserHardcore * 0.5);
@@ -421,6 +421,7 @@ export class APIWorker {
       rateEarnedHardcore: ~~(100 * NumAwardedHardcore / NumDistinctPlayers) + "%",
       trend: trend,
       level: this.getCheevoLevel(achievement),
+      retroRatio: (TrueRatio / Points).toFixed(2),
       difficulty:
         trend < 1.5 && TrueRatio > 300 || TrueRatio >= 500 ? "hell" :
           trend <= 3 && TrueRatio > 100 || TrueRatio >= 300 ? "insane" :
