@@ -4365,7 +4365,7 @@ class GameCard {
       `https://media.retroachievements.org${ImageBoxArt}`
     );
     const gameInfoData = await loadGameInfo(ID);
-    const genres = gameInfoData.Genres;
+    const genres = gameInfoData?.Genres;
     this.gameInfoElements.Platform.value = ConsoleName;
     this.gameInfoElements.Developer.value = Developer;
     this.gameInfoElements.Publisher.value = Publisher;
