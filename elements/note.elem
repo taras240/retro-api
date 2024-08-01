@@ -1,29 +1,22 @@
 <section id="note_section" class="note_section  section">
     <div class="header-container note-header">
 
-        <div class="header-icon note-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24px"
-                viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                <path
-                    d="M280-280h84l240-238-86-86-238 238v86Zm352-266 42-44q6-6 6-14t-6-14l-56-56q-6-6-14-6t-14 6l-44 42 86 86ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h168q13-36 43.5-58t68.5-22q38 0 68.5 22t43.5 58h168q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm280-590q13 0 21.5-8.5T510-820q0-13-8.5-21.5T480-850q-13 0-21.5 8.5T450-820q0 13 8.5 21.5T480-790ZM200-200v-560 560Z" />
-            </svg></div>
+        <div class="header-icon note-icon"></div>
 
         <h2 class="widget-header-text note-header-text">
             <div class="note__tabs-container">
             </div>
         </h2>
 
-        <button class="header-button header-icon" onclick="ui.buttons.note.click()">
-            <svg height="24" viewBox="0 -960 960 960" width="24">
-                <path
-                    d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-            </svg>
+        <button class="header-button header-icon close-icon" onclick="ui.buttons.note.click()">
         </button>
     </div>
     <div class="note-container content-container">
         <div class="note__controls">
             <button title="copy" class="note__control-button copy-icon" onclick="ui.note.copyNoteText()"></button>
             <button title="paste" class="note__control-button paste-icon" onclick="ui.note.pasteTextToNote()"></button>
-            <button title="DELETE ALL" class="note__control-button clear-icon" onclick="ui.note.clearTextNote()"></button>
+            <button title="DELETE ALL" class="note__control-button clear-icon"
+                onclick="ui.note.clearTextNote()"></button>
         </div>
 
         <textarea placeholder="Your notes will be here" name="note_textaria" class="note-textaria scrollable"

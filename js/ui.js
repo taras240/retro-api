@@ -754,7 +754,7 @@ export class UI {
     return { newWidth, newHeight };
   }
   static moveEvent(section, e) {
-    document.querySelector("#background-animation").style.display = "none";
+    // document.querySelector("#background-animation") && (document.querySelector("#background-animation").style.display = "none");
     section.classList.add("dragable");
 
     const rect = section.getBoundingClientRect(); // Отримуємо розміри та позицію вікна
@@ -768,8 +768,8 @@ export class UI {
       ui.app.removeEventListener("mousemove", handleMouseMove);
       ui.app.removeEventListener("mouseup", handleMouseUp);
       section.removeEventListener("mouseleave", handleMouseUp);
-      document.querySelector("#background-animation").style.display =
-        config.bgVisibility ? "block" : "none";
+      // document.querySelector("#background-animation").style.display =
+      //   config.bgVisibility ? "block" : "none";
       // Здійснюємо збереження позиції після закінчення перетягування
       config.setNewPosition({
         id: section.id,
@@ -1752,7 +1752,7 @@ class AchievementsBlock {
       windowWidth = parseInt(config.ui[this.SECTION_NAME].width);
     }
     container.style.flex = "";
-    const achivs = Array.from(container.children);
+    const achivs = container.querySelectorAll(".achiv-block:not(.removed)");
     const achivsCount = achivs.length;
     // Перевірка, чи є елементи в блоці досягнень
     if (achivsCount === 0) return;
@@ -2021,6 +2021,7 @@ class AchievementsBlock {
       reverse: this.REVERSE_FILTER,
       isHide: this.HIDE_FILTERED,
     });
+    this.fitSizeVertically()
   }
   close() {
     this.CLONE_NUMBER === 0
@@ -2037,22 +2038,16 @@ class AchievementsBlock {
       config.ui.achievements_section?.height ?? 650 + "px";
     newWidget.innerHTML = `
       <div class="header-container achievements-header_container">
-        <div class="header-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-            <path
-              d="m668-380 152-130 120 10-176 153 52 227-102-62-46-198Zm-94-292-42-98 46-110 92 217-96-9ZM294-287l126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM173-120l65-281L20-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Zm247-340Z" />
-          </svg>
+        <div class="header-icon achievements-icon">
         </div>
         <h2 class="widget-header-text achivs-header-text">Cheevos${this.CLONE_NUMBER === 0 ? "" : " ~"
       }</h2>
-      <button class="header-button header-icon tweak-button" onclick="ui.settings.openSettings(ui.achievementsBlock[${this.CLONE_NUMBER}].contextMenuItems)">
-        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"/>
-        </svg>        
+      <button class="header-button header-icon tweak-icon tweak-button" onclick="ui.settings.openSettings(ui.achievementsBlock[${this.CLONE_NUMBER}].contextMenuItems)">
+             
       </button>
-        <button class="header-button header-icon" onclick="ui.achievementsBlock[${this.CLONE_NUMBER
+        <button class="header-button header-icon close-icon" onclick="ui.achievementsBlock[${this.CLONE_NUMBER
       }].close();">
-          <svg height="24" viewBox="0 -960 960 960" width="24">
-            <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-          </svg>
+          
         </button>
       </div>
       <ul class="achievements-container content-container"></ul>
@@ -3922,6 +3917,7 @@ class Settings {
     return config._cfg.settings.preset || "default";
   }
   set COLOR_SCHEME(value) {
+    console.log('set color')
     config._cfg.settings.preset = value;
     config.writeConfiguration();
     UI.updateColors(value);
@@ -3932,8 +3928,8 @@ class Settings {
   set BG_ANIMATION(value) {
     config._cfg.settings.bgVisibility = value;
     config.writeConfiguration();
-    document.querySelector("#background-animation").style.display =
-      config.bgVisibility ? "block" : "none";
+    // document.querySelector("#background-animation").style.display =
+    //   config.bgVisibility ? "block" : "none";
   }
   get START_ON_LOAD() {
     return config._cfg.settings.startOnLoad ?? false;
@@ -4005,14 +4001,9 @@ class Settings {
     settingsElement.id = "settings_section";
     settingsElement.innerHTML = `
       <div class="header-container prefs-header-container">
-        <div class="header-icon settings-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" fill="white" viewBox="0 -960 960 960" width="24">
-            <path d="m370-80-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm70-80h79l14-106q31-8 57.5-23.5T639-327l99 41 39-68-86-65q5-14 7-29.5t2-31.5q0-16-2-31.5t-7-29.5l86-65-39-68-99 42q-22-23-48.5-38.5T533-694l-13-106h-79l-14 106q-31 8-57.5 23.5T321-633l-99-41-39 68 86 64q-5 15-7 30t-2 32q0 16 2 31t7 30l-86 65 39 68 99-42q22 23 48.5 38.5T427-266l13 106Zm42-180q58 0 99-41t41-99q0-58-41-99t-99-41q-59 0-99.5 41T342-480q0 58 40.5 99t99.5 41Zm-2-140Z"></path>
-          </svg></div>
+        <div class="header-icon settings-icon"></div>
         <h2 class="widget-header-text prefs-header">Settings</h2>
-        <button class="header-button header-icon" onclick="ui.settings.close()">
-          <svg height="24" viewBox="0 -960 960 960" width="24">
-            <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"></path>
-          </svg>
+        <button class="header-button header-icon close-icon" onclick="ui.settings.close()">
         </button>
       </div>
       <div class="settings_container "></div>
@@ -6098,11 +6089,8 @@ class Games {
     <section class="section game-popup__section">
         <div class="game-popup__header-container header-container">
             <h2 class="widget-header-text"><a href="https://retroachievements.org/game/${game.ID}" target="_blank">${game.FixedTitle} ${generateBadges(game.badges)}</a></h2>
-            <button class="header-button header-icon" onclick="this.closest('section').remove();">
-                <svg height="24" viewBox="0 -960 960 960" width="24">
-                    <path
-                        d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-                </svg>
+            <button class="header-button header-icon close-icon" onclick="this.closest('section').remove();">
+                
             </button>
         </div>
         <div class="game-info__container">
@@ -7944,4 +7932,89 @@ const loadGameInfo = async (gameID) => {
   const infoResponce = await fetch(`./json/games/all_ext.json`);
   const games = await infoResponce.json();
   return gameID ? games.find(g => g.ID == gameID) : games;
+}
+export const bgAnimation = ({ fps = 120, speed = 50 }) => {
+  const canvas = document.createElement("canvas");
+  canvas.id = 'starfield';
+  document.body.prepend(canvas);
+
+  const ctx = canvas.getContext('2d');
+
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const color = config.mainColor;
+
+  const interval = 1000 / fps;
+
+  const stars = [];
+  const numStars = ~~(canvas.width * canvas.height / 2e4);
+  const speedXY = speed / 1000;
+  const speedZ = (speed / 2) / 1000;
+
+  //Create stars
+  for (let i = 0; i < numStars; i++) {
+    stars.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      radius: Math.random() * 2.5,
+    });
+  }
+
+  // Draw stars
+  function drawStars() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    stars.forEach(star => {
+      let x = star.x;
+      let y = star.y;
+      let radius = star.radius;
+
+      ctx.fillStyle = 'green';// config.getColors().accentColor;
+      ctx.beginPath();
+      ctx.rect(x, y, radius, radius);
+      // ctx.arc(x, y, radius, 0, Math.PI * 2, true); // circle
+      ctx.fill();
+    });
+  }
+
+  // updete frame
+  function updateStars() {
+    stars.forEach(star => {
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+
+      const angleInRadians = Math.atan2(centerY - star.y, centerX - star.x);
+
+      const speedX = Math.cos(angleInRadians) * speedXY;
+      const speedY = Math.sin(angleInRadians) * speedXY;
+
+      star.x -= speedX * star.radius * interval;
+      star.y -= speedY * star.radius * interval;
+      star.radius += speedZ;
+
+      if (star.x > canvas.width || star.y > canvas.height || star.x < -10 || star.y < -10) {
+        star.z = ~~(Math.random() * 10 + 1);
+        star.x = Math.random() * canvas.width * 0.5 + canvas.width * 0.25;
+        star.y = Math.random() * canvas.height * 0.5 + canvas.height * 0.25;
+        star.radius = Math.random();
+      }
+    });
+  }
+
+
+  function animate() {
+    drawStars();
+    updateStars();
+    setTimeout(animate, interval);
+  }
+
+  // Start animation
+  animate();
+
+  // onresize event
+  window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+
 }

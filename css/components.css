@@ -55,14 +55,10 @@
 }
 
 /**--------[ Header Style ]---------------*/
-.tweak-button {
+.section:not(:hover) .tweak-button {
     opacity: 0;
-    transition: opacity .1s;
 }
 
-.section:hover .tweak-button {
-    opacity: 1;
-}
 
 .header-container {
     position: relative;
@@ -70,13 +66,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 5px;
     padding: 0 10px;
     width: 100%;
     border-bottom: 0px solid var(--font-color);
     background-color: var(--secondary-color);
     border-radius: var(--border-radius) var(--border-radius) 0 0;
     z-index: -1;
-    font-family: "OHair", system-ui;
+    font-family: system-ui;
 }
 
 .header-container::after {
@@ -87,7 +84,6 @@
     width: 100%;
     height: 5px;
     background-color: var(--secondary-color);
-
     z-index: -1;
 }
 
@@ -121,17 +117,26 @@
     flex: 1;
 }
 
-.header-icon {
-    display: flex;
-    padding: 2px;
+.header-icon.hidden {
+    display: none;
 }
 
 .header-button {
     background-color: transparent;
     cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.2s, scale 0.2s;
 }
 
-.header-icon svg,
+.header-button:hover {
+    opacity: 1;
+}
+
+.header-button:active {
+    scale: 0.9;
+}
+
+/* .header-icon svg,
 .svg-icon svg {
     fill: var(--font-color);
     padding: 1px;
@@ -159,7 +164,7 @@
     opacity: 1;
     padding: 2px;
     transition: 0.2s;
-}
+} */
 
 .header-settings_button svg {
     padding: 3px;

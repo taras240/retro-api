@@ -1,16 +1,16 @@
-.section.achivs {
+.achivs {
   width: 30vw;
   height: 30vh;
   min-height: 60px;
   min-width: 90px;
   display: flex;
   flex-direction: column;
-  background-color: var(--main-color);
+  background: var(--main-color);
   cursor: grab;
 }
 
 .achivs.hide-bg:not(:hover) {
-  background-color: transparent;
+  background: transparent;
 }
 
 .achievements-header_container {
@@ -33,9 +33,6 @@
   max-width: 100%;
   overflow: scroll;
 }
-
-
-
 
 
 /** ------------[ ACHIEVEMENT ]------------*/
@@ -527,7 +524,7 @@
 /** MOVING TO START ANIM  */
 .achiv-block.move {
   position: absolute !important;
-  transition: var(--duration) !important;
+  transition: var(--duration) linear !important;
   z-index: 5;
 }
 

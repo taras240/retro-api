@@ -40,28 +40,15 @@
   <div class="resizer" id="game-card-resizer"></div>
 </section><section id="target_section" class="target_section section ">
   <div class="header-container target-header_container">
-    <div class="header-icon">
-      <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-        <path
-          d="M480-400q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm-40-240v-200h80v200h-80Zm0 520v-200h80v200h-80Zm200-320v-80h200v80H640Zm-520 0v-80h200v80H120Z" />
-      </svg>
-    </div>
+    <div class="header-icon target-icon"></div>
 
     <h2 class="widget-header-text">Target</h2>
-    <button class="header-button header-icon tweak-button"
+    <button class="header-button header-icon tweak-button tweak-icon"
       onclick="ui.settings.openSettings(ui.target.contextMenuItems)">
-      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed">
-        <path d="M0 0h24v24H0V0z" fill="none" />
-        <path
-          d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z" />
-      </svg>
     </button>
     <input type="search" name="" id="target__searchbar" class="text-input target__search-bar" placeholder="Search...">
 
-    <button class="header-icon header-button " onclick="ui.target.close()">
-      <svg height="24" viewBox="0 -960 960 960" width="24">
-        <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-      </svg>
+    <button class="header-icon header-button close-icon" onclick="ui.target.close()">
     </button>
 
   </div>
@@ -70,21 +57,11 @@
   <div class="resizer" id="target-resizer"></div>
 </section><section class="progression_section section" id="progression_section">
     <div class="header-container">
-        <div class="header-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"
-                style="transform: scaleX(-1);">
-                <path
-                    d="M680-160v-640q33 0 56.5 23.5T760-720v480q0 33-23.5 56.5T680-160ZM160-80q-33 0-56.5-23.5T80-160v-640q0-33 23.5-56.5T160-880h360q33 0 56.5 23.5T600-800v640q0 33-23.5 56.5T520-80H160Zm680-160v-480q25 0 42.5 17.5T900-660v360q0 25-17.5 42.5T840-240Zm-680 80h360v-640H160v640Zm0-640v640-640Z" />
-            </svg>
+        <div class="header-icon progression-icon">
         </div>
 
         <h2 class="widget-header-text">Progression</h2>
-        <div class="header-button header-icon" onclick="ui.progression.close()">
-            <svg height="24" viewBox="0 -960 960 960" width="24">
-                <path
-                    d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z">
-                </path>
-            </svg>
+        <div class="header-button header-icon close-icon" onclick="ui.progression.close()">
         </div>
     </div>
     <div class="progression_container">
@@ -241,25 +218,15 @@
 </section><section class="awards_section section " id="awards_section">
 
     <div class="awards-header_container header-container">
-        <div class="header-icon awards-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24"
-                viewBox="0 -960 960 960" width="24">
-                <path
-                    d="M280-120v-80h160v-124q-49-11-87.5-41.5T296-442q-75-9-125.5-65.5T120-640v-40q0-33 23.5-56.5T200-760h80v-80h400v80h80q33 0 56.5 23.5T840-680v40q0 76-50.5 132.5T664-442q-18 46-56.5 76.5T520-324v124h160v80H280Zm0-408v-152h-80v40q0 38 22 68.5t58 43.5Zm200 128q50 0 85-35t35-85v-240H360v240q0 50 35 85t85 35Zm200-128q36-13 58-43.5t22-68.5v-40h-80v152Zm-200-52Z" />
-            </svg></div>
+        <div class="header-icon awards-icon "></div>
         <h2 class="widget-header-text"> User awards</h2>
-        <div class="get-awards_button header-button header-icon" id="awards-button" title="force reload"
+        <div class="get-awards_button header-button header-icon update-icon" id="awards-button" title="force reload"
             onclick="ui.awards.updateAwards()">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                <path
-                    d="M204-318q-22-38-33-78t-11-82q0-134 93-228t227-94h7l-64-64 56-56 160 160-160 160-56-56 64-64h-7q-100 0-170 70.5T240-478q0 26 6 51t18 49l-60 60ZM481-40 321-200l160-160 56 56-64 64h7q100 0 170-70.5T720-482q0-26-6-51t-18-49l60-60q22 38 33 78t11 82q0 134-93 228t-227 94h-7l64 64-56 56Z" />
-            </svg>
+
         </div>
 
-        <button class="header-button header-icon" onclick="ui.awards.close()">
-            <svg height="24" viewBox="0 -960 960 960" width="24">
-                <path
-                    d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-            </svg>
+        <button class="header-button header-icon close-icon" onclick="ui.awards.close()">
+
         </button>
     </div>
     <ul class="awards-content_container content-container">
@@ -268,21 +235,10 @@
 </section><section id="update-section" class="status__section  section">
   <div class="status__container " id="update-text-block">
     <div class="status__header-buttons">
-      <a id="status-game-guide"
-        class="header-button header-link-icon header-icon tweak-button guide-icon update__header-button" target="_blank"
-        href="">
-        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-          <path
-            d="M560-564v-68q33-14 67.5-21t72.5-7q26 0 51 4t49 10v64q-24-9-48.5-13.5T700-600q-38 0-73 9.5T560-564Zm0 220v-68q33-14 67.5-21t72.5-7q26 0 51 4t49 10v64q-24-9-48.5-13.5T700-380q-38 0-73 9t-67 27Zm0-110v-68q33-14 67.5-21t72.5-7q26 0 51 4t49 10v64q-24-9-48.5-13.5T700-490q-38 0-73 9.5T560-454ZM260-320q47 0 91.5 10.5T440-278v-394q-41-24-87-36t-93-12q-36 0-71.5 7T120-692v396q35-12 69.5-18t70.5-6Zm260 42q44-21 88.5-31.5T700-320q36 0 70.5 6t69.5 18v-396q-33-14-68.5-21t-71.5-7q-47 0-93 12t-87 36v394Zm-40 118q-48-38-104-59t-116-21q-42 0-82.5 11T100-198q-21 11-40.5-1T40-234v-482q0-11 5.5-21T62-752q46-24 96-36t102-12q58 0 113.5 15T480-740q51-30 106.5-45T700-800q52 0 102 12t96 36q11 5 16.5 15t5.5 21v482q0 23-19.5 35t-40.5 1q-37-20-77.5-31T700-240q-60 0-116 21t-104 59ZM280-494Z" />
-        </svg>
+      <a id="status-game-guide" class="header-button  header-icon tweak-button guide-icon " target="_blank" href="">
       </a>
-      <button class="header-button header-icon tweak-button update__header-button"
+      <button class="header-button header-icon tweak-button tweak-icon"
         onclick="ui.settings.openSettings(ui.statusPanel.contextMenuItems)">
-        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed">
-          <path d="M0 0h24v24H0V0z" fill="none" />
-          <path
-            d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z" />
-        </svg>
       </button>
     </div>
 
@@ -345,31 +301,15 @@
 </section><section class="section games_setion " id="games_section">
 
     <div class="games-header_container header-container">
-        <div class="header-icon games-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960"
-                width="24">
-                <path
-                    d="M160-240q-33 0-56.5-23.5T80-320v-320q0-33 23.5-56.5T160-720h640q33 0 56.5 23.5T880-640v320q0 33-23.5 56.5T800-240H160Zm0-80h640v-320H160v320Zm120-40h80v-80h80v-80h-80v-80h-80v80h-80v80h80v80Zm300 0q25 0 42.5-17.5T640-420q0-25-17.5-42.5T580-480q-25 0-42.5 17.5T520-420q0 25 17.5 42.5T580-360Zm120-120q25 0 42.5-17.5T760-540q0-25-17.5-42.5T700-600q-25 0-42.5 17.5T640-540q0 25 17.5 42.5T700-480ZM160-320v-320 320Z" />
-            </svg></div>
+        <div class="header-icon games-icon"></div>
         <h2 class="widget-header-text"> RA Games Library</h2>
-        <div class="get-awards_button header-button header-icon" id="" title="force reload"
+        <div class="get-awards_button header-button header-icon update-icon" id="" title="force reload"
             onclick="ui.games.loadGames()">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-                <path
-                    d="M204-318q-22-38-33-78t-11-82q0-134 93-228t227-94h7l-64-64 56-56 160 160-160 160-56-56 64-64h-7q-100 0-170 70.5T240-478q0 26 6 51t18 49l-60 60ZM481-40 321-200l160-160 56 56-64 64h7q100 0 170-70.5T720-482q0-26-6-51t-18-49l60-60q22 38 33 78t11 82q0 134-93 228t-227 94h-7l64 64-56 56Z" />
-            </svg>
         </div>
-        <button class="header-button header-icon fullscreen-button" onclick="ui.games.toggleFullscreen()">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed">
-                <path d="M0 0h24v24H0V0z" fill="none" />
-                <path
-                    d="M19 12h-2v3h-3v2h5v-5zM7 9h3V7H5v5h2V9zm14-6H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16.01H3V4.99h18v14.02z" />
-            </svg>
+        <button class="header-button header-icon fullscreen-button fullscreen-icon"
+            onclick="ui.games.toggleFullscreen()">
         </button>
-        <button class="header-button header-icon" onclick="ui.buttons.games.click()">
-            <svg height="24" viewBox="0 -960 960 960" width="24">
-                <path
-                    d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-            </svg>
+        <button class="header-button header-icon close-icon" onclick="ui.buttons.games.click()">
         </button>
     </div>
     <div class="games_container content-container">
@@ -494,29 +434,22 @@
 </section><section id="note_section" class="note_section  section">
     <div class="header-container note-header">
 
-        <div class="header-icon note-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24px"
-                viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                <path
-                    d="M280-280h84l240-238-86-86-238 238v86Zm352-266 42-44q6-6 6-14t-6-14l-56-56q-6-6-14-6t-14 6l-44 42 86 86ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h168q13-36 43.5-58t68.5-22q38 0 68.5 22t43.5 58h168q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm280-590q13 0 21.5-8.5T510-820q0-13-8.5-21.5T480-850q-13 0-21.5 8.5T450-820q0 13 8.5 21.5T480-790ZM200-200v-560 560Z" />
-            </svg></div>
+        <div class="header-icon note-icon"></div>
 
         <h2 class="widget-header-text note-header-text">
             <div class="note__tabs-container">
             </div>
         </h2>
 
-        <button class="header-button header-icon" onclick="ui.buttons.note.click()">
-            <svg height="24" viewBox="0 -960 960 960" width="24">
-                <path
-                    d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-            </svg>
+        <button class="header-button header-icon close-icon" onclick="ui.buttons.note.click()">
         </button>
     </div>
     <div class="note-container content-container">
         <div class="note__controls">
             <button title="copy" class="note__control-button copy-icon" onclick="ui.note.copyNoteText()"></button>
             <button title="paste" class="note__control-button paste-icon" onclick="ui.note.pasteTextToNote()"></button>
-            <button title="DELETE ALL" class="note__control-button clear-icon" onclick="ui.note.clearTextNote()"></button>
+            <button title="DELETE ALL" class="note__control-button clear-icon"
+                onclick="ui.note.clearTextNote()"></button>
         </div>
 
         <textarea placeholder="Your notes will be here" name="note_textaria" class="note-textaria scrollable"
@@ -525,44 +458,22 @@
     <div class="resizer" id="note-resizer"></div>
 </section><section id="notification_section" class="notification_section bg-visible section">
     <div class="header-container">
-        <div class="header-icon notification-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24px"
-                viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                <path
-                    d="M160-200v-80h80v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h80v80H160Zm320-300Zm0 420q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80ZM320-280h320v-280q0-66-47-113t-113-47q-66 0-113 47t-47 113v280Z" />
-            </svg></div>
+        <div class="header-icon notification-icon"></div>
         <h2 class="widget-header-text">Last activity</h2>
-
-        <button class="header-button header-icon" onclick="ui.buttons.notifications.click()">
-            <svg height="24" viewBox="0 -960 960 960" width="24">
-                <path
-                    d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-            </svg>
+        <button class="header-button header-icon close-icon" onclick="ui.buttons.notifications.click()">
         </button>
     </div>
     <ul class="notification-container content-container">
-
     </ul>
     <div class="resizer" id="notification-resizer"></div>
 </section><section id="stats_section" class="stats_section  section">
     <div class="header-container">
-        <div class="header-icon stats-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24px"
-                viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                <path
-                    d="M280-280h80v-200h-80v200Zm320 0h80v-400h-80v400Zm-160 0h80v-120h-80v120Zm0-200h80v-80h-80v80ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
-            </svg></div>
+        <div class="header-icon stats-icon"></div>
         <h2 class="widget-header-text">Stats</h2>
-        <div class="get-awards_button header-button header-icon" id="" title="force update"
+        <div class="get-awards_button header-button header-icon update-icon" id="" title="force update"
             onclick="ui.stats.updateStats({})">
-            <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="24">
-                <path
-                    d="M204-318q-22-38-33-78t-11-82q0-134 93-228t227-94h7l-64-64 56-56 160 160-160 160-56-56 64-64h-7q-100 0-170 70.5T240-478q0 26 6 51t18 49l-60 60ZM481-40 321-200l160-160 56 56-64 64h7q100 0 170-70.5T720-482q0-26-6-51t-18-49l60-60q22 38 33 78t11 82q0 134-93 228t-227 94h-7l64 64-56 56Z" />
-            </svg>
         </div>
-        <button class="header-button header-icon" onclick="ui.buttons.stats.click()">
-            <svg height="24" viewBox="0 -960 960 960" width="24">
-                <path
-                    d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-            </svg>
+        <button class="header-button header-icon close-icon" onclick="ui.buttons.stats.click()">
         </button>
     </div>
     <ul class="stats-container content-container">

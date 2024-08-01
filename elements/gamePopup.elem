@@ -1,30 +1,13 @@
 <section class="section game-popup__section">
     <div class="game-popup__header-container header-container">
         <h2 class="widget-header-text"><a href="#" target="_blank"> Some Game Name</a></h2>
-        <button class="header-button header-icon" onclick="this.closest('section').remove();">
-            <svg height="24" viewBox="0 -960 960 960" width="24">
-                <path
-                    d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-            </svg>
+        <button class="header-button header-icon close-icon" onclick="this.closest('section').remove();">
         </button>
     </div>
     <div class="game-info__container">
         <div class="game-info__images-container">
-            <img src="https://media.retroachievements.org/Images/047257.png" alt="" class="game__image">
-            <img src="https://media.retroachievements.org/Images/005527.png" alt="" class="game__image">
-            <img src="https://media.retroachievements.org/Images/005537.png" alt="" class="game__image">
-
         </div>
         <div class="game-info__descriptions-container">
-            <div class="game-description__property">Platform: <span>${game?.ConsoleName}</span></div>
-            <div class="game-description__property">Developer: <span>${game?.Developer} Soft</span></div>
-            <div class="game-description__property">Genre: <span>${game?.Genre}</span></div>
-            <div class="game-description__property">Publisher: <span>${game?.Publisher} Soft</span></div>
-            <div class="game-description__property">Released: <span>${game?.Released}</span></div>
-            <div class="game-description__property">Achievements total : <span>${game?.achievements_published}</span>
-            </div>
-            <div class="game-description__property">Total points : <span>${game?.points_total}</span></div>
-            <div class="game-description__property">Total players : <span>${game?.players_total}</span></div>
 
         </div>
         <div class="game-info__cheevos-container">

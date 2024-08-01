@@ -1,5 +1,5 @@
 import { Config } from "./config.js";
-import { UI } from "./ui.js";
+import { UI, bgAnimation } from "./ui.js";
 import { APIWorker } from "./apiWorker.js"
 
 let config, ui, apiWorker, userAuthData;
@@ -67,6 +67,6 @@ function doMusic() {
 
   }, durationInSecs * 1000)
 }
-
+// bgAnimation({ speed: 10 });
 
 export { config, ui, apiWorker, userAuthData }

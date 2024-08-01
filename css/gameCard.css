@@ -61,11 +61,11 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.25rem 1rem;
-  background: rgba(0, 0, 0, 0.5);
+  /* background: rgba(0, 0, 0, 0.5); */
   z-index: 1;
 }
 
-.game-card__icons-container::after {
+/* .game-card__icons-container::after {
   content: "";
   position: absolute;
   top: 0;
@@ -74,7 +74,7 @@
   height: 100%;
   z-index: -1;
   backdrop-filter: blur(1.5px);
-}
+} */
 
 .game-info-header.game-card__icon-block {
   --font-color: white;
@@ -84,7 +84,9 @@
   gap: 0.25rem;
   font-size: 1.1rem;
   font-weight: 400;
-
+  background: black;
+  padding: 2px 5px;
+  border-radius: 5px;
 }
 
 .game-card__title-container {
@@ -197,10 +199,10 @@
   display: none;
 }
 
-.game-info-header {
+/* .game-info-header {
   margin-right: 10px;
   font-weight: 500;
-}
+} */
 
 .game-card-text {
   text-align: end;

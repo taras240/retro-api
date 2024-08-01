@@ -292,3 +292,64 @@
 .close-icon {
     mask-image: url(../assets/img/close.svg);
 }
+
+.header-icon {
+    width: 1.5rem;
+    aspect-ratio: 1;
+    background-color: white;
+    mask-size: contain;
+    mask-position: center;
+    mask-repeat: no-repeat;
+}
+
+.target-icon {
+    mask-image: url(../assets/img/target.svg);
+}
+
+.tweak-icon {
+    mask-image: url(../assets/img/tune.svg)
+}
+
+.close-icon {
+    mask-image: url(../assets/img/close.svg)
+}
+
+.awards-icon {
+    mask-image: url(../assets/img/awards.svg)
+}
+
+.update-icon {
+    mask-image: url(../assets/img/update.svg)
+}
+
+.stats-icon {
+    mask-image: url(../assets/img/stats.svg)
+}
+
+.games-icon {
+    mask-image: url(../assets/img/gamepad.svg)
+}
+
+.fullscreen-icon {
+    mask-image: url(../assets/img/fullscreen.svg)
+}
+
+.progression-icon {
+    mask-image: url(../assets/img/progression-cards.svg)
+}
+
+.note-icon {
+    mask-image: url(../assets/img/note.svg)
+}
+
+.notification-icon {
+    mask-image: url(../assets/img/notifications.svg)
+}
+
+.settings-icon {
+    mask-image: url(../assets/img/settings.svg)
+}
+
+.guide-icon {
+    mask-image: url(../assets/img/book.svg)
+}
