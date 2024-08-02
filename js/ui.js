@@ -1,6 +1,7 @@
 import { loadSections } from "./htmlBuilder.js";
 
 import { config, ui, apiWorker, userAuthData } from "./script.js";
+import * as XLSX from '../node_modules/xlsx/xlsx.mjs';
 
 export class UI {
   VERSION = "0.49";
@@ -1059,6 +1060,58 @@ export class UI {
     date: "date",
     level: 'level',
   };
+  // exportDataAsCSV
+  async exportCompletionDataToXlsx() {
+
+    const completion = await apiWorker.SAVED_COMPLETION_PROGRESS;
+    const completionResults = completion?.Results.map(game => ({
+      Title: game.Title,
+      ID: game.GameID,
+      Platform: RAPlatforms[game.ConsoleID],
+      Award: game.HighestAwardKind,
+      AwardDate: game.HighestAwardDate && (new Date(game.HighestAwardDate)).toLocaleString(),
+      LastEarnedDate: game.MostRecentAwardedDate && (new Date(game.MostRecentAwardedDate)).toLocaleString(),
+      TotalAchievements: game.NumAchievements,
+      EarnedAchievements: game.NumAwardedHardcore,
+      EarnedAchievementsSoftcore: game.NumAwarded,
+      PlayedTime: secondsToTimeFormat(config.ui.update_section.playTime[game.GameID])
+    }));
+
+    if (!completionResults || completionResults.length == 0) return;
+
+    const headers = [
+      ...Object.keys(completionResults[0])
+    ];
+
+    const rows = completionResults.map(row => [
+      row.Title,
+      row.ID,
+      row.Platform,
+      row.Award,
+      row.AwardDate,
+      row.LastEarnedDate,
+      row.TotalAchievements,
+      row.EarnedAchievements,
+      row.EarnedAchievementsSoftcore,
+      row.PlayedTime
+    ]);
+
+    const csvContent = [
+      headers.join(";"),
+      ...rows.map(row => row.join(";"))
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'data.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+  }
 }
 
 class AchievementsBlock {
@@ -3624,6 +3677,17 @@ class Settings {
           }
         ]
       },
+      {
+        label: "Export data",
+        elements: [
+          {
+            label: "**Completion progress**",
+            type: "button",
+            name: "context_export-completion",
+            id: "context_export-completion",
+            event: `onclick="ui.exportCompletionDataToXlsx()"`,
+          }]
+      }
     ]
   }
   get LANG() {
@@ -3791,45 +3855,7 @@ class Settings {
             event: "onchange=\"ui.settings.COLOR_SCHEME = 'custom'\"",
           },
         ],
-        //  () => {
-        //   return Object.getOwnPropertyNames(colorPresets).reduce((colorsMenuItems, name) => {
-        //     let menuItem = {
-        //       type: "radio",
-        //       name: "context_color-scheme",
-        //       id: `context_color-scheme-${name}`,
-        //       label: `${name}`,
-        //       checked: this.COLOR_SCHEME === name,
-        //       event: `onchange="ui.settings.COLOR_SCHEME = '${name}'"`,
-        //     }
-        //     colorsMenuItems.push(menuItem);
-        //     return colorsMenuItems;
-        //   }, [])
-        // }
       },
-      // {
-      //   label: "Font",
-      //   elements: [{
-      //     type: "range",
-      //     id: "context_font-size",
-      //     label: "Font size",
-      //     event: "oninput =\"ui.settings.FONT_SIZE = this.value;\"",
-      //     prefix: "Font size",
-      //     minRange: 12,
-      //     maxRange: 20,
-      //     value: ui.settings.FONT_SIZE,
-      //   },
-      //   {
-      //     prefix: "<a href='https://fonts.google.com/' title='go to google fonts' target='_blanc'>Font family</a>",
-      //     postfix: "",
-      //     type: "text-input",
-      //     id: "context-menu_font-family",
-      //     label: "Font family",
-      //     title: "paste embed code of custom font(@import... or url...) or write 'def' to reset it",
-      //     placeholder: this.FONT_NAME,
-      //     event: `onchange="ui.settings.loadCustomFont(this.value);"`,
-      //   }]
-      // },
-
       {
         label: ui.lang.showBgAnimation,
         type: "checkbox",
@@ -3845,7 +3871,14 @@ class Settings {
         id: "context_show-start-on-load",
         checked: ui.settings.START_ON_LOAD,
         event: `onchange="ui.settings.START_ON_LOAD = this.checked;"`,
-      }
+      },
+      // {
+      //   label: "**Export completion progress**",
+      //   type: "button",
+      //   name: "context_export-completion",
+      //   id: "context_export-completion",
+      //   event: `onclick="ui.exportCompletionDataToXlsx()"`,
+      // }
 
     ]
   }
@@ -4086,6 +4119,8 @@ class Settings {
     settingsElement.appendChild(settingsContainerElement);
     return settingsElement;
   }
+
+
 }
 
 class GameCard {
@@ -7933,6 +7968,23 @@ const loadGameInfo = async (gameID) => {
   const games = await infoResponce.json();
   return gameID ? games.find(g => g.ID == gameID) : games;
 }
+function secondsToTimeFormat(seconds) {
+  if (!seconds) return '';
+  const isNegative = seconds < 0;
+  isNegative && (seconds *= -1);
+
+  let hours = Math.floor(seconds / 3600);
+  let minutes = Math.floor((seconds % 3600) / 60);
+  let remainingSeconds = seconds % 60;
+
+  // Додавання ведучих нулів, якщо необхідно
+  hours = (hours < 10) ? "0" + hours : hours;
+  minutes = (minutes < 10) ? "0" + minutes : minutes;
+  remainingSeconds = (remainingSeconds < 10) ? "0" + remainingSeconds : remainingSeconds;
+
+  return `${isNegative ? "-" : ""}${hours != "00" ? hours + ":" : ""}${minutes}:${remainingSeconds}`;
+}
+
 export const bgAnimation = ({ fps = 120, speed = 50 }) => {
   const canvas = document.createElement("canvas");
   canvas.id = 'starfield';
