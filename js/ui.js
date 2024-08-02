@@ -1,7 +1,6 @@
 import { loadSections } from "./htmlBuilder.js";
 
 import { config, ui, apiWorker, userAuthData } from "./script.js";
-import * as XLSX from '../node_modules/xlsx/xlsx.mjs';
 
 export class UI {
   VERSION = "0.49";
@@ -7970,6 +7969,7 @@ const loadGameInfo = async (gameID) => {
 }
 function secondsToTimeFormat(seconds) {
   if (!seconds) return '';
+  seconds = parseInt(seconds) ?? 0;
   const isNegative = seconds < 0;
   isNegative && (seconds *= -1);
 
@@ -7982,7 +7982,9 @@ function secondsToTimeFormat(seconds) {
   minutes = (minutes < 10) ? "0" + minutes : minutes;
   remainingSeconds = (remainingSeconds < 10) ? "0" + remainingSeconds : remainingSeconds;
 
-  return `${isNegative ? "-" : ""}${hours != "00" ? hours + ":" : ""}${minutes}:${remainingSeconds}`;
+  const time = `${hours}:${minutes}:${remainingSeconds}`;
+  console.log(time, seconds)
+  return time;
 }
 
 export const bgAnimation = ({ fps = 120, speed = 50 }) => {
