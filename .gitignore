@@ -8,3 +8,8 @@ json/games/rawg-platforms.json
 node_modules
 webpack.config.js
 dist/bundle.min.js.LICENSE.txt
+assets/database.sql
+js
+elements
+css
+

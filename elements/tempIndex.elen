@@ -10,7 +10,7 @@
   <meta property="og:type" content="website" />
   <link rel="icon" href="./favicon.ico">
   <title>RAchievements</title>
-  <link rel="stylesheet" href="./css/style-compiled.css" />
+  <link rel="stylesheet" href="./dist/style.css" />
 
 </head>
 
@@ -25,7 +25,6 @@
   <div class="wrapper">
   </div>
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
-  <!-- <script type="module" src="./js/script.js"></script> -->
   <script src="./dist/bundle.min.js"></script>
 </body>
 

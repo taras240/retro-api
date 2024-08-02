@@ -36,12 +36,13 @@
   align-items: flex-start;
   justify-content: flex-start;
   align-content: flex-start;
-  gap: 10px;
+  gap: 5px;
   transition: none;
   flex: 1;
 }
 
 .target-achiv {
+  --mark-color: transparent;
   position: relative;
   flex-basis: 350px;
   flex-grow: 1;
@@ -49,20 +50,50 @@
   display: flex;
   gap: 10px;
   color: var(--font-color);
-  background-color: var(--secondary-color);
+  background: var(--secondary-color);
   border-radius: var(--border-radius);
   overflow: hidden;
   /* box-shadow: 1px 1px 1px 0px #000000a1; */
   transition: 0.1s;
 }
 
+/* .target-achiv.earned {
+  background: linear-gradient(to right, silver 0%, var(--secondary-color) 10%);
+}
+
+.target-achiv.earned.hardcore {
+  background: linear-gradient(to right, gold, var(--secondary-color) 10%);
+} */
+
+.target-achiv::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background-color: var(--mark-color);
+  box-shadow: 0 0 5px 0px var(--mark-color);
+  z-index: 1;
+}
+
+.target-achiv.earned::before {
+  --mark-color: silver;
+}
+
+.target-achiv.earned.hardcore::before {
+  --mark-color: gold;
+}
+
 .target-achiv:not(.hardcore).highlight {
-  border: 1px solid greenyellow;
+  --mark-color: green;
+  /* border: 1px solid greenyellow; */
   /* box-shadow: 0 0 5px 2px var(--font-color); */
 }
 
 .highlight-passed .target-achiv:not(.hardcore).passed {
-  border: 1px solid red;
+  --mark-color: crimson;
+  /* border: 1px solid red; */
   /* box-shadow: 0 0 5px 2px var(--font-color); */
 }
 
@@ -158,8 +189,8 @@
   right: 0;
   top: 50%;
   transform: translateY(-50%);
-  --color: silver;
-  background: linear-gradient(to bottom right, transparent, var(--color));
+  --mark-color: silver;
+  background: linear-gradient(to bottom right, transparent, var(--mark-color));
   mask-size: 2rem 2rem;
   mask-repeat: no-repeat;
   mask-position: center;
@@ -172,7 +203,7 @@
 }
 
 .target-achiv.earned.hardcore::after {
-  --color: gold;
+  --mark-color: gold;
   mask-size: contain;
   mask-image: url(../assets/img/military_medal.svg);
 }

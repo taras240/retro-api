@@ -1073,7 +1073,8 @@ export class UI {
       TotalAchievements: game.NumAchievements,
       EarnedAchievements: game.NumAwardedHardcore,
       EarnedAchievementsSoftcore: game.NumAwarded,
-      PlayedTime: secondsToTimeFormat(config.ui.update_section.playTime[game.GameID])
+      PlayedTime: secondsToTimeFormat(config.ui.update_section.playTime[game.GameID]),
+      Notes: config.ui.note_section?.game_notes && config.ui.note_section.game_notes[game.GameID]?.replace(/;|\n/g, " "),
     }));
 
     if (!completionResults || completionResults.length == 0) return;
@@ -1092,7 +1093,8 @@ export class UI {
       row.TotalAchievements,
       row.EarnedAchievements,
       row.EarnedAchievementsSoftcore,
-      row.PlayedTime
+      row.PlayedTime,
+      row.Notes,
     ]);
 
     const csvContent = [
