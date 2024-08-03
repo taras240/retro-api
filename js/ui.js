@@ -1026,6 +1026,9 @@ export class UI {
       return awardA - awardB != 0 ? awardA - awardB : awardADate - awardBDate;
     },
     level: (a, b) => {
+      if (!a.level && !b.level) return UI.sortBy.default(a, b);
+      if (!a.level) return 1;
+      if (!b.level) return -1;
       return a.level - b.level
     },
   }
@@ -1669,7 +1672,7 @@ class AchievementsBlock {
       achievement.TrueRatio > 300 && (achivElement.dataset.rarity = "mythycal");
       achivElement.dataset.DisplayOrder = achievement.DisplayOrder;
       achivElement.dataset.type = achievement.type;
-      achivElement.dataset.level = achievement.level;
+      achievement.level && (achivElement.dataset.level = achievement.level);
 
       achivElement.dataset.NumAwardedHardcore = achievement.NumAwardedHardcore;
       achievement.DateEarnedHardcore && (achivElement.dataset.DateEarnedHardcore = achievement.DateEarnedHardcore);
@@ -5304,7 +5307,7 @@ class Target {
 
       targetElement.dataset.NumAwardedHardcore = achievement.NumAwardedHardcore;
       targetElement.dataset.achivId = id;
-      targetElement.dataset.level = achievement.level;
+      achievement.level && (targetElement.dataset.level = achievement.level);
     }
     const setElementHtml = () => {
 
@@ -5323,7 +5326,10 @@ class Target {
         </div>
         <div class="target-achiv-details">
           <h3 class="achiv-name">
-          ${achievement.level < 1000 ? `<p class="target-level-badge badge badge-bold badge_gold"> LVL ${achievement.level?.toString()?.replace(".", "-")} </p>` : ""}
+
+          ${achievement.zone ? `<p class="target-level-badge badge badge-bold badge_gold">${achievement.zone} Zone</p>` : ""}
+
+          ${achievement.level ? `<p class="target-level-badge badge badge-bold badge_gold"> LVL ${achievement.level?.toString()?.replace(".", "-")}</p>` : ""}
             <a target="_blanc" href="https://retroachievements.org/achievement/${id}">
               ${achievement.Title}
             </a>
@@ -7652,29 +7658,24 @@ const parseCurrentGameLevel = (richPresence) => {
     });
   }
 
-  const checkLevel = (inputStr, levelNames) => {
-    const regexWordSecond = new RegExp(`(${levelNamesString})(\\s|-\\s*|:\\s*)((\\d+-\\d+)|(\\d+))`, 'gi');
-
-    const regexWordFirst = new RegExp(`\\s*((\\d+-\\d+)|(\\d+))\\s(${levelNamesString})`, 'gi');
-
-    const matchesSecond = inputStr.matchAll(regexWordSecond);
-    for (const match of matchesSecond) {
-      const level = Number(match[3]?.replace('-', '.'));
-      return level;
+  const checkLevel = (inputStr, zoneNames) => {
+    const regexLevel = new RegExp(`(${levelNamesString})(\\s|-\\s*|:\\s*)((\\d+-\\d+)|(\\d+))`, 'gi');
+    const regexZoneName = new RegExp(`\\b${zoneNames?.join("\\b|\\b")}\\b`, 'g');
+    const zoneIndex = ui.GAME_DATA.zones?.indexOf(inputStr.match(regexZoneName)[0]) + 1;
+    const levelMatches = inputStr.matchAll(regexLevel);
+    let level;
+    for (const match of levelMatches) {
+      level = match[3]?.replace('-', '.');
     }
-
-    // const matchesFirst = inputStr.matchAll(regexWordFirst);
-    // for (const match of matchesFirst) {
-    //   const level = Number(match[1]?.replace('-', '.'));
-    //   return level;
-    // }
-
-    return null;
+    if (zoneIndex > 0 && !level.includes(".")) {
+      level = `${zoneIndex}.${level}`;
+    }
+    return Number(level);
   };
 
   const inputStr = replaceWrittenNumbers(richPresence);
 
-  levelNumber = checkLevel(inputStr);
+  levelNumber = checkLevel(inputStr, ui.GAME_DATA.zones);
 
   return Number.isFinite(levelNumber) ? levelNumber : false;
 
@@ -7985,7 +7986,7 @@ function secondsToTimeFormat(seconds) {
   remainingSeconds = (remainingSeconds < 10) ? "0" + remainingSeconds : remainingSeconds;
 
   const time = `${hours}:${minutes}:${remainingSeconds}`;
-  console.log(time, seconds)
+
   return time;
 }
 

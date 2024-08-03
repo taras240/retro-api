@@ -296,7 +296,7 @@
 .header-icon {
     width: 1.5rem;
     aspect-ratio: 1;
-    background-color: white;
+    background-color: var(--font-color);
     mask-size: contain;
     mask-position: center;
     mask-repeat: no-repeat;

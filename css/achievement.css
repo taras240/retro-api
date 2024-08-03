@@ -195,7 +195,7 @@
   aspect-ratio: 1;
   position: relative;
   overflow: hidden;
-  transition: opacity 0.2s;
+  transition: opacity 0.2s, translate 0.2s;
 }
 
 .achiv-preview {
@@ -242,7 +242,7 @@
 
 
 .achiv-block:not(.hidden):hover .preview-container {
-  top: -5px;
+  translate: 0 -5px;
 }
 
 /** ----[ TOOLTIP ]--------- */

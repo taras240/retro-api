@@ -73,8 +73,9 @@
   width: 3px;
   height: 100%;
   background-color: var(--mark-color);
-  box-shadow: 0 0 5px 0px var(--mark-color);
+  box-shadow: 0 0 3px 0px var(--mark-color);
   z-index: 1;
+  transition: background-color 1s, box-shadow 1s;
 }
 
 .target-achiv.earned::before {
@@ -227,6 +228,7 @@
 
 .target-achiv-details {
   /* height: 100%; */
+  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -284,6 +286,7 @@
   flex-wrap: wrap;
   gap: 10px;
   align-items: center;
+  /* justify-content: space-evenly; */
   z-index: 1;
 }
 

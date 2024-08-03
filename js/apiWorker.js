@@ -158,6 +158,7 @@ export class APIWorker {
       .then(gameProgressObject => {
         gameProgressObject = {
           ...gameProgressObject,
+          ...this.parseBadges(gameProgressObject),
           TotalRealPlayers: 0,
           TotalRetropoints: 0,
           progressionRetroRatio: 0,
@@ -275,8 +276,7 @@ export class APIWorker {
         Object.values(gameProgressObject.Achievements)
           .map(cheevo =>
             this.fixAchievement(cheevo, gameProgressObject));
-
-        gameProgressObject = this.fixGameTitle(gameProgressObject);
+        this.parseLevels(gameProgressObject);
         return gameProgressObject;
       });
   }
@@ -320,8 +320,8 @@ export class APIWorker {
         NumAchievements: game.NumAchievedHardcore + "/" + game.AchievementsTotal,
         DateEarnedHardcore: game.LastPlayed //for sort methods
       }
-      return this.fixGameTitle(game);
-    }));;
+      return { ...game, ...this.parseBadges(game) };
+    }));
   }
 
   getUserProfile({ userName }) {
@@ -411,7 +411,7 @@ export class APIWorker {
     const { NumDistinctPlayers, NumAwardedToUserHardcore, TotalRealPlayers } = gameData;
 
     const trend = 100 * (NumAwardedHardcore - NumAwardedToUserHardcore * 0.5) / ((NumDistinctPlayers + TotalRealPlayers) * 0.5 - NumAwardedToUserHardcore * 0.5);
-
+    const earnedRateHardcore = (100 * NumAwardedHardcore / NumDistinctPlayers);
     gameData.Achievements[ID] = {
       ...achievement,
       totalPlayers: NumDistinctPlayers,
@@ -421,9 +421,10 @@ export class APIWorker {
       DateEarnedHardcore: DateEarnedHardcore && this.toLocalTimeString(DateEarnedHardcore),
       prevSrc: `https://media.retroachievements.org/Badge/${BadgeName}.png`,
       rateEarned: ~~(100 * NumAwarded / NumDistinctPlayers) + "%",
-      rateEarnedHardcore: ~~(100 * NumAwardedHardcore / NumDistinctPlayers) + "%",
+      rateEarnedHardcore: NumAwardedHardcore < 20 ? NumAwardedHardcore : earnedRateHardcore < 10 ? `${earnedRateHardcore.toFixed(1)}%` : `${earnedRateHardcore.toFixed(0)}%`,
       trend: trend,
-      level: this.getCheevoLevel(achievement),
+      // level: this.getCheevoLevel(achievement),
+      // zone: this.getCheevoZone(achievement),
       retroRatio: (TrueRatio / Points).toFixed(2),
       difficulty:
         trend < 1.5 && TrueRatio > 300 || TrueRatio >= 500 ? "hell" :
@@ -434,7 +435,7 @@ export class APIWorker {
                   "easy",
     }
   }
-  fixGameTitle(game) {
+  parseBadges(game) {
     const ignoredWords = [/\[SUBSET[^\[]*\]/gi, /~[^~]*~/g, ".HACK//",];
     let title = game.Title;
 
@@ -452,7 +453,7 @@ export class APIWorker {
     }, []);
     game.badges = badges;
     game.FixedTitle = title.trim();
-    return game;
+    return { badges: badges, FixedTitle: title.trim() };
   }
   toLocalTimeString(UTCTime) {
     const UTCReg = /(\+00\:00$)|(z$)/gi;
@@ -470,33 +471,68 @@ export class APIWorker {
     return date.toLocaleDateString("uk-UA", options);
 
   }
+  parseLevels(game) {
+    const levels = Object.values(game.Achievements)
+      .sort((a, b) => a.ID - b.ID)
+      .sort((a, b) => a.DisplayOrder - b.DisplayOrder)
+      .reduce((levels, cheevo) => {
+        const zone = this.getCheevoZone(cheevo);
+        zone && (
+          levels.zoneCount++,
+          !levels.zoneNames.includes(zone) && levels.zoneNames.push(zone)
+        );
+        const level = this.getCheevoLevel(cheevo);
+        level && (levels.levelCount++);
+        levels.data.push({ ID: cheevo.ID, zone: zone, level: level });
+        return levels;
+      }, { zoneCount: 0, levelCount: 0, data: [], zoneNames: [] });
+    if (levels.zoneCount > 3 && levels.zoneCount >= levels.levelCount) {
+      game.zones = levels.zoneNames;
+      levels.zoneNames.forEach((name, index) => {
+        Object.values(game.Achievements).forEach(cheevo => {
+          const regex = new RegExp(`\\b${name}\\b`, "g");
+          (regex.test(cheevo.Description) || regex.test(cheevo.Title)) && (cheevo.zone = name, cheevo.level = index + 1)
+        })
+      })
+      levels.data.forEach(levelObj => {
+        levelObj.zone && (
+          game.Achievements[levelObj.ID].zone = levelObj.zone,
+          game.Achievements[levelObj.ID].level = +`${levels.zoneNames.indexOf(levelObj.zone) + 1}${levelObj.level ? "." + levelObj.level : ""}`)
+      })
+    }
+    else {
+      levels.data.forEach(levelObj => {
+        game.Achievements[levelObj.ID].level = levelObj.level;
+      })
+    }
+  }
   getCheevoLevel(cheevo) {
     const levelNames = [
-      'level', 'levels', 'stage', 'area', 'world', 'mission', 'chapter', 'section', 'part',
+      'level', 'levels', 'stage\\b', 'stages', 'area', 'world', 'mission', 'chapter', 'section', 'part',
       'zone', 'phase', 'realm', 'domain', 'episode', 'act', 'sequence', 'tier', 'floor',
-      'dimension', 'region', 'scene', 'screen', 'complete', 'round\\s'
+      'dimension', 'region', 'scene', 'screen', 'round\\s',
     ];
 
     const numberMapping = {
       'one': '1', 'first': '1',
       'two': '2', 'second': '2',
       'three': '3', 'third': '3',
-      'four\\s': '4', 'fourth': '4',
+      'four': '4', 'fourth': '4',
       'five': '5', 'fifth': '5',
-      'six\\s': '6', 'sixth': '6',
-      'seven\\s': '7', 'seventh': '7',
-      'eight\\s': '8', 'eighth': '8',
+      'six': '6', 'sixth': '6',
+      'seven': '7', 'seventh': '7',
+      'eight': '8', 'eighth': '8',
       'nine': '9', 'ninth': '9',
-      'ten\\s': '10', 'tenth': '10',
-      'eleven\\s': '11', 'eleventh': '11',
+      'ten': '10', 'tenth': '10',
+      'eleven': '11', 'eleventh': '11',
       'twelve': '12', 'twelfth': '12',
-      'thirteen\\s': '13', 'thirteenth': '13',
-      'fourteen\\s': '14', 'fourteenth': '14',
-      'fifteen\\s': '15', 'fifteenth': '15',
-      'sixteen\\s': '16', 'sixteenth': '16',
-      'seventeen\\s': '17', 'seventeenth': '17',
-      'eighteen\\s': '18', 'eighteenth': '18',
-      'nineteen\\s': '19', 'nineteenth': '19',
+      'thirteen': '13', 'thirteenth': '13',
+      'fourteen': '14', 'fourteenth': '14',
+      'fifteen': '15', 'fifteenth': '15',
+      'sixteen': '16', 'sixteenth': '16',
+      'seventeen': '17', 'seventeenth': '17',
+      'eighteen': '18', 'eighteenth': '18',
+      'nineteen': '19', 'nineteenth': '19',
       'twenty': '20', 'twentieth': '20'
     };
 
@@ -508,13 +544,14 @@ export class APIWorker {
           .keys(numberMapping)
           .map(num => `\\b${num}\\b`)
           .join("|"), 'gi');
-      return description.replace(regex, match => numberMapping[match.toLowerCase()]);
+      description = description.replace(regex, match => numberMapping[match.toLowerCase().trim()]);
+      return description;
     }
 
     function checkLevel(description) {
       const levelNamesString = levelNames.join("|");
       const d = "\\d{1,2}(?!\\d|\\s*%)";
-      const regex = new RegExp(`(?:${levelNamesString})\\s*((${d}-${d})|(${d}))|((${d}-${d})|(${d}))\\s*(?:${levelNamesString})`, 'gi');
+      const regex = new RegExp(`(?:${levelNamesString})\\s*#{0,1}((${d}-${d})|(${d}))|((${d}-${d})|(${d}))\\s*(?:${levelNamesString})`, 'gi');
       const match = regex.exec(description);
 
       if (match) {
@@ -526,11 +563,37 @@ export class APIWorker {
 
     const description = replaceWrittenNumbers(cheevo.Description);
     const levelNumber = checkLevel(description);
-
+    return levelNumber;
     return Number.isFinite(levelNumber) ? levelNumber :
       (+cheevo.DisplayOrder > 0 ? cheevo.DisplayOrder * 1000 : cheevo.ID);
   }
+  getCheevoZone(cheevo) {
+    // console.log(cheevo)
+    const levelNames = [
+      'Stage', 'Area', 'World', 'Mission', 'Chapter', 'Section', 'Zone',
+    ];
+    const ignoreWords = [
+      "Clear", "Complete", "Beat", "Start", "Enter", "Reach", "Select"
+    ]
+    function checkLevel(description) {
+      const levelNamesString = levelNames.join("|");
+      const ignoreWordsString = ignoreWords.join("|");
+      const levelTitle = "\\b[A-Z]\\w*";
 
+      let regex = new RegExp(`((?:${levelNamesString})\\s((${levelTitle}\\b\\s*){1,2}))|((?!${ignoreWordsString})((${levelTitle}\\s){1,2})(?:${levelNamesString}\\b(?!\\s*\\d)))`, 'gm');
+
+      const match = regex.exec(description);
+      // console.log(match );
+      const zone = match && (match[2] || match[5]);
+      return zone?.trim();
+
+    }
+
+    const description = cheevo.Description;
+    const levelZone = checkLevel(description);
+
+    return levelZone;
+  }
 
 
   async rawgSearchGame({ gameTitle, platformID }) {
