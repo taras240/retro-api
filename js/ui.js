@@ -4,9 +4,13 @@ import { config, ui, apiWorker, userAuthData } from "./script.js";
 
 export class UI {
   VERSION = "0.49";
-  RECENT_ACHIVES_RANGE_MINUTES = Math.ceil(config.updateDelay * 5 / 60);
+  RECENT_ACHIVES_RANGE_MINUTES = Math.max(config.updateDelay * 5 / 60, 5);
+  CHECK_FOR_ONLINE_DELAY_MS = 1 * 60 * 1000; // If user offline and wathing is ON, it check for online whith delay
+  CHECK_FOR_ONLINE_AFTER_SILENCE_MS = 3 * 60 * 1000; // If there is no activity for this time, it will be check for online
   IS_WATCHING = false;
   CURRENT_LEVEL;
+  RP_DATA = { text: "", lastChange: "" };
+  IS_ONLINE = true;
   static AUTOCLOSE_CONTEXTMENU = false;
   static STICK_MARGIN = 10;
   // static isTest = true;
@@ -367,6 +371,8 @@ export class UI {
   totalPoints = 0;
   softcorePoints = 0;
   async checkUpdates(isStart = false) {
+    if (!isStart && !this.IS_ONLINE) return;
+
     const responce = await apiWorker.getProfileInfo({});
     if (responce.LastGameID != config.gameID || isStart) {
       config.gameID = responce.LastGameID;
@@ -394,12 +400,14 @@ export class UI {
 
       this.updateAchievements();
       this.userInfo?.updatePoints({ points: responce });
+      this.RP_DATA.lastChange = new Date();
     }
+    const richPresence = responce.RichPresenceMsg;
+    this.statusPanel.richPresence.innerText = richPresence;
 
-    this.statusPanel.richPresence.innerText = responce.RichPresenceMsg;
-
-    const currentLevel = parseCurrentGameLevel(responce.RichPresenceMsg);
+    const currentLevel = parseCurrentGameLevel(richPresence);
     this.CURRENT_LEVEL = currentLevel;
+
     if (currentLevel) {
       this.target.highlightCurrentLevel(currentLevel);
       this.achievementsBlock.forEach(widget =>
@@ -407,8 +415,40 @@ export class UI {
       )
       this.statusPanel.highlightCurrentLevel(currentLevel);
     }
-  }
 
+    if (richPresence !== this.RP_DATA.text) {
+      this.RP_DATA.lastChange = new Date();
+      this.RP_DATA.text = responce.RichPresenceMsg;
+      this.IS_ONLINE = true;
+    }
+
+    else if (!isStart && this.RP_DATA.lastChange && new Date() - this.RP_DATA.lastChange > this.CHECK_FOR_ONLINE_AFTER_SILENCE_MS) {
+      await this.checkForOnline();
+    }
+  }
+  async checkForOnline() {
+    const parseDate = (UTCTime) => {
+      const UTCReg = /(\+00\:00$)|(z$)/gi;
+      !UTCReg.test(UTCTime) && (UTCTime += "+00:00"); // Mark time as UTC Time   
+      const date = new Date(UTCTime);
+      return date
+    }
+
+    const lastPlayedGame = (await apiWorker.getRecentlyPlayedGames({ count: 1 }))[0];
+    const LastPlayedDate = parseDate(lastPlayedGame.LastPlayed);
+
+    if (new Date() - LastPlayedDate > 3 * 60 * 1000) {
+      this.IS_ONLINE = false;
+      console.log("checkOnline");
+      if (!this.IS_WATCHING) return;
+      setTimeout(() => this.checkForOnline(), this.CHECK_FOR_ONLINE_DELAY_MS)
+    }
+    else {
+      this.RP_DATA.lastChange = new Date();
+      !this.IS_ONLINE && (this.IS_ONLINE = true, this.checkUpdates())
+      this.IS_ONLINE = true;
+    }
+  }
   async sendDiscordMessage({ message = "", type, id }) {
     const messageElements = {};
     const webhook = config.DISCORD_WEBHOOK;
@@ -2724,6 +2764,7 @@ class StatusPanel {
       else {
         ui.startWatching();
         this.gameTimeInterval = setInterval(() => {
+          if (!ui.IS_ONLINE) return;
           this.gameTime++;
           this.sessionGameTime++;
           this.timerTime--;
@@ -3286,9 +3327,13 @@ class StatusPanel {
     container.style.fontSize = fontSize;
   }
   blinkUpdate() {
-    if (this.BLINK_ON_UPDATE) {
+    this.section.classList.remove("offline", "blink")
+    if (this.BLINK_ON_UPDATE && ui.IS_ONLINE) {
       this.section.classList.add("blink");
-      setTimeout(() => this.section.classList.remove("blink"), 1000);
+      setTimeout(() => this.section.classList.remove("blink", "offline"), 1000);
+    }
+    else if (!ui.IS_ONLINE) {
+      this.section.classList.add("offline");
     }
   }
 }

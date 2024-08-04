@@ -23,7 +23,13 @@
 }
 
 .status__section.blink::after {
+  --color: var(--font-color);
   animation: update-blink 1s;
+}
+
+.status__section.offline::after {
+  background-color: crimson;
+  transition: .2s;
 }
 
 @keyframes update-blink {
@@ -32,7 +38,7 @@
   }
 
   50% {
-    background-color: var(--font-color);
+    background-color: var(--color);
   }
 
   100% {
