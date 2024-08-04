@@ -1,0 +1,151 @@
+.awards__section {
+    display: flex;
+    flex-direction: column;
+    gap: 0rem;
+}
+
+.user-info__awards-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem 1rem 6rem;
+    overflow: scroll;
+}
+
+.user-info__awards-list.grid {
+    justify-content: space-evenly;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.awards__game-item {
+    width: 100%;
+    border-radius: 0.5rem;
+    background-color: var(--secondary-color);
+    overflow: hidden;
+    box-shadow: var(--item-shadow);
+
+    flex-shrink: 0;
+}
+
+.grid .awards__game-item {
+    width: auto;
+    border-radius: 0.5rem;
+    background-color: transparent;
+    overflow: hidden;
+    box-shadow: var(--item-shadow);
+    border: 2px solid transparent;
+}
+
+.awards__game-item {
+    border-bottom: 1px solid transparent;
+}
+
+.awards__game-item.beaten {
+    border-color: silver;
+}
+
+.awards__game-item.mastered {
+    border-color: gold;
+}
+
+.awards__game-item.completed {
+    border-color: brown;
+}
+
+.grid .awards__game-item.event {
+    /* border-color: violet; */
+    animation: event-award-animation 5s infinite;
+}
+
+@keyframes event-award-animation {
+    0% {
+        border-color: violet;
+        box-shadow: 0 0 5px 0px violet;
+    }
+
+    50% {
+        border-color: blueviolet;
+        box-shadow: 0 0 5px 0px blueviolet;
+    }
+
+    100% {
+        border-color: violet;
+        box-shadow: 0 0 5px 0px violet;
+    }
+}
+
+.awards__game-container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 1rem;
+    height: 6.5rem;
+    padding: 0.75rem;
+}
+
+.grid .awards__game-container {
+    padding: 0;
+    background-color: transparent;
+}
+
+.awards__game-preview-container {
+    height: 100%;
+}
+
+.awards__game-preview {
+    height: 100%;
+    aspect-ratio: 1;
+    border-radius: 0.5rem;
+}
+
+.awards__game-description {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.grid .awards__game-description {
+    display: none;
+}
+
+.awards__game-title {
+    font-size: 1.2rem;
+    font-weight: 400;
+    max-width: 100%;
+    overflow-x: scroll;
+    text-wrap: nowrap;
+    color: var(--font-color);
+}
+
+.awards__game-stats-container {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+    gap: 1rem;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.awards__game-stats__text {
+    font-size: 1rem;
+    color: var(--font-color);
+}
+
+.awards__game-award-type {
+    text-transform: capitalize;
+}
+
+.awards__game-stats__button {
+    position: absolute;
+    right: 1rem;
+}

@@ -1,0 +1,252 @@
+.login_section {
+  position: absolute;
+  min-width: 300px;
+  min-height: 500px;
+  top: calc(50% - 250px);
+  left: calc(50% - 150px);
+  background-color: var(--main-color);
+  display: grid;
+  align-content: space-between;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+.login_section::after,
+.login_section::before {
+  content: "";
+  position: absolute;
+  width: 200%;
+  z-index: -1;
+  background-color: var(--secondary-color);
+  background: linear-gradient(to right,
+      var(--main-color),
+      var(--accent-color),
+      var(--main-color));
+  transform: translate(-50%, -50%) rotate(30deg);
+}
+
+.login_section::before {
+  top: 90%;
+  left: 50%;
+  height: 200px;
+  opacity: 0.6;
+}
+
+.login_section::after {
+  z-index: -1;
+  top: 0%;
+  left: 50%;
+  height: 200px;
+}
+
+.header-container.login-header_container {
+  display: flex;
+  background-color: transparent;
+}
+
+.header-container.login-header_container::after {
+  display: none;
+}
+
+.login-header {
+  flex: 1;
+}
+
+.login-container {
+  flex: 1;
+  display: flex;
+  align-items: start;
+}
+
+.login-form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+  height: 100%;
+}
+
+.user-ident-input {
+  width: 100%;
+}
+
+.form-input-container {
+  width: 100%;
+  display: flex;
+  gap: 5px;
+  flex-direction: column;
+  padding: 15px 20px;
+}
+
+.form-button-container {
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.login-user-image {
+  width: 100px;
+  aspect-ratio: 1;
+  margin: auto;
+  border-radius: 50%;
+  overflow: hidden;
+  image-rendering: pixelated;
+}
+
+.login-form-container label {
+  font-size: 1.1rem;
+}
+
+.login-form-container input {
+  background-color: transparent;
+  color: var(--font-color);
+  font-size: 1.1rem;
+  /* height: 2rem; */
+  border: 1px solid gray;
+  border-radius: 5px;
+  padding: 5px;
+  /* border-bottom: 2px solid gray; */
+  transition: 0.2s;
+}
+
+.login-form-container input:hover,
+.login-form-container input:focus {
+  border-color: white;
+  transition: 0.2s;
+}
+
+.api-input {
+  position: relative;
+}
+
+.text-input.login-api-key {
+  flex-grow: 1;
+  width: 100%;
+  padding-right: 35px;
+}
+
+.paste-api-key {
+  position: absolute;
+  top: 55%;
+  right: 5px;
+  transform: translateY(-50%);
+}
+
+.ra-settings-link {
+  color: var(--font-color);
+  opacity: 0.5;
+  text-align: right;
+}
+
+.ra-settings-link:hover {
+  color: var(--font-color);
+  background-color: var(--accent-color);
+  opacity: 1;
+}
+
+.ra-settings-link:active {
+  color: darkred;
+  text-decoration: underline;
+}
+
+.link-icon {
+  fill: var(--font-color);
+  height: 100%;
+  width: 1rem;
+  vertical-align: middle;
+  margin-bottom: 2px;
+}
+
+.ra-settings-link:hover .link-icon {
+  opacity: 1;
+}
+
+.submit-login {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  font-size: 1.2rem;
+  background-color: transparent;
+  border: 1px solid gray;
+  border-radius: 4px;
+  padding: 5px;
+  color: var(--font-color);
+  width: 100%;
+  padding: 0.5rem;
+  justify-self: center;
+
+  transition: 0.2s;
+}
+
+.submit-login-google {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  font-size: 1.2rem;
+  background-color: transparent;
+  border: 1px solid gray;
+  border-radius: 4px;
+  padding: 5px;
+  color: var(--font-color);
+  width: 100%;
+  padding: 0.5rem;
+  justify-self: center;
+
+  transition: 0.2s;
+}
+
+.submit-login.verified::after {
+  content: "";
+  height: 100%;
+  aspect-ratio: 1;
+  background-image: url(../assets/img/verified.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.submit-login-google:hover,
+.submit-login:hover {
+  border-color: white;
+  box-shadow: 1px 1px 5px 0px black;
+  transition: 0.2s;
+}
+
+.submit-login-google:active,
+.submit-login:active {
+  border-color: gray;
+  transform: scale(0.95);
+  box-shadow: 1px 1px 2px 1px black;
+  transition: 0.2s;
+}
+
+.submit-login.error,
+.submit-login.verified {
+  background-color: red;
+  color: black;
+  font-weight: 600;
+  border-color: transparent;
+  transition: 0.2s;
+}
+
+.submit-login-google.linked,
+.submit-login.verified {
+  background-color: green;
+  color: black;
+  font-weight: 600;
+  border-color: transparent;
+}
+
+
+
+.login-text {
+  font-size: inherit;
+  color: inherit;
+}

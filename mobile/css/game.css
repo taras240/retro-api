@@ -1,0 +1,235 @@
+.game__header-container {
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+.game-header__background-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    bottom: 0;
+    overflow: hidden;
+
+}
+
+.game-header__background-img {
+    width: 100%;
+    opacity: 0;
+}
+
+.game-header__background-gradient {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    image-rendering: pixelated;
+    background: linear-gradient(to bottom, transparent, var(--main-color));
+}
+
+.game-header__main-info {
+    padding: 1rem;
+    display: flex;
+    gap: 1rem;
+    z-index: 1;
+}
+
+.game-header__icon-container {
+    position: relative;
+    width: 6rem;
+    height: 6rem;
+    flex-shrink: 0;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.game-header__icon {
+    width: 100%;
+    aspect-ratio: 1;
+    image-rendering: pixelated;
+
+}
+
+.game-header__retro-ratio {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: inline-block;
+    text-transform: uppercase;
+    padding: 0 .25rem;
+    border-radius: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: black;
+    z-index: 2;
+}
+
+
+.game-header__description-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    overflow: hidden;
+}
+
+.game-header__title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-wrap: nowrap;
+    max-width: 100%;
+    overflow-x: scroll;
+}
+
+
+.game-header__progress-container {
+    --progress: 50%;
+    border: 1px solid var(--accent-color);
+    max-width: 100%;
+    border-radius: 0.6rem;
+    font-size: 1.2rem;
+    color: var(--main-color);
+    font-weight: 600;
+    padding: 0.2rem 0.5rem;
+    background-color: var(--accent-color);
+    z-index: 1;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.game-header__progress {
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    background-color: var(--main-color);
+    /* border: 1px so   lid var(--accent-color); */
+    color: var(--font-color);
+    border-radius: 5pt;
+    padding: 0 5pt;
+    text-align: center;
+    width: fit-content;
+}
+
+.game-header__progress-container::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: calc(100% - var(--progress));
+    height: 100%;
+    background-color: var(--main-color);
+    z-index: -1;
+    /* mix-blend-mode: color-dodge; */
+    /* border-radius: 0 5pt 5pt 0; */
+}
+
+.game-header__platform {
+    font-size: 1.0rem;
+    text-wrap: nowrap;
+    overflow-x: scroll;
+    margin: auto 0;
+}
+
+.game-points__container {
+    display: flex;
+    justify-content: space-evenly;
+    z-index: 1;
+}
+
+.game-points__points-name {
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.game-achivs__container {
+    display: flex;
+    flex-direction: column;
+    padding: 0 1rem;
+    gap: 0.75rem;
+    padding-bottom: 7rem;
+    overflow: scroll;
+}
+
+.game-achivs__container.grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.achiv__achiv-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    background-color: var(--secondary-color);
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    width: 100%;
+}
+
+.grid .achiv__achiv-container {
+    height: 7rem;
+    width: 7rem;
+    overflow: hidden;
+    padding: 0;
+}
+
+.achiv__title-container {
+    display: flex;
+    justify-content: start;
+    gap: 1rem;
+    height: 7rem;
+}
+
+.achiv__title-container_small {
+    height: 6rem;
+}
+
+.achiv__preview-container {
+    /* width: 7rem; */
+    padding: 0.5rem;
+    height: 100%;
+    aspect-ratio: 1;
+    border: 0.5rem;
+}
+
+.grid .achiv__preview-container {
+    padding: 0;
+
+}
+
+
+
+.achiv__achiv-description {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+
+}
+
+.achiv__achiv-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.achiv__achiv-text {
+    font-size: 1.1rem;
+
+    overflow-y: hidden;
+}
+
+
+.achiv__icons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    overflow-x: scroll;
+    flex-shrink: 0;
+}
+
+/** -----------Library---------- */
+.search-icon.show-searchbar__button {}

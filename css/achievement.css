@@ -1,0 +1,554 @@
+.achivs {
+  width: 30vw;
+  height: 30vh;
+  min-height: 60px;
+  min-width: 90px;
+  display: flex;
+  flex-direction: column;
+  background: var(--main-color);
+  cursor: grab;
+}
+
+.achivs.hide-bg:not(:hover) {
+  background: transparent;
+}
+
+.achievements-header_container {
+  top: 0;
+  left: 0;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.achivs-header-text {
+  flex-shrink: 1;
+  overflow: hidden;
+}
+
+.achievements-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 100%;
+  overflow: scroll;
+}
+
+
+/** ------------[ ACHIEVEMENT ]------------*/
+/*--------------- OVERLAT-SETS---------------- */
+
+
+.achivs[data-overlay="border"] {
+  --overlay-closed: url("../assets/img/overlay_sets/border/closed.png");
+  --overlay-earned: url("../assets/img/overlay_sets/border/earned.png");
+  --overlay-earned-soft: url("../assets/img/overlay_sets/border/earned_soft.png");
+}
+
+.achivs[data-overlay="digger"] {
+  --overlay-closed: url("../assets/img/overlay_sets/digger/closed-1.png");
+  --overlay-earned: url("../assets/img/overlay_sets/digger/earned.png");
+  --overlay-earned-soft: url("../assets/img/overlay_sets/digger/earned_soft.png");
+}
+
+.achivs[data-overlay="digger"] [data-rarity="rare"] {
+  --overlay-closed: url("../assets/img/overlay_sets/digger/closed-2.png");
+}
+
+.achivs[data-overlay="digger"] [data-rarity="mythycal"] {
+  --overlay-closed: url("../assets/img/overlay_sets/digger/closed-3.png");
+}
+
+.achivs[data-overlay="digger"] [data-rarity="normal"] {
+  --overlay-closed: url("../assets/img/overlay_sets/digger/closed.png");
+}
+
+
+@keyframes q-animation {
+  from {
+    transform: translateX(80%);
+  }
+
+  to {
+    transform: translateX(-80%);
+  }
+}
+
+.achivs[data-overlay="mario_q"] {
+  --overlay-closed: url("../assets/img/overlay_sets/mario_q/closed-1.png");
+  --overlay-earned: url("../assets/img/overlay_sets/mario_q/earned.webp");
+  --overlay-earned-soft: url("../assets/img/overlay_sets/mario_q/earned_soft.png");
+}
+
+
+
+.achivs[data-overlay="mario_q"] [data-rarity="rare"],
+.achivs[data-overlay="mario_q"] [data-rarity="normal"] {
+  --overlay-closed: url("../assets/img/overlay_sets/mario_q/closed.png");
+}
+
+.achivs[data-overlay="mario_q"] [data-type="missable"][data-rarity="rare"],
+.achivs[data-overlay="mario_q"] [data-type="missable"][data-rarity="normal"] {
+  --overlay-closed: url("../assets/img/overlay_sets/mario_q/missable_q.png");
+}
+
+.achivs[data-overlay="mario_q"] [data-rarity="mythycal"] {
+  --overlay-closed: url("../assets/img/overlay_sets/mario_q/closed-2.png");
+}
+
+.achivs[data-overlay="cd_box"] {
+  --overlay-closed: url("../assets/img/overlay_sets/cd_box/closed.png");
+  --overlay-earned: url("../assets/img/overlay_sets/cd_box/earned.png");
+  --overlay-earned-soft: url("../assets/img/overlay_sets/cd_box/earned_soft.png");
+}
+
+.achivs[data-overlay="kirby"] {
+  --overlay-closed: url("../assets/img/overlay_sets/kirby/closed.png");
+  --overlay-earned: url("../assets/img/overlay_sets/kirby/earned.png");
+  --overlay-earned-soft: url("../assets/img/overlay_sets/kirby/earned_soft.png");
+}
+
+.achivs[data-overlay="megaman"] {
+  --overlay-closed: url("../assets/img/overlay_sets/megaman/closed.png");
+  --overlay-earned: url("../assets/img/overlay_sets/megaman/earned.png");
+  --overlay-earned-soft: url("../assets/img/overlay_sets/megaman/earned_soft.png");
+}
+
+.achivs[data-overlay="sonic"] {
+  --overlay-closed: url("../assets/img/overlay_sets/sonic/closed.png");
+  --overlay-earned: url("../assets/img/overlay_sets/sonic/earned.png");
+  --overlay-earned-soft: url("../assets/img/overlay_sets/sonic/earned_soft.png");
+}
+
+.achivs [data-type="missable"] .preview-container::before {
+  filter: invert(1)
+}
+
+/* ---------------------------------- */
+.achiv-block {
+  --height: 104px;
+  position: relative;
+  aspect-ratio: 1;
+  cursor: default;
+  z-index: 1;
+}
+
+.achiv-block.highlight::after {
+  content: "";
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  max-width: 25%;
+  max-height: 25%;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background-color: greenyellow;
+  box-shadow: 0 0 5px 1px black;
+  z-index: 10;
+}
+
+.achiv-block.mario-dumb {
+  animation: hardcore-earned-animation 0.25s forwards cubic-bezier(0, .52, .96, 1.7);
+}
+
+@keyframes hardcore-earned-animation {
+  0% {
+    top: 0;
+  }
+
+  50% {
+    top: -20px;
+  }
+
+  100% {
+    top: 0;
+  }
+}
+
+.achiv-block.hidden .preview-container {
+  opacity: 0.2;
+}
+
+.achiv-block.hidden:hover .preview-container {
+  opacity: 0.5;
+}
+
+.achiv-block.removed {
+  display: none;
+}
+
+.achiv-block.earned.hardcore .achiv-preview {
+  border: 1px solid gold;
+}
+
+.achiv-block.earned .achiv-preview {
+  filter: grayscale(0.3);
+}
+
+.achiv-block.hardcore .achiv-preview {
+  filter: grayscale(0);
+}
+
+.preview-container {
+  height: var(--achiv-height);
+  aspect-ratio: 1;
+  position: relative;
+  overflow: hidden;
+  transition: opacity 0.2s, translate 0.2s;
+}
+
+.achiv-preview {
+  position: relative;
+  height: 100%;
+  aspect-ratio: 1;
+  filter: grayscale(1);
+  image-rendering: pixelated;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+/* .achiv-block.overlay:not(:active) .preview-container::after, */
+.achiv-block.overlay:not(:active) .preview-container::before {
+  position: absolute;
+  content: "";
+  aspect-ratio: 1;
+  top: 0;
+  left: 0;
+  /* transform: translate(-50%, -50%); */
+  background-position: center;
+  background-size: contain;
+  image-rendering: pixelated;
+}
+
+
+.achiv-block .preview-container::before {
+  height: calc(100%);
+  background-image: var(--overlay-closed);
+  z-index: 1;
+  opacity: 1;
+  transition: .2s;
+  transition-delay: 0.12s;
+}
+
+.achiv-block.earned .preview-container::before {
+  background-image: var(--overlay-earned-soft);
+}
+
+.achiv-block.earned.hardcore .preview-container::before {
+
+  background-image: var(--overlay-earned);
+}
+
+
+.achiv-block:not(.hidden):hover .preview-container {
+  translate: 0 -5px;
+}
+
+/** ----[ TOOLTIP ]--------- */
+
+.popup {
+  position: absolute;
+  max-width: 25rem;
+  width: fit-content;
+
+  margin: 1px;
+  padding: 8px 16px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 4px;
+
+  background-color: var(--secondary-color);
+  background: linear-gradient(to top left,
+      var(--main-color),
+      var(--secondary-color));
+  box-shadow: 0 0 2px 0 black;
+
+  border-radius: 8px;
+  overflow: hidden;
+
+  visibility: hidden;
+  opacity: 0;
+  font-size: 1.15rem;
+  z-index: 1000;
+  transition: opacity 0.2s;
+}
+
+.popup h3 {
+  position: relative;
+  font-size: 1.15rem;
+  font-weight: 500;
+
+}
+
+.popup::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 5px;
+  height: 100%;
+  background-color: var(--accent-color);
+  box-shadow: 0 0 5px 0px var(--accent-color);
+  z-index: 100;
+}
+
+.popup.left-side {
+  transform: translateX(calc(-100% - 35px));
+}
+
+.popup.left-side.top-side {
+  transform: translateX(calc(-100% - 35px)) translateY(calc(-90%));
+}
+
+.popup.top-side {
+  transform: translateY(calc(-90%));
+}
+
+.achiv-title {
+  font-weight: 600;
+  line-height: 2rem;
+}
+
+.achiv-description {
+  font-size: 1.1rem;
+  color: var(--font-color);
+
+}
+
+.achiv-details-block .points {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.points p {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+
+
+
+.popup.visible {
+  visibility: visible;
+  opacity: 1;
+  transition: 0.2s;
+}
+
+/**---------- MARIO_ACTION-------------------- */
+.coin__container,
+.mario__container {
+  position: fixed;
+  z-index: 10;
+  image-rendering: pixelated;
+}
+
+.mario__container {
+  width: calc(var(--achiv-height));
+  aspect-ratio: 1;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.coin__container {
+  --frame-duration: 50ms;
+  --coin-anim-duration: 750ms;
+  height: calc(var(--achiv-height) / 2);
+  width: var(--achiv-height);
+
+}
+
+.coins__coin {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url(../assets/img/mario_sprites/coin/coin-0.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  animation: coin-earn-animation var(--coin-anim-duration) linear forwards,
+    coin-rotate-animation calc(var(--frame-duration) * 4) steps(4, start) infinite;
+}
+
+.coins__points {
+  position: absolute;
+  top: 0%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: calc(var(--achiv-height) / 2.5);
+  background-color: black;
+  border-radius: 5px;
+  padding: 2px;
+  color: goldenrod;
+
+  font-weight: 600;
+  opacity: 0;
+  animation: coin-points-animation 2s linear forwards;
+  animation-delay: var(--coin-anim-duration);
+}
+
+.mario__container.jump {
+  background-image: url(../assets/img/mario_sprites/mario_jump/jump_1.png);
+}
+
+.mario__container.stand {
+  background-image: url(../assets/img/mario_sprites/mario_jump/jump_0.png);
+
+}
+
+.mario__container.to-left {
+  transform: scaleX(-1);
+}
+
+.mario__container.walk {
+  --frame-duration: 70ms;
+  animation: mario-walk-animation calc(var(--frame-duration) * 3) steps(3, start) infinite;
+}
+
+.mario__container.ext.walk {
+  --frame-duration: 70ms;
+  animation: mario-ext-walk-animation calc(var(--frame-duration) * 2) steps(2, start) infinite;
+}
+
+@keyframes mario-ext-walk-animation {
+  0% {
+    background-image: url(../assets/img/mario_sprites/mario_walk/m-r-0.png);
+  }
+
+  50% {
+    background-image: url(../assets/img/mario_sprites/mario_walk/m-r-1.png);
+  }
+
+  100% {
+    background-image: url(../assets/img/mario_sprites/mario_walk/m-r-0.png);
+  }
+}
+
+@keyframes mario-walk-animation {
+  0% {
+    background-image: url(../assets/img/mario_sprites/mario_walk/walk_1.png);
+  }
+
+  33.33% {
+    background-image: url(../assets/img/mario_sprites/mario_walk/walk_2.png);
+  }
+
+  66.67% {
+    background-image: url(../assets/img/mario_sprites/mario_walk/walk_3.png);
+  }
+
+  100% {
+    background-image: url(../assets/img/mario_sprites/mario_walk/walk_1.png);
+  }
+}
+
+@keyframes coin-rotate-animation {
+  0% {
+    background-image: url(../assets/img/mario_sprites/coin/coin-0.png);
+  }
+
+  25% {
+    background-image: url(../assets/img/mario_sprites/coin/coin-1.png);
+  }
+
+  50% {
+    background-image: url(../assets/img/mario_sprites/coin/coin-2.png);
+  }
+
+  75% {
+    background-image: url(../assets/img/mario_sprites/coin/coin-3.png);
+  }
+}
+
+@keyframes coin-points-animation {
+  0% {
+    opacity: 0;
+    margin-top: 0;
+  }
+
+  20% {
+    opacity: 1;
+    margin-top: calc(0px - var(--achiv-height) * 0.2);
+  }
+
+  60% {
+    opacity: 1;
+  }
+
+  100% {
+    margin-top: calc(0px - var(--achiv-height));
+    opacity: 0;
+  }
+}
+
+@keyframes coin-earn-animation {
+  0% {
+    transform: translateY(-0%);
+  }
+
+  25% {
+    transform: translateY(-185%);
+    animation-timing-function: ease-out;
+  }
+
+  50% {
+    transform: translateY(-200%);
+    animation-timing-function: ease-in;
+  }
+
+  75% {
+    transform: translateY(-180%);
+    animation-timing-function: ease-out;
+    opacity: 1;
+  }
+
+  99.9% {
+    transform: translateY(-50%);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(-50%);
+    opacity: 0;
+  }
+}
+
+/** MOVING TO START ANIM  */
+.achiv-block.move {
+  position: absolute !important;
+  transition: var(--duration) linear !important;
+  z-index: 5;
+}
+
+.grow-element {
+  visibility: hidden;
+  width: 0;
+  animation: grow-anim var(--duration) linear forwards;
+}
+
+@keyframes grow-anim {
+  to {
+    width: var(--achiv-height);
+  }
+}
+
+.shrink-element {
+  opacity: 0;
+  height: 20px;
+  width: var(--achiv-height);
+  animation: shrink-anim var(--duration) linear forwards;
+}
+
+@keyframes shrink-anim {
+  to {
+    width: 0px;
+  }
+}

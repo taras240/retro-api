@@ -1,0 +1,219 @@
+/** -----[ Settings Section ]--------*/
+.section.prefs_section {
+  display: flex;
+  flex-direction: column;
+  width: auto;
+  width: 640px;
+
+  top: 31%;
+  left: 1%;
+  z-index: 1000;
+}
+
+.section.prefs_section:hover {
+  z-index: 101;
+}
+
+.prefs_section.section {
+  background: linear-gradient(to top left,
+      var(--main-color),
+      var(--secondary-color));
+}
+
+/**------------- header -------------*/
+.widget-header-text.prefs-header {
+  /* font-size: 1.5rem; */
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px;
+  gap: 5px;
+}
+
+/**-----------[ Elements ]-----------*/
+/**! NEW ELEMENTS **/
+.settings_setting-line {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+
+}
+
+.settings_setting-header {
+  flex: 1;
+  display: block;
+  line-height: 100%;
+  font-size: 1.1rem;
+  user-select: none;
+}
+
+/**! NEW ELEMENTS **/
+.setting-label {
+  flex: 1;
+  display: block;
+  line-height: 100%;
+  font-size: 1.1rem;
+  user-select: none;
+}
+
+.prefs_section .input:not(.target-user):placeholder-shown {
+  border-color: crimson;
+}
+
+.number-input {
+  width: 4rem;
+  padding: 10px;
+}
+
+.settings-input,
+.input {
+  position: relative;
+  display: block;
+  top: 0px;
+  left: 0px;
+  padding: 2px 15px;
+  background-color: var(--accent-color);
+  border: 1px solid black;
+  border-right: none;
+  border-bottom: none;
+  color: var(--font-color);
+  font-size: 1rem;
+  text-align: center;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 1px 1px 0 var(--shadow-color), 2px 2px 0 var(--shadow-color),
+    3px 3px 0 var(--shadow-color);
+  user-select: none;
+  transition: 0.1s;
+  color: var(--input-color);
+}
+
+.input {
+  min-width: 70px;
+}
+
+.setting-button::after,
+input[type="radio"]+.settings-input::after,
+input[type="checkbox"]+.settings-input::after {
+  content: "";
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: transparent;
+  box-shadow: 0 0 3px 2px transparent;
+  top: 2px;
+  right: 2px;
+}
+
+input[type="radio"]:not(:checked)+.settings-input::after,
+input[type="checkbox"]:not(:checked)+.settings-input::after {
+  background-color: black;
+  box-shadow: 0 0 3px 2px transparent;
+}
+
+.setting-button.checked::after,
+input[type="radio"]:checked+.settings-input::after,
+input[type="checkbox"]:checked+.settings-input::after {
+  background-color: var(--selection-color);
+  box-shadow: 0 0 3px 2px var(--selection-color);
+}
+
+.setting-button:hover,
+.settings-input:hover,
+.input:hover {
+  top: 1px;
+  left: 1px;
+  box-shadow: 1px 1px 0 var(--shadow-color), 2px 2px 0 var(--shadow-color);
+}
+
+.setting-button.checked,
+input:checked+.settings-input,
+.input:focus {
+  top: 2px;
+  left: 2px;
+  box-shadow: 0 0 0;
+}
+
+.setting-button:active,
+.settings-input:active {
+  top: 2px;
+  left: 2px;
+  box-shadow: 0px 0px 0 var(--shadow-color);
+}
+
+#game-achivs-count::after {
+  content: " achieves availible";
+}
+
+.settings_container>* {
+  padding: 7px 20px;
+}
+
+/* .settings_container > *:nth-child(even) {
+  background-color: var(--secondary-color);
+} */
+
+.settings_container>*:not(:first-child) {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.colors-block {
+  display: flex;
+  visibility: visible;
+  opacity: 1;
+  transition: 0.2s;
+}
+
+.colors-block.hidden {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.color-input {
+  background-color: transparent;
+  cursor: pointer;
+  overflow: hidden;
+  width: 30px;
+  transition: 0.2s;
+}
+
+.color-input:hover {
+  transform: scale(1.05);
+}
+
+.color-input:active {
+  transform: scale(0.95);
+}
+
+.svg-button {
+  background-color: transparent;
+}
+
+/* #color-preset-selection option {
+  background-color: var(--secondary-color);
+  color: var(--font-color);
+  padding: 5px;
+  height: 10px;
+} */
+
+.settings-select {
+  padding: 2.5px 4px;
+  font-family: inherit;
+}
+
+.font-input {
+  max-width: 130px;
+  padding: 2px 5px;
+}
+
+.font-input::placeholder {
+  color: var(--font-color);
+  opacity: .6;
+
+}

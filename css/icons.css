@@ -1,0 +1,355 @@
+/* *-----------------BADGES----------- */
+.badge {
+    display: inline-block;
+    font-size: 0.8em;
+    color: black;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-wrap: nowrap;
+    padding: 0px 0.25rem;
+    border-radius: 3px;
+    margin-right: 0.25rem;
+    background-color: chartreuse;
+}
+
+.badge.badge-bold {
+    font-weight: 700;
+    font-size: 0.9em;
+}
+
+.badge_gold {
+    background-color: goldenrod;
+}
+
+.highlight-badge {
+    background-color: var(--font-color);
+    color: var(--main-color);
+    font-size: inherit;
+    font-weight: inherit;
+    text-transform: none;
+}
+
+/** Title badges */
+
+.game-title_original {
+    display: none;
+}
+
+.game-title_genre {
+    background-color: darkslategray;
+    color: white;
+}
+
+.game-title_hack {
+    background-color: crimson;
+}
+
+.game-title_unlicensed {
+    background-color: gold;
+}
+
+.game-title_homebrew {
+    background-color: cyan;
+}
+
+.game-title_prototype {
+    background-color: white;
+}
+
+.game-title_demo {
+    background-color: chocolate;
+}
+
+.game-title_mastered {
+    background-color: gold;
+}
+
+.game-title_completed {
+    background-color: rgba(255, 217, 0, 0.473);
+}
+
+.game-title_beaten-hardcore {
+    background-color: grey;
+}
+
+.game-title_beaten-softcore {
+    background-color: rgba(128, 128, 128, 0.281);
+}
+
+/** Difficult badges */
+
+.difficult-badge__hell {
+    background-color: #ff00ff;
+    box-shadow: 0 0 5px 1px #ff00ff;
+    animation: hell-anim 6s infinite
+}
+
+
+@keyframes hell-anim {
+    0% {
+        background-color: #ff00ff;
+        box-shadow: 0 0 5px 1px #ff00ff;
+    }
+
+    50% {
+        background-color: #800080;
+        box-shadow: 0 0 5px 1px #800080;
+    }
+
+    to {
+        background-color: #ff00ff;
+        box-shadow: 0 0 5px 1px #ff00ff;
+    }
+}
+
+.difficult-badge__insane {
+    background-color: #800080;
+}
+
+.difficult-badge__pro {
+    background-color: orange;
+}
+
+.difficult-badge__expert {
+    background-color: crimson;
+}
+
+.difficult-badge__standard {
+    background-color: green;
+}
+
+.difficult-badge__easy {
+    background-color: greenyellow;
+}
+
+
+/** ICONS  */
+.description-icon {
+    display: inline-block;
+    position: relative;
+    height: 1em;
+    aspect-ratio: 1;
+    background-color: var(--font-color);
+    mask-size: contain;
+    mask-position: center bottom;
+    mask-repeat: no-repeat;
+    transition: background-color .2s;
+}
+
+.icon-button,
+.icon-button:hover {
+    display: grid;
+    place-items: center;
+    padding: 2px;
+    background-color: transparent;
+}
+
+.game-description_link {
+    padding: 0;
+    background-color: transparent;
+    font-size: 1.2rem;
+    display: grid;
+    place-items: center;
+    border-radius: 2px;
+}
+
+.game-description_link:hover {
+    background-color: var(--font-color);
+}
+
+:hover>.link_icon {
+    background-color: var(--secondary-color);
+}
+
+.description-icon .link-icon {
+    background-color: var(--secondary-color);
+}
+
+
+.games__icon-button {
+    font-size: 1.4rem;
+    width: 20px;
+    aspect-ratio: 1;
+    align-self: center;
+    justify-self: center;
+}
+
+.win_condition {
+    mask-image: url(../assets/img/win-condition.svg);
+}
+
+.missable {
+    mask-image: url(../assets/img/missable.svg);
+}
+
+.progression {
+    mask-image: url(../assets/img/progression.svg);
+}
+
+.rarity-icon {
+    mask-image: url(../assets/img/diamond.svg);
+}
+
+.checked>.favourite_icon {
+    opacity: 0.5;
+    mask-image: url(../assets/img/favorite.svg);
+}
+
+.favourite_icon {
+    mask-image: url(../assets/img/favorite_border.svg);
+}
+
+.mastered_icon {
+    mask-image: url(../assets/img/award-mastered.svg);
+}
+
+.beaten-hardcore_icon {
+    mask-image: url(../assets/img/award-beaten.svg);
+}
+
+.completed_icon {
+    mask-image: url(../assets/img/award-completed.svg);
+}
+
+.beaten-softcore_icon {
+    mask-image: url(../assets/img/award-beaten-soft.svg);
+}
+
+.started_icon {
+    mask-image: url(../assets/img/more_horiz.svg);
+}
+
+.award-type__icon {
+    height: 1.2rem;
+}
+
+.award_icon {
+    mask-image: url(../assets/img/awards.svg);
+    opacity: 0.7;
+}
+
+.award_icon:hover {
+    opacity: 1;
+}
+
+.expand_icon {
+    mask-image: url(../assets/img/expand_more.svg);
+}
+
+.favourite_icon:hover {
+    opacity: 1;
+    background-color: var(--font-color);
+}
+
+.achievements-icon {
+    mask-image: url(../assets/img/star.svg);
+}
+
+.points-icon {
+    mask-image: url(../assets/img/points.svg);
+}
+
+.retropoints-icon {
+    mask-image: url(../assets/img/bolt.svg);
+}
+
+.trending-icon {
+    mask-image: url(../assets/img/trending.svg);
+}
+
+.leaderboards-icon {
+    mask-image: url(../assets/img/leaderboard.svg);
+}
+
+.expand_icon {
+    margin: auto;
+    mask-position: center;
+    mask-image: url(../assets/img/expand_more.svg);
+}
+
+.search-icon {
+    mask-image: url(../assets/img/search.svg);
+
+}
+
+
+.ra-link_icon {
+    mask-image: url(../assets/img/link2.svg);
+}
+
+.download-icon {
+    mask-image: url(../assets/img/download.svg);
+}
+
+.forum-icon {
+    mask-image: url(../assets/img/forum.svg);
+}
+
+.apply-icon {
+    mask-image: url(../assets/img/check.svg);
+}
+
+.close-icon {
+    mask-image: url(../assets/img/close.svg);
+}
+
+.header-icon {
+    width: 1.5rem;
+    aspect-ratio: 1;
+    background-color: var(--font-color);
+    mask-size: contain;
+    mask-position: center;
+    mask-repeat: no-repeat;
+}
+
+.target-icon {
+    mask-image: url(../assets/img/target.svg);
+}
+
+.tweak-icon {
+    mask-image: url(../assets/img/tune.svg)
+}
+
+.close-icon {
+    mask-image: url(../assets/img/close.svg)
+}
+
+.awards-icon {
+    mask-image: url(../assets/img/awards.svg)
+}
+
+.update-icon {
+    mask-image: url(../assets/img/update.svg)
+}
+
+.stats-icon {
+    mask-image: url(../assets/img/stats.svg)
+}
+
+.games-icon {
+    mask-image: url(../assets/img/gamepad.svg)
+}
+
+.fullscreen-icon {
+    mask-image: url(../assets/img/fullscreen.svg)
+}
+
+.progression-icon {
+    mask-image: url(../assets/img/progression-cards.svg)
+}
+
+.note-icon {
+    mask-image: url(../assets/img/note.svg)
+}
+
+.notification-icon {
+    mask-image: url(../assets/img/notifications.svg)
+}
+
+.settings-icon {
+    mask-image: url(../assets/img/settings.svg)
+}
+
+.guide-icon {
+    mask-image: url(../assets/img/book.svg)
+}
