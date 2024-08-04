@@ -472,9 +472,23 @@ export class APIWorker {
 
   }
   parseLevels(game) {
-    const levels = Object.values(game.Achievements)
-      .sort((a, b) => a.ID - b.ID)
-      .sort((a, b) => a.DisplayOrder - b.DisplayOrder)
+    const sortZoneNames = (cheevos, zoneNames) => {
+      return cheevos.reduce((sortedNames, cheevo) => {
+
+        zoneNames.forEach(name => {
+          const regex = new RegExp(`\\b${name}\\b`, "g");
+          !sortedNames.includes(name) && (regex.test(cheevo.Title) || regex.test(cheevo.Description)) && sortedNames.push(name)
+
+        }
+        );
+        return sortedNames;
+      }, [])
+    }
+    const cheevos = Object.values(game.Achievements)
+      .sort((a, b) => a.DisplayOrder != 0 ?
+        a.DisplayOrder - b.DisplayOrder :
+        a.ID - b.ID);
+    const levels = cheevos
       .reduce((levels, cheevo) => {
         const zone = this.getCheevoZone(cheevo);
         zone && (
@@ -486,7 +500,9 @@ export class APIWorker {
         levels.data.push({ ID: cheevo.ID, zone: zone, level: level });
         return levels;
       }, { zoneCount: 0, levelCount: 0, data: [], zoneNames: [] });
-    if (levels.zoneCount > 3 && levels.zoneCount >= levels.levelCount) {
+
+    if (levels.zoneNames.length > 2 && levels.zoneCount > 4 && levels.zoneCount >= levels.levelCount) {
+      levels.zoneNames = sortZoneNames(cheevos, levels.zoneNames);
       game.zones = levels.zoneNames;
       levels.zoneNames.forEach((name, index) => {
         Object.values(game.Achievements).forEach(cheevo => {
@@ -509,8 +525,8 @@ export class APIWorker {
   getCheevoLevel(cheevo) {
     const levelNames = [
       'level', 'levels', 'stage\\b', 'stages', 'area', 'world', 'mission', 'chapter', 'section', 'part',
-      'zone', 'phase', 'realm', 'domain', 'episode', 'act', 'sequence', 'tier', 'floor',
-      'dimension', 'region', 'scene', 'screen', 'round\\s',
+      'zone', 'phase', 'realm', 'domain', 'episode', 'act', 'acts', 'sequence', 'tier', 'floor', 'floors',
+      'dimension', 'region', 'scene', 'screen', 'round\\s', 'course'
     ];
 
     const numberMapping = {
@@ -550,10 +566,10 @@ export class APIWorker {
 
     function checkLevel(description) {
       const levelNamesString = levelNames.join("|");
-      const d = "\\d{1,2}(?!\\d|\\s*%)";
-      const regex = new RegExp(`(?:${levelNamesString})\\s*#{0,1}((${d}-${d})|(${d}))|((${d}-${d})|(${d}))\\s*(?:${levelNamesString})`, 'gi');
+      const d = "(?!\\d{4,}|\\d+%)(\\b\\d{1,3}(?:-\\d{1,3}\\b){0,1})"; //"\\d{1,3}(?!\\d|\\s*%)";
+      const regex = new RegExp(`(?:${levelNamesString})\\s*#{0,1}(${d})|(${d})\\s*(?:${levelNamesString})`, 'gi');
       const match = regex.exec(description);
-
+      // console.log(match)
       if (match) {
         const levelString = match[1] || match[4];
         return parseFloat(levelString.replace('-', '.'));
@@ -570,17 +586,17 @@ export class APIWorker {
   getCheevoZone(cheevo) {
     // console.log(cheevo)
     const levelNames = [
-      'Stage', 'Area', 'World', 'Mission', 'Chapter', 'Section', 'Zone',
+      'Stage', 'Stages', 'Area', 'World', 'Mission', 'Chapter', 'Section', 'Zone',
     ];
     const ignoreWords = [
-      "Clear", "Complete", "Beat", "Start", "Enter", "Reach", "Select"
+      "Clear", "Complete", "Beat", "Start", "Enter", "Reach", "Select", "Bonus", "No"
     ]
     function checkLevel(description) {
-      const levelNamesString = levelNames.join("|");
-      const ignoreWordsString = ignoreWords.join("|");
+      const levelNamesString = [...levelNames, ...levelNames.map(name => name.toLowerCase())].join("\\b|\\b");
+      const ignoreWordsString = ignoreWords.join("\\b|\\b");
       const levelTitle = "\\b[A-Z]\\w*";
 
-      let regex = new RegExp(`((?:${levelNamesString})\\s((${levelTitle}\\b\\s*){1,2}))|((?!${ignoreWordsString})((${levelTitle}\\s){1,2})(?:${levelNamesString}\\b(?!\\s*\\d)))`, 'gm');
+      let regex = new RegExp(`((?:\\b${levelNamesString}\\b)\\s(?!\\b${ignoreWordsString}\\b)((${levelTitle}\\b\\s*){1,2}))|((?!\\b${ignoreWordsString}\\b)((${levelTitle}\\s){1,2})(?:\\b${levelNamesString}\\b(?!\\s*\\d)))`, 'gm');
 
       const match = regex.exec(description);
       // console.log(match );
