@@ -1,3 +1,4 @@
+js/ui.js
 json/games/script.js
 json/games/searchData.js
 worker.js
@@ -9,7 +10,6 @@ node_modules
 webpack.config.js
 dist/bundle.min.js.LICENSE.txt
 assets/database.sql
-js
 css
 elements
-
+test.html
