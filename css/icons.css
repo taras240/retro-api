@@ -21,6 +21,10 @@
     background-color: goldenrod;
 }
 
+.badge_cheevo-genre {
+    background-color: crimson;
+}
+
 .highlight-badge {
     background-color: var(--font-color);
     color: var(--main-color);
