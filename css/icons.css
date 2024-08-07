@@ -9,12 +9,27 @@
     padding: 0px 0.25rem;
     border-radius: 3px;
     margin-right: 0.25rem;
-    background-color: chartreuse;
+    background-color: lime;
+}
+
+.badge-button {
+    cursor: pointer;
+    transition: color .2s, background-color .2s;
+}
+
+.badge-button:hover {
+    background-color: var(--font-color);
+    color: var(--main-color);
+
 }
 
 .badge.badge-bold {
     font-weight: 700;
     font-size: 0.9em;
+}
+
+.badge_green {
+    background-color: lime;
 }
 
 .badge_gold {
@@ -183,10 +198,12 @@
 }
 
 .missable {
-    mask-image: url(../assets/img/missable.svg);
+    /* scale: 1.05; */
+    mask-image: url(../assets/img/missable_ra.svg);
 }
 
 .progression {
+    scale: 1.05;
     mask-image: url(../assets/img/progression.svg);
 }
 
