@@ -336,10 +336,12 @@
   opacity: 1;
 }
 
+.target-genre-badge,
 .target-level-badge {
   display: none;
 }
 
+.show-genre .target-genre-badge,
 .show-level .target-level-badge {
   display: inline;
 }

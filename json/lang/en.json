@@ -88,5 +88,7 @@
     "showLevel": "Show Level",
     "showUpdateBlink": "Show Update Blink",
     "highLightPassedLevels": "Highlight Passed Levels",
-    "hidePassedLevels": "Hide Passed Levels"
+    "hidePassedLevels": "Hide Passed Levels",
+    "showEvents": "Show Events",
+    "data": "Data"
 }
