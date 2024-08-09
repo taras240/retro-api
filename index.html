@@ -54,6 +54,17 @@
   </div>
 
   <ul class="target-container content-container"></ul>
+  <div class="target-comments__container hidden" onmousedown="event.stopPropagation()">
+    <div class="target-comments__header">
+      Cheevo comments
+      <button class="header-icon header-button close-icon close-comments"
+        onclick="event.target.closest('.target-comments__container').classList.toggle('hidden')">
+      </button>
+    </div>
+    <ul class="target-comments__list">
+    </ul>
+
+  </div>
   <div class="resizer" id="target-resizer"></div>
 </section><section class="progression_section section" id="progression_section">
     <div class="header-container">
