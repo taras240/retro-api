@@ -108,7 +108,7 @@
         "ID": 16,
         "Name": "GameCube",
         "IconURL": "https://static.retroachievements.org/assets/images/system/gc.png",
-        "Active": false,
+        "Active": true,
         "IsGameSystem": true
     },
     {

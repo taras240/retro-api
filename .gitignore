@@ -1,6 +1,8 @@
 js/
 json/games/script.js
 json/games/searchData.js
+json/games/mergeData.js
+json/games/platforms
 worker.js
 downloader.js
 json/games/rawgParser.js

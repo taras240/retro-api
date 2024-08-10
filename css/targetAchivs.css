@@ -345,7 +345,7 @@
   display: inline;
 }
 
-.target-achiv:not(.show-difficult) .target-other-descriptions .badge {
+.target-achiv:not(.show-difficult) .target-other-descriptions .difficult-icon {
   display: none !important;
 }
 

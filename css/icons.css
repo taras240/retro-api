@@ -95,51 +95,7 @@
     background-color: rgba(128, 128, 128, 0.281);
 }
 
-/** Difficult badges */
 
-.difficult-badge__hell {
-    background-color: #ff00ff;
-    box-shadow: 0 0 5px 1px #ff00ff;
-    animation: hell-anim 6s infinite
-}
-
-
-@keyframes hell-anim {
-    0% {
-        background-color: #ff00ff;
-        box-shadow: 0 0 5px 1px #ff00ff;
-    }
-
-    50% {
-        background-color: #800080;
-        box-shadow: 0 0 5px 1px #800080;
-    }
-
-    to {
-        background-color: #ff00ff;
-        box-shadow: 0 0 5px 1px #ff00ff;
-    }
-}
-
-.difficult-badge__insane {
-    background-color: #800080;
-}
-
-.difficult-badge__pro {
-    background-color: orange;
-}
-
-.difficult-badge__expert {
-    background-color: crimson;
-}
-
-.difficult-badge__standard {
-    background-color: lime;
-}
-
-.difficult-badge__easy {
-    background-color: greenyellow;
-}
 
 
 /** ICONS  */
@@ -191,6 +147,11 @@
     aspect-ratio: 1;
     align-self: center;
     justify-self: center;
+}
+
+.difficult-icon {
+    mask-image: url(../assets/img/award-mastered.svg);
+    scale: 1.05;
 }
 
 .win_condition {
@@ -377,4 +338,51 @@
 
 .chat-icon {
     mask-image: url(../assets/img/chat.svg)
+}
+
+
+/** Difficult badges */
+
+.difficult-badge__hell {
+    background-color: #ff00ff;
+    box-shadow: 0 0 5px 1px #ff00ff;
+    animation: hell-anim 6s infinite
+}
+
+
+@keyframes hell-anim {
+    0% {
+        background-color: #ff00ff;
+        box-shadow: 0 0 5px 1px #ff00ff;
+    }
+
+    50% {
+        background-color: #800080;
+        box-shadow: 0 0 5px 1px #800080;
+    }
+
+    to {
+        background-color: #ff00ff;
+        box-shadow: 0 0 5px 1px #ff00ff;
+    }
+}
+
+.difficult-badge__insane {
+    background-color: #800080;
+}
+
+.difficult-badge__pro {
+    background-color: orange;
+}
+
+.difficult-badge__expert {
+    background-color: crimson;
+}
+
+.difficult-badge__standard {
+    background-color: lime;
+}
+
+.difficult-badge__easy {
+    background-color: greenyellow;
 }
