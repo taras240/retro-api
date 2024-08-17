@@ -552,3 +552,21 @@
     width: 0px;
   }
 }
+
+/** LOADING ANIMATION */
+
+.achivs .achiv-block.start-load-anim {
+  transform: translateY(var(--top-position));
+}
+
+.achivs .achiv-block.show-load-anim {
+  transform: translateY(var(--top-position));
+  animation: load-cheevos-anim 500ms ease-in-out forwards;
+  animation-delay: var(--load-delay);
+}
+
+@keyframes load-cheevos-anim {
+  to {
+    transform: translateY(0);
+  }
+}
