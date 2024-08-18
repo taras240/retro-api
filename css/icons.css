@@ -163,6 +163,14 @@
     mask-image: url(../assets/img/missable_ra.svg);
 }
 
+.map-icon {
+    height: 1.2em;
+    background-color: black;
+    margin-bottom: -0.2rem;
+    mask-image: url(../assets/img/flag.svg);
+    mask-position: bottom;
+}
+
 .progression {
     scale: 1.05;
     mask-image: url(../assets/img/progression.svg);

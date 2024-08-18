@@ -245,67 +245,6 @@
   translate: 0 -5px;
 }
 
-/** ----[ TOOLTIP ]--------- */
-
-.popup {
-  position: absolute;
-  max-width: 25rem;
-  width: fit-content;
-
-  margin: 1px;
-  padding: 8px 16px;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 4px;
-
-  background-color: var(--secondary-color);
-  background: linear-gradient(to top left,
-      var(--main-color),
-      var(--secondary-color));
-  box-shadow: 0 0 2px 0 black;
-
-  border-radius: 8px;
-  overflow: hidden;
-
-  visibility: hidden;
-  opacity: 0;
-  font-size: 1.15rem;
-  z-index: 1000;
-  transition: opacity 0.2s;
-}
-
-.popup h3 {
-  position: relative;
-  font-size: 1.15rem;
-  font-weight: 500;
-
-}
-
-.popup::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 5px;
-  height: 100%;
-  background-color: var(--accent-color);
-  box-shadow: 0 0 5px 0px var(--accent-color);
-  z-index: 100;
-}
-
-.popup.left-side {
-  transform: translateX(calc(-100% - 35px));
-}
-
-.popup.left-side.top-side {
-  transform: translateX(calc(-100% - 35px)) translateY(calc(-90%));
-}
-
-.popup.top-side {
-  transform: translateY(calc(-90%));
-}
 
 .achiv-title {
   font-weight: 600;
