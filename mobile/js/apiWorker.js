@@ -140,6 +140,7 @@ class APIWorker {
           ...gameProgressObject,
           TotalRealPlayers: 0,
           TotalRetropoints: 0,
+          points_total: 0,
           progressionRetroRatio: 0,
           beatenCount: Infinity,
           masteredCount: Infinity,
@@ -159,7 +160,7 @@ class APIWorker {
         }
         for (let achievement of Object.values(gameProgressObject.Achievements)) {
           gameProgressObject.TotalRetropoints += achievement.TrueRatio;
-
+          gameProgressObject.points_total += achievement.Points;
           if (gameProgressObject.TotalRealPlayers < achievement.NumAwarded) {
             gameProgressObject.TotalRealPlayers = achievement.NumAwarded
           }

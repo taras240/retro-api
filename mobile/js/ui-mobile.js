@@ -266,7 +266,7 @@ class UI {
           <div class="popup-info__property">Genre: <span>${game?.Genre}</span></div>
           <div class="popup-info__property">Publisher: <span>${game?.Publisher} Soft</span></div>
           <div class="popup-info__property">Released: <span>${game?.Released}</span></div>
-          <div class="popup-info__property">Achievements total : <span>${game?.achievements_published}</span></div>
+          <div class="popup-info__property">Achievements total : <span>${game?.NumAchievements}</span></div>
           <div class="popup-info__property">Total points : <span>${game?.points_total}</span></div>
           <div class="popup-info__property">Total players : <span>${game?.players_total}</span></div>
 
@@ -1234,7 +1234,7 @@ class Game {
     //   }, { achivs: 0, points: 0, retropoints: 0 });
     // style = { '--progress': this.gameData.completionProgress + "%" }
     // earnedData.achivs == 0 && (earnedData = false);
-    const completionProgress = ~~(100 * earnedData.count / this.gameData.achievements_published);
+    const completionProgress = ~~(100 * earnedData.count / this.gameData.NumAchievements);
     return `
       <div class="section__header-container game__header-container" onclick="ui.showGameDetails(${this.gameID});event.stopPropagation();">
             <!--<div class="game-header__background-container">
@@ -1540,7 +1540,7 @@ class Library {
   async getAllGames() {
     try {
 
-      const gamesResponse = await fetch(`../../json/games/all.json`);
+      const gamesResponse = await fetch(`./../json/games/all.json`);
       const gamesJson = await gamesResponse.json();
       this.GAMES = gamesJson;
       // const ignoredWords = ["~UNLICENSED~", "~DEMO~", "~HOMEBREW~", "~HACK~", "~PROTOTYPE~", ".HACK//", "~TEST KIT~"];
