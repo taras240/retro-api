@@ -163,21 +163,21 @@
 }
 
 .prev-img {
-  height: 80px;
+  height: 5rem;
   aspect-ratio: 1;
   filter: grayscale(1);
   image-rendering: pixelated;
   border-radius: 4px;
   overflow: hidden;
-  transition: 0.2s;
+  transition: filter 0.2s;
 }
 
 .target-achiv.border .prev-img {
-  height: 70px;
+  height: 4.5rem;
 }
 
 .target-achiv.earned .prev-img {
-  filter: grayscale(0.8);
+  filter: grayscale(0.1);
 }
 
 .target-achiv.earned.hardcore .prev-img {
