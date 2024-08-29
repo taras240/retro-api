@@ -393,6 +393,15 @@ input:checked+.checkbox-input::before {
     transition: opacity 0.2s;
 }
 
+.popup.hint {
+    width: auto;
+    min-width: 10rem;
+}
+
+.popup.hint::before {
+    display: none;
+}
+
 .popup h3 {
     position: relative;
     font-size: 1.15rem;
