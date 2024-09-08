@@ -354,7 +354,7 @@
 .difficult-badge__hell {
     background-color: #ff00ff;
     box-shadow: 0 0 5px 1px #ff00ff;
-    animation: hell-anim 6s infinite
+    /* animation: hell-anim 6s infinite */
 }
 
 
