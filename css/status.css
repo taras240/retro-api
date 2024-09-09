@@ -801,13 +801,14 @@
 
 
 .progres-point.focus::after {
+  display: none;
   content: '';
   position: absolute;
   height: 160%;
   aspect-ratio: 1;
   border-radius: 50%;
   border: 2px dashed var(--font-color);
-  animation: rotate-animation 10s linear infinite;
+  /* animation: rotate-animation 10s linear infinite; */
 }
 
 @keyframes rotate-animation {
