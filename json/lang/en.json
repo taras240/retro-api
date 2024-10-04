@@ -90,5 +90,7 @@
     "highLightPassedLevels": "Highlight Passed Levels",
     "hidePassedLevels": "Hide Passed Levels",
     "showEvents": "Show Events",
-    "data": "Data"
+    "data": "Data",
+    "showGenreBadges": "Show Genre Badges",
+    "level_test": "Level (Test)"
 }

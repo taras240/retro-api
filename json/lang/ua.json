@@ -88,5 +88,9 @@
     "showLevel": "Показувати рівень",
     "showUpdateBlink": "Показувати спалах при оновленні",
     "showEvents": "Показувати івенти",
-    "data": "Дані"
+    "data": "Дані",
+    "level_test": "Рівень (Тест)",
+    "showGenreBadges": "Показувати жанри",
+    "hidePassedLevels": "Приховати пройдені рівні",
+    "highLightPassedLevels": "Підсвічувати пройдені рівні"
 }

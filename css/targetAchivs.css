@@ -36,7 +36,7 @@
   align-items: flex-start;
   justify-content: flex-start;
   align-content: flex-start;
-  gap: 5px;
+  gap: 1px;
   transition: none;
   flex: 1;
 }
@@ -51,7 +51,8 @@
   gap: 10px;
   color: var(--font-color);
   background: var(--secondary-color);
-  border-radius: var(--border-radius);
+  /* border-bottom: 1px solid var(--main-color); */
+  /* border-radius: var(--border-radius); */
   overflow: hidden;
   /* box-shadow: 1px 1px 1px 0px #000000a1; */
   transition: 0.1s;
@@ -126,9 +127,10 @@
 }
 
 .target-achiv:hover {
-  transform: scale(1.02);
-  box-shadow: 2px 2px 7px 0px #000000a1;
+  /* transform: scale(1.01); */
+  box-shadow: 0 0 7px 0px #000000a1;
   transition: 0.2s;
+  z-index: 1;
 }
 
 .target-achiv .prev::before,
