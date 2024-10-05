@@ -28,7 +28,7 @@
 }
 
 .target-container {
-  padding: 10px;
+  padding: 5px;
   overflow: scroll;
   display: flex;
   flex-wrap: wrap;
@@ -51,10 +51,7 @@
   gap: 10px;
   color: var(--font-color);
   background: var(--secondary-color);
-  /* border-bottom: 1px solid var(--main-color); */
-  /* border-radius: var(--border-radius); */
   overflow: hidden;
-  /* box-shadow: 1px 1px 1px 0px #000000a1; */
   transition: 0.1s;
 }
 
@@ -128,7 +125,8 @@
 
 .target-achiv:hover {
   /* transform: scale(1.01); */
-  box-shadow: 0 0 7px 0px #000000a1;
+  transform: translate(-5px, -2px);
+  box-shadow: 3px 3px 10px 0px #000000a1;
   transition: 0.2s;
   z-index: 1;
 }
