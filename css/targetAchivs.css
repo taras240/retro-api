@@ -294,7 +294,7 @@
 .target-description-text {
   display: flex;
   align-items: center;
-  gap: 2px
+  column-gap: 3px
 }
 
 

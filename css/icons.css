@@ -106,7 +106,7 @@
     aspect-ratio: 1;
     background-color: var(--font-color);
     mask-size: contain;
-    mask-position: center bottom;
+    mask-position: center;
     mask-repeat: no-repeat;
     transition: background-color .2s;
 }
@@ -178,6 +178,22 @@
 
 .rarity-icon {
     mask-image: url(../assets/img/diamond.svg);
+}
+
+.ps-rarity-icon {
+    mask-image: url(../assets/img/rarity-1.svg);
+}
+
+.ps-rarity-icon.rare {
+    mask-image: url(../assets/img/rarity-2.svg);
+}
+
+.ps-rarity-icon.very-rare {
+    mask-image: url(../assets/img/rarity-3.svg);
+}
+
+.ps-rarity-icon.ultra-rare {
+    mask-image: url(../assets/img/rarity-4.svg);
 }
 
 .checked>.favourite_icon {
