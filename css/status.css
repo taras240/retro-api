@@ -801,13 +801,13 @@
 
 
 .progres-point.focus::after {
-  display: none;
+  /* display: none; */
   content: '';
   position: absolute;
   height: 160%;
   aspect-ratio: 1;
   border-radius: 50%;
-  border: 2px dashed var(--font-color);
+  border-bottom: 2px solid var(--font-color);
   /* animation: rotate-animation 10s linear infinite; */
 }
 
