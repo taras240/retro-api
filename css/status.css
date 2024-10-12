@@ -655,7 +655,10 @@
   align-items: end;
   justify-content: start;
   font-size: inherit;
-  padding: 0 0.25rem;
+  padding: 0 0.2em;
+  margin: auto;
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
 }
 
 .progres-step.softcore {
@@ -772,7 +775,7 @@
   left: 50%;
   height: 30%;
   aspect-ratio: 1;
-  height: 120%;
+  height: 110%;
   background-color: var(--font-color);
   mask-image: url(../assets/img/flag.svg);
   mask-repeat: no-repeat;
@@ -799,16 +802,19 @@
   background-color: gold;
 }
 
+.progres-step.focus {
+  scroll-snap-align: center;
+}
 
 .progres-point.focus::after {
   /* display: none; */
   content: '';
   position: absolute;
-  height: 160%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  border-bottom: 2px solid var(--font-color);
-  /* animation: rotate-animation 10s linear infinite; */
+  width: 1.2em;
+  height: 2px;
+  background: linear-gradient(to left, transparent, var(--font-color), transparent);
+  bottom: -5px;
+
 }
 
 @keyframes rotate-animation {
