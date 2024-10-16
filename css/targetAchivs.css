@@ -53,6 +53,7 @@
   background: var(--secondary-color);
   overflow: hidden;
   transition: 0.1s;
+  border-radius: 1px;
 }
 
 /* .target-achiv.earned {

@@ -665,17 +665,17 @@
   --color: var(--selection-color);
 }
 
-.progres-step__win:has(.softcore) {
+/* .progres-step__win:has(.softcore) {
   --color: var(--selection-color);
-}
+} */
 
 .progres-step.hardcore {
   --color: var(--accent-color);
 }
 
-.progres-step__win:has(.hardcore) {
+/* .progres-step__win:has(.hardcore) {
   --color: var(--accent-color);
-}
+} */
 
 .progres-step,
 .progres-step__win {
@@ -823,7 +823,7 @@
   }
 }
 
-.current-level.progres-point:not(.win) {
+/* .current-level.progres-point:not(.win) {
   border-radius: 50%;
   border: 2px solid greenyellow;
-}
+} */
