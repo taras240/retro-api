@@ -342,8 +342,13 @@
 }
 
 .status__achiv-points {
-  font-size: 1.6em;
+  font-size: 1.5em;
   font-weight: 600;
+}
+
+.new-game-info .status__back-side .status__progres-description,
+.new-award .status__back-side .status__progres-description {
+  display: none;
 }
 
 .new-game-info .status__achiv-points {
@@ -431,7 +436,7 @@
 
 
 
-.progress-percent {
+.status__big-text {
   --animation-duration: 1s;
   position: absolute;
   right: 20px;
@@ -449,11 +454,11 @@
   transition: color var(--animation-duration);
 }
 
-.progress-percent.hidden {
+.status__big-text.hidden {
   visibility: hidden;
 }
 
-.progress-percent.hide {
+.status__big-text.hide {
   color: var(--main-color);
 }
 
@@ -630,13 +635,14 @@
 .status__progres {
   --progress: 2;
   width: 100%;
-  height: 3em;
   color: var(--font-color);
   display: flex;
   flex-direction: column;
   align-items: start;
   justify-content: space-between;
   font-size: inherit;
+  row-gap: .25rem;
+  overflow: visible;
 }
 
 .status__progres-description {
@@ -650,7 +656,6 @@
   --color: var(--font-color);
   --width: calc(100% / 5);
   width: 100%;
-  height: fit-content;
   display: flex;
   align-items: end;
   justify-content: start;
@@ -665,17 +670,9 @@
   --color: var(--selection-color);
 }
 
-/* .progres-step__win:has(.softcore) {
-  --color: var(--selection-color);
-} */
-
 .progres-step.hardcore {
   --color: var(--accent-color);
 }
-
-/* .progres-step__win:has(.hardcore) {
-  --color: var(--accent-color);
-} */
 
 .progres-step,
 .progres-step__win {
