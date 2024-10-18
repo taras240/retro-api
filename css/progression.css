@@ -7,6 +7,14 @@
     /* background: transparent !important; */
 }
 
+.progression_section.section:not(:hover) {
+    background: transparent;
+}
+
+.progression_section.section:not(:hover) .header-container {
+    display: none;
+}
+
 .progression_section .header-container::after {
     display: none;
 }
@@ -17,7 +25,6 @@
     flex-direction: row;
     justify-content: space-evenly;
     flex-wrap: wrap;
-    padding-top: 15px;
     position: relative;
 }
 

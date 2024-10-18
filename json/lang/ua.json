@@ -92,5 +92,11 @@
     "level_test": "Рівень (Тест)",
     "showGenreBadges": "Показувати жанри",
     "hidePassedLevels": "Приховати пройдені рівні",
-    "highLightPassedLevels": "Підсвічувати пройдені рівні"
+    "highLightPassedLevels": "Підсвічувати пройдені рівні",
+    "exportCompletion": "Експортувати дані прогресу",
+    "exportSettings": "Експортувати налаштування",
+    "exportWantToPlay": "Експортувати WantToPlay",
+    "importSettings": "Імпортувати налаштування",
+    "hardcoreMode": "Режим Хардкор",
+    "showLoadAnimation": "Показувати анімацію завантаження"
 }
