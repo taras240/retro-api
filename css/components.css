@@ -32,7 +32,7 @@
 
 .section:hover {
     z-index: 10;
-    box-shadow: 0 0 5px 2px black;
+    box-shadow: 0 0 5px 0 black;
 }
 
 .section.resized {}
