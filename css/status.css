@@ -682,19 +682,19 @@
   height: 1.5em;
   background-color: transparent;
   display: flex;
-  justify-content: end;
+  justify-content: start;
   font-size: inherit;
   align-items: center;
 }
 
-.progres-step:first-child,
+/* .progres-step:first-child, */
 .progres-step__win:first-child {
   width: auto;
 }
 
-.progres-step:first-child {
+/* .progres-step:first-child {
   width: auto;
-}
+} */
 
 .progres-point {
   position: relative;
@@ -704,7 +704,6 @@
   aspect-ratio: 1;
   border-radius: 50%;
   border: 2px solid var(--color);
-
   display: grid;
   place-items: center;
   z-index: 2;
@@ -731,13 +730,11 @@
   background-color: var(--color);
 }
 
-.progres-step:not(:first-child)::before,
-.progres-step__win:not(:first-child)::before {
+.progres-step::after {
   content: "";
   position: absolute;
   transform: translateY(-50%);
   top: 50%;
-  left: 0;
   right: 0;
   width: 100%;
   height: 2px;
@@ -745,10 +742,8 @@
   z-index: 1;
 }
 
-.progres-step__win {
-  display: flex;
-  align-self: center;
-  justify-content: end;
+.progres-step:last-child::after {
+  display: none;
 }
 
 .progres-step .progres-point::before {
