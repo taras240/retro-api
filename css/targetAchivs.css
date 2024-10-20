@@ -46,7 +46,7 @@
   position: relative;
   flex-basis: 25rem;
   flex-grow: 1;
-  padding: 0.6rem 0.75rem;
+  padding: 0.5rem 0.8rem;
   display: flex;
   gap: 10px;
   color: var(--font-color);
@@ -54,6 +54,11 @@
   overflow: hidden;
   transition: 0.1s;
   border-radius: 1px;
+}
+
+.target-achiv.border {
+  padding: 0.5rem 1rem;
+  gap: 15px;
 }
 
 /* .target-achiv.earned {
@@ -101,10 +106,7 @@
   display: none;
 }
 
-.target-achiv.border {
-  padding: 15px 20px;
-  gap: 15px;
-}
+
 
 .target-achiv.dragged {
   transition: none;
@@ -146,17 +148,20 @@
 }
 
 .target-achiv.border .prev::after {
-  width: 150%;
+  width: calc(100% + 1.5rem);
   background-image: url(../assets/img/game-border.webp);
   z-index: 2;
 }
 
 .target-achiv.overlay .prev::before {
-  width: 110%;
-  background-image: url(../assets/img/overlay_sets/mario_q/closed.webp);
+  width: 100%;
+  background-image: url(../assets/img/overlay_sets/mario_q/closed.png);
   z-index: 1;
-  opacity: 1;
   transition: .2s;
+}
+
+.target-achiv.border .prev::before {
+  width: calc(100% - 0.2rem);
 }
 
 .target-achiv.earned .prev::before {
@@ -174,7 +179,7 @@
 }
 
 .target-achiv.border .prev-img {
-  height: 4.5rem;
+  padding: 0.25rem;
 }
 
 .target-achiv.earned .prev-img {
@@ -188,25 +193,22 @@
 .target-achiv.earned::after {
   content: "";
   position: absolute;
+  width: 4rem;
+  height: 100%;
   right: 0;
   top: 50%;
   transform: translateY(-50%);
   --mark-color: silver;
   background: linear-gradient(to bottom right, transparent, var(--mark-color));
-  mask-size: 2rem 2rem;
   mask-repeat: no-repeat;
   mask-position: center;
-  z-index: 0;
-  width: 4rem;
-  height: 100%;
-  mask-image: url(../assets/img/earned-check.svg);
   mask-size: contain;
   mask-image: url(../assets/img/military_medal.svg);
+  z-index: 0;
 }
 
 .target-achiv.earned.hardcore::after {
   --mark-color: gold;
-  mask-size: contain;
   mask-image: url(../assets/img/military_medal.svg);
 }
 
@@ -228,19 +230,20 @@
 }
 
 .target-achiv-details {
-  /* height: 100%; */
-  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   z-index: 1;
+  align-content: stretch;
+  font-size: 1.05rem;
 }
 
-.achiv-name {}
+.achiv-name {
+  font-size: 1.1rem;
+}
 
 .achiv-description {
   font-size: 1rem;
-
 }
 
 .delete-from-target {

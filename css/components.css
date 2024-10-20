@@ -74,7 +74,12 @@
     border-radius: var(--border-radius) var(--border-radius) 0 0;
     z-index: -1;
     font-family: system-ui;
+    /* display: none; */
 }
+
+/* .section:hover .header-container {
+    display: flex;
+} */
 
 .header-container::after {
     content: "";
