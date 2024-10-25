@@ -117,6 +117,7 @@
 }
 
 .status__container.game-bg {
+  /* --font-color: gray; */
   background-image: var(--bg-image);
   background-blend-mode: multiply;
   background-position: center;
@@ -708,7 +709,7 @@
 
 .progres-point {
   position: relative;
-  background-color: var(--main-color);
+  /* background-color: var(--main-color); */
   height: 1.2em;
   max-height: 1.8rem;
   aspect-ratio: 1;
@@ -722,7 +723,6 @@
 
 .progres-point.win {
   border: none;
-  background-color: transparent;
   width: 0.75rem;
 }
 
@@ -746,7 +746,7 @@
   transform: translateY(-50%);
   top: 50%;
   right: 0;
-  width: 100%;
+  width: calc(100% - 1.2em);
   height: 2px;
   background-color: var(--color);
   z-index: 1;
