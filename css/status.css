@@ -20,6 +20,7 @@
   background-color: var(--main-color);
   border-radius: 50%;
   opacity: 0.5;
+
 }
 
 .status__section.blink::after {
@@ -101,6 +102,7 @@
 }
 
 .status__container {
+  /* --bg-image: url(https://media.retroachievements.org/Images/005200.png); */
   position: relative;
   background: var(--main-color);
   height: 100%;
@@ -111,6 +113,13 @@
   backface-visibility: hidden;
   font-size: 16px;
   transition: transform 1s;
+
+}
+
+.status__container.game-bg {
+  background-image: var(--bg-image);
+  background-blend-mode: multiply;
+  background-position: center;
 }
 
 .timer-timeout .status__container {
@@ -685,6 +694,7 @@
   justify-content: start;
   font-size: inherit;
   align-items: center;
+  min-width: 1.5em;
 }
 
 /* .progres-step:first-child, */
@@ -712,7 +722,7 @@
 
 .progres-point.win {
   border: none;
-  background-color: var(--main-color);
+  background-color: transparent;
   width: 0.75rem;
 }
 
