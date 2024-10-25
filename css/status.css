@@ -120,7 +120,11 @@
   /* --font-color: gray; */
   background-image: var(--bg-image);
   background-blend-mode: multiply;
+  /* background-position: center; */
+  background-size: 100%;
+  background-repeat: no-repeat;
   background-position: center;
+  image-rendering: pixelated;
 }
 
 .timer-timeout .status__container {
@@ -711,7 +715,7 @@
   position: relative;
   /* background-color: var(--main-color); */
   height: 1.2em;
-  max-height: 1.8rem;
+  /* max-height: 1.8rem; */
   aspect-ratio: 1;
   border-radius: 50%;
   border: 2px solid var(--color);
