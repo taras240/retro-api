@@ -4,8 +4,8 @@
   left: 70%;
   width: 300px;
   max-height: 100vh;
-  min-width: 300px;
-  min-height: 400px;
+  min-width: 250px;
+  min-height: 200px;
   cursor: grab;
   display: flex;
   flex-direction: column;

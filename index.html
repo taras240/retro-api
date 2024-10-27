@@ -37,6 +37,12 @@
     <div class="game-card-description">
     </div>
   </div>
+  <div class="game-card__back-side">
+    <div class="game-info__progression">
+      <ul class="game-info__progression-list">
+      </ul>
+    </div>
+  </div>
   <div class="resizer" id="game-card-resizer"></div>
 </section><section id="target_section" class="target_section section ">
   <div class="header-container target-header_container">
@@ -75,11 +81,9 @@
         <div class="header-button header-icon close-icon" onclick="ui.progression.close()">
         </div>
     </div>
-    <div class="progression_container">
-        <ul class="horizon_list not-earned" id="not-earned_progression-list">
-
+    <div class="progression__container">
+        <ul class="progression__list">
         </ul>
-        <ul class="horizon_list earned" id="earned_progression-list"></ul>
     </div>
     <div class="resizer" id="progression-resizer"></div>
 </section><section id="side_panel" class="buttons-block gradient-animation expanded">
