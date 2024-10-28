@@ -489,7 +489,7 @@
   display: grid;
   place-items: center;
   box-shadow: 0 0 5px 1px var(--secondary-color);
-  opacity: 0;
+  opacity: 1;
   transition: transform 200ms, opacity 200ms;
   z-index: 10;
 }
@@ -500,6 +500,10 @@
 
 .status__watch-button:hover {
   transform: translate(-50%, -50%) scale(1.1);
+}
+
+.status__watch-button.active {
+  opacity: 0;
 }
 
 .status__watch-button:active {
