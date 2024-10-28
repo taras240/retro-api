@@ -38,34 +38,6 @@
             "AchievementsTotal": 54,
             "DateEarnedHardcore": "Mon May 20 2024 22:50:12 GMT+0300 (за східноєвропейським літнім часом)",
             "type": "newGame"
-        },
-        {
-            "GameID": 2115,
-            "ConsoleID": 7,
-            "ConsoleName": "NES/Famicom",
-            "Title": "Teenage Mutant Ninja Turtles III: The Manhattan Project",
-            "ImageIcon": "/Images/064419.png",
-            "ImageTitle": "/Images/003126.png",
-            "ImageIngame": "/Images/003127.png",
-            "ImageBoxArt": "/Images/013121.png",
-            "LastPlayed": "Mon May 20 2024 22:43:57 GMT+0300 (за східноєвропейським літнім часом)",
-            "AchievementsTotal": 30,
-            "DateEarnedHardcore": "Mon May 20 2024 22:43:57 GMT+0300 (за східноєвропейським літнім часом)",
-            "type": "newGame"
-        },
-        {
-            "GameID": 1532,
-            "ConsoleID": 7,
-            "ConsoleName": "NES/Famicom",
-            "Title": "Adventures of Lolo III",
-            "ImageIcon": "/Images/049211.png",
-            "ImageTitle": "/Images/007258.png",
-            "ImageIngame": "/Images/007259.png",
-            "ImageBoxArt": "/Images/011527.png",
-            "LastPlayed": "Sun May 19 2024 21:26:56 GMT+0300 (за східноєвропейським літнім часом)",
-            "AchievementsTotal": 37,
-            "DateEarnedHardcore": "Sun May 19 2024 21:26:56 GMT+0300 (за східноєвропейським літнім часом)",
-            "type": "newGame"
         }
     ],
     "Awarded": {
@@ -76,22 +48,6 @@
             "ScoreAchieved": 18,
             "NumAchievedHardcore": 4,
             "ScoreAchievedHardcore": 18
-        },
-        "1532": {
-            "NumPossibleAchievements": 37,
-            "PossibleScore": 370,
-            "NumAchieved": 8,
-            "ScoreAchieved": 38,
-            "NumAchievedHardcore": 8,
-            "ScoreAchievedHardcore": 38
-        },
-        "2115": {
-            "NumPossibleAchievements": 30,
-            "PossibleScore": 415,
-            "NumAchieved": 21,
-            "ScoreAchieved": 205,
-            "NumAchievedHardcore": 17,
-            "ScoreAchievedHardcore": 135
         }
     },
     "RecentAchievements": [
@@ -110,70 +66,6 @@
             "DateEarnedHardcore": "Fri May 17 2024 00:13:02 GMT+0300 (за східноєвропейським літнім часом)",
             "type": "earnedAchivs",
             "BadgeURL": "Badge/276685.png"
-        },
-        {
-            "ID": 22464,
-            "GameID": 470,
-            "GameTitle": "Super Bomberman",
-            "Title": "Remote Bomber",
-            "Description": "Acquire Remote Bomb Upgrade as Player 1 (can be playing in 2 player mode)",
-            "Points": 4,
-            "Type": null,
-            "BadgeName": "276676",
-            "IsAwarded": "1",
-            "DateAwarded": "Fri May 17 2024 00:12:11 GMT+0300 (за східноєвропейським літнім часом)",
-            "HardcoreAchieved": 1,
-            "DateEarnedHardcore": "Fri May 17 2024 00:12:11 GMT+0300 (за східноєвропейським літнім часом)",
-            "type": "earnedAchivs",
-            "BadgeURL": "Badge/276676.png"
-        },
-        {
-            "ID": 22474,
-            "GameID": 470,
-            "GameTitle": "Super Bomberman",
-            "Title": "Timeless Bomber",
-            "Description": "Finish a Stage with 0 time left (1 player only)",
-            "Points": 5,
-            "Type": null,
-            "BadgeName": "276684",
-            "IsAwarded": "1",
-            "DateAwarded": "Fri May 17 2024 00:09:07 GMT+0300 (за східноєвропейським літнім часом)",
-            "HardcoreAchieved": 1,
-            "DateEarnedHardcore": "Fri May 17 2024 00:09:07 GMT+0300 (за східноєвропейським літнім часом)",
-            "type": "earnedAchivs",
-            "BadgeURL": "Badge/276684.png"
-        },
-        {
-            "ID": 22465,
-            "GameID": 470,
-            "GameTitle": "Super Bomberman",
-            "Title": "Kick Bomber",
-            "Description": "Acquire Kick Bomb Skill as Player 1 (can be playing in 2 player mode)",
-            "Points": 4,
-            "Type": null,
-            "BadgeName": "276677",
-            "IsAwarded": "1",
-            "DateAwarded": "Fri May 17 2024 00:07:31 GMT+0300 (за східноєвропейським літнім часом)",
-            "HardcoreAchieved": 1,
-            "DateEarnedHardcore": "Fri May 17 2024 00:07:31 GMT+0300 (за східноєвропейським літнім часом)",
-            "type": "earnedAchivs",
-            "BadgeURL": "Badge/276677.png"
-        },
-        {
-            "ID": 56858,
-            "GameID": 1532,
-            "GameTitle": "Adventures of Lolo III",
-            "Title": "Bested Alma",
-            "Description": "Defeat the Alma boss",
-            "Points": 5,
-            "Type": "progression",
-            "BadgeName": "59391",
-            "IsAwarded": "1",
-            "DateAwarded": "Thu Mar 07 2024 00:21:10 GMT+0200 (за східноєвропейським стандартним часом)",
-            "HardcoreAchieved": 1,
-            "DateEarnedHardcore": "Thu Mar 07 2024 00:21:10 GMT+0200 (за східноєвропейським стандартним часом)",
-            "type": "earnedAchivs",
-            "BadgeURL": "Badge/59391.png"
         }
     ],
     "LastGame": {
