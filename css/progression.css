@@ -8,8 +8,8 @@
     flex-direction: column;
 }
 
-.progression_section.section:not(:hover) {
-    /* background: transparent; */
+.progression_section.section.hide-bg:not(:hover) {
+    background: transparent;
 }
 
 .progression_section.section:not(:hover) .header-container {
@@ -33,14 +33,6 @@
     overflow: hidden;
 }
 
-
-
-/* .progression__container {
-
-    overflow-y: scroll;
-    height: 100%;
-} */
-
 .progression__list {
     position: relative;
     padding: 1rem 0;
@@ -51,12 +43,7 @@
     height: 100%;
     width: 100%;
     overflow-y: scroll;
-    /* scroll-snap-type: y mandatory; */
-    /* padding-bottom: 1rem; */
 }
-
-.progression__item.win_condition-cheevo {}
-
 
 .progression__item {
     position: relative;
@@ -78,7 +65,7 @@
 
 
 .mark {
-    --mark-color: white;
+    --mark-color: var(--font-color);
     position: relative;
     left: 50%;
     top: 1.3rem;
@@ -101,7 +88,7 @@
 }
 
 .mark.earned {
-    --mark-color: rgb(47, 255, 99);
+    --mark-color: var(--accent-color);
 }
 
 .mark::after {
@@ -131,6 +118,13 @@
     font-size: 1rem;
 }
 
+.cheevo-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    gap: 0.5rem;
+}
+
 .cheevo-title {
     font-size: 1.1rem;
     font-weight: 600;
@@ -140,14 +134,50 @@
 .cheevo-description {
     display: none;
     font-size: 1.2rem;
-    padding: 0.5rem 0 1rem;
 }
 
-.focus .cheevo-description {
+.focus .cheevo-description,
+.show-all-descriptions .cheevo-description {
     display: inline-block;
 }
 
 .focus {
     scroll-snap-align: center;
 
+}
+
+.subcheevos-container {
+    flex: 1;
+    display: none;
+    flex-direction: column;
+    justify-content: space-evenly;
+    padding-bottom: 0.5rem;
+}
+
+.show-sublevels .subcheevos-container {
+    display: flex;
+}
+
+.progression__subcheevo {
+    position: relative;
+    padding-left: 1rem;
+}
+
+.progression__subcheevo::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.5rem;
+    width: 0.75rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 2px solid var(--font-color);
+}
+
+.progression__subcheevo.earned::before {
+    border-color: var(--accent-color);
+}
+
+.progression__subcheevo.hardcore::before {
+    background: var(--accent-color);
 }
