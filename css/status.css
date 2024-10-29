@@ -429,11 +429,16 @@
   background-position: center;
 }
 
+.stats .status__back-side .status__preview-container::after {
+  background-image: url(../assets/img/avatar-border.webp);
+}
+
+.status__back-side.mastered .status__preview-container::after,
 .status__back-side.hardcore .status__preview-container::after {
   background-image: url(../assets/img/border-8.webp);
 }
 
-.update_status__backback-side .status__preview-container::after {
+.status__back-side .status__preview-container::after {
   background-image: url(../assets/img/game-border-5.webp);
 }
 
