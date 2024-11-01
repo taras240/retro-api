@@ -111,6 +111,12 @@
     transition: background-color .2s;
 }
 
+.signed-icon {
+    display: flex;
+    align-items: center;
+    column-gap: 0.25rem
+}
+
 .icon-button,
 .icon-button:hover {
     display: grid;
@@ -149,9 +155,17 @@
     justify-self: center;
 }
 
+.q-icon {
+    mask-image: url(../assets/img/help.svg);
+}
+
 .difficult-icon {
     mask-image: url(../assets/img/award-mastered.svg);
     scale: 1.05;
+}
+
+.info-icon {
+    mask-image: url(../assets/img/info.svg);
 }
 
 .win_condition {

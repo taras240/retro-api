@@ -54,13 +54,14 @@
 .awards-content_container {
   max-height: 100%;
   overflow: scroll;
+  width: 100%;
 }
 
 .console-awards {
   display: grid;
   grid-template-columns: 1fr auto auto;
   /* column-gap: 10px; */
-  padding: 10px 15px 10px 15px;
+  padding: 5px;
 }
 
 .console-awards:nth-child(even) {
@@ -77,10 +78,6 @@
   display: flex;
   align-items: center;
   gap: 15px;
-}
-
-.awarded-games:not(:last-child)::after {
-  /* content: " /"; */
 }
 
 .awarded-games {
@@ -116,11 +113,7 @@
 
 .awarded-games.beaten-softcore:before,
 .awarded-games.beaten:before {
-  --dot-border-color: gray;
-}
-
-.awarded-games.beaten:before {
-  --dot-fill-to-color: gray;
+  --dot-border-color: silver;
 }
 
 .awarded-games.completed:before,
@@ -128,8 +121,9 @@
   --dot-border-color: gold;
 }
 
-.awarded-games.mastered:before {
-  --dot-fill-to-color: gold;
+.awarded-games.mastered:before,
+.awarded-games.beaten:before {
+  --dot-fill-to-color: var(--dot-border-color)
 }
 
 .awarded-games_list {
@@ -147,93 +141,46 @@
   overflow: hidden;
 }
 
-.awarded-game {
-  margin: 10px 0;
-  border-radius: 5px;
-  overflow: hidden;
-  position: relative;
-  padding: 10px 15px;
+.awards__game-item {
   display: grid;
   column-gap: 10px;
   grid-template-columns: auto 1fr;
   transition: 0.2s;
 }
 
-.awarded-game.hidden {
+.awards__game-item.hidden {
   display: none;
 }
 
-.console-awards:nth-child(odd) .awarded-game {
+.console-awards:nth-child(odd) .awards__game-item {
   background-color: var(--secondary-color);
-  /* background: linear-gradient(to right, var(--secondary-color), transparent); */
 }
 
-.console-awards:nth-child(even) .awarded-game {
+.console-awards:nth-child(even) .awards__game-item {
   background-color: var(--main-color);
-
-  /* background: linear-gradient(to right, var(--main-color), transparent); */
 }
 
-.awarded-game:hover {
-  box-shadow: 0 2px 7px 0px #000000a1;
-  transform: scale(1.05);
-  transition: 0.2s;
+.awards__game-item.beatenSoftcore,
+.awards__game-item.completion::after {
+  --mark-color: silver;
 }
 
-.awarded-game::after {
-  --dot-fill-to-color: transparent;
-  --dot-fill-from-color: transparent;
-  --dot-border-color: transparent;
-  content: "";
-  position: absolute;
-  right: 20px;
-  top: 50%;
-  transform: translate(0, -50%);
-  width: 20px;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  overflow: hidden;
-  opacity: 0.5;
-  background-image: radial-gradient(circle,
-      var(--dot-fill-from-color),
-      var(--dot-fill-to-color));
-  border: 2px solid var(--dot-border-color);
-  background-color: var(--dot-fill-to-color);
-  box-shadow: 0 0 10px 1px var(--dot-fill-to-color) inset;
-  box-shadow: 0 0 5px 2px var(--dot-fill-to-color);
-  transition: 0.2s;
+.awards__game-item.beatenHardcore::after,
+.awards__game-item.mastery::after {
+  --mark-color: gold;
 }
 
-.awarded-game:hover::after {
-  opacity: 1;
-  transition: opacity 0.2s;
+.awards__game-item.beatenHardcore::after,
+.awards__game-item.beatenSoftcore {
+  --icon-url: url(../assets/img/medal.svg);
 }
 
-.awarded-game.beatenSoftcore::after {
-  --dot-border-color: gray;
+.awards__game-item.completion::after,
+.awards__game-item.mastery::after {
+  --icon-url: url(../assets/img/trophy.svg);
 }
 
-.awarded-game.beatenHardcore::after {
-  --dot-fill-from-color: rgb(255, 255, 255);
-  --dot-fill-to-color: gray;
-  filter: blur(0.5px);
-}
-
-.awarded-game.completion::after {
-  --dot-border-color: gold;
-}
-
-.awarded-game.mastery::after {
-  --dot-fill-from-color: rgb(250, 255, 174);
-  --dot-fill-to-color: gold;
-  filter: blur(0.5px);
-}
-
-.game-title {
-  padding: 0;
-}
-
-.awarded-game-preview {
+.awards__game-preview {
   width: 60px;
   border-radius: 5px;
   overflow: hidden;
@@ -244,8 +191,7 @@
 
 .console-awards .expand-awards_button {
   background-color: transparent;
-  mask-image: url("../assets/img/expand_more.svg");
-  -webkit-mask-image: url("../assets/img/expand_more.svg");
+  mask-image: url(../assets/img/expand_more.svg);
   background-color: var(--font-color);
   background-position: center;
   background-repeat: no-repeat;

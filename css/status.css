@@ -29,7 +29,8 @@
 }
 
 .status__section.offline::after {
-  background-color: crimson;
+  background-color: goldenrod;
+  opacity: 1;
   transition: .2s;
 }
 
@@ -113,22 +114,19 @@
   backface-visibility: hidden;
   font-size: 16px;
   transition: transform 1s;
-
 }
 
 .status__container.game-bg {
-  /* --font-color: gray; */
   background-image: var(--bg-image);
-  background-blend-mode: multiply;
-  /* background-position: center; */
-  background-size: 100%;
+  background-blend-mode: overlay;
+  background-size: 120%;
   background-repeat: no-repeat;
-  background-position: center;
+  background-position: center left;
   image-rendering: pixelated;
 }
 
 .timer-timeout .status__container {
-  background: rgb(134, 0, 27);
+  filter: hue-rotate(90deg);
 }
 
 .status__container.show-back {
@@ -466,7 +464,7 @@
   word-wrap: none;
   font-weight: bold;
   color: var(--font-color);
-  opacity: 0.2;
+  opacity: 0.4;
   padding-bottom: 6px;
   pointer-events: none;
   z-index: 2;

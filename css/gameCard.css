@@ -51,6 +51,7 @@
   justify-content: center;
   align-items: normal;
   overflow: hidden;
+  z-index: 2;
 }
 
 .game-card__icons-container {
@@ -77,6 +78,7 @@
 } */
 
 .game-info-header.game-card__icon-block {
+  position: relative;
   --font-color: white;
   color: var(--font-color);
   display: flex;
@@ -90,6 +92,7 @@
 }
 
 .game-card__title-container {
+  position: relative;
   font-size: 1.4rem;
   font-weight: 500;
   padding: 0.25rem 1rem;
@@ -123,20 +126,53 @@
   /* border-top: 1px solid var(--accent-color); */
 }
 
-.mastered .game-card_image-container::after {
+.game-card__title-container::after,
+.game-card__title-container::before {
   content: "";
-  width: 100%;
-  aspect-ratio: 3;
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) rotateZ(-30deg);
-  background-image: url(../assets/img/mastered.png);
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-  filter: drop-shadow(0px 0px 2px black);
+  width: 3rem;
+  aspect-ratio: 1;
+  background-color: var(--award-color);
+  mask-image: var(--award-icon-url);
+  mask-size: contain;
+  mask-position: bottom;
+  mask-repeat: no-repeat;
+  top: 0;
+  z-index: -2;
+
 }
+
+.game-card_section {
+  --mastered-width: 0rem;
+}
+
+[data-award="mastered"],
+[data-award="completed"] {
+  --mastered-width: 3rem
+}
+
+[data-award="completed"] .game-card__title-container::after,
+[data-award="mastered"] .game-card__title-container::after {
+  right: 0;
+  --award-icon-url: url(../assets/img/trophy.svg);
+}
+
+[data-progression-award="beaten-softcore"] .game-card__title-container::before,
+[data-progression-award="beaten"] .game-card__title-container::before {
+  --award-icon-url: url(../assets/img/medal.svg);
+  right: var(--mastered-width);
+}
+
+[data-award="completed"] .game-card__title-container::after,
+[data-progression-award="beaten-softcore"] .game-card__title-container::before {
+  --award-color: silver;
+}
+
+[data-progression-award="beaten"] .game-card__title-container::before,
+[data-award="mastered"] .game-card__title-container::after {
+  --award-color: gold;
+}
+
 
 .game-card_image {
   width: 100%;
