@@ -17,7 +17,7 @@
 }
 
 .section.disposed {
-    display: none;
+    display: none !important
 }
 
 .section.dragable {
@@ -630,6 +630,11 @@ input[type="radio"]:checked+.context-menu_radio::after {
 
 
 /** ---------LISTS------- */
+.flex-row {
+    display: flex;
+    justify-content: space-evenly;
+}
+
 .flex-main-list {
     padding: 5px;
     overflow: scroll;

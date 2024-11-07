@@ -63,13 +63,13 @@
   --mark-color: gold;
 }
 
-.target-achiv:not(.hardcore).highlight {
+.target-achiv:not(.hardcore).highlight::before {
   --mark-color: green;
   /* border: 1px solid greenyellow; */
   /* box-shadow: 0 0 5px 2px var(--font-color); */
 }
 
-.highlight-passed .target-achiv:not(.hardcore).passed {
+.highlight-passed .target-achiv:not(.hardcore).passed::before {
   --mark-color: crimson;
   /* border: 1px solid red; */
   /* box-shadow: 0 0 5px 2px var(--font-color); */
@@ -136,6 +136,8 @@
 }
 
 .prev-img {
+  max-height: 100%;
+  max-width: 100%;
   height: 5rem;
   aspect-ratio: 1;
   filter: grayscale(1);
@@ -239,6 +241,8 @@
 .target-achiv .prev {
   position: relative;
   align-self: center;
+  aspect-ratio: 1;
+  flex-shrink: 0;
 }
 
 

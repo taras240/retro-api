@@ -303,12 +303,18 @@
   animation: update-achiv-anim 0.5s linear forwards;
 }
 
+.new-award .status__back-side.beaten::after,
+.new-award .status__back-side.beaten-softcore::after {
+  mask-image: url(../assets/img/medal.svg);
+}
+
 .new-achiv .status__back-side::after {
   mask-image: url(../assets/img/military_medal.svg);
   animation: update-achiv-anim 0.5s linear forwards;
 }
 
 .status__back-side.mastered::after,
+.status__back-side.beaten::after,
 .status__back-side.hardcore::after {
   --color: gold;
 }
