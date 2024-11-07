@@ -86,7 +86,75 @@
     place-self: center;
 }
 
+.rp__progression-container {
+    width: 100%;
+    padding: 0 0.5rem;
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.5rem;
+    display: none;
+}
 
+.show-progression .rp__progression-container {
+    display: flex;
+}
+
+.rp__progression-target {
+    font-weight: normal;
+    overflow-x: scroll;
+    text-wrap: nowrap;
+
+}
+
+
+.rp__progression-points {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: start;
+    gap: 0.2rem;
+    align-items: center;
+    /* padding: 0.25rem 0 0.5rem; */
+}
+
+.rp__win-points {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    flex-basis: 2rem;
+    flex-grow: 2;
+    flex-shrink: 0;
+}
+
+.rp__progression-point {
+    --color: var(--font-color);
+    flex-basis: 2rem;
+    flex-grow: 1;
+    flex-shrink: 0;
+    height: 5px;
+    border: 1px solid var(--color);
+
+
+}
+
+.rp__progression-point.win {
+    flex-basis: 5px;
+    --color: goldenrod;
+}
+
+.rp__progression-point.earned {
+    --color: var(--accent-color);
+    box-shadow: 0 0 2px 0px var(--color);
+    background-color: var(--color);
+}
+
+.rp__progression-point.win.earned {
+    --color: goldenrod;
+}
+
+.rp__progression-point.win.earned.hardcore {
+    --color: gold;
+}
 
 .rp__progressbar-container {
     position: relative;
@@ -112,6 +180,7 @@
 .rp__last-cheevos {
     position: absolute;
     right: 0;
+    bottom: -0.25rem;
     display: flex;
 }
 
