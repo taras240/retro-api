@@ -141,7 +141,7 @@
 
 
 .rp__progression-point.win {
-    flex-basis: 5px;
+    flex-basis: 0.4rem;
     --color: goldenrod;
 }
 
