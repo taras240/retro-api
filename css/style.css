@@ -61,6 +61,7 @@ input[type="radio"] {
 
 img {
   image-rendering: pixelated;
+  pointer-events: none;
 }
 
 :root {

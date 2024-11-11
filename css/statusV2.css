@@ -10,21 +10,26 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    row-gap: 0.5rem;
+    padding-bottom: 0.5rem;
 }
 
+.rp__section:not(.show-cheevos-list) {
+    height: fit-content !important;
+}
+
+/**---------GAME-INFO-------  */
 .rp__game-container {
-    height: 5.5rem;
+    height: 6rem;
     display: flex;
     flex-direction: row;
     column-gap: 0.5rem;
-    padding: 0.5rem 0.5rem 0;
+    padding: 0.5rem 0.5rem;
     cursor: grab;
 }
 
 .rp__preview-container {
     position: relative;
-    height: 100%;
+    height: 5rem;
     aspect-ratio: 1;
     flex-shrink: 0;
     overflow: hidden;
@@ -35,6 +40,7 @@
 .rp__game-image {
     height: 100%;
     width: 100%;
+
 }
 
 .rp__game-info {
@@ -47,6 +53,8 @@
 }
 
 .rp__game-title {
+    width: fit-content;
+    max-width: 100%;
     font-size: 1.3rem;
     font-weight: 500;
     text-wrap: nowrap;
@@ -86,9 +94,23 @@
     place-self: center;
 }
 
+/**--------RICH PRESENCE----------  */
+.rp__rich-presence {
+    width: 100%;
+    padding: 0.25rem 0.5rem;
+    font-size: 1.1rem;
+    text-wrap: nowrap;
+    overflow: scroll;
+}
+
+.rp__rich-presence.hidden {
+    display: none;
+}
+
+/**--------PROGRESSION------------  */
 .rp__progression-container {
     width: 100%;
-    padding: 0 0.5rem;
+    padding: 0.25rem 0.5rem;
     display: flex;
     flex-direction: column;
     row-gap: 0.5rem;
@@ -159,9 +181,10 @@
     --color: gold;
 }
 
+/**-----------PROGRESSBAR------------------  */
 .rp__progressbar-container {
     position: relative;
-    padding: 0 0.5rem;
+    padding: 0.25rem 0.5rem;
     display: flex;
     flex-direction: column;
     row-gap: 0.5rem;
@@ -256,6 +279,7 @@
     transition-delay: 2s;
 }
 
+/**-------------TICKER--------------  */
 .rp__ticker {
     width: 100%;
     text-wrap: nowrap;
@@ -272,12 +296,104 @@
     align-items: center;
     flex-shrink: 0;
     display: none;
+    margin: 0.25rem 0;
 }
 
 .show-ticker .rp__ticker {
     display: flex;
 }
 
+/**-------------ALERT---------------- */
+.rp__alert-container {
+    display: flex;
+    column-gap: 0.5rem;
+    height: fit-content;
+    width: 100%;
+    padding: 0;
+    background: linear-gradient(to right,
+            #ee0979,
+            #ff6a00);
+    color: black;
+    box-shadow: inset 0 0 3px 0px var(--main-color);
+    overflow: hidden;
+    display: none;
+    /* animation: rp-alert-animation 0.6s ease-in-out forwards; */
+}
+
+.rp__alert-container.show-alert {
+    display: flex;
+    animation-delay: 50ms;
+    animation: rp-show-alert-animation 0.2s ease-in-out forwards;
+}
+
+.rp__alert-container.hide-alert {
+    animation: rp-hide-alert-animation 0.2s ease-in-out forwards;
+}
+
+@keyframes rp-show-alert-animation {
+    from {
+        max-height: 0;
+        padding: 0;
+    }
+
+    to {
+        max-height: 6rem;
+        padding: 0.5rem;
+    }
+}
+
+@keyframes rp-hide-alert-animation {
+    from {
+        max-height: 6rem;
+        padding: 0.5rem;
+    }
+
+    to {
+        max-height: 0;
+        padding: 0;
+    }
+}
+
+.rp__alert-container.new-game .rp__preview-container {
+    display: none;
+}
+
+.rp__alert-info-grid {
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.2rem;
+    justify-content: space-evenly;
+    /* align-items: center; */
+    width: 100%;
+    overflow: hidden;
+}
+
+.rp__alert-title {
+    line-height: 1.4rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+    text-wrap: nowrap;
+}
+
+.rp__alert-description {
+    line-height: 1.2rem;
+    font-size: 1.1rem;
+
+    text-wrap: nowrap;
+    overflow-x: scroll;
+}
+
+.rp__alert-badges {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.25rem;
+    font-size: 1.5rem;
+    width: 100%;
+    overflow-x: scroll;
+}
+
+
+/**-------------CHEEVOS-LIST--------  */
 .flex-main-list.grid-list {
     justify-content: space-evenly;
     align-content: start;
@@ -291,7 +407,7 @@
     aspect-ratio: 1;
 }
 
-.flex-main-list.hidden {
+.rp__section:not(.show-cheevos-list) .flex-main-list {
     display: none;
 }
 
