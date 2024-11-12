@@ -17,6 +17,29 @@
     height: fit-content !important;
 }
 
+.rp__indicator {
+    --color: var(--main-color);
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+    width: 5px;
+    aspect-ratio: 1;
+    background-color: var(--color);
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.rp__indicator.blink {
+    --color: var(--font-color);
+    animation: update-blink 1s;
+}
+
+.rp__indicator.offline {
+    background-color: goldenrod;
+    opacity: 1;
+    transition: .2s;
+}
+
 /**---------GAME-INFO-------  */
 .rp__game-container {
     height: 6rem;

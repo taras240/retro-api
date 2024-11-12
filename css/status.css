@@ -94,7 +94,7 @@
   opacity: 0;
 }
 
-.status__section:hover .status__header-buttons {
+.section:hover .status__header-buttons {
   opacity: 1;
 }
 
