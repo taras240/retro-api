@@ -9,6 +9,8 @@
   perspective: 1500px;
   background: transparent;
   border-radius: var(--border-radius);
+  display: flex;
+  position: relative;
 }
 
 .status__section::after {
@@ -49,49 +51,9 @@
   }
 }
 
-.status__section .status__game-info {
-  display: none;
-  padding: 0 5px;
-}
-
-.status__section .status__progres {
-  display: none;
-}
-
-.title-platform-badge {
-  display: none;
-}
-
-.show-game-info .status__game-info {
-  flex: 1;
-  display: flex;
-  justify-content: space-evenly;
-  flex-direction: column;
-  width: auto;
-  font-size: inherit;
-}
-
-.show-game-progress .title-platform-badge {
-  display: inline;
-}
-
-.show-game-progress .status__progres {
-  display: flex;
-}
 
 .show-ticker .magic-line__container {
   display: flex;
-}
-
-.status__header-buttons {
-  position: absolute;
-  z-index: 10;
-  right: 0.25rem;
-  top: 0.25rem;
-  background-color: var(--main-color);
-  border-radius: 0.5rem;
-  display: flex;
-  opacity: 0;
 }
 
 .section:hover .status__header-buttons {
@@ -107,7 +69,7 @@
 }
 
 .status__container {
-  /* --bg-image: url(https://media.retroachievements.org/Images/005200.png); */
+  width: 100%;
   position: relative;
   background: var(--main-color);
   height: 100%;
@@ -115,8 +77,7 @@
   cursor: grab;
   transform-style: preserve-3d;
   transform: rotateX(0deg);
-  backface-visibility: hidden;
-  font-size: 16px;
+  font-size: inherit;
   transition: transform 1s;
 }
 
@@ -133,12 +94,449 @@
   filter: hue-rotate(90deg);
 }
 
+.status__header-buttons {
+  position: absolute;
+  z-index: 10;
+  right: 0.25rem;
+  top: 0.25rem;
+  background-color: var(--main-color);
+  border-radius: 0.5rem;
+  display: flex;
+  opacity: 0;
+}
+
+.card-3d {
+  width: 100%;
+  height: 100%;
+  /* position: relative; */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+  border-radius: var(--border-radius);
+
+}
+
+.card-3d {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  backface-visibility: hidden;
+  font-size: inherit;
+}
+
+card-3d::before,
+card-3d::after {
+  /* content: ''; */
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: var(--font-color);
+  opacity: 0.06;
+  z-index: 10;
+}
+
+card-3d::before {
+  bottom: 0;
+  height: 7px;
+  background-color: var(--main-color);
+  z-index: 9;
+  opacity: 1;
+}
+
+.status__preview-container {
+  position: relative;
+  height: 100%;
+  aspect-ratio: 1;
+  z-index: 2;
+  box-shadow: 0 0 3px 0px black;
+}
+
+.status__preview-container::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  opacity: 0.2;
+  background: linear-gradient(to bottom, transparent, var(--secondary-color), transparent);
+}
+
+.status__retro-ratio {
+  display: none;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  color: black;
+  font-size: 1em;
+  font-weight: bold;
+  padding: 0 .2em 2px;
+  border-radius: 0 var(--border-radius) 0 var(--border-radius);
+  line-height: 1em;
+}
+
+
+.show-game-ratio .status__retro-ratio {
+  display: block;
+}
+
+.status__game-preview {
+  height: 100%;
+  aspect-ratio: 1;
+  object-fit: fill;
+  border-radius: var(--border-radius) 0 0 var(--border-radius);
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.status__watch-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 60%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: var(--secondary-color);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 0 5px 1px var(--secondary-color);
+  opacity: 1;
+  transition: transform 200ms, opacity 200ms;
+  z-index: 10;
+}
+
+.section:hover .status__watch-button {
+  opacity: 1;
+}
+
+.status__watch-button:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.status__watch-button.active {
+  opacity: 0;
+}
+
+.status__watch-button:active {
+  background-color: var(--accent-color);
+  transform: translate(-50%, -50%) scale(1.05);
+}
+
+.status__watch-button::after {
+  content: "";
+  position: absolute;
+  height: 80%;
+  aspect-ratio: 1;
+  background-color: var(--font-color);
+  mask-image: url(../assets/img/play.svg);
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  mask-position: center;
+  opacity: 0.6;
+  transition: opacity 200ms;
+}
+
+.status__watch-button:hover::after {
+  opacity: 1;
+}
+
+.status__watch-button.active::after {
+  mask-image: url(../assets/img/pause.svg);
+}
+
+.status__watch-button.error {
+  background-color: red;
+  border-color: transparent;
+}
+
+.status__main-information {
+  font-size: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: space-evenly;
+  height: 100%;
+  padding-left: 0.25rem;
+
+  flex-shrink: 1;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.status__title-container {
+  text-align: start;
+  column-gap: 5px;
+  font-size: inherit;
+  max-height: 2.7em;
+  width: 100%;
+  overflow-x: scroll;
+  font-size: 1.3em;
+  text-wrap: nowrap;
+  white-space: nowrap;
+}
+
+.status__game-title {
+  position: relative;
+  color: var(--font-color);
+  font-size: inherit;
+  line-height: 1.2;
+  font-weight: bold;
+  flex-shrink: 0;
+  max-width: 100%;
+  text-wrap: nowrap;
+}
+
+.status__description-text,
+.rich-presence_text {
+  font-size: 1.1em;
+  text-wrap: nowrap;
+  place-self: center start;
+  overflow: hidden;
+  width: 100%;
+}
+
+.section:not(.show-game-info) .rich-presence_text {
+  display: none;
+}
+
+.rich-presence_text.hidden {
+  display: none;
+}
+
+.status__footer-container {
+  width: 100%;
+  overflow: hidden;
+  font-size: inherit;
+}
+
+.status__sideblock-container {
+  position: relative;
+  font-size: inherit;
+  flex-shrink: 0;
+  background: var(--secondary-color);
+  height: 100%;
+  min-width: 7em;
+  padding: 0 0.25em;
+  pointer-events: none;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  mix-blend-mode: color-burn;
+  box-shadow: 0 0 3px 0px black;
+  transition: min-width 1s;
+}
+
+.status__sideblock-container.long-time {
+  min-width: 10em;
+}
+
+.game-bg .status__sideblock-container {
+  background: #00000093;
+}
+
+.status__sideblock-icons {
+  font-size: inherit;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 0.5rem;
+}
+
+.signed-icon.auto-font-size,
+.auto-font-size {
+  font-size: 1.0em;
+}
+
+.status__big-text {
+  --animation-duration: 1s;
+  font-size: 2.5em;
+  line-height: 1.0em;
+  text-wrap: nowrap;
+  font-weight: 600;
+  color: var(--font-color);
+  transition: color var(--animation-duration);
+}
+
+.status__big-text.hidden {
+  visibility: hidden;
+}
+
+.status__big-text.hide {
+  color: var(--main-color);
+}
+
+.status__main-time,
+.status__secondary-time {
+  font-weight: 600;
+  font-size: 1.1em;
+  line-height: 1.1em;
+}
+
+
+
+/**---------------- BACK SIDE ------------- */
+
+.status__back-side {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  justify-content: start;
+  padding: 0 1rem;
+  transform: rotateX(180deg);
+  background-color: var(--secondary-color);
+  border-radius: var(--border-radius);
+  transform: rotateX(180deg);
+}
+
+
+
+.new-game-info .status__back-side {
+  gap: 5px;
+  padding: 0;
+}
+
+.status__back-side::after {
+  --color: silver;
+  content: "";
+  position: absolute;
+  right: 0px;
+  top: 50%;
+  height: 80%;
+  aspect-ratio: 1;
+  transform: translate(-100%, -200%);
+  background-color: var(--color);
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  image-rendering: pixelated;
+  background-size: contain;
+  background-repeat: no-repeat;
+  z-index: -1;
+}
+
+.new-award .status__back-side::after {
+  mask-image: url(../assets/img/trophy.svg);
+  animation: update-achiv-anim 0.5s linear forwards;
+}
+
+.new-award .status__back-side.beaten::after,
+.new-award .status__back-side.beaten-softcore::after {
+  mask-image: url(../assets/img/medal.svg);
+}
+
+.new-achiv .status__back-side::after {
+  mask-image: url(../assets/img/military_medal.svg);
+  animation: update-achiv-anim 0.5s linear forwards;
+}
+
+.status__back-side.mastered::after,
+.status__back-side.beaten::after,
+.status__back-side.hardcore::after {
+  --color: gold;
+}
+
+@keyframes update-achiv-anim {
+  from {
+    transform: scale(2) translate(100%, -200%);
+  }
+
+  to {
+    transform: scale(1.0) translate(0, -50%);
+
+  }
+}
+
+.new-game-info .status__back-side::after {
+  content: none;
+  background-image: "";
+}
+
+
+
+.status__alert-header {
+  font-size: inherit;
+  font-weight: 600;
+  text-wrap: nowrap;
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+
+.status__alert-title {
+  max-width: 100%;
+  overflow-x: scroll;
+  display: block;
+  white-space: nowrap;
+  text-wrap: nowrap;
+  font-size: 1.5em;
+  line-height: 1.2;
+}
+
+.status__alert-description {
+  font-size: 1.1em;
+  line-height: 1.2;
+  text-wrap: nowrap;
+  white-space: nowrap;
+}
+
+
+.status__alert-points {
+  font-size: 1.4em;
+  font-weight: 600;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.25em;
+}
+
+.new-game-info .status__back-side .status__progression-description,
+.new-award .status__back-side .status__progression-description {
+  display: none;
+}
+
+.stats .status__alert-points,
+.new-game-info .status__alert-points {
+  font-size: 1.3em;
+  font-weight: 600;
+  flex-wrap: wrap;
+}
+
+.status__preview-container {
+  font-size: inherit;
+}
+
+.status__back-side .status__preview-container {
+  max-height: 65%;
+}
+
+.new-game-info .status__back-side .status__preview-container {
+  max-height: 100%;
+
+}
+
+.status__back-side .status__text-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 100%;
+  overflow: hidden;
+  font-size: inherit;
+}
+
+
+/**---------------- BACK SIDE ------------- */
+
+
 .status__container.show-back {
   transform: rotateX(180deg);
   animation: rotate-status-animation 1s ease-in-out;
 }
 
-/* .update */
 .show-back .status_glass-effect {
   animation: status-glass-animation 1s ease-in-out forwards;
   animation-delay: 0s;
@@ -225,206 +623,8 @@
   z-index: 12;
 }
 
-.status__user-status {
-  position: relative;
-  display: flex;
-  align-items: center;
-  /* gap: 5px; */
-  justify-content: space-between;
-  overflow: hidden;
-  border-radius: var(--border-radius);
-  /* padding-bottom: 5px; */
-}
 
-.status__user-status::before,
-.status__user-status::after {
-  /* content: ''; */
-  position: absolute;
-  bottom: 2px;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  background-color: var(--font-color);
-  opacity: 0.06;
-  z-index: 10;
-}
-
-.status__user-status::before {
-  bottom: 0;
-  height: 7px;
-  background-color: var(--main-color);
-  z-index: 9;
-  opacity: 1;
-}
-
-/**---------------- BACK SIDE ------------- */
-.status__back-side {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  justify-content: space-between;
-  padding: 5px 20px;
-  transform: rotateX(180deg);
-  background-color: var(--secondary-color);
-  border-radius: var(--border-radius);
-}
-
-.status__back-side .status__text-block {
-  justify-content: space-evenly;
-}
-
-.new-game-info .status__back-side {
-  gap: 5px;
-  padding: 0;
-}
-
-.status__back-side::after {
-  --color: silver;
-  content: "";
-  position: absolute;
-  right: 0px;
-  top: 50%;
-  height: 80%;
-  aspect-ratio: 1;
-  transform: translate(-100%, -200%);
-  background-color: var(--color);
-  mask-position: center;
-  mask-repeat: no-repeat;
-  mask-size: contain;
-  image-rendering: pixelated;
-  background-size: contain;
-  background-repeat: no-repeat;
-  z-index: -1;
-}
-
-.new-award .status__back-side::after {
-  mask-image: url(../assets/img/trophy.svg);
-  animation: update-achiv-anim 0.5s linear forwards;
-}
-
-.new-award .status__back-side.beaten::after,
-.new-award .status__back-side.beaten-softcore::after {
-  mask-image: url(../assets/img/medal.svg);
-}
-
-.new-achiv .status__back-side::after {
-  mask-image: url(../assets/img/military_medal.svg);
-  animation: update-achiv-anim 0.5s linear forwards;
-}
-
-.status__back-side.mastered::after,
-.status__back-side.beaten::after,
-.status__back-side.hardcore::after {
-  --color: gold;
-}
-
-@keyframes update-achiv-anim {
-  from {
-    transform: scale(2) translate(100%, -200%);
-  }
-
-  to {
-    transform: scale(1.0) translate(0, -50%);
-
-  }
-}
-
-.new-game-info .status__back-side::after {
-  content: none;
-  background-image: "";
-}
-
-.card-3d {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
-  overflow: hidden;
-  font-size: inherit;
-}
-
-.status__achiv-header {
-  font-size: 1.6em;
-  font-weight: 600;
-  text-wrap: nowrap;
-  overflow-x: hidden;
-  max-width: 100%;
-}
-
-#update_achiv-title {
-  max-width: 100%;
-  overflow-x: scroll;
-  display: block;
-  white-space: nowrap;
-}
-
-.new-game-info .status__achiv-header {
-  font-size: 1.4em;
-  font-weight: 600;
-}
-
-.status__achiv-points {
-  font-size: 1.5em;
-  font-weight: 600;
-}
-
-.new-game-info .status__back-side .status__progres-description,
-.new-award .status__back-side .status__progres-description {
-  display: none;
-}
-
-.new-game-info .status__achiv-points {
-  font-size: 1.4em;
-  font-weight: 600;
-}
-
-.status__preview-container {
-  font-size: inherit;
-}
-
-.status__back-side .status__preview-container {
-  max-height: 75%;
-}
-
-.new-game-info .status__back-side .status__preview-container {
-  max-height: 100%;
-
-}
-
-
-
-/**---------------- BACK SIDE ------------- */
-.status__preview-container {
-  position: relative;
-  height: 100%;
-  aspect-ratio: 1;
-  z-index: 2;
-  box-shadow: 0 1px 10px 3px black;
-}
-
-.status__preview-container::before {
-  content: "";
-  width: 100%;
-  height: 100%;
-  opacity: 0.2;
-  background: linear-gradient(to bottom, transparent, var(--secondary-color), transparent);
-}
-
-
-.status__game-preview {
-  height: 100%;
-  aspect-ratio: 1;
-  object-fit: fill;
-  border-radius: var(--border-radius) 0 0 var(--border-radius);
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 2;
-}
-
-.status__preview-container::after {
+.status__back-side .status__preview-container::after {
   content: "";
   position: absolute;
   top: 50%;
@@ -462,177 +662,15 @@
   white-space: nowrap;
 }
 
-
-
-.status__big-text {
-  --animation-duration: 1s;
-  position: absolute;
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 2.5em;
-  text-wrap: nowrap;
-  word-wrap: none;
-  font-weight: bold;
-  color: var(--font-color);
-  opacity: 0.4;
-  padding-bottom: 6px;
-  pointer-events: none;
-  z-index: 2;
-  transition: color var(--animation-duration);
-}
-
-.status__big-text.hidden {
-  visibility: hidden;
-}
-
-.status__big-text.hide {
-  color: var(--main-color);
-}
-
-.status__watch-button {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  height: 60%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  overflow: hidden;
-  background-color: var(--secondary-color);
-  display: grid;
-  place-items: center;
-  box-shadow: 0 0 5px 1px var(--secondary-color);
-  opacity: 1;
-  transition: transform 200ms, opacity 200ms;
-  z-index: 10;
-}
-
-.section:hover .status__watch-button {
-  opacity: 1;
-}
-
-.status__watch-button:hover {
-  transform: translate(-50%, -50%) scale(1.1);
-}
-
-.status__watch-button.active {
-  opacity: 0;
-}
-
-.status__watch-button:active {
-  background-color: var(--accent-color);
-  transform: translate(-50%, -50%) scale(1.05);
-}
-
-.status__watch-button::after {
-  content: "";
-  position: absolute;
-  height: 80%;
-  aspect-ratio: 1;
-  background-color: var(--font-color);
-  mask-image: url(../assets/img/play.svg);
-  mask-repeat: no-repeat;
-  mask-size: contain;
-  mask-position: center;
-  opacity: 0.6;
-  transition: opacity 200ms;
-}
-
-.status__watch-button:hover::after {
-  opacity: 1;
-}
-
-.status__watch-button.active::after {
-  mask-image: url(../assets/img/pause.svg);
-}
-
-.status__watch-button.error {
-  background-color: red;
-  border-color: transparent;
-}
-
-
-.status__retro-ratio {
-  display: none;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  color: black;
-  font-size: 1em;
-  font-weight: bold;
-  padding: 0 .2em 2px;
-  border-radius: 0 var(--border-radius) 0 var(--border-radius);
-  line-height: 1em;
-}
-
-
-.show-game-ratio .status__retro-ratio {
-  display: block;
-}
-
-.status__game-title-container {
-  text-align: start;
-  display: flex;
-  flex-direction: row;
-  column-gap: 5px;
-  align-items: center;
-  overflow: scroll;
-  font-size: inherit;
-  padding: 0.2em 0.2em 0;
-}
-
-.status__game-title {
-  position: relative;
-  color: var(--font-color);
+.status__progres-description {
   font-size: 1.2em;
-  font-weight: bold;
-  padding: 0 2px;
-  flex-shrink: 0;
-  overflow-x: scroll;
-  max-width: 100%;
+  line-height: 1.2;
+  text-wrap: wrap;
+  max-height: 2.5em;
 }
 
 
-.status__game-platform {
-  flex-shrink: 1;
-  color: var(--font-color);
-  background-color: var(--secondary-color);
-  align-self: flex-start;
-  padding: 0 8px;
-  border-radius: 3px;
-  font-weight: medium;
-  font-size: 1.0em;
-}
 
-.status__game-platform.hidden {
-  display: none;
-}
-
-.status__text-block {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-  flex: 1;
-  overflow: hidden;
-  z-index: 1;
-  font-size: inherit;
-}
-
-
-.status__text.rich-presence_text {
-  flex-grow: 0;
-  overflow: scroll;
-  text-wrap: nowrap;
-  white-space: nowrap;
-  font-size: 1em;
-}
-
-.rich-presence_text.hidden {
-  display: none;
-}
 
 .status__progress-bar {
   position: absolute;
@@ -679,14 +717,37 @@
   padding: 0 5px;
 }
 
-.status__progres-description {
+.status__progression-description {
+  position: relative;
   font-size: 1em;
   text-wrap: nowrap;
   white-space: nowrap;
   overflow: hidden;
+  max-width: calc(100% - 6em);
+  display: none !important;
+  /* max-width: calc(100% - 8.5em);  */
 }
 
-.status__progres-container {
+/* 
+.status__progression-description::after {
+  content: '\00A0\00A0\00A0';
+
+}
+
+.status__progression-description::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 1em;
+  background: linear-gradient(to right, transparent, var(--main-color));
+} */
+.section:not(.show-game-progress) .status__description-text {
+  display: none;
+}
+
+.status__progression-container {
   --color: var(--font-color);
   --width: calc(100% / 5);
   width: 100%;
@@ -694,166 +755,109 @@
   align-items: end;
   justify-content: start;
   font-size: inherit;
-  padding: 0 0.2em;
   overflow-x: scroll;
   scroll-snap-type: x mandatory;
 }
 
-.progres-step.softcore {
-  --color: var(--selection-color);
-}
-
-.progres-step.hardcore {
-  --color: var(--accent-color);
-}
-
-.progres-step,
-.progres-step__win {
-  position: relative;
-  width: var(--width);
-  max-width: 5em;
-  height: 1.5em;
-  background-color: transparent;
+.progression-points__dots {
+  --dot-height: 1.5em;
+  --dot-min-width: 2em;
+  --color: var(--font-color);
+  --dot-image: url(../assets/img/circle-with-dot.svg);
   display: flex;
-  justify-content: start;
-  font-size: inherit;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.progression-points__rects {
+  display: flex;
   align-items: center;
-  min-width: 1.5em;
+  flex-wrap: wrap;
+  column-gap: 0.5em;
+  row-gap: 0.25em;
+  min-height: 1.0em;
+  max-height: 1.8em;
 }
 
-/* .progres-step:first-child, */
-.progres-step__win:first-child {
-  width: auto;
-}
-
-/* .progres-step:first-child {
-  width: auto;
-} */
-
-.progres-point {
-  position: relative;
-  /* background-color: var(--main-color); */
-  height: 1.2em;
-  /* max-height: 1.8rem; */
-  aspect-ratio: 1;
-  border-radius: 50%;
-  border: 2px solid var(--color);
-  display: grid;
-  place-items: center;
-  z-index: 2;
+.win-points__dots {
   font-size: inherit;
+  align-self: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: -10px;
+  height: var(--dot-height);
+  width: fit-content;
 }
 
-.progres-point.win {
-  border: none;
-  width: 0.75rem;
+.progression-point__dot {
+  font-size: inherit;
+  position: relative;
+  height: var(--dot-height);
+  flex-basis: var(--dot-min-width);
+  flex-shrink: 0;
+  flex-grow: 1;
+  max-width: 6em;
+}
+
+.progression-point__dot.focus {
+  --dot-image: url(../assets/img/radio_button_checked.svg);
 }
 
 
-.progres-point:hover {
-  scale: 1.1;
-  transition: 0.2s;
+.progression-point__dot.earned {
+  --color: var(--accent-color);
+  --dot-image: url(../assets/img/task_check_circle.svg);
 }
 
-/* .softcore .progres-point:not(.win) {
-  background-color: var(--color);
-} */
-
-.hardcore .progres-point:not(.win) {
-  background-color: var(--color);
-}
-
-.progres-step::after {
+.progression-point__dot::before {
   content: "";
   position: absolute;
-  transform: translateY(-50%);
-  top: 50%;
-  right: 0;
-  width: calc(100% - 1.2em);
-  height: 2px;
+  height: var(--dot-height);
+  aspect-ratio: 1;
+  left: 0;
+  top: 0;
+  mask-image: var(--dot-image);
+  mask-repeat: no-repeat;
+  mask-size: contain;
   background-color: var(--color);
-  z-index: 1;
 }
 
-.progres-step:last-child::after {
+.progression-point__dot::after {
+  content: "";
+  position: absolute;
+  width: calc(100% - var(--dot-height) + 4px);
+  right: -2px;
+  height: 2px;
+  top: calc(50% - 1px);
+  background-color: var(--color);
+}
+
+.progression-point__dot:last-child:after {
   display: none;
 }
 
-.progres-step .progres-point::before {
-  content: '';
-  position: absolute;
-  transform: translate(-50%, -50%);
-  top: 50%;
-  left: 50%;
-  height: 30%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background-color: var(--font-color);
-}
-
-
-.progres-point.win::before {
-  content: '';
-  position: absolute;
-  transform: translate(-50%, -50%);
-  top: 50%;
-  left: 50%;
-  height: 30%;
-  aspect-ratio: 1;
-  height: 110%;
-  background-color: var(--font-color);
+.progression-point__dot-win {
+  font-size: inherit;
+  height: var(--dot-height);
+  width: var(--dot-height);
   mask-image: url(../assets/img/flag.svg);
-  mask-repeat: no-repeat;
   mask-size: contain;
-  mask-position: center;
-  overflow: visible;
-}
-
-.progres-step:where(.hardcore, .softcore) .progres-point:not(.win):before {
-  height: 100%;
-  border-radius: 50%;
-  background-color: var(--font-color);
-  mask-image: url(../assets/img/check.svg);
+  mask-position: -0.17em center;
   mask-repeat: no-repeat;
-  mask-size: contain;
-  mask-position: center;
+  background-color: var(--color);
 }
 
-.progres-point.softcore.win:before {
-  background-color: rgb(153, 130, 71);
+.progression-point__dot-win.earned {
+  --color: gold;
 }
 
-.progres-point.hardcore.win:before {
-  background-color: gold;
+.progression-point__dot-win:nth-child(n + 2) {
+  margin-left: -0.8em;
 }
-
-.progres-step.focus {
-  scroll-snap-align: center;
-}
-
-.progres-point.focus::after {
-  /* display: none; */
-  content: '';
-  position: absolute;
-  width: 1.2em;
-  height: 2px;
-  background: linear-gradient(to left, transparent, var(--font-color), transparent);
-  bottom: -5px;
-
-}
-
-@keyframes rotate-animation {
-  to {
-    transform: rotateZ(360deg);
-  }
-}
-
-/* .current-level.progres-point:not(.win) {
-  border-radius: 50%;
-  border: 2px solid greenyellow;
-} */
 
 .magic-line__container {
+  grid-area: ticker;
   font-size: inherit;
   /* position: absolute; */
   bottom: 0;

@@ -23,6 +23,15 @@
 
 }
 
+.badge-centered {
+    --font-color: black;
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    line-height: 1;
+    padding: 0.15rem 0.25rem;
+}
+
 .badge.badge-bold {
     font-weight: 700;
     font-size: 0.9em;
