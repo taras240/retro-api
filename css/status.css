@@ -343,7 +343,7 @@ card-3d::before {
 .status__sideblock-icons {
   font-size: inherit;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, auto);
   column-gap: 0.5rem;
 }
 
