@@ -328,7 +328,6 @@ card-3d::before {
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  mix-blend-mode: color-burn;
   box-shadow: 0 0 3px 0px black;
   transition: min-width 1s;
 }
