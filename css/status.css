@@ -294,6 +294,7 @@ card-3d::before {
 .rich-presence_text {
   font-size: 1.1em;
   text-wrap: nowrap;
+  white-space: nowrap;
   place-self: center start;
   overflow: hidden;
   width: 100%;
