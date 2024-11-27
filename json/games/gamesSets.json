@@ -16128,17 +16128,6 @@
             "badges": []
         }
     ],
-    "Dizzy the Adventurer": [
-        {
-            "Title": "Dizzy the Adventurer",
-            "ID": 4605,
-            "Console": "NES/Famicom",
-            "ImageIcon": "077412",
-            "badges": [
-                "Unlicensed"
-            ]
-        }
-    ],
     "DJ Boy": [
         {
             "Title": "DJ Boy",
@@ -16654,9 +16643,7 @@
             "badges": [
                 "Hack"
             ]
-        }
-    ],
-    "Donkey Kong Accelerate": [
+        },
         {
             "Title": "Donkey Kong Accelerate",
             "ID": 28363,
@@ -16665,9 +16652,7 @@
             "badges": [
                 "Hack"
             ]
-        }
-    ],
-    "Donkey Kong Arcade": [
+        },
         {
             "Title": "Donkey Kong Arcade",
             "ID": 31167,
@@ -16676,14 +16661,48 @@
             "badges": [
                 "Homebrew"
             ]
-        }
-    ],
-    "Donkey Kong Barrelpalooza": [
+        },
         {
             "Title": "Donkey Kong Barrelpalooza",
             "ID": 20533,
             "Console": "Arcade",
             "ImageIcon": "062304",
+            "badges": [
+                "Hack"
+            ]
+        },
+        {
+            "Title": "Donkey Kong Hearthunt",
+            "ID": 23999,
+            "Console": "Arcade",
+            "ImageIcon": "071102",
+            "badges": [
+                "Hack"
+            ]
+        },
+        {
+            "Title": "Donkey Kong Into The Dark",
+            "ID": 20439,
+            "Console": "Arcade",
+            "ImageIcon": "061695",
+            "badges": [
+                "Hack"
+            ]
+        },
+        {
+            "Title": "Donkey Kong On The Run",
+            "ID": 25326,
+            "Console": "Arcade",
+            "ImageIcon": "081552",
+            "badges": [
+                "Hack"
+            ]
+        },
+        {
+            "Title": "Donkey Kong Twisted Jungle",
+            "ID": 24000,
+            "Console": "Arcade",
+            "ImageIcon": "071098",
             "badges": [
                 "Hack"
             ]
@@ -16783,9 +16802,7 @@
             "badges": [
                 "Hack"
             ]
-        }
-    ],
-    "Donkey Kong Country 1 &": [
+        },
         {
             "Title": "Donkey Kong Country 1 & 2: Boss Blitz | Brigand Barrage",
             "ID": 7873,
@@ -16794,9 +16811,7 @@
             "badges": [
                 "Hack"
             ]
-        }
-    ],
-    "Donkey Kong Country Mania": [
+        },
         {
             "Title": "Donkey Kong Country Mania",
             "ID": 18328,
@@ -16805,46 +16820,6 @@
             "badges": [
                 "Hack"
             ]
-        }
-    ],
-    "Donkey Kong Hearthunt": [
-        {
-            "Title": "Donkey Kong Hearthunt",
-            "ID": 23999,
-            "Console": "Arcade",
-            "ImageIcon": "071102",
-            "badges": [
-                "Hack"
-            ]
-        }
-    ],
-    "Donkey Kong Into The Dark": [
-        {
-            "Title": "Donkey Kong Into The Dark",
-            "ID": 20439,
-            "Console": "Arcade",
-            "ImageIcon": "061695",
-            "badges": [
-                "Hack"
-            ]
-        }
-    ],
-    "Donkey Kong Jr.": [
-        {
-            "Title": "Donkey Kong Jr.",
-            "ID": 1465,
-            "Console": "NES/Famicom",
-            "ImageIcon": "024531",
-            "badges": []
-        }
-    ],
-    "Donkey Kong Jr. Math": [
-        {
-            "Title": "Donkey Kong Jr. Math",
-            "ID": 1659,
-            "Console": "NES/Famicom",
-            "ImageIcon": "024800",
-            "badges": []
         }
     ],
     "Donkey Kong Jungle Beat": [
@@ -16857,6 +16832,29 @@
         }
     ],
     "Donkey Kong Junior": [
+        {
+            "Title": "Game & Watch Donkey Kong Jr",
+            "ID": 30910,
+            "Console": "Nintendo DS",
+            "ImageIcon": "102017",
+            "badges": [
+                "Homebrew"
+            ]
+        },
+        {
+            "Title": "Donkey Kong Jr.",
+            "ID": 1465,
+            "Console": "NES/Famicom",
+            "ImageIcon": "024531",
+            "badges": []
+        },
+        {
+            "Title": "Donkey Kong Jr. Math",
+            "ID": 1659,
+            "Console": "NES/Famicom",
+            "ImageIcon": "024800",
+            "badges": []
+        },
         {
             "Title": "Donkey Kong Junior",
             "ID": 13323,
@@ -16916,17 +16914,6 @@
             "badges": []
         }
     ],
-    "Donkey Kong On The Run": [
-        {
-            "Title": "Donkey Kong On The Run",
-            "ID": 25326,
-            "Console": "Arcade",
-            "ImageIcon": "081552",
-            "badges": [
-                "Hack"
-            ]
-        }
-    ],
     "Donkey Kong Pac-Man Crossover": [
         {
             "Title": "Donkey Kong Pac-Man Crossover",
@@ -16949,17 +16936,6 @@
             ]
         }
     ],
-    "Donkey Kong Twisted Jungle": [
-        {
-            "Title": "Donkey Kong Twisted Jungle",
-            "ID": 24000,
-            "Console": "Arcade",
-            "ImageIcon": "071098",
-            "badges": [
-                "Hack"
-            ]
-        }
-    ],
     "Donkey Konga 2 [USA]": [
         {
             "Title": "Donkey Konga 2 [USA]",
@@ -16967,27 +16943,21 @@
             "Console": "Game Cube",
             "ImageIcon": "100547",
             "badges": []
-        }
-    ],
-    "Donkey Konga [Europe]": [
+        },
         {
             "Title": "Donkey Konga [Europe]",
             "ID": 28604,
             "Console": "Game Cube",
             "ImageIcon": "089894",
             "badges": []
-        }
-    ],
-    "Donkey Konga [Japan]": [
+        },
         {
             "Title": "Donkey Konga [Japan]",
             "ID": 28605,
             "Console": "Game Cube",
             "ImageIcon": "089895",
             "badges": []
-        }
-    ],
-    "Donkey Konga [USA]": [
+        },
         {
             "Title": "Donkey Konga [USA]",
             "ID": 13727,
@@ -17090,9 +17060,7 @@
             "badges": [
                 "Hack"
             ]
-        }
-    ],
-    "Doom 32X": [
+        },
         {
             "Title": "Doom 32X: Resurrection",
             "ID": 18179,
@@ -17360,18 +17328,14 @@
             "Console": "Genesis/Mega Drive",
             "ImageIcon": "039756",
             "badges": []
-        }
-    ],
-    "Double Dragon (Neo-Geo)": [
+        },
         {
             "Title": "Double Dragon (Neo-Geo)",
             "ID": 12661,
             "Console": "Arcade",
             "ImageIcon": "048754",
             "badges": []
-        }
-    ],
-    "Double Dragon Advance": [
+        },
         {
             "Title": "Double Dragon Advance",
             "ID": 2138,
@@ -17538,23 +17502,26 @@
             "Console": "Nintendo 64",
             "ImageIcon": "041427",
             "badges": []
-        }
-    ],
-    "Dr. Mario & Puzzle League": [
+        },
         {
             "Title": "Dr. Mario & Puzzle League",
             "ID": 4970,
             "Console": "Game Boy Advance",
             "ImageIcon": "060392",
             "badges": []
-        }
-    ],
-    "Dr. Mario Express | A Little Bit of... Dr. Mario": [
+        },
         {
             "Title": "Dr. Mario Express | A Little Bit of... Dr. Mario",
             "ID": 22374,
             "Console": "Nintendo DSi",
             "ImageIcon": "067316",
+            "badges": []
+        },
+        {
+            "Title": "Tetris and Dr. Mario",
+            "ID": 1259,
+            "Console": "SNES/Super Famicom",
+            "ImageIcon": "070455",
             "badges": []
         }
     ],
@@ -17653,23 +17620,16 @@
             "badges": []
         }
     ],
-    "Dragon Ball GT": [
+    "Dragon Ball": [
         {
-            "Title": "Dragon Ball GT: Final Bout",
-            "ID": 11418,
-            "Console": "PlayStation",
-            "ImageIcon": "088587",
-            "badges": []
-        },
-        {
-            "Title": "Dragon Ball GT: Transformation",
-            "ID": 753,
+            "Title": "Dragon Ball Z Team Training",
+            "ID": 7825,
             "Console": "Game Boy Advance",
-            "ImageIcon": "101557",
-            "badges": []
-        }
-    ],
-    "Dragon Ball Z": [
+            "ImageIcon": "014741",
+            "badges": [
+                "Hack"
+            ]
+        },
         {
             "Title": "Dragon Ball Z",
             "ID": 12742,
@@ -17950,20 +17910,7 @@
             "Console": "PlayStation",
             "ImageIcon": "086071",
             "badges": []
-        }
-    ],
-    "Dragon Ball Z Team Training": [
-        {
-            "Title": "Dragon Ball Z Team Training",
-            "ID": 7825,
-            "Console": "Game Boy Advance",
-            "ImageIcon": "014741",
-            "badges": [
-                "Hack"
-            ]
-        }
-    ],
-    "Dragon Ball": [
+        },
         {
             "Title": "Dragon Ball: Advanced Adventure",
             "ID": 1376,
@@ -17990,6 +17937,20 @@
             "ID": 5172,
             "Console": "NES/Famicom",
             "ImageIcon": "025611",
+            "badges": []
+        },
+        {
+            "Title": "Dragon Ball GT: Final Bout",
+            "ID": 11418,
+            "Console": "PlayStation",
+            "ImageIcon": "088587",
+            "badges": []
+        },
+        {
+            "Title": "Dragon Ball GT: Transformation",
+            "ID": 753,
+            "Console": "Game Boy Advance",
+            "ImageIcon": "101557",
             "badges": []
         }
     ],
@@ -18095,52 +18056,42 @@
             "badges": []
         }
     ],
-    "Dragon Quest (MSX2 version)": [
-        {
-            "Title": "Dragon Quest (MSX2 version)",
-            "ID": 16400,
-            "Console": "MSX",
-            "ImageIcon": "082859",
-            "badges": []
-        }
-    ],
-    "Dragon Quest Heroes": [
+    "Dragon Quest": [
         {
             "Title": "Dragon Quest Heroes: Rocket Slime",
             "ID": 16254,
             "Console": "Nintendo DS",
             "ImageIcon": "055622",
             "badges": []
-        }
-    ],
-    "Dragon Quest I &": [
+        },
+        {
+            "Title": "Dragon Quest (MSX2 version)",
+            "ID": 16400,
+            "Console": "MSX",
+            "ImageIcon": "082859",
+            "badges": []
+        },
         {
             "Title": "Dragon Quest I & II",
             "ID": 1405,
             "Console": "SNES/Super Famicom",
             "ImageIcon": "038721",
             "badges": []
-        }
-    ],
-    "Dragon Quest I & II | Dragon Warrior I &": [
+        },
         {
             "Title": "Dragon Quest I & II | Dragon Warrior I & II",
             "ID": 3818,
             "Console": "Game Boy Color",
             "ImageIcon": "093949",
             "badges": []
-        }
-    ],
-    "Dragon Quest II | Dragon Warrior": [
+        },
         {
             "Title": "Dragon Quest II | Dragon Warrior II",
             "ID": 1470,
             "Console": "NES/Famicom",
             "ImageIcon": "026798",
             "badges": []
-        }
-    ],
-    "Dragon Quest III | Dragon Warrior": [
+        },
         {
             "Title": "Dragon Quest III | Dragon Warrior III",
             "ID": 697,
@@ -18163,9 +18114,7 @@
             "Console": "NES/Famicom",
             "ImageIcon": "026799",
             "badges": []
-        }
-    ],
-    "Dragon Quest": [
+        },
         {
             "Title": "Dragon Quest III: Soshite Densetsu e...",
             "ID": 6231,
@@ -18318,36 +18267,28 @@
             "badges": [
                 " Party and Records Chat"
             ]
-        }
-    ],
-    "Dragon Quest IV | Dragon Warrior": [
+        },
         {
             "Title": "Dragon Quest IV | Dragon Warrior IV",
             "ID": 4612,
             "Console": "NES/Famicom",
             "ImageIcon": "067845",
             "badges": []
-        }
-    ],
-    "Dragon Quest Monsters 2 | Dragon Warrior Monsters": [
+        },
         {
             "Title": "Dragon Quest Monsters 2 | Dragon Warrior Monsters 2",
             "ID": 5105,
             "Console": "Game Boy Color",
             "ImageIcon": "086569",
             "badges": []
-        }
-    ],
-    "Dragon Quest Monsters | Dragon Warrior Monsters": [
+        },
         {
             "Title": "Dragon Quest Monsters | Dragon Warrior Monsters",
             "ID": 3608,
             "Console": "Game Boy Color",
             "ImageIcon": "086568",
             "badges": []
-        }
-    ],
-    "Dragon Quest Monsters": [
+        },
         {
             "Title": "Dragon Quest Monsters: Caravan Heart",
             "ID": 8315,
@@ -18368,27 +18309,21 @@
             "Console": "Nintendo DS",
             "ImageIcon": "082888",
             "badges": []
-        }
-    ],
-    "Dragon Quest VII | Dragon Warrior": [
+        },
         {
             "Title": "Dragon Quest VII | Dragon Warrior VII",
             "ID": 11289,
             "Console": "PlayStation",
             "ImageIcon": "102807",
             "badges": []
-        }
-    ],
-    "Dragon Quest Wars": [
+        },
         {
             "Title": "Dragon Quest Wars",
             "ID": 22308,
             "Console": "Nintendo DSi",
             "ImageIcon": "067608",
             "badges": []
-        }
-    ],
-    "Dragon Quest | Dragon Warrior": [
+        },
         {
             "Title": "Dragon Quest | Dragon Warrior",
             "ID": 1471,
@@ -18415,25 +18350,21 @@
             "badges": []
         }
     ],
-    "Dragon Slayer Level 1.": [
+    "Dragon Slayer": [
         {
             "Title": "Dragon Slayer Level 1.1",
             "ID": 13705,
             "Console": "PC-8000/8800",
             "ImageIcon": "049326",
             "badges": []
-        }
-    ],
-    "Dragon Slayer Level 2.": [
+        },
         {
             "Title": "Dragon Slayer Level 2.0",
             "ID": 14152,
             "Console": "PC-8000/8800",
             "ImageIcon": "024207",
             "badges": []
-        }
-    ],
-    "Dragon Slayer": [
+        },
         {
             "Title": "Dragon Slayer: The Legend of Heroes",
             "ID": 12889,
@@ -18594,7 +18525,7 @@
             "badges": []
         }
     ],
-    "Dragoon X Omega I - Gold Edition": [
+    "Dragoon X Omega": [
         {
             "Title": "Dragoon X Omega I - Gold Edition: Amnethen Apocalypse",
             "ID": 20087,
@@ -18603,9 +18534,7 @@
             "badges": [
                 "Hack"
             ]
-        }
-    ],
-    "Dragoon X Omega": [
+        },
         {
             "Title": "Dragoon X Omega II: Easy Mode",
             "ID": 20271,
@@ -18752,16 +18681,14 @@
             "badges": []
         }
     ],
-    "Driver 2 Advance": [
+    "Driver": [
         {
             "Title": "Driver 2 Advance",
             "ID": 2527,
             "Console": "Game Boy Advance",
             "ImageIcon": "046403",
             "badges": []
-        }
-    ],
-    "Driver": [
+        },
         {
             "Title": "Driver 2: The Wheelman Is Back",
             "ID": 11588,
@@ -18802,12 +18729,19 @@
             "badges": []
         }
     ],
-    "Druaga no Tou | The Tower of Druaga": [
+    "The Tower of Druaga": [
         {
             "Title": "Druaga no Tou | The Tower of Druaga",
             "ID": 12826,
             "Console": "PC Engine/TurboGrafx-16",
             "ImageIcon": "020096",
+            "badges": []
+        },
+        {
+            "Title": "The Tower of Druaga",
+            "ID": 12051,
+            "Console": "Arcade",
+            "ImageIcon": "079516",
             "badges": []
         }
     ],
@@ -18906,7 +18840,7 @@
             "badges": []
         }
     ],
-    "Duke Nukem 3D": [
+    "Duke Nukem": [
         {
             "Title": "Duke Nukem 3D",
             "ID": 129,
@@ -18920,9 +18854,7 @@
             "Console": "Saturn",
             "ImageIcon": "043347",
             "badges": []
-        }
-    ],
-    "Duke Nukem": [
+        },
         {
             "Title": "Duke Nukem 64",
             "ID": 10121,
@@ -18957,9 +18889,7 @@
             "Console": "Nintendo 64",
             "ImageIcon": "066261",
             "badges": []
-        }
-    ],
-    "Duke Nukem Advance": [
+        },
         {
             "Title": "Duke Nukem Advance",
             "ID": 3701,
@@ -19187,9 +19117,7 @@
             "Console": "Genesis/Mega Drive",
             "ImageIcon": "060585",
             "badges": []
-        }
-    ],
-    "Dynamite Headdy [Japan]": [
+        },
         {
             "Title": "Dynamite Headdy [Japan]",
             "ID": 22188,
@@ -19242,18 +19170,14 @@
             "Console": "PlayStation Portable",
             "ImageIcon": "047325",
             "badges": []
-        }
-    ],
-    "Dynasty Warriors 4 | Dynasty Warriors": [
+        },
         {
             "Title": "Dynasty Warriors 4 | Dynasty Warriors 4: Xtreme Legends",
             "ID": 20784,
             "Console": "PlayStation 2",
             "ImageIcon": "088860",
             "badges": []
-        }
-    ],
-    "Dynasty Warriors 5 | Dynasty Warriors": [
+        },
         {
             "Title": "Dynasty Warriors 5 | Dynasty Warriors 5: Xtreme Legends",
             "ID": 20787,
@@ -19467,9 +19391,7 @@
             "Console": "Sega CD",
             "ImageIcon": "030293",
             "badges": []
-        }
-    ],
-    "Earthworm Jim 3D": [
+        },
         {
             "Title": "Earthworm Jim 3D",
             "ID": 10348,
@@ -19489,16 +19411,35 @@
             ]
         }
     ],
-    "Ecco Jr.": [
+    "Ecco the Dolphin": [
+        {
+            "Title": "Ecco: The Tides of Time",
+            "ID": 1440,
+            "Console": "Genesis/Mega Drive",
+            "ImageIcon": "048090",
+            "badges": []
+        },
+        {
+            "Title": "Ecco: The Tides of Time",
+            "ID": 12995,
+            "Console": "Game Gear",
+            "ImageIcon": "018337",
+            "badges": []
+        },
+        {
+            "Title": "Ecco the Dolphin [Japan]",
+            "ID": 4374,
+            "Console": "Genesis/Mega Drive",
+            "ImageIcon": "048153",
+            "badges": []
+        },
         {
             "Title": "Ecco Jr.",
             "ID": 2186,
             "Console": "Genesis/Mega Drive",
             "ImageIcon": "069906",
             "badges": []
-        }
-    ],
-    "Ecco the Dolphin": [
+        },
         {
             "Title": "Ecco the Dolphin",
             "ID": 8,
@@ -19525,31 +19466,6 @@
             "ID": 3872,
             "Console": "Dreamcast",
             "ImageIcon": "051225",
-            "badges": []
-        }
-    ],
-    "Ecco the Dolphin [Japan]": [
-        {
-            "Title": "Ecco the Dolphin [Japan]",
-            "ID": 4374,
-            "Console": "Genesis/Mega Drive",
-            "ImageIcon": "048153",
-            "badges": []
-        }
-    ],
-    "Ecco": [
-        {
-            "Title": "Ecco: The Tides of Time",
-            "ID": 1440,
-            "Console": "Genesis/Mega Drive",
-            "ImageIcon": "048090",
-            "badges": []
-        },
-        {
-            "Title": "Ecco: The Tides of Time",
-            "ID": 12995,
-            "Console": "Game Gear",
-            "ImageIcon": "018337",
             "badges": []
         }
     ],
@@ -19603,16 +19519,14 @@
             "badges": []
         }
     ],
-    "Egg Mania | Eggo Mania": [
+    "Egg Mania": [
         {
             "Title": "Egg Mania | Eggo Mania",
             "ID": 5959,
             "Console": "Game Boy Advance",
             "ImageIcon": "049763",
             "badges": []
-        }
-    ],
-    "Egg Mania": [
+        },
         {
             "Title": "Egg Mania: Eggstreme Madness",
             "ID": 24974,
@@ -19776,18 +19690,14 @@
             "Console": "SG-1000",
             "ImageIcon": "076278",
             "badges": []
-        }
-    ],
-    "Elevator Action Returns": [
+        },
         {
             "Title": "Elevator Action Returns",
             "ID": 11654,
             "Console": "Saturn",
             "ImageIcon": "087251",
             "badges": []
-        }
-    ],
-    "Elevator Action Returns | Elevator Action": [
+        },
         {
             "Title": "Elevator Action Returns | Elevator Action II",
             "ID": 12111,
@@ -20275,12 +20185,40 @@
             ]
         }
     ],
-    "Evangelion New Theatrical Edition": [
+    "Evangelion": [
         {
             "Title": "Evangelion New Theatrical Edition: 3nd Impact",
             "ID": 2922,
             "Console": "PlayStation Portable",
             "ImageIcon": "047933",
+            "badges": []
+        },
+        {
+            "Title": "Neon Genesis Evangelion: Shito Ikusei",
+            "ID": 17551,
+            "Console": "WonderSwan",
+            "ImageIcon": "104746",
+            "badges": []
+        },
+        {
+            "Title": "Neon Genesis Evangelion: Typing Project Advanced",
+            "ID": 10837,
+            "Console": "Dreamcast",
+            "ImageIcon": "052615",
+            "badges": []
+        },
+        {
+            "Title": "Shin Seiki Evangelion: Girlfriend of Steel 2nd Portable",
+            "ID": 6415,
+            "Console": "PlayStation Portable",
+            "ImageIcon": "047519",
+            "badges": []
+        },
+        {
+            "Title": "Shin Seiki Evangelion: Typing e Keikaku",
+            "ID": 10830,
+            "Console": "Dreamcast",
+            "ImageIcon": "052629",
             "badges": []
         }
     ],
@@ -20461,17 +20399,6 @@
             "badges": []
         }
     ],
-    "Extra Mario Bros.": [
-        {
-            "Title": "Extra Mario Bros.",
-            "ID": 5288,
-            "Console": "NES/Famicom",
-            "ImageIcon": "064453",
-            "badges": [
-                "Hack"
-            ]
-        }
-    ],
     "Extreme Volleyball Infernal League": [
         {
             "Title": "Extreme Volleyball Infernal League",
@@ -20491,9 +20418,7 @@
             "Console": "Nintendo 64",
             "ImageIcon": "046200",
             "badges": []
-        }
-    ],
-    "Extreme-G XG": [
+        },
         {
             "Title": "Extreme-G XG2",
             "ID": 10460,
@@ -20519,6 +20444,13 @@
         }
     ],
     "F-Zero": [
+        {
+            "Title": "F-Zero GX",
+            "ID": 9699,
+            "Console": "Game Cube",
+            "ImageIcon": "081531",
+            "badges": []
+        },
         {
             "Title": "F-Zero",
             "ID": 252,
@@ -20570,15 +20502,6 @@
             "ID": 507,
             "Console": "Game Boy Advance",
             "ImageIcon": "076868",
-            "badges": []
-        }
-    ],
-    "F-Zero GX": [
-        {
-            "Title": "F-Zero GX",
-            "ID": 9699,
-            "Console": "Game Cube",
-            "ImageIcon": "081531",
             "badges": []
         }
     ],
@@ -20642,7 +20565,7 @@
             ]
         }
     ],
-    "Famicom Mini Vol.": [
+    "Famicom Mini": [
         {
             "Title": "Famicom Mini Vol. 16: Dig Dug",
             "ID": 12971,
@@ -20725,6 +20648,40 @@
             "Console": "Genesis/Mega Drive",
             "ImageIcon": "000400",
             "badges": []
+        },
+        {
+            "Title": "The Fantastic Adventures of Dizzy",
+            "ID": 4616,
+            "Console": "NES/Famicom",
+            "ImageIcon": "024223",
+            "badges": []
+        },
+        {
+            "Title": "Wonderland Dizzy",
+            "ID": 10388,
+            "Console": "NES/Famicom",
+            "ImageIcon": "013646",
+            "badges": [
+                "Unlicensed"
+            ]
+        },
+        {
+            "Title": "Dizzy the Adventurer",
+            "ID": 4605,
+            "Console": "NES/Famicom",
+            "ImageIcon": "077412",
+            "badges": [
+                "Unlicensed"
+            ]
+        },
+        {
+            "Title": "Mystery World Dizzy",
+            "ID": 10389,
+            "Console": "NES/Famicom",
+            "ImageIcon": "013656",
+            "badges": [
+                "Unlicensed"
+            ]
         }
     ],
     "Fantasy Zone": [
@@ -20811,9 +20768,7 @@
             "Console": "PlayStation 2",
             "ImageIcon": "052798",
             "badges": []
-        }
-    ],
-    "Fatal Frame | Project Zero": [
+        },
         {
             "Title": "Fatal Frame | Project Zero",
             "ID": 1275,
@@ -20878,9 +20833,7 @@
             "Console": "Arcade",
             "ImageIcon": "021885",
             "badges": []
-        }
-    ],
-    "Fatal Fury Special": [
+        },
         {
             "Title": "Fatal Fury Special",
             "ID": 905,
@@ -21086,18 +21039,14 @@
             "Console": "PlayStation Portable",
             "ImageIcon": "074622",
             "badges": []
-        }
-    ],
-    "FIFA Soccer 2005 | FIFA Football": [
+        },
         {
             "Title": "FIFA Soccer 2005 | FIFA Football 2005",
             "ID": 13204,
             "Console": "Game Boy Advance",
             "ImageIcon": "071435",
             "badges": []
-        }
-    ],
-    "FIFA Soccer": [
+        },
         {
             "Title": "FIFA Soccer 95",
             "ID": 181,
@@ -21167,9 +21116,7 @@
             "Console": "Nintendo 64",
             "ImageIcon": "063155",
             "badges": []
-        }
-    ],
-    "Fighting Force | Metal Fist": [
+        },
         {
             "Title": "Fighting Force | Metal Fist",
             "ID": 11411,
@@ -21715,9 +21662,7 @@
             "Console": "Nintendo DS",
             "ImageIcon": "054808",
             "badges": []
-        }
-    ],
-    "Final Fantasy ++": [
+        },
         {
             "Title": "Final Fantasy ++",
             "ID": 7924,
@@ -21726,18 +21671,14 @@
             "badges": [
                 "Hack"
             ]
-        }
-    ],
-    "Final Fantasy Adventure | Mystic Quest": [
+        },
         {
             "Title": "Final Fantasy Adventure | Mystic Quest",
             "ID": 2403,
             "Console": "Game Boy",
             "ImageIcon": "070038",
             "badges": []
-        }
-    ],
-    "Final Fantasy Anthology": [
+        },
         {
             "Title": "Final Fantasy Anthology: Final Fantasy V",
             "ID": 14435,
@@ -21751,9 +21692,7 @@
             "Console": "PlayStation",
             "ImageIcon": "076139",
             "badges": []
-        }
-    ],
-    "Final Fantasy Chronicles": [
+        },
         {
             "Title": "Final Fantasy Chronicles: Chrono Trigger",
             "ID": 11243,
@@ -21776,9 +21715,7 @@
             "badges": [
                 " Rare Drops"
             ]
-        }
-    ],
-    "Final Fantasy Crystal Chronicles": [
+        },
         {
             "Title": "Final Fantasy Crystal Chronicles",
             "ID": 3885,
@@ -21810,9 +21747,7 @@
             "Console": "Nintendo DS",
             "ImageIcon": "073415",
             "badges": []
-        }
-    ],
-    "Final Fantasy Elements": [
+        },
         {
             "Title": "Final Fantasy Elements",
             "ID": 27537,
@@ -21821,18 +21756,7 @@
             "badges": [
                 "Hack"
             ]
-        }
-    ],
-    "Final Fantasy Fables": [
-        {
-            "Title": "Final Fantasy Fables: Chocobo Tales",
-            "ID": 16633,
-            "Console": "Nintendo DS",
-            "ImageIcon": "087757",
-            "badges": []
-        }
-    ],
-    "Final Fantasy I &": [
+        },
         {
             "Title": "Final Fantasy I & II: Dawn of Souls",
             "ID": 762,
@@ -21857,9 +21781,7 @@
             "badges": [
                 "Hack"
             ]
-        }
-    ],
-    "Final Fantasy Legend": [
+        },
         {
             "Title": "Final Fantasy Legend II",
             "ID": 2479,
@@ -21873,9 +21795,7 @@
             "Console": "Game Boy",
             "ImageIcon": "083258",
             "badges": []
-        }
-    ],
-    "Final Fantasy Origins": [
+        },
         {
             "Title": "Final Fantasy Origins",
             "ID": 11332,
@@ -21891,9 +21811,7 @@
             "badges": [
                 " FF1 Solo Class"
             ]
-        }
-    ],
-    "Final Fantasy Tactics": [
+        },
         {
             "Title": "Final Fantasy Tactics",
             "ID": 11246,
@@ -21907,36 +21825,28 @@
             "Console": "PlayStation Portable",
             "ImageIcon": "074335",
             "badges": []
-        }
-    ],
-    "Final Fantasy Tactics A": [
+        },
         {
             "Title": "Final Fantasy Tactics A2: Grimoire of the Rift",
             "ID": 4958,
             "Console": "Nintendo DS",
             "ImageIcon": "070806",
             "badges": []
-        }
-    ],
-    "Final Fantasy Tactics Advance": [
+        },
         {
             "Title": "Final Fantasy Tactics Advance",
             "ID": 519,
             "Console": "Game Boy Advance",
             "ImageIcon": "070805",
             "badges": []
-        }
-    ],
-    "Final Fantasy X-": [
+        },
         {
             "Title": "Final Fantasy X-2",
             "ID": 29090,
             "Console": "PlayStation 2",
             "ImageIcon": "093586",
             "badges": []
-        }
-    ],
-    "Final Fantasy X": [
+        },
         {
             "Title": "Final Fantasy X1: Dark Chapter",
             "ID": 15166,
@@ -21963,9 +21873,7 @@
             "badges": [
                 "Unlicensed"
             ]
-        }
-    ],
-    "Final Fantasy XI Adventure": [
+        },
         {
             "Title": "Final Fantasy XI Adventure",
             "ID": 15147,
@@ -21974,6 +21882,15 @@
             "badges": [
                 "Homebrew"
             ]
+        }
+    ],
+    "Final Fantasy Fables": [
+        {
+            "Title": "Final Fantasy Fables: Chocobo Tales",
+            "ID": 16633,
+            "Console": "Nintendo DS",
+            "ImageIcon": "087757",
+            "badges": []
         }
     ],
     "Final Fight": [
@@ -22004,36 +21921,28 @@
             "Console": "SNES/Super Famicom",
             "ImageIcon": "101605",
             "badges": []
-        }
-    ],
-    "Final Fight CD": [
+        },
         {
             "Title": "Final Fight CD",
             "ID": 10070,
             "Console": "Sega CD",
             "ImageIcon": "101603",
             "badges": []
-        }
-    ],
-    "Final Fight Guy": [
+        },
         {
             "Title": "Final Fight Guy",
             "ID": 352,
             "Console": "SNES/Super Famicom",
             "ImageIcon": "014627",
             "badges": []
-        }
-    ],
-    "Final Fight One": [
+        },
         {
             "Title": "Final Fight One",
             "ID": 3706,
             "Console": "Game Boy Advance",
             "ImageIcon": "062590",
             "badges": []
-        }
-    ],
-    "Final Fight Revenge": [
+        },
         {
             "Title": "Final Fight Revenge",
             "ID": 17899,
@@ -22144,9 +22053,7 @@
             "Console": "Master System",
             "ImageIcon": "062183",
             "badges": []
-        }
-    ],
-    "Fire 'n Ice | Solomon's Key": [
+        },
         {
             "Title": "Fire 'n Ice | Solomon's Key 2",
             "ID": 1686,
@@ -22155,16 +22062,14 @@
             "badges": []
         }
     ],
-    "Fire Emblem Gaiden": [
+    "Fire Emblem": [
         {
             "Title": "Fire Emblem Gaiden",
             "ID": 5431,
             "Console": "NES/Famicom",
             "ImageIcon": "088026",
             "badges": []
-        }
-    ],
-    "Fire Emblem": [
+        },
         {
             "Title": "Fire Emblem: Genealogy of the Holy War",
             "ID": 2878,
@@ -22582,7 +22487,16 @@
             ]
         }
     ],
-    "Flapee Bird": [
+    "Flappy Bird": [
+        {
+            "Title": "Flappy Cheep Cheep",
+            "ID": 19509,
+            "Console": "Virtual Boy",
+            "ImageIcon": "057489",
+            "badges": [
+                "Homebrew"
+            ]
+        },
         {
             "Title": "Flapee Bird",
             "ID": 20037,
@@ -22591,9 +22505,7 @@
             "badges": [
                 "Homebrew"
             ]
-        }
-    ],
-    "Flapple Bird": [
+        },
         {
             "Title": "Flapple Bird",
             "ID": 20042,
@@ -22602,9 +22514,7 @@
             "badges": [
                 "Homebrew"
             ]
-        }
-    ],
-    "Flappy": [
+        },
         {
             "Title": "Flappy",
             "ID": 12795,
@@ -22613,18 +22523,14 @@
             "badges": [
                 "Homebrew"
             ]
-        }
-    ],
-    "Flappy Ball": [
+        },
         {
             "Title": "Flappy Ball",
             "ID": 5816,
             "Console": "Arduboy",
             "ImageIcon": "056451",
             "badges": []
-        }
-    ],
-    "Flappy Bird": [
+        },
         {
             "Title": "Flappy Bird",
             "ID": 20044,
@@ -22678,9 +22584,7 @@
             "badges": [
                 "Homebrew"
             ]
-        }
-    ],
-    "Flappy Bird (INioreh)": [
+        },
         {
             "Title": "Flappy Bird (INioreh)",
             "ID": 21475,
@@ -22689,9 +22593,7 @@
             "badges": [
                 "Homebrew"
             ]
-        }
-    ],
-    "Flappy Bird (jwarby)": [
+        },
         {
             "Title": "Flappy Bird (jwarby)",
             "ID": 21433,
@@ -22700,9 +22602,7 @@
             "badges": [
                 "Homebrew"
             ]
-        }
-    ],
-    "Flappy Bird for MSX": [
+        },
         {
             "Title": "Flappy Bird for MSX",
             "ID": 19726,
@@ -22711,9 +22611,7 @@
             "badges": [
                 "Homebrew"
             ]
-        }
-    ],
-    "Flappy Bird GB": [
+        },
         {
             "Title": "Flappy Bird GB",
             "ID": 26083,
@@ -22722,18 +22620,7 @@
             "badges": [
                 "Homebrew"
             ]
-        }
-    ],
-    "Flappy Birdie": [
-        {
-            "Title": "Flappy Birdie",
-            "ID": 8691,
-            "Console": "Arduboy",
-            "ImageIcon": "057863",
-            "badges": []
-        }
-    ],
-    "Flappy Birds": [
+        },
         {
             "Title": "Flappy Birds 2",
             "ID": 24633,
@@ -22742,25 +22629,19 @@
             "badges": [
                 "Homebrew"
             ]
-        }
-    ],
-    "Flappy Boy": [
+        },
+        {
+            "Title": "Flappy Birdie",
+            "ID": 8691,
+            "Console": "Arduboy",
+            "ImageIcon": "057863",
+            "badges": []
+        },
         {
             "Title": "Flappy Boy",
             "ID": 7412,
             "Console": "Game Boy",
             "ImageIcon": "073496",
-            "badges": [
-                "Homebrew"
-            ]
-        }
-    ],
-    "Flappy Cheep Cheep": [
-        {
-            "Title": "Flappy Cheep Cheep",
-            "ID": 19509,
-            "Console": "Virtual Boy",
-            "ImageIcon": "057489",
             "badges": [
                 "Homebrew"
             ]
@@ -23369,18 +23250,14 @@
             "Console": "PlayStation",
             "ImageIcon": "022449",
             "badges": []
-        }
-    ],
-    "Frogger Advance": [
+        },
         {
             "Title": "Frogger Advance: The Great Quest",
             "ID": 9358,
             "Console": "Game Boy Advance",
             "ImageIcon": "067186",
             "badges": []
-        }
-    ],
-    "Frogger's Adventures": [
+        },
         {
             "Title": "Frogger's Adventures 2: The Lost Wand",
             "ID": 2524,
@@ -23783,7 +23660,7 @@
             "badges": []
         }
     ],
-    "Galactix": [
+    "Galaga": [
         {
             "Title": "Galactix",
             "ID": 15726,
@@ -23792,9 +23669,7 @@
             "badges": [
                 "Homebrew"
             ]
-        }
-    ],
-    "Galaga": [
+        },
         {
             "Title": "Galaga",
             "ID": 1701,
@@ -23815,18 +23690,14 @@
             "Console": "Atari 7800",
             "ImageIcon": "056840",
             "badges": []
-        }
-    ],
-    "Galaga '88 | Galaga '": [
+        },
         {
             "Title": "Galaga '88 | Galaga '90",
             "ID": 2298,
             "Console": "PC Engine/TurboGrafx-16",
             "ImageIcon": "041051",
             "badges": []
-        }
-    ],
-    "Galaxian": [
+        },
         {
             "Title": "Galaxian",
             "ID": 3614,
@@ -23926,9 +23797,7 @@
             "Console": "Arcade",
             "ImageIcon": "089897",
             "badges": []
-        }
-    ],
-    "Gals Panic SS": [
+        },
         {
             "Title": "Gals Panic SS",
             "ID": 28135,
@@ -23982,17 +23851,6 @@
             "Console": "Nintendo DS",
             "ImageIcon": "069524",
             "badges": []
-        }
-    ],
-    "Game & Watch Donkey Kong Jr": [
-        {
-            "Title": "Game & Watch Donkey Kong Jr",
-            "ID": 30910,
-            "Console": "Nintendo DS",
-            "ImageIcon": "102017",
-            "badges": [
-                "Homebrew"
-            ]
         }
     ],
     "Game & Watch Gallery": [
@@ -24161,18 +24019,14 @@
             "Console": "SNES/Super Famicom",
             "ImageIcon": "063363",
             "badges": []
-        }
-    ],
-    "Ganbare Goemon Gaiden": [
+        },
         {
             "Title": "Ganbare Goemon Gaiden: Kieta Ougon Kiseru",
             "ID": 2615,
             "Console": "NES/Famicom",
             "ImageIcon": "082648",
             "badges": []
-        }
-    ],
-    "Ganbare Goemon! Karakuri Douchuu": [
+        },
         {
             "Title": "Ganbare Goemon! Karakuri Douchuu",
             "ID": 4847,
@@ -24690,6 +24544,13 @@
     ],
     "Ghostbusters": [
         {
+            "Title": "New Ghostbusters II",
+            "ID": 6215,
+            "Console": "NES/Famicom",
+            "ImageIcon": "075901",
+            "badges": []
+        },
+        {
             "Title": "Ghostbusters",
             "ID": 19,
             "Console": "Genesis/Mega Drive",
@@ -24742,6 +24603,20 @@
         }
     ],
     "Ghosts 'n Goblins": [
+        {
+            "Title": "Ghouls 'n Ghosts",
+            "ID": 212,
+            "Console": "Genesis/Mega Drive",
+            "ImageIcon": "072975",
+            "badges": []
+        },
+        {
+            "Title": "Ghouls 'n Ghosts",
+            "ID": 11903,
+            "Console": "Arcade",
+            "ImageIcon": "042915",
+            "badges": []
+        },
         {
             "Title": "Ghosts 'n Goblins",
             "ID": 8667,
@@ -24816,22 +24691,6 @@
             "ID": 1711,
             "Console": "NES/Famicom",
             "ImageIcon": "082526",
-            "badges": []
-        }
-    ],
-    "Ghouls 'n Ghosts": [
-        {
-            "Title": "Ghouls 'n Ghosts",
-            "ID": 212,
-            "Console": "Genesis/Mega Drive",
-            "ImageIcon": "072975",
-            "badges": []
-        },
-        {
-            "Title": "Ghouls 'n Ghosts",
-            "ID": 11903,
-            "Console": "Arcade",
-            "ImageIcon": "042915",
             "badges": []
         }
     ],
@@ -25558,9 +25417,7 @@
             "Console": "SNES/Super Famicom",
             "ImageIcon": "034928",
             "badges": []
-        }
-    ],
-    "Goof Troop ST": [
+        },
         {
             "Title": "Goof Troop ST: Space Treasure",
             "ID": 18966,
@@ -25803,9 +25660,7 @@
             "badges": [
                 " Bonus"
             ]
-        }
-    ],
-    "Gradius Generation | Gradius Galaxies | Gradius Advance": [
+        },
         {
             "Title": "Gradius Generation | Gradius Galaxies | Gradius Advance",
             "ID": 7437,
@@ -25921,9 +25776,7 @@
             "Console": "Watara Supervision",
             "ImageIcon": "063182",
             "badges": []
-        }
-    ],
-    "Grand Prix | Car Races | Road Race": [
+        },
         {
             "Title": "Grand Prix | Car Races | Road Race",
             "ID": 21625,
@@ -29070,15 +28923,6 @@
             "badges": []
         }
     ],
-    "Ike Ike! Nekketsu Hockey-bu": [
-        {
-            "Title": "Ike Ike! Nekketsu Hockey-bu: Subette Koronde Dai Rantou",
-            "ID": 6423,
-            "Console": "NES/Famicom",
-            "ImageIcon": "054721",
-            "badges": []
-        }
-    ],
     "Ike! Ike!! Hamusuta": [
         {
             "Title": "Ike! Ike!! Hamusuta",
@@ -29929,9 +29773,7 @@
             "Console": "Genesis/Mega Drive",
             "ImageIcon": "048627",
             "badges": []
-        }
-    ],
-    "James Pond II - Codename": [
+        },
         {
             "Title": "James Pond II - Codename: RoboCod",
             "ID": 29,
@@ -31691,15 +31533,6 @@
             ]
         }
     ],
-    "King of Fighters R-": [
-        {
-            "Title": "King of Fighters R-2",
-            "ID": 14250,
-            "Console": "Neo Geo Pocket",
-            "ImageIcon": "063067",
-            "badges": []
-        }
-    ],
     "King of the Monsters": [
         {
             "Title": "King of the Monsters",
@@ -31837,6 +31670,38 @@
     ],
     "Kingdom Hearts": [
         {
+            "Title": "Kingdom Hearts Re:Chain of Memories",
+            "ID": 19290,
+            "Console": "PlayStation 2",
+            "ImageIcon": "061471",
+            "badges": []
+        },
+        {
+            "Title": "Kingdom Hearts Re:Chain of Memories",
+            "ID": 25006,
+            "Console": "PlayStation 2",
+            "ImageIcon": "076449",
+            "badges": [
+                " Extreme Difficulty"
+            ]
+        },
+        {
+            "Title": "Kingdom Hearts Re:Chain of Memories",
+            "ID": 21479,
+            "Console": "PlayStation 2",
+            "ImageIcon": "076448",
+            "badges": [
+                " Proud Level 1"
+            ]
+        },
+        {
+            "Title": "Kingdom Hearts Re:coded",
+            "ID": 14828,
+            "Console": "Nintendo DS",
+            "ImageIcon": "095488",
+            "badges": []
+        },
+        {
             "Title": "Kingdom Hearts II: Final Mix",
             "ID": 2781,
             "Console": "PlayStation 2",
@@ -31888,40 +31753,6 @@
             "badges": [
                 " Level 100 on Destiny Islands"
             ]
-        }
-    ],
-    "Kingdom Hearts Re": [
-        {
-            "Title": "Kingdom Hearts Re:Chain of Memories",
-            "ID": 19290,
-            "Console": "PlayStation 2",
-            "ImageIcon": "061471",
-            "badges": []
-        },
-        {
-            "Title": "Kingdom Hearts Re:Chain of Memories",
-            "ID": 25006,
-            "Console": "PlayStation 2",
-            "ImageIcon": "076449",
-            "badges": [
-                " Extreme Difficulty"
-            ]
-        },
-        {
-            "Title": "Kingdom Hearts Re:Chain of Memories",
-            "ID": 21479,
-            "Console": "PlayStation 2",
-            "ImageIcon": "076448",
-            "badges": [
-                " Proud Level 1"
-            ]
-        },
-        {
-            "Title": "Kingdom Hearts Re:coded",
-            "ID": 14828,
-            "Console": "Nintendo DS",
-            "ImageIcon": "095488",
-            "badges": []
         }
     ],
     "Kingdom": [
@@ -33805,7 +33636,7 @@
             "badges": []
         }
     ],
-    "Letty9 | (9)": [
+    "Letty9": [
         {
             "Title": "Letty9 | (9)",
             "ID": 17058,
@@ -35784,17 +35615,6 @@
             "badges": []
         }
     ],
-    "MARIO": [
-        {
-            "Title": "MARIO",
-            "ID": 2667,
-            "Console": "SNES/Super Famicom",
-            "ImageIcon": "043012",
-            "badges": [
-                "Hack"
-            ]
-        }
-    ],
     "Mario & Luigi": [
         {
             "Title": "Mario & Luigi: Bowser's Inside Story",
@@ -35836,7 +35656,7 @@
             ]
         }
     ],
-    "Mario & Sonic at the Olympic Winter Games": [
+    "Mario & Sonic": [
         {
             "Title": "Mario & Sonic at the Olympic Winter Games",
             "ID": 14813,
@@ -35852,37 +35672,6 @@
             "Console": "SNES/Super Famicom",
             "ImageIcon": "054423",
             "badges": []
-        }
-    ],
-    "Mario": [
-        {
-            "Title": "Mario 3: Around the World",
-            "ID": 15329,
-            "Console": "Genesis/Mega Drive",
-            "ImageIcon": "055633",
-            "badges": [
-                "Unlicensed"
-            ]
-        },
-        {
-            "Title": "Mario 4: A Space Odyssey",
-            "ID": 16285,
-            "Console": "Genesis/Mega Drive",
-            "ImageIcon": "055036",
-            "badges": [
-                "Unlicensed"
-            ]
-        }
-    ],
-    "Mario Adventure": [
-        {
-            "Title": "Mario Adventure",
-            "ID": 4994,
-            "Console": "NES/Famicom",
-            "ImageIcon": "019336",
-            "badges": [
-                "Hack"
-            ]
         }
     ],
     "Mario Aimlessly Drives a Car Around the City": [
@@ -35920,6 +35709,13 @@
     ],
     "Mario Bros.": [
         {
+            "Title": "Mario Clash",
+            "ID": 11171,
+            "Console": "Virtual Boy",
+            "ImageIcon": "073200",
+            "badges": []
+        },
+        {
             "Title": "Mario Bros.",
             "ID": 1824,
             "Console": "NES/Famicom",
@@ -35952,15 +35748,6 @@
             "ID": 14183,
             "Console": "Apple II",
             "ImageIcon": "071861",
-            "badges": []
-        }
-    ],
-    "Mario Clash": [
-        {
-            "Title": "Mario Clash",
-            "ID": 11171,
-            "Console": "Virtual Boy",
-            "ImageIcon": "073200",
             "badges": []
         }
     ],
@@ -40597,27 +40384,21 @@
             "Console": "PlayStation 2",
             "ImageIcon": "077729",
             "badges": []
-        }
-    ],
-    "Monster Hunter Freedom": [
+        },
         {
             "Title": "Monster Hunter Freedom",
             "ID": 3591,
             "Console": "PlayStation Portable",
             "ImageIcon": "085841",
             "badges": []
-        }
-    ],
-    "Monster Hunter Freedom Unite": [
+        },
         {
             "Title": "Monster Hunter Freedom Unite",
             "ID": 3732,
             "Console": "PlayStation Portable",
             "ImageIcon": "047405",
             "badges": []
-        }
-    ],
-    "Monster Hunter Portable 3rd": [
+        },
         {
             "Title": "Monster Hunter Portable 3rd",
             "ID": 17976,
@@ -40784,9 +40565,7 @@
             "Console": "PlayStation 2",
             "ImageIcon": "073283",
             "badges": []
-        }
-    ],
-    "Monsters, Inc. Scream Team | Monsters, Inc. Scare Island": [
+        },
         {
             "Title": "Monsters, Inc. Scream Team | Monsters, Inc. Scare Island",
             "ID": 14457,
@@ -40795,25 +40574,21 @@
             "badges": []
         }
     ],
-    "Montezuma's Return": [
+    "Montezuma": [
         {
             "Title": "Montezuma's Return",
             "ID": 8337,
             "Console": "Game Boy Color",
             "ImageIcon": "062143",
             "badges": []
-        }
-    ],
-    "Montezuma's Revenge": [
+        },
         {
             "Title": "Montezuma's Revenge",
             "ID": 21994,
             "Console": "ColecoVision",
             "ImageIcon": "065882",
             "badges": []
-        }
-    ],
-    "Montezuma's Revenge featuring Panama Joe": [
+        },
         {
             "Title": "Montezuma's Revenge featuring Panama Joe",
             "ID": 10817,
@@ -41202,9 +40977,7 @@
             "Console": "PlayStation Portable",
             "ImageIcon": "075383",
             "badges": []
-        }
-    ],
-    "Mortal Kombat 3 (Hummer Team)": [
+        },
         {
             "Title": "Mortal Kombat 3 (Hummer Team)",
             "ID": 17104,
@@ -41213,9 +40986,7 @@
             "badges": [
                 "Unlicensed"
             ]
-        }
-    ],
-    "Mortal Kombat 3 (SuperGame)": [
+        },
         {
             "Title": "Mortal Kombat 3 (SuperGame)",
             "ID": 17105,
@@ -41224,18 +40995,14 @@
             "badges": [
                 "Unlicensed"
             ]
-        }
-    ],
-    "Mortal Kombat Gold": [
+        },
         {
             "Title": "Mortal Kombat Gold",
             "ID": 6366,
             "Console": "Dreamcast",
             "ImageIcon": "056848",
             "badges": []
-        }
-    ],
-    "Mortal Kombat II (Hummer Team)": [
+        },
         {
             "Title": "Mortal Kombat II (Hummer Team)",
             "ID": 10183,
@@ -41244,9 +41011,7 @@
             "badges": [
                 "Unlicensed"
             ]
-        }
-    ],
-    "Mortal Kombat II (Yoko Soft)": [
+        },
         {
             "Title": "Mortal Kombat II (Yoko Soft)",
             "ID": 17103,
@@ -41255,9 +41020,7 @@
             "badges": [
                 "Unlicensed"
             ]
-        }
-    ],
-    "Mortal Kombat II Special": [
+        },
         {
             "Title": "Mortal Kombat II Special",
             "ID": 10195,
@@ -41266,9 +41029,7 @@
             "badges": [
                 "Unlicensed"
             ]
-        }
-    ],
-    "Mortal Kombat II Unlimited": [
+        },
         {
             "Title": "Mortal Kombat II Unlimited",
             "ID": 8005,
@@ -41277,9 +41038,7 @@
             "badges": [
                 "Hack"
             ]
-        }
-    ],
-    "Mortal Kombat Mythologies": [
+        },
         {
             "Title": "Mortal Kombat Mythologies: Sub-Zero",
             "ID": 10926,
@@ -41293,9 +41052,7 @@
             "Console": "PlayStation",
             "ImageIcon": "036517",
             "badges": []
-        }
-    ],
-    "Mortal Kombat Trilogy": [
+        },
         {
             "Title": "Mortal Kombat Trilogy",
             "ID": 10114,
@@ -41338,16 +41095,14 @@
             ]
         }
     ],
-    "Mother 1+": [
+    "Mother": [
         {
             "Title": "Mother 1+2",
             "ID": 2595,
             "Console": "Game Boy Advance",
             "ImageIcon": "050766",
             "badges": []
-        }
-    ],
-    "Mother": [
+        },
         {
             "Title": "Mother 3",
             "ID": 677,
@@ -41666,18 +41421,14 @@
             "Console": "Atari 7800",
             "ImageIcon": "043750",
             "badges": []
-        }
-    ],
-    "Ms. Pac-Man (Namco)": [
+        },
         {
             "Title": "Ms. Pac-Man (Namco)",
             "ID": 1846,
             "Console": "NES/Famicom",
             "ImageIcon": "039740",
             "badges": []
-        }
-    ],
-    "Ms. Pac-Man (speedup)": [
+        },
         {
             "Title": "Ms. Pac-Man (speedup)",
             "ID": 24949,
@@ -41686,18 +41437,14 @@
             "badges": [
                 "Hack"
             ]
-        }
-    ],
-    "Ms. Pac-Man (Tengen)": [
+        },
         {
             "Title": "Ms. Pac-Man (Tengen)",
             "ID": 1847,
             "Console": "NES/Famicom",
             "ImageIcon": "039739",
             "badges": []
-        }
-    ],
-    "Ms. Pac-Man Maze Madness": [
+        },
         {
             "Title": "Ms. Pac-Man Maze Madness",
             "ID": 10394,
@@ -42018,17 +41765,6 @@
             "badges": []
         }
     ],
-    "Mystery World Dizzy": [
-        {
-            "Title": "Mystery World Dizzy",
-            "ID": 10389,
-            "Console": "NES/Famicom",
-            "ImageIcon": "013656",
-            "badges": [
-                "Unlicensed"
-            ]
-        }
-    ],
     "Mystic Ark": [
         {
             "Title": "Mystic Ark",
@@ -42216,7 +41952,7 @@
             "badges": []
         }
     ],
-    "Naruto RPG": [
+    "Naruto": [
         {
             "Title": "Naruto RPG 2: Chidori vs Rasengan",
             "ID": 15481,
@@ -42230,9 +41966,7 @@
             "Console": "Game Boy Advance",
             "ImageIcon": "097752",
             "badges": []
-        }
-    ],
-    "Naruto Shippuden": [
+        },
         {
             "Title": "Naruto Shippuden: Ultimate Ninja 4",
             "ID": 21484,
@@ -42260,9 +41994,7 @@
             "Console": "PlayStation Portable",
             "ImageIcon": "079890",
             "badges": []
-        }
-    ],
-    "Naruto": [
+        },
         {
             "Title": "Naruto: Clash of Ninja",
             "ID": 25456,
@@ -42366,22 +42098,6 @@
             "badges": [
                 " Boss Challenges"
             ]
-        }
-    ],
-    "Nazo Puyo": [
-        {
-            "Title": "Nazo Puyo",
-            "ID": 20259,
-            "Console": "Game Gear",
-            "ImageIcon": "074182",
-            "badges": []
-        },
-        {
-            "Title": "Nazo Puyo 2",
-            "ID": 20244,
-            "Console": "Game Gear",
-            "ImageIcon": "081446",
-            "badges": []
         }
     ],
     "NBA Hang Time": [
@@ -42613,21 +42329,33 @@
             "badges": []
         }
     ],
-    "Nekketsu Tairiku Burning Heroes": [
+    "Nekketsu": [
         {
             "Title": "Nekketsu Tairiku Burning Heroes",
             "ID": 3282,
             "Console": "SNES/Super Famicom",
             "ImageIcon": "076730",
             "badges": []
-        }
-    ],
-    "Nekketsu! Beach Volley Dayo Kunio-kun": [
+        },
         {
             "Title": "Nekketsu! Beach Volley Dayo Kunio-kun",
             "ID": 6489,
             "Console": "Game Boy",
             "ImageIcon": "068344",
+            "badges": []
+        },
+        {
+            "Title": "Ike Ike! Nekketsu Hockey-bu: Subette Koronde Dai Rantou",
+            "ID": 6423,
+            "Console": "NES/Famicom",
+            "ImageIcon": "054721",
+            "badges": []
+        },
+        {
+            "Title": "Renegade | Nekketsu Kouha Kunio-kun",
+            "ID": 1908,
+            "Console": "NES/Famicom",
+            "ImageIcon": "054767",
             "badges": []
         }
     ],
@@ -42728,22 +42456,6 @@
             "ID": 18726,
             "Console": "Arcade",
             "ImageIcon": "083587",
-            "badges": []
-        }
-    ],
-    "Neon Genesis Evangelion": [
-        {
-            "Title": "Neon Genesis Evangelion: Shito Ikusei",
-            "ID": 17551,
-            "Console": "WonderSwan",
-            "ImageIcon": "104746",
-            "badges": []
-        },
-        {
-            "Title": "Neon Genesis Evangelion: Typing Project Advanced",
-            "ID": 10837,
-            "Console": "Dreamcast",
-            "ImageIcon": "052615",
             "badges": []
         }
     ],
@@ -42876,15 +42588,6 @@
             "ID": 2310,
             "Console": "PC Engine/TurboGrafx-16",
             "ImageIcon": "042609",
-            "badges": []
-        }
-    ],
-    "New Ghostbusters": [
-        {
-            "Title": "New Ghostbusters II",
-            "ID": 6215,
-            "Console": "NES/Famicom",
-            "ImageIcon": "075901",
             "badges": []
         }
     ],
@@ -50350,25 +50053,21 @@
             "badges": []
         }
     ],
-    "Puyo Pop": [
+    "Puyo Puyo": [
         {
             "Title": "Puyo Pop",
             "ID": 8416,
             "Console": "Game Boy Advance",
             "ImageIcon": "059493",
             "badges": []
-        }
-    ],
-    "Puyo Pop Fever": [
+        },
         {
             "Title": "Puyo Pop Fever",
             "ID": 6401,
             "Console": "Game Boy Advance",
             "ImageIcon": "049924",
             "badges": []
-        }
-    ],
-    "Puyo Puyo": [
+        },
         {
             "Title": "Puyo Puyo",
             "ID": 7530,
@@ -50382,18 +50081,28 @@
             "Console": "NES/Famicom",
             "ImageIcon": "025797",
             "badges": []
-        }
-    ],
-    "Puyo Puyo CD": [
+        },
+        {
+            "Title": "Nazo Puyo",
+            "ID": 20259,
+            "Console": "Game Gear",
+            "ImageIcon": "074182",
+            "badges": []
+        },
+        {
+            "Title": "Nazo Puyo 2",
+            "ID": 20244,
+            "Console": "Game Gear",
+            "ImageIcon": "081446",
+            "badges": []
+        },
         {
             "Title": "Puyo Puyo CD",
             "ID": 13185,
             "Console": "PC Engine CD/TurboGrafx-CD",
             "ImageIcon": "050432",
             "badges": []
-        }
-    ],
-    "Puyo Puyo Da!": [
+        },
         {
             "Title": "Puyo Puyo Da!",
             "ID": 19345,
@@ -50409,23 +50118,33 @@
             "badges": [
                 " Full Chain"
             ]
-        }
-    ],
-    "Puyo Puyo Fever | Puyo Pop Fever": [
+        },
         {
             "Title": "Puyo Puyo Fever | Puyo Pop Fever",
             "ID": 8564,
             "Console": "Dreamcast",
             "ImageIcon": "053207",
             "badges": []
-        }
-    ],
-    "Puyo Puyo Sun": [
+        },
         {
             "Title": "Puyo Puyo Sun 64",
             "ID": 13113,
             "Console": "Nintendo 64",
             "ImageIcon": "056033",
+            "badges": []
+        },
+        {
+            "Title": "Super Nazo Puyo: Ruruu no Ruu",
+            "ID": 3797,
+            "Console": "SNES/Super Famicom",
+            "ImageIcon": "073905",
+            "badges": []
+        },
+        {
+            "Title": "Super Puyo Puyo 2 Remix",
+            "ID": 3834,
+            "Console": "SNES/Super Famicom",
+            "ImageIcon": "058967",
             "badges": []
         }
     ],
@@ -52103,15 +51822,6 @@
             "ID": 30133,
             "Console": "PlayStation",
             "ImageIcon": "099143",
-            "badges": []
-        }
-    ],
-    "Renegade | Nekketsu Kouha Kunio-kun": [
-        {
-            "Title": "Renegade | Nekketsu Kouha Kunio-kun",
-            "ID": 1908,
-            "Console": "NES/Famicom",
-            "ImageIcon": "054767",
             "badges": []
         }
     ],
@@ -56273,22 +55983,6 @@
             "ID": 3495,
             "Console": "SNES/Super Famicom",
             "ImageIcon": "019680",
-            "badges": []
-        }
-    ],
-    "Shin Seiki Evangelion": [
-        {
-            "Title": "Shin Seiki Evangelion: Girlfriend of Steel 2nd Portable",
-            "ID": 6415,
-            "Console": "PlayStation Portable",
-            "ImageIcon": "047519",
-            "badges": []
-        },
-        {
-            "Title": "Shin Seiki Evangelion: Typing e Keikaku",
-            "ID": 10830,
-            "Console": "Dreamcast",
-            "ImageIcon": "052629",
             "badges": []
         }
     ],
@@ -63747,6 +63441,53 @@
             ]
         }
     ],
+    "Super Mario Bros. Hacks": [
+        {
+            "Title": "Extra Mario Bros.",
+            "ID": 5288,
+            "Console": "NES/Famicom",
+            "ImageIcon": "064453",
+            "badges": [
+                "Hack"
+            ]
+        },
+        {
+            "Title": "MARIO",
+            "ID": 2667,
+            "Console": "SNES/Super Famicom",
+            "ImageIcon": "043012",
+            "badges": [
+                "Hack"
+            ]
+        },
+        {
+            "Title": "Mario 3: Around the World",
+            "ID": 15329,
+            "Console": "Genesis/Mega Drive",
+            "ImageIcon": "055633",
+            "badges": [
+                "Unlicensed"
+            ]
+        },
+        {
+            "Title": "Mario 4: A Space Odyssey",
+            "ID": 16285,
+            "Console": "Genesis/Mega Drive",
+            "ImageIcon": "055036",
+            "badges": [
+                "Unlicensed"
+            ]
+        },
+        {
+            "Title": "Mario Adventure",
+            "ID": 4994,
+            "Console": "NES/Famicom",
+            "ImageIcon": "019336",
+            "badges": [
+                "Hack"
+            ]
+        }
+    ],
     "Super Mario Bros.": [
         {
             "Title": "Super Mario Bros.",
@@ -64842,15 +64583,6 @@
             ]
         }
     ],
-    "Super Nazo Puyo": [
-        {
-            "Title": "Super Nazo Puyo: Ruruu no Ruu",
-            "ID": 3797,
-            "Console": "SNES/Super Famicom",
-            "ImageIcon": "073905",
-            "badges": []
-        }
-    ],
     "Super NicoNico Kart": [
         {
             "Title": "Super NicoNico Kart",
@@ -65018,15 +64750,6 @@
             "ID": 11950,
             "Console": "Arcade",
             "ImageIcon": "060935",
-            "badges": []
-        }
-    ],
-    "Super Puyo Puyo 2 Remix": [
-        {
-            "Title": "Super Puyo Puyo 2 Remix",
-            "ID": 3834,
-            "Console": "SNES/Super Famicom",
-            "ImageIcon": "058967",
             "badges": []
         }
     ],
@@ -67796,15 +67519,6 @@
             "badges": []
         }
     ],
-    "Tetris and Dr. Mario": [
-        {
-            "Title": "Tetris and Dr. Mario",
-            "ID": 1259,
-            "Console": "SNES/Super Famicom",
-            "ImageIcon": "070455",
-            "badges": []
-        }
-    ],
     "Tetris Attack": [
         {
             "Title": "Tetris Attack",
@@ -68562,15 +68276,6 @@
             "badges": []
         }
     ],
-    "The Fantastic Adventures of Dizzy": [
-        {
-            "Title": "The Fantastic Adventures of Dizzy",
-            "ID": 4616,
-            "Console": "NES/Famicom",
-            "ImageIcon": "024223",
-            "badges": []
-        }
-    ],
     "The Final Fantasy Legend": [
         {
             "Title": "The Final Fantasy Legend",
@@ -69114,89 +68819,6 @@
             "badges": []
         }
     ],
-    "The King of Fighters '": [
-        {
-            "Title": "The King of Fighters '94",
-            "ID": 12028,
-            "Console": "Arcade",
-            "ImageIcon": "035634",
-            "badges": []
-        },
-        {
-            "Title": "The King of Fighters '94: Re-Bout",
-            "ID": 24059,
-            "Console": "PlayStation 2",
-            "ImageIcon": "072693",
-            "badges": []
-        },
-        {
-            "Title": "The King of Fighters '95",
-            "ID": 2409,
-            "Console": "Game Boy",
-            "ImageIcon": "072441",
-            "badges": []
-        },
-        {
-            "Title": "The King of Fighters '95",
-            "ID": 12029,
-            "Console": "Arcade",
-            "ImageIcon": "031991",
-            "badges": []
-        },
-        {
-            "Title": "The King of Fighters '96",
-            "ID": 12030,
-            "Console": "Arcade",
-            "ImageIcon": "035635",
-            "badges": []
-        },
-        {
-            "Title": "The King of Fighters '97",
-            "ID": 23873,
-            "Console": "Neo Geo CD",
-            "ImageIcon": "085661",
-            "badges": []
-        },
-        {
-            "Title": "The King of Fighters '98: Combo",
-            "ID": 28804,
-            "Console": "Arcade",
-            "ImageIcon": "090424",
-            "badges": [
-                "Hack"
-            ]
-        },
-        {
-            "Title": "The King of Fighters '98: Dream Match Never Ends",
-            "ID": 18755,
-            "Console": "PlayStation",
-            "ImageIcon": "054593",
-            "badges": []
-        },
-        {
-            "Title": "The King of Fighters '98: The Slugfest",
-            "ID": 11757,
-            "Console": "Arcade",
-            "ImageIcon": "035600",
-            "badges": []
-        },
-        {
-            "Title": "The King of Fighters '99: Millennium Battle",
-            "ID": 12032,
-            "Console": "Arcade",
-            "ImageIcon": "035601",
-            "badges": []
-        }
-    ],
-    "The King of Fighters '97 | The King of Fighters '97 Plus": [
-        {
-            "Title": "The King of Fighters '97 | The King of Fighters '97 Plus",
-            "ID": 12031,
-            "Console": "Arcade",
-            "ImageIcon": "031993",
-            "badges": []
-        }
-    ],
     "The King of Fighters": [
         {
             "Title": "The King of Fighters 2000",
@@ -69302,9 +68924,93 @@
             "Console": "Arcade",
             "ImageIcon": "084388",
             "badges": []
-        }
-    ],
-    "The King of Fighters EX": [
+        },
+        {
+            "Title": "The King of Fighters '97 | The King of Fighters '97 Plus",
+            "ID": 12031,
+            "Console": "Arcade",
+            "ImageIcon": "031993",
+            "badges": []
+        },
+        {
+            "Title": "King of Fighters R-2",
+            "ID": 14250,
+            "Console": "Neo Geo Pocket",
+            "ImageIcon": "063067",
+            "badges": []
+        },
+        {
+            "Title": "The King of Fighters '94",
+            "ID": 12028,
+            "Console": "Arcade",
+            "ImageIcon": "035634",
+            "badges": []
+        },
+        {
+            "Title": "The King of Fighters '94: Re-Bout",
+            "ID": 24059,
+            "Console": "PlayStation 2",
+            "ImageIcon": "072693",
+            "badges": []
+        },
+        {
+            "Title": "The King of Fighters '95",
+            "ID": 2409,
+            "Console": "Game Boy",
+            "ImageIcon": "072441",
+            "badges": []
+        },
+        {
+            "Title": "The King of Fighters '95",
+            "ID": 12029,
+            "Console": "Arcade",
+            "ImageIcon": "031991",
+            "badges": []
+        },
+        {
+            "Title": "The King of Fighters '96",
+            "ID": 12030,
+            "Console": "Arcade",
+            "ImageIcon": "035635",
+            "badges": []
+        },
+        {
+            "Title": "The King of Fighters '97",
+            "ID": 23873,
+            "Console": "Neo Geo CD",
+            "ImageIcon": "085661",
+            "badges": []
+        },
+        {
+            "Title": "The King of Fighters '98: Combo",
+            "ID": 28804,
+            "Console": "Arcade",
+            "ImageIcon": "090424",
+            "badges": [
+                "Hack"
+            ]
+        },
+        {
+            "Title": "The King of Fighters '98: Dream Match Never Ends",
+            "ID": 18755,
+            "Console": "PlayStation",
+            "ImageIcon": "054593",
+            "badges": []
+        },
+        {
+            "Title": "The King of Fighters '98: The Slugfest",
+            "ID": 11757,
+            "Console": "Arcade",
+            "ImageIcon": "035600",
+            "badges": []
+        },
+        {
+            "Title": "The King of Fighters '99: Millennium Battle",
+            "ID": 12032,
+            "Console": "Arcade",
+            "ImageIcon": "035601",
+            "badges": []
+        },
         {
             "Title": "The King of Fighters EX2: Howling Blood",
             "ID": 5312,
@@ -71327,15 +71033,6 @@
             "ID": 1264,
             "Console": "SNES/Super Famicom",
             "ImageIcon": "046895",
-            "badges": []
-        }
-    ],
-    "The Tower of Druaga": [
-        {
-            "Title": "The Tower of Druaga",
-            "ID": 12051,
-            "Console": "Arcade",
-            "ImageIcon": "079516",
             "badges": []
         }
     ],
@@ -77667,17 +77364,6 @@
             "Console": "SNES/Super Famicom",
             "ImageIcon": "064692",
             "badges": []
-        }
-    ],
-    "Wonderland Dizzy": [
-        {
-            "Title": "Wonderland Dizzy",
-            "ID": 10388,
-            "Console": "NES/Famicom",
-            "ImageIcon": "013646",
-            "badges": [
-                "Unlicensed"
-            ]
         }
     ],
     "Wondersnake": [
