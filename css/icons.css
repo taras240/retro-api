@@ -319,6 +319,10 @@
     mask-image: url(../assets/img/check.svg);
 }
 
+.playlist-icon {
+    mask-image: url(../assets/img/playlist-play.svg);
+}
+
 .close-icon {
     mask-image: url(../assets/img/close.svg);
 }
@@ -330,6 +334,7 @@
     mask-size: contain;
     mask-position: center;
     mask-repeat: no-repeat;
+    flex-shrink: 0;
 }
 
 .target-icon {

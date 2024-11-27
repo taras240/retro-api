@@ -75,7 +75,9 @@ img {
   --shadow-color: #000000;
   --yellow-color: #c39c30;
   --blue-color: #3663d8;
-
+  --orange-gradient: linear-gradient(to right,
+      #ee0979,
+      #ff6a00);
   --border-radius: 5px;
   --box-shadows: 1px 1px 0 var(--shadow-color), 2px 2px 0 var(--shadow-color),
     3px 3px 0 var(--shadow-color), 4px 4px 0 var(--shadow-color);

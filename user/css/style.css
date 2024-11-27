@@ -1,0 +1,167 @@
+@import url(/css/reset.css);
+
+body {
+    --main-color: #0b1216;
+    --font-color: #edf3fa;
+    background-color: var(--main-color);
+    font-family: system-ui;
+    color: var(--font-color);
+}
+
+.page-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 20rem;
+    background:
+        linear-gradient(to bottom, transparent, var(--main-color) 20rem),
+        url(../assets/images/bg.jpg);
+    z-index: -1;
+    image-rendering: pixelated;
+    opacity: 0.4;
+    overflow: hidden;
+}
+
+section {
+    width: 100vw;
+}
+
+.section__container {
+    max-width: 1000px;
+    padding: 0 1rem;
+    margin: 0 auto;
+}
+
+.header-section {
+    background-color: rgba(0, 0, 0, 0.5);
+
+}
+
+.header-section {}
+
+.header__list {
+    width: 100%;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    column-gap: 1.5rem;
+}
+
+.header__list-item {
+    display: flex;
+    align-items: center;
+}
+
+.header__list-time {
+    flex: 1;
+}
+
+.time-container {
+    font-size: 2rem;
+    font-weight: 600;
+    flex: 1;
+}
+
+.header__text {
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.points-icon {
+    display: inline-block;
+    height: 1.5em;
+    aspect-ratio: 1;
+    background-image: url(../assets/images/knight-shield.png);
+    background-position: center;
+    background-size: contain;
+    /* image-rendering: pixelated; */
+}
+
+.retropoints-icon {
+    display: inline-block;
+    height: 1.5em;
+    aspect-ratio: 1;
+    background-image: url(../assets/images/shield.png);
+    background-position: center;
+    background-size: contain;
+}
+
+.header__user {
+    display: flex;
+    column-gap: 0.5rem;
+}
+
+.header__user-image {
+    height: 2rem;
+}
+
+
+
+.user-header-section {
+    margin-bottom: 5rem;
+}
+
+.user-header__container {
+    position: relative;
+    display: flex;
+    column-gap: 1rem;
+    padding: 3rem 0 0;
+}
+
+.user-preview__container {
+    height: 6rem;
+    aspect-ratio: 1;
+}
+
+.user-preview__image {
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+}
+
+.username__container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.username__username {
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.username__description {
+    font-size: 1.1rem;
+    opacity: 0.8;
+}
+
+.rank__icon {
+    height: 6rem;
+    aspect-ratio: 1;
+    background: url(../assets/images/rank5-1.webp);
+    background-size: contain;
+    background-position: center;
+}
+
+/*! SUMMARY */
+
+.summary__list {
+    display: flex;
+    justify-content: space-between;
+    height: 4rem;
+    background-color: rgb(0, 52, 112);
+    border-radius: 5px 5px;
+}
+
+.summary__list-item {
+    flex: 1;
+    display: grid;
+    place-items: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+}

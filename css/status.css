@@ -862,9 +862,7 @@ card-3d::before {
   /* position: absolute; */
   bottom: 0;
   height: 1em;
-  background: linear-gradient(to right,
-      #ee0979,
-      #ff6a00);
+  background: var(--orange-gradient);
   overflow-x: scroll;
   color: black;
   width: 100%;
