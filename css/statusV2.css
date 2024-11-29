@@ -5,17 +5,18 @@
     min-width: 26rem;
     min-height: 6rem;
     height: 50vh;
+    height: fit-content !important;
     width: 350px;
     border-radius: var(--border-radius);
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    padding-bottom: 0.5rem;
+    padding-bottom: var(--border-radius);
 }
 
-.rp__section:not(.show-cheevos-list) {
+/* .rp__section:not(.show-cheevos-list) {
     height: fit-content !important;
-}
+} */
 
 .rp__indicator {
     --color: var(--main-color);
@@ -110,11 +111,14 @@
 }
 
 .rp__game-time {
+    font-family: monospace;
     /* position: absolute; */
     grid-row: span 2;
     font-size: 2.5rem;
     font-weight: 600;
     place-self: center;
+    text-wrap: nowrap;
+    white-space: nowrap;
 }
 
 /**--------RICH PRESENCE----------  */
@@ -435,7 +439,8 @@
     aspect-ratio: 1;
 }
 
-.rp__section:not(.show-cheevos-list) .flex-main-list {
+/* .rp__section:not(.show-cheevos-list) */
+.rp__section .flex-main-list {
     display: none;
 }
 
