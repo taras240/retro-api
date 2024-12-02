@@ -106,7 +106,7 @@
 .rp__game-icons {
     column-gap: 0.5rem;
     max-width: 75%;
-    font-size: 0.8rem;
+    font-size: 1.05rem;
     flex-wrap: nowrap;
 }
 

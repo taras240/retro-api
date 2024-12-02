@@ -86,6 +86,7 @@ img {
 }
 
 body {
+  position: fixed;
   background-color: black;
   color: var(--font-color);
   overflow: hidden;

@@ -1,14 +1,15 @@
 /* *-----------------BADGES----------- */
 .badge {
+    --font-color: black;
     display: inline-block;
     font-size: 0.8em;
-    color: black;
+    color: var(--font-color);
     font-weight: 700;
     text-transform: uppercase;
     text-wrap: nowrap;
-    padding: 0px 0.25rem;
+    padding: 0 0.25rem;
     border-radius: 3px;
-    margin-right: 0.25rem;
+    /* margin-right: 0.25rem; */
     background-color: lime;
 }
 
@@ -19,7 +20,7 @@
 
 .badge-button:hover {
     background-color: var(--font-color);
-    color: var(--main-color);
+    color: white;
 
 }
 
@@ -45,6 +46,13 @@
     background-color: goldenrod;
 }
 
+.badge_black {
+    font-weight: normal;
+    background-color: black;
+    --font-color: white;
+    padding: 1px 0.25rem;
+}
+
 .badge_cheevo-genre {
     background-color: crimson;
 }
@@ -63,7 +71,8 @@
     display: none;
 }
 
-.game-title_genre {
+.game-title_genre,
+.badge_grey {
     background-color: darkslategray;
     color: white;
 }
@@ -124,7 +133,8 @@
 .signed-icon {
     display: flex;
     align-items: center;
-    column-gap: 0.25rem
+    column-gap: 0.25rem;
+    font-size: inherit;
 }
 
 .icon-button,
@@ -132,7 +142,7 @@
     display: grid;
     place-items: center;
     padding: 2px;
-    background-color: transparent;
+    /* background-color: transparent; */
 }
 
 .game-description_link {
@@ -163,6 +173,10 @@
     aspect-ratio: 1;
     align-self: center;
     justify-self: center;
+}
+
+.delete-icon {
+    mask-image: url(../assets/img/delete.svg);
 }
 
 .q-icon {
@@ -220,7 +234,7 @@
     mask-image: url(../assets/img/rarity-4.svg);
 }
 
-.checked>.favourite_icon {
+.checked.favourite_icon {
     opacity: 0.5;
     mask-image: url(../assets/img/favorite.svg);
 }
