@@ -1,0 +1,188 @@
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+.achievemas__section {
+    --main-color: white;
+    --font-color: black;
+    position: absolute;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    width: 80vw;
+    max-width: 90vw;
+    max-height: 80vh;
+    background: white;
+    background:
+        url(../assets/img/winter-pattern.jpg);
+    background-repeat: repeat;
+    background-size: 200px 200px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: right 500ms, transform 500ms;
+    z-index: 1000;
+    user-select: none;
+}
+
+.achievemas__section::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background:
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.5));
+    z-index: -1;
+}
+
+.achievemas__section.hidden {
+    transform: translate(0, -50%);
+    right: -80%;
+}
+
+.achievemas__section.hidden.expanded {
+    right: calc(50px - 80%);
+}
+
+.achievement__section.hidden {}
+
+.achievemas-header__container {
+    --font-color: black;
+    width: 100%;
+    display: flex;
+}
+
+.achievemas__header-icon {
+    margin-top: 0.25rem;
+    width: 2.5rem;
+    opacity: 1;
+    align-self: flex-start;
+}
+
+
+
+.achievemas__header {
+    flex: 1;
+    font-family: "Pacifico", serif;
+    font-size: 3rem;
+    text-align: center;
+    font-weight: 700;
+    color: black;
+}
+
+.achievemas__close-button {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    height: 2rem;
+    aspect-ratio: 1;
+    background: transparent;
+}
+
+
+.achievemas__header span:nth-child(3n+1) {
+    color: red;
+}
+
+.achievemas__header span:nth-child(3n+2) {
+    color: green;
+}
+
+.achievemas__header span:nth-child(3n) {
+    color: blue;
+}
+
+.achievemas__games-list {
+    padding: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    gap: 1rem;
+    flex: 1;
+    overflow-y: scroll;
+    align-content: start;
+
+}
+
+.achievemas-game__container {
+    --bg-color: silver;
+    --shadow-color: black;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-basis: calc(100%/3 - 1rem);
+    overflow: hidden;
+    border-radius: 5px;
+    background-color: var(--bg-color);
+    color: black;
+    /* box-shadow: 0 0 8px 0px var(--shadow-color); */
+    transition: transform 200ms, box-shadow 200ms;
+}
+
+.achievemas-game__container:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 0 0 2px 0px var(--shadow-color);
+}
+
+.achievemas-game__container.beaten {
+    --bg-color: gold;
+    --shadow-color: gold;
+}
+
+.achievemas-game__container.mastered {
+    --bg-color: lime;
+    --shadow-color: lime;
+}
+
+.achievemas-game__container::after {
+    content: "";
+    font-family: "Pacifico", serif;
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    font-size: 3rem;
+    font-weight: bold;
+    color: black;
+    transform: translateY(-50%);
+}
+
+.achievemas-game__container.beaten::after {
+    content: "+1";
+}
+
+.achievemas-game__container.mastered::after {
+    content: "+2";
+}
+
+.achievemas-game__preview-container {
+    height: 5rem;
+    aspect-ratio: 1;
+    border-radius: 5px 0 0 5px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.achievemas-game__preview {
+    height: 100%;
+    aspect-ratio: 1;
+    image-rendering: pixelated;
+}
+
+.achievemas-game__title {
+    /* font-weight: bold; */
+    font-size: 1.2rem;
+    text-wrap: nowrap;
+}
+
+.achievemas-points__header {
+    font-family: "Pacifico", serif;
+    font-size: 2rem;
+    /* text-align: center; */
+    font-weight: 700;
+    padding: 0 1rem;
+    text-align: right;
+    color: var(--font-color);
+}
