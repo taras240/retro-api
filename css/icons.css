@@ -1,16 +1,18 @@
 /* *-----------------BADGES----------- */
 .badge {
-    --font-color: black;
+    --badge-font-color: black;
+    --badge-bg-color: lime;
     display: inline-block;
     font-size: 0.8em;
-    color: var(--font-color);
+    color: var(--badge-font-color);
     font-weight: 700;
     text-transform: uppercase;
     text-wrap: nowrap;
     padding: 0 0.25rem;
     border-radius: 3px;
     /* margin-right: 0.25rem; */
-    background-color: lime;
+    background-color: var(--badge-bg-color);
+    ;
 }
 
 .badge-button {
@@ -19,13 +21,12 @@
 }
 
 .badge-button:hover {
-    background-color: var(--font-color);
-    color: white;
+    background-color: var(--badge-font-color);
+    color: var(--badge-bg-color);
 
 }
 
 .badge-centered {
-    --font-color: black;
     display: flex;
     align-items: center;
     width: fit-content;
@@ -39,27 +40,28 @@
 }
 
 .badge_green {
-    background-color: lime;
+    --badge-bg-color: lime;
 }
 
 .badge_gold {
-    background-color: goldenrod;
+    --badge-bg-color: goldenrod;
+    --font-color: var(--badge-font-color);
 }
 
 .badge_black {
     font-weight: normal;
-    background-color: black;
-    --font-color: white;
+    --badge-bg-color: black;
+    --badge-font-color: white;
     padding: 1px 0.25rem;
 }
 
 .badge_cheevo-genre {
-    background-color: crimson;
+    --badge-bg-color: : crimson;
 }
 
 .highlight-badge {
-    background-color: var(--font-color);
-    color: var(--main-color);
+    --badge-bg-color: greenyellow;
+    --badge-font-color: black;
     font-size: inherit;
     font-weight: inherit;
     text-transform: none;
@@ -73,44 +75,44 @@
 
 .game-title_genre,
 .badge_grey {
-    background-color: darkslategray;
-    color: white;
+    --badge-bg-color: darkslategray;
+    --badge-font-color: white;
 }
 
 .game-title_hack {
-    background-color: crimson;
+    --badge-bg-color: crimson;
 }
 
 .game-title_unlicensed {
-    background-color: gold;
+    --badge-bg-color: gold;
 }
 
 .game-title_homebrew {
-    background-color: cyan;
+    --badge-bg-color: cyan;
 }
 
 .game-title_prototype {
-    background-color: white;
+    --badge-bg-color: white;
 }
 
 .game-title_demo {
-    background-color: chocolate;
+    --badge-bg-color: chocolate;
 }
 
 .game-title_mastered {
-    background-color: gold;
+    --badge-bg-color: gold;
 }
 
 .game-title_completed {
-    background-color: rgba(255, 217, 0, 0.473);
+    --badge-bg-color: rgba(255, 217, 0, 0.473);
 }
 
 .game-title_beaten-hardcore {
-    background-color: grey;
+    --badge-bg-color: grey;
 }
 
 .game-title_beaten-softcore {
-    background-color: rgba(128, 128, 128, 0.281);
+    --badge-bg-color: rgba(128, 128, 128, 0.281);
 }
 
 
@@ -124,6 +126,7 @@
     height: 1em;
     aspect-ratio: 1;
     background-color: var(--font-color);
+    /* background-color: var(--badge-font-color); */
     mask-size: contain;
     mask-position: center;
     mask-repeat: no-repeat;

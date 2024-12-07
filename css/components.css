@@ -145,6 +145,20 @@
     padding: 3px;
 }
 
+.hidden-header-buttons {
+    position: absolute;
+    z-index: 10;
+    right: 0.25rem;
+    top: 0.25rem;
+    background-color: var(--main-color);
+    border-radius: 0.5rem;
+    display: flex;
+    opacity: 0;
+}
+
+.section:hover .hidden-header-buttons {
+    opacity: 1;
+}
 
 /**---------[ Resizer ]---------------------------- */
 .resizer {

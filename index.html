@@ -67,20 +67,31 @@
     <div id='background-star3'></div>
   </div>
   <div class="wrapper"><section class="game-card_section section" id="game_section">
+  <div class="hidden-header-buttons">
+    <button class="header-button header-icon playlist-icon show-sets__button" data-title="show games set"
+      onclick="ui.gameCard.toggleGamesSetVisibility()"></button>
+
+    <button class="header-button header-icon tweak-button tweak-icon" data-title="config"
+      onclick="ui.settings.openSettings(ui.gameCard.contextMenuItems)">
+    </button>
+    <button class="header-button header-icon close-icon" data-title="close" onclick="ui.gameCard.close()">
+
+    </button>
+  </div>
   <div class="game-card_container content-container">
     <div class="game-card_image-container">
-      <button class="icon-button header-icon playlist-icon show-sets__button"
-        onclick="ui.gameCard.toggleGamesSetVisibility()"></button>
       <div class="game-card__icons-container"></div>
       <img id="game-card-image" class="game-card_image" src="" onerror="this.src='./assets/img/missable.svg';"
         alt=" " />
     </div>
     <div class="hor-line-decorate"></div>
     <h2 class="game-card__title-container">
-      <a id="game-card-header" href="#" target="_blank"> Some Game Name</a>
+      <a id="game-card-header" href="#" target="_blank"> </a>
     </h2>
     <div class="game-card__info game-card__genres-container"></div>
-    <div class="game-card-description"></div>
+    <div class="game-card-description">
+
+    </div>
   </div>
   <div class="game-card__back-side">
     <div class="game-info__set">
@@ -339,7 +350,7 @@
     <div class="resizer" id="awards-resizer"></div>
 </section><section id="update-section" class="status__section  section">
   <div class="status__container">
-    <div class="status__header-buttons">
+    <div class="status__header-buttons hidden-header-buttons">
       <a id="status-game-guide" class="header-button  header-icon tweak-button guide-icon " target="_blank" href="">
       </a>
       <button class="header-button header-icon tweak-button tweak-icon"
@@ -645,7 +656,7 @@
     </ul>
     <div class="resizer" id="stats-resizer"></div>
 </section><section class="section rp__section" id="rp__section">
-    <div class="status__header-buttons">
+    <div class="status__header-buttons hidden-header-buttons">
         <!-- <a id="rp-game-guide" class="header-button  header-icon tweak-button guide-icon " target="_blank" href="">
         </a> -->
         <button class="header-button header-icon tweak-button tweak-icon"
