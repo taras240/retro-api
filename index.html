@@ -175,11 +175,17 @@
 
     <div class="setting-radio-group">
         <button class="side-panel_login login-icon" onclick="window.location.href = './login'" data-title="login page">
-            <img id="side-panel-user-image" src="" onerror="this.src='./assets/img/account.svg';" alt=""></b>
+            <img id="side-panel-user-image" src="" onerror="this.src='./assets/img/account.svg';" alt="">
+        </button>
+
     </div>
     <div class="buttons-block_container">
         <div class="buttons-block_widgets">
-
+            <div class="setting-radio-group">
+                <button class="side-panel_input side-panel_text-icon" data-title="2024 statistics"
+                    onclick="ui.recap.open()">24
+                </button>
+            </div>
             <div class="setting-radio-group">
                 <input type="checkbox" onchange="ui.statusPanel.VISIBLE = this.checked" name="open-status-button"
                     id="open-status-button">
@@ -342,7 +348,6 @@
         </div>
 
         <button class="header-button header-icon close-icon" onclick="ui.awards.close()">
-
         </button>
     </div>
     <ul class="awards-content_container content-container">

@@ -2,6 +2,7 @@
 /** -------[ WIDGETS SECTION ]----------------------*/
 .buttons-block {
     --side-panel-width: 90px;
+    --button-height: 30px;
     position: fixed;
     top: 50%;
     height: 90vh;
@@ -73,7 +74,7 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 30px;
+    height: var(--button-height);
     background-color: transparent;
     transition: 0.2s;
     cursor: pointer;
@@ -147,6 +148,7 @@ input[type="checkbox"]:checked+.side-panel_input::after {
 
 
 
+
 .login-icon {
     position: relative;
     width: 100%;
@@ -215,4 +217,23 @@ input[type="checkbox"]:checked+.side-panel_input::after {
     50% {
         background-position: 50% 0%;
     }
+}
+
+/*! 2024 recap button  */
+.side-panel_text-icon {
+    font-size: var(--button-height);
+    color: var(--font-color);
+    font-weight: bold;
+    background: linear-gradient(90deg, #ff6f61, #6b4cff);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    opacity: 1 !important;
+}
+
+.side-panel_text-icon:hover {
+    transform: scale(1.1);
+}
+
+.side-panel_text-icon:active {
+    transform: scale(0.99);
 }
