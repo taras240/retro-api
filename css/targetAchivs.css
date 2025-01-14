@@ -27,7 +27,7 @@
   max-height: calc(var(--max-count)*calc(var(--cheevo-fixed-height) + 1px) + 3px);
 }
 
-.target_section.fixed-size .target-achiv-details {
+.target_section.fixed-size .target__cheevo-details {
   justify-content: space-evenly;
 }
 
@@ -212,7 +212,7 @@
   }
 }
 
-.target-achiv-details {
+.target__cheevo-details {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -221,8 +221,12 @@
   font-size: 1.05rem;
 }
 
-.achiv-name {
+.target__cheevo-header {
   font-size: 1.1rem;
+}
+
+.target__cheevo-header>* {
+  margin-right: 0.5rem;
 }
 
 .achiv-description {
@@ -342,7 +346,7 @@
 
 
 
-.target__aotw-container .target-achiv-details {
+.target__aotw-container .target__cheevo-details {
   padding: 0.25rem;
   height: 100%;
 }
