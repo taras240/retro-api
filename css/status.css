@@ -319,6 +319,11 @@ card-3d::before {
   align-items: center;
   box-shadow: 0 0 3px 0px black;
   transition: min-width 1s;
+  display: none;
+}
+
+.show-time-bar .status__sideblock-container {
+  display: flex;
 }
 
 .status__sideblock-container.long-time {

@@ -455,3 +455,23 @@
 .difficult-badge__easy {
     background-color: greenyellow;
 }
+
+.version-badge::before {
+    position: absolute;
+    bottom: 0;
+    right: 0.25rem;
+    font-size: 0.85em;
+    color: white;
+    background-color: black;
+    padding: 0 0.5rem;
+    border-radius: 0.25em;
+
+}
+
+.version-badge__v1::before {
+    content: "v1";
+}
+
+.version-badge__v2::before {
+    content: "v2";
+}

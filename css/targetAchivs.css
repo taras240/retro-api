@@ -213,6 +213,7 @@
 }
 
 .target__cheevo-details {
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -223,10 +224,14 @@
 
 .target__cheevo-header {
   font-size: 1.1rem;
+  white-space: nowrap;
+  text-wrap: nowrap;
+  width: 100%;
+  overflow-x: scroll;
 }
 
 .target__cheevo-header>* {
-  margin-right: 0.5rem;
+  margin-right: 0.25rem;
 }
 
 .achiv-description {
@@ -321,6 +326,10 @@
 
 .target-achiv:not(.show-difficult) .icons-row-list .difficult-icon {
   display: none !important;
+}
+
+.target__cheevo-details .icons-row-list {
+  flex-wrap: nowrap;
 }
 
 .target__aotw-container {
