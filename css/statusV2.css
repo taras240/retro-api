@@ -161,8 +161,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: start;
-    column-gap: 0.4rem;
-    row-gap: 0.2rem;
+    gap: 5px;
     align-items: center;
     /* padding: 0.25rem 0 0.5rem; */
 }
@@ -170,9 +169,9 @@
 .rp__win-points {
     font-size: inherit;
     display: flex;
-    flex-direction: column;
-    gap: 1px;
-    flex-basis: 2rem;
+    flex-direction: row;
+    gap: 5px;
+    flex-basis: 1rem;
     flex-grow: 2;
     flex-shrink: 0;
 }
@@ -180,13 +179,12 @@
 .rp__progression-point {
     font-size: inherit;
     --color: var(--font-color);
-    flex-basis: 2rem;
+    flex-basis: 0.5rem;
     flex-grow: 1;
     flex-shrink: 0;
     height: 0.4rem;
     border: 1px solid var(--color);
     border-radius: 500px;
-
     transition: background-color 0.2s, border-color 0.2s;
 }
 
@@ -195,7 +193,7 @@
 }
 
 .rp__progression-point.win {
-    flex-basis: 0.4rem;
+    flex-basis: 1rem;
     --color: goldenrod;
 }
 
@@ -298,6 +296,7 @@
     width: var(--earnedRate);
     height: 100%;
     background-color: var(--accent-color);
+    box-shadow: 0 0 2px 0px var(--accent-color);
     border-radius: inherit;
 }
 
@@ -328,7 +327,7 @@
     align-items: center;
     flex-shrink: 0;
     display: none;
-    margin: 0.25rem 0;
+    margin-top: 0.25rem;
 }
 
 .show-ticker .rp__ticker {

@@ -5,6 +5,8 @@
             var(--main-color),
             var(--main-color));
     position: absolute;
+    display: flex;
+    flex-direction: column;
     visibility: visible;
     border-radius: var(--border-radius);
     user-select: none;
@@ -91,6 +93,8 @@
     background-color: var(--secondary-color);
     z-index: -1;
 }
+
+
 
 .content-container {
     border-radius: var(--border-radius);

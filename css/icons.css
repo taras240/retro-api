@@ -148,6 +148,18 @@
     /* background-color: transparent; */
 }
 
+.side-panel__icon {
+    display: inline-block;
+    position: relative;
+    height: var(--button-height);
+    aspect-ratio: 1;
+    background-color: var(--font-color);
+    mask-size: contain;
+    mask-position: center;
+    mask-repeat: no-repeat;
+    mask-image: var(--icon-source);
+}
+
 .game-description_link {
     padding: 0;
     background-color: transparent;
@@ -215,6 +227,10 @@
 .progression {
     scale: 1.05;
     mask-image: url(../assets/img/progression.svg);
+}
+
+.game-info-icon {
+    mask-image: url(../assets/img/article.svg);
 }
 
 .rarity-icon {
@@ -408,6 +424,14 @@
 
 .chat-icon {
     mask-image: url(../assets/img/chat.svg)
+}
+
+.discord-icon {
+    mask-image: url(../assets/img/discord.svg)
+}
+
+.game-stats {
+    mask-image: url(../assets/img/game-stats.svg);
 }
 
 /** Difficult badges */
