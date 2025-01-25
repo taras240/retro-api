@@ -5,6 +5,10 @@
             var(--main-color),
             var(--main-color));
     position: absolute;
+    min-width: 300px;
+    width: 400px;
+    min-height: 10rem;
+    height: 20rem;
     display: flex;
     flex-direction: column;
     visibility: visible;
@@ -97,6 +101,15 @@
 
 
 .content-container {
+    border-radius: var(--border-radius);
+    background-color: var(--main-color);
+    z-index: 1;
+}
+
+.widget-content__container {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
     border-radius: var(--border-radius);
     background-color: var(--main-color);
     z-index: 1;
