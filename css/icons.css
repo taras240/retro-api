@@ -394,6 +394,10 @@
     mask-image: url(../assets/img/stats.svg)
 }
 
+.status-icon {
+    mask-image: url(../assets/img/cardio.svg)
+}
+
 .games-icon {
     mask-image: url(../assets/img/gamepad.svg)
 }
