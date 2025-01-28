@@ -162,8 +162,12 @@
   width: calc(100% - 0.2rem);
 } */
 .target-achiv.overlay .prev::before {
-  width: 100%;
-  background-image: url(../assets/img/overlay_sets/mario_q/closed.png);
+  height: 50%;
+  aspect-ratio: 1;
+  mask-image: url(../assets/img/lock.svg);
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  background-color: var(--font-color);
   z-index: 1;
   transition: .2s;
 }
@@ -177,7 +181,7 @@
   transform: translate(var(--image-offset), var(--image-offset));
   height: calc(100% + calc(var(--image-offset) * -2));
   aspect-ratio: 1;
-  filter: grayscale(1);
+  filter: opacity(.2);
   image-rendering: pixelated;
   /* border-radius: 4px; */
   overflow: hidden;
