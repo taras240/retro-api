@@ -64,10 +64,10 @@
 
 
 
-.target-achiv.border {
+/* .target-achiv.border {
   padding: 0.5rem 1rem;
   gap: 15px;
-}
+} */
 
 .target-achiv::before {
   content: "";
@@ -136,7 +136,7 @@
   --image-offset: -5px;
   border: 3px solid var(--mark-color);
   border-radius: 10px;
-  box-shadow: 0 0 5px 0 var(--mark-color);
+  box-shadow: 0 0 5px -1px var(--mark-color);
 }
 
 .target-achiv .prev::before,
@@ -228,6 +228,7 @@
 
 .target__cheevo-details {
   width: 100%;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
