@@ -503,3 +503,23 @@
 .version-badge__v2::before {
     content: "v2";
 }
+
+.watching:not(.offline) .time__blinked-dots {
+    animation-delay: 1s;
+    animation: blink-time-dots 5s infinite;
+}
+
+@keyframes blink-time-dots {
+    25% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+
+    75% {
+        opacity: 1;
+    }
+
+}
