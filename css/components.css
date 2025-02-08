@@ -15,7 +15,8 @@
     border-radius: var(--border-radius);
     user-select: none;
     opacity: 1;
-    background: var(--background-gradient);
+    /* background: var(--background-gradient); */
+    background: var(--main-color);
     z-index: 1;
     transition-property: opacity, box-shadow;
     transition-duration: 200ms;
@@ -42,6 +43,10 @@
 }
 
 .section.resized {}
+
+.popup-section {
+    z-index: 11;
+}
 
 /**---------FULSCREEN_MODE----------- */
 .section.fullscreen {
@@ -167,6 +172,7 @@
     z-index: 10;
     right: 0.25rem;
     top: 0.25rem;
+    padding: 2px 0.5rem;
     background-color: var(--main-color);
     border-radius: 0.5rem;
     display: flex;

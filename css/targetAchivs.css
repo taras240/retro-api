@@ -410,64 +410,27 @@
   transition: 0.2s;
 }
 
-.target-comments__container {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  height: fit-content;
-  max-height: 60%;
-  overflow-y: scroll;
-  background-color: var(--main-color);
-  border-radius: 5px;
-  cursor: default;
-  box-shadow: 0 0 5px 1px black;
-  z-index: 2;
-  opacity: 1;
-  transition: max-height 200ms, opacity 200ms, padding 200ms;
-  padding-bottom: 1rem;
-}
-
-.target-comments__container.loading {
-  height: 7rem;
-  max-height: 7rem;
-}
-
-
-.target-comments__container.hidden {
-  max-height: 0;
-  opacity: 0;
-  padding: 0;
-}
-
-.target-comments__header {
-  position: sticky;
-  display: grid;
-  grid-template-columns: 1fr 1rem;
-  top: 0;
-  z-index: 2;
-  padding: 0.25rem 1rem;
-  text-align: center;
-  background-color: var(--secondary-color);
-  /* font-weight: bold; */
-  font-size: 1.1rem;
-}
-
-.target-comments__list {
+.comments-list {
   position: relative;
-
+  padding: 1rem 0;
+  flex: 1;
+  width: 100%;
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+  /* height: 100%; */
+  overflow-y: auto;
 }
 
-.close-comments {}
 
-.target-comment {
+.comment {
   padding: 0 1rem;
   /* display: flex;
   flex-direction: column;
   align-items: end; */
-  margin-bottom: 1rem;
 }
 
-.target-comment__header {
+.comment__header {
   position: relative;
   display: flex;
   gap: 1rem;
@@ -484,11 +447,11 @@
 
 }
 
-.target-comment__user-name {
+.comment__user-name {
   font-size: inherit;
 }
 
-.target-comment__comment {
+.comment__comment {
   background: linear-gradient(to top left, var(--main-color), var(--secondary-color));
   background: var(--secondary-color);
   /* border: 1px solid black; */
@@ -496,27 +459,4 @@
   border-radius: 0 2px 2px 2px;
   user-select: text;
   cursor: text;
-}
-
-.loading .target-comments__list::after {
-  content: "";
-  position: absolute;
-  transform: translate(-50%, 0);
-  top: 50%;
-  left: 50%;
-  height: 3rem;
-  aspect-ratio: 1;
-  margin: auto;
-  background-color: var(--font-color);
-  mask-image: url("../assets/img/progress-loading.svg");
-  mask-size: contain;
-  mask-repeat: no-repeat;
-  mask-position: center;
-  animation: loading-comments-animation 0.8s linear infinite;
-}
-
-@keyframes loading-comments-animation {
-  to {
-    transform: translate(-50%, 0) rotateZ(360deg);
-  }
 }

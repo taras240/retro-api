@@ -24,7 +24,8 @@
   </div>
   <div class="wrapper"><section class="game-card_section section" id="game_section">
   <div class="hidden-header-buttons">
-
+    <button class="comments-button header-button header-icon chat-icon" data-title="show comments">
+    </button>
     <button class="header-button header-icon tweak-button tweak-icon" data-title="config"
       onclick="ui.settings.openSettings(ui.gameCard.contextMenuItems)">
     </button>
@@ -51,34 +52,6 @@
 
   </div>
   <div class="resizer" id="game-card-resizer"></div>
-</section><section id="target_section" class="target_section section ">
-  <div class="header-container target-header_container">
-    <div class="header-icon target-icon"></div>
-
-    <h2 class="widget-header-text">Target</h2>
-    <button class="header-button header-icon tweak-button tweak-icon"
-      onclick="ui.settings.openSettings(ui.target.contextMenuItems)">
-    </button>
-    <input type="search" name="" id="target__searchbar" class="text-input target__search-bar" placeholder="Search...">
-
-    <button class="header-icon header-button close-icon" onclick="ui.target.close()">
-    </button>
-
-  </div>
-
-  <ul class="target-container content-container flex-main-list"></ul>
-  <div class="target-comments__container hidden" onmousedown="event.stopPropagation()">
-    <div class="target-comments__header">
-      Cheevo comments
-      <button class="header-icon header-button close-icon close-comments"
-        onclick="event.target.closest('.target-comments__container').classList.toggle('hidden')">
-      </button>
-    </div>
-    <ul class="target-comments__list">
-    </ul>
-
-  </div>
-  <div class="resizer" id="target-resizer"></div>
 </section><section id="side_panel" class="buttons-block gradient-animation expanded">
 
     <div class="setting-radio-group">
@@ -110,25 +83,13 @@
     </div>
 
 
-</section><section class="awards_section section " id="awards_section">
-
-    <div class="awards-header_container header-container">
-        <div class="header-icon awards-icon "></div>
-        <h2 class="widget-header-text"> User awards</h2>
-        <div class="get-awards_button header-button header-icon update-icon" id="awards-button" title="force reload"
-            onclick="ui.awards.updateAwards()">
-        </div>
-        <button class="header-button header-icon close-icon">
-        </button>
-    </div>
-    <ul class="awards-content_container content-container">
-    </ul>
-    <div class="resizer" id="awards-resizer"></div>
 </section><section id="update-section" class="status__section  section">
   <div class="status__container">
     <div class="status__header-buttons hidden-header-buttons">
       <a id="status-game-guide" class="header-button  header-icon tweak-button guide-icon " target="_blank" href="">
       </a>
+      <button class="comments-button header-button header-icon chat-icon" data-title="show comments">
+      </button>
       <button class="header-button header-icon tweak-button tweak-icon"
         onclick="ui.settings.openSettings(ui.statusPanel.contextMenuItems)">
       </button>
@@ -435,6 +396,8 @@
     <div class="status__header-buttons hidden-header-buttons">
         <!-- <a id="rp-game-guide" class="header-button  header-icon tweak-button guide-icon " target="_blank" href="">
         </a> -->
+        <button class="comments-button header-button header-icon chat-icon" data-title="show comments">
+        </button>
         <button class="header-button header-icon tweak-button tweak-icon"
             onclick="ui.settings.openSettings(ui.status.contextMenuItems)">
         </button>
