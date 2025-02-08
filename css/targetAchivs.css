@@ -253,34 +253,26 @@
   font-size: 1rem;
 }
 
-.delete-from-target {
+.target__buttons-container {
   position: absolute;
-  bottom: 10px;
-  right: 10px;
-  height: 20px;
-  z-index: 2;
-  background: var(--font-color);
+  height: calc(100% - 0.5rem);
   opacity: 0;
-  transition: 0.2s;
+  background-color: var(--main-color);
+  top: 0.25rem;
+  right: 0.25rem;
+  padding: 0.25rem;
+  border-radius: 3px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  gap: 0.25rem;
 }
 
-.target-achiv:hover .delete-from-target {
-  opacity: 0.8;
-  transition: 0.2s;
-}
-
-.target-achiv:hover .delete-from-target:hover {
-  transform: scale(1.1);
+.target-achiv:hover .target__buttons-container {
   opacity: 1;
   transition: 0.2s;
 }
-
-.target-achiv:hover .delete-from-target:active {
-  transform: scale(0.9);
-  opacity: 0.9;
-  transition: 0.2s;
-}
-
 
 .target-achiv .prev {
   position: relative;
@@ -397,6 +389,8 @@
 
 }
 
+
+
 /* ------------- */
 .show-comments-button {
   position: absolute;
@@ -474,12 +468,27 @@
   transition: opacity 0.2s;
 }
 
-.comment__copy-button:hover {
+.comment__note-button {
+  position: absolute;
+  height: 1.1rem;
+  transform: translateY(100%);
+  top: -0.25rem;
+  right: -0.25rem;
+  padding: 0 0.25rem;
+  background-color: var(--font-color);
+  opacity: 0.5;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.comment__copy-button:hover,
+.comment__note-button:hover {
   opacity: 1;
   scale: 1.05;
 }
 
-.comment__copy-button:active {
+.comment__copy-button:active,
+.comment__note-button:active {
   opacity: 0.8;
   scale: 0.99;
 }
