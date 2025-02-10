@@ -80,16 +80,15 @@ input:checked+.radio-tab::after {
 
 .note-textaria {
     background-color: black;
-    font-family: consolas, system-ui, sans-serif;
+    font-family: monospace, sans-serif;
     color: greenyellow;
     text-wrap: wrap;
     width: 100%;
     flex: 1;
-    padding: 20px;
-    font-size: 1.3rem;
+    padding: 0.5rem 1rem;
+    font-size: 1.2rem;
     resize: none;
     border-radius: var(--border-radius);
-
 }
 
 .note__controls {

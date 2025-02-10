@@ -1,0 +1,24 @@
+.links-list {
+    gap: 0.5rem;
+    overflow: hidden;
+    flex-direction: column;
+}
+
+.links__link-item {
+    min-width: 100%;
+}
+
+.links__link-container {
+    height: 3rem;
+    padding: 0.25rem 0.5rem;
+    width: 100%;
+}
+
+.links__link-image {
+    height: 3rem;
+    aspect-ratio: 1;
+    flex-shrink: 0;
+    flex-grow: 0;
+    object-fit: contain;
+    padding: 0.25rem;
+}

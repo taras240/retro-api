@@ -341,6 +341,10 @@
     mask-image: url(../assets/img/link2.svg);
 }
 
+.link-icon {
+    mask-image: url(../assets/img/links.svg);
+}
+
 .download-icon {
     mask-image: url(../assets/img/download.svg);
 }
