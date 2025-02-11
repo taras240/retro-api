@@ -94,5 +94,18 @@
     "exportSettings": "エクスポート設定",
     "importSettings": "インポート設定",
     "hardcoreMode": "ハードコアモード",
-    "showLoadAnimation": "ロードアニメーションを表示"
+    "showLoadAnimation": "ロードアニメーションを表示",
+    "pauseIfOffline": "オフライン時に一時停止",
+    "fsAlerts": "フルスクリーンアラート",
+    "stickyWindows": "ウィンドウに合わせる",
+    "showTimeBar": "タイムバーを表示",
+    "focusCheevoPreview": "実績プレビューにフォーカス",
+    "progressionStyleTypes": "進行スタイルの種類",
+    "dots": "ドット",
+    "rects": "四角",
+    "statsAlerts": "統計アラート",
+    "gameBg": "ゲーム背景",
+    "ticker": "ティッカー",
+    "time": "時間",
+    "totalTime": "合計時間"
 }
