@@ -435,6 +435,10 @@
     mask-image: url(../assets/img/chat.svg)
 }
 
+.edit-icon {
+    mask-image: url(../assets/img/edit.svg)
+}
+
 .discord-icon {
     mask-image: url(../assets/img/discord.svg)
 }

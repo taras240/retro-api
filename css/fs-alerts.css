@@ -113,7 +113,9 @@
     clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
     image-rendering: pixelated;
     z-index: 1;
+
 }
+
 
 .fs-alert__light {
     position: absolute;

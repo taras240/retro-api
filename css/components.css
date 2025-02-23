@@ -46,6 +46,8 @@
 
 .popup-section {
     z-index: 11;
+    height: fit-content !important;
+    width: fit-content !important;
 }
 
 /**---------FULSCREEN_MODE----------- */
@@ -684,6 +686,24 @@ input[type="radio"]:checked+.context-menu_radio::after {
     gap: 1px;
     transition: none;
     flex: 1;
+}
+
+.flex-column-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    row-gap: 1rem;
+    padding: 1rem;
+
+}
+
+.game-props__item {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .main-column-item {
