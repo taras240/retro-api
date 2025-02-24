@@ -46,8 +46,11 @@
 
 .popup-section {
     z-index: 11;
-    height: fit-content !important;
-    width: fit-content !important;
+}
+
+.game-data__section {
+    width: max-content !important;
+    height: max-content !important;
 }
 
 /**---------FULSCREEN_MODE----------- */
