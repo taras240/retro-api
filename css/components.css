@@ -49,6 +49,7 @@
 }
 
 .game-data__section {
+    max-width: 30rem;
     width: max-content !important;
     height: max-content !important;
 }
