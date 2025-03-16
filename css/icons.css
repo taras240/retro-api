@@ -448,7 +448,8 @@
 
 /** Difficult badges */
 
-.difficult-badge__hell {
+.difficult-badge__hell,
+.difficult-badge__sss {
     background-color: #ff00ff;
     box-shadow: 0 0 5px 1px #ff00ff;
     /* animation: hell-anim 6s infinite */
@@ -472,23 +473,30 @@
     }
 }
 
-.difficult-badge__insane {
-    background-color: #800080;
+.difficult-badge__insane,
+.difficult-badge__s {
+    background-color: #f9249c;
 }
 
-.difficult-badge__pro {
-    background-color: orange;
-}
-
-.difficult-badge__expert {
+.difficult-badge__expert,
+.difficult-badge__a {
     background-color: crimson;
 }
 
-.difficult-badge__standard {
+.difficult-badge__pro,
+.difficult-badge__b {
+    background-color: orange;
+}
+
+
+
+.difficult-badge__standard,
+.difficult-badge__c {
     background-color: lime;
 }
 
-.difficult-badge__easy {
+.difficult-badge__easy,
+.difficult-badge__d {
     background-color: greenyellow;
 }
 
