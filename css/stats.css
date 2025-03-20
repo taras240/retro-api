@@ -5,7 +5,7 @@
     top: 100px;
     width: 250px;
     height: auto !important;
-    min-width: 250px;
+    min-width: 11rem;
     min-height: 5rem;
     /* background: linear-gradient(to top left, var(--main-color), var(--secondary-color)); */
     cursor: grab;
@@ -41,7 +41,7 @@
     align-items: center;
     justify-content: space-evenly;
     gap: 0;
-    padding: 0.5rem;
+    padding: 0.25rem;
     border-radius: var(--border-radius);
     background-color: var(--main-color);
 }
