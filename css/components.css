@@ -710,16 +710,17 @@ input[type="radio"]:checked+.context-menu_radio::after {
     justify-content: space-between;
 }
 
-.main-column-item {
+.main-column-item,
+.cheevo-column-item {
     position: relative;
-    flex-basis: 25rem;
     flex-grow: 1;
     padding: 0.5rem 0.8rem;
     overflow: hidden;
     border-radius: 1px;
 }
 
-.main-column-item:hover {
+.main-column-item:hover,
+.cheevo-column-item:hover {
     transform: translate(-5px, -2px);
     box-shadow: 3px 3px 10px 0px #000000a1;
     transition: 0.2s;

@@ -35,7 +35,7 @@
     "fillAll": "Fill All",
     "autofill": "Autofill",
     "selectColors": "Color Scheme",
-    "showBgAnimation": "Show Bg. Animation",
+    "showBgAnimation": "Bg. Animation",
     "customColors": "Custom Colors",
     "fontFamily": "Fonts",
     "selectFont": "Select Font",
@@ -116,5 +116,6 @@
     "count": "Count",
     "cheevosCount": "Cheevos Count",
     "showAllDesc": "Show All Descriptions",
-    "showSubLevels": "Show Sublevels"
+    "showSubLevels": "Show Sublevels",
+    "raApi": "RA API"
 }

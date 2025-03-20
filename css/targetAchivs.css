@@ -59,6 +59,7 @@
   color: var(--font-color);
   background: var(--secondary-color);
   display: flex;
+  flex-basis: 25rem;
   transition: 0.1s;
 }
 
