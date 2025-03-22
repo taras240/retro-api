@@ -447,14 +447,35 @@
 }
 
 /** Difficult badges */
+.difficult-badge__11 {
+    position: relative;
+    background-color: #000;
+    box-shadow: 0 0 3px 1px #000;
+    color: #ff00ff;
+    padding: 0 0.5rem;
+    /* animation: hell-anim 6s infinite */
+}
+
+/* .difficult-badge__11::before {
+    content: "[";
+}
+
+.difficult-badge__11::after {
+    content: "]";
+} */
 
 .difficult-badge__hell,
 .difficult-badge__10 {
     background-color: #ff00ff;
-    box-shadow: 0 0 5px 1px #ff00ff;
+    box-shadow: 0 0 3px 1px #ff00ff;
     /* animation: hell-anim 6s infinite */
 }
 
+.difficult-badge__9 {
+    background-color: #ff00ff;
+    box-shadow: 0 0 3px 1px #ff00ff;
+    /* animation: hell-anim 6s infinite */
+}
 
 @keyframes hell-anim {
     0% {
@@ -476,6 +497,7 @@
 .difficult-badge__insane,
 .difficult-badge__8 {
     background-color: #f9249c;
+    box-shadow: 0 0 3px 1px #f9249c;
 }
 
 .difficult-badge__expert,
@@ -492,12 +514,12 @@
 
 .difficult-badge__standard,
 .difficult-badge__5 {
-    background-color: lime;
+    background-color: greenyellow;
 }
 
 .difficult-badge__easy,
 .difficult-badge__4 {
-    background-color: greenyellow;
+    background-color: lime;
 }
 
 .version-badge::before {
