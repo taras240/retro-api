@@ -117,5 +117,6 @@
     "cheevosCount": "Кількість досягнень",
     "showAllDesc": "Показувати всі описи",
     "showSubLevels": "Показувати підрівні",
-    "raApi": "RA API"
+    "raApi": "RA API",
+    "difficulty": "Складність"
 }
