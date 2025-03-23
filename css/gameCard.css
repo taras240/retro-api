@@ -106,8 +106,13 @@
   overflow-x: scroll;
   font-size: 1.2rem;
   padding: 0.25rem 1rem;
-  text-wrap: nowrap;
-  white-space: nowrap;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.25rem;
+  margin-bottom: 0.5rem;
+  /* text-wrap: nowrap;
+  white-space: nowrap; */
 }
 
 .game-card__info.game-card__genres-container:empty {
@@ -210,6 +215,11 @@
   100% {
     box-shadow: 0 0 3px 0px var(--accent-color);
   }
+}
+
+.game-card-description {
+  display: none;
+  /*! HIDE PROPS*/
 }
 
 .game-card-info {
