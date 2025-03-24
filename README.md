@@ -3,8 +3,7 @@
 
 *This web application is designed to track achievements obtained in retro games using the open API from retroachievements.org.*
 
-![image](https://github.com/user-attachments/assets/99631ce8-1b4f-4589-bcd1-dda46e9f6ab9)
-
+![зображення](https://github.com/user-attachments/assets/9ca167a4-d5eb-450d-84df-0dd8129ce8cb)
 
 
 ![image](https://github.com/taras240/retro-api/assets/41308277/3340c91e-18b3-4053-b220-cba2c30a5f4c)
