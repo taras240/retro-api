@@ -37,7 +37,8 @@
     pointer-events: none;
 }
 
-.section:hover {
+.section:hover,
+.section.focus {
     z-index: 10;
     box-shadow: 0 0 5px 0 black;
 }
@@ -72,33 +73,27 @@
 }
 
 /**--------[ Header Style ]---------------*/
-.section:not(:hover) .tweak-button {
+/* .section:not(:hover) .tweak-button {
     opacity: 0;
-}
+} */
 
 
 .header-container {
-    /* position: relative; */
-    top: 0.25rem;
-    left: 0.25rem;
     position: relative;
+    margin: 0.25rem 0.25rem 0;
     width: calc(100% - 0.5rem);
-    /* transform: translate(0.5rem, 0.25rem); */
     cursor: grab;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 5px;
     padding: 0 10px;
-    /* width: 100%; */
     border-bottom: 0px solid var(--font-color);
     background-color: var(--secondary-color);
     border-radius: var(--border-radius);
     z-index: 2;
     font-family: system-ui;
     box-shadow: 0 0 5px 0px var(--secondary-color);
-    /* border: 1px solid var(--accent-color); */
-    /* display: none; */
 }
 
 .section.compact-header .header-container {
@@ -109,8 +104,11 @@
     box-shadow: 0 0 2px 0px var(--accent-color);
 }
 
-.section .header-container.fixed {
+.section.compact .header-container {
+    display: none;
+}
 
+.section .header-container.fixed {
     display: flex;
 }
 
@@ -141,6 +139,8 @@
 .section:hover.compact-header .header-container {
     display: flex;
 }
+
+
 
 /* .section .header-container {
     display: none;
