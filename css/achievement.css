@@ -13,12 +13,12 @@
   background: transparent;
 }
 
-.achievements-header_container {
+/* .achievements-header_container {
   top: 0;
   left: 0;
   width: 100%;
   flex-shrink: 0;
-}
+} */
 
 .achivs-header-text {
   flex-shrink: 1;

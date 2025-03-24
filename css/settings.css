@@ -15,12 +15,6 @@
   z-index: 101;
 }
 
-.prefs_section.section {
-  background: linear-gradient(to top left,
-      var(--main-color),
-      var(--secondary-color));
-}
-
 /**------------- header -------------*/
 .widget-header-text.prefs-header {
   /* font-size: 1.5rem; */
