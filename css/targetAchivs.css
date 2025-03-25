@@ -358,9 +358,12 @@
   --main-color: white;
   color: var(--font-color);
   background: var(--orange-gradient);
-  padding: 0;
+
 }
 
+.target__aotw-container.target__aotw {
+  padding: 0;
+}
 
 
 .target__aotw-container .target__cheevo-details {

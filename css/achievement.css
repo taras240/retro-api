@@ -282,7 +282,7 @@
 .coin__container,
 .mario__container {
   position: fixed;
-  z-index: 10;
+  z-index: 15;
   image-rendering: pixelated;
 }
 
@@ -299,7 +299,6 @@
   --coin-anim-duration: 750ms;
   height: calc(var(--achiv-height) / 2);
   width: var(--achiv-height);
-
 }
 
 .coins__coin {
