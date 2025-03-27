@@ -7,9 +7,7 @@
     height: auto !important;
     min-width: 11rem;
     min-height: 5rem;
-    /* background: linear-gradient(to top left, var(--main-color), var(--secondary-color)); */
     cursor: grab;
-    background: var(--secondary-color);
 }
 
 .hide-bg.stats_section.section:not(:hover) {
@@ -43,7 +41,7 @@
     gap: 0;
     padding: 0.25rem;
     border-radius: var(--border-radius);
-    background-color: var(--main-color);
+    background-color: var(--secondary-color);
 }
 
 .stats__stat-container.hidden {

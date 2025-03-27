@@ -120,6 +120,12 @@
 
 
 /** ICONS  */
+.svg-icon {
+    fill: var(--font-color);
+    height: 1em;
+    width: 1em;
+}
+
 .description-icon {
     display: inline-block;
     position: relative;

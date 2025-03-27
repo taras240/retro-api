@@ -210,6 +210,13 @@
   --mark-color: gold;
 }
 
+.target-achiv.show-hard-anim {
+  transform: translate(-0.25rem, -0.25rem);
+  z-index: 2;
+  box-shadow: 0 0 3px 0 black;
+  transition: transform 200ms;
+}
+
 .target-achiv.show-hard-anim::after {
   animation: target-hardcore-animation 0.3s linear forwards;
 }
