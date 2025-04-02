@@ -334,9 +334,15 @@
   display: none;
 }
 
+.show-genre .target-genre-badge {
+  /* padding: 0; */
+  /* --badge-font-color: var(--font-color); */
+}
+
 .show-genre .target-genre-badge,
 .show-level .target-level-badge {
   display: inline;
+
 }
 
 .target-achiv:not(.show-difficult) .icons-row-list .difficult-icon {

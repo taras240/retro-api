@@ -24,7 +24,11 @@
 .badge-button:hover {
     background-color: var(--badge-font-color);
     color: var(--badge-bg-color);
+}
 
+.badge_transparent.badge-button:hover {
+    background-color: var(--badge-font-color);
+    color: var(--main-color);
 }
 
 .badge-centered {
@@ -45,6 +49,11 @@
 
 .badge_gold {
     --badge-bg-color: goldenrod;
+    --font-color: var(--badge-font-color);
+}
+
+.badge_transparent {
+    --badge-bg-color: transparent;
     --font-color: var(--badge-font-color);
 }
 
@@ -137,6 +146,12 @@
     mask-position: center;
     mask-repeat: no-repeat;
     transition: background-color .2s;
+}
+
+.cheevo-genre__icon {
+    font-size: 1.2em;
+    margin-left: 0.15rem;
+    text-align: center;
 }
 
 .signed-icon {
