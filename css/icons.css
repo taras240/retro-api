@@ -54,8 +54,10 @@
 
 .badge_transparent {
     --badge-bg-color: transparent;
-    --font-color: var(--badge-font-color);
+    --badge-font-color: var(--font-color);
+    border: 1px solid var(--badge-font-color);
 }
+
 
 .badge_black {
     font-weight: normal;

@@ -135,7 +135,7 @@
     display: none;
 }
 
-.section:hover .header-container,
+.section:not(.resized):hover .header-container,
 .section:hover.compact-header .header-container {
     display: flex;
 }
@@ -302,6 +302,7 @@
 
 .checkbox-input_container {}
 
+
 .checkbox-input {
     display: block;
     position: relative;
@@ -319,12 +320,20 @@
 
 }
 
+.statebox[data-state="1"],
 input:checked+.checkbox-input {
     background-color: var(--accent-color);
     color: var(--font-color);
     padding-left: 30px;
 }
 
+.statebox[data-state="-1"] {
+    background-color: crimson;
+    color: white;
+    padding-left: 30px;
+}
+
+.statebox[data-state="1"]::before,
 input:checked+.checkbox-input::before {
     content: "";
     position: absolute;
@@ -337,6 +346,20 @@ input:checked+.checkbox-input::before {
     mask-repeat: no-repeat;
     mask-position: center;
     background-color: var(--font-color);
+}
+
+.statebox[data-state="-1"]::before {
+    content: "";
+    position: absolute;
+    height: 80%;
+    aspect-ratio: 1;
+    left: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    mask-image: url(../assets/img/close.svg);
+    mask-repeat: no-repeat;
+    mask-position: center;
+    background-color: white;
 }
 
 .text-input {
@@ -609,6 +632,7 @@ input:checked+.checkbox-input::before {
     padding: 5px 0;
 }
 
+.context-menu_statebox,
 .context-menu_checkbox,
 .context-menu_radio {
     position: relative;
@@ -619,6 +643,7 @@ input:checked+.checkbox-input::before {
     padding: 5px 0px 5px 15px;
 }
 
+.context-menu_statebox::after,
 input[type="checkbox"]+.context-menu_checkbox::after,
 input[type="radio"]+.context-menu_radio::after {
     position: absolute;
@@ -633,12 +658,23 @@ input[type="radio"]+.context-menu_radio::after {
     -webkit-mask-size: contain;
 }
 
+.context-menu_statebox[data-state="0"]::after,
 input[type="checkbox"]+.context-menu_checkbox::after {
     mask-image: url(../assets/img/check_box_outline.svg);
 }
 
+.context-menu_statebox[data-state="1"]::after {
+    mask-image: url(../assets/img/positive-box.svg);
+    /* background-color: greenyellow; */
+}
+
 input[type="checkbox"]:checked+.context-menu_checkbox::after {
     mask-image: url(../assets/img/check_box_FILL.svg);
+}
+
+.context-menu_statebox[data-state="-1"]::after {
+    mask-image: url(../assets/img/nagative-box.svg);
+    /* background-color: crimson; */
 }
 
 input[type="radio"]+.context-menu_radio::after {
