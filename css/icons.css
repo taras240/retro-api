@@ -2,8 +2,7 @@
 .badge {
     --badge-font-color: black;
     --badge-bg-color: lime;
-    display: inline-block;
-    width: fit-content;
+    display: inline;
     padding: 0 0.25rem;
     border-radius: 3px;
     background-color: var(--badge-bg-color);
@@ -163,7 +162,6 @@
     column-gap: 0.25rem;
     font-size: inherit;
     flex-wrap: nowrap;
-    overflow: hidden;
     text-overflow: ellipsis;
     text-wrap: nowrap;
     white-space: nowrap;
