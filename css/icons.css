@@ -3,17 +3,18 @@
     --badge-font-color: black;
     --badge-bg-color: lime;
     display: inline-block;
-    font-size: 0.8em;
-    color: var(--badge-font-color);
-    font-weight: 700;
-    text-transform: uppercase;
-    text-wrap: nowrap;
-    white-space: nowrap;
+    width: fit-content;
     padding: 0 0.25rem;
     border-radius: 3px;
-    /* margin-right: 0.25rem; */
     background-color: var(--badge-bg-color);
-    ;
+    text-transform: uppercase;
+    font-size: 0.8em;
+    font-weight: 700;
+    color: var(--badge-font-color);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-wrap: nowrap;
+    white-space: nowrap;
 }
 
 .badge-button {
@@ -161,6 +162,11 @@
     align-items: center;
     column-gap: 0.25rem;
     font-size: inherit;
+    flex-wrap: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-wrap: nowrap;
+    white-space: nowrap;
 }
 
 .icon-button,

@@ -590,9 +590,9 @@ input:checked+.checkbox-input::before {
     aspect-ratio: 1;
     transform: rotateZ(90deg) scaleY(-1) translate(-50%, 0%);
     background-color: var(--context-font-color);
-    -webkit-mask-image: url(../assets/img/expand_more.svg);
-    -webkit-mask-position: center;
-    -webkit-mask-size: cover;
+    mask-image: url(../assets/img/expand_more.svg);
+    mask-position: center;
+    mask-size: cover;
 }
 
 .context-menu_item:last-child {
@@ -655,7 +655,7 @@ input[type="radio"]+.context-menu_radio::after {
     transform: translate(-50%, -50%);
     background-color: var(--font-color);
     opacity: 0.8;
-    -webkit-mask-size: contain;
+    mask-size: cover;
 }
 
 .context-menu_statebox[data-state="0"]::after,
@@ -665,7 +665,6 @@ input[type="checkbox"]+.context-menu_checkbox::after {
 
 .context-menu_statebox[data-state="1"]::after {
     mask-image: url(../assets/img/positive-box.svg);
-    /* background-color: greenyellow; */
 }
 
 input[type="checkbox"]:checked+.context-menu_checkbox::after {
@@ -685,6 +684,7 @@ input[type="radio"]:checked+.context-menu_radio::after {
     mask-image: url(../assets/img/radio_button_checked.svg);
 }
 
+.context-menu_statebox:hover::after,
 .context-menu_item:hover>.context-menu_checkbox::after,
 .context-menu_item:hover>.context-menu_radio::after {
     background-color: var(--context-font-color);
@@ -789,4 +789,12 @@ input[type="radio"]:checked+.context-menu_radio::after {
     column-gap: 1rem;
     align-items: center;
     width: 100%;
+}
+
+.achievement__header {
+    font-size: 1.1rem;
+    white-space: nowrap;
+    text-wrap: nowrap;
+    width: 100%;
+    overflow-x: scroll;
 }
