@@ -19,6 +19,7 @@
     "disable": "Disabled",
     "progression": "Progression",
     "missable": "Missable",
+    "locked": "Locked",
     "earned": "Unlocked",
     "earnedSoftcore": "Unlocked (Casual)",
     "all": "All",
@@ -120,5 +121,6 @@
     "showSubLevels": "Sublevels",
     "raApi": "RA API",
     "difficulty": "Difficulty",
-    "unlockAnimation": "Unlock Animation"
+    "unlockAnimation": "Unlock Animation",
+    "groupElements": "Group Cheevos"
 }

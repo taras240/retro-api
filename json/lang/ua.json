@@ -19,6 +19,7 @@
     "disable": "Вимкнено",
     "progression": "Проходження",
     "missable": "Втрачувані",
+    "locked": "Не здобуті",
     "earned": "Здобуті",
     "earnedSoftcore": "Здобуті (Казуальні)",
     "all": "Всі",
@@ -120,5 +121,6 @@
     "showSubLevels": "Показувати підрівні",
     "raApi": "RA API",
     "difficulty": "Складність",
-    "unlockAnimation": "Анімація здобуття"
+    "unlockAnimation": "Анімація здобуття",
+    "groupElements": "Групувати досягнення"
 }
