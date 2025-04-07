@@ -63,7 +63,7 @@
     "progressbar": "Progress Bar",
     "auto": "Auto",
     "platform": "Platform",
-    "richPresence": "Game Status",
+    "richPresence": "Rich Presence",
     "showRetroRatio": "Retro Ratio",
     "showMasteryRate": "Mastery Rate",
     "alerts": "Alerts",
@@ -122,5 +122,9 @@
     "raApi": "RA API",
     "difficulty": "Difficulty",
     "unlockAnimation": "Unlock Animation",
-    "groupElements": "Group Cheevos"
+    "groupElements": "Group Cheevos",
+    "type": "Type",
+    "unlockStatus": "Unlock Status",
+    "other": "Other",
+    "groupBy": "Group By"
 }

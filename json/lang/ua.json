@@ -122,5 +122,9 @@
     "raApi": "RA API",
     "difficulty": "Складність",
     "unlockAnimation": "Анімація здобуття",
-    "groupElements": "Групувати досягнення"
+    "groupElements": "Групувати досягнення",
+    "type": "Тип",
+    "unlockStatus": "Статус розблокування",
+    "other": "Інше",
+    "groupBy": "Групування"
 }
