@@ -12,7 +12,7 @@
 @import url(./games.css);
 @import url(./progression.css);
 @import url(./note.css);
-@import url(./userInfo.css);
+/* @import url(./userInfo.css); */
 @import url(./notification.css);
 @import url(./game-popup.css);
 @import url(./stats.css);
@@ -68,7 +68,7 @@ img {
 }
 
 :root {
-  --font-family: system-ui, sans-serif;
+  --font-family: Arial, system-ui, sans-serif;
   font-size: 16px;
   --main-color: #201221;
   --secondary-color: #181118;

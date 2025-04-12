@@ -195,7 +195,7 @@
   aspect-ratio: 1;
   position: relative;
   overflow: hidden;
-  transition: opacity 0.2s, translate 0.2s;
+  transition: opacity 0.2s, translate 0.2s, scale 50ms;
 }
 
 .achiv-preview {
@@ -244,7 +244,7 @@
 }
 
 .achiv-block:not(.hidden):hover .preview-container {
-  translate: 0 -5px;
+  scale: 1.05;
 }
 
 
@@ -514,7 +514,7 @@
 /** GROUPS  */
 .cheevos__group {
   width: 100%;
-
+  text-align: center;
 }
 
 .cheevos__group-header {
@@ -523,15 +523,30 @@
   text-align: center;
 }
 
-.cheevos__group-header::after {
+.cheevos__group-title {
+  position: relative;
+
+}
+
+.cheevos__group-title::after,
+.cheevos__group-title::before {
   content: "";
   position: absolute;
   top: calc(50% + 1px);
-  left: 0%;
-  width: 100%;
+  width: 1000px;
   height: 1px;
   background-color: var(--accent-color);
   z-index: -1;
+}
+
+.cheevos__group-title::before {
+  left: 0;
+  transform: translateX(-100%);
+}
+
+.cheevos__group-title::after {
+  right: 0;
+  transform: translateX(100%);
 
 }
 
@@ -539,7 +554,7 @@
   display: inline;
   font-size: 1.1rem;
   color: var(--accent-color);
-  background-color: var(--main-color);
+  /* background-color: var(--main-color); */
   padding: 1rem;
 }
 

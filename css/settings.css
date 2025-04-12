@@ -190,12 +190,6 @@ input:checked+.settings-input,
   background-color: transparent;
 }
 
-/* #color-preset-selection option {
-  background-color: var(--secondary-color);
-  color: var(--font-color);
-  padding: 5px;
-  height: 10px;
-} */
 
 .settings-select {
   padding: 2.5px 4px;

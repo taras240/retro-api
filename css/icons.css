@@ -54,9 +54,9 @@
 }
 
 .badge_transparent {
-    --badge-bg-color: transparent;
-    --badge-font-color: var(--font-color);
-    border: 1px solid var(--badge-font-color);
+    --badge-bg-color: var(--selection-color);
+    --badge-font-color: var(--accent-color);
+    border: 1px solid var(--accent-color);
 }
 
 
