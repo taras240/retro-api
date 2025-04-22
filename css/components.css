@@ -79,30 +79,30 @@
 
 
 .header-container {
+    /* --font-color: var(--main-color); */
     position: relative;
-    margin: 0.25rem 0.25rem 0;
-    width: calc(100% - 0.5rem);
     cursor: grab;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 5px;
-    padding: 0 10px;
-    border-bottom: 0px solid var(--font-color);
+    gap: 0.25rem;
+    padding: 0.2rem 0.5rem;
     background-color: var(--secondary-color);
-    border-radius: var(--border-radius);
-    border: 1px solid var(--secondary-color);
-    z-index: 2;
+    /* font-weight: bold; */
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+    border-bottom: 1px solid var(--main-color);
     font-family: system-ui;
-    box-shadow: 0 0 5px 0px var(--secondary-color);
+    /* margin-bottom: 0.2rem; */
 }
 
 .section.compact-header .header-container {
     position: absolute;
     width: fit-content;
     display: none;
+    border-radius: var(--border-radius);
     border: 1px solid var(--accent-color);
     box-shadow: 0 0 2px 0px var(--accent-color);
+    z-index: 2;
 }
 
 .section.compact .header-container {
@@ -148,10 +148,11 @@
 } */
 
 .widget-header-text {
+    color: var(--font-color);
     text-align: center;
-    padding: 5px;
+    /* padding: 5px; */
     /* font-weight: bold; */
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     flex: 1;
 }
 
@@ -367,13 +368,17 @@ input:checked+.checkbox-input::before {
     transition: 0.2s;
 }
 
+.header-container .text-input {
+    padding: 0 1rem;
+}
+
 [type="number"].text-input {
     width: 5rem;
 }
 
 .text-input::placeholder {
-    color: var(--font-color);
-    opacity: 0.9;
+    color: inherit;
+    opacity: 0.5;
 }
 
 .text-input:hover,
@@ -747,7 +752,7 @@ input[type="radio"]:checked+.context-menu_radio::after {
 .cheevo-column-item {
     position: relative;
     flex-grow: 1;
-    padding: 0.35rem 0.8rem;
+    padding: 0.5rem 0.8rem;
     overflow: hidden;
     border-radius: 1px;
     border: 1px solid transparent;

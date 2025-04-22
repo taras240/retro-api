@@ -5,7 +5,7 @@ section.section.games_setion {
   height: 600px;
   display: flex;
   flex-direction: column;
-  min-width: 800px;
+  /* min-width: 800px; */
   min-height: 400px;
   z-index: 1;
 }
@@ -96,7 +96,7 @@ section.section.games_setion:hover {
   padding-bottom: 2rem;
   height: 100%;
   transition: 0.2s;
-  background: linear-gradient(to left, var(--main-color), var(--secondary-color));
+  /* background: linear-gradient(to left, var(--main-color), var(--secondary-color)); */
 }
 
 .games__load-button {
@@ -176,20 +176,27 @@ section.section.games_setion:hover {
 .platform-list::-webkit-scrollbar-thumb:hover {}
 
 .platform_game-item {
-
   width: 100%;
   position: relative;
-  padding: 3px 5px;
-  display: grid;
-  grid-column-gap: 1px;
-  grid-template-columns: 1fr 3.5rem 2rem 5rem 8rem 8rem 6rem 6rem 5rem;
-  align-items: center;
+  padding: 0.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 0.5rem;
   transition: 0.2s;
   border-bottom: 1px solid var(--secondary-color);
+  border: 1px solid transparent;
+  transition: 50ms;
+  /* overflow: hidden; */
+}
+
+.platform_game-item:nth-child(even) {
+  background-color: var(--secondary-color);
 }
 
 .platform_game-item:hover {
-  background-color: var(--secondary-color);
+  border-color: var(--accent-color);
+  background-color: var(--selection-color);
 }
 
 
@@ -203,19 +210,29 @@ section.section.games_setion:hover {
 
 .game-description_title {
   height: 100%;
+  font-weight: bold !important;
+}
+
+.game-description__info {
+  font-size: 0.9rem;
+  flex-wrap: nowrap;
+  text-wrap: nowrap;
+  white-space: none;
+}
+
+.game-description__info * {
+  text-wrap: nowrap;
+  white-space: none;
 }
 
 .game-description_button {
+  position: relative;
   background-color: transparent;
-  font-size: 1.0rem;
-  color: var(--font-color);
-  text-align: left;
+  font-size: 1.1rem;
   border-radius: 2px;
-  padding: 0 3px;
-  transition: .2s;
   width: 100%;
-
   height: 100%;
+  color: var(--font-color);
 }
 
 .game-description_button:hover {
@@ -235,8 +252,7 @@ section.section.games_setion:hover {
 }
 
 .game-description__links {
-  display: grid;
-  grid-template-columns: repeat(3, 1.5rem);
+  display: flex;
   column-gap: 0.2rem;
   justify-content: center;
 }
@@ -255,10 +271,6 @@ section.section.games_setion:hover {
 
 }
 
-.game-description_button {
-  position: relative;
-  padding: 0 5px;
-}
 
 .platform_game-item.expanded .expand-button {
   transform: scaleY(-1);

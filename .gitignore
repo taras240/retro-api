@@ -1,4 +1,3 @@
-js/
 json/games/script.js
 json/games/searchData.js
 json/games/mergeData.js
@@ -15,3 +14,6 @@ assets/database.sql
 elements/
 test.html
 tools
+constructor
+user
+js

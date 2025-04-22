@@ -5,8 +5,7 @@
     z-index: 15;
     transform: translate(-50%, -50%);
     max-height: 90vh;
-    overflow-y: scroll;
-    /* height: 600px; */
+    height: fit-content;
 }
 
 .game-popup__section .header-container {

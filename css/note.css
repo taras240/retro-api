@@ -9,74 +9,73 @@
     min-height: 200px;
 }
 
+.note-header {
+    padding-bottom: 0;
+}
+
 .widget-header-text.note-header-text {
     display: flex;
     align-items: end;
-    padding-bottom: 0;
-    padding-top: 9px;
 }
 
 .note-container {
     position: relative;
     flex: 1;
-    padding: 10px;
+    padding: 0.5rem;
     display: flex;
     flex-direction: column;
 
 }
 
 .note__tabs-container {
-    /* margin: 0 1rem; */
     display: flex;
     gap: 2px;
-    align-items: end;
+    align-items: center;
     align-self: end;
-    /* border-bottom: 1px solid var(--accent-color); */
 }
 
 .radio-tab {
+    color: var(--font-color);
     position: relative;
     display: inline-block;
-    padding: 0rem .5rem;
-    /* margin-top: 0.2rem; */
+    padding: 0rem .5rem 0.2rem;
     background-color: var(--main-color);
-    border-radius: var(--border-radius) var(--border-radius) 0 0;
-    border: 1px solid transparent;
-    opacity: 0.5;
-    transition: 0.2s;
+    border-radius: var(--border-radius);
     cursor: pointer;
-    font-size: 1.4rem;
-    /* overflow-x: hidden;
-    overflow-y: visible; */
+    font-size: 1.0rem;
+    transition: none;
+    margin-left: 0.25rem;
 }
 
 input:checked+.radio-tab {
+    color: var(--font-color);
+    font-size: 1.2rem;
+    font-weight: bold;
     margin-top: 0;
     opacity: 1;
-    padding: 0rem .6rem;
-    border-color: var(--accent-color);
-    border-bottom: 1px solid transparent;
+    background-color: var(--main-color);
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+    border: 1px solid transparent;
     z-index: 2;
-    color: var(--font-color);
 }
 
-input:checked+.radio-tab::before,
+/* input:checked+.radio-tab::before,
 input:checked+.radio-tab::after {
     content: '';
     position: absolute;
     bottom: -1px;
     right: 100%;
-    width: 2rem;
+    width: 5rem;
     height: 1px;
-    background: linear-gradient(to right, transparent, var(--accent-color));
+    background: linear-gradient(to right, transparent, var(--accent-color), var(--accent-color));
     z-index: 0;
 }
 
 input:checked+.radio-tab::after {
-    background: linear-gradient(to left, transparent, var(--accent-color));
+    background: linear-gradient(to left, transparent, var(--accent-color), var(--accent-color));
     right: auto;
     left: 100%;
-}
+} */
 
 .note-textaria {
     background-color: black;
@@ -85,7 +84,7 @@ input:checked+.radio-tab::after {
     text-wrap: wrap;
     width: 100%;
     flex: 1;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem;
     font-size: 1.2rem;
     resize: none;
     border-radius: var(--border-radius);
