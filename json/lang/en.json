@@ -126,5 +126,7 @@
     "type": "Type",
     "unlockStatus": "Unlock Status",
     "other": "Other",
-    "groupBy": "Group By"
+    "groupBy": "Group By",
+    "releaseDate": "Release Date",
+    "search": "Search..."
 }

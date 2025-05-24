@@ -191,16 +191,18 @@
         <button class="header-button header-icon close-icon">
         </button>
     </div>
+    <div class="games__main-controls"></div>
     <div class="games_container content-container">
-
+        <!-- 
         <div class="games__filter-container">
             <div class="games__filter-header">
 
                 <div class="checkbox-input_container">
-                    <input type="checkbox" id="games__favourites-filter"
-                        onchange="ui.games.FAVOURITES_FILTER = this.checked">
-                    <label class="checkbox-input" for="games__favourites-filter">Favourites</label>
+                    <input type="checkbox" id="games__sidebar-filters-checkbox"
+                        onchange="ui.games.showFilters(this.checked)">
+                    <label class="checkbox-input" for="games__sidebar-filters-checkbox">Filters</label>
                 </div>
+                <button class="select-button" onclick="ui.games.toggleSortList(event)">Sort By</button>
                 <div class="checkbox-input_container">
                     <input type="checkbox" id="games__coop-filter" onchange="ui.games.COOP_FILTER = this.checked">
                     <label class="checkbox-input" for="games__coop-filter">Coop</label>
@@ -209,96 +211,11 @@
                 <button class="select-button" onclick="ui.games.toggleFilterList(event,'award')">Awards</button>
                 <button class="select-button" onclick="ui.games.toggleFilterList(event,'genre')">Genres</button>
                 <input type="search" name="" id="games__searchbar" class="games__searchbar" placeholder="Search">
-
-                <!-- <button class="games__show-filters-button icon-button ">
-                    <i class="icon expand_icon"></i>
-                </button> -->
             </div>
 
-        </div>
+        </div> -->
         <ul class="platform-list" id="games-list" data--console-id="all" data-current-games-array-position="0">
 
-            <li data-game-i-d="12" class="platform_game-item">
-                <div class="game-preview_container">
-                    <img src="./assets/imgCache/048141.webp"
-                        onerror="this.src='https://media.retroachievements.org/Images/048141.png';" alt=""
-                        class="game-preview_image">
-                </div>
-                <h3 class="game-description_title"><button title="open game" class="game-description_button"
-                        onclick="config.gameID = 12; getAchievements()">Addams Family, The</button></h3>
-                <p title="achievements count" class="game-description  achievements-count">
-                    <i class="game-description_icon achievements-icon"></i>69
-                </p>
-                <p title="points count" class="game-description  points-count">
-                    <i class="game-description_icon points-icon"></i>
-                    450
-                </p>
-                <a title="go to RA" target="_blanc" href="https://retroachievements.org/game/12"
-                    class="game-description game-description_link">
-                    <i class="game-description_icon link_icon ra-link_icon"></i>
-                </a>
-                <!-- <div class="game-description_block">
-                    <button class="game-description_button  expand-button" onclick="ui.games.showMoreDescription(this)">
-                        <i class="game-description_icon link_icon expand_icon"></i>
-                    </button>
-                </div>
-                <div class="game-description_block">
-                    
-                    <a title=" go to RA forum" target="_blanc" href="https://retroachievements.org/viewtopic.php?t=202"
-                        class="game-description game-description_link   " "="">
-                <i class=" game-description_icon link_icon forum-icon"></i>
-                    </a>
-                    <a title=" search for downloading" target="_blanc"
-                        href="https://romhustler.org/roms/search?query=Addams Family, The"
-                        class="game-description game-description_link  " "="">                
-                  <i class=" game-description_icon link_icon download-icon"></i></a>
-                </div> -->
-
-            </li>
-            <li data-game-i-d="3684" class="platform_game-item">
-                <div class="game-preview_container">
-                    <img src="./assets/imgCache/020895.webp"
-                        onerror="this.src='https://media.retroachievements.org/Images/020895.png';" alt=""
-                        class="game-preview_image">
-                </div>
-                <h3 class="game-description_title"><button title="open game" class="game-description_button"
-                        onclick="config.gameID = 3684; getAchievements()">Advanced Busterhawk: Gley
-                        Lancer</button></h3>
-
-                <p title="achievements count" class="game-description  achievements-count">
-                    <i class="game-description_icon achievements-icon"></i>44
-                </p>
-                <p title="points count" class="game-description  points-count">
-                    <i class="game-description_icon points-icon"></i>
-                    595
-                </p>
-                <a title="go to RA" target="_blanc" href="https://retroachievements.org/game/3684"
-                    class="game-description game-description_link">
-                    <i class="game-description_icon link_icon ra-link_icon"></i>
-                </a>
-
-            </li>
-            <li data-game-i-d="168" class="platform_game-item">
-                <div class="game-preview_container">
-                    <img src="./assets/imgCache/061855.webp"
-                        onerror="this.src='https://media.retroachievements.org/Images/061855.png';" alt=""
-                        class="game-preview_image">
-                </div>
-                <h3 class="game-description_title"><button title="open game" class="game-description_button"
-                        onclick="config.gameID = 168; getAchievements()">Adventures of Batman &amp; Robin,
-                        The</button></h3>
-                <p title="achievements count" class="game-description  achievements-count">
-                    <i class="game-description_icon achievements-icon"></i>13
-                </p>
-                <p title="points count" class="game-description  points-count">
-                    <i class="game-description_icon points-icon"></i>
-                    240
-                </p>
-                <a title="go to RA" target="_blanc" href="https://retroachievements.org/game/168"
-                    class="game-description game-description_link">
-                    <i class="game-description_icon link_icon ra-link_icon"></i>
-                </a>
-            </li>
 
         </ul>
 
@@ -452,6 +369,12 @@
   </div>
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
   <script src="./dist/bundle.min.js"></script>
+  <script>
+    window.va = window.va || function () {
+      (window.vaq = window.vaq || []).push(arguments);
+    };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
 </body>
 
 </html>

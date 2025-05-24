@@ -27,6 +27,7 @@
     aspect-ratio: 1;
     background-color: var(--color);
     border-radius: 50%;
+    opacity: 0.2;
     z-index: 1;
 }
 
@@ -34,6 +35,16 @@
     --color: var(--font-color);
     animation: update-blink 1s;
 }
+
+.rp__indicator.online {
+    --color: green;
+    opacity: 1;
+    transition: .2s;
+}
+
+/* .rp__indicator.online::after {
+    content: " online";
+} */
 
 .rp__indicator.offline {
     background-color: goldenrod;

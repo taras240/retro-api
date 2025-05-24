@@ -24,6 +24,14 @@ section.section.games_setion:hover {
   flex-direction: column;
 }
 
+.games__main-controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  padding: 0.5rem 1rem;
+  gap: 1rem;
+}
+
 .games__filter-container {
   position: relative;
   padding: 0.5rem 2rem;
@@ -176,14 +184,13 @@ section.section.games_setion:hover {
 .platform-list::-webkit-scrollbar-thumb:hover {}
 
 .platform_game-item {
-  width: 100%;
   position: relative;
+  height: 5rem;
+  width: 100%;
   padding: 0.5rem 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  gap: 0.5rem;
-  transition: 0.2s;
+  display: grid;
+  grid-template-columns: 4rem 1fr;
+  column-gap: 0.5rem;
   border-bottom: 1px solid var(--secondary-color);
   border: 1px solid transparent;
   transition: 50ms;
@@ -201,11 +208,10 @@ section.section.games_setion:hover {
 
 
 .game-preview_image {
-  padding: 1px;
-  width: 100%;
+  grid-row: 1/3;
+  height: 4rem;
   aspect-ratio: 1;
   border-radius: 5px;
-  display: none;
 }
 
 .game-description_title {
@@ -233,6 +239,7 @@ section.section.games_setion:hover {
   width: 100%;
   height: 100%;
   color: var(--font-color);
+  text-align: left;
 }
 
 .game-description_button:hover {
