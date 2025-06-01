@@ -1,4 +1,13 @@
 {
+    "cheevosSectionName": "Cheevos",
+    "awardsSectionName": "Awards",
+    "gameSeriesSectionName": "Game Series",
+    "linksSectionName": "Links",
+    "alertsSectionName": "Alerts",
+    "progressionSectionName": "Progression",
+    "settingsSectionName": "Settings",
+    "targetSectionName": "Target",
+    "staticsSectionName": "Stats",
     "style": "Style",
     "sort": "Sort By",
     "filter": "Filter By",
