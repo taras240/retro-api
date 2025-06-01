@@ -128,5 +128,16 @@
     "other": "Інше",
     "groupBy": "Групування",
     "releaseDate": "Дата виходу",
-    "search": "Шукати..."
+    "search": "Шукати...",
+    "createdBy": "Створено",
+    "created": "Дата створення",
+    "unlockRate": "Частота відкриття",
+    "unlockedBy": "Відкрито користувачами",
+    "unlockDate": "Дата відкриття",
+    "playersTotal": "Кількість гравців",
+    "highestAward": "Найвища нагорода",
+    "from": "з",
+    "to": "до",
+    "releaseYear": "Рік випуску",
+    "filters": "Фільтри"
 }

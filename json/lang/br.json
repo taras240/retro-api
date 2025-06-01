@@ -20,6 +20,7 @@
     "overlaySet": "Tipo de Sobreposição",
     "showOverlay": "Sobreposição",
     "latest": "Data de desbloqueio",
+    "date": "Data",
     "rarest": "Raridade",
     "points": "Pontos",
     "retropoints": "Retro Pontos",
@@ -137,5 +138,17 @@
     "other": "Outros",
     "groupBy": "Agrupar por",
     "releaseDate": "Data de Lançamento",
-    "search": "Pesquisa..."
+    "search": "Pesquisa...",
+    "createdBy": "Criado por",
+    "created": "Criado em",
+    "unlockRate": "Taxa de Desbloqueio",
+    "unlockedBy": "Desbloqueado por",
+    "unlockDate": "Data de Desbloqueio",
+    "playersTotal": "Total de Jogadores",
+    "highestAward": "Maiores Premiações",
+    "pointsPerCheevo": "Pontos por Cheevo (média)",
+    "from": "de",
+    "to": "até",
+    "releaseYear": "Ano de Lançamento",
+    "filters": "Filtros"
 }

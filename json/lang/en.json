@@ -20,6 +20,7 @@
     "overlaySet": "Overlay Set",
     "showOverlay": "Overlay",
     "latest": "Unlock Date",
+    "date": "Date",
     "rarest": "Rarity",
     "points": "Points",
     "retropoints": "Retro Points",
@@ -137,5 +138,18 @@
     "other": "Other",
     "groupBy": "Group By",
     "releaseDate": "Release Date",
-    "search": "Search..."
+    "search": "Search...",
+    "createdBy": "Created by",
+    "created": "Created",
+    "unlockRate": "Unlock Rate",
+    "unlockedBy": "Unlocked by",
+    "casual_": "(Casual)",
+    "unlockDate": "Unlock Date",
+    "playersTotal": "Players Total",
+    "highestAward": "Highest Awards",
+    "pointsPerCheevo": "Points per Cheevo(avg.)",
+    "from": "from",
+    "to": "to",
+    "releaseYear": "Release Year",
+    "filters": "Filters"
 }
