@@ -41,8 +41,8 @@
     "showDifficult": "Difficult",
     "clear": "Clear",
     "clearAll": "Clear All",
-    "autoclearEarned": "Auto Clear Earned",
-    "clearDelay": "Clear Delay",
+    "autoclearEarned": "Autoclear Unlocked",
+    "clearDelay": "Autoclear Delay",
     "fill": "Fill",
     "fillAll": "Fill All",
     "autofill": "Autofill",
@@ -169,5 +169,11 @@
     "goToRAHint": "go to retroachievements.org",
     "editPropsHint": "edit properties",
     "showCommentsHint": "show comments",
-    "removeFromTargetHint": "remove from target"
+    "removeFromTargetHint": "remove from target",
+    "noProgressionMsg": "Progression is not available",
+    "gameBeatenMsg": "You have beaten the game",
+    "gameMasteredMsg": "You have mastered the game",
+    "gameCompletedMsg": "You have completed the game",
+    "unlockProgressMsg": "Unlocked *** cheevos",
+    "gameRating": "game rating"
 }

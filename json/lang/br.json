@@ -1,4 +1,9 @@
 {
+    "noProgressionMsg": "Progressão não disponível",
+    "gameBeatenMsg": "Você beat o jogo",
+    "gameMasteredMsg": "Você mastered o jogo",
+    "gameCompletedMsg": "Você completed o jogo",
+    "unlockProgressMsg": "*** conquistas desbloqueadas",
     "forceReloadHint": "forçar recarregamento",
     "totalAwardsHint": "total de conquistas",
     "beatenSoftHint": "beaten no softcore",
