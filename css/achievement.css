@@ -116,7 +116,7 @@
   --overlay-earned-soft: url("../assets/img/overlay_sets/sonic/earned_soft.png");
 }
 
-.achivs [data-type="missable"] .preview-container::before {
+.achivs [data-type="missable"]:not(.earned) .preview-container::before {
   filter: invert(1)
 }
 

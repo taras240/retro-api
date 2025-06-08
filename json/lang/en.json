@@ -144,6 +144,7 @@
     "unlockRate": "Unlock Rate",
     "unlockedBy": "Unlocked by",
     "casual_": "(Casual)",
+    "casual": "casual",
     "unlockDate": "Unlock Date",
     "playersTotal": "Players Total",
     "highestAward": "Highest Awards",
@@ -175,5 +176,8 @@
     "gameMasteredMsg": "You have mastered the game",
     "gameCompletedMsg": "You have completed the game",
     "unlockProgressMsg": "Unlocked *** cheevos",
-    "gameRating": "game rating"
+    "gameRating": "game rating",
+    "masteryUnlocked": "Mastery Unlocked",
+    "gameBeaten": "Game Beaten",
+    "achievementUnlocked": "Achievement Unlocked"
 }
