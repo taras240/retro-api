@@ -523,6 +523,10 @@
   text-align: center;
 }
 
+.compact>.cheevos__group-header {
+  display: none;
+}
+
 .cheevos__group-title {
   position: relative;
 
