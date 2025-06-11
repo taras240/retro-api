@@ -180,5 +180,6 @@
     "masteryUnlocked": "Mastery Unlocked",
     "gameBeaten": "Game Beaten",
     "achievementUnlocked": "Achievement Unlocked",
-    "showCheevosGroupTitle": "Show Group Titles"
+    "showCheevosGroupTitle": "Show Group Titles",
+    "showCheevoUnlockRateBar": "Unlock Rate Bar"
 }

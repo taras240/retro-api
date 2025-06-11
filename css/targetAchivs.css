@@ -509,3 +509,18 @@
   opacity: 0.8;
   scale: 0.99;
 }
+
+.target__cheevo-progression {
+  display: none;
+  position: absolute;
+  width: var(--progression);
+  height: 100%;
+  background-color: var(--selection-color);
+  top: 0;
+  left: 0;
+  border-right: 1px solid var(--accent-color);
+}
+
+.show-progression-bar .target__cheevo-progression {
+  display: block;
+}
