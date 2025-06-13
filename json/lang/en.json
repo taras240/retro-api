@@ -181,5 +181,6 @@
     "gameBeaten": "Game Beaten",
     "achievementUnlocked": "Achievement Unlocked",
     "showCheevosGroupTitle": "Show Group Titles",
-    "showCheevoUnlockRateBar": "Unlock Rate Bar"
+    "showCheevoUnlockRateBar": "Unlock Rate Bar",
+    "releaseVersion": "Release Version"
 }
