@@ -190,6 +190,10 @@
   pointer-events: none;
 }
 
+.left-margin-preview .game-card_image {
+  object-position: 80% 50%;
+}
+
 .hor-line-decorate {
   height: 5px;
   background-color: var(--accent-color);
