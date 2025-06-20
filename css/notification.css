@@ -92,6 +92,7 @@
     overflow: hidden;
 }
 
+.compact-timestamp .notification_timestamp,
 .notification_timestamp.hidden {
     height: 0;
     opacity: 0;

@@ -170,21 +170,6 @@ input:checked+.settings-input,
   opacity: 0;
 }
 
-.color-input {
-  background-color: transparent;
-  cursor: pointer;
-  overflow: hidden;
-  width: 30px;
-  transition: 0.2s;
-}
-
-.color-input:hover {
-  transform: scale(1.05);
-}
-
-.color-input:active {
-  transform: scale(0.95);
-}
 
 .svg-button {
   background-color: transparent;

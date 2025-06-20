@@ -122,11 +122,11 @@
 }
 
 .rp__game-time {
-    font-family: monospace;
+    /* font-family: monospace; */
     /* position: absolute; */
     grid-row: span 2;
     font-size: 2.5rem;
-    font-weight: 600;
+    font-weight: bold;
     place-self: center;
     text-wrap: nowrap;
     white-space: nowrap;

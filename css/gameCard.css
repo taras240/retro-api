@@ -119,6 +119,9 @@
   padding: 0;
 }
 
+.game-card__genres-container.hidden {
+  display: none;
+}
 
 .game-card__info {
   font-size: 1.1rem;
