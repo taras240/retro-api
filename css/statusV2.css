@@ -132,6 +132,11 @@
     white-space: nowrap;
 }
 
+.time__blinked-dots {
+    font-weight: inherit;
+    font-size: inherit;
+}
+
 /**--------RICH PRESENCE----------  */
 .rp__rich-presence {
     width: 100%;
