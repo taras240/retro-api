@@ -164,7 +164,7 @@
 }
 
 .cheevo-genre__icon {
-    font-size: 1.2em;
+    font-size: inherit;
     margin-left: 0.15rem;
     text-align: center;
 }
