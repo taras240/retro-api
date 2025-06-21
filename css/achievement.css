@@ -31,7 +31,8 @@
   justify-content: center;
   flex-wrap: wrap;
   max-width: 100%;
-  overflow: scroll;
+  overflow-x: hidden;
+  overflow-y: scroll;
   width: 100%;
   flex: 1;
   align-content: start;
