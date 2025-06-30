@@ -159,8 +159,13 @@
 }
 
 .image-icon {
-    height: 1rem;
+    height: 1em;
     display: inline-block;
+
+}
+
+.image-icon.console-icon {
+    margin-bottom: -0.2em;
 }
 
 .cheevo-genre__icon {
