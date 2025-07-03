@@ -388,6 +388,7 @@
   position: absolute;
   top: .25rem;
   right: .25rem;
+  z-index: 2;
 }
 
 .target__aotw-container .prev {
