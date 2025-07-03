@@ -207,5 +207,6 @@
     "exportSettingsMessage": "How do you want to export the settings?",
     "download": "Download",
     "copyToClipboard": "Copy to clipboard",
-    "sendToDS": "Send to Discord"
+    "sendToDS": "Send to Discord",
+    "strictMode": "Strict Mode"
 }
