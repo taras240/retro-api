@@ -180,7 +180,7 @@
 }
 
 .achiv-block.earned.hardcore .achiv-preview {
-  border: 1px solid gold;
+  border: 2px solid var(--gold-color);
 }
 
 .achiv-block.earned .achiv-preview {

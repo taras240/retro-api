@@ -75,7 +75,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 3px;
+  width: 2px;
   height: 100%;
   background-color: var(--mark-color);
   box-shadow: 0 0 3px 0px var(--mark-color);
@@ -84,11 +84,15 @@
 }
 
 .target-achiv.earned::before {
-  --mark-color: silver;
+  --mark-color: var(--silver-color);
 }
 
 .target-achiv.earned.hardcore::before {
-  --mark-color: gold;
+  --mark-color: var(--gold-color);
+}
+
+.target-achiv.earned.hardcore.rare::before {
+  --mark-color: var(--rare-color);
 }
 
 .target-achiv:not(.hardcore).highlight::before {
@@ -134,10 +138,36 @@
 }
 
 .target-achiv.border .prev {
-  --image-offset: -5px;
-  border: 3px solid var(--mark-color);
+  /* --image-offset: 5px; */
+  /* border: 3px solid var(--mark-color);
   border-radius: 10px;
-  box-shadow: 0 0 5px -1px var(--mark-color);
+  box-shadow: 0 0 5px -1px var(--mark-color); */
+  --image-offset: -3px;
+
+  border: 1px solid var(--mark-color);
+  border-radius: 2px;
+  box-shadow: var(--border-shadow);
+
+}
+
+.target-achiv:not(.earned) .prev {
+
+  --mark-color: var(--accent-color);
+}
+
+.target-achiv.earned {
+  --mark-color: var(--silver-color);
+  --border-shadow: var(--silver-shadow);
+}
+
+.target-achiv.earned.hardcore {
+  --mark-color: var(--gold-color);
+  --border-shadow: var(--gold-shadow);
+}
+
+.target-achiv.earned.hardcore.rare {
+  --mark-color: var(--rare-color);
+  --border-shadow: var(--rare-shadow);
 }
 
 .target-achiv .prev::before,
@@ -202,12 +232,12 @@
 }
 
 .target-achiv.earned {
-  --mark-color: silver;
+  --mark-color: var(--silver-color);
   --icon-url: url(../assets/img/military_medal.svg);
 }
 
 .target-achiv.earned.hardcore {
-  --mark-color: gold;
+  --mark-color: var(--gold-color);
 }
 
 .target-achiv.show-hard-anim {
@@ -520,6 +550,9 @@
   top: 0;
   left: 0;
   border-right: 1px solid var(--accent-color);
+
+  background-color: var(--main-color);
+  box-shadow: -10px 0 15px 5px var(--accent-color);
 }
 
 .show-progression-bar .target__cheevo-progression {

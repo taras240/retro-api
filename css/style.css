@@ -78,6 +78,12 @@ img {
   --shadow-color: #000000;
   --yellow-color: #c39c30;
   --blue-color: #3663d8;
+  --gold-color: rgb(255 184 78);
+  --gold-shadow: 0 0 2px 1px rgb(255 184 78 / 60%), 0 0 16px 1px rgb(255 184 78 / 40%);
+  --silver-color: rgb(192, 192, 192);
+  --silver-shadow: 0 0 2px 1px rgb(192 192 192 / 60%), 0 0 16px 1px rgb(192 192 192 / 40%);
+  --rare-color: rgb(255, 0, 255);
+  --rare-shadow: 0 0 2px 1px rgb(255 0 255 / 60%), 0 0 16px 1px rgb(255 0 255 / 40%);
   --orange-gradient: linear-gradient(to right,
       #ee0979,
       #ff6a00);
