@@ -170,30 +170,31 @@
   --border-shadow: var(--rare-shadow);
 }
 
-.target-achiv .prev::before,
-.target-achiv .prev::after {
+
+
+.target-achiv.overlay .prev-lock-overlay {
   position: absolute;
-  content: "";
-  aspect-ratio: 1;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-position: center;
-  background-size: contain;
-  image-rendering: pixelated;
+  bottom: 0rem;
+  left: 0rem;
+  background-color: var(--main-color);
+  width: 100%;
+  height: 30%;
+  border-radius: 2px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.2rem;
 }
 
-/* .target-achiv.border .prev::after {
-  width: calc(100% + 1.5rem);
-  background-image: url(../assets/img/game-border.webp);
-  z-index: 2;
-} */
-/* 
-.target-achiv.border .prev::before {
-  width: calc(100% - 0.2rem);
-} */
-.target-achiv.overlay .prev::before {
-  height: 50%;
+.target-achiv.earned .prev-lock-overlay {
+  opacity: 0;
+}
+
+.prev-lock-overlay::before {
+  content: "";
+  height: 0.8rem;
   aspect-ratio: 1;
   mask-image: url(../assets/img/lock.svg);
   mask-repeat: no-repeat;
@@ -203,9 +204,16 @@
   transition: .2s;
 }
 
+.prev-lock-overlay::after {
+  content: "LOCKED";
+}
 
-.target-achiv.earned .prev::before {
-  opacity: 0;
+
+.prev-bg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: var(--secondary-color);
 }
 
 .prev-img {
@@ -219,17 +227,31 @@
   transition: filter 0.2s;
 }
 
+[data-preview-filter="blur"] .prev-img {
+  filter: blur(2px);
+}
+
+[data-preview-filter="opacity"] .prev-img {
+  filter: opacity(0.3);
+}
+
+[data-preview-filter="grayscale"] .prev-img {
+  filter: grayscale(1);
+}
+
+[data-preview-filter="disabled"] .prev-img {
+  filter: none;
+}
+
 .target-achiv.border .prev-img {
   padding: 0.25rem;
 }
 
 .target-achiv.earned .prev-img {
-  filter: grayscale(0.1);
+  filter: grayscale(0) opacity(1) blur(0);
 }
 
-.target-achiv.earned.hardcore .prev-img {
-  filter: grayscale(0);
-}
+
 
 .target-achiv.earned {
   --mark-color: var(--silver-color);

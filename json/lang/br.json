@@ -202,5 +202,6 @@
     "download": "Baixar",
     "copyToClipboard": "Copiar para o clipboard",
     "sendToDS": "Enviar para o Discord",
-    "strictMode": "Modo Estrito"
+    "strictMode": "Modo Estrito",
+    "lockBadgeFilter": "Filtro de Bloqueados"
 }

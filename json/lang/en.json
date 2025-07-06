@@ -208,5 +208,6 @@
     "download": "Download",
     "copyToClipboard": "Copy to clipboard",
     "sendToDS": "Send to Discord",
-    "strictMode": "Strict Mode"
+    "strictMode": "Strict Mode",
+    "lockBadgeFilter": "Locked Preview Filter"
 }
