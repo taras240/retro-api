@@ -128,6 +128,7 @@
   aspect-ratio: 1;
   cursor: default;
   z-index: 1;
+  margin: 1px;
 }
 
 .achivs[data-overlay="border"] .achiv-block {
@@ -179,8 +180,16 @@
   display: none;
 }
 
-.achiv-block.earned.hardcore .achiv-preview {
+.achiv-block.earned.hardcore .preview-container {
   border: 2px solid var(--gold-color);
+}
+
+.achiv-block.earned.hardcore.rare .preview-container {
+  border: 2px solid var(--rare-color);
+}
+
+.achiv-block.earned .preview-container {
+  border: 2px solid var(--silver-color);
 }
 
 .achiv-block.earned .achiv-preview {
@@ -197,22 +206,81 @@
   position: relative;
   overflow: hidden;
   transition: opacity 0.2s, translate 0.2s, scale 50ms;
+  border: 2px solid var(--selection-color);
+  border-radius: 2px;
 }
+
+.achiv-block.overlay .prev-lock-overlay {
+  --font-size: calc(var(--achiv-height)/7);
+  display: block;
+  position: absolute;
+  bottom: 0rem;
+  left: 0rem;
+  background-color: var(--main-color);
+  width: 100%;
+  height: 30%;
+  border-radius: 2px;
+  font-size: var(--font-size);
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.achiv-block.earned .prev-lock-overlay {
+  opacity: 0;
+}
+
+.achiv-block .prev-lock-overlay::before {
+  content: "";
+  height: var(--font-size);
+  aspect-ratio: 1;
+  mask-image: url(../assets/img/lock.svg);
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  background-color: var(--font-color);
+  z-index: 1;
+  transition: .2s;
+}
+
+/* 
+.prev-lock-overlay::after {
+  content: "LOCKED";
+} */
+
 
 .achiv-preview {
   position: relative;
   height: 100%;
   aspect-ratio: 1;
+  filter: blur(1.2px);
   filter: grayscale(1);
   image-rendering: pixelated;
   border-radius: 2px;
   overflow: hidden;
 }
 
+[data-preview-filter="blur"] .achiv-preview {
+  filter: blur(2px);
+}
+
+[data-preview-filter="opacity"] .achiv-preview {
+  filter: opacity(0.3);
+}
+
+[data-preview-filter="grayscale"] .achiv-preview {
+  filter: grayscale(1);
+}
+
+[data-preview-filter="disabled"] .achiv-preview {
+  filter: none;
+}
+
 /* .achiv-block.overlay:not(:active) .preview-container::after, */
 .achiv-block.overlay:not(:active) .preview-container::before {
   position: absolute;
-  content: "";
+  /* content: ""; */
   aspect-ratio: 1;
   top: 0;
   left: 0;

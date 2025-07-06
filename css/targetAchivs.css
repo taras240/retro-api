@@ -171,8 +171,12 @@
 }
 
 
+.prev-lock-overlay {
+  display: none;
+}
 
 .target-achiv.overlay .prev-lock-overlay {
+  display: block;
   position: absolute;
   bottom: 0rem;
   left: 0rem;
@@ -192,7 +196,7 @@
   opacity: 0;
 }
 
-.prev-lock-overlay::before {
+.target-achiv .prev-lock-overlay::before {
   content: "";
   height: 0.8rem;
   aspect-ratio: 1;
