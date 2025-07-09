@@ -209,5 +209,6 @@
     "copyToClipboard": "Copy to clipboard",
     "sendToDS": "Send to Discord",
     "strictMode": "Strict Mode",
-    "lockBadgeFilter": "Locked Preview Filter"
+    "lockBadgeFilter": "Locked Preview Filter",
+    "overlay": "Overlay"
 }

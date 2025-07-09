@@ -175,8 +175,8 @@
   display: none;
 }
 
-.target-achiv.overlay .prev-lock-overlay {
-  display: block;
+.section.show-overlay .prev-lock-overlay {
+  display: flex;
   position: absolute;
   bottom: 0rem;
   left: 0rem;
@@ -186,7 +186,6 @@
   border-radius: 2px;
   font-size: 0.8rem;
   font-weight: bold;
-  display: flex;
   justify-content: center;
   align-items: center;
   gap: 0.2rem;
