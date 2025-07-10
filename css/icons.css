@@ -405,6 +405,14 @@
     mask-image: url(../assets/img/playlist-play.svg);
 }
 
+.sort-icon {
+    mask-image: url(../assets/img/sort.svg);
+}
+
+.filter-icon {
+    mask-image: url(../assets/img/filter.svg);
+}
+
 .close-icon {
     mask-image: url(../assets/img/close.svg);
 }
