@@ -180,6 +180,8 @@
     justify-content: start;
     gap: 5px;
     align-items: center;
+    overflow-y: scroll;
+    height: 0.4rem;
     /* padding: 0.25rem 0 0.5rem; */
 }
 
@@ -187,7 +189,7 @@
     font-size: inherit;
     display: flex;
     flex-direction: row;
-    gap: 5px;
+    gap: 0.5rem;
     flex-basis: 1rem;
     flex-grow: 2;
     flex-shrink: 0;
@@ -196,10 +198,10 @@
 .rp__progression-point {
     font-size: inherit;
     --color: var(--font-color);
-    flex-basis: 0.5rem;
+    height: 0.4rem;
+    flex-basis: 0.4rem;
     flex-grow: 1;
     flex-shrink: 0;
-    height: 0.4rem;
     border: 1px solid var(--color);
     border-radius: 500px;
     transition: background-color 0.2s, border-color 0.2s;
@@ -218,6 +220,7 @@
     --color: var(--accent-color);
     box-shadow: 0 0 2px 0px var(--color);
     background-color: var(--color);
+    border-color: transparent;
 }
 
 .rp__progression-point.win.earned {
