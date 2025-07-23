@@ -176,11 +176,11 @@
 .rp__progression-points {
     width: 100%;
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     justify-content: start;
     gap: 5px;
     align-items: center;
-    overflow-y: scroll;
+    overflow-x: scroll;
     height: 0.4rem;
     /* padding: 0.25rem 0 0.5rem; */
 }
