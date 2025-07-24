@@ -221,6 +221,8 @@
     box-shadow: 0 0 2px 0px var(--color);
     background-color: var(--color);
     border-color: transparent;
+    border: none;
+    box-shadow: none;
 }
 
 .rp__progression-point.win.earned {
@@ -317,13 +319,16 @@
     width: var(--earnedRate);
     height: 100%;
     background-color: var(--accent-color);
-    box-shadow: 0 0 2px 0px var(--accent-color);
+    /* box-shadow: 0 0 2px 0px var(--accent-color); */
     border-radius: inherit;
 }
 
 .rp__progressbar-total::before {
+    --margin: 1px;
     content: "";
     background-color: lime;
+    width: calc(var(--earnedRate) - var(--margin)*2);
+    margin-left: var(--margin);
 }
 
 .rp__progressbar-value {
