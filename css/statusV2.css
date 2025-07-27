@@ -307,10 +307,10 @@
 .rp__progressbar-total {
     position: relative;
     width: 100%;
-    height: calc(0.4rem - 2px);
+    height: calc(0.4rem - 1px);
     border-radius: 5rem;
     background-color: var(--selection-color);
-    margin: 1px 0;
+    margin: 0 0 1px;
 }
 
 .rp__progressbar-total::before,
