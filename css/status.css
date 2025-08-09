@@ -11,6 +11,8 @@
   border-radius: var(--border-radius);
   display: flex;
   position: relative;
+  cursor: grab;
+
 }
 
 .status__section::after {
@@ -72,7 +74,6 @@
   background: var(--main-color);
   height: 100%;
   border-radius: var(--border-radius);
-  cursor: grab;
   transform-style: preserve-3d;
   transform: rotateX(0deg);
   font-size: inherit;

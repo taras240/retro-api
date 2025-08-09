@@ -12,6 +12,7 @@
     display: flex;
     flex-direction: column;
     padding-bottom: var(--border-radius);
+    cursor: grab;
 }
 
 /* .rp__section:not(.show-cheevos-list) {
@@ -59,7 +60,6 @@
     flex-direction: row;
     column-gap: 0.5rem;
     padding: 0.5rem 0.5rem;
-    cursor: grab;
 }
 
 .rp__preview-container {

@@ -195,7 +195,7 @@
 .header-container {
     /* --font-color: var(--main-color); */
     position: relative;
-    cursor: grab;
+    /* cursor: grab; */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -309,7 +309,39 @@
     opacity: 1;
 }
 
+.section.grab-hover {
+    cursor: grab;
+}
+
 /**---------[ Resizer ]---------------------------- */
+.resize-hover.hover-S,
+.resize-hover.hover-N,
+.section.resized.resised-S,
+.section.resized.resised-N {
+    cursor: ns-resize !important;
+}
+
+.resize-hover.hover-W,
+.section.hover-E,
+.section.resized.resised-W,
+.section.resized.resised-E {
+    cursor: ew-resize !important;
+}
+
+.resize-hover.hover-NW,
+.resize-hover.hover-SE,
+.section.resized.resised-SE,
+.section.resized.resised-NW {
+    cursor: se-resize !important;
+}
+
+.resize-hover.hover-NE,
+.resize-hover.hover-SW,
+.section.resized.resised-SW,
+.section.resized.resised-NE {
+    cursor: sw-resize !important;
+}
+
 .resizer {
     position: absolute;
     bottom: 0px;

@@ -7,7 +7,7 @@
     height: auto !important;
     min-width: 11rem;
     min-height: 5rem;
-    cursor: grab;
+    /* cursor: grab; */
 }
 
 .hide-bg.stats_section.section:not(:hover) {
