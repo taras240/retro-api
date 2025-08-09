@@ -210,5 +210,6 @@
     "sendToDS": "Send to Discord",
     "strictMode": "Strict Mode",
     "lockBadgeFilter": "Locked Preview Filter",
-    "overlay": "Overlay"
+    "overlay": "Overlay",
+    "contrastHighlight": "Highlight Unlocked"
 }

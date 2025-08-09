@@ -256,7 +256,13 @@
   filter: grayscale(0) opacity(1) blur(0);
 }
 
+.section.contrast-highlight .target-achiv.earned {
+  background: var(--accent-color);
+}
 
+.section.contrast-highlight .target-achiv.earned:hover {
+  background-color: var(--accent-color) !important;
+}
 
 .target-achiv.earned {
   --mark-color: var(--silver-color);
