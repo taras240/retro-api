@@ -431,6 +431,10 @@
     mask-image: url(../assets/img/target.svg);
 }
 
+.external-icon {
+    mask-image: url(../assets/img/external.svg);
+}
+
 .tweak-icon {
     mask-image: url(../assets/img/tune.svg)
 }
