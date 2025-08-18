@@ -11,6 +11,8 @@
   <link rel="icon" href="./favicon.ico">
   <title>RAchievements</title>
   <link rel="stylesheet" href="./dist/style.css" />
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#2196f3">
 
 </head>
 
@@ -366,6 +368,15 @@
     };
   </script>
   <script defer src="/_vercel/insights/script.js"></script>
+  <script>
+    // // sw.js
+    // self.addEventListener("install", () => {
+    //   console.log("Service Worker Installed");
+    // });
+    // if ("serviceWorker" in navigator) {
+    //   navigator.serviceWorker.register("/sw.js");
+    // }
+  </script>
 </body>
 
 </html>
