@@ -632,14 +632,14 @@
 
 .lines::before {
   width: 6rem;
-  height: 200px;
-  top: 50%;
+  height: 500px;
+  top: 60%;
   left: 75%;
   transform: rotateZ(35deg) translate(-50%, -50%);
 }
 
 .lines::after {
-  height: 200px;
+  height: 500px;
   width: 4rem;
   top: 0%;
   left: 35%;
