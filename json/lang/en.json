@@ -214,5 +214,6 @@
     "contrastHighlight": "Highlight Unlocked",
     "logParser": "Log Parser",
     "enableLogParser": "Enable Log Parser",
-    "selectRarchLog": "Select Retroarch Log"
+    "selectRarchLog": "Select Retroarch Log",
+    "timeToUnlock": "Time To Unlock"
 }
