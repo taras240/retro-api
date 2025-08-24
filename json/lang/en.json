@@ -215,5 +215,6 @@
     "logParser": "Log Parser",
     "enableLogParser": "Enable Log Parser",
     "selectRarchLog": "Select Retroarch Log",
-    "timeToUnlock": "Time To Unlock"
+    "timeToUnlock": "Time To Unlock",
+    "clearCache": "Clear Cache"
 }
