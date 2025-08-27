@@ -342,7 +342,7 @@
 }
 
 .achiv-details-block__description {
-  background-color: var(--accent-color);
+  background-color: var(--selection-color);
   border-radius: var(--border-radius);
   padding: 0.1rem 0.5rem;
 }

@@ -54,18 +54,29 @@
 }
 
 .badge_transparent {
-    --badge-bg-color: var(--selection-color);
+    --badge-bg-color: #4d4d4d5e;
     --badge-font-color: var(--accent-color);
     border: 1px solid var(--accent-color);
     /* test */
     font-weight: normal;
     font-size: 1rem;
     border: 1px solid gray;
-    background: #4d4d4d5e;
+    background: var(--badge-bg-color);
     color: var(--font-color);
-    font-size: 1rem;
 }
 
+.badge_selection {
+    --badge-bg-color: var(--selection-color);
+    --badge-font-color: var(--font-color);
+    display: inline-block !important;
+    border: none;
+    /* test */
+    font-weight: normal;
+    font-size: 1rem;
+    background: var(--badge-bg-color);
+    color: var(--badge-font-color);
+    padding: 0 0.5rem;
+}
 
 .badge_black {
     font-weight: normal;
