@@ -642,11 +642,11 @@ input:checked+.checkbox-input::before {
     width: 25rem;
     /* width: fit-content; */
     margin: 1px;
-    padding: 8px 16px;
+    padding: 0.5rem 1rem;
 
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: start;
     gap: 4px;
 
     background-color: var(--main-color);
@@ -665,6 +665,10 @@ input:checked+.checkbox-input::before {
     transition: opacity 0.2s;
 }
 
+.achiv-details-block {
+    gap: 0.5rem;
+}
+
 .popup.hint {
     width: auto;
     min-width: 10rem;
@@ -676,12 +680,13 @@ input:checked+.checkbox-input::before {
 
 .popup h3 {
     position: relative;
-    font-size: 1.15rem;
-    font-weight: 500;
+    font-size: 1.2rem;
+    font-weight: bold;
+    /* background-color: var(--selection-color); */
 
 }
 
-.popup::before {
+/* .popup::before {
     content: '';
     position: absolute;
     left: 0;
@@ -691,7 +696,7 @@ input:checked+.checkbox-input::before {
     background-color: var(--accent-color);
     box-shadow: 0 0 5px 0px var(--accent-color);
     z-index: 100;
-}
+} */
 
 .popup.left-side {
     transform: translateX(calc(-100% - 35px));
