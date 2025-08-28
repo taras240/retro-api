@@ -328,44 +328,6 @@
 
 }
 
-.achiv-details-block .points {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.points p {
-  display: flex;
-  align-items: center;
-  gap: 0.2rem;
-}
-
-.achiv-details-block__description {
-  background-color: var(--selection-color);
-  border-radius: var(--border-radius);
-  padding: 0.1rem 0.5rem;
-}
-
-.achiv-details-block__props p {
-  margin-bottom: 0.2rem;
-}
-
-.popup__prop-title {
-  text-transform: uppercase;
-  color: var(--accent-color);
-}
-
-.popup__value-divider {
-  color: var(--accent-color);
-  opacity: 0.6;
-}
-
-.popup.visible {
-  visibility: visible;
-  opacity: 1;
-  transition: 0.2s;
-}
 
 /**---------- MARIO_ACTION-------------------- */
 .coin__container,

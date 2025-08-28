@@ -29,7 +29,7 @@
         "9": {
             "ID": 9,
             "Title": "That Was Easy",
-            "Description": "Complete the first act in Green Hill Zone",
+            "Description": "Complete the first act in Green Hill Zone without dying, collect 1000 poits, kill 100 monsters",
             "Points": 3,
             "TrueRatio": 3,
             "Type": "progression",

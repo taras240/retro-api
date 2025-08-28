@@ -638,26 +638,41 @@ input:checked+.checkbox-input::before {
 
 .popup {
     position: absolute;
+    background-color: var(--main-color);
+    box-shadow: 0 0 3px 0 black;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    visibility: hidden;
+    opacity: 0;
+    font-size: 1.0rem;
+    z-index: 1000;
+    transition: opacity 0.2s;
+
+}
+
+.hint-popup {
+    padding: 0.5rem 1rem;
+    width: auto;
+    min-width: 10rem;
+}
+
+.cheevo-popup {
+    --header-font-color: var(--font-color);
+    --header-bg-color: var(--selection-color);
+    position: absolute;
     max-width: 25rem;
     width: 25rem;
-    /* width: fit-content; */
-    margin: 1px;
-    padding: 0.5rem 1rem;
-
+    /* padding: 0.5rem 1rem; */
     display: flex;
     flex-direction: column;
     justify-content: start;
-    gap: 4px;
-
     background-color: var(--main-color);
     /* background: linear-gradient(to top left,
-        var(--main-color),
-        var(--secondary-color)); */
-    box-shadow: 0 0 2px 0 black;
-
+            var(--main-color),
+            var(--secondary-color)); */
+    box-shadow: 0 0 3px 0 black;
     border-radius: var(--border-radius);
     overflow: hidden;
-
     visibility: hidden;
     opacity: 0;
     font-size: 1.0rem;
@@ -665,14 +680,118 @@ input:checked+.checkbox-input::before {
     transition: opacity 0.2s;
 }
 
-.achiv-details-block {
-    gap: 0.5rem;
+.cheevo-popup {
+    /* gap: 0.25rem; */
 }
 
-.popup.hint {
+.cheevo-popup__header {
+    --font-color: var(--header-font-color);
+    position: relative;
+    width: 100%;
+    height: fit-content;
+    background: var(--header-bg-color);
+    padding: 0.5rem 1rem 0;
+    color: var(--header-font-color);
+}
+
+.cheevo-popup.hardcore {
+    --header-font-color: black;
+    --header-bg-color: var(--gold-color);
+}
+
+.cheevo-popup.softcore {
+    --header-font-color: black;
+    --header-bg-color: var(--silver-color);
+}
+
+.cheevo-popup__header::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--header-bg-color);
+    box-shadow: 0 0 5px 0px var(--accent-color);
+    z-index: 0;
+    opacity: 1;
+    mask-image: url(../assets/img/triangle-bg.webp);
+    mask-size: cover;
+    mix-blend-mode: multiply;
+    transform: rotateZ(180deg);
+    opacity: 0.5;
+}
+
+
+
+.cheevo-popup .points {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+
+
+.cheevo-popup__header>* {
+    margin-bottom: 0.5rem;
+}
+
+.cheevo-popup__title {
+    font-size: 1.2rem;
+    white-space: nowrap;
+    text-wrap: nowrap;
+    width: 100%;
+    overflow-x: scroll;
+}
+
+.points p {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+.cheevo-popup__icons {
+    display: flex;
+    row-gap: 0.25rem;
+    column-gap: 0.5rem;
+}
+
+.cheevo-popup__description {
+    background-color: var(--selection-color);
+    border-radius: var(--border-radius);
+    padding: 0.1rem 0.5rem;
+    color: var(--header-font-color);
+}
+
+.cheevo-popup__props {
+    padding: 0.5rem 1rem;
+}
+
+.cheevo-popup__props p {
+    margin-bottom: 0.2rem;
+}
+
+.popup__prop-title {
+    text-transform: uppercase;
+    color: var(--accent-color);
+}
+
+.popup__value-divider {
+    color: var(--accent-color);
+    opacity: 0.6;
+}
+
+.popup.visible {
+    visibility: visible;
+    opacity: 1;
+    transition: 0.2s;
+}
+
+/* .popup.hint {
     width: auto;
     min-width: 10rem;
-}
+} */
 
 .popup.hint::before {
     display: none;
@@ -686,17 +805,7 @@ input:checked+.checkbox-input::before {
 
 }
 
-/* .popup::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 5px;
-    height: 100%;
-    background-color: var(--accent-color);
-    box-shadow: 0 0 5px 0px var(--accent-color);
-    z-index: 100;
-} */
+
 
 .popup.left-side {
     transform: translateX(calc(-100% - 35px));
