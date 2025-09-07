@@ -216,5 +216,9 @@
     "enableLogParser": "Enable Log Parser",
     "selectRarchLog": "Select Retroarch Log",
     "timeToUnlock": "Time To Unlock",
-    "clearCache": "Clear Cache"
+    "clearCache": "Clear Cache",
+    "gameCard": "Game Card",
+    "widgetConfigHint": "open config",
+    "close": "Close",
+    "fullscreen": "Fullscreen"
 }

@@ -161,7 +161,7 @@ card-3d::before {
   color: black;
   font-size: 1em;
   font-weight: bold;
-  padding: 0 .2em 2px;
+  /* padding: 0 .2em 2px; */
   border-radius: 0 var(--border-radius) 0 var(--border-radius);
   line-height: 1em;
 }

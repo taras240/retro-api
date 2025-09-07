@@ -135,52 +135,6 @@
   /* border-top: 1px solid var(--accent-color); */
 }
 
-.game-card__title-container::after,
-.game-card__title-container::before {
-  content: "";
-  position: absolute;
-  width: 3rem;
-  aspect-ratio: 1;
-  background-color: var(--award-color);
-  mask-image: var(--award-icon-url);
-  mask-size: contain;
-  mask-position: bottom;
-  mask-repeat: no-repeat;
-  top: 0;
-  z-index: -2;
-
-}
-
-.game-card_section {
-  --mastered-width: 0rem;
-}
-
-[data-award="mastered"],
-[data-award="completed"] {
-  --mastered-width: 3rem
-}
-
-[data-award="completed"] .game-card__title-container::after,
-[data-award="mastered"] .game-card__title-container::after {
-  right: 0;
-  --award-icon-url: url(../assets/img/trophy.svg);
-}
-
-[data-progression-award="beaten-softcore"] .game-card__title-container::before,
-[data-progression-award="beaten"] .game-card__title-container::before {
-  --award-icon-url: url(../assets/img/medal.svg);
-  right: var(--mastered-width);
-}
-
-[data-award="completed"] .game-card__title-container::after,
-[data-progression-award="beaten-softcore"] .game-card__title-container::before {
-  --award-color: silver;
-}
-
-[data-progression-award="beaten"] .game-card__title-container::before,
-[data-award="mastered"] .game-card__title-container::after {
-  --award-color: gold;
-}
 
 
 .game-card_image {
@@ -224,9 +178,48 @@
   }
 }
 
-.game-card-description {
-  display: none;
+[data-progression-award="beaten-softcore"] .game-card__description {
+  /* background: var(--silver-color);
+  mask-image: url(../assets/img/triangle-bg.webp);
+  mask-size: cover; */
+  /* mix-blend-mode: multiply; */
+  /* background: var(--selection-color); */
+  /* display: none; */
   /*! HIDE PROPS*/
+}
+
+.game-card__progression-award,
+.game-card__award {
+  display: none;
+  height: 1.4rem;
+  mask-size: cover;
+  mask-position: bottom;
+  mask-repeat: no-repeat;
+  transform: translateY(20%);
+}
+
+.game-card__award {
+  width: 1rem;
+  --award-icon-url: url(../assets/img/trophy.svg);
+  mask-image: var(--award-icon-url);
+}
+
+.game-card__progression-award {
+  width: 1.3rem;
+  --award-icon-url: url(../assets/img/medal.svg);
+  mask-image: var(--award-icon-url);
+}
+
+[data-award="mastered"] .game-card__award,
+[data-progression-award="beaten"] .game-card__progression-award {
+  display: inline-block;
+  background-color: var(--gold-color);
+}
+
+[data-award="completed"] .game-card__award,
+[data-progression-award="beaten-softcore"] .game-card__progression-award {
+  display: inline-block;
+  background-color: var(--silver-color);
 }
 
 .game-card-info {
