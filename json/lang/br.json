@@ -203,5 +203,20 @@
     "copyToClipboard": "Copiar para o clipboard",
     "sendToDS": "Enviar para o Discord",
     "strictMode": "Modo Estrito",
-    "lockBadgeFilter": "Filtro de Bloqueados"
+    "lockBadgeFilter": "Filtro de Bloqueados",
+    "overlay": "Sobreposição",
+    "contrastHighlight": "Destaque Desbloqueado",
+    "logParser": "Analisador de Log",
+    "enableLogParser": "Ativar Analisador de Log",
+    "selectRarchLog": "Selecionar Log do Retroarch",
+    "timeToUnlock": "Tempo para Desbloquear",
+    "clearCache": "Limpar Cache",
+    "gameCard": "Cartão do Jogo",
+    "widgetConfigHint": "abrir configuração",
+    "close": "Fechar",
+    "fullscreen": "Tela Cheia",
+    "previewType": "Tipo de Imagem",
+    "boxart": "Capa",
+    "ingame": "No Jogo",
+    "titleScreen": "Tela de Título"
 }

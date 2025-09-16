@@ -201,5 +201,20 @@
     "copyToClipboard": "Скопіювати в буфер",
     "sendToDS": "Відправити в Discord",
     "strictMode": "Строгий режим",
-    "lockBadgeFilter": "Ефект забл. досягнення"
+    "lockBadgeFilter": "Ефект забл. досягнення",
+    "overlay": "Накладка",
+    "contrastHighlight": "Виділення Розблокованого",
+    "logParser": "Парсер Логу",
+    "enableLogParser": "Увімкнути Парсер Логу",
+    "selectRarchLog": "Логфайл Retroarch",
+    "timeToUnlock": "Час для Розблокування",
+    "clearCache": "Очистити Кеш",
+    "gameCard": "Картка Гри",
+    "widgetConfigHint": "відкрити налаштування",
+    "close": "Закрити",
+    "fullscreen": "Повний Екран",
+    "previewType": "Тип зображення",
+    "boxart": "Боксарт",
+    "ingame": "У Грі",
+    "titleScreen": "Стартовий Екран"
 }
