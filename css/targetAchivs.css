@@ -257,7 +257,40 @@
 }
 
 .section.contrast-highlight .target-achiv.earned {
-  background: var(--accent-color);
+  --font-color: black;
+  --main-color: white;
+  --secondary-color: var(--silver-color);
+  color: var(--font-color);
+  /* background: var(--silver-color); */
+
+}
+
+.section.contrast-highlight .target-achiv.earned.hardcore {
+  --font-color: black;
+  --secondary-color: var(--gold-color);
+  color: var(--font-color);
+  /* background: var(--gold-color); */
+
+}
+
+.target__cheevo-bg {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  mask-image: url(../assets/img/triangle-bg.webp);
+  background: var(--selection-color);
+  mask-size: repeat;
+  mask-position: center;
+  image-rendering: pixelated;
+  mix-blend-mode: color-burn;
+}
+
+.section.contrast-highlight .target-achiv.earned .target__cheevo-bg {
+  display: block;
+
 }
 
 .section.contrast-highlight .target-achiv.earned:hover {
