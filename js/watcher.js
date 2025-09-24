@@ -362,8 +362,11 @@ export class Watcher {
 
             this.GAME_DATA.hasZeroPoints && checkForZeroPoints();
             if (cheevosIDs && cheevosIDs.length > 0) {
-                ui.showCheevoAlerts(cheevosIDs);
-                ui.showAwardsAlerts(awardsArray);
+                try {
+                    ui.showCheevoAlerts(cheevosIDs);
+                    ui.showAwardsAlerts(awardsArray);
+                } catch (e) { }
+
                 ui.updateWidgets({ earnedAchievementsIDs: cheevosIDs, isLog });
             }
 
