@@ -16,5 +16,6 @@ test.html
 tools
 constructor
 user
-js
+js/functions/genreParser.js
+js/functions/levelParser.js
 test

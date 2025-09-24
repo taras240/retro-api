@@ -1,0 +1,17 @@
+export const raEdpoints = Object.freeze({
+    userProfile: "API_GetUserProfile.php",
+    gameInfoAndProgress: "API_GetGameInfoAndUserProgress.php",
+    gameTimesInfo: "API_GetGameProgression.php",
+    recentAchieves: "API_GetUserRecentAchievements.php",
+    gameInfo: "API_GetGame.php",
+    extendedGameInfo: "API_GetGameExtended.php",
+    recentlyPlayedGames: "API_GetUserRecentlyPlayedGames.php",
+    userAwards: "API_GetUserAwards.php",
+    userGameRankAndScore: "API_GetUserGameRankAndScore.php",
+    completionProgress: "API_GetUserCompletionProgress.php",
+    gameList: "API_GetGameList.php",
+    userSummary: "API_GetUserSummary.php",
+    achievementOfTheWeek: "API_GetAchievementOfTheWeek.php",
+    comments: "API_GetComments.php",
+    wantToPlay: "API_GetUserWantToPlayList.php",
+});

@@ -280,7 +280,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  mask-image: url(../assets/img/triangle-bg.webp);
+  /* mask-image: url(../assets/img/triangle-bg.webp); */
   background: var(--selection-color);
   mask-size: repeat;
   mask-position: center;
@@ -736,4 +736,14 @@
     transform: rotateZ(-5deg);
     opacity: 0;
   }
+}
+
+.target__badges-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  overflow-x: scroll;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.25rem 0.5rem 0;
 }
