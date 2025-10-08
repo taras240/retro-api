@@ -351,7 +351,7 @@ export class UserStatistic extends Widget {
     async updateChart() {
         if (!this.SHOW_COMPLETION_CHART) return;
         const chartContainer = this.section.querySelector(".stats__chart-container");
-        const completionData = await apiWorker.SAVED_COMPLETION_PROGRESS;//"beaten-hardcore"
+        const completionData = await apiWorker.completionProgress();//"beaten-hardcore"
         const allGames = completionData?.Results ?? [];
         const allGamesCount = allGames.length;
         const masteryRate = allGames.filter(g => g.HighestAwardKind === 'mastered').length / allGamesCount * 100;

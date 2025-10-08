@@ -64,7 +64,7 @@ export class GameList extends Widget {
     async generateGamesSet() {
         const gameID = this.gameSetID = watcher.GAME_DATA?.ID;
         const gamesSet = await loadGamesSet(gameID);
-        const gamesAwards = (await apiWorker.SAVED_COMPLETION_PROGRESS)?.Results;
+        const gamesAwards = (await apiWorker.completionProgress())?.Results;
 
         const header = this.section.querySelector(".widget-header-text");
         const setList = this.section.querySelector(".widget-content__container");

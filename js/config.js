@@ -5,7 +5,7 @@ import { ui } from "./script.js";
 import { UI } from "./ui.js";
 
 const CONFIG_FILE_NAME = "retroApiConfig";
-const CONFIG_VERSION = 3;
+const CONFIG_VERSION = 3.11;
 export class Config {
   //! ----------[ Login information ]------------------
   get version() {
@@ -187,104 +187,8 @@ export class Config {
     if (this.version === CONFIG_VERSION) return;
     try {
 
+      delete this._cfg.apiWorker;
 
-      if (this.ui.update_section?.playTime) {
-        this._cfg.playTime = {
-          ...this._cfg.playTime,
-          ...this.ui.update_section?.playTime
-        };
-      }
-      Object.getOwnPropertyNames(this._cfg.playTime ?? {}).forEach(id => {
-        this.gamesDB[id] = {
-          ...this.gamesDB[id],
-          TimePlayed: this._cfg.playTime[id]
-        }
-      });
-      delete this._cfg.playTime;
-      delete this.ui.update_section?.playTime;
-
-      if (this.ui.game_section?.contextMenuPropertiesItems) {
-        this.ui.game_section.contextMenuPropertiesItems.forEach(item => {
-          let itemName = item.id.replace(/context_show-/gi, "");
-          itemName = "show" + itemName.charAt(0).toUpperCase() + itemName.slice(1);
-          const itemValue = !!item.checked;
-          this.saveUIProperty({ sectionID: "game_section", property: itemName, value: itemValue });
-        });
-        delete this.ui.game_section?.contextMenuPropertiesItems;
-        delete this.ui.game_section?.contextMenuItems;
-        delete this.ui.game_section?.gameInfoElements;
-      }
-      const notes = this.ui.note_section?.game_notes || {};
-      Object.keys(notes).forEach(gameID => {
-        this.gamesDB[gameID] = {
-          ...this.gamesDB[gameID],
-          notes: notes[gameID] ?? ""
-        }
-        delete this.ui.note_section.game_notes[gameID];
-      })
-      delete this._cfg.settings?.filterTargetBy;
-      delete this._cfg.settings?.sortTargetBy;
-      delete this._cfg.settings?.reverseSortTarget;
-      delete this._cfg.settings?.filterTargetBy;
-      delete this._cfg.settings?.reverseFilterTarget;
-      //* cheevos section
-      let filter = {
-        filterName: this.ui["achievements_section"]?.filterBy ?? "all",
-        state: this.ui["achievements_section"]?.reverseFilter ? -1 : 1
-      }
-      if (filter.filterName !== "all") {
-        this.ui["achievements_section"].filters = { [filter.filterName]: filter };
-      }
-
-      delete this.ui["achievements_section"]?.filterBy;
-      delete this.ui["achievements_section"]?.reverseFilter;
-      //* cheevos-1 section
-      filter = {
-        filterName: this.ui["achievements_section-1"]?.filterBy ?? "all",
-        state: this.ui["achievements_section-1"]?.reverseFilter ? -1 : 1
-      }
-      if (filter.filterName !== "all") {
-        this.ui["achievements_section-1"].filters = { [filter.filterName]: filter };
-      }
-      delete this.ui["achievements_section-1"]?.filterBy;
-      delete this.ui["achievements_section-1"]?.reverseFilter;
-
-
-      this._cfg.settings.fontFamilyName = this._cfg.settings.fontSelectorName;
-      this._cfg.settings.pauseIfOnline = this._cfg.discordNewGame;
-      this._cfg.settings.discordNewGame = this._cfg.discordNewGame;
-      this._cfg.settings.discordNewCheevo = this._cfg.discordNewCheevo;
-      this._cfg.settings.discordNewAward = this._cfg.discordNewAward;
-      this._cfg.settings.discordStartSession = this._cfg.discordStartSession;
-      this._cfg.settings.discordWebhook = this._cfg.discordWebhook;
-
-
-      if (!this._cfg.settings.customColors) {
-        this._cfg.settings.customColors = colorPresets.default;
-        const { fontColor, mainColor, secondaryColor, accentColor, selectionColor } = this._cfg.settings;
-        fontColor && (this._cfg.settings.customColors.fontColor = fontColor);
-        mainColor && (this._cfg.settings.customColors.mainColor = mainColor);
-        secondaryColor && (this._cfg.settings.customColors.secondaryColor = secondaryColor);
-        accentColor && (this._cfg.settings.customColors.accentColor = accentColor);
-        selectionColor && (this._cfg.settings.customColors.selectionColor = selectionColor);
-
-        delete this._cfg.settings.fontColor;
-        delete this._cfg.settings.mainColor;
-        delete this._cfg.settings.secondaryColor;
-        delete this._cfg.settings.accentColor;
-        delete this._cfg.settings.selectionColor;
-      }
-
-
-      delete this._cfg.settings.fontSelectorName;
-      delete this._cfg.discordNewGame;
-      delete this._cfg.discordNewGame;
-      delete this._cfg.discordNewCheevo;
-      delete this._cfg.discordNewAward;
-      delete this._cfg.discordStartSession;
-      delete this._cfg.discordWebhook;
-      delete this._cfg.settings.ACHIV_MIN_SIZE;
-      delete this._cfg.settings.ACHIV_MAX_SIZE;
       this.version = CONFIG_VERSION;
       this.writeConfiguration();
     }

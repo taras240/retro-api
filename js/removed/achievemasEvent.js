@@ -1,4 +1,4 @@
-import { UI, GameGenres, RAPlatforms, generateBadges, generateGenres, icons, badgeElements, signedIcons } from "../ui.js";
+import { UI, GameGenres, PlatformIcons, generateBadges, generateGenres, icons, badgeElements, signedIcons } from "../ui.js";
 import { config, ui, apiWorker } from "../script.js";
 
 export class AchievemasEvent {
@@ -62,7 +62,7 @@ export class AchievemasEvent {
                         <div class="achievemas-game__description-container">
                             <div class="achievemas-game__title"><a target="_blanc" data-title="go to RA game-page" href="https://retroachievements.org/game/${game.ID}">
                     ${game.FixedTitle}</a></div>
-                            <div class="achievemas-game__description">${RAPlatforms[game.ConsoleID]}</div>
+                            <div class="achievemas-game__description">${PlatformIcons[game.ConsoleID]?.Name}</div>
                             <div class="achievemas-game__description">${(new Date(game.Date)).toLocaleDateString()}</div>
                         </div>
                     </li>

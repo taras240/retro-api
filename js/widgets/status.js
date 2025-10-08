@@ -385,7 +385,7 @@ export class StatusPanel extends Widget {
             gameTitle.innerHTML = `
                 <a target="_blank" class="status__game-title" href="${gameUrl(ID)}">${FixedTitle}</a>
                 ${generateBadges(badges)} 
-                ${generateBadges([RAPlatforms[ConsoleID || 1]])}
+                ${generateBadges([RAPlatforms[ConsoleID || 1].Name])}
 
             `;
             setTimeout(() => {

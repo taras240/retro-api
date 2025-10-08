@@ -288,7 +288,7 @@ export class GameCard extends Widget {
             const badgesArray = [
                 ConsoleName,
                 ...badges,
-                ...Genre.split(","),
+                ...(Genre ? Genre.split(",") : []),
                 ...infoBadges,
                 difficultyNames[gameDifficulty],
                 hltb,

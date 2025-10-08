@@ -47,11 +47,11 @@ async function copyToClipboard(text) {
 }
 // exportDataAsCSV
 async function exportCompletionDataToXlsx() {
-    const completion = await apiWorker.SAVED_COMPLETION_PROGRESS;
+    const completion = await apiWorker.completionProgress();
     const completionResults = completion?.Results.map(game => ({
         Title: game.Title,
         ID: game.GameID,
-        Platform: RAPlatforms[game.ConsoleID],
+        Platform: RAPlatforms[game.ConsoleID]?.Name ?? "-",
         Award: game.HighestAwardKind,
         AwardDate: game.HighestAwardDate && (new Date(game.HighestAwardDate)).toLocaleString(),
         LastEarnedDate: game.MostRecentAwardedDate && (new Date(game.MostRecentAwardedDate)).toLocaleString(),
@@ -93,7 +93,7 @@ async function exportWantToPlayToCSV() {
     const wantListResults = wantList?.map(game => ({
         Title: game.Title,
         ID: game.ID,
-        ConsoleName: RAPlatforms[game.ConsoleID],
+        ConsoleName: RAPlatforms[game.ConsoleID]?.Name ?? "-",
         AchievementsPublished: game.AchievementsPublished,
     }));
     const headers = [

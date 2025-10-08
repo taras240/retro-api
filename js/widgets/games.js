@@ -365,7 +365,7 @@ export class Games extends Widget {
         const titleRegex = new RegExp(searchRequest, 'gi');
         this.games = this.titleFilter ?
             this.GAMES.filter(game =>
-                `${game.FixedTitle} ${game.badges?.join(' ')} ${RAPlatforms[game.ConsoleID]}`.match(titleRegex)) :
+                `${game.FixedTitle} ${game.badges?.join(' ')} ${RAPlatforms[game.ConsoleID]?.Name ?? "-"}`.match(titleRegex)) :
             this.GAMES;
         this.COOP_FILTER && (this.games = this.games?.filter(game => game.Coop == "true"));
 
@@ -605,7 +605,7 @@ export class Games extends Widget {
             const gamesMinJson = await gamesResponse.json();
             const gamesJson = unpackMinJson(gamesMinJson);
 
-            const lastPlayedGames = await apiWorker.SAVED_COMPLETION_PROGRESS;
+            const lastPlayedGames = await apiWorker.completionProgress();
             for (let lastGame of lastPlayedGames.Results) {
                 let gameToModify = gamesJson.find(game => lastGame.ID === game.ID);
                 if (gameToModify) {

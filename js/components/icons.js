@@ -17,7 +17,7 @@
 //     link: '<i class="description-icon link_icon ra-link_icon"></i>',
 
 import { cheevoGenres } from "../enums/cheevoGenres.js"
-import { PlatformIcons, RAPlatforms } from "../enums/RAPlatforms.js"
+import { RAPlatforms } from "../enums/RAPlatforms.js"
 import { ui } from "../script.js"
 
 const signedIconTemplate = ({ icon, label = "", hint = "", }) => {
@@ -34,7 +34,7 @@ export const signedIcons = {
     date: (date) => signedIconTemplate({ icon: icons.date, label: date, hint: ui.lang.date }),
     time: (time) => time ? signedIconTemplate({ icon: icons.time, label: time, hint: ui.lang.time }) : "",
     rating: (rating) => signedIconTemplate({ icon: icons.rating, label: rating, hint: ui.lang.gameRating }),
-    platform: (platformID) => signedIconTemplate({ icon: icons.platform(platformID), label: PlatformIcons[platformID].Name, hint: platformID }),
+    platform: (platformID) => signedIconTemplate({ icon: icons.platform(platformID), label: RAPlatforms[platformID].Name, hint: platformID }),
 
     difficulty: (difficulty) => `<p class="description-icon difficult-icon difficult-badge__${difficulty}" data-title="${ui.lang.difficulty} [${difficulty}]"></p>`,
     award: (award) => `<p  class="signed-icon award-type" data-title="${award}">
@@ -65,7 +65,7 @@ export const icons = {
     apply: '<i class="description-icon link_icon apply-icon"></i>',
     search: '<i class="description-icon link_icon search-icon google_link"></i>',
     link: '<i class="description-icon link_icon ra-link_icon"></i>',
-    platform: (platformID) => `<img class="image-icon console-icon" src="${PlatformIcons[platformID].IconURL}">`,
+    platform: (platformID) => `<img class="image-icon console-icon" src="${RAPlatforms[platformID].IconURL}">`,
 }
 export const genreIcons = {
     [cheevoGenres.KILLER]: `<i class="cheevo-genre__icon">💀</i>`,

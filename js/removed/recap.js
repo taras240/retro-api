@@ -1,4 +1,4 @@
-import { UI, GameGenres, RAPlatforms, generateBadges, generateGenres, icons, badgeElements, signedIcons } from "../../ui.js";
+import { UI, GameGenres, generateBadges, generateGenres, icons, badgeElements, signedIcons } from "../../ui.js";
 import { config, ui, apiWorker } from "../../script.js";
 
 export class Recap {

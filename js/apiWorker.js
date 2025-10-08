@@ -30,13 +30,16 @@ export class APIWorker {
     if (!this._cache) {
       await this.initializeCache();
     }
-    let data;
     switch (dataType) {
       case cacheDataTypes.GAME_TIMES:
-        data = this._cache[cacheDataTypes.GAME_TIMES] ?
+        return this._cache[cacheDataTypes.GAME_TIMES] ?
           this._cache[cacheDataTypes.GAME_TIMES][ID] : undefined;
+
+      case cacheDataTypes.COMPLETION_PROGRESS:
+        return this._cache[cacheDataTypes.COMPLETION_PROGRESS] ?
+          this._cache[cacheDataTypes.COMPLETION_PROGRESS] : {}
+
     }
-    return data;
   }
   pushToCache = async ({ dataType, data }) => {
     if (!this._cache) {
@@ -49,38 +52,14 @@ export class APIWorker {
         }
         this._cache[cacheDataTypes.GAME_TIMES][data.ID] = data;
         break;
+      case cacheDataTypes.COMPLETION_PROGRESS:
+        this._cache[cacheDataTypes.COMPLETION_PROGRESS] = data;
+        break;
     }
     localStorage.setItem(CACHE_FILE_NAME, JSON.stringify(this._cache));
   }
-  get _savedCompletionProgress() {
-    return config._cfg?.apiWorker?.completionProgress ?? {}
-  }
-  get SAVED_COMPLETION_PROGRESS() {
-    let completionProgress = this._savedCompletionProgress;
-    if (!completionProgress?.Total || config._cfg.apiWorker.targetUser !== configData.targetUser) {
-      return this.updateCompletionProgress({ batchSize: 500 }).then(() => this._savedCompletionProgress)
-    }
-    else {
-      const date = new Date();
-      return (date - this._savedCompletionProgress.Date < 60 * 1000)
-        ? this._savedCompletionProgress
-        : this.updateCompletionProgress({ batchSize: 10, savedArray: completionProgress.Results })
-          .then(() => this._savedCompletionProgress)
-    }
-  }
-  set SAVED_COMPLETION_PROGRESS(value) {
-    value.Results = value.Results.map(game => {
-      delete game.ConsoleName;
-      delete game.NumLeaderboards;
-      return game;
-    })
-    if (!config._cfg.apiWorker) {
-      config._cfg.apiWorker = {};
-    }
-    config._cfg.apiWorker.targetUser = configData.targetUser;
-    config._cfg.apiWorker.completionProgress = value;
-    config.writeConfiguration();
-  }
+
+
   gamesTimes = {
   };
   // Базовий URL API
@@ -112,6 +91,21 @@ export class APIWorker {
     url.search = new URLSearchParams(params);
 
     return url;
+  }
+  async completionProgress() {
+    let completionProgress = await this.getCachedData({ dataType: cacheDataTypes.COMPLETION_PROGRESS });
+    if (!completionProgress?.Total || (configData.targetUser || config.USER_NAME) !== completionProgress.UserName) {
+      await this.updateCompletionProgress({ batchSize: 500 });
+      completionProgress = await this.getCachedData({ dataType: cacheDataTypes.COMPLETION_PROGRESS });
+      return completionProgress;
+    }
+    else {
+      const date = new Date();
+      return (date - completionProgress.Date < 60 * 1000)
+        ? completionProgress
+        : this.updateCompletionProgress({ batchSize: 10, savedArray: completionProgress.Results })
+          .then(async () => await this.getCachedData({ dataType: cacheDataTypes.COMPLETION_PROGRESS }))
+    }
   }
   getAotW() {
     let url = this.getUrl({ endpoint: raEdpoints.achievementOfTheWeek });
@@ -520,7 +514,16 @@ export class APIWorker {
       const completionIDs = completionProgress.map(game => game.GameID);
       savedArray = savedArray.filter(game => !completionIDs.includes(game.GameID))
       savedArray = [...completionProgress, ...savedArray];
-      this.SAVED_COMPLETION_PROGRESS = { Date: new Date(), Total: savedArray.length, Results: savedArray };
+      this.pushToCache({
+        dataType: cacheDataTypes.COMPLETION_PROGRESS,
+        data: {
+          Date: new Date(),
+          Total: savedArray.length,
+          Results: savedArray,
+          UserName: configData.targetUser || config.USER_NAME
+        }
+      });
+      // this.SAVED_COMPLETION_PROGRESS = { Date: new Date(), Total: savedArray.length, Results: savedArray };
     }
     else {
       setTimeout(() => this.updateCompletionProgress({ savedArray: savedArray, completionProgress: completionProgress, batchSize: batchSize }), 100)
