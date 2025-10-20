@@ -36,8 +36,10 @@ export class APIWorker {
           this._cache[cacheDataTypes.GAME_TIMES][ID] : undefined;
 
       case cacheDataTypes.COMPLETION_PROGRESS:
-        return this._cache[cacheDataTypes.COMPLETION_PROGRESS] ?
-          this._cache[cacheDataTypes.COMPLETION_PROGRESS] : {}
+        return this._cache[cacheDataTypes.COMPLETION_PROGRESS] || {};
+
+      case cacheDataTypes.AOTW:
+        return this._cache[cacheDataTypes.AOTW]
 
     }
   }
@@ -54,6 +56,9 @@ export class APIWorker {
         break;
       case cacheDataTypes.COMPLETION_PROGRESS:
         this._cache[cacheDataTypes.COMPLETION_PROGRESS] = data;
+        break;
+      case cacheDataTypes.AOTW:
+        this._cache[cacheDataTypes.AOTW] = data;
         break;
     }
     localStorage.setItem(CACHE_FILE_NAME, JSON.stringify(this._cache));
@@ -127,6 +132,25 @@ export class APIWorker {
           isEarnedHardcore: !!userEarned && !!userEarned.HardcoreMode
         }
       });
+  }
+  async aotw() {
+    function isActualDate(dateString) {
+      const now = new Date();
+      const oneWeekAgo = new Date();
+      oneWeekAgo.setDate(now.getDate() - 7);
+
+      const eventStartDate = new Date(dateString)
+      return eventStartDate > oneWeekAgo;
+    }
+    let aotw = await this.getCachedData({ dataType: cacheDataTypes.AOTW });
+
+    const isActual = aotw && isActualDate(aotw.StartAt);
+    console.log(isActual)
+    if (!isActual) {
+      aotw = await this.getAotW();
+      this.pushToCache({ dataType: cacheDataTypes.AOTW, data: aotw })
+    }
+    return aotw;
   }
   getUserGameRank({ targetUser, gameID }) {
     let url = this.getUrl({ endpoint: raEdpoints.userRankAndScore });

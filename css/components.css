@@ -769,7 +769,7 @@ input:checked+.checkbox-input::before {
 }
 
 .cheevo-popup__props p {
-    margin-bottom: 0.2rem;
+    margin-bottom: 0.5rem;
 }
 
 .popup__prop-title {

@@ -1,5 +1,5 @@
 import { alertTypes } from "../enums/alerts.js";
-import { config, configData, watcher } from "../script.js";
+import { apiWorker, config, configData, watcher } from "../script.js";
 import { delay } from "./delay.js";
 import { cheevoUrl, gameImageUrl, gameUrl } from "./raLinks.js";
 import { formatTime } from "./time.js";
@@ -51,10 +51,8 @@ export async function sendDiscordAlert({ message = "", type, value, award, id })
         return message;
     }
     const cheevoMessage = (gameData, cheevo) => {
-        const isAotW = config.aotw?.ID == cheevo.ID;
-        const header = `${targetUser} unlocked ${isAotW ?
-            "'Achievement of the Week'" : "cheevo"}${cheevo.isHardcoreEarned
-                ? '' : " (casual mode)"}: \n${cheevo.Title}`
+        const header = `${targetUser} unlocked cheevo"}${cheevo.isHardcoreEarned
+            ? '' : " (casual mode)"}: \n${cheevo.Title}`
         const description = `
         Game: [${gameData.Title}](${gameUrl(gameData.ID)})
         Unlocked in: ${formatTime(gameData.TimePlayed)}

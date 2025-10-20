@@ -85,11 +85,8 @@ export class Aotw {
 
     }
     async getAotwObject() {
-        if (!config.aotw) {
-            const aotwObj = await apiWorker.getAotW();
-            config.aotw = aotwObj;
-        }
-        this.aotwObj = config.aotw;
+        const aotwObj = await apiWorker.aotw();
+        this.aotwObj = aotwObj;
         return this.aotwObj;
     }
     showGameInfo() {

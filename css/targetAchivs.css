@@ -485,6 +485,7 @@
   top: .25rem;
   right: .25rem;
   z-index: 2;
+  mask-image: url(../assets/img/close.svg);
 }
 
 .target__aotw-container .prev {

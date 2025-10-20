@@ -173,7 +173,7 @@ export class UI {
           cheevoPopupElement(cheevo) : undefined;
       if (popup) {
         this.app.appendChild(popup);
-        setPopupPosition(popup, event);
+        setPopupPosition(popup, event, !hint && cheevo);
         setTimeout(() => popup.classList.add("visible"), 50);
 
 
@@ -220,7 +220,7 @@ export class UI {
     this.note?.updateGame();
     this.progression?.generateProgression();
   }
-  updateWidgets({ earnedAchievementsIDs = [], isLog }) {
+  updateWidgets({ earnedAchievementsIDs = [], isLog = false }) {
     // if (earnedAchievementsIDs?.length === 0) return
     // try {
     //   this.aotw?.checkCheevo({ earnedAchievementIDs: earnedAchievementsIDs });
@@ -246,16 +246,16 @@ export class UI {
     //Update Progression widget
     this.progression.update({ earnedAchievementIDs: earnedAchievementsIDs });
 
-    if (!isLog && (this.stats?.VISIBLE || this.statusPanel?.uiProps?.showStatisticsAlert)) {
-      //Update Stats widget & UserInfo widget
-      this.userInfoTimeout && clearTimeout(this.userInfoTimeout);
+    //Update Stats widget & UserInfo widget
+    this.userInfoTimeout && clearTimeout(this.userInfoTimeout);
 
-      this.userInfoTimeout = setTimeout(async () => {
-        const userSummary = await apiWorker.getUserSummary({ gamesCount: 0, achievesCount: 0 });
-        ui.stats.updateStats({ currentUserSummary: userSummary });
-        ui.statusPanel?.updateStatistics({ userSummary: userSummary });
-      }, 16 * 1000 * earnedAchievementsIDs.length)
-    }
+    const updateDelay = 16 * 1000 * earnedAchievementsIDs.length;
+    this.userInfoTimeout = setTimeout(async () => {
+      const userSummary = await apiWorker.getUserSummary({ gamesCount: 0, achievesCount: 0 });
+      ui.stats?.updateStats({ currentUserSummary: userSummary });
+      ui.statusPanel?.updateStatistics({ userSummary: userSummary });
+    }, isLog && updateDelay < 30 * 1000 ? 30 * 1000 : updateDelay);
+
 
     const alerts = earnedAchievementsIDs.map(cheevoID => ({ type: alertTypes.CHEEVO, value: watcher.CHEEVOS[cheevoID] }));
     this.notifications.pushAlerts(alerts);

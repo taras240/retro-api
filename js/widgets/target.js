@@ -13,6 +13,7 @@ import { inputTypes } from "../components/inputElements.js";
 import { imageFilters } from "../enums/imageFilters.js";
 import { secondsToBadgeString } from "../functions/time.js";
 import { buttonsHtml } from "../components/htmlElements.js";
+import { cacheDataTypes } from "../enums/cacheDataTypes.js";
 
 export class Target extends Widget {
     sectionCode = "-target";
@@ -362,7 +363,7 @@ export class Target extends Widget {
         this.initializeElements();
         this.addEvents();
         this.setValues();
-        this.showAotwEvent({ cheevo: config.aotw })
+        this.showAotwEvent()
     }
     initializeElements() {
         this.section = document.querySelector("#target_section");
@@ -894,16 +895,13 @@ export class Target extends Widget {
         this.applySort();
         this.isDynamicAdding = false;
 
-        config.aotw && this.container.querySelector(`.target-achiv[data-achiv-id='${config.aotw?.ID}']`)?.classList.add("target__aotw");
+        // config.aotw && this.container.querySelector(`.target-achiv[data-achiv-id='${config.aotw?.ID}']`)?.classList.add("target__aotw");
 
     }
 
-    async showAotwEvent({ cheevo }) {
-        if (!cheevo) {
-            const aotwObj = await apiWorker.getAotW();
-            config.aotw = aotwObj;
-            cheevo = config.aotw;
-        }
+    async showAotwEvent() {
+        const cheevo = await apiWorker.aotw();
+
         if (!cheevo || cheevo.wasShown) return;
         const rarity = 100 * cheevo.UnlocksHardcoreCount / cheevo.TotalPlayers;
         this.section.querySelector(`.target__aotw-container`)?.remove();
@@ -911,8 +909,8 @@ export class Target extends Widget {
         const aotwElement = document.createElement("div");
         aotwElement.classList.add("target__aotw-container", "target__aotw", "show-difficult", "show-level");
         aotwElement.innerHTML = `
-        <button class="description-icon close-icon target__hide-aotw" 
-          onclick=></button>
+        <button class="description-icon target__hide-aotw" 
+          onclick="ui.target.hideAotw()"></button>
         <div class="prev">
           <img class="prev-img" src="${gameImageUrl(cheevo.BadgeURL)}" alt=" ">
         </div>
@@ -942,9 +940,16 @@ export class Target extends Widget {
         this.section.querySelector(".target__aotw-container")?.remove();
         this.section.insertBefore(aotwElement, this.container);
     }
-    hideAotw() {
+    async hideAotw() {
         this.section.querySelector(`.target__aotw-container`)?.remove();
-        config.aotw = { ...config?.aotw, wasShown: true };
+        const aotw = await apiWorker.aotw();
+        apiWorker.pushToCache({
+            dataType: cacheDataTypes.AOTW,
+            data: {
+                ...aotw,
+                wasShown: true
+            }
+        })
     }
 
 }
