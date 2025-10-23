@@ -27,6 +27,10 @@
     padding: 0.5rem;
 }
 
+.stats-container.list-mode {
+    flex-direction: column;
+    gap: 1px;
+}
 
 .stats__stat-container {
     flex-basis: 8rem;
@@ -42,6 +46,15 @@
     padding: 0.25rem;
     border-radius: var(--border-radius);
     background-color: var(--secondary-color);
+}
+
+.stats-container.list-mode .stats__stat-container {
+    flex-basis: auto;
+    height: auto;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0.2rem 1rem;
+    border-radius: 2px;
 }
 
 .stats__stat-container.hidden {
@@ -74,7 +87,11 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+}
 
+.stats-container.list-mode .stats__value {
+    font-size: 1.5rem;
+    flex-direction: row;
 }
 
 /* .stats__value::after {
@@ -131,6 +148,10 @@
     flex-direction: column;
     gap: 0;
     padding: 0.5rem 0.25rem;
+}
+
+.stats-container.list-mode .stats__chart-container {
+    justify-content: center;
 }
 
 .round-stat__container {

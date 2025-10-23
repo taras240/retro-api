@@ -24,40 +24,40 @@ export class UserStatistic extends Widget {
                         name: "context_show-points",
                         id: "context_show-points",
                         label: ui.lang.points,
-                        checked: this.SHOW_HP,
-                        event: `onchange="ui.stats.SHOW_HP = this.checked;"`,
+                        checked: this.uiProps.showHP,
+                        event: `onchange="ui.stats.uiProps.showHP = this.checked;"`,
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         name: "context_show-retropoints",
                         id: "context_show-retropoints",
                         label: ui.lang.retropoints,
-                        checked: this.SHOW_RP,
-                        event: `onchange="ui.stats.SHOW_RP = this.checked;"`,
+                        checked: this.uiProps.showRP,
+                        event: `onchange="ui.stats.uiProps.showRP = this.checked;"`,
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         name: "context_show-softpoints",
                         id: "context_show-softpoints",
                         label: ui.lang.softpoints,
-                        checked: this.SHOW_SP,
-                        event: `onchange="ui.stats.SHOW_SP = this.checked;"`,
+                        checked: this.uiProps.showSP,
+                        event: `onchange="ui.stats.uiProps.showSP = this.checked;"`,
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         name: "context_show-rank",
                         id: "context_show-rank",
                         label: ui.lang.rank,
-                        checked: this.SHOW_RANK,
-                        event: `onchange="ui.stats.SHOW_RANK = this.checked;"`,
+                        checked: this.uiProps.showRank,
+                        event: `onchange="ui.stats.uiProps.showRank = this.checked;"`,
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         name: "context_show-percentile",
                         id: "context_show-percentile",
                         label: ui.lang.percentile,
-                        checked: this.SHOW_PERCENTILE,
-                        event: `onchange="ui.stats.SHOW_PERCENTILE = this.checked;"`,
+                        checked: this.uiProps.showPercentile,
+                        event: `onchange="ui.stats.uiProps.showPercentile = this.checked;"`,
                     },
 
                     {
@@ -65,16 +65,16 @@ export class UserStatistic extends Widget {
                         name: "context_show-true-ratio",
                         id: "context_show-true-ratio",
                         label: ui.lang.trueRatio,
-                        checked: this.SHOW_TR,
-                        event: `onchange="ui.stats.SHOW_TR = this.checked;"`,
+                        checked: this.uiProps.showTrueRatio,
+                        event: `onchange="ui.stats.uiProps.showTrueRatio = this.checked;"`,
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         name: "context_show-completion-chart",
                         id: "context_show-completion-chart",
                         label: ui.lang.completionChart,
-                        checked: this.SHOW_COMPLETION_CHART,
-                        event: `onchange="ui.stats.SHOW_COMPLETION_CHART = this.checked;"`,
+                        checked: this.uiProps.completionChart,
+                        event: `onchange="ui.stats.uiProps.completionChart = this.checked;"`,
                     },
                 ]
             },
@@ -86,17 +86,34 @@ export class UserStatistic extends Widget {
                         name: "context_show-header",
                         id: "context_show-header",
                         label: ui.lang.showHeader,
-                        checked: this.SHOW_HEADER,
-                        event: `onchange="ui.stats.SHOW_HEADER = this.checked;"`,
+                        checked: this.uiProps.showHeader,
+                        event: `onchange="ui.stats.uiProps.showHeader = this.checked;"`,
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         name: "context_show-bg",
                         id: "context_show-bg",
                         label: ui.lang.showBackground,
-                        checked: this.SHOW_BG,
-                        event: `onchange="ui.stats.SHOW_BG = this.checked;"`,
+                        checked: this.uiProps.showBG,
+                        event: `onchange="ui.stats.uiProps.showBG = this.checked;"`,
                     },
+                    {
+                        type: inputTypes.RADIO,
+                        name: `context_list-type`,
+                        id: `context_list-type-list`,
+                        label: "List",
+                        checked: this.uiProps.listMode,
+                        event: `onchange="ui.stats.uiProps.listMode = true;"`
+                    },
+                    {
+                        type: inputTypes.RADIO,
+                        name: `context_list-type`,
+                        id: `context_list-type-grid`,
+                        label: "Grid",
+                        checked: !this.uiProps.listMode,
+                        event: `onchange="ui.stats.uiProps.listMode = false;"`
+                    }
+
                 ]
             },
             {
@@ -104,88 +121,33 @@ export class UserStatistic extends Widget {
                 name: "context_show-session-progress",
                 id: "context_show-session-progress",
                 label: ui.lang.showSessionProgress,
-                checked: this.SHOW_SESSION_PROGRESS,
-                event: `onchange="ui.stats.SHOW_SESSION_PROGRESS = this.checked;"`,
+                checked: this.uiProps.showSessionProgress,
+                event: `onchange="ui.stats.uiProps.showSessionProgress = this.checked;"`,
             }
 
 
         ];
     }
-    get SHOW_BG() {
-        return config.ui?.stats_section?.showBG ?? true;
-    }
-    set SHOW_BG(value) {
-        this.saveProppertySetting("showBG", value);
-        this.setElementsVisibility();
-    }
-    get SHOW_HEADER() {
-        return config.ui?.stats_section?.showHeader ?? false;
-    }
-    set SHOW_HEADER(value) {
-        this.saveProppertySetting("showHeader", value);
-        this.setElementsVisibility();
-    }
-    get SHOW_HP() {
-        return config.ui?.stats_section?.showHP ?? true;
-    }
-    set SHOW_HP(value) {
-        this.saveProppertySetting("showHP", value);
-        this.setElementsVisibility();
-    }
 
-    get SHOW_RP() {
-        return config.ui?.stats_section?.showRP ?? true;
+    uiDefaultValues = {
+        listMode: false,
+        completionChart: false,
+        showSessionProgress: true,
+        showTrueRatio: true,
+        showPercentile: true,
+        showRank: true,
+        showSP: false,
+        showRP: true,
+        showHP: true,
+        showHeader: false,
+        showBG: true,
     }
-    set SHOW_RP(value) {
-        this.saveProppertySetting("showRP", value);
-        this.setElementsVisibility();
+    uiSetCallbacks = {
+        completionChart() {
+            this.setElementsValues();
+            this.updateChart();
+        },
     }
-
-    get SHOW_SP() {
-        return config.ui?.stats_section?.showSP ?? true;
-    }
-    set SHOW_SP(value) {
-        this.saveProppertySetting("showSP", value);
-        this.setElementsVisibility();
-    }
-
-    get SHOW_RANK() {
-        return config.ui?.stats_section?.showRank ?? true;
-    }
-    set SHOW_RANK(value) {
-        this.saveProppertySetting("showRank", value);
-        this.setElementsVisibility();
-    }
-    get SHOW_PERCENTILE() {
-        return config.ui?.stats_section?.showPercentile ?? true;
-    }
-    set SHOW_PERCENTILE(value) {
-        this.saveProppertySetting("showPercentile", value);
-        this.setElementsVisibility();
-    }
-    get SHOW_TR() {
-        return config.ui?.stats_section?.showTrueRatio ?? true;
-    }
-    set SHOW_TR(value) {
-        this.saveProppertySetting("showTrueRatio", value);
-        this.setElementsVisibility();
-    }
-    get SHOW_SESSION_PROGRESS() {
-        return config.ui?.stats_section?.showSessionProgress ?? true;
-    }
-    set SHOW_SESSION_PROGRESS(value) {
-        this.saveProppertySetting("showSessionProgress", value);
-        this.setElementsVisibility();
-    }
-    get SHOW_COMPLETION_CHART() {
-        return config.ui?.stats_section?.completionChart ?? false;
-    }
-    set SHOW_COMPLETION_CHART(value) {
-        this.saveProppertySetting("completionChart", value);
-        this.setElementsVisibility();
-        this.updateChart();
-    }
-
     saveProppertySetting(property, value) {
         if (!config.ui.stats_section) {
             config.ui.stats_section = {};
@@ -200,7 +162,7 @@ export class UserStatistic extends Widget {
         this.generateWidget();
         this.addWidgetIcon();
         this.initializeElements();
-        this.setElementsVisibility();
+        this.setElementsValues();
         this.addEvents();
         UI.applyPosition({ widget: this });
     }
@@ -224,6 +186,7 @@ export class UserStatistic extends Widget {
     }
     initializeElements() {
         this.section = document.querySelector("#stats_section");
+        this.sectionID = this.section.id;
         this.header = this.section.querySelector(".header-container");
         this.container = this.section.querySelector(".stats-container");
 
@@ -243,17 +206,19 @@ export class UserStatistic extends Widget {
 
         this.resizer = this.section.querySelector(".resizer");
     }
-    setElementsVisibility() {
-        this.pointsElement.closest("li").classList.toggle("hidden", !this.SHOW_HP);
-        this.retropointsElement.closest("li").classList.toggle("hidden", !this.SHOW_RP);
-        this.softpointsElement.closest("li").classList.toggle("hidden", !this.SHOW_SP);
-        this.rankElement.closest("li").classList.toggle("hidden", !this.SHOW_RANK);
-        this.rankRateElement.closest("li").classList.toggle("hidden", !this.SHOW_PERCENTILE);
-        this.trueRatioElement.closest("li").classList.toggle("hidden", !this.SHOW_TR);
-        this.completionElement.classList.toggle("hidden", !this.SHOW_COMPLETION_CHART);
-        this.section.classList.toggle("compact-header", !this.SHOW_HEADER);
-        this.section.classList.toggle("hide-bg", !this.SHOW_BG);
-        this.container.classList.toggle("show-session-progress", this.SHOW_SESSION_PROGRESS)
+
+    setElementsValues() {
+        this.pointsElement.closest("li").classList.toggle("hidden", !this.uiProps.showHP);
+        this.retropointsElement.closest("li").classList.toggle("hidden", !this.uiProps.showRP);
+        this.softpointsElement.closest("li").classList.toggle("hidden", !this.uiProps.showSP);
+        this.rankElement.closest("li").classList.toggle("hidden", !this.uiProps.showRank);
+        this.rankRateElement.closest("li").classList.toggle("hidden", !this.uiProps.showPercentile);
+        this.trueRatioElement.closest("li").classList.toggle("hidden", !this.uiProps.showTrueRatio);
+        this.completionElement.classList.toggle("hidden", !this.uiProps.completionChart);
+        this.section.classList.toggle("compact-header", !this.uiProps.showHeader);
+        this.section.classList.toggle("hide-bg", !this.uiProps.showBG);
+        this.container.classList.toggle("show-session-progress", this.uiProps.showSessionProgress);
+        this.container.classList.toggle("list-mode", this.uiProps.listMode)
 
     }
     addEvents() {
@@ -349,7 +314,7 @@ export class UserStatistic extends Widget {
         this.userSummary = currentUserSummary;
     }
     async updateChart() {
-        if (!this.SHOW_COMPLETION_CHART) return;
+        if (!this.uiProps.completionChart) return;
         const chartContainer = this.section.querySelector(".stats__chart-container");
         const completionData = await apiWorker.completionProgress();//"beaten-hardcore"
         const allGames = completionData?.Results ?? [];
@@ -393,7 +358,7 @@ export class UserStatistic extends Widget {
             }, '');
         const pieChartHtml = `
             <li class="stats__stat-container stats__chart-container">
-            <h2 class="stats__title">${ui.lang.completionChart}</h2>
+            
             <div class="round-stat__container ">
                 <div class="circle">
                 <div class="round-stat__total" id="sector"></div>
