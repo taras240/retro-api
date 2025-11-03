@@ -38,6 +38,7 @@ import { colorPresets } from "./enums/colorPresets.js";
 import { parseCurrentGameLevel } from "./functions/parseRP.js";
 import { dialogWindow } from "./components/dialogWindow.js";
 import { inputTypes } from "./components/inputElements.js";
+import { initBgAnimation } from "./functions/bgAnimations.js";
 
 
 
@@ -118,7 +119,6 @@ export class UI {
     this.settings = new Settings();
     this.links = new Links();
     this.buttons = new SidePanel();
-
   }
 
   static applyPosition({ widget }) {
@@ -202,6 +202,18 @@ export class UI {
 
       this.app.addEventListener('mousemove', mouseMoveEvent)
     })
+  }
+  toggleBgAnimation(value) {
+    this.bgAnimation && this.bgAnimation.stop()
+    if (!this.animContainer) {
+      this.animContainer = document.createElement("div");
+      this.animContainer.id = "background-animation";
+      document.body.appendChild(this.animContainer);
+    }
+    if (value) {
+      this.bgAnimation = initBgAnimation(this.animContainer, configData.bgAnimType);
+      this.bgAnimation.start();
+    }
   }
   gameChangeEvent(isNewGame) {
     const widgetNames = [

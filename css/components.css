@@ -890,7 +890,7 @@ input:checked+.checkbox-input::before {
     --context-font-color: var(--font-color);
     color: var(--context-font-color);
     position: relative;
-    padding: 0.5rem;
+
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -898,6 +898,10 @@ input:checked+.checkbox-input::before {
     gap: 5px;
     text-wrap: nowrap;
     border-radius: 3px;
+}
+
+.context-menu_item.expandable {
+    padding: 0.5rem;
 }
 
 .context-menu_item.expandable::after {
@@ -939,6 +943,7 @@ input:checked+.checkbox-input::before {
     text-align: left;
     color: inherit;
     background-color: transparent;
+    padding: 0.5rem;
 }
 
 .context-menu_statebox,
@@ -949,7 +954,8 @@ input:checked+.checkbox-input::before {
     width: 100%;
     font-size: inherit;
     cursor: pointer;
-    padding-left: 1.1rem;
+    padding: 0.5rem;
+    padding-left: 1.75rem;
 }
 
 .context-menu_statebox::after,
@@ -959,7 +965,7 @@ input[type="radio"]+.context-menu_radio::after {
     content: "";
     width: 1.15rem;
     aspect-ratio: 1;
-    left: 0.25rem;
+    left: 1rem;
     top: 50%;
     transform: translate(-50%, -50%);
     background-color: var(--font-color);
@@ -1010,6 +1016,7 @@ input[type="radio"]:checked+.context-menu_radio::after {
     text-align: center;
     font-size: 1rem;
     width: 50px;
+    margin: 0.5rem 0;
 }
 
 .context-menu_item ::placeholder,

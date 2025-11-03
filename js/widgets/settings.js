@@ -7,6 +7,7 @@ import { stateboxClickHandler } from "../functions/stateBoxClick.js";
 import { local } from "../enums/locals.js";
 import { colorPresets } from "../enums/colorPresets.js";
 import { fonts } from "../enums/fontsPreset.js";
+import { animVariants } from "../enums/bgAnimations.js";
 export class Settings extends Widget {
     widgetIcon = {
         iconClass: "settings-icon",
@@ -44,6 +45,20 @@ export class Settings extends Widget {
                         id: "settings_show-bg",
                         onChange: "configData.bgVisibility = this.checked;",
                         checked: configData.bgVisibility,
+                    },
+                    {
+                        type: inputTypes.SELECTOR,
+                        label: ui.lang.animType,
+                        id: "settings_anims-variant",
+                        selectValues: [
+                            ...Object.values(animVariants).map(anim => ({
+                                type: inputTypes.RADIO,
+                                name: "settings_anim-variant",
+                                id: `settings_anim-variant-${anim}`,
+                                label: anim,
+                                checked: configData.bgAnimType === anim,
+                                event: `onchange=\"configData.bgAnimType = '${anim}'\"`,
+                            })),]
                     },
                     {
                         type: inputTypes.CHECKBOX,
@@ -423,12 +438,27 @@ export class Settings extends Widget {
                     }]
             },
             {
-                label: ui.lang.showBgAnimation,
-                type: inputTypes.CHECKBOX,
-                id: "context_show-bg-animation",
-                checked: configData.bgVisibility,
-                event: `onchange="configData.bgVisibility = this.checked;"`,
+                label: ui.lang.animType,
+                elements: [
+                    {
+                        label: ui.lang.showBgAnimation,
+                        type: inputTypes.CHECKBOX,
+                        id: "context_show-bg-animation",
+                        checked: configData.bgVisibility,
+                        event: `onchange="configData.bgVisibility = this.checked;"`,
+                    },
+
+                    ...Object.values(animVariants).map(anim => ({
+                        type: inputTypes.RADIO,
+                        name: "context_anim-variant",
+                        id: `context_anim-variant-${anim}`,
+                        label: anim,
+                        checked: configData.bgAnimType === anim,
+                        event: `onchange=\"configData.bgAnimType = '${anim}'\"`,
+                    })),
+                ]
             },
+
             {
                 label: ui.lang.startOnLoad,
                 type: inputTypes.CHECKBOX,

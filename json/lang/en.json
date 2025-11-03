@@ -224,5 +224,6 @@
     "previewType": "Preview Type",
     "boxart": "BoxArt",
     "ingame": "Ingame",
-    "titleScreen": "Title Screen"
+    "titleScreen": "Title Screen",
+    "animType": "Animation Type"
 }

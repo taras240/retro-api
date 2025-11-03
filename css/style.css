@@ -166,3 +166,13 @@ a:hover {
     transform: translate(-50%, -50%) rotateZ(360deg);
   }
 }
+
+#background-animation {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+}

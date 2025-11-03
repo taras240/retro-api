@@ -72,6 +72,7 @@ export class Config {
   });
   configDefaultValues = {
     bgVisibility: false,
+    bgAnimType: "",
     startOnLoad: false,
     targetUser: "",
     gameID: 1,
@@ -118,8 +119,13 @@ export class Config {
       }
     },
     bgVisibility(value) {
-      const bgElement = document.querySelector("#background-animation");
-      bgElement && (bgElement.style.display = value ? "block" : "none");
+      ui.toggleBgAnimation(value)
+      // const bgElement = document.querySelector("#background-animation");
+      // bgElement && (bgElement.style.display = value ? "block" : "none");
+    },
+    bgAnimType(value) {
+      ui.toggleBgAnimation(false);
+      ui.toggleBgAnimation(true);
     },
     customColors() {
       this.configData.preset = "custom";
