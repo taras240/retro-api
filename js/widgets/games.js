@@ -28,13 +28,13 @@ export class Games extends Widget {
         return [
             {
                 type: inputTypes.BUTTON,
-                id: "context-update-game",
+                id: "update-game",
                 label: "**Update game**",
                 event: `onclick="watcher.updateGameData(${gameID})"`,
             },
             {
                 type: inputTypes.CHECKBOX,
-                id: "context-add-to-favourites",
+                id: "add-to-favourites",
                 label: `fav`,
                 checked: ui.games.FAVOURITES.includes(+gameID),
                 event: `onclick="ui.games.addToFavourite(event,${gameID})"`,

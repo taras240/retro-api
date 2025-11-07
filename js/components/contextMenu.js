@@ -42,12 +42,12 @@ const contextInputs = {
     [inputTypes.CHECKBOX]: ({ type, name, id, checked, event, label, sectionCode = "" }) => `
         <input 
             type="${type}" 
-            name="${name || id}${sectionCode}" 
-            id="${id}${sectionCode}" 
+            name="context-${name || id}${sectionCode}" 
+            id="context-${id}${sectionCode}" 
             ${event ?? ""}
             ${checked ? "checked" : ""} 
             ></input>
-        <label class="context-menu_${type}" for="${id}${sectionCode}">${label}</label>`,
+        <label class="context-menu_${type}" for="context-${id}${sectionCode}">${label}</label>`,
     radio: (props) => contextInputs.checkbox(props),
     statebox: ({ state, type, value, id, event, label, sectionCode = "" }) => `
         <div 
@@ -55,7 +55,7 @@ const contextInputs = {
             data-state="${state ?? 0}" 
             data-value="${value}" 
             data-event="${event}"
-            id="${id + sectionCode}"
+            id="context-${id + sectionCode}"
             <p class="statebox__label">${label}</p>
         </div>
     `,
@@ -63,7 +63,7 @@ const contextInputs = {
         ${prefix}
         <input 
             class="context-menu_${type}" 
-            id="${id}-${sectionCode}" 
+            id="context-${id}-${sectionCode}" 
             type="number" 
             data-title="${title}" 
             value="${value ?? ""}" 
@@ -75,7 +75,7 @@ const contextInputs = {
         ${prefix}
         <input 
             class="context-menu_${type}" 
-            id="${id}-${sectionCode}" 
+            id="context-${id}-${sectionCode}" 
             type="text" 
             data-title="${title}" 
             value="${value ?? ""}" 
@@ -87,7 +87,7 @@ const contextInputs = {
         ${prefix}
         <input 
             class="slider" 
-            id="${id}-${sectionCode}"
+            id="context-${id}-${sectionCode}"
             type="range" 
             ${event ?? ""} 
             min="${minRange}" 
@@ -96,7 +96,7 @@ const contextInputs = {
     button: ({ type, id, sectionCode, event, label = "" }) => `
             <button 
                 class="context-menu_${type}" 
-                id="${id}-${sectionCode}" 
+                id="context-${id}-${sectionCode}" 
                 ${event ?? ""} 
                 type="button"
             >

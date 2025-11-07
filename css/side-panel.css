@@ -10,14 +10,23 @@
     display: flex;
     flex-direction: column;
     padding: 0px;
-    background: linear-gradient(to bottom,
-            var(--accent-color),
-            var(--main-color),
-            var(--secondary-color));
     z-index: 1000;
     transition: 250ms;
     /* left: 0; */
     /*! delete */
+    box-shadow: 0 0 10px -2px black;
+}
+
+.buttons-block:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(27, 27, 27, 0.6);
+    backdrop-filter: blur(5px);
+    z-index: -1;
 }
 
 #side_panel:hover,
