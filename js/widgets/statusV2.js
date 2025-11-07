@@ -270,7 +270,6 @@ export class Status extends Widget {
         });
     }
     setElementsProperties() {
-        this.cheevosList.classList.toggle("grid-list", this.LIST_TYPE == "grid");
         this.section.classList.toggle("show-ticker", this.uiProps.showTicker);
         this.section.classList.toggle("show-progression", this.uiProps.showProgression);
         this.section.classList.toggle("show-progressbar", this.uiProps.showProgressbar);
@@ -316,7 +315,7 @@ export class Status extends Widget {
         this.progressionElements.header.innerHTML = focusCheevo ?
             `${badgeElements.gold(`${focusIndex + 1}/${progressionCheevoses?.length}`)} ${focusCheevo.Description}` : watcher.GAME_DATA?.progressionAward ?
                 ui.lang.gameBeatenMsg : ui.lang.noProgressionMsg;
-        const focusElement = this.progressionElements.pointsContainer.querySelector(`[data-achiv-id="${focusCheevo?.ID}"`);
+        const focusElement = this.progressionElements.pointsContainer.querySelector(`[data-achiv-id="${focusCheevo?.ID}"]`);
         focusElement?.classList.add("focus");
 
         scrollElementIntoView({
@@ -439,7 +438,7 @@ export class Status extends Widget {
                 .reverse();
             this.progressbarElements.lastCheevos.innerHTML = lastCheevos.reduce((html, cheevo) => {
                 html += `
-                <li class="last-cheevo cheevo-popup" data-achiv-id="${cheevo.ID}"><img class="last-cheevo__img"
+                <li class="last-cheevo" data-achiv-id="${cheevo.ID}"><img class="last-cheevo__img"
                             src="${cheevoImageUrl(cheevo.BadgeName)}" alt=""></li>
             `;
                 return html
@@ -678,10 +677,11 @@ export class Status extends Widget {
     autoscrollAlertInterval = {};
     startAutoScrollElement(element, toLeft = true, pause = 1000) {
         const containerID = element.id || element.className;
-        this.autoscrollAlertInterval[containerID] ?
-            this.stopAutoScrollElement(element) : (
-                this.autoscrollAlertInterval[containerID] = {}
-            );
+        if (this.autoscrollAlertInterval[containerID]) {
+            this.stopAutoScrollElement(element);
+        } else {
+            this.autoscrollAlertInterval[containerID] = {};
+        }
         const refreshRateMiliSecs = 50;
         const scrollContainer = element;
         // Часовий інтервал для прокручування вниз
@@ -700,7 +700,7 @@ export class Status extends Widget {
                     this.autoscrollAlertInterval[containerID].timeout = setTimeout(() => this.startAutoScrollElement(element, false, pause), pause);
                 }
             } else {
-                scrollContainer.scrollLeft--;
+                scrollContainer.scrollLeft = Math.max(0, scrollContainer.scrollLeft - 1);
                 if (scrollContainer.scrollLeft == 0) {
                     this.stopAutoScrollElement(element);
                     this.autoscrollAlertInterval[containerID].timeout = setTimeout(() => this.startAutoScrollElement(element, true, pause), pause);
@@ -712,44 +712,9 @@ export class Status extends Widget {
     stopAutoScrollElement(element, reset = false) {
         reset && (element.scrollLeft = 0);
         const containerID = element.id || element.className;
-        clearInterval(this.autoscrollAlertInterval[containerID].interval);
-        clearTimeout(this.autoscrollAlertInterval[containerID].timeout)
-    }
-    fitCheevosSize(cheevosList) {
-        const ACHIV_MIN_SIZE = 36;
-        const ACHIV_MAX_SIZE = 128;
-        // Отримання розмірів вікна блоку досягнень
-        let windowHeight, windowWidth;
-        cheevosList.style.flex = "1";
-        windowHeight = cheevosList.clientHeight - 2;
-        windowWidth = cheevosList.clientWidth - 10;
-
-        cheevosList.style.flex = "";
-        const achivs = cheevosList.querySelectorAll(".target-achiv:not(.removed)");
-        const achivsCount = achivs.length;
-        // Перевірка, чи є елементи в блоці досягнень
-        if (achivsCount === 0) return;
-        // Початкова ширина досягнення для розрахунку
-        let achivWidth = Math.floor(
-            Math.sqrt((windowWidth * windowHeight) / achivsCount)
-        );
-
-        let rowsCount, colsCount;
-        // Цикл для знаходження оптимального розміру досягнень
-        do {
-            achivWidth--;
-            rowsCount = Math.floor(windowHeight / (achivWidth + 2));
-            colsCount = Math.floor(windowWidth / (achivWidth + 2));
-        } while (
-            rowsCount * colsCount < achivsCount &&
-            achivWidth > ACHIV_MIN_SIZE
-        );
-        achivWidth =
-            achivWidth < ACHIV_MIN_SIZE
-                ? ACHIV_MIN_SIZE
-                : achivWidth > ACHIV_MAX_SIZE
-                    ? ACHIV_MAX_SIZE
-                    : achivWidth;
-        cheevosList.style.setProperty("--achiv-height", achivWidth + "px");
+        if (this.autoscrollAlertInterval[containerID]) {
+            clearInterval(this.autoscrollAlertInterval[containerID].interval);
+            clearTimeout(this.autoscrollAlertInterval[containerID].timeout);
+        }
     }
 }

@@ -861,7 +861,7 @@ input:checked+.checkbox-input::before {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    box-shadow: 2px 2px 5px 0 black;
+    box-shadow: 0 0 10px -2px black;
     border-radius: var(--border-radius);
     font-size: 1rem;
     min-width: 150px;

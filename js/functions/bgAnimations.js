@@ -8,6 +8,8 @@ const moveTypes = Object.freeze({
 })
 export function initBgAnimation(container, bgAnimType) {
     switch (bgAnimType) {
+        case animVariants.RANDOM_IMAGE:
+            return randomImage(container);
         case animVariants.PARTICLES_MOVE_RANDOM:
             return particlesAnimation(container, moveTypes.RANDOM);
         case animVariants.PARTICLES_MOVE_RIGHT:
@@ -18,11 +20,32 @@ export function initBgAnimation(container, bgAnimType) {
             return particlesAnimation(container, moveTypes.TO_RIGHT);
     }
 }
-function particlesAnimation(container, moveType = moveTypes.RANDOM) {
+function randomImage(container) {
+    let imageElement;
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    let seed = new Date().getDate() * 5;
+    const stop = () => {
+        imageElement?.remove();
+    }
+    const start = () => {
+        const initContainer = () => {
+            container.innerHTML = "";
+            imageElement = document.createElement("img");
+            imageElement.id = "background-image";
+            container.appendChild(imageElement);
+        };
+        stop();
+        initContainer();
+        imageElement.src = `https://picsum.photos/seed/${seed}/${width}/${height}`;
+    }
+    return { start, stop };
+}
+function particlesAnimation(container, moveType) {
     let width = window.innerWidth;
     let height = window.innerHeight;
     let starMaxSize = 5;
-    let starsCount = width * height / (3e4);
+    let starsCount = Math.floor(width * height / (3e4));
     let isPlay = false;
     let canvas, ctx;
     let particles = [];
@@ -113,7 +136,7 @@ function particlesAnimation(container, moveType = moveTypes.RANDOM) {
     }
 
 
-    const animate = async () => {
+    const animate = () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         if (!isPlay) return;
@@ -148,5 +171,5 @@ function particlesAnimation(container, moveType = moveTypes.RANDOM) {
         particles = [];
 
     }
-    return { start, stop }
+    return { start, stop };
 }
