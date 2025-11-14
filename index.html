@@ -24,156 +24,151 @@
     <div id='background-star2'></div>
     <div id='background-star3'></div>
   </div>
-  <div class="wrapper"><section id="side_panel" class="buttons-block expanded">
+  <div class="wrapper">
+    <section id="side_panel" class="buttons-block expanded">
 
-    <div class="setting-radio-group">
+      <div class="setting-radio-group">
         <button class="side-panel_login login-icon" onclick="window.location.href = './login'" data-title="login page">
-            <img id="side-panel-user-image" src="" onerror="this.src='./assets/img/account.svg';" alt="">
+          <img id="side-panel-user-image" src="" onerror="this.src='./assets/img/account.svg';" alt="">
         </button>
-    </div>
-
-    <div class="buttons-block__shortcuts">
-
-    </div>
-
-    <div class="buttons-block_tools">
-        <div class="setting-radio-group ">
-            <a class="side-panel_input side-panel_link" data-title="go to discord channel"
-                href="https://discord.gg/apzc6kCAbH" target="_blank">
-                <i class="side-panel__icon discord-icon"></i>
-            </a>
-        </div>
-        <div class="setting-radio-group ">
-            <input type="checkbox" name="open-settings-button" id="open-settings-button">
-            </input>
-            <label class="side-panel_input " data-title="settings" for="open-settings-button">
-                <i class="side-panel__icon settings-icon"></i>
-            </label>
-        </div>
-
-
-    </div>
-
-
-</section><section id="update-section" class="status__section  section">
-  <div class="status__container">
-    <div class="status__header-buttons hidden-header-buttons">
-      <a id="status-game-guide" class="header-button  header-icon tweak-button guide-icon " target="_blank" href="">
-      </a>
-      <button class="comments-button header-button header-icon chat-icon" data-title="show comments">
-      </button>
-      <button class="game-props-button header-button header-icon edit-icon" data-title="edit props">
-      </button>
-      <button class="header-button header-icon tweak-button tweak-icon"
-        onclick="ui.settings.openSettings(ui.statusPanel.contextMenuItems)">
-      </button>
-      <button class="header-button header-icon close-icon" data-title="close">
-    </div>
-
-    <div class="status__user-status status__front-side card-3d">
-      <div class="status__preview-container">
-        <img class="status__game-preview" id="game-preview" src="./assets/img/icon.png" alt=" " />
-        <p class="status__retro-ratio"></p>
-        <button id="watching-button" class="status__watch-button checked"
-          data-title="start/stop autoupdate achievements progression"></button>
       </div>
-      <div class="status__main-information">
-        <p class="status__title-container" id="game-title">
-          <a target="_blank" class="status__game-title" href="">Game tittle</a>
-        </p>
-        <p id="game-platform" class="status__description-text"></p>
-        <div id="rich-presence" class="rich-presence_text">Waiting...</div>
 
-        <div class="status__footer-container">
-          <div class="status__progression-container">
+      <div class="buttons-block__shortcuts">
+
+      </div>
+
+      <div class="buttons-block_tools">
+        <div class="setting-radio-group ">
+          <a class="side-panel_input side-panel_link" data-title="go to discord channel"
+            href="https://discord.gg/apzc6kCAbH" target="_blank">
+            <i class="side-panel__icon discord-icon"></i>
+          </a>
+        </div>
+        <div class="setting-radio-group ">
+          <input type="checkbox" name="open-settings-button" id="open-settings-button">
+          </input>
+          <label class="side-panel_input " data-title="settings" for="open-settings-button">
+            <i class="side-panel__icon settings-icon"></i>
+          </label>
+        </div>
+
+
+      </div>
+
+
+    </section>
+    <section id="update-section" class="status__section  section">
+      <div class="status__container">
+        <div class="status__header-buttons hidden-header-buttons">
+          <a id="status-game-guide" class="header-button  header-icon tweak-button guide-icon " target="_blank" href="">
+          </a>
+          <button class="comments-button header-button header-icon chat-icon" data-title="show comments">
+          </button>
+          <button class="game-props-button header-button header-icon edit-icon" data-title="edit props">
+          </button>
+          <button class="header-button header-icon tweak-button tweak-icon"
+            onclick="ui.settings.openSettings(ui.statusPanel.contextMenuItems)">
+          </button>
+          <button class="header-button header-icon close-icon" data-title="close">
+        </div>
+
+        <div class="status__user-status status__front-side card-3d">
+          <div class="status__preview-container">
+            <img class="status__game-preview" id="game-preview" src="./assets/img/icon.png" alt=" " />
+            <p class="status__retro-ratio"></p>
+            <button id="watching-button" class="status__watch-button checked"
+              data-title="start/stop autoupdate achievements progression"></button>
           </div>
+          <div class="status__main-information">
+            <p class="status__title-container" id="game-title">
+              <a target="_blank" class="status__game-title" href="">Game tittle</a>
+            </p>
+            <p id="game-platform" class="status__description-text"></p>
+            <div id="rich-presence" class="rich-presence_text">Waiting...</div>
+
+            <div class="status__footer-container">
+              <div class="status__progression-container">
+              </div>
+            </div>
+
+
+            <div id="magic-line" class="magic-line__container">
+
+            </div>
+          </div>
+          <div class="status__sideblock-container">
+            <div class="status__big-text status__game-time" id="status-progress-text"></div>
+            <div class="status__sideblock-icons" id="status__sideblock-icons">
+              <p class="signed-icon auto-font-size" data-title="cheevos count"><i
+                  class="description-icon achievements-icon  auto-font-size"></i>
+              </p>
+
+              <p class="signed-icon auto-font-size" data-title="total points"><i
+                  class="description-icon points-icon  auto-font-size"></i>
+              </p>
+              <p class="signed-icon auto-font-size" data-title="true ratio">
+                <i class="description-icon rarity-icon  auto-font-size"></i>
+              </p>
+              <p class="signed-icon auto-font-size" data-title="total retropoints"><i
+                  class="description-icon retropoints-icon  auto-font-size"></i>
+              </p>
+
+            </div>
+          </div>
+
+          <div class="status__background"></div>
         </div>
-
-
-        <div id="magic-line" class="magic-line__container">
-
-        </div>
-      </div>
-      <div class="status__sideblock-container">
-        <div class="status__big-text status__game-time" id="status-progress-text">01:12:78</div>
-        <div class="status__sideblock-icons" id="status__sideblock-icons">
-          <p class="signed-icon auto-font-size" data-title="cheevos count"><i
-              class="description-icon achievements-icon  auto-font-size"></i>0
-          </p>
-
-          <p class="signed-icon auto-font-size" data-title="total points"><i
-              class="description-icon points-icon  auto-font-size"></i>0
-          </p>
-          <p class="signed-icon auto-font-size" data-title="true ratio">
-            <i class="description-icon rarity-icon  auto-font-size"></i>0
-          </p>
-          <p class="signed-icon auto-font-size" data-title="total retropoints"><i
-              class="description-icon retropoints-icon  auto-font-size"></i>0
-          </p>
-
-        </div>
-      </div>
-
-      <div class="status__background"></div>
-      <!-- <div class="status__progress-bar" id="status-progress-bar"></div>
-      <div class="status__progress-bar_delta-values hidden" id="status_progress-bar-delta"></div> -->
-
-
-
-    </div>
-    <div class="status__back-side card-3d">
-      <div class="status__preview-container">
-        <img class="status__game-preview" id="update_achiv-preview"
-          src="https://media.retroachievements.org/Badge/55561.png" alt=" ">
-      </div>
-      <div class="status__text-block show-difficult">
-        <div class="status__alert-header">
-          <p id="update_achiv-title" target="_blank" class="status__alert-title" href="">Kawaiivania
-          </p>
-        </div>
-        <p id="update_achiv-description" class="status__alert-description">Reach the end of Stage 5
-          without
-          using charged attacks</p>
-        <div id="update_achiv-earned-points" class="status__text 
+        <div class="status__back-side card-3d">
+          <div class="status__preview-container">
+            <img class="status__game-preview" id="update_achiv-preview" src="" alt=" ">
+          </div>
+          <div class="status__text-block show-difficult">
+            <div class="status__alert-header">
+              <p id="update_achiv-title" target="_blank" class="status__alert-title" href="">
+              </p>
+            </div>
+            <p id="update_achiv-description" class="status__alert-description"></p>
+            <div id="update_achiv-earned-points" class="status__text 
         status__alert-points">
-          <p class="badge difficult-badge__pro">+5HP </p>
-          <p class="badge difficult-badge__pro">+5RP </p>
-          <p class="badge difficult-badge__pro">TOP58%</p>
+              <p class="badge difficult-badge__pro"></p>
+              <p class="badge difficult-badge__pro"></p>
+              <p class="badge difficult-badge__pro"></p>
+            </div>
+          </div>
+          <div class="status_glass-effect update"></div>
         </div>
+
       </div>
-      <div class="status_glass-effect update"></div>
-    </div>
 
-  </div>
-
-  <div class="resizer" id="status-resizer"></div>
-</section><section id="note_section" class="note_section  section">
-    <div class="header-container note-header">
+      <div class="resizer" id="status-resizer"></div>
+    </section>
+    <section id="note_section" class="note_section  section">
+      <div class="header-container note-header">
 
         <div class="header-icon note-icon"></div>
 
         <h2 class="widget-header-text note-header-text">
-            <div class="note__tabs-container">
-            </div>
+          <div class="note__tabs-container">
+          </div>
         </h2>
 
         <button class="header-button header-icon close-icon">
         </button>
-    </div>
-    <div class="note-container content-container">
+      </div>
+      <div class="note-container content-container">
         <div class="note__controls">
-            <button title="copy" class="note__control-button copy-icon" onclick="ui.note.copyNoteText()"></button>
-            <button title="paste" class="note__control-button paste-icon" onclick="ui.note.pasteTextToNote()"></button>
-            <button title="DELETE ALL" class="note__control-button clear-icon"
-                onclick="ui.note.clearTextNote()"></button>
+          <button title="copy" class="note__control-button copy-icon" onclick="ui.note.copyNoteText()"></button>
+          <button title="paste" class="note__control-button paste-icon" onclick="ui.note.pasteTextToNote()"></button>
+          <button title="DELETE ALL" class="note__control-button clear-icon" onclick="ui.note.clearTextNote()"></button>
         </div>
 
         <textarea placeholder="Your notes will be here" name="note_textaria" class="note-textaria scrollable"
-            id="note_textarea" cols="auto" rows="auto"></textarea>
-    </div>
-    <div class="resizer"></div>
-</section><section class="section rp__section" id="rp__section">
-    <div class="status__header-buttons hidden-header-buttons">
+          id="note_textarea" cols="auto" rows="auto"></textarea>
+      </div>
+      <div class="resizer"></div>
+    </section>
+    <section class="section rp__section" id="rp__section">
+      <div class="status__header-buttons hidden-header-buttons">
         <!-- <a id="rp-game-guide" class="header-button  header-icon tweak-button guide-icon " target="_blank" href="">
         </a> -->
         <button class="comments-button header-button header-icon chat-icon" data-title="show comments">
@@ -181,111 +176,108 @@
         <button class="game-props-button header-button header-icon edit-icon" data-title="edit props">
         </button>
         <button class="header-button header-icon tweak-button tweak-icon"
-            onclick="ui.settings.openSettings(ui.status.contextMenuItems)">
+          onclick="ui.settings.openSettings(ui.status.contextMenuItems)">
         </button>
         <button class="header-button header-icon close-icon" data-title="close">
 
-    </div>
-    <div class="rp__indicator"></div>
-    <div class="rp__game-container">
+      </div>
+      <div class="rp__indicator"></div>
+      <div class="rp__game-container">
         <div class="rp__preview-container">
-            <img class="rp__game-image" src="https://media.retroachievements.org/Images/065134.png" alt="" srcset="">
-            <button class="status__watch-button" id="rp__watch-button"></button>
+          <img class="rp__game-image" src="https://media.retroachievements.org/Images/065134.png" alt="" srcset="">
+          <button class="status__watch-button" id="rp__watch-button"></button>
         </div>
         <div class="rp__game-info">
-            <a class="rp__game-title" target="_blank">Lorem ipsum dolor </a>
-            <div class="rp__game-info-grid">
+          <a class="rp__game-title" target="_blank"></a>
+          <div class="rp__game-info-grid">
 
-                <p class="rp__game-platform">NES/Famicom</p>
-                <div class="rp__game-time">01:23:13</div>
-                <div class="icons-row-list rp__game-icons"></div>
+            <p class="rp__game-platform"></p>
+            <div class="rp__game-time"></div>
+            <div class="icons-row-list rp__game-icons"></div>
 
-            </div>
+          </div>
 
         </div>
-    </div>
-    <div class="rp__rich-presence">
-        Rich presence value
-    </div>
-    <div class="rp__alert-container">
+      </div>
+      <div class="rp__rich-presence">
+      </div>
+      <div class="rp__alert-container">
         <div class="rp__preview-container">
-            <img class="rp__game-image rp__alert-preview" src="https://media.retroachievements.org/Images/065134.png"
-                alt="" srcset="">
+          <img class="rp__game-image rp__alert-preview" src="" alt="" srcset="">
         </div>
         <div class="rp__alert-info-grid">
-            <h3 class="rp__alert-title">Alert title</h3>
-            <div class="rp__alert-description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur,
-                quod!
-            </div>
-            <div class="rp__alert-badges"></div>
+          <h3 class="rp__alert-title"></h3>
+          <div class="rp__alert-description">
+          </div>
+          <div class="rp__alert-badges"></div>
         </div>
 
-    </div>
-    <div class="rp__progression-container">
+      </div>
+      <div class="rp__progression-container">
         <h3 class="rp__progression-target">Beet the game</h3>
         <!-- <p class="rp-progression-description">
             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sit, ipsam?
         </p> -->
         <div class="rp__progression-points">
-            <div class="rp__progression-point earned"></div>
-            <div class="rp__progression-point earned"></div>
-            <div class="rp__progression-point earned"></div>
-            <div class="rp__progression-point"></div>
-            <div class="rp__progression-point"></div>
-            <div class="rp__progression-point"></div>
-            <div class="rp__progression-point"></div>
-            <div class="rp__progression-point"></div>
-            <div class="rp__progression-point"></div>
-            <div class="rp__progression-point"></div>
-            <div class="rp__progression-point"></div>
-            <div class="rp__progression-point"></div>
-            <div class="rp__progression-point"></div>
-            <div class="rp__win-points">
-                <div class="rp__progression-point win earned"></div>
-                <div class="rp__progression-point win"></div>
-            </div>
+          <div class="rp__progression-point earned"></div>
+          <div class="rp__progression-point earned"></div>
+          <div class="rp__progression-point earned"></div>
+          <div class="rp__progression-point"></div>
+          <div class="rp__progression-point"></div>
+          <div class="rp__progression-point"></div>
+          <div class="rp__progression-point"></div>
+          <div class="rp__progression-point"></div>
+          <div class="rp__progression-point"></div>
+          <div class="rp__progression-point"></div>
+          <div class="rp__progression-point"></div>
+          <div class="rp__progression-point"></div>
+          <div class="rp__progression-point"></div>
+          <div class="rp__win-points">
+            <div class="rp__progression-point win earned"></div>
+            <div class="rp__progression-point win"></div>
+          </div>
         </div>
-    </div>
-    <div class="rp__progressbar-container">
+      </div>
+      <div class="rp__progressbar-container">
         <div class="rp__progressbar-header">
-            <div class="rp__progressbar-title">
-                Progressbar value
-            </div>
-            <ul class="rp__last-cheevos">
-                <li class="last-cheevo"><img class="last-cheevo__img"
-                        src="https://media.retroachievements.org/Badge/02449.png" alt=""></li>
-                <li class="last-cheevo"><img class="last-cheevo__img"
-                        src="https://media.retroachievements.org/Badge/02449.png" alt=""></li>
-                <li class="last-cheevo"><img class="last-cheevo__img"
-                        src="https://media.retroachievements.org/Badge/02449.png" alt=""></li>
+          <div class="rp__progressbar-title">
+            Progressbar value
+          </div>
+          <ul class="rp__last-cheevos">
+            <li class="last-cheevo"><img class="last-cheevo__img"
+                src="https://media.retroachievements.org/Badge/02449.png" alt=""></li>
+            <li class="last-cheevo"><img class="last-cheevo__img"
+                src="https://media.retroachievements.org/Badge/02449.png" alt=""></li>
+            <li class="last-cheevo"><img class="last-cheevo__img"
+                src="https://media.retroachievements.org/Badge/02449.png" alt=""></li>
 
-            </ul>
+          </ul>
         </div>
         <div class="rp__progressbar-total">
-            <div class="rp__progressbar-value">
+          <div class="rp__progressbar-value">
 
-            </div>
+          </div>
         </div>
-    </div>
-    <div class="rp__ticker">
-    </div>
+      </div>
+      <div class="rp__ticker">
+      </div>
 
-    <ul class="rp__target-cheevos flex-main-list ">
+      <ul class="rp__target-cheevos flex-main-list ">
         <li class="target-achiv">
-            <div class="target-cheevo__preview-container">
-                <img class="target-cheevo__preview" src="https://media.retroachievements.org/Badge/02449.png" alt=""
-                    srcset="">
-            </div>
-            <div class="target-cheevo__description">
-                <h2 class="cheevo__header">Lorem ipsum dolor sit amet.</h2>
-                <div class="cheevo__description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam quis
-                    voluptates harum asperiores! Dic</div>
-            </div>
+          <div class="target-cheevo__preview-container">
+            <img class="target-cheevo__preview" src="https://media.retroachievements.org/Badge/02449.png" alt=""
+              srcset="">
+          </div>
+          <div class="target-cheevo__description">
+            <h2 class="cheevo__header">Lorem ipsum dolor sit amet.</h2>
+            <div class="cheevo__description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam quis
+              voluptates harum asperiores! Dic</div>
+          </div>
         </li>
 
-    </ul>
-    <div class="resizer"></div>
-</section>
+      </ul>
+      <div class="resizer"></div>
+    </section>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
   <script src="./dist/bundle.min.js"></script>

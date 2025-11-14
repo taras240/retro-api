@@ -33,38 +33,11 @@ export class Watcher {
         return this._gameData;
     }
     set GAME_DATA(gameObject) {
-        const widgets = [
-            "statusPanel",
-            "status",
-            "target",
-            "notifications",
-            "gameList"
-        ]
-        const updateWidgets = (isNewGame) => {
-            // ui.statusPanel.gameChangeEvent(isNewGame);
-            // ui.status?.gameChangeEvent(isNewGame);
-            // ui.gameList?.gameChangeEvent();
-            ui.achievementsBlock.forEach((widget) =>
-                widget?.parseGameAchievements(this.GAME_DATA)
-            );
-
-            ui.gameCard?.updateGameCardInfo(this.GAME_DATA);
-
-            // ui.target.gameChangeEvent();
-            // ui.notifications?.gameChangeEvent(isNewGame);
-            widgets.forEach(widgetName => ui[widgetName].gameChangeEvent(isNewGame))
-            ui.note?.updateGame();
-
-
-
-            ui.progression?.generateProgression();
-        }
         this.savePlayTime();
         const isNewGame = this.GAME_DATA && gameObject.ID != this.GAME_DATA?.ID;
         this._gameData = gameObject;
         this.initPlayTime();
         ui.gameChangeEvent(isNewGame);
-        // updateWidgets(isNewGame);
     }
 
     constructor() {

@@ -231,7 +231,7 @@ export class StatusPanel extends Widget {
         showMasteryRate: true,
         showGameBg: true,
         showTimeBar: true,
-        statusDescriptionVariant: "show-game-info",
+        statusDescriptionVariant: "progression",
         hardMode: true,
         showNewAchiv: true,
         showUpdateBlink: true,
@@ -462,7 +462,7 @@ export class StatusPanel extends Widget {
                 event.stopPropagation();
                 this.close();
             }
-            else {
+            else if (event.button === 0) {
                 moveEvent(this.section, event);
             }
         });

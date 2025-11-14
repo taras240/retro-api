@@ -145,7 +145,6 @@ export class APIWorker {
     let aotw = await this.getCachedData({ dataType: cacheDataTypes.AOTW });
 
     const isActual = aotw && isActualDate(aotw.StartAt);
-    console.log(isActual)
     if (!isActual) {
       aotw = await this.getAotW();
       this.pushToCache({ dataType: cacheDataTypes.AOTW, data: aotw })

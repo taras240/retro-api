@@ -22,6 +22,9 @@ import { scrollElementIntoView } from "../functions/scrollingToElement.js";
 import { getHoveredEdge } from "../functions/hoveredEdges.js";
 import { moveDirections } from "../enums/moveDirections.js";
 import { recentCheevoHtml } from "../components/statusWidget/recentCheevo.js";
+import { progressionBarHtml } from "../components/statusWidget/progressionBar.js";
+import { progressBarHtml, updateProgressBarData } from "../components/statusWidget/progressBar.js";
+import { progressTypes } from "../enums/progressBar.js";
 export class Status extends Widget {
     widgetIcon = {
         description: "status widget (v2)",
@@ -64,6 +67,19 @@ export class Status extends Widget {
                         event: `onchange="ui.status.uiProps.showProgressbar = this.checked"`,
                     },
                 ],
+            },
+            {
+                label: ui.lang.progressbar,
+                elements: Object.values(progressTypes).map(type =>
+                ({
+                    type: inputTypes.RADIO,
+                    name: "progressbar-type",
+                    id: `progressbar-type-${type}`,
+                    label: ui.lang?.[type] ?? type,
+                    checked: this.uiProps.progressType == type,
+                    event: `onclick="ui.status.uiProps.progressType = '${type}';"`,
+                })
+                )
             },
             {
                 label: ui.lang.time,
@@ -123,6 +139,7 @@ export class Status extends Widget {
         showTicker: true,
         showProgressbar: true,
         showProgression: true,
+        progressType: progressTypes.cheevos
     }
     uiSetCallbacks = {
         time(value) {
@@ -132,6 +149,9 @@ export class Status extends Widget {
             value ? this.ticker.startScrolling() : this.ticker.stopScrolling();
 
             this.setElementsValues();
+        },
+        progressType(value) {
+            this.updateProgressBar();
         }
     };
     uiValuePreprocessors = {
@@ -195,10 +215,8 @@ export class Status extends Widget {
 
         }
         this.richPresenceElement = this.section.querySelector(".rp__rich-presence");
-        this.progressionElements = {
-            header: this.section.querySelector(".rp__progression-target"),
-            pointsContainer: this.section.querySelector(".rp__progression-points")
-        }
+        this.progressionContainer = this.section.querySelector(".rp__progression-container")
+
         this.progressbarElements = {
             container: this.section.querySelector(".rp__progressbar-container"),
             title: this.section.querySelector(".rp__progressbar-title"),
@@ -241,7 +259,7 @@ export class Status extends Widget {
                 this.close();
             }
             // Drag Section Event
-            else {
+            else if (event.button === 0) {
                 moveEvent(this.section, event);
             }
         });
@@ -273,46 +291,23 @@ export class Status extends Widget {
         this.uiProps.showTicker && this.ticker.startScrolling();
 
     }
-    fillProgression = () => {
-        const isEarned = (cheevo) => this.IS_HARD_MODE ?
-            (cheevo.isHardcoreEarned ? "earned" : "") :
-            (cheevo.isEarned ? "earned" : "");
-        const progressionCheevos = Object.values(watcher.CHEEVOS)
-            .filter(a => a.Type == cheevoTypes.PROGRESSION)
-            .sort((a, b) => sortBy.default(a, b));
-        const winCheevos = Object.values(watcher.CHEEVOS)
-            .filter(a => a.Type == cheevoTypes.WIN);
 
-        const progressionHtml = progressionCheevos.reduce((html, cheevo) => {
-            html += `
-                    <div class="rp__progression-point ${isEarned(cheevo)}" data-achiv-id=${cheevo.ID}></div>
-                `;
-            return html
-        }, "");
-        const winHtml = winCheevos.reduce((html, cheevo) => {
-            html += `<div class="rp__progression-point win ${isEarned(cheevo)}" data-achiv-id=${cheevo.ID}></div>`;
-            return html
-        }, "");
-        this.progressionElements.pointsContainer.innerHTML = progressionHtml + winHtml;
-        const progressionCheevoses = Object.values(watcher.CHEEVOS)
-            .filter(a => filterBy.progression(a))
-            .sort((a, b) => sortBy.default(a, b));
-        const focusCheevo = progressionCheevoses
-            .find(a => !isEarned(a));
-        const focusIndex = progressionCheevoses.findIndex(c => !isEarned(c));
-        this.progressionElements.header.innerHTML = focusCheevo ?
-            `${badgeElements.gold(`${focusIndex + 1}/${progressionCheevoses?.length}`)} ${focusCheevo.Description}` : watcher.GAME_DATA?.progressionAward ?
-                ui.lang.gameBeatenMsg : ui.lang.noProgressionMsg;
-        const focusElement = this.progressionElements.pointsContainer.querySelector(`[data-achiv-id="${focusCheevo?.ID}"]`);
-        focusElement?.classList.add("focus");
-
+    updateProgressionBar() {
+        this.progressionContainer.innerHTML = progressionBarHtml(watcher?.GAME_DATA, this.IS_HARD_MODE);
         scrollElementIntoView({
-            container: this.progressionElements.pointsContainer,
-            element: focusElement || this.progressionElements.pointsContainer.querySelector(`.rp__progression-point:last-child`),
+            container: this.progressionContainer.querySelector(".rp__progression-points"),
+            element: this.progressionContainer.querySelector(`.rp__progression-points .focus`),
             scrollByY: false,
             scrollByX: true
         });
-
+    }
+    updateProgressBar() {
+        updateProgressBarData(
+            this.section,
+            watcher?.GAME_DATA,
+            this.IS_HARD_MODE,
+            this.uiProps.progressType
+        );
     }
     fillGameData() {
         const fillGameInfoData = () => {
@@ -338,98 +333,16 @@ export class Status extends Widget {
             const time = this.getActiveTime();
             this.gameElements.time.innerHTML = time;
         }
-        const fillProgressbar = () => {
-            const completionMsg = () => {
-                switch (watcher.GAME_DATA.award) {
-                    case "mastered":
-                        return ui.lang.gameMasteredMsg;
-                    case "completed":
-                        return ui.lang.gameCompletedMsg;
-                    default:
-                        const unlockProgress = `${earnedCount}/${totalCheevos} ${badgeElements.gold(parseInt(100 * earnedCount / totalCheevos) + "%")}`;
-                        return ui.lang.unlockProgressMsg?.replace("***", unlockProgress)
-
-                }
-            }
-
-
-            const earnedCount = this.IS_HARD_MODE ? watcher.GAME_DATA?.earnedStats?.hard?.count ?? 0 :
-                watcher.GAME_DATA?.earnedStats?.soft?.count ?? 0
-                ;
-            const totalCheevos = watcher.GAME_DATA?.NumAchievements ?? "";
-            this.progressbarElements.title.innerHTML = completionMsg();
-
-            this.progressbarElements.container.style.setProperty("--earnedRate", 100 * earnedCount / totalCheevos + "%")
-
-            const lastCheevos = Object.values(watcher.CHEEVOS)
-                .filter(a => filterBy.earned(a))
-                .sort((a, b) => sortBy.latest(a, b, 1, true))
-                .slice(0, 6)
-                .reverse();
-            this.progressbarElements.lastCheevos.innerHTML = lastCheevos.reduce((html, cheevo) => {
-                html += recentCheevoHtml(cheevo);
-                return html
-            }, "")
-        }
         fillGameInfoData();
-        this.fillProgression();
-        fillProgressbar();
+        this.updateProgressionBar();
+        this.updateProgressBar();
         this.startAutoScrollElement(this.richPresenceElement, true, 10 * 1000);
     }
     updateProgress({ earnedAchievementIDs }) {
-        const updateProgression = () => {
-            const focusID = this.progressionElements.pointsContainer.querySelector(".rp__progression-point:not(.earned)")?.dataset?.achivId;
-            const focusCheevo = watcher.CHEEVOS[focusID];
-            this.progressionElements.header.innerHTML = focusCheevo ?
-                focusCheevo.Description : watcher.GAME_DATA?.progressionAward ?
-                    ui.lang.gameBeatenMsg : ui.lang.noProgressionMsg;
-            if (focusID) {
-                const focusElement = this.progressionElements.pointsContainer.querySelector(`[data-achiv-id="${focusID}"`);
-                focusElement?.classList.add("focus");
-                focusCheevo && scrollElementIntoView({
-                    container: this.progressionElements.pointsContainer,
-                    element: focusElement,
-                    scrollByY: true,
-                    scrollByX: false
-                });
-            }
-
-        }
-        const updateProgressBar = () => {
-            const completionMsg = () => {
-                switch (watcher.GAME_DATA.award) {
-                    case "mastered":
-                        return ui.lang.gameMasteredMsg;
-                    case "completed":
-                        return ui.lang.gameCompletedMsg;
-                    default:
-                        const unlockProgress = `${earnedCount}/${totalCheevos} ${badgeElements.gold(parseInt(100 * earnedCount / totalCheevos) + "%")}`;
-                        return ui.lang.unlockProgressMsg?.replace("***", unlockProgress)
-
-                }
-            }
-            const earnedCount = this.IS_HARD_MODE ? watcher.GAME_DATA?.earnedStats?.hard?.count ?? 0 :
-                watcher.GAME_DATA?.earnedStats?.soft?.count ?? 0
-                ;
-            const totalCheevos = watcher.GAME_DATA?.NumAchievements ?? "";
-            this.progressbarElements.title.innerHTML = completionMsg();
-
-            this.progressbarElements.container.style.setProperty("--earnedRate", 100 * earnedCount / totalCheevos + "%")
-
-            const lastCheevos = Object.values(watcher.CHEEVOS)
-                .filter(a => filterBy.earned(a))
-                .sort((a, b) => sortBy.latest(a, b, 1, true))
-                .slice(0, 6)
-                .reverse();
-            this.progressbarElements.lastCheevos.innerHTML = lastCheevos.reduce((html, cheevo) => {
-                html += recentCheevoHtml(cheevo);
-                return html
-            }, "")
-        }
         earnedAchievementIDs?.length > 0 && (this.IS_HARD_MODE = !!watcher.CHEEVOS[earnedAchievementIDs[0]].isHardcoreEarned);
 
-        this.fillProgression();
-        updateProgressBar();
+        this.updateProgressionBar();
+        this.updateProgressBar();
         // this.gameChangeEvent();
     }
     alertsQuery = [];

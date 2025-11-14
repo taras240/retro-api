@@ -245,8 +245,10 @@
     padding: 0.25rem 0.5rem;
     display: flex;
     flex-direction: column;
-    row-gap: 0.5rem;
+    /* row-gap: 0.5rem; */
     display: none;
+    height: calc(3rem - 1px);
+    justify-content: space-between;
 }
 
 .show-progressbar .rp__progressbar-container {
@@ -308,32 +310,41 @@
 
 .rp__progressbar-title {
     font-size: 1.1rem;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .rp__progressbar-total {
     position: relative;
     width: 100%;
-    height: calc(0.4rem - 1px);
+    height: calc(0.4rem);
     border-radius: 5rem;
     background-color: var(--selection-color);
     margin: 0 0 1px;
 }
 
+.rp__progressbar-container.fat .rp__progressbar-total {
+    height: 0.6rem;
+    border-radius: 0;
+    border: 1px solid var(--accent-color);
+}
+
 .rp__progressbar-total::before,
 .rp__progressbar-value {
     position: absolute;
-    width: var(--earnedRate);
+    width: var(--unlockRate);
     height: 100%;
     background-color: var(--accent-color);
     /* box-shadow: 0 0 2px 0px var(--accent-color); */
     border-radius: inherit;
+
 }
 
 .rp__progressbar-total::before {
     --margin: 1px;
     content: "";
     background-color: lime;
-    width: calc(var(--earnedRate) - var(--margin)*2);
+    width: calc(var(--unlockRate) - var(--margin)*2);
     margin-left: var(--margin);
 }
 
