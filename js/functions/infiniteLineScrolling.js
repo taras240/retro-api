@@ -19,19 +19,14 @@ export function infiniteLineScrolling({ container, textGenerator }) {
     let scrollInterval = null;
     const step = async () => {
         container.scrollBy({ left: 1, behavior: 'auto' });
-
-        const first = container.querySelector('.infinite-line');
-        if (first) {
-            const firstRight = first.offsetLeft + first.offsetWidth;
-            if (firstRight <= container.scrollLeft) {
-                const prevScroll = container.scrollLeft;
-                const removedWidth = first.offsetWidth;
-                first.remove();
-
+        const linePart = container.querySelector('.infinite-line');
+        if (linePart) {
+            const deltaPosX = linePart.offsetWidth - container.scrollLeft;
+            if (deltaPosX <= 0) {
+                linePart.remove();
                 const newEl = markText(textGenerator());
                 container.appendChild(newEl);
-
-                container.scrollLeft = Math.max(0, prevScroll - removedWidth);
+                container.scrollLeft = 0;
             }
         }
 

@@ -32,7 +32,7 @@ export class PopupWindow extends Widget {
             <div class="${"widget-content__container"}">
                 ${content}
             </div>
-            <div class="resizer"></div>`;
+            ${resizerHtml()}`;
         this.section = widget;
         ui.app.appendChild(widget);
     }

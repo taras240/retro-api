@@ -55,6 +55,8 @@ export const icons = {
     rating: unicodeIcon("🔥"),
     rarity: unicodeIcon("📈"),
     retroRatio: unicodeIcon("💎"),
+    masteryAward: unicodeIcon("🏆"),
+    progressionAward: unicodeIcon("🎖️"),
     // rarity: (rarity) => `<i>📈</i>`,
     // retroRatio: (retroRatio) => `<i>💎</i>`,
     cheevoType: (type) => `<i class=" description-icon ${type ?? "none"}" data-title="[${type ?? "none"}]"></i> `,

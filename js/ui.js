@@ -26,6 +26,7 @@ import { UserStatistic } from "./widgets/userStatistic.js";
 import { Notifications } from "./widgets/notifications.js";
 import { Games } from "./widgets/games.js";
 // import { Aotw } from "./widgets/aotw.js";
+// import { Status } from "./widgets/statusV2.js";
 import { Status } from "./widgets/statusV2.js";
 import { TwitchIntegration } from "./twitch.js";
 import { GameList } from "./widgets/gamesList.js";

@@ -4,6 +4,7 @@ import { cheevoTypes } from "./enums/cheevoTypes.js";
 import { delay } from "./functions/delay.js";
 import { sendDiscordAlert } from "./functions/discord.js";
 import { readLog } from "./functions/logParser.js";
+import { formatTime } from "./functions/time.js";
 import { apiWorker, config, configData, ui, watcher } from "./script.js";
 export class Watcher {
     RP_DATA = { text: "", lastChange: "" };
@@ -429,5 +430,25 @@ export class Watcher {
             config.gamesDB[this.GAME_DATA.ID].TimePlayed = playTime;
             config.writeConfiguration();
         }
+    }
+    getActiveTime = (timeType, timerTime = 0) => {
+        let time = 0;
+        const { sessionTime, totalGameTime, gameTime } = this.playTime;
+        switch (timeType) {
+            case ("totalSessionTime"):
+                time = sessionTime;
+                break;
+            case ("playTime"):
+                time = totalGameTime;
+                break;
+            case ("sessionTime"):
+                time = gameTime;
+                break;
+            case ("timer"):
+                time = timerTime - gameTime;
+                break;
+        }
+
+        return formatTime(time, true);
     }
 }

@@ -1168,3 +1168,23 @@ input[type="radio"]:checked+.context-menu_radio::after {
         opacity: 1;
     }
 }
+
+.sweep-effect-element {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    left: 100%;
+    background: linear-gradient(to right, transparent, rgb(255, 0, 234), transparent);
+    animation: sweep-bg-animation 1s ease-in-out forwards;
+}
+
+@keyframes sweep-bg-animation {
+    from {
+        left: -100%;
+    }
+
+    to {
+        left: 100%;
+    }
+}

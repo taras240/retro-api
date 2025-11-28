@@ -2,16 +2,14 @@ import { UI } from "../ui.js";
 import { config, ui, watcher } from "../script.js";
 import { Widget } from "./widget.js";
 import { applyFilter, applySort, cheevosFiterNames, cheevosSortNames, filterBy, filterMethods, sortBy, sortMethods } from "../functions/sortFilter.js";
-import { moveEvent } from "../functions/movingWidget.js";
-import { resizeEvent } from "../functions/resizingWidget.js";
 import { delay } from "../functions/delay.js";
 import cheevoGrouping from "../enums/cheevoGrouping.js";
 import { scrollElementIntoView } from "../functions/scrollingToElement.js";
 import { inputTypes } from "../components/inputElements.js";
-import { overlayNames, overlayTypes } from "../enums/cheevoOverlay.js";
+import { overlayNames } from "../enums/cheevoOverlay.js";
 import { imageFilters } from "../enums/imageFilters.js";
-import { generateContextMenu } from "../components/contextMenu.js";
 import { buttonsHtml } from "../components/htmlElements.js";
+import { resizerHtml } from "../components/resizer.js";
 export class AchievementsBlock extends Widget {
     widgetIcon = {
         description: "cheevos widget",
@@ -869,7 +867,7 @@ export class AchievementsBlock extends Widget {
             ${buttonsHtml.close()}
         </div>
         <ul class="achievements-container content-container"></ul>
-        <div class="resizer"></div>
+        ${resizerHtml()}
       `;
         return newWidget;
     }

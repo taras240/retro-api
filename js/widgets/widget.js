@@ -7,6 +7,7 @@ import { resizeEvent } from "../functions/resizingWidget.js";
 import { moveDirections, sumDirections } from "../enums/moveDirections.js";
 import { getHoveredEdge } from "../functions/hoveredEdges.js";
 import { buttonsHtml } from "../components/htmlElements.js";
+import { resizerHtml } from "../components/resizer.js";
 
 export class Widget {
     widgetIcon = {
@@ -140,8 +141,7 @@ export class Widget {
                 ${buttonsHtml.close()}
             </div>
             <div class="${contentClasses ? contentClasses.join(" ") : "widget-content__container"}"></div>
-            <div class="resizer">
-            </div>`;
+            ${resizerHtml()}`;
         return widget;
     }
     open() {

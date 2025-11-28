@@ -1,6 +1,7 @@
 .buttons-block {
     --side-panel-width: 100px;
     --button-height: 2rem;
+    --font-color: white;
     position: fixed;
     top: 0;
     left: calc(0px - var(--side-panel-width) - 5px);

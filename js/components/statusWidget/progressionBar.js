@@ -3,8 +3,9 @@ import { filterBy, sortBy } from "../../functions/sortFilter.js";
 import { ui } from "../../script.js";
 import { badgeElements } from "../badges.js";
 
+const mainClass = "rp__progression";
 
-export const progressionBarHtml = (gameData, isHardMode = true) => {
+export const updateProgressionBar = (container, gameData, isHardMode = true) => {
     const isEarned = (cheevo) => cheevo.isHardcoreEarned ||
         (cheevo.isEarned && !isHardMode);
     const progressionMessage = (focusCheevo, focusIndex, cheevos) => {
@@ -43,13 +44,21 @@ export const progressionBarHtml = (gameData, isHardMode = true) => {
     const focusCheevo = cheevos.find(a => !isEarned(a));
     const focusIndex = cheevos.findIndex(c => !isEarned(c));
 
-    return `
-        <h3 class="rp__progression-target">
+    container.innerHTML = `
+        <h3 class="${mainClass}-target">
             ${progressionMessage(focusCheevo, focusIndex, cheevos)}
         </h3>
-        <div class="rp__progression-points">
+        <div class="${mainClass}-points">
             ${progressionPoints(focusCheevo, cheevos)}
         </div>
     `;
 }
 
+export const progressionBarHtml = (theme) => {
+    return `
+        <div class="${mainClass}-container">
+            <h3 class="${mainClass}-target"></h3>
+            <div class="${mainClass}-points"></div>
+        </div>
+    `;
+}

@@ -14,7 +14,7 @@ const sections = {
   // user: "./elements/userInfo.elem",
   // notification: "./elements/notification.elem",
   // stats: "./elements/stats.elem",
-  statusV2: "./elements/statusV2.elem",
+  // statusV2: "./elements/statusV2.elem",
   // achievemas: "./elements/achievemas.elem"
 };
 export async function loadSections() {

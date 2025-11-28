@@ -314,6 +314,14 @@
     mask-image: url(../assets/img/favorite.svg);
 }
 
+.mastery-icon {
+    mask-image: url(../assets/img/award-beaten.svg);
+}
+
+.beaten-icon {
+    mask-image: url(../assets/img/award-mastered.svg);
+}
+
 .favourite_icon {
     mask-image: url(../assets/img/favorite_border.svg);
 }

@@ -5,7 +5,7 @@ import { icons, signedIcons } from "../components/icons.js"
 
 import { generateBadges, badgeElements, goldBadge } from "../components/badges.js";
 import { config, ui, watcher } from "../script.js";
-import { Widget } from "./widget.js";
+import { Widget } from "../widgets/widget.js";
 import { filterBy, sortBy } from "../functions/sortFilter.js";
 import { showComments } from "../components/comments.js";
 import { moveEvent } from "../functions/movingWidget.js";
@@ -25,29 +25,12 @@ import { recentCheevoHtml } from "../components/statusWidget/recentCheevo.js";
 import { progressionBarHtml, updateProgressionBar } from "../components/statusWidget/progressionBar.js";
 import { progressBarHtml, updateProgressBarData } from "../components/statusWidget/progressBar.js";
 import { progressTypes } from "../enums/progressBar.js";
-import { buttonsHtml } from "../components/htmlElements.js";
-import { resizerHtml } from "../components/resizer.js";
-import { tickerHtml } from "../components/statusWidget/ticker.js";
-import { richPresenceHtml } from "../components/statusWidget/richPresence.js";
-import { indicatorHtml } from "../components/statusWidget/statusIndicator.js";
-import { statusThemes } from "../enums/statusThemes.js";
-import { StatusPanel } from "./status.js";
-import { alertHtml, updateAlertContainer } from "../components/statusWidget/alert.js";
-import { gameInfoHtml } from "../components/statusWidget/gameInfo.js";
-import { timePosition } from "../enums/timePosition.js";
-import { gameInfoTypes } from "../enums/gameInfoTypes.js";
-import { gameInfoIconsHtml } from "../components/statusWidget/gameInfoIcons.js";
-import { sweepEffect } from "../components/windowEffects.js";
-
-export class Status extends Widget {
-
-    ACHIV_DURATION = 15000;
-    IS_HARD_MODE = true;
-
+export class StatusOld extends Widget {
     widgetIcon = {
-        description: "status widget",
-        iconID: `side-panel__status1`,
+        description: "status widget (v2)",
+        iconID: `side-panel__status-v2`,
         onChangeEvent: `ui.status.VISIBLE = this.checked`,
+        badgeLabel: "v2",
         iconClass: "status-icon",
     };
     get contextMenuItems() {
@@ -84,32 +67,6 @@ export class Status extends Widget {
                         event: `onchange="ui.status.uiProps.showProgressbar = this.checked"`,
                     },
                 ],
-            },
-            {
-                label: "**GameInfo Type**",
-                elements: Object.values(gameInfoTypes).map(type =>
-                ({
-                    type: inputTypes.RADIO,
-                    name: "info-type",
-                    id: `info-type-${type}`,
-                    label: ui.lang?.[type] ?? type,
-                    checked: this.uiProps.gameInfoType == type,
-                    event: `onclick="ui.status.uiProps.gameInfoType = '${type}';"`,
-                })
-                )
-            },
-            {
-                label: ui.lang.style,
-                elements: Object.keys(statusThemes).map(theme =>
-                ({
-                    type: inputTypes.RADIO,
-                    name: "status-theme",
-                    id: `status-theme-${theme}`,
-                    label: ui.lang?.[theme] ?? theme,
-                    checked: this.uiProps.statusTheme == theme,
-                    event: `onclick="ui.status.uiProps.statusTheme = '${theme}';"`,
-                })
-                )
             },
             {
                 label: ui.lang.progressbar,
@@ -169,21 +126,12 @@ export class Status extends Widget {
                         event: `onchange="ui.status.uiProps.timerTime = this.value;"`,
                         onChange: "ui.status.uiProps.timerTime = this.value;",
                     },
-                    ...Object.keys(timePosition).map(position =>
-                    ({
-                        type: inputTypes.RADIO,
-                        name: "time-pos",
-                        id: `time-pos-${position}`,
-                        label: ui.lang?.[position] ?? position,
-                        checked: this.uiProps.timePosition == position,
-                        event: `onclick="ui.status.uiProps.timePosition = '${position}';"`,
-                    })
-                    )
                 ],
             },
 
         ];
     }
+
     uiDefaultValues = {
         time: "playTime",
         timerTime: 30,
@@ -191,13 +139,10 @@ export class Status extends Widget {
         showTicker: true,
         showProgressbar: true,
         showProgression: true,
-        progressType: progressTypes.cheevos,
-        statusTheme: "rerw",
-        timePosition: timePosition.normal,
-        gameInfoType: gameInfoTypes.progressbar
+        progressType: progressTypes.cheevos
     }
     uiSetCallbacks = {
-        time() {
+        time(value) {
             this.gameElements.time.innerText = watcher.getActiveTime(this.uiProps.time, this.uiProps.timerTime);
         },
         showTicker(value) {
@@ -205,19 +150,10 @@ export class Status extends Widget {
 
             this.setElementsValues();
         },
-        progressType() {
+        progressType(value) {
             this.updateProgressBar();
-        },
-        statusTheme() {
-            this.section.remove();
-            ui.status = new Status();
-            ui.status.gameChangeEvent(false);
-        },
-        gameInfoType() {
-            this.updateGameInfo();
         }
     };
-
     uiValuePreprocessors = {
         timerTime(value) {
             if (value <= 0) value = 1;
@@ -225,16 +161,37 @@ export class Status extends Widget {
             return value * 60;
         }
     };
+
+    ACHIV_DURATION = 15000;
+    IS_HARD_MODE = true;
+    // getActiveTime = () => {
+    //     let time = 0;
+
+    //     switch (this.uiProps.time) {
+    //         case ("totalSessionTime"):
+    //             time = watcher.playTime.sessionTime;
+    //             break;
+    //         case ("playTime"):
+    //             time = watcher.playTime.totalGameTime;
+    //             break;
+    //         case ("sessionTime"):
+    //             time = watcher.playTime.gameTime;
+    //             break;
+    //         case ("timer"):
+    //             time = this.uiProps.timerTime - watcher.playTime.gameTime;
+    //             break;
+    //     }
+
+    //     return formatTime(time, true);
+    // }
     constructor() {
         super();
-        this.generateWidget();
         this.addWidgetIcon();
         this.initializeElements();
         UI.applyPosition({ widget: this });
         this.setElementsValues();
         this.addEvents();
     }
-
     initializeElements() {
         this.section = document.querySelector(".rp__section");
         this.sectionID = this.section.id;
@@ -266,47 +223,9 @@ export class Status extends Widget {
         }
         this.tickerElement = this.section.querySelector(".rp__ticker");
         this.ticker = infiniteLineScrolling({ container: this.tickerElement, textGenerator: generateMagicLineText });
-    }
-    generateWidget() {
-        const widgetID = "rp__section";
-        const headerElementsHtml = `
-        `;
+        this.cheevosList = this.section.querySelector(".rp__target-cheevos");
 
-        const widgetData = {
-            classes: ["rp__section", "section"],
-            id: widgetID,
-            title: ui.lang.targetSectionName,
-            headerElementsHtml: headerElementsHtml,
-            contentClasses: ["target-container", "content-container", "flex-main-list"],
-        };
-
-        const widget = this.generateWidgetElement(widgetData);
-        ui.app.appendChild(widget);
     }
-    generateWidgetElement({ classes, id, title, headerElementsHtml, contentClasses }) {
-        const widget = document.createElement("section");
-        widget.classList.add(...classes);
-        widget.id = id;
-        const theme = config.ui?.[id]?.statusTheme ?? statusThemes.v1;
-        const isWatching = watcher?.IS_WATCHING;
-        widget.innerHTML = `
-            <div class="hidden-header-buttons">
-                ${headerElementsHtml ?? ""}
-                ${buttonsHtml.close()}
-            </div>
-            ${indicatorHtml()}
-            ${alertHtml()}
-            <div class="rp-content__container">
-                ${gameInfoHtml()}
-                ${richPresenceHtml()}
-                ${progressionBarHtml()}
-                ${progressBarHtml()}
-            </div>
-            ${tickerHtml()}
-            ${resizerHtml()}`;
-        return widget;
-    }
-
     addEvents() {
         this.section.addEventListener("mousemove", (event) => {
             this.section.classList.remove(...Object.values(moveDirections).map(dir => "hover-" + dir), "resize-hover");
@@ -360,11 +279,8 @@ export class Status extends Widget {
         this.section.classList.toggle("show-progression", this.uiProps.showProgression);
         this.section.classList.toggle("show-progressbar", this.uiProps.showProgressbar);
         this.richPresenceElement.classList.toggle("hidden", !this.uiProps.showRichPresence)
-        this.gameElements.time && (this.gameElements.time.dataset.position = this.uiProps.timePosition);
+
         this.uiProps.showTicker && watcher.GAME_DATA && this.ticker.startScrolling();
-    }
-    doUpdateAnimation() {
-        sweepEffect(this.section);
     }
     gameChangeEvent(isNewGame = false) {
         if (isNewGame && watcher.IS_WATCHING) {
@@ -372,87 +288,52 @@ export class Status extends Widget {
         }
         this.fillGameData();
         this.uiProps.showTicker && this.ticker.startScrolling();
-        this.doUpdateAnimation();
+
     }
 
     updateProgressionBar() {
-        this.section
-            .querySelectorAll(".rp__progression-container")
-            ?.forEach(container => {
-                updateProgressionBar(container, watcher?.GAME_DATA, this.IS_HARD_MODE);
-                scrollElementIntoView({
-                    container,
-                    element: container.querySelector(`.rp__progression-points .focus`),
-                    scrollByX: true,
-                    scrollByY: false,
+        updateProgressionBar(this.progressionContainer, watcher?.GAME_DATA, this.IS_HARD_MODE);
 
-                });
-            }
-            )
-
+        scrollElementIntoView({
+            container: this.progressionContainer.querySelector(".rp__progression-points"),
+            element: this.progressionContainer.querySelector(`.rp__progression-points .focus`),
+            scrollByY: false,
+            scrollByX: true
+        });
     }
     updateProgressBar() {
-        this.section.querySelectorAll(".rp__progressbar-container")?.forEach(
-            container => updateProgressBarData(
-                container,
-                watcher?.GAME_DATA,
-                this.IS_HARD_MODE,
-                this.uiProps.progressType
-            ));
-    }
-    updateGameInfo() {
-        const gameInfoContent = this.section.querySelector(".rp__game-info-content");
-        const updateIcons = () => {
-            const { ConsoleID, NumAchievements, totalPoints, retroRatio } = watcher.GAME_DATA;
-
-            this.section.querySelector(".rp__game-platform")?.setHTMLUnsafe(signedIcons.platform(ConsoleID));
-
-            this.section.querySelector(".rp__game-icons")?.setHTMLUnsafe(`
-                    ${signedIcons.cheevos(NumAchievements)}
-                    ${signedIcons.points(totalPoints)}
-                    ${signedIcons.retroRatio(retroRatio)}
-                `)
-        }
-        switch (this.uiProps.gameInfoType) {
-            case gameInfoTypes.progressbar:
-                gameInfoContent.innerHTML = progressBarHtml();
-                this.updateProgressBar();
-                break;
-            case gameInfoTypes.progression:
-                gameInfoContent.innerHTML = progressionBarHtml();
-                this.updateProgressionBar();
-                break;
-            case gameInfoTypes.icons:
-                gameInfoContent.innerHTML = gameInfoIconsHtml();
-                updateIcons();
-                break;
-            default:
-                gameInfoContent.innerHTML = progressionBarHtml();
-                this.updateProgressionBar();
-                break;
-        }
-
+        updateProgressBarData(
+            this.section,
+            watcher?.GAME_DATA,
+            this.IS_HARD_MODE,
+            this.uiProps.progressType
+        );
     }
     fillGameData() {
         const fillGameInfoData = () => {
             const { ImageIcon, FixedTitle, badges, ConsoleName, ConsoleID, ID, NumAchievements, totalPoints, retroRatio } = watcher.GAME_DATA;
-
-            this.gameElements.icon.src = gameImageUrl(ImageIcon);
-
+            this.gameElements.icon.setAttribute("src", gameImageUrl(ImageIcon));
             this.gameElements.title.innerHTML = `
-                ${FixedTitle || ""}
-                ${generateBadges(badges)}
+            ${FixedTitle || "Some game name"}
+            ${generateBadges(badges)}
             `;
-            this.gameElements.title.href = gameUrl(ID);
-
+            this.gameElements.title.setAttribute(
+                "href",
+                gameUrl(ID)
+            );
             setTimeout(() => this.startAutoScrollElement(this.gameElements.title, true, 10 * 1000), 10 * 1000);
+            this.gameElements.platform.innerHTML = signedIcons.platform(ConsoleID); //ConsoleName
+            this.richPresenceElement.innerText = ui.lang.richPresence;
+            this.gameElements.gameIcons.innerHTML = `
+                ${signedIcons.cheevos(NumAchievements)}
+                ${signedIcons.points(totalPoints)}
+                ${signedIcons.retroRatio(retroRatio)}
+            `
 
             const time = watcher.getActiveTime(this.uiProps.time, this.uiProps.timerTime);
             this.gameElements.time.innerHTML = time;
         }
-        this.richPresenceElement.innerText = ui.lang.richPresence;
         fillGameInfoData();
-        this.updateGameInfo();
         this.updateProgressionBar();
         this.updateProgressBar();
         this.startAutoScrollElement(this.richPresenceElement, true, 10 * 1000);
@@ -462,7 +343,6 @@ export class Status extends Widget {
 
         this.updateProgressionBar();
         this.updateProgressBar();
-        this.doUpdateAnimation();
         // this.gameChangeEvent();
     }
     alertsQuery = [];
@@ -477,30 +357,168 @@ export class Status extends Widget {
         }
     }
     async startAlerts() {
+        const clearContainer = () => {
+            this.alertElements.container.classList.remove("hide-alert", "show-alert", "new-game", "new-achiv", "new-award", "stats", "beaten", "mastered", "hardcore", "mastered", "beaten-softcore", "completed");
+        }
+        const deltaTime = (time) => {
+            const hours = ~~(time / 3600);
+            const mins = ~~((time - hours * 3600) / 60);
+            const timeStr = `
+          ${hours > 0 ? hours == 1 ? "1 hour " : hours + " hours " : ""}
+          ${hours > 0 && mins > 0 ? "and " : ""}
+          ${mins > 0 ? mins == 1 ? "1 minute" : mins + " minutes" : ""}
+            `;
+            return timeStr;
+        }
+        const updateGameData = (game) => {
+            const { FixedTitle,
+                badges,
+                ImageIcon,
+                totalPoints,
+                ConsoleName,
+                TotalRetropoints,
+                NumAchievements,
+                masteryRate,
+                beatenRate,
+            } = game;
+            this.alertElements.preview.src = gameImageUrl(ImageIcon);
+            this.alertElements.title.innerHTML = `${FixedTitle} ${generateBadges(badges)}
+            <i class="badge">${ConsoleName}</i>
+            `;
+            let badgesHtml = `
+                ${goldBadge(icons.cheevos + NumAchievements)}
+                ${goldBadge(icons.points + totalPoints)}
+                ${goldBadge(icons.retropoints + TotalRetropoints)}
+                ${goldBadge(masteryRate + "% MASTERED RATE")}
+                ${goldBadge(beatenRate + "% BEATEN RATE")}
+            `;
+            this.alertElements.description.innerText = "";
+            this.alertElements.badges.innerHTML = badgesHtml;
+            this.alertElements.container.classList.add("new-game");
+        }
+        const updateAchivData = (cheevo) => {
+            const { isHardcoreEarned, Title, prevSrc, Points, TrueRatio, rateEarned, rateEarnedHardcore, difficulty } = cheevo;
+            this.alertElements.preview.src = prevSrc;
+            this.alertElements.title.innerHTML = `
+                ${Title}`
+
+            this.alertElements.description.innerText = cheevo.Description;
+
+            let cheevoBadges = isHardcoreEarned ?
+                `
+                    ${goldBadge(icons.points + " +" + Points)}
+                    ${goldBadge(icons.retropoints + " +" + TrueRatio)}
+                    ${goldBadge("TOP" + rateEarnedHardcore)}
+                    ${badgeElements.difficultBadge(difficulty)}
+                `
+                : `
+                    ${goldBadge(icons.points + " +" + Points)}
+                    ${goldBadge("TOP" + rateEarned)}
+                    ${badgeElements.difficultBadge(difficulty)}
+                `;
+
+            let genres = cheevo.genres?.map(genre => goldBadge(genre))?.join("\n") ?? "";
+            this.alertElements.badges.innerHTML = genres + cheevoBadges;
+
+            this.alertElements.container.classList.toggle("hardcore", cheevo.isHardcoreEarned);
+            this.alertElements.container.classList.add("new-achiv");
+        }
+        const updateAwardData = (game, award) => {
+            const { FixedTitle,
+                badges,
+                ImageIcon,
+                totalPoints,
+                earnedStats,
+                TotalRetropoints,
+                masteryRate,
+                beatenRate,
+                completedRate,
+                beatenSoftRate,
+                ID,
+                NumAchievements,
+                TimePlayed
+            } = game;
+            // let award = 'mastered';
+            const awardRate = award == 'mastered' ? masteryRate :
+                award == 'beaten' ? beatenRate :
+                    award == 'completed' ? completedRate : beatenSoftRate;
+
+            const playTimeInMinutes = deltaTime(TimePlayed);
+            this.alertElements.preview.src = gameImageUrl(ImageIcon);
+            this.alertElements.title.innerHTML = `${FixedTitle} ${generateBadges(badges)}
+            ${goldBadge("GAINED AWARD")}`;
+            let awardBadges = `
+                ${goldBadge(`${award} IN ${playTimeInMinutes}`)}
+                ${goldBadge(`TOP${awardRate}%`)}
+                ${goldBadge(`${icons.cheevos}${earnedStats.hard.count}/${NumAchievements}`)}
+                ${goldBadge(`${icons.points}${earnedStats.hard.points}/${totalPoints}`)}
+                ${goldBadge(`${icons.retropoints}${earnedStats.hard.retropoints}/${TotalRetropoints}`)}
+            `;
+            this.alertElements.badges.innerHTML = awardBadges;
+            this.alertElements.description.innerText = "";
+            this.alertElements.container.classList.add(award);
+            this.alertElements.container.classList.add("new-award");
+        }
+        const updateStatsData = (stats) => {
+            this.alertElements.preview.src = config.userImageSrc;
+            this.alertElements.title.innerHTML = `
+                ${config.USER_NAME.toUpperCase()} statistics:
+            `;
+            let statsBadges = `
+                ${stats.rank ? goldBadge(`Rank: ${stats.rank} ${stats.deltaRank}`) : ""}
+                ${stats.percentile ? goldBadge(`TOP ${stats.percentile.toFixed(2)}% ${stats.deltaPercentile}`) : ""}
+                ${goldBadge(`${icons.cheevos} +${stats.cheevosCount}`)}
+                ${goldBadge(`${icons.points}${stats.points} ${stats.deltaPoints}`)}
+                ${goldBadge(`${icons.retropoints}${stats.retroPoints} ${stats.deltaRetroPoints}`)}
+                ${goldBadge(`${icons.points}${stats.softPoints}SP ${stats.deltaSoftPoints}`)}
+            `;
+            this.alertElements.badges.innerHTML = statsBadges;
+            this.alertElements.description.innerText = "";
+            this.alertElements.container.classList.add("stats");
+        }
+        const updateAlertData = (alert) => {
+            clearContainer();
+            switch (alert.type) {
+                case alertTypes.GAME:
+                    updateGameData(alert.value);
+                    break;
+                case alertTypes.CHEEVO:
+                    updateAchivData(alert.value);
+                    break;
+                case alertTypes.AWARD:
+                    updateAwardData(alert.value, alert.award);
+                    break;
+                case alertTypes.STATS:
+                    updateStatsData(alert.value);
+                    break;
+                default:
+                    break;
+            }
+        }
         while (this.alertsQuery.length > 0) {
             const currentAlert = this.alertsQuery[0];
             if (!currentAlert.value) {
                 this.alertsQuery.shift();
                 return;
             } const onAlertStart = () => {
-                updateAlertContainer(currentAlert, this.alertElements.container);
-                // this.alertElements.container.classList.add("show-alert");
+                updateAlertData(currentAlert)
+                this.alertElements.container.classList.add("show-alert");
                 // glassAnimation();
                 setTimeout(() => {
-                    // this.startAutoScrollElement(this.alertElements.title);
-                    // this.startAutoScrollElement(this.alertElements.badges);
-                    // this.startAutoScrollElement(this.alertElements.description);
+                    this.startAutoScrollElement(this.alertElements.title);
+                    this.startAutoScrollElement(this.alertElements.badges);
+                    this.startAutoScrollElement(this.alertElements.description);
                 }, 2000)
 
 
             }
             const onAlertFinish = () => {
                 this.alertElements.container.classList.add("hide-alert");
-                // setTimeout(() => clearContainer(), 500)
+                setTimeout(() => clearContainer(), 500)
                 this.alertsQuery.shift();
-                // this.stopAutoScrollElement(this.alertElements.badges, true);
-                // this.stopAutoScrollElement(this.alertElements.description, true);
-                // this.stopAutoScrollElement(this.alertElements.title, true);
+                this.stopAutoScrollElement(this.alertElements.badges, true);
+                this.stopAutoScrollElement(this.alertElements.description, true);
+                this.stopAutoScrollElement(this.alertElements.title, true);
             }
             await delay(1000); //*waiting for previous animation ending
             onAlertStart();
@@ -589,7 +607,4 @@ export class Status extends Widget {
             clearTimeout(this.autoscrollAlertInterval[containerID].timeout);
         }
     }
-
-
-
 }

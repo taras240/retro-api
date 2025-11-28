@@ -53,16 +53,19 @@ const getStats = (gameData, isHardMode, progressType) => {
 }
 export const progressBarHtml = (theme = progressStyle.default) => {
     return `
-        <div class="rp__progressbar-header">
-            <div class="rp__progressbar-title"></div>
-            <ul class="rp__last-cheevos"></ul>
-        </div>
-        <div class="rp__progressbar-total">
-            <div class="rp__progressbar-value"></div>
+        <div class="rp__progressbar-container">
+            <div class="rp__progressbar-header">
+                <div class="rp__progressbar-title"></div>
+                <ul class="rp__last-cheevos"></ul>
+            </div>
+            <div class="rp__progressbar-total">
+                <div class="rp__progressbar-value"></div>
+            </div>
         </div>
     `;
 }
 export const updateProgressBarData = (container, gameData, isHardMode, progressType = progressTypes.cheevos) => {
+    if (!container) return;
     const progressMsgElement = container.querySelector(".rp__progressbar-title");
     const lastCheevosElement = container.querySelector(".rp__last-cheevos");
     const progressBarElement = container.querySelector(".rp__progressbar-total");
