@@ -194,7 +194,7 @@ export class Status extends Widget {
         progressType: progressTypes.cheevos,
         statusTheme: "rerw",
         timePosition: timePosition.normal,
-        gameInfoType: gameInfoTypes.progressbar
+        gameInfoType: gameInfoTypes.icons
     }
     uiSetCallbacks = {
         time() {
