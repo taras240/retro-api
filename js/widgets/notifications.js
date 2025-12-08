@@ -186,7 +186,7 @@ export class Notifications extends Widget {
               ${game.Title}
             </a>
           </h3>
-          <p class="achiv-description">${game.Genre ? game.Genre + ",\n" : ""}${game.ConsoleName}</p>
+          <p class="list-item__text">${game.Genre ? game.Genre + ",\n" : ""}${game.ConsoleName}</p>
           <div class="notification_description-icons">
             <p class="notification_description-text" data-title="${ui.lang.points}">
               ${icons.points}

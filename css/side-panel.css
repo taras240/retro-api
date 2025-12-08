@@ -252,6 +252,7 @@ input[type="checkbox"]:checked+.side-panel_input::after {
     background-clip: text;
     -webkit-text-fill-color: transparent;
     opacity: 1 !important;
+    width: 100%;
 }
 
 .side-panel_text-icon:hover {

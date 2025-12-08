@@ -415,6 +415,10 @@
 
 /**-------------ALERT---------------- */
 .rp__alert-container {
+    --font-color: black;
+    --main-color: linear-gradient(to right,
+            #ee0979,
+            #ff6a00);
     position: absolute;
     z-index: 10;
     display: flex;
@@ -422,11 +426,9 @@
     height: 5.5rem;
     width: 100%;
     padding: 0;
-    background: linear-gradient(to right,
-            #ee0979,
-            #ff6a00);
+    background: var(--main-color);
     color: black;
-    box-shadow: inset 0 0 3px 0px var(--main-color);
+    box-shadow: inset 0 0 3px 0px black;
     overflow: hidden;
     display: none;
     /* animation: rp-alert-animation 0.6s ease-in-out forwards; */
@@ -480,6 +482,10 @@
     /* align-items: center; */
     width: 100%;
     overflow: hidden;
+}
+
+.rp__alert-container .prev-img {
+    filter: grayscale(0) opacity(1) blur(0);
 }
 
 .rp__alert-preview-container {

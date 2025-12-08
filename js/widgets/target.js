@@ -526,7 +526,7 @@ export class Target extends Widget {
         const clearPrevQuery = () => {
             [...ui.target.container.querySelectorAll('.target-achiv')].forEach(target => {
                 const id = target.dataset.achivId;
-                const description = target.querySelector(".achiv-description");
+                const description = target.querySelector(".list-item__text");
                 const header = target.querySelector('.target__cheevo-header a');
                 description && (description.innerText = watcher.CHEEVOS[id]?.Description);
                 header && (header.innerText = watcher.CHEEVOS[id]?.Title);
@@ -535,7 +535,7 @@ export class Target extends Widget {
         const markQuery = (query) => {
             const regex = new RegExp(`(${query})`, 'gi');
             [...ui.target.container.querySelectorAll('.target-achiv')].reverse().forEach(cheevo => {
-                const description = cheevo.querySelector('.achiv-description');
+                const description = cheevo.querySelector('.list-item__text');
                 const title = cheevo.querySelector('.target__cheevo-header a');
                 if (title.innerText.match(regex)) {
                     ui.target.moveToTop(description.closest('.target-achiv'));
@@ -743,8 +743,8 @@ export class Target extends Widget {
                         ${achievement.Title} ${achievement.genres?.map(genre => genreIcons[genre]).join("")}
                     </a>
                 </h3>
-                <p class="achiv-description">${achievement.Description}</p>
-                <div class="target-other-descriptions icons-row-list">
+                <p class="list-item__text">${achievement.Description}</p>
+                <div class="icons-row-list">
                     ${icons.cheevoType(achievement.Type)}
                     ${signedIcons.points(achievement.Points)}
                     ${signedIcons.retropoints(achievement.TrueRatio)}
@@ -924,11 +924,11 @@ export class Target extends Widget {
               ${cheevo.GameTitle}
             </a>
           </h3>
-          <div class="achiv-description">
+          <div class="list-item__text">
           ${badgeElements.black("AotW Event")}
             ${cheevo.Description}
           </div>
-          <div class="target-other-descriptions  icons-row-list">
+          <div class="icons-row-list">
             ${icons.cheevoType(cheevo?.Type)}
             ${signedIcons.points(cheevo.Points)}
             ${signedIcons.retropoints(cheevo.TrueRatio)}

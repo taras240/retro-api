@@ -1,7 +1,7 @@
 import { badgeElements, goldBadge } from "./badges.js";
 import { icons, signedIcons } from "./icons.js";
 
-export const cheevoElementFull = (cheevo) => {
+export const cheevoElementFull = (cheevo, isTarget = false) => {
     const cheevoElement = document.createElement("li");
     cheevoElement.classList.add("cheevo-column-item");
     cheevoElement.classList.toggle("earned", cheevo.isEarned);
@@ -11,13 +11,15 @@ export const cheevoElementFull = (cheevo) => {
     const subLevel = cheevo.level?.toString()?.split(".")[1];
     const level = cheevo.zone ? subLevel ? `${cheevo.zone} [${subLevel}]` : cheevo.zone : cheevo.level?.toString()?.replace(".", "-");
     const rarity = 100 * cheevo.NumAwardedHardcore / cheevo.totalPlayers;
-
-    cheevoElement.innerHTML = `
-            <div class="target__buttons-container">
+    const sideButtonsHtml = `
+        <div class="target__buttons-container">
                 <button class="header-button header-icon  target__comments-button edit-cheevo-button edit-icon" data-title="edit props" data-cheevo-id="${cheevo.ID}"></button>
                 <button class="header-button header-icon  target__comments-button comments-button chat-icon" data-title="${ui.lang.showCommentsHint}"></button>
                 <button class="header-button header-icon  delete-icon delete-from-target" data-title="remove"></button>
-            </div>
+        </div>
+    `;
+    cheevoElement.innerHTML = `
+            ${isTarget ? sideButtonsHtml : ""}
             <div class="prev">
                 <img
                 class="prev-img"
@@ -33,8 +35,8 @@ export const cheevoElementFull = (cheevo) => {
                         ${cheevo.Title}
                     </a>
                 </h3>
-                <p class="achiv-description">${cheevo.Description}</p>
-                <div class="target-other-descriptions icons-row-list">
+                <p class="list-item__text">${cheevo.Description}</p>
+                <div class="icons-row-list">
                     ${icons.cheevoType(cheevo.Type)}
                     ${signedIcons.points(cheevo.Points)}
                     ${signedIcons.retropoints(cheevo.TrueRatio)}

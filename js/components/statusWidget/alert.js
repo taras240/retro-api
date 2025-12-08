@@ -2,6 +2,7 @@ import { alertTypes } from "../../enums/alerts.js";
 import { cheevoImageUrl, gameImageUrl } from "../../functions/raLinks.js";
 import { config, watcher } from "../../script.js";
 import { badgeElements, generateBadges, goldBadge } from "../badges.js";
+import { cheevoElementFull } from "../cheevo.js";
 import { divHtml } from "../divContainer.js";
 import { icons } from "../icons.js";
 
@@ -141,7 +142,7 @@ export const updateAlertContainer = (alert, container) => {
             // container.className = "rp__alert-container game-alert show-alert"
             break;
         case alertTypes.CHEEVO:
-            container.innerHTML = cheevoAlertHtml(alert.value);
+            container.innerHTML = cheevoElementFull(alert.value).innerHTML;
             container.className = "rp__alert-container cheevo-alert show-alert"
             break;
         case alertTypes.AWARD:

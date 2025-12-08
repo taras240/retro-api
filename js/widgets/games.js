@@ -16,6 +16,7 @@ import { releaseVersions } from "../enums/releaseVersions.js";
 import { gamesExtMap } from "../enums/gamesExtMap.js";
 import { getGenres } from "../functions/genreIDtoGenre.js";
 import { buttonsHtml } from "../components/htmlElements.js";
+import { gamesFromJson } from "../functions/gamesJson.js";
 
 export class Games extends Widget {
     widgetIcon = {
@@ -570,41 +571,10 @@ export class Games extends Widget {
         this.gamesInfo = await infoResponce.json();
     }
     async getAllGames() {
-        const gamesJsonUrl = `./json/games/all_ext_min.json`;
-        const unpackMinJson = (gamesMinJson) => {
-            const gamesJson = gamesMinJson.map(game => {
-                let fullObject = {};
-                Object.keys(game).forEach(key => {
-                    fullObject = {
-                        ...fullObject,
-                        [gamesExtMap[key]]: game[key]
-                    }
-                });
-                if (fullObject.HLTB) {
-                    const timeToBeatMins = Math.min(...Object.values(fullObject.HLTB));
-                    const hrs = timeToBeatMins >= 60 ?
-                        `${~~(timeToBeatMins / 60)}hr${timeToBeatMins > 119 ? "s" : ""}` :
-                        "";
-                    const mins = timeToBeatMins % 60 > 0 ? `${timeToBeatMins % 60}mins` :
-                        "";
-                    const timeToBeat = `${hrs} ${mins}`;
-                    fullObject.timeToBeat = timeToBeat;
-                }
-                fullObject.ImageIcon = `/Images/${fullObject.ImageIcon}.png`;
-                !fullObject.badges && (fullObject.badges = []);
-                !fullObject.Genres && (fullObject.Genres = []);
-
-                return fullObject;
-            })
-            return gamesJson;
-        }
         this.GAMES = {};
 
         try {
-            const gamesResponse = await fetch(gamesJsonUrl);
-            const gamesMinJson = await gamesResponse.json();
-            const gamesJson = unpackMinJson(gamesMinJson);
-
+            const gamesJson = await gamesFromJson();
             const lastPlayedGames = await apiWorker.completionProgress();
             for (let lastGame of lastPlayedGames.Results) {
                 let gameToModify = gamesJson.find(game => lastGame.ID === game.ID);
