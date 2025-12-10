@@ -51,7 +51,7 @@ export async function sendDiscordAlert({ message = "", type, value, award, id })
         return message;
     }
     const cheevoMessage = (gameData, cheevo) => {
-        const header = `${targetUser} unlocked cheevo"}${cheevo.isHardcoreEarned
+        const header = `${targetUser} unlocked cheevo${cheevo.isHardcoreEarned
             ? '' : " (casual mode)"}: \n${cheevo.Title}`
         const description = `
         Game: [${gameData.Title}](${gameUrl(gameData.ID)})

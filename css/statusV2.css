@@ -470,6 +470,12 @@
     }
 }
 
+.rp__alert-container :is(.target__cheevo-header, .list-item__text) {
+    overflow-x: scroll;
+    text-wrap: nowrap;
+    white-space: nowrap;
+}
+
 .rp__alert-container.new-game .rp__preview-container {
     display: none;
 }
