@@ -4,6 +4,7 @@ import { apiWorker, config, ui, watcher } from "../script.js";
 import { Widget } from "./widget.js";
 import { generateBadges, badgeElements } from "../components/badges.js";
 import { buttonsHtml } from "../components/htmlElements.js";
+import { resizerHtml } from "../components/resizer.js";
 
 
 export class PopupWindow extends Widget {
