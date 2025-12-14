@@ -943,7 +943,7 @@ export class Target extends Widget {
     async hideAotw() {
         this.section.querySelector(`.target__aotw-container`)?.remove();
         const aotw = await apiWorker.aotw();
-        apiWorker.pushToCache({
+        apiWorker.cache.push({
             dataType: cacheDataTypes.AOTW,
             data: {
                 ...aotw,

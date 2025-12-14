@@ -6,7 +6,7 @@ import { recentCheevoHtml } from "./recentCheevo.js";
 
 const completionMsg = (gameData, unlockedCount, totalCount, rate, progressType) => {
     const { gameMasteredMsg, gameCompletedMsg, unlockProgressMsg } = ui.lang;
-    const label = ui.lang?.[progressType]?.toLowerCase() ?? progressType;
+    const label = ui.lang?.[`${progressType}Progress`] ?? progressType;
 
     switch (gameData.award) {
         case "mastered": return gameMasteredMsg;
@@ -17,18 +17,18 @@ const completionMsg = (gameData, unlockedCount, totalCount, rate, progressType) 
 };
 const getUnlockedCount = (gameData, isHardMode) => {
     if (isHardMode) {
-        return gameData?.earnedStats?.hard?.count ?? 0;
+        return gameData?.unlockData?.hardcore?.count ?? 0;
     }
-    return gameData?.earnedStats?.soft?.count ?? 0;
+    return gameData?.unlockData?.soft?.count ?? 0;
 }
 const getUnlockedPoints = (gameData, isHardMode) => {
     if (isHardMode) {
-        return gameData?.earnedStats?.hard?.points ?? 0;
+        return gameData?.unlockData?.hardcore?.points ?? 0;
     }
-    return gameData?.earnedStats?.soft?.points ?? 0;
+    return gameData?.unlockData?.soft?.points ?? 0;
 }
 const getUnlockedRetroPoints = (gameData) => {
-    return gameData?.earnedStats?.hard?.retropoints ?? 0;
+    return gameData?.unlockData?.hardcore?.retropoints ?? 0;
 }
 const getStats = (gameData, isHardMode, progressType) => {
     let unlocked, total, unlockedRate;
@@ -40,7 +40,7 @@ const getStats = (gameData, isHardMode, progressType) => {
             break;
         case progressTypes.retropoints:
             unlocked = getUnlockedRetroPoints(gameData, isHardMode);
-            total = gameData?.TotalRetropoints || 1;
+            total = gameData?.totalRetropoints || 1;
             unlockedRate = Math.round(100 * unlocked / total) + "%";
             break;
         default:

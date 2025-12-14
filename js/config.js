@@ -93,7 +93,9 @@ export class Config {
     discordNewAward: true, //_cfg?.discordNewAward
     discordStartSession: true, //_cfg?.discordStartSession
     discordWebhook: "", //_cfg.discordWebhook,
-    parseLog: false //logfileHandle for retroarch
+    parseLog: false, //logfileHandle for retroarch
+    showCheevoOnHover: true,
+    loadLastSubset: true,
   }
   configValuePreprocessors = {
     updateDelaySec: (value) => parseInt(value) < 5 ? 5 : parseInt(value),

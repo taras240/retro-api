@@ -366,7 +366,7 @@ export class Games extends Widget {
         const titleRegex = new RegExp(searchRequest, 'gi');
         this.games = this.titleFilter ?
             this.GAMES.filter(game =>
-                `${game.FixedTitle} ${game.badges?.join(' ')} ${RAPlatforms[game.ConsoleID]?.Name ?? "-"}`.match(titleRegex)) :
+                `${game.Title} ${game.badges?.join(' ')} ${RAPlatforms[game.ConsoleID]?.Name ?? "-"}`.match(titleRegex)) :
             this.GAMES;
         this.COOP_FILTER && (this.games = this.games?.filter(game => game.Coop == "true"));
 
@@ -609,7 +609,7 @@ export class Games extends Widget {
             <h3 class="game-description_title">
             <button data-title="${ui.lang.showGameInfoHint}" class="game-description_button"
                     onclick="ui.games.showGameInfoPopup(${gameData.ID})">
-                    ${gameData.FixedTitle} 
+                    ${gameData.Title} 
                     ${gameData.Award ? badgeElements.infoBadge(gameData.Award) : ""}
                     ${gameData.badges?.length ? generateBadges(gameData.badges, "infoBadge") : ""} 
                     ${bool(gameData.Coop) ? badgeElements.infoBadge('coop') : ""} 
@@ -723,7 +723,7 @@ export class Games extends Widget {
         gamePopupElement.innerHTML = `
             <section class="section game-popup__section">
                 <div class="game-popup__header-container header-container">
-                    <h2 class="widget-header-text"><a href="${gameUrl(game.ID)}" target="_blank">${game.FixedTitle} ${generateBadges(game.badges)}</a></h2>
+                    <h2 class="widget-header-text"><a href="${gameUrl(game.ID)}" target="_blank">${game.Title} ${generateBadges(game.badges)}</a></h2>
                     ${buttonsHtml.close("this.closest('section').remove();")}
                 </div>
                 <div class="game-info__container">
@@ -739,8 +739,8 @@ export class Games extends Widget {
                         ${properyLine({ label: ui.lang.publisher, value: game?.Publisher })}
                         ${properyLine({ label: ui.lang.released, value: game?.Released })}
                         ${properyLine({ label: ui.lang.cheevosCount, value: `${game?.NumAwardedToUserHardcore} / ${game?.NumAwardedToUser} / ${game?.NumAchievements}` })}
-                        ${properyLine({ label: ui.lang.retropoints, value: `${game?.earnedStats.hard.retropoints} / ${game?.TotalRetropoints}` })}
-                        ${properyLine({ label: ui.lang.points, value: `${game?.earnedStats.hard.points} / ${game?.earnedStats.soft.points} / ${game?.totalPoints}` })}
+                        ${properyLine({ label: ui.lang.retropoints, value: `${game?.unlockData.hardcore.retropoints} / ${game?.totalRetropoints}` })}
+                        ${properyLine({ label: ui.lang.points, value: `${game?.unlockData.hardcore.points} / ${game?.unlockData.softcore.points} / ${game?.totalPoints}` })}
                         ${properyLine({ label: ui.lang.retroRatio, value: game?.retroRatio })}
                         ${properyLine({ label: ui.lang.players, value: `${game?.masteredCount} / ${game?.beatenCount} / ${game?.players_total}` })}
                         ${properyLine({ label: ui.lang.completion, value: `${game?.masteryRate}% / ${game?.beatenRate}%` })}

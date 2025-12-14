@@ -4,7 +4,7 @@ import { alertTypes } from "../enums/alerts.js";
 import { icons, signedIcons } from "../components/icons.js"
 
 import { generateBadges, badgeElements, goldBadge } from "../components/badges.js";
-import { config, ui, watcher } from "../script.js";
+import { apiWorker, config, ui, watcher } from "../script.js";
 import { Widget } from "./widget.js";
 import { filterBy, sortBy } from "../functions/sortFilter.js";
 import { showComments } from "../components/comments.js";
@@ -53,6 +53,19 @@ export class Status extends Widget {
     get contextMenuItems() {
         return [
             {
+                label: ui.lang.subsets,
+                elements: Object.keys(watcher.GAME_DATA?.subsets).map(subsetName => {
+                    return {
+                        type: inputTypes.RADIO,
+                        name: "subset-select",
+                        id: `subset-select-${subsetName}`,
+                        label: subsetName,
+                        checked: watcher.GAME_DATA?.ID === watcher.GAME_DATA?.subsets[subsetName],
+                        event: `onclick="watcher.setSubset('${subsetName}')"`,
+                    }
+                }),
+            },
+            {
                 label: ui.lang.elements,
                 elements: [
                     {
@@ -86,7 +99,7 @@ export class Status extends Widget {
                 ],
             },
             {
-                label: "**GameInfo Type**",
+                label: ui.lang.infoPanel,
                 elements: Object.values(gameInfoTypes).map(type =>
                 ({
                     type: inputTypes.RADIO,
@@ -435,12 +448,12 @@ export class Status extends Widget {
     }
     fillGameData() {
         const fillGameInfoData = () => {
-            const { ImageIcon, FixedTitle, badges, ConsoleName, ConsoleID, ID, NumAchievements, totalPoints, retroRatio } = watcher.GAME_DATA;
+            const { ImageIcon, Title, badges, ConsoleName, ConsoleID, ID, NumAchievements, totalPoints, retroRatio } = watcher.GAME_DATA;
 
             this.gameElements.icon.src = gameImageUrl(ImageIcon);
 
             this.gameElements.title.innerHTML = `
-                ${FixedTitle || ""}
+                ${Title || ""}
                 ${generateBadges(badges)}
             `;
             this.gameElements.title.href = gameUrl(ID);

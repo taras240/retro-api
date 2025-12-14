@@ -1,10 +1,10 @@
-export function parseReleaseVersion(game) {
+export function addReleaseBadges(gameData) {
     const ignoredWords = [/\[SUBSET[^\[]*\]/gi, /~[^~]*~/g, ".HACK//",];
-    let title = game.Title;
+    let title = gameData.Title;
 
     const badges = ignoredWords.reduce((badges, word) => {
         const reg = new RegExp(word, "gi");
-        const matches = game.Title.match(reg);
+        const matches = gameData.Title.match(reg);
         if (matches) {
             matches.forEach(match => {
                 title = title.replace(match, "");
@@ -14,7 +14,6 @@ export function parseReleaseVersion(game) {
         }
         return badges;
     }, []);
-    game.badges = badges;
-    game.FixedTitle = title.trim();
-    return { badges: badges, FixedTitle: title.trim() };
+    gameData.badges = badges;
+    gameData.Title = title.trim();
 }

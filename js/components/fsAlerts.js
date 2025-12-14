@@ -19,7 +19,7 @@ async function showFSAlert() {
     const { app } = ui;
     const casualBadge = () => badgeElements.default(ui.lang.casual);
     const awardAlert = (gameData, awardName) => {
-        const { ImageIcon, FixedTitle } = gameData;
+        const { ImageIcon, Title } = gameData;
         const { MASTERED, COMPLETED, BEATEN, BEATEN_SOFTCORE } = gameAwardTypes;
         const awardTitles = {
             [MASTERED]: ui.lang.masteryUnlocked,
@@ -40,7 +40,7 @@ async function showFSAlert() {
                     <img src="${gameImageUrl(ImageIcon)}" alt="" class="fs-alert__image">
                     <div class="fs-alert__blick"></div>
                 </div>
-                <div class="fs-alert__description">${FixedTitle}</div>
+                <div class="fs-alert__description">${Title}</div>
                 <div class="fs-alert__border fs-alert__border-botton"></div>
             </div>
         `;

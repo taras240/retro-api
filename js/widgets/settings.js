@@ -67,6 +67,13 @@ export class Settings extends Widget {
                         onChange: "ui.settings.IS_WINDOWS_STICKY = this.checked;",
                         checked: this.IS_WINDOWS_STICKY,
                     },
+                    {
+                        type: inputTypes.CHECKBOX,
+                        label: ui.lang.cheevoOnHover,
+                        id: "settings_cheevo-on-hover",
+                        onChange: "configData.showCheevoOnHover = this.checked;",
+                        checked: configData.showCheevoOnHover,
+                    },
                 ]
             },
             {
@@ -171,7 +178,7 @@ export class Settings extends Widget {
                         type: inputTypes.BUTTON,
                         label: ui.lang.checkGameID,
                         id: "settings_check-game-id",
-                        onClick: "watcher.updateGameData(configData.gameID)",
+                        onClick: "watcher.updateGameData(document.getElementById('settings_game-id-input').value)",
                     },
                     {
                         type: inputTypes.BUTTON,
@@ -185,7 +192,14 @@ export class Settings extends Widget {
                         id: "settings_game-id-input",
                         value: configData.gameID,
                         onChange: "configData.gameID = this.value;",
-                    }
+                    },
+                    {
+                        type: inputTypes.CHECKBOX,
+                        label: ui.lang.loadLastSubset,
+                        id: "settings_load-last-subset",
+                        onChange: "configData.loadLastSubset = this.checked;",
+                        checked: configData.loadLastSubset,
+                    },
                 ]
             },
             {
@@ -385,7 +399,7 @@ export class Settings extends Widget {
                         label: ui.lang.clearCache,
                         type: inputTypes.BUTTON,
                         id: "context_clear-cache",
-                        onClick: "apiWorker.clearCache()",
+                        onClick: "apiWorker.cache.clear()",
                     }]
 
             }

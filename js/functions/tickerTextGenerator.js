@@ -4,7 +4,7 @@ import { secondsToBadgeString } from "./time.js";
 
 export function generateMagicLineText() {
     const stats = {
-        ...watcher.GAME_DATA?.earnedStats,
+        ...watcher.GAME_DATA?.unlockData,
         user: configData.targetUser || config.USER_NAME,
         ...Object.fromEntries(
             Object.entries(watcher.GAME_DATA).filter(([key, value]) =>
@@ -16,7 +16,7 @@ export function generateMagicLineText() {
     `;
     const cheevosURL = `retrocheevos.vercel.app${space}`;
     const gameTitle = `
-        ${stats.user} is playing ${stats.FixedTitle}${space}`;
+        ${stats.user} is playing ${stats.Title}${space}`;
 
     const gameInfo = watcher.GAME_DATA ? [
         stats.ConsoleName && `Console: ${stats.ConsoleName},`,
@@ -25,7 +25,7 @@ export function generateMagicLineText() {
         stats.Publisher && `Publisher: ${stats.Publisher},`,
         stats.Genre && `Genre: ${stats.Genre},`,
         stats.NumDistinctPlayersCasual && `Total RA Players: ${stats.NumDistinctPlayersCasual},`,
-        stats.beatenRate && `Beaten Rate: ${stats.beatenRate}% (${stats.beatenSoftRate}%),`,
+        stats.beatenRate && `Beaten Rate: ${stats.beatenRate}% (${stats.beatenRateSoftcore}%),`,
         stats.masteryRate && `Mastery Rate: ${stats.masteryRate}% (${stats.completedRate}%),`,
         stats.retroRatio && `Retro Ratio: ${stats.retroRatio},`,
         stats.timeToBeat && `Time to beat: ${secondsToBadgeString(stats.timeToBeat)}`,
@@ -35,11 +35,11 @@ export function generateMagicLineText() {
     ].join("&nbsp;") : "Game ERROR";
     const gameStatsInfo = [
         "Completion Progress: ",
-        `${stats.hard.count > 0 ? stats.hard.count + "/" : ""}${stats.soft.count > stats.hard.count ? (stats.soft.count - stats.hard.count) + "/" : ""}${stats.NumAchievements} achievements, `,
+        `${stats.hardcore.count > 0 ? stats.hardcore.count + "/" : ""}${stats.softcore.count > stats.hardcore.count ? (stats.softcore.count - stats.hardcore.count) + "/" : ""}${stats.NumAchievements} achievements, `,
 
-        `${stats.hard.points > 0 ? stats.hard.points + "/" : ""}${stats.soft.points > stats.hard.points ? (stats.soft.points - stats.hard.points) + "/" : ""}${stats.totalPoints} points, `,
+        `${stats.hardcore.points > 0 ? stats.hardcore.points + "/" : ""}${stats.softcore.points > stats.hardcore.points ? (stats.softcore.points - stats.hardcore.points) + "/" : ""}${stats.totalPoints} points, `,
 
-        `${stats.hard.retropoints ? stats.hard.retropoints + "/" : ""}${stats.TotalRetropoints} retropoints${space}`
+        `${stats.hardcore.retropoints ? stats.hardcore.retropoints + "/" : ""}${stats.totalRetropoints} retropoints${space}`
     ].join(" ");
 
     const isHard = !!ui.statusPanel?.deltaStats?.deltaPoints;

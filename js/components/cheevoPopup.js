@@ -2,7 +2,7 @@ import { formatDate, formatDateTime, secondsToBadgeString } from "../functions/t
 import { badgeElements, generateBadges } from "./badges.js";
 import { icons, signedIcons } from "./icons.js";
 
-export function cheevoPopupElement(cheevo) {
+export function cheevoPopupElement(cheevo, isFixed = false) {
     const propElem = (title, value, isShown = true) => {
         const valueDivider = `<span class="popup__value-divider"> | </span>`;
         const valueText = Array.isArray(value) ? [...new Set(value)].join(valueDivider) : value;
@@ -27,7 +27,8 @@ export function cheevoPopupElement(cheevo) {
         cheevo.level?.toString()?.replace(".", "-");
 
     let popup = document.createElement("div");
-    popup.classList.add("cheevo-popup", "popup", cheevo.isHardcoreEarned ? "hardcore" : cheevo.isEarned ? "softcore" : "f");
+    popup.classList.add("cheevo-popup", "popup", cheevo.isHardcoreEarned ? "hardcore" : cheevo.isEarned ? "softcore" : "f",);
+    popup.classList.toggle("fixed", isFixed);
     popup.dataset.id = cheevo.ID;
     popup.innerHTML = `
         <div class="cheevo-popup__header">

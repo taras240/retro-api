@@ -130,6 +130,8 @@
   visibility: visible;
   width: 100%;
   opacity: 1;
+  flex-wrap: nowrap;
+  flex-direction: column;
   transition: 0.2s ease-in-out;
 }
 
@@ -141,6 +143,7 @@
 }
 
 .awards__game-item {
+  width: 100%;
   display: grid;
   column-gap: 10px;
   grid-template-columns: auto 1fr;
@@ -159,23 +162,23 @@
   background-color: var(--main-color);
 }
 
-.awards__game-item.beatenSoftcore,
-.awards__game-item.completion::after {
+.awards__game-item.beaten-softcore,
+.awards__game-item.completed::after {
   --mark-color: silver;
 }
 
-.awards__game-item.beatenHardcore::after,
-.awards__game-item.mastery::after {
+.awards__game-item.beaten::after,
+.awards__game-item.mastered::after {
   --mark-color: gold;
 }
 
-.awards__game-item.beatenHardcore::after,
-.awards__game-item.beatenSoftcore {
+.awards__game-item.beaten::after,
+.awards__game-item.beaten-softcore {
   --icon-url: url(../assets/img/medal.svg);
 }
 
-.awards__game-item.completion::after,
-.awards__game-item.mastery::after {
+.awards__game-item.completed::after,
+.awards__game-item.mastered::after {
   --icon-url: url(../assets/img/trophy.svg);
 }
 

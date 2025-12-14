@@ -31,12 +31,12 @@ const alertInnerHtml = ({ imageUrl, title, description, badgesHtml }) => {
     `;
 }
 const gameAlertHtml = (gameData) => {
-    const { FixedTitle,
+    const { Title,
         badges,
         ImageIcon,
         totalPoints,
         ConsoleName,
-        TotalRetropoints,
+        totalRetropoints,
         NumAchievements,
         masteryRate,
         beatenRate,
@@ -45,11 +45,11 @@ const gameAlertHtml = (gameData) => {
     const badgesHtml = `
                 ${badgeElements.black(icons.cheevos + NumAchievements)}
                 ${badgeElements.black(icons.points + totalPoints)}
-                ${badgeElements.black(icons.retropoints + TotalRetropoints)}
+                ${badgeElements.black(icons.retropoints + totalRetropoints)}
                 ${badgeElements.black(icons.masteryAward + masteryRate + "%")}
                 ${badgeElements.black(icons.progressionAward + beatenRate + "%")}
             `;
-    const title = `${FixedTitle} ${generateBadges(badges)}<i class="badge">${ConsoleName}</i>`;
+    const title = `${Title} ${generateBadges(badges)}<i class="badge">${ConsoleName}</i>`;
 
     return alertInnerHtml({ title, badgesHtml, imageUrl: gameImageUrl(ImageIcon) });
 }
@@ -80,16 +80,16 @@ const cheevoAlertHtml = (cheevo) => {
 }
 
 const awardAlertHtml = (game, award) => {
-    const { FixedTitle,
+    const { Title,
         badges,
         ImageIcon,
         totalPoints,
-        earnedStats,
-        TotalRetropoints,
+        unlockData,
+        totalRetropoints,
         masteryRate,
         beatenRate,
         completedRate,
-        beatenSoftRate,
+        beatenRateSoftcore,
         ID,
         NumAchievements,
         TimePlayed
@@ -97,18 +97,18 @@ const awardAlertHtml = (game, award) => {
     // let award = 'mastered';
     const awardRate = award == 'mastered' ? masteryRate :
         award == 'beaten' ? beatenRate :
-            award == 'completed' ? completedRate : beatenSoftRate;
+            award == 'completed' ? completedRate : beatenRateSoftcore;
 
     const playTimeInMinutes = deltaTime(TimePlayed);
 
     let badgesHtml = `
                 ${goldBadge(`${award} IN ${playTimeInMinutes}`)}
                 ${goldBadge(`TOP${awardRate}%`)}
-                ${goldBadge(`${icons.cheevos}${earnedStats.hard.count}/${NumAchievements}`)}
-                ${goldBadge(`${icons.points}${earnedStats.hard.points}/${totalPoints}`)}
-                ${goldBadge(`${icons.retropoints}${earnedStats.hard.retropoints}/${TotalRetropoints}`)}
+                ${goldBadge(`${icons.cheevos}${unlockData.hardcore.count}/${NumAchievements}`)}
+                ${goldBadge(`${icons.points}${unlockData.hardcore.points}/${totalPoints}`)}
+                ${goldBadge(`${icons.retropoints}${unlockData.hardcore.retropoints}/${totalRetropoints}`)}
             `;
-    const title = `${FixedTitle} ${generateBadges(badges)} ${goldBadge("GAINED AWARD")}`;
+    const title = `${Title} ${generateBadges(badges)} ${goldBadge("GAINED AWARD")}`;
     return alertInnerHtml({
         imageUrl: gameImageUrl(ImageIcon),
         title,

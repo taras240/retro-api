@@ -166,12 +166,14 @@ export class UI {
       const cheevoID = event.target.closest('[data-achiv-id]')?.dataset?.achivId;
       const cheevo = watcher.CHEEVOS[cheevoID];
 
-      const oldPopups = document.querySelectorAll(".popup");
+      const oldPopups = document.querySelectorAll(".popup:not(.fixed)");
 
       if (hint && hint === oldPopups[0]?.innerText) return;
       if (!hint && oldPopups[0]?.dataset.id && oldPopups[0]?.dataset.id == cheevoID) return;
 
       removePopups(oldPopups);
+      const isCheevoPopup = !hint && cheevo;
+      if (isCheevoPopup && !configData.showCheevoOnHover) return;
       const popup = hint ?
         hintElement(hint) : cheevo ?
           cheevoPopupElement(cheevo) : undefined;
@@ -188,12 +190,20 @@ export class UI {
 
     this.app.addEventListener('mouseleave',
       () => {
-        document.querySelectorAll(".popup").forEach((popup) => popup.remove());
+        document.querySelectorAll(".popup:not(.fixed)").forEach((popup) => popup.remove());
         this.buttons.section.classList.remove("expanded");
       }
     )
-    this.app.addEventListener("click", () => {
+    this.app.addEventListener("click", (event) => {
       document.querySelectorAll(".context-menu").forEach((el) => el.remove());
+
+      const cheevoID = event.target.closest('[data-achiv-id]')?.dataset?.achivId;
+      if (!cheevoID) return;
+      const cheevo = watcher.CHEEVOS[cheevoID];
+      const popup = cheevo ? cheevoPopupElement(cheevo, true) : undefined;
+      this.app.appendChild(popup);
+      setPopupPosition(popup, event);
+      setTimeout(() => popup.classList.add("visible"), 0);
     });
     this.app.addEventListener("contextmenu", (e) => {
       this.showContextmenu({ event: e, menuItems: this.settings.contextMenuItems })

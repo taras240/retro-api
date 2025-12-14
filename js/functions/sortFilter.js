@@ -134,8 +134,8 @@ export const sortBy = {
     achievementsCount: (a, b) => parseInt(a.NumAchievements) - parseInt(b.NumAchievements),
 
     title: (a, b) => {
-        let nameA = a.FixedTitle.toUpperCase();
-        let nameB = b.FixedTitle.toUpperCase();
+        let nameA = a.Title.toUpperCase();
+        let nameB = b.Title.toUpperCase();
 
         if (nameA < nameB) {
             return -1;

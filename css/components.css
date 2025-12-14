@@ -902,6 +902,7 @@ input:checked+.checkbox-input::before {
 
 .context-menu_item.expandable {
     padding: 0.5rem;
+    padding-right: 1.5rem;
 }
 
 .context-menu_item.expandable::after {

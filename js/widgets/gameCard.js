@@ -173,11 +173,11 @@ export class GameCard extends Widget {
 
     async gameChangeEvent(isNewGame) {
         const {
-            FixedTitle,
+            Title,
             ID,
             ImageBoxArt,
             Genre,
-            TotalRetropoints,
+            totalRetropoints,
             NumAchievements,
             totalPoints,
             badges,
@@ -203,9 +203,9 @@ export class GameCard extends Widget {
             }
             const infoBadges = generateInfoBadges();
             this.setElementsValues();
-            this.header.innerHTML = `${FixedTitle.replaceAll(/\,\s*the$/gi, "")}`;
+            this.header.innerHTML = `${Title.replaceAll(/\,\s*the$/gi, "")}`;
             this.header.href = gameUrl(ID);
-            this.preview.alt = `${FixedTitle} boxart`;
+            this.preview.alt = `${Title} boxart`;
             const hltb = `HLTB: 
                     ${timeToBeat ?
                     secondsToBadgeString(timeToBeat) + " | " : ""} 
@@ -241,7 +241,7 @@ export class GameCard extends Widget {
             this.iconsContainer.innerHTML = `
                 ${badgeElements.black(signedIcons.cheevos(NumAchievements))}
                 ${badgeElements.black(signedIcons.points(totalPoints))}
-                ${badgeElements.black(signedIcons.retropoints(TotalRetropoints))}
+                ${badgeElements.black(signedIcons.retropoints(totalRetropoints))}
                 ${badgeElements.black(signedIcons.retroRatio(retroRatio))}
             `;
         }

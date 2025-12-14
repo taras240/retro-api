@@ -216,5 +216,22 @@
     "previewType": "Тип зображення",
     "boxart": "Боксарт",
     "ingame": "У Грі",
-    "titleScreen": "Стартовий Екран"
+    "titleScreen": "Стартовий Екран",
+    "unlockProgressMsg": "Розблоковано {1} {2}",
+    "cheevosProgress": "досягнень",
+    "pointsProgress": "поінтів",
+    "retropointsProgress": "ретропоінтів",
+    "gameRating": "рейтинг гри",
+    "masteryUnlocked": "Здобута Майстерність",
+    "gameBeaten": "Гра Пройдена",
+    "achievementUnlocked": "Досягнення Розблоковано",
+    "showCheevosGroupTitle": "Показувати назву групи",
+    "showCheevoUnlockRateBar": "Візуалізувати відсоток розблокувань",
+    "releaseVersion": "Версія випуску",
+    "animType": "Тип Анімації",
+    "infoPanel": "Інформаційна Панель",
+    "icons": "Іконки",
+    "cheevoOnHover": "Деталі досягнення при наведенні",
+    "loadLastSubset": "Завантажувати дод.набори",
+    "subsets": "Дод. набори"
 }

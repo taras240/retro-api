@@ -18,8 +18,8 @@ export async function sendDiscordAlert({ message = "", type, value, award, id })
           Platform: ${gameData.ConsoleName}
           Realeased: ${gameData.Released}
           Achievements: ${gameData.NumAwardedToUserHardcore} / ${gameData.NumAchievements}
-          Points: ${gameData.earnedStats.hard.points} / ${gameData.earnedStats.soft.points} / ${gameData.totalPoints}
-          Retropoints:  ${gameData.earnedStats.hard.retropoints} / ${gameData.TotalRetropoints}
+          Points: ${gameData.unlockData.hardcore.points} / ${gameData.unlockData.softcore.points} / ${gameData.totalPoints}
+          Retropoints:  ${gameData.unlockData.hardcore.retropoints} / ${gameData.totalRetropoints}
         `;
         const message = {
             header: header,
@@ -37,9 +37,9 @@ export async function sendDiscordAlert({ message = "", type, value, award, id })
           Earned in: ${formatTime(gameData.TimePlayed)}
           Platform: ${gameData.ConsoleName}
           Realeased: ${gameData.Released}
-          Achievements: ${gameData?.earnedStats?.hard.count} / ${gameData?.earnedStats?.soft.count} / ${gameData.NumAchievements}
-          Points: ${gameData.earnedStats.hard.points} / ${gameData.earnedStats.soft.points} / ${gameData.totalPoints}
-          Retropoints: ${gameData.earnedStats.hard.retropoints} / ${gameData.TotalRetropoints}
+          Achievements: ${gameData?.unlockData?.hardcore.count} / ${gameData?.unlockData?.softcore.count} / ${gameData.NumAchievements}
+          Points: ${gameData.unlockData.hardcore.points} / ${gameData.unlockData.softcore.points} / ${gameData.totalPoints}
+          Retropoints: ${gameData.unlockData.hardcore.retropoints} / ${gameData.totalRetropoints}
         `;
         const message = {
             header: header,

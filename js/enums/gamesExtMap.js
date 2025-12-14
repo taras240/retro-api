@@ -1,5 +1,5 @@
 export const gamesExtMap = {
-    t: "FixedTitle",
+    t: "Title",
     b: "badges",
     i: "ID",
     c: "ConsoleID",

@@ -23,8 +23,8 @@ export class Watcher {
         timer: 60,
     }
     points = {
-        hard: 0,
-        soft: 0,
+        hardcore: 0,
+        softcore: 0,
     }
     zeroCheckTime = new Date();
     get CHEEVOS() {
@@ -92,22 +92,22 @@ export class Watcher {
     apiTrackerInterval;
     async checkApiUpdates(isStart = false) {
         const isPointsChanged = (raProfileInfo) => {
-            const isPointsChanged = raProfileInfo.TotalPoints != this.points.hard || raProfileInfo.TotalSoftcorePoints != this.points.soft;
+            const isPointsChanged = raProfileInfo.TotalPoints != this.points.hardcore || raProfileInfo.TotalSoftcorePoints != this.points.softcore;
 
             return isPointsChanged;
         }
 
         const updatePoints = (raProfileInfo) => {
-            this.points.hard = raProfileInfo.TotalPoints;
-            this.points.soft = raProfileInfo.TotalSoftcorePoints;
+            this.points.hardcore = raProfileInfo.TotalPoints;
+            this.points.softcore = raProfileInfo.TotalSoftcorePoints;
         }
 
 
         if (!isStart && (!this.IS_ONLINE)) return;
 
         const raProfileInfo = await apiWorker.getProfileInfo({});
-
-        if (raProfileInfo.LastGameID != this.GAME_DATA?.ID || isStart) {
+        //!PrentGameID for Saved set update
+        if (raProfileInfo.LastGameID != this.GAME_DATA?.ParentGameID || isStart) {
             configData.gameID = raProfileInfo.LastGameID;
             isStart && updatePoints(raProfileInfo);
 
@@ -173,27 +173,6 @@ export class Watcher {
         // console.log("parsed:", parsedData)
     }
     async updateGameData(gameID) {
-        const mergeCheevoData = (gameData, cheevoData, cheevoTimes) => {
-            gameData.Achievements[cheevoData.ID] = ({
-                ...cheevoData,
-                timeToUnlock: cheevoTimes.MedianTimeToUnlockHardcore,
-                timeToUnlockSoftcore: cheevoTimes.MedianTimeToUnlock,
-            })
-        }
-        const mergeGameData = (gameData, gameTimes) => {
-            if (!gameTimes || !gameTimes.ID) {
-                return gameData;
-            }
-            gameData = {
-                ...gameData,
-                timeToBeat: gameTimes.MedianTimeToBeatHardcore,
-                timeToMaster: gameTimes.MedianTimeToMaster,
-            }
-            Object.values(gameData.Achievements)
-                .map(cheevo =>
-                    mergeCheevoData(gameData, cheevo, gameTimes?.Achievements[cheevo.ID]));
-            return gameData;
-        }
         const getLastGameID = async () => {
             const gameID = Object.values(await apiWorker.getRecentlyPlayedGames({ count: 1 }))[0]?.ID;
             configData.gameID = gameID;
@@ -205,20 +184,8 @@ export class Watcher {
         };
 
         try {
-            const gameData = await apiWorker.getGameInfoAndProgress({ gameID: gameID });
-            //!Uncomment to load times
-            await delay(150);
-            let gameTimes;
-            try {
-                gameTimes = await apiWorker.getGameTimesInfo({ gameID: gameID });
-            }
-            catch (err) {
-                console.log(err)
-            }
-            // debugger;
-
-            this.GAME_DATA = mergeGameData(gameData, gameTimes);
-
+            const gameData = await apiWorker.getGameInfoAndProgress({ gameID: gameID, withTimesData: true });
+            this.GAME_DATA = gameData;
         } catch (error) {
             //this.statusPanel.frontSide.watchButton.classList.add("error");
             this.stop;
@@ -238,18 +205,18 @@ export class Watcher {
                     if (isHard) {
                         cheevo.isHardcoreEarned = true;
                         cheevo.DateEarnedHardcore = Date;
-                        this.GAME_DATA.earnedStats.hard.count++;
-                        this.GAME_DATA.earnedStats.hard.points += cheevo.Points;
-                        this.GAME_DATA.earnedStats.hard.retropoints += cheevo.TrueRatio;
+                        this.GAME_DATA.unlockData.hardcore.count++;
+                        this.GAME_DATA.unlockData.hardcore.points += cheevo.Points;
+                        this.GAME_DATA.unlockData.hardcore.retropoints += cheevo.TrueRatio;
                         if (cheevo.Type == cheevoTypes.PROGRESSION || cheevo.Type == cheevoTypes.WIN) {
-                            this.GAME_DATA.earnedStats.hard.progressionCount++;
+                            this.GAME_DATA.unlockData.hardcore.progressionCount++;
                         }
                     }
 
-                    this.GAME_DATA.earnedStats.soft.count++;
-                    this.GAME_DATA.earnedStats.soft.points += cheevo.Points;
+                    this.GAME_DATA.unlockData.softcore.count++;
+                    this.GAME_DATA.unlockData.softcore.points += cheevo.Points;
                     if (cheevo.Type == cheevoTypes.PROGRESSION || cheevo.Type == cheevoTypes.WIN) {
-                        this.GAME_DATA.earnedStats.soft.progressionCount++;
+                        this.GAME_DATA.unlockData.softcore.progressionCount++;
                     }
 
                     cheevo.isEarned = true;
@@ -280,7 +247,7 @@ export class Watcher {
         const checkForNewAwards = () => {
             let awardsArray = [];
             if (this.GAME_DATA.award !== 'mastered'
-                && this.GAME_DATA.earnedStats.hard.count === this.GAME_DATA.NumAchievements) {
+                && this.GAME_DATA.unlockData.hardcore.count === this.GAME_DATA.NumAchievements) {
                 this.GAME_DATA.award = 'mastered';
                 awardsArray.push({
                     type: alertTypes.AWARD,
@@ -288,7 +255,7 @@ export class Watcher {
                     value: this.GAME_DATA
                 });
             }
-            else if (!this.GAME_DATA.award && this.GAME_DATA.earnedStats.soft.count === this.GAME_DATA.NumAchievements) {
+            else if (!this.GAME_DATA.award && this.GAME_DATA.unlockData.softcore.count === this.GAME_DATA.NumAchievements) {
                 this.GAME_DATA.award = 'completed';
                 awardsArray.push({
                     type: alertTypes.AWARD,
@@ -298,7 +265,7 @@ export class Watcher {
             }
             if (this.GAME_DATA.progressionSteps > 0 &&
                 this.GAME_DATA.progressionAward !== 'beaten' &&
-                this.GAME_DATA.earnedStats.hard.progressionCount >= this.GAME_DATA.progressionSteps) {
+                this.GAME_DATA.unlockData.hardcore.progressionCount >= this.GAME_DATA.progressionSteps) {
                 this.GAME_DATA.progressionAward = 'beaten';
                 awardsArray.push({
                     type: alertTypes.AWARD,
@@ -308,7 +275,7 @@ export class Watcher {
             }
             else if (this.GAME_DATA.progressionSteps > 0 &&
                 !this.GAME_DATA.progressionAward &&
-                this.GAME_DATA.earnedStats.soft.progressionCount >= this.GAME_DATA.progressionSteps) {
+                this.GAME_DATA.unlockData.softcore.progressionCount >= this.GAME_DATA.progressionSteps) {
                 this.GAME_DATA.progressionAward = 'beaten-softcore';
                 awardsArray.push({
                     type: alertTypes.AWARD,
@@ -347,6 +314,18 @@ export class Watcher {
         } catch (error) {
             console.error(error);
         }
+    }
+    setSubset(subsetName) {
+        const gameSetID = this.GAME_DATA.subsets?.[subsetName];
+        if (!config.gamesDB[this.GAME_DATA.ParentGameID]) {
+            config.gamesDB[this.GAME_DATA.ParentGameID] = {};
+        }
+        if (gameSetID) {
+            config.gamesDB[this.GAME_DATA.ParentGameID].lastSetID = gameSetID;
+            config.writeConfiguration();
+            this.updateGameData(gameSetID);
+        }
+
     }
     start() {
         const increasePlayTime = () => {
@@ -413,7 +392,7 @@ export class Watcher {
             ui.statusPanel.gameChangeEvent(isNewGame);
             ui.status?.gameChangeEvent(isNewGame);
             ui.gameList?.gameChangeEvent();
-            ui.gameCard?.updateGameCardInfo(this.GAME_DATA);
+            ui.gameCard?.gameChangeEvent(isNewGame);
         }
         this._gameData = { ...this._gameData, ...config.gamesDB[this._gameData.ID] }
         this.initPlayTime();

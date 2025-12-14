@@ -288,7 +288,7 @@ export class StatusPanel extends Widget {
         totalSoftpoints: 0,
         earnedPoints: 0,
         earnedAchievesCount: 0,
-        totalRetropoints: watcher.GAME_DATA?.TotalRetropoints,
+        totalRetropoints: watcher.GAME_DATA?.totalRetropoints,
         earnedRetropoints: 0,
         earnedSoftpoints: 0,
         showStatisticsAlert: true,
@@ -374,7 +374,7 @@ export class StatusPanel extends Widget {
     setElementsValues() {
         const fillStatusbarData = () => {
             //main information
-            const { ImageIcon, FixedTitle, ConsoleName, ConsoleID, badges, ID, GuideURL } = watcher.GAME_DATA;
+            const { ImageIcon, Title, ConsoleName, ConsoleID, badges, ID, GuideURL } = watcher.GAME_DATA;
             const { gamePreview, gameTitle, gamePlatform, richPresence } = this.frontSide;
 
             gamePreview.setAttribute(
@@ -383,7 +383,7 @@ export class StatusPanel extends Widget {
             );
 
             gameTitle.innerHTML = `
-                <a target="_blank" class="status__game-title" href="${gameUrl(ID)}">${FixedTitle}</a>
+                <a target="_blank" class="status__game-title" href="${gameUrl(ID)}">${Title}</a>
                 ${generateBadges(badges)} 
                 ${generateBadges([RAPlatforms[ConsoleID || 1].Name])}
 
@@ -475,16 +475,16 @@ export class StatusPanel extends Widget {
 
     }
     fillSidebarIcons() {
-        const earnedStats = this.uiProps.hardMode ? { ...watcher.GAME_DATA.earnedStats.hard } : { ...watcher.GAME_DATA.earnedStats.soft };
+        const unlockData = this.uiProps.hardMode ? { ...watcher.GAME_DATA.unlockData.hardcore } : { ...watcher.GAME_DATA.unlockData.soft };
         this.frontSide.iconsContainer.innerHTML = `
             <p class="signed-icon auto-font-size" data-title="${ui.lang.cheevosCount}">
                 ${icons.cheevos}
-                ${earnedStats.count}/${watcher.GAME_DATA.NumAchievements}
+                ${unlockData.count}/${watcher.GAME_DATA.NumAchievements}
             </p>
 
             <p class="signed-icon auto-font-size" data-title="${ui.lang.points}">
                 ${icons.points}
-                ${earnedStats.points}/${watcher.GAME_DATA.totalPoints}
+                ${unlockData.points}/${watcher.GAME_DATA.totalPoints}
             </p>
             <p class="signed-icon auto-font-size" data-title="${ui.lang.trueRatio}">
                 ${icons.trueratio}
@@ -492,27 +492,27 @@ export class StatusPanel extends Widget {
             </p>
             <p class="signed-icon auto-font-size" data-title="${ui.lang.retropoints}">
                 ${icons.retropoints}
-                ${earnedStats.retropoints}/${watcher.GAME_DATA.TotalRetropoints}
+                ${unlockData.retropoints}/${watcher.GAME_DATA.totalRetropoints}
             </p>
         `;
     }
     updateGameData(isNewGame = false) {
         this.stats = {
             userName: configData.targetUser,
-            gameTitle: watcher.GAME_DATA?.FixedTitle ?? "Title",
+            gameTitle: watcher.GAME_DATA?.Title ?? "Title",
             gamePlatform: watcher.GAME_DATA?.ConsoleName ?? "Platform",
             richPresence: "Waiting...",
             imageSrc: gameImageUrl(watcher.GAME_DATA?.ImageIcon),
             totalPoints: watcher.GAME_DATA?.totalPoints ?? 0,
-            totalSoftPoints: watcher.GAME_DATA.totalPoints - watcher.GAME_DATA.earnedStats.soft.points,
+            totalSoftPoints: watcher.GAME_DATA.totalPoints - watcher.GAME_DATA.unlockData.softcore.points,
             totalAchievesCount: watcher.GAME_DATA?.NumAchievements ?? 0,
             totalProgressionCount: watcher.GAME_DATA?.progressionSteps,
-            earnedPoints: watcher.GAME_DATA.earnedStats.hard.points,
-            earnedAchievesCount: watcher.GAME_DATA.earnedStats.hard.count,
-            earnedProgressionCount: watcher.GAME_DATA.earnedStats.soft.progressionCount,
-            totalRetropoints: watcher.GAME_DATA?.TotalRetropoints,
-            earnedRetropoints: watcher.GAME_DATA.earnedStats.hard.retropoints,
-            earnedSoftpoints: watcher.GAME_DATA.earnedStats.soft.points - watcher.GAME_DATA.earnedStats.hard.points,
+            earnedPoints: watcher.GAME_DATA.unlockData.hardcore.points,
+            earnedAchievesCount: watcher.GAME_DATA.unlockData.hardcore.count,
+            earnedProgressionCount: watcher.GAME_DATA.unlockData.softcore.progressionCount,
+            totalRetropoints: watcher.GAME_DATA?.totalRetropoints,
+            earnedRetropoints: watcher.GAME_DATA.unlockData.hardcore.retropoints,
+            earnedSoftpoints: watcher.GAME_DATA.unlockData.softcore.points - watcher.GAME_DATA.unlockData.hardcore.points,
 
         }
         isNewGame && (
@@ -737,24 +737,24 @@ export class StatusPanel extends Widget {
             return timeStr;
         }
         const updateGameData = (game) => {
-            const { FixedTitle,
+            const { Title,
                 badges,
                 ImageIcon,
                 totalPoints,
                 ConsoleName,
-                TotalRetropoints,
+                totalRetropoints,
                 NumAchievements,
                 masteryRate,
                 beatenRate,
             } = game;
             this.backSide.imgElement.src = gameImageUrl(ImageIcon);
-            this.backSide.titleElement.innerHTML = `${FixedTitle} ${generateBadges(badges)}
+            this.backSide.titleElement.innerHTML = `${Title} ${generateBadges(badges)}
             <i class="badge">${ConsoleName}</i>
             `;
             let gameInfo = `
                 ${goldBadge(icons.cheevos + NumAchievements)}
                 ${goldBadge(icons.points + totalPoints)}
-                ${goldBadge(icons.retropoints + TotalRetropoints)}
+                ${goldBadge(icons.retropoints + totalRetropoints)}
                 ${goldBadge(masteryRate + "% MASTERED")}
                 ${beatenRate ? goldBadge(beatenRate + "% BEATEN") : ""}
             `;
@@ -791,16 +791,16 @@ export class StatusPanel extends Widget {
             setTimeout(() => this.container.classList.add("new-achiv"), 2000)
         }
         const updateAwardData = (game, award) => {
-            const { FixedTitle,
+            const { Title,
                 badges,
                 ImageIcon,
                 totalPoints,
-                earnedStats,
-                TotalRetropoints,
+                unlockData,
+                totalRetropoints,
                 masteryRate,
                 beatenRate,
                 completedRate,
-                beatenSoftRate,
+                beatenRateSoftcore,
                 ID,
                 NumAchievements,
                 TimePlayed
@@ -808,19 +808,19 @@ export class StatusPanel extends Widget {
             // let award = 'mastered';
             const awardRate = award == 'mastered' ? masteryRate :
                 award == 'beaten' ? beatenRate :
-                    award == 'completed' ? completedRate : beatenSoftRate;
+                    award == 'completed' ? completedRate : beatenRateSoftcore;
 
             const playTimeInMinutes = deltaTime(TimePlayed);
             this.backSide.imgElement.src = gameImageUrl(ImageIcon);
-            this.backSide.titleElement.innerHTML = `${FixedTitle} ${generateBadges(badges)}
+            this.backSide.titleElement.innerHTML = `${Title} ${generateBadges(badges)}
                 ${goldBadge(`GAINED AWARD`)}
             `;
             let gameInfo = `
                 ${goldBadge(`${award} IN ${playTimeInMinutes}`)}
                 ${goldBadge(`TOP${awardRate}%`)}
-                ${goldBadge(`${icons.cheevos}${earnedStats.hard.count}/${NumAchievements}`)}
-                ${goldBadge(`${icons.points}${earnedStats.hard.points}/${totalPoints}`)}
-                ${goldBadge(`${icons.retropoints}${earnedStats.hard.retropoints}/${TotalRetropoints}`)}
+                ${goldBadge(`${icons.cheevos}${unlockData.hardcore.count}/${NumAchievements}`)}
+                ${goldBadge(`${icons.points}${unlockData.hardcore.points}/${totalPoints}`)}
+                ${goldBadge(`${icons.retropoints}${unlockData.hardcore.retropoints}/${totalRetropoints}`)}
             `;
             this.backSide.badgesElement.innerHTML = gameInfo;
             this.backSide.descriptionElement.innerText = "";

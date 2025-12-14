@@ -176,6 +176,9 @@
     "gameMasteredMsg": "Game mastered",
     "gameCompletedMsg": "Game completed",
     "unlockProgressMsg": "Unlocked {1} of {2}",
+    "cheevosProgress": "achievements",
+    "pointsProgress": "points",
+    "retropointsProgress": "retropoints",
     "gameRating": "game rating",
     "masteryUnlocked": "Mastery Unlocked",
     "gameBeaten": "Game Beaten",
@@ -225,5 +228,10 @@
     "boxart": "BoxArt",
     "ingame": "Ingame",
     "titleScreen": "Title Screen",
-    "animType": "Animation Type"
+    "animType": "Animation Type",
+    "infoPanel": "Info Panel",
+    "icons": "Icons",
+    "cheevoOnHover": "Cheevo Data on Hover",
+    "loadLastSubset": "Load saved Subset",
+    "subsets": "Subsets"
 }

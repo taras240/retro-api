@@ -1,74 +1,30 @@
 import { cacheDataTypes } from "./enums/cacheDataTypes.js";
-import { cheevoGenres } from "./enums/cheevoGenres.js";
-import { cheevoTypes } from "./enums/cheevoTypes.js";
 import { gameAwardTypes } from "./enums/gameAwards.js";
 import { raEdpoints } from "./enums/RAEndpoints.js";
-import { RAtoRAWG } from "./enums/RAWGPlatforms.js";
-import { generateCheevosDisplayOrder } from "./functions/displayOrder.js";
-import { parseCheevosGenres } from "./functions/genreParser.js";
-import { parseCheevoLevels } from "./functions/levelParser.js";
-import { cheevoImageUrl } from "./functions/raLinks.js";
-import { parseReleaseVersion } from "./functions/releaseTypeParser.js";
+import { cacheWorker } from "./functions/api/cacheWorker.js";
+import { getNormalizedAotW } from "./functions/api/cheevosNormalization.js";
+import { mergeWithTimesData, normalizeGameData } from "./functions/api/gameDataNormalization.js";
+import { getNormalizedTimes } from "./functions/api/gameTimesData.js";
+import { delay } from "./functions/delay.js";
+import { addReleaseBadges } from "./functions/releaseTypeParser.js";
 import { formatDateTime } from "./functions/time.js";
 import { config, configData, ui } from "./script.js";
 
 const CACHE_FILE_NAME = "raApiCache";
+
 export class APIWorker {
-  initializeCache = async () => {
-    let cache = await JSON.parse(localStorage.getItem(CACHE_FILE_NAME)) || {
-      [cacheDataTypes.GAME_TIMES]: {}
-    };
-    this._cache = cache;
-  }
-  clearCache() {
-    this._cache = {
-      [cacheDataTypes.GAME_TIMES]: {}
-    }
-    localStorage.setItem(CACHE_FILE_NAME, JSON.stringify(this._cache));
-  }
-  getCachedData = async ({ dataType, ID }) => {
-    if (!this._cache) {
-      await this.initializeCache();
-    }
-    switch (dataType) {
-      case cacheDataTypes.GAME_TIMES:
-        return this._cache[cacheDataTypes.GAME_TIMES] ?
-          this._cache[cacheDataTypes.GAME_TIMES][ID] : undefined;
 
-      case cacheDataTypes.COMPLETION_PROGRESS:
-        return this._cache[cacheDataTypes.COMPLETION_PROGRESS] || {};
-
-      case cacheDataTypes.AOTW:
-        return this._cache[cacheDataTypes.AOTW]
-
-    }
-  }
-  pushToCache = async ({ dataType, data }) => {
-    if (!this._cache) {
-      await this.initializeCache()
-    }
-    switch (dataType) {
-      case cacheDataTypes.GAME_TIMES:
-        if (!this._cache[cacheDataTypes.GAME_TIMES]) {
-          this._cache[cacheDataTypes.GAME_TIMES] = {};
-        }
-        this._cache[cacheDataTypes.GAME_TIMES][data.ID] = data;
-        break;
-      case cacheDataTypes.COMPLETION_PROGRESS:
-        this._cache[cacheDataTypes.COMPLETION_PROGRESS] = data;
-        break;
-      case cacheDataTypes.AOTW:
-        this._cache[cacheDataTypes.AOTW] = data;
-        break;
-    }
-    localStorage.setItem(CACHE_FILE_NAME, JSON.stringify(this._cache));
-  }
-
-
-  gamesTimes = {
-  };
+  cache = cacheWorker(CACHE_FILE_NAME);
   // Базовий URL API
   baseUrl = `https://retroachievements.org/API/`;
+  _subsetsList;
+  async getSubsets(gameID) {
+    if (!this._subsetsList) {
+      this._subsetsList = await fetch(`./json/games/all-subsets.json`).then(resp => resp.json());
+    }
+    const subsets = this._subsetsList[gameID] ?? { Main: gameID };
+    return subsets;
+  }
 
   getUrl({ endpoint, targetUser, gameID, minutes, apiKey, userName, achievesCount, count, offset, type, sort }) {
     if (ui.isTest) {
@@ -98,10 +54,10 @@ export class APIWorker {
     return url;
   }
   async completionProgress() {
-    let completionProgress = await this.getCachedData({ dataType: cacheDataTypes.COMPLETION_PROGRESS });
+    let completionProgress = this.cache.getData({ dataType: cacheDataTypes.COMPLETION_PROGRESS });
     if (!completionProgress?.Total || (configData.targetUser || config.USER_NAME) !== completionProgress.UserName) {
       await this.updateCompletionProgress({ batchSize: 500 });
-      completionProgress = await this.getCachedData({ dataType: cacheDataTypes.COMPLETION_PROGRESS });
+      completionProgress = await this.cache.getData({ dataType: cacheDataTypes.COMPLETION_PROGRESS });
       return completionProgress;
     }
     else {
@@ -109,29 +65,14 @@ export class APIWorker {
       return (date - completionProgress.Date < 60 * 1000)
         ? completionProgress
         : this.updateCompletionProgress({ batchSize: 10, savedArray: completionProgress.Results })
-          .then(async () => await this.getCachedData({ dataType: cacheDataTypes.COMPLETION_PROGRESS }))
+          .then(async () => await this.cache.getData({ dataType: cacheDataTypes.COMPLETION_PROGRESS }))
     }
   }
   getAotW() {
     let url = this.getUrl({ endpoint: raEdpoints.achievementOfTheWeek });
     return fetch(url)
       .then((resp) => resp.json())
-      .then(aotwOrig => {
-        const userEarned = aotwOrig.Unlocks
-          .find(user => user.User.toLowerCase() === configData.targetUser?.toLowerCase()?.trim())
-        return {
-          ...aotwOrig.Achievement,
-          ConsoleName: aotwOrig.Console.Title,
-          ForumTopic: aotwOrig.ForumTopic.ID,
-          GameID: aotwOrig.Game.ID,
-          GameTitle: aotwOrig.Game.Title,
-          StartAt: aotwOrig.StartAt,
-          TotalPlayers: aotwOrig.TotalPlayers,
-          UnlocksHardcoreCount: aotwOrig.UnlocksHardcoreCount,
-          isEarned: !!userEarned,
-          isEarnedHardcore: !!userEarned && !!userEarned.HardcoreMode
-        }
-      });
+      .then(AotwData => getNormalizedAotW({ AotwData, userName: configData.targetUser }));
   }
   async aotw() {
     function isActualDate(dateString) {
@@ -142,12 +83,12 @@ export class APIWorker {
       const eventStartDate = new Date(dateString)
       return eventStartDate > oneWeekAgo;
     }
-    let aotw = await this.getCachedData({ dataType: cacheDataTypes.AOTW });
+    let aotw = this.cache.getData({ dataType: cacheDataTypes.AOTW });
 
     const isActual = aotw && isActualDate(aotw.StartAt);
     if (!isActual) {
       aotw = await this.getAotW();
-      this.pushToCache({ dataType: cacheDataTypes.AOTW, data: aotw })
+      this.cache.push({ dataType: cacheDataTypes.AOTW, data: aotw })
     }
     return aotw;
   }
@@ -195,164 +136,39 @@ export class APIWorker {
         ...game,
         DateEarnedHardcore: game.AwardedAt,
         timeString: formatDateTime(game.AwardedAt),
+        awardedDate: new Date(game.AwardedAt),
         award:
           game.ConsoleName == 'Events' ? "event" :
             game.AwardType == "Game Beaten" ?
-              game.AwardDataExtra == "1" ? "beaten" : "beaten_softcore" :
-              game.AwardDataExtra == "1" ? "mastered" : "completed",
+              game.AwardDataExtra == "1" ? gameAwardTypes.BEATEN : gameAwardTypes.BEATEN_SOFTCORE :
+              game.AwardDataExtra == "1" ? gameAwardTypes.MASTERED : gameAwardTypes.COMPLETED,
 
       }))
       return awardsObj;
     });
   }
   // Отримання прогресу гри користувача
-  getGameInfoAndProgress({ targetUser, gameID }) {
+  async getGameInfoAndProgress({ targetUser, gameID, withTimesData = false }) {
+    const lastPlayedSubsetID = config.gamesDB?.[gameID]?.lastSetID ?? gameID;
+    gameID = configData.loadLastSubset ? lastPlayedSubsetID : gameID;
+
     let url = this.getUrl({
       endpoint: raEdpoints.gameInfoAndProgress,
       targetUser: targetUser || configData.targetUser,
-      gameID: gameID || configData.gameID,
+      gameID: gameID,
     });
-    const defGameProps = {
-      TotalRealPlayers: 0,
-      TotalRetropoints: 0,
-      totalPoints: 0,
-      progressionRetroRatio: 0,
-      beatenCount: Infinity,
-      masteredCount: Infinity,
-      beatenSoftCount: Infinity,
-      completedCount: Infinity,
-      earnedStats: {
-        soft:
-          { count: 0, points: 0, retropoints: 0, progressionCount: 0 },
-        hard:
-          { count: 0, points: 0, retropoints: 0, progressionCount: 0 }
-      },
-      hasZeroPoints: false,
+
+    const dataResp = await fetch(url);
+    let gameData = await dataResp.json();
+    this.gameData = JSON.parse(JSON.stringify(gameData));
+    if (withTimesData) {
+      await delay(100);
+      const timesData = await this.getGameTimesInfo({ gameID: gameID, targetUser });
+      gameData = mergeWithTimesData(gameData, timesData);
     }
-    return fetch(url)
-      .then((resp) => resp.json())
-      .then(gameObject => {
-        gameObject = {
-          ...gameObject,
-          ...parseReleaseVersion(gameObject),
-          ...defGameProps,
-        }
-        const progressionAchivs = { Count: 0, WinCount: 0, WinAwardedCount: 0, WinAwardedSoftCount: 0, WinEarnedCount: 0 };
-        const awards = {
-          isBeaten: true,
-          isBeatenSoftcore: true,
-          isWinEarned: false,
-          isWinEarnedSoftcore: false,
-        }
-        for (let cheevo of Object.values(gameObject.Achievements)) {
-          // cheevo.type = cheevo.Type; //* FIX API Update
-          //get TotalRetropoints
-          gameObject.TotalRetropoints += cheevo.TrueRatio;
-          gameObject.totalPoints += cheevo.Points;
-          //get TotalRealplayers
-          if (gameObject.TotalRealPlayers < cheevo.NumAwarded) {
-            gameObject.TotalRealPlayers = cheevo.NumAwarded
-          }
-          if (cheevo.Points === 0 && !cheevo.DateEarnedHardcore) {
-            gameObject.hasZeroPoints = true;
-          }
-          // Earned STATS
-          if (cheevo.DateEarned) {
-            gameObject.earnedStats.soft.count += 1;
-            gameObject.earnedStats.soft.points += cheevo.Points;
-            gameObject.earnedStats.soft.retropoints += cheevo.TrueRatio;
-            if (cheevo.Type === cheevoTypes.PROGRESSION || cheevo.Type === cheevoTypes.WIN) { gameObject.earnedStats.soft.progressionCount++; }
-          }
-          if (cheevo.DateEarnedHardcore) {
-            gameObject.earnedStats.hard.count += 1;
-            gameObject.earnedStats.hard.points += cheevo.Points;
-            gameObject.earnedStats.hard.retropoints += cheevo.TrueRatio;
-            if (cheevo.Type === cheevoTypes.PROGRESSION || cheevo.Type === cheevoTypes.WIN) { gameObject.earnedStats.hard.progressionCount++; }
-          }
-
-          //Progression stats
-          if (cheevo.Type === cheevoTypes.PROGRESSION) {
-            progressionAchivs.Count++;
-
-            !cheevo.DateEarned && (awards.isBeatenSoftcore = false);
-            !cheevo.DateEarnedHardcore && (awards.isBeaten = false);
-
-            gameObject.beatenCount = Math.min(cheevo.NumAwardedHardcore, gameObject.beatenCount);
-            gameObject.beatenSoftCount = Math.min(cheevo.NumAwarded, gameObject.beatenSoftCount);
-
-          }
-          else if (cheevo.Type === cheevoTypes.WIN) {
-            progressionAchivs.WinCount++;
-            progressionAchivs.WinAwardedCount = Math.max(cheevo.NumAwardedHardcore, progressionAchivs.WinAwardedCount);
-            progressionAchivs.WinAwardedSoftCount = Math.max(cheevo.NumAwarded, progressionAchivs.WinAwardedSoftCount);
-
-            cheevo.DateEarnedHardcore && progressionAchivs.WinEarnedCount++;
-
-            awards.isWinEarned = !!cheevo.DateEarnedHardcore;
-            awards.isWinEarnedSoftcore = !!cheevo.DateEarned;
-          }
-          gameObject.masteredCount = Math.min(cheevo.NumAwardedHardcore, gameObject.masteredCount);
-          gameObject.completedCount = Math.min(cheevo.NumAwarded, gameObject.completedCount);
-
-        }
-        gameObject = {
-          ...gameObject,
-          winVariantCount: progressionAchivs.WinCount,
-          winEarnedCount: progressionAchivs.WinEarnedCount,
-          progressionSteps: progressionAchivs.WinCount > 0 ? progressionAchivs.Count + 1 : progressionAchivs.Count,
-        }
-
-        gameObject.award =
-          (gameObject.NumAchievements === gameObject.NumAwardedToUserHardcore) ? gameAwardTypes.MASTERED :
-            (gameObject.NumAchievements === gameObject.NumAwardedToUser) ? gameAwardTypes.COMPLETED :
-              gameObject.award;
-
-
-        gameObject.progressionSteps && (gameObject.progressionAward =
-          (awards.isBeaten && gameObject.earnedStats.hard.progressionCount >= gameObject.progressionSteps) ? gameAwardTypes.BEATEN :
-            (awards.isBeatenSoftcore && gameObject.earnedStats.soft.progressionCount >= gameObject.progressionSteps) ? gameAwardTypes.BEATEN_SOFTCORE :
-              gameObject.progressionAward);
-
-
-
-        progressionAchivs.WinCount > 0 && (
-          gameObject.beatenCount = progressionAchivs.WinAwardedCount,
-          gameObject.beatenSoftCount = progressionAchivs.WinAwardedSoftCount
-        )
-
-        gameObject.beatenCount != Infinity &&
-          (gameObject.beatenRate = ~~(10000 * gameObject.beatenCount / gameObject.TotalRealPlayers) / 100);
-        gameObject.beatenSoftCount != Infinity &&
-          (gameObject.beatenSoftRate = ~~(10000 * gameObject.beatenSoftCount / gameObject.TotalRealPlayers) / 100);
-
-        gameObject.masteredCount != Infinity &&
-          (gameObject.masteryRate = ~~(10000 * gameObject.masteredCount / gameObject.TotalRealPlayers) / 100);
-        gameObject.completedCount != Infinity &&
-          (gameObject.completedRate = ~~(10000 * gameObject.completedCount / gameObject.TotalRealPlayers) / 100);
-
-        const ratio = ~~(gameObject.TotalRetropoints / gameObject.totalPoints * 100) / 100;
-        gameObject.retroRatio = ratio;
-
-        this.gameData = JSON.parse(JSON.stringify(gameObject));
-
-        parseCheevoLevels(gameObject);
-        parseCheevosGenres(gameObject);
-        generateCheevosDisplayOrder(gameObject);
-        //add missed fields for ACHIEVEMENTS
-        Object.values(gameObject.Achievements)
-          .map(cheevo =>
-            this.fixAchievement(cheevo, gameObject));
-        gameObject = { ...gameObject, TimePlayed: 0, ...config.gamesDB[gameObject?.ID] };
-
-        const cheevos = Object.values(gameObject.Achievements);
-        gameObject.masteryDifficulty = Math.max(...cheevos.map(c => c.difficulty));
-        if (gameObject.progressionSteps > 0) {
-          gameObject.gameDifficulty = gameObject.winVariantCount === 0 ?
-            Math.max(...cheevos.filter(c => c.Type === cheevoTypes.PROGRESSION).map(c => c.difficulty)) :
-            Math.min(...cheevos.filter(c => c.Type === cheevoTypes.WIN).map(c => c.difficulty))
-        };
-        return gameObject;
-      });
+    normalizeGameData(gameData, config.gamesDB, config.cheevosDB);
+    gameData.subsets = await this.getSubsets(gameData.ParentGameID)
+    return gameData;
   }
   //Повертає час який потрібен для здобуття досягнень та нагород
   async getGameTimesInfo({ gameID, targetUser }) {
@@ -361,29 +177,32 @@ export class APIWorker {
       targetUser: targetUser || configData.targetUser,
       gameID: gameID || configData.gameID,
     });
-    let cachedData = await this.getCachedData({ dataType: cacheDataTypes.GAME_TIMES, ID: gameID });
+    let cachedData = this.cache.getData({ dataType: cacheDataTypes.GAME_TIMES, ID: gameID });
     if (!cachedData) {
       const gameTimes = await fetch(url).then(resp => resp.json());
-      const Achievements = gameTimes.Achievements
-        .reduce((obj, { ID, MedianTimeToUnlock, MedianTimeToUnlockHardcore }) => {
-          obj[ID] = { ID, MedianTimeToUnlock, MedianTimeToUnlockHardcore };
-          return obj
-        }, {});
-      const { ID, MedianTimeToBeat, MedianTimeToBeatHardcore, MedianTimeToMaster, MedianTimeToComplete } = gameTimes;
-      cachedData = {
-        ID,
-        MedianTimeToBeat,
-        MedianTimeToBeatHardcore,
-        MedianTimeToMaster,
-        MedianTimeToComplete,
-        Achievements
-      }
-      this.pushToCache({
+
+      cachedData = getNormalizedTimes(gameTimes);
+      this.cache.push({
         dataType: cacheDataTypes.GAME_TIMES,
         data: cachedData
       });
     }
     return cachedData;
+  }
+  async getGameInfoWithTimes({ gameID, targetUser }) {
+    const gameData = await this.getGameInfoAndProgress({ gameID: gameID });
+    //!Uncomment to load times
+    await delay(150);
+    let gameTimes;
+    try {
+      gameTimes = await apiWorker.getGameTimesInfo({ gameID: gameID });
+    }
+    catch (err) {
+      console.log(err)
+    }
+    // debugger;
+
+    this.GAME_DATA = mergeGameData(gameData, gameTimes);
   }
   // Отримання недавно отриманих досягнень користувача
   getRecentAchieves({ targetUser, minutes }) {
@@ -394,9 +213,9 @@ export class APIWorker {
     });
     return fetch(url)
       .then((resp) => resp.json())
-      .then(achivs => achivs.map(achiv => {
-        achiv.localDate = formatDateTime(achiv.Date);
-        return achiv;
+      .then(cheevos => cheevos.map(cheevo => {
+        cheevo.localDate = formatDateTime(cheevo.Date);
+        return cheevo;
       }));
   }
 
@@ -441,7 +260,7 @@ export class APIWorker {
     return fetch(url).then((resp) => resp.json()).then(arr => arr.map((game, index) => {
       return {
         ...game,
-        ...parseReleaseVersion(game),
+        ...addReleaseBadges(game),
         ID: game.GameID,
         Points: game.ScoreAchievedHardcore + "/" + game.PossibleScore,
         NumAchievements: game.NumAchievedHardcore + "/" + game.AchievementsTotal,
@@ -537,7 +356,7 @@ export class APIWorker {
       const completionIDs = completionProgress.map(game => game.GameID);
       savedArray = savedArray.filter(game => !completionIDs.includes(game.GameID))
       savedArray = [...completionProgress, ...savedArray];
-      this.pushToCache({
+      this.cache.push({
         dataType: cacheDataTypes.COMPLETION_PROGRESS,
         data: {
           Date: new Date(),
@@ -552,107 +371,5 @@ export class APIWorker {
       setTimeout(() => this.updateCompletionProgress({ savedArray: savedArray, completionProgress: completionProgress, batchSize: batchSize }), 100)
     }
   }
-
-  fixAchievement(achievement, gameData) {
-    const { BadgeName, DateEarned, DateEarnedHardcore, NumAwardedHardcore, NumAwarded, TrueRatio, ID, Points } = achievement;
-    const { NumDistinctPlayers, NumAwardedToUserHardcore, TotalRealPlayers } = gameData;
-
-    const trend = 100 * (NumAwardedHardcore - NumAwardedToUserHardcore * 0.5) / ((NumDistinctPlayers + TotalRealPlayers) * 0.5 - NumAwardedToUserHardcore * 0.5);
-    const earnedRateHardcore = (100 * NumAwardedHardcore / NumDistinctPlayers);
-    gameData.Achievements[ID] = {
-      ...achievement,
-      totalPlayers: NumDistinctPlayers,
-      isEarned: !!DateEarned,
-      isHardcoreEarned: !!DateEarnedHardcore,
-      prevSrc: cheevoImageUrl(BadgeName),
-      rateEarned: ~~(100 * NumAwarded / NumDistinctPlayers) + "%",
-      rateEarnedHardcore: earnedRateHardcore < 10 ? `${earnedRateHardcore.toFixed(1)}%` : `${earnedRateHardcore.toFixed(0)}%`,
-      trend: trend,
-      retroRatio: (TrueRatio / Math.max(1, Points)).toFixed(2),
-      difficulty:
-        trend <= 0.2 && TrueRatio > 1000 && NumAwardedHardcore < 100 ? 11 :
-          trend <= 1 && TrueRatio > 300 || TrueRatio >= 500 ? 10 :
-            trend <= 1.5 && TrueRatio > 300 || TrueRatio >= 500 ? 9 :
-              trend <= 3 && TrueRatio > 100 || TrueRatio >= 300 ? 8 :
-                trend < 8 && TrueRatio > 24 ? 7 :
-                  trend < 13 && TrueRatio > 10 ? 6 :
-                    trend < 20 && TrueRatio > 5 || TrueRatio > 10 ? 5 :
-                      4,
-      ...config.cheevosDB[ID], // Load edited props
-    }
-  }
-  // parseBadges(game) {
-  //   const ignoredWords = [/\[SUBSET[^\[]*\]/gi, /~[^~]*~/g, ".HACK//",];
-  //   let title = game.Title;
-
-  //   const badges = ignoredWords.reduce((badges, word) => {
-  //     const reg = new RegExp(word, "gi");
-  //     const matches = game.Title.match(reg);
-  //     if (matches) {
-  //       matches.forEach(match => {
-  //         title = title.replace(match, "");
-  //         let badge = match;
-  //         badges.push(badge.replace(/[~\.\[\]]|subset -|\/\//gi, ""));
-  //       })
-  //     }
-  //     return badges;
-  //   }, []);
-  //   game.badges = badges;
-  //   game.FixedTitle = title.trim();
-  //   return { badges: badges, FixedTitle: title.trim() };
-  // }
-
-
-
-
-
-  async rawgSearchGame({ gameTitle, platformID }) {
-    gameTitle = gameTitle.split("|")[0];
-    const RAWGPlatform = RAtoRAWG[platformID];
-    if (!RAWGPlatform) {
-      return false;
-    }
-
-    const baseUrl = `https://api.rawg.io/api/`;
-    const endpoint = "games";
-    let url = new URL(endpoint, baseUrl);
-
-    let params = {
-      search: gameTitle,
-      platforms: RAWGPlatform,
-      key: "179353905bcb491d975b1fc03b3c8bd6",
-    };
-    url.search = new URLSearchParams(params);
-
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        console.log(`HTTP error! status: ${response.status}`);
-        return false;
-      }
-      const data = await response.json();
-      const res = data.results ? data.results[0] : null;
-
-      const testTitle = gameTitle.replace(/[^a-z0-9]/gi, " ").trim();
-      const testRes = res?.name.replace(/[^a-z0-9]/gi, " ").trim() ?? "";
-      if (!res || testTitle !== testRes) {
-        console.log(`Game not found for title: ${gameTitle} on platform: ${platformID}`);
-        return false;
-      }
-
-      const keys = [
-        "name", "playtime", "released", "background_image", "rating",
-        "ratings", "added", "metacritic", "score", "community_rating", "genres"
-      ];
-
-      return Object.fromEntries(
-        Object.entries(res).filter(([key]) => keys.includes(key))
-      );
-    } catch (err) {
-      console.log(`Fetch error: ${err.message}`);
-      return false;
-    }
-  }
-
 }
 

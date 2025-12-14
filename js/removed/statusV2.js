@@ -311,10 +311,10 @@ export class StatusOld extends Widget {
     }
     fillGameData() {
         const fillGameInfoData = () => {
-            const { ImageIcon, FixedTitle, badges, ConsoleName, ConsoleID, ID, NumAchievements, totalPoints, retroRatio } = watcher.GAME_DATA;
+            const { ImageIcon, Title, badges, ConsoleName, ConsoleID, ID, NumAchievements, totalPoints, retroRatio } = watcher.GAME_DATA;
             this.gameElements.icon.setAttribute("src", gameImageUrl(ImageIcon));
             this.gameElements.title.innerHTML = `
-            ${FixedTitle || "Some game name"}
+            ${Title || "Some game name"}
             ${generateBadges(badges)}
             `;
             this.gameElements.title.setAttribute(
@@ -371,24 +371,24 @@ export class StatusOld extends Widget {
             return timeStr;
         }
         const updateGameData = (game) => {
-            const { FixedTitle,
+            const { Title,
                 badges,
                 ImageIcon,
                 totalPoints,
                 ConsoleName,
-                TotalRetropoints,
+                totalRetropoints,
                 NumAchievements,
                 masteryRate,
                 beatenRate,
             } = game;
             this.alertElements.preview.src = gameImageUrl(ImageIcon);
-            this.alertElements.title.innerHTML = `${FixedTitle} ${generateBadges(badges)}
+            this.alertElements.title.innerHTML = `${Title} ${generateBadges(badges)}
             <i class="badge">${ConsoleName}</i>
             `;
             let badgesHtml = `
                 ${goldBadge(icons.cheevos + NumAchievements)}
                 ${goldBadge(icons.points + totalPoints)}
-                ${goldBadge(icons.retropoints + TotalRetropoints)}
+                ${goldBadge(icons.retropoints + totalRetropoints)}
                 ${goldBadge(masteryRate + "% MASTERED RATE")}
                 ${goldBadge(beatenRate + "% BEATEN RATE")}
             `;
@@ -424,16 +424,16 @@ export class StatusOld extends Widget {
             this.alertElements.container.classList.add("new-achiv");
         }
         const updateAwardData = (game, award) => {
-            const { FixedTitle,
+            const { Title,
                 badges,
                 ImageIcon,
                 totalPoints,
-                earnedStats,
-                TotalRetropoints,
+                unlockData,
+                totalRetropoints,
                 masteryRate,
                 beatenRate,
                 completedRate,
-                beatenSoftRate,
+                beatenRateSoftcore,
                 ID,
                 NumAchievements,
                 TimePlayed
@@ -441,18 +441,18 @@ export class StatusOld extends Widget {
             // let award = 'mastered';
             const awardRate = award == 'mastered' ? masteryRate :
                 award == 'beaten' ? beatenRate :
-                    award == 'completed' ? completedRate : beatenSoftRate;
+                    award == 'completed' ? completedRate : beatenRateSoftcore;
 
             const playTimeInMinutes = deltaTime(TimePlayed);
             this.alertElements.preview.src = gameImageUrl(ImageIcon);
-            this.alertElements.title.innerHTML = `${FixedTitle} ${generateBadges(badges)}
+            this.alertElements.title.innerHTML = `${Title} ${generateBadges(badges)}
             ${goldBadge("GAINED AWARD")}`;
             let awardBadges = `
                 ${goldBadge(`${award} IN ${playTimeInMinutes}`)}
                 ${goldBadge(`TOP${awardRate}%`)}
-                ${goldBadge(`${icons.cheevos}${earnedStats.hard.count}/${NumAchievements}`)}
-                ${goldBadge(`${icons.points}${earnedStats.hard.points}/${totalPoints}`)}
-                ${goldBadge(`${icons.retropoints}${earnedStats.hard.retropoints}/${TotalRetropoints}`)}
+                ${goldBadge(`${icons.cheevos}${unlockData.hardcore.count}/${NumAchievements}`)}
+                ${goldBadge(`${icons.points}${unlockData.hardcore.points}/${totalPoints}`)}
+                ${goldBadge(`${icons.retropoints}${unlockData.hardcore.retropoints}/${totalRetropoints}`)}
             `;
             this.alertElements.badges.innerHTML = awardBadges;
             this.alertElements.description.innerText = "";

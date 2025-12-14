@@ -12,7 +12,7 @@ export function gamePropsPopup() {
           type: "text",
           title: ui.lang.gameTitleHint,
           id: "game-props-title",
-          value: gameData?.FixedTitle ?? '',
+          value: gameData?.Title ?? '',
         },
       ]
     },
@@ -85,7 +85,7 @@ export function gamePropsPopup() {
     </ul>`;
 
   const getGameDataFromWindow = (window) => ({
-    FixedTitle: window.querySelector("#game-props-title")?.value,
+    Title: window.querySelector("#game-props-title")?.value,
     ConsoleName: window.querySelector("#game-props-platform")?.value,
     Genre: window.querySelector("#game-props-genre")?.value,
     TimePlayed: Number(window.querySelector("#game-props-time")?.value ?? 0),
@@ -99,7 +99,7 @@ export function gamePropsPopup() {
   const resetGameData = async (window, gameData) => {
     const originalGameData = apiWorker.gameData;
 
-    watcher.GAME_DATA.FixedTitle = originalGameData.FixedTitle;
+    watcher.GAME_DATA.Title = originalGameData.Title;
     watcher.GAME_DATA.ConsoleName = originalGameData.ConsoleName;
     watcher.GAME_DATA.Genre = originalGameData.Genre;
 
@@ -135,7 +135,7 @@ export function gamePropsPopup() {
   }
   const open = (gameData) => {
     const popupData = () => ({
-      title: gameData?.FixedTitle,
+      title: gameData?.Title,
       content: contentHtml(gameDataItems(gameData)),
       id: `game-data-popup`,
       classList: ["game-data__section"]

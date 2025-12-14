@@ -1,5 +1,5 @@
-import { cheevoTypes } from "../enums/cheevoTypes.js";
-import { sortBy } from "./sortFilter.js";
+import { cheevoTypes } from "../../enums/cheevoTypes.js";
+import { sortBy } from "../sortFilter.js";
 
 export function generateCheevosDisplayOrder(game) {
     const cheevos = Object.values(game.Achievements);

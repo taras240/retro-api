@@ -4,6 +4,9 @@
     "gameMasteredMsg": "Você mastered o jogo",
     "gameCompletedMsg": "Você completed o jogo",
     "unlockProgressMsg": "{1} {2} desbloqueadas",
+    "cheevosProgress": "conquistas",
+    "pointsProgress": "pontos",
+    "retropointsProgress": "retropontos",
     "forceReloadHint": "forçar recarregamento",
     "totalAwardsHint": "total de conquistas",
     "beatenSoftHint": "beaten no softcore",
@@ -218,5 +221,15 @@
     "previewType": "Tipo de Imagem",
     "boxart": "Capa",
     "ingame": "No Jogo",
-    "titleScreen": "Tela de Título"
+    "titleScreen": "Tela de Título",
+    "date": "Data",
+    "casual_": "(Casual)",
+    "casual": "casual",
+    "beatenHint": "beaten",
+    "completedHint": "completed",
+    "masteredHint": "mastered",
+    "animType": "Tipo de Animação",
+    "infoPanel": "Painel de Informações",
+    "icons": "Ícones",
+    "cheevoOnHover": "Conquista ao passar o mouse"
 }
