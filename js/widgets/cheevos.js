@@ -438,6 +438,7 @@ export class AchievementsBlock extends Widget {
         <div class="preview-container">
           <img class="achiv-preview" src="${achievement.prevSrc}"  alt="${achievement.Title} icon"/>
           <div class="prev-lock-overlay"></div>
+          <div class="box-inner-shadow"></div>
         </div>
         `;
         }

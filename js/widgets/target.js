@@ -730,6 +730,7 @@ export class Target extends Widget {
                     alt="${achievement.Title}"
                 />
                 <div class="prev-lock-overlay"></div>
+                <div class="box-inner-shadow"></div>
                 <div class="target__cheevo-progression-container">
                     <div class="target__cheevo-progression">
                 </div>

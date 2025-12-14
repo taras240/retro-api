@@ -288,15 +288,13 @@ export class Status extends Widget {
         const widgetData = {
             classes: ["rp__section", "section"],
             id: widgetID,
-            title: ui.lang.targetSectionName,
             headerElementsHtml: headerElementsHtml,
-            contentClasses: ["target-container", "content-container", "flex-main-list"],
         };
 
         const widget = this.generateWidgetElement(widgetData);
         ui.app.appendChild(widget);
     }
-    generateWidgetElement({ classes, id, title, headerElementsHtml, contentClasses }) {
+    generateWidgetElement({ classes, id, headerElementsHtml }) {
         const widget = document.createElement("section");
         widget.classList.add(...classes);
         widget.id = id;
