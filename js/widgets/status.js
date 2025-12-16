@@ -28,7 +28,7 @@ export class StatusPanel extends Widget {
         description: "status widget",
         iconID: `side-panel__status`,
         onChangeEvent: `ui.statusPanel.VISIBLE = this.checked`,
-        badgeLabel: "v1",
+        badgeLabel: "legacy",
         iconClass: "status-icon",
     };
     get contextMenuItems() {

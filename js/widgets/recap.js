@@ -444,7 +444,7 @@ export class Recap {
         const genCardsData = (data) => {
             const statsObject = (title, value, valueSoft) => ({
                 title,
-                value: valueSoft ? `${value} • ${valueSoft}` : value,
+                value: value,// valueSoft ? `${value} • ${valueSoft}` : value,
             })
             const card1 = [
                 statsObject("Games played", data.gamesPlayed),

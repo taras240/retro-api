@@ -94,7 +94,7 @@ export class Config {
     discordStartSession: true, //_cfg?.discordStartSession
     discordWebhook: "", //_cfg.discordWebhook,
     parseLog: false, //logfileHandle for retroarch
-    showCheevoOnHover: true,
+    showCheevoOnHover: false,
     loadLastSubset: true,
   }
   configValuePreprocessors = {

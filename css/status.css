@@ -1,4 +1,5 @@
 .section.status__section {
+  position: absolute;
   top: calc(100vh - 100px);
   left: 30%;
   height: 70px;
@@ -10,9 +11,7 @@
   background: transparent;
   border-radius: var(--border-radius);
   display: flex;
-  position: relative;
   cursor: grab;
-
 }
 
 .status__section::after {

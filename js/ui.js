@@ -137,10 +137,12 @@ export class UI {
     if (config.ui[id]) {
       // Getting positions and dimensions from config.ui
       const { x, y, width, height, hidden } = config.ui[id];
-
+      const { clientWidth, clientHeight } = ui.app;
+      const xValue = parseInt(x);
+      const yValue = parseInt(y);
       // Set positions and dimensions for widget if they are saved in config.ui
-      x && (widget.section.style.left = x < 0 ? 0 : x);
-      y && (widget.section.style.top = y < 0 ? 0 : y);
+      x && (widget.section.style.left = xValue < 0 ? 0 : xValue > (clientWidth - 10) ? `${clientWidth - 100}px` : x);
+      y && (widget.section.style.top = yValue < 0 ? 0 : yValue > (clientHeight - 10) ? `${clientHeight - 100}px` : y);
       width && (widget.section.style.width = width);
       height && (widget.section.style.height = height);
 
@@ -195,15 +197,19 @@ export class UI {
       }
     )
     this.app.addEventListener("click", (event) => {
-      document.querySelectorAll(".context-menu").forEach((el) => el.remove());
+      const showCheevoPopup = (cheevoID) => {
 
+        const cheevo = watcher.CHEEVOS[cheevoID];
+        const popup = cheevo ? cheevoPopupElement(cheevo, true) : undefined;
+        this.app.appendChild(popup);
+        setPopupPosition(popup, event);
+        setTimeout(() => popup.classList.add("visible"), 0);
+      }
+      document.querySelectorAll(".context-menu").forEach((el) => el.remove());
+      if (event.target.closest("button, a, .badge-button")) return;
       const cheevoID = event.target.closest('[data-achiv-id]')?.dataset?.achivId;
-      if (!cheevoID) return;
-      const cheevo = watcher.CHEEVOS[cheevoID];
-      const popup = cheevo ? cheevoPopupElement(cheevo, true) : undefined;
-      this.app.appendChild(popup);
-      setPopupPosition(popup, event);
-      setTimeout(() => popup.classList.add("visible"), 0);
+      cheevoID && showCheevoPopup(cheevoID);
+
     });
     this.app.addEventListener("contextmenu", (e) => {
       this.showContextmenu({ event: e, menuItems: this.settings.contextMenuItems })

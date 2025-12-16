@@ -2,8 +2,8 @@
 .section.prefs_section {
   display: flex;
   flex-direction: column;
-  width: max-content;
-  max-width: 640px;
+  width: 800px;
+  max-width: 90vw;
   height: fit-content;
   min-height: auto;
   top: 31%;
