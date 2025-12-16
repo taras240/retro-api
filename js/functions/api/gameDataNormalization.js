@@ -1,6 +1,7 @@
 import { cheevoTypes } from "../../enums/cheevoTypes.js";
 import { gameAwardTypes } from "../../enums/gameAwards.js";
 import { addReleaseBadges } from "../releaseTypeParser.js";
+import { sortBy, sortMethods } from "../sortFilter.js";
 import { normalizeCheevos } from "./cheevosNormalization.js";
 
 
@@ -117,6 +118,45 @@ const addCompletionData = (gameData) => {
         beatenCountData(),
     )
 }
+const addSessions = (gameData) => {
+    const sessions = cheevosArray
+        .filter(c => c.DateEarned)
+        .sort((a, b) => sortBy.latest(a, b, -1))
+        .reduce((groups, cheevo) => {
+            const findGroup = (date, groups) => {
+                const group = groups.find(g => {
+                    return date - g.date < 12 * 60 * 60 * 1000
+                }); //*12 hours
+                return group;
+            }
+            const unlockDate = new Date(cheevo.DateEarnedHardcore || cheevo.DateEarned);
+            let group = findGroup(unlockDate, groups);
+            if (group) {
+                group.date = unlockDate;
+                group.cheevos.push(cheevo);
+            }
+            else {
+                group = {
+                    date: unlockDate,
+                    cheevos: [cheevo],
+                    startDate: unlockDate
+                }
+                groups.push(group);
+            }
+            return groups;
+        }, [])//{date,cheevos,startDate}
+        .map(({ startDate, cheevos, date }) => {
+            return {
+                startDate: startDate.toLocaleDateString(),
+                endDate: date.toLocaleDateString(),
+                cheevos: cheevos.map(({ ID }) => ID),
+                cheevosCount: cheevos.length,
+                cheevosCountHardcore: cheevos.filter(c => c.DateEarnedHardcore).length
+            }
+        })
+
+    Object.assign(gameData, { sessions })
+}
 const addSavedData = (gameData, savedData = {}) => {
     Object.assign(
         gameData,
@@ -128,12 +168,13 @@ export const normalizeGameData = (gameData, gamesDB = {}, cheevosDB = {}) => {
     if (!gameData) return;
     normalizeCheevos(gameData, cheevosDB);
 
-    cheevosArray = Object.values(gameData?.Achievements ?? {});
+    cheevosArray = Object.values(gameData?.Achievements ?? []);
 
     gameData.ParentGameID ??= gameData.ID;
     addReleaseBadges(gameData);
     addPointsData(gameData);
     addCompletionData(gameData);
+    addSessions(gameData);
     addSavedData(gameData, gamesDB[gameData.ID])
 }
 export const mergeWithTimesData = (gameData, timesData) => {

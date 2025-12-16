@@ -4,6 +4,7 @@ import { ui } from "../../script.js";
 import { badgeElements } from "../badges.js";
 import { recentCheevoHtml } from "./recentCheevo.js";
 
+const baseClass = "rp__progressbar";
 const completionMsg = (gameData, unlockedCount, totalCount, rate, progressType) => {
     const { gameMasteredMsg, gameCompletedMsg, unlockProgressMsg } = ui.lang;
     const label = ui.lang?.[`${progressType}Progress`] ?? progressType;
@@ -15,6 +16,20 @@ const completionMsg = (gameData, unlockedCount, totalCount, rate, progressType) 
             return `${badgeElements.gold(`${unlockedCount}/${totalCount}`)} ${unlockProgressMsg?.replace("{1}", rate).replace("{2}", label)}`;
     }
 };
+const sessionHtml = (gameData, session, isHardMode) => {
+    const totalCount = gameData.NumAchievements;
+    const { cheevosCount, cheevosCountHardcore, startDate } = session;
+    const count = isHardMode ? cheevosCountHardcore : cheevosCount;
+    if (count === 0) return "";
+    const cheevosPercentage = 100 * count / totalCount;
+    return `
+        <div 
+            class="${baseClass}-session" 
+            data-title="Unlocked ${count} cheevo${count > 1 ? "s" : ""} on ${startDate}" 
+            style="--percentage:${cheevosPercentage}%"
+        ></div>
+    `;
+}
 const getUnlockedCount = (gameData, isHardMode) => {
     if (isHardMode) {
         return gameData?.unlockData?.hardcore?.count ?? 0;
@@ -53,22 +68,24 @@ const getStats = (gameData, isHardMode, progressType) => {
 }
 export const progressBarHtml = (theme = progressStyle.default) => {
     return `
-        <div class="rp__progressbar-container">
-            <div class="rp__progressbar-header">
-                <div class="rp__progressbar-title"></div>
+        <div class="${baseClass}-container">
+            <div class="${baseClass}-header">
+                <div class="${baseClass}-title"></div>
                 <ul class="rp__last-cheevos"></ul>
             </div>
-            <div class="rp__progressbar-total">
-                <div class="rp__progressbar-value"></div>
+            <div class="${baseClass}-total">
+                <div class="${baseClass}-value"></div>
+                <div class="${baseClass}-sessions"></div>
             </div>
         </div>
     `;
 }
 export const updateProgressBarData = (container, gameData, isHardMode, progressType = progressTypes.cheevos) => {
     if (!container) return;
-    const progressMsgElement = container.querySelector(".rp__progressbar-title");
-    const lastCheevosElement = container.querySelector(".rp__last-cheevos");
-    const progressBarElement = container.querySelector(".rp__progressbar-total");
+    const progressMsgElement = container.querySelector(`.${baseClass}-title`);
+    const lastCheevosElement = container.querySelector(`.rp__last-cheevos`);
+    const progressBarElement = container.querySelector(`.${baseClass}-total`);
+    const progressSessionsElement = container.querySelector(`.${baseClass}-sessions`)
 
     const { unlocked, total, unlockedRate } = getStats(gameData, isHardMode, progressType);
 
@@ -82,4 +99,11 @@ export const updateProgressBarData = (container, gameData, isHardMode, progressT
 
     lastCheevosElement.innerHTML = lastCheevos.map(cheevo => recentCheevoHtml(cheevo)).join("");
     progressBarElement.style.setProperty("--unlockRate", unlockedRate);
+    if (progressType === progressTypes.cheevos) {
+        progressSessionsElement.innerHTML = gameData.sessions.map(session => sessionHtml(gameData, session, isHardMode).trim()).join("")
+    }
+    else {
+        progressSessionsElement.innerHTML = "";
+    }
+
 }
