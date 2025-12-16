@@ -233,5 +233,10 @@
     "icons": "Icons",
     "cheevoOnHover": "Cheevo Data on Hover",
     "loadLastSubset": "Load saved Subset",
-    "subsets": "Subsets"
+    "subsets": "Subsets",
+    "progressUnlockCheevosHint": "Unlocked {{count}} {{type}} on {{date}}",
+    "progressEarnedPointsHint": "Earned {{count}} {{type}} on {{date}}",
+    "cheevo": "cheevo",
+    "point": "point",
+    "retropoint": "retroPoint"
 }

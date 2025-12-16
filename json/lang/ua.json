@@ -233,5 +233,10 @@
     "icons": "Іконки",
     "cheevoOnHover": "Деталі досягнення при наведенні",
     "loadLastSubset": "Завантажувати дод.набори",
-    "subsets": "Дод. набори"
+    "subsets": "Дод. набори",
+    "progressUnlockCheevosHint": "Розблоковано {{count}} {{type}} {{date}}",
+    "progressEarnedPointsHint": "Зароблено {{count}} {{type}} {{date}}",
+    "cheevo": "досягнення",
+    "point": "поінт",
+    "retropoint": "ретропоінт"
 }

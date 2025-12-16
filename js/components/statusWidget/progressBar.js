@@ -1,4 +1,5 @@
 import { progressStyle, progressTypes } from "../../enums/progressBar.js";
+import { formatText } from "../../functions/local.js";
 import { filterBy, sortBy } from "../../functions/sortFilter.js";
 import { ui } from "../../script.js";
 import { badgeElements } from "../badges.js";
@@ -16,19 +17,61 @@ const completionMsg = (gameData, unlockedCount, totalCount, rate, progressType) 
             return `${badgeElements.gold(`${unlockedCount}/${totalCount}`)} ${unlockProgressMsg?.replace("{1}", rate).replace("{2}", label)}`;
     }
 };
-const sessionHtml = (gameData, session, isHardMode) => {
-    const totalCount = gameData.NumAchievements;
-    const { cheevosCount, cheevosCountHardcore, startDate } = session;
-    const count = isHardMode ? cheevosCountHardcore : cheevosCount;
-    if (count === 0) return "";
-    const cheevosPercentage = 100 * count / totalCount;
-    return `
-        <div 
-            class="${baseClass}-session" 
-            data-title="Unlocked ${count} cheevo${count > 1 ? "s" : ""} on ${startDate}" 
-            style="--percentage:${cheevosPercentage}%"
-        ></div>
-    `;
+const sessionsProgressHtml = (gameData, isHardMode, progressType) => {
+    let totalCount, count = 0;
+    let hint = "";
+    return gameData.sessions.map(session => {
+        const { cheevosCount, cheevosCountHardcore, startDate } = session;
+
+
+        switch (progressType) {
+            case progressTypes.cheevos:
+                count = isHardMode ? cheevosCountHardcore : cheevosCount;
+                totalCount = gameData.NumAchievements;
+                hint = formatText(ui.lang.progressUnlockCheevosHint, {
+                    count,
+                    type: `${count === 1 ? ui.lang.cheevo : ui.lang.cheevos}`,
+                    date: startDate
+                });
+                break;
+            case progressTypes.points:
+                count = session.cheevos.reduce((points, ID) => {
+                    const cheevo = gameData.Achievements[ID];
+                    ((isHardMode && cheevo.DateEarnedHardcore) || (!isHardMode && cheevo.DateEarned)) && (points += cheevo.Points);
+                    return points;
+                }, 0);
+                totalCount = gameData.totalPoints;
+                hint = formatText(ui.lang.progressEarnedPointsHint, {
+                    count,
+                    type: `${count === 1 ? ui.lang.point : ui.lang.points}`,
+                    date: startDate
+                })
+                break;
+            case progressTypes.retropoints:
+                count = session.cheevos.reduce((retropoints, ID) => {
+                    const cheevo = gameData.Achievements[ID];
+                    (isHardMode && cheevo.DateEarnedHardcore) && (retropoints += cheevo.TrueRatio);
+                    return retropoints;
+                }, 0);
+                totalCount = gameData.totalRetropoints;
+                hint = formatText(ui.lang.progressEarnedPointsHint, {
+                    count,
+                    type: `${count === 1 ? ui.lang.retropoint : ui.lang.retropoints}`,
+                    date: startDate
+                })
+
+                break;
+        }
+        if (count === 0) return "";
+        const cheevosPercentage = 100 * count / totalCount;
+        return `
+            <div 
+                class="${baseClass}-session"
+                data-title="${hint}" 
+                style="--percentage:${cheevosPercentage}%"
+            ></div>
+        `.trim();
+    }).join("")
 }
 const getUnlockedCount = (gameData, isHardMode) => {
     if (isHardMode) {
@@ -99,11 +142,10 @@ export const updateProgressBarData = (container, gameData, isHardMode, progressT
 
     lastCheevosElement.innerHTML = lastCheevos.map(cheevo => recentCheevoHtml(cheevo)).join("");
     progressBarElement.style.setProperty("--unlockRate", unlockedRate);
-    if (progressType === progressTypes.cheevos) {
-        progressSessionsElement.innerHTML = gameData.sessions.map(session => sessionHtml(gameData, session, isHardMode).trim()).join("")
-    }
-    else {
-        progressSessionsElement.innerHTML = "";
-    }
+
+    progressSessionsElement.innerHTML = sessionsProgressHtml(gameData, isHardMode, progressType);
+    progressSessionsElement.classList.toggle("completed", unlocked === total)
+
+
 
 }
