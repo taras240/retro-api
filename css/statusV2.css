@@ -418,12 +418,11 @@
 
 .rp__progressbar-session:last-child {
     border-radius: 0 100px 100px 0;
-    border: none;
+
 }
 
 .rp__progressbar-session:only-child {
     border-radius: 100px;
-    border: none;
 }
 
 .rp__progressbar-session:hover {
