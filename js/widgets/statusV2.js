@@ -113,7 +113,7 @@ export class Status extends Widget {
             },
             {
                 label: ui.lang.style,
-                elements: Object.keys(statusThemes).map(theme =>
+                elements: Object.values(statusThemes).map(theme =>
                 ({
                     type: inputTypes.RADIO,
                     name: "status-theme",
@@ -205,9 +205,9 @@ export class Status extends Widget {
         showProgressbar: true,
         showProgression: true,
         progressType: progressTypes.cheevos,
-        statusTheme: "rerw",
+        statusTheme: statusThemes.DEFAULT,
         timePosition: timePosition.normal,
-        gameInfoType: gameInfoTypes.icons
+        gameInfoType: gameInfoTypes.icons,
     }
     uiSetCallbacks = {
         time() {
@@ -220,11 +220,6 @@ export class Status extends Widget {
         },
         progressType() {
             this.updateProgressBar();
-        },
-        statusTheme() {
-            this.section.remove();
-            ui.status = new Status();
-            ui.status.gameChangeEvent(false);
         },
         gameInfoType() {
             this.updateGameInfo();
@@ -298,7 +293,7 @@ export class Status extends Widget {
         const widget = document.createElement("section");
         widget.classList.add(...classes);
         widget.id = id;
-        const theme = config.ui?.[id]?.statusTheme ?? statusThemes.v1;
+        const theme = config.ui?.[id]?.statusTheme ?? statusThemes.DEFAULT;
         const isWatching = watcher?.IS_WATCHING;
         widget.innerHTML = `
             <div class="hidden-header-buttons">
@@ -373,6 +368,7 @@ export class Status extends Widget {
         this.richPresenceElement.classList.toggle("hidden", !this.uiProps.showRichPresence)
         this.gameElements.time && (this.gameElements.time.dataset.position = this.uiProps.timePosition);
         this.uiProps.showTicker && watcher.GAME_DATA && this.ticker.startScrolling();
+        this.section.dataset.theme = this.uiProps.statusTheme ?? statusThemes.DEFAULT;
     }
     doUpdateAnimation() {
         sweepEffect(this.section);

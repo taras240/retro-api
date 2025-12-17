@@ -238,5 +238,6 @@
     "progressEarnedPointsHint": "Earned {{count}} {{type}} on {{date}}",
     "cheevo": "cheevo",
     "point": "point",
-    "retropoint": "retroPoint"
+    "retropoint": "retroPoint",
+    "thick": "Thick"
 }

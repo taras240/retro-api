@@ -1,4 +1,7 @@
 .rp__section {
+    --progress-border-radius: 100px;
+    --progress-height: 0.4rem;
+    --progression-gap: 5px;
     top: 0;
     left: 100px;
     max-height: 100vh;
@@ -12,6 +15,12 @@
     display: flex;
     flex-direction: column;
     cursor: grab;
+}
+
+.rp__section[data-theme="thick"] {
+    --progress-border-radius: 1px;
+    --progress-height: 1rem;
+    --progression-gap: 1px;
 }
 
 /* .rp__section:not(.show-cheevos-list) {
@@ -187,9 +196,9 @@
     padding: 0;
     display: flex;
     flex-direction: column;
-    row-gap: 0.5rem;
+    /* row-gap: 0.5rem; */
     display: none;
-    height: 2.5rem;
+    /* height: 2.5rem; */
     min-width: 5rem;
 }
 
@@ -202,6 +211,7 @@
     overflow-x: hidden;
     text-wrap: nowrap;
     text-overflow: ellipsis;
+    margin-bottom: 0.5rem;
 }
 
 
@@ -210,12 +220,17 @@
     display: flex;
     flex-wrap: nowrap;
     justify-content: start;
-    gap: 5px;
+    gap: var(--progression-gap);
     align-items: center;
     overflow-x: scroll;
-    height: 0.4rem;
+    height: var(--progress-height);
+    margin-bottom: 0.2rem;
     /* padding: 0.25rem 0 0.5rem; */
 }
+
+/* --border-radius: 1px;
+    --progress-height: 1rem;
+    --progression-gap: 1px; */
 
 .rp__win-points {
     font-size: inherit;
@@ -229,14 +244,14 @@
 
 .rp__progression-point {
     --color: var(--accent-color);
-    height: 0.4rem;
+    height: 100%;
     flex-basis: 0.4rem;
     flex-grow: 1;
     flex-shrink: 0;
     font-size: inherit;
     /* border: 1px solid var(--color); */
     background-color: var(--color);
-    border-radius: 500px;
+    border-radius: var(--progress-border-radius);
     opacity: 0.1;
     transition: opacity 0.2s, flex-grow 0.2s;
 }
@@ -278,7 +293,7 @@
     flex-direction: column;
     /* row-gap: 0.5rem; */
     display: none;
-    height: 2.5rem;
+    /* height: 2.5rem; */
     justify-content: space-between;
     min-width: 5rem;
 }
@@ -293,6 +308,7 @@
     display: flex;
     justify-content: space-between;
     align-items: end;
+    margin-bottom: 0.5rem;
 }
 
 .rp__last-cheevos {
@@ -354,10 +370,10 @@
 .rp__progressbar-total {
     position: relative;
     width: 100%;
-    height: calc(0.4rem);
-    border-radius: 5rem;
+    height: var(--progress-height);
+    border-radius: var(--progress-border-radius);
     background-color: var(--selection-color);
-    margin: 0 0 1px;
+    margin: 0 0 0.2rem;
 }
 
 .rp__progressbar-container.fat .rp__progressbar-total {
@@ -399,7 +415,7 @@
     background: transparent;
     display: flex;
     flex-direction: row;
-    border-radius: 100px;
+    border-radius: var(--progress-border-radius);
     overflow: hidden;
 }
 
