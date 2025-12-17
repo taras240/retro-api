@@ -77,7 +77,7 @@ const getUnlockedCount = (gameData, isHardMode) => {
     if (isHardMode) {
         return gameData?.unlockData?.hardcore?.count ?? 0;
     }
-    return gameData?.unlockData?.soft?.count ?? 0;
+    return gameData?.unlockData?.softcore?.count ?? 0;
 }
 const getUnlockedPoints = (gameData, isHardMode) => {
     if (isHardMode) {
