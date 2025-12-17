@@ -217,7 +217,7 @@
     "boxart": "Боксарт",
     "ingame": "У Грі",
     "titleScreen": "Стартовий Екран",
-    "unlockProgressMsg": "Розблоковано {1} {2}",
+    "unlockProgressMsg": "Розблоковано {{rate}} {{progressTypeName}}",
     "cheevosProgress": "досягнень",
     "pointsProgress": "поінтів",
     "retropointsProgress": "ретропоінтів",

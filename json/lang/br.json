@@ -3,7 +3,7 @@
     "gameBeatenMsg": "Você beat o jogo",
     "gameMasteredMsg": "Você mastered o jogo",
     "gameCompletedMsg": "Você completed o jogo",
-    "unlockProgressMsg": "{1} {2} desbloqueadas",
+    "unlockProgressMsg": "{{rate}} {{progressTypeName}} desbloqueadas",
     "cheevosProgress": "conquistas",
     "pointsProgress": "pontos",
     "retropointsProgress": "retropontos",

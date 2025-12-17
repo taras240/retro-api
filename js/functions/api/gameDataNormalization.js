@@ -79,7 +79,7 @@ const addCompletionData = (gameData) => {
     }
     const userAward = () => {
         const isMastered = cheevosArray.length > 0 && cheevosArray.filter(cheevo => !cheevo.DateEarnedHardcore).length === 0;
-        const isCompleted = cheevosArray.length > 0 && cheevosArray.filter(cheevo => !cheevo.DateEarnedHardcore).length === 0;
+        const isCompleted = cheevosArray.length > 0 && cheevosArray.filter(cheevo => !cheevo.DateEarned).length === 0;
         const award = isMastered ? gameAwardTypes.MASTERED :
             isCompleted ? gameAwardTypes.COMPLETED : null;
         return { award }

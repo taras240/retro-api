@@ -1,3 +1,4 @@
+import { gameAwardTypes } from "../../enums/gameAwards.js";
 import { progressStyle, progressTypes } from "../../enums/progressBar.js";
 import { formatText } from "../../functions/local.js";
 import { filterBy, sortBy } from "../../functions/sortFilter.js";
@@ -6,17 +7,16 @@ import { badgeElements } from "../badges.js";
 import { recentCheevoHtml } from "./recentCheevo.js";
 
 const baseClass = "rp__progressbar";
-const completionMsg = (gameData, unlockedCount, totalCount, rate, progressType) => {
+const completionMsg = (gameData, unlockedCount, totalCount, rate, progressType, isHardMode) => {
     const { gameMasteredMsg, gameCompletedMsg, unlockProgressMsg } = ui.lang;
-    const label = ui.lang?.[`${progressType}Progress`] ?? progressType;
+    const progressTypeName = ui.lang?.[`${progressType}Progress`] ?? progressType;
 
-    switch (gameData.award) {
-        case "mastered": return gameMasteredMsg;
-        case "completed": return gameCompletedMsg;
-        default:
-            return `${badgeElements.gold(`${unlockedCount}/${totalCount}`)} ${unlockProgressMsg?.replace("{1}", rate).replace("{2}", label)}`;
-    }
-};
+    if (gameData.award === gameAwardTypes.MASTERED) return gameMasteredMsg;
+
+    if (!isHardMode && gameData.award === gameAwardTypes.COMPLETED) return gameCompletedMsg;
+
+    else return `${badgeElements.gold(`${unlockedCount}/${totalCount}`)} ${formatText(unlockProgressMsg, { rate, progressTypeName })}`;
+}
 const sessionsProgressHtml = (gameData, isHardMode, progressType) => {
     let totalCount, count = 0;
     let hint = "";
@@ -138,7 +138,7 @@ export const updateProgressBarData = (container, gameData, isHardMode, progressT
         .slice(0, 6)
         .reverse();
 
-    progressMsgElement.innerHTML = completionMsg(gameData, unlocked, total, unlockedRate, progressType);
+    progressMsgElement.innerHTML = completionMsg(gameData, unlocked, total, unlockedRate, progressType, isHardMode);
 
     lastCheevosElement.innerHTML = lastCheevos.map(cheevo => recentCheevoHtml(cheevo)).join("");
     progressBarElement.style.setProperty("--unlockRate", unlockedRate);
