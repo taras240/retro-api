@@ -2,6 +2,10 @@
     --progress-border-radius: 100px;
     --progress-height: 0.4rem;
     --progression-gap: 5px;
+    --focus-opacity: 0.5;
+    --locked-opacity: 0.1;
+    --bg-opacity-mask: none;
+    --progress-bg-color: var(--accent-color);
     top: 0;
     left: 100px;
     max-height: 100vh;
@@ -17,10 +21,15 @@
     cursor: grab;
 }
 
-.rp__section[data-theme="thick"] {
+.rp__section[data-theme="thick"],
+.status__section {
     --progress-border-radius: 1px;
     --progress-height: 1rem;
     --progression-gap: 1px;
+    --bg-opacity-mask: url(../assets/img/tr-1.svg);
+    --focus-opacity: 1;
+    --locked-opacity: 0.5;
+    --progress-bg-color: var(--accent-color);
 }
 
 /* .rp__section:not(.show-cheevos-list) {
@@ -252,13 +261,17 @@
     /* border: 1px solid var(--color); */
     background-color: var(--color);
     border-radius: var(--progress-border-radius);
-    opacity: 0.1;
+    opacity: var(--locked-opacity);
+    mask-image: var(--bg-opacity-mask);
+    mask-repeat: repeat;
     transition: opacity 0.2s, flex-grow 0.2s;
 }
 
 .rp__progression-point.focus {
     flex-grow: 1.5;
-    opacity: 0.5;
+    opacity: var(--focus-opacity);
+    mask-image: var(--bg-opacity-mask);
+    mask-repeat: repeat;
 }
 
 .rp__progression-point.win {
@@ -274,6 +287,7 @@
     border: none;
     box-shadow: none;
     opacity: 1;
+    mask-image: none;
 }
 
 .rp__progression-point.win.earned {
@@ -367,22 +381,27 @@
     text-overflow: ellipsis;
 }
 
-.rp__progressbar-total {
+.rp__progressbar {
     position: relative;
     width: 100%;
     height: var(--progress-height);
     border-radius: var(--progress-border-radius);
-    background-color: var(--selection-color);
     margin: 0 0 0.2rem;
 }
 
-.rp__progressbar-container.fat .rp__progressbar-total {
-    height: 0.6rem;
-    border-radius: 0;
-    border: 1px solid var(--accent-color);
+.rp__progressbar-bg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: var(--locked-opacity);
+    background-color: var(--progress-bg-color);
+    mask-image: var(--bg-opacity-mask);
+    mask-repeat: repeat;
 }
 
-.rp__progressbar-total::before,
+.rp__progressbar::before,
 .rp__progressbar-value {
     position: absolute;
     width: var(--unlockRate);
@@ -393,8 +412,8 @@
 
 }
 
-.rp__progressbar-total::before {
-    --margin: 1px;
+.rp__progressbar::before {
+    --margin: 0px;
     content: "";
     background-color: lime;
     width: calc(var(--unlockRate) - var(--margin)*2);
@@ -409,7 +428,7 @@
 .rp__progressbar-sessions {
     position: absolute;
     top: 0;
-    left: 1px;
+    left: 0;
     width: 100%;
     height: 100%;
     background: transparent;
@@ -421,6 +440,7 @@
 
 .rp__progressbar-sessions.completed .rp__progressbar-session:last-child {
     border: 0;
+
 }
 
 .rp__progressbar-session {
@@ -431,6 +451,10 @@
     background: transparent;
     border-right: 1px solid var(--main-color);
     cursor: default;
+}
+
+.rp__progressbar-session:last-child {
+    width: calc(var(--percentage) + 1px);
 }
 
 .rp__progressbar-session:hover {

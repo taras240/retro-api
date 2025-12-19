@@ -72,7 +72,7 @@ const cheevoAlertHtml = (cheevo) => {
     let genres = cheevo.genres?.map(genre => goldBadge(genre))?.join("\n") ?? "";
 
     return alertInnerHtml({
-        imageUrl: cheevoImageUrl(BadgeName),
+        imageUrl: cheevoImageUrl(cheevo),
         title: Title,
         description: Description,
         badgesHtml: genres + cheevoBadges

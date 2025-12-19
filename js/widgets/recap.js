@@ -91,7 +91,7 @@ export class Recap {
                             ${cheevosArray.map(cheevo => `
                                     <li class="recap__cheevo-container" data-title="${cheevo.Description}">
                                         <div class="recap__cheevo-preview">
-                                            <img src="${cheevoImageUrl(cheevo.BadgeName)}" alt=""
+                                            <img src="${cheevoImageUrl(cheevo)}" alt=""
                                                 class="cheevo-icon">
                                         </div>
                                         <div class="recap__cheevo-content">

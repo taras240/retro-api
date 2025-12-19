@@ -63,7 +63,7 @@ async function showFSAlert() {
                 <div class="fs-alert__sub-border"></div>
                 <div class="fs-alert__image-container">
                     <div class="fs-alert__light"></div>
-                    <img src="${cheevoImageUrl(BadgeName)}" alt="" class="fs-alert__image">
+                    <img src="${cheevoImageUrl({ BadgeName })}" alt="" class="fs-alert__image">
                     <div class="fs-alert__blick"></div>
                 </div>
                 <div class="fs-alert__title">

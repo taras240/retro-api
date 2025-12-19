@@ -120,16 +120,12 @@
 .notification-game,
 .notification-achiv {
     position: relative;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    align-items: center;
-    column-gap: 10px;
     flex-shrink: 0;
     background-color: var(--main-color);
     border-radius: 5px;
     overflow: hidden;
     box-shadow: 0 0 8px -5px var(--secondary-color);
-    padding: 5px;
+    padding: 0.25rem;
 }
 
 .notificaton_header {

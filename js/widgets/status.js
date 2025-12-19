@@ -273,7 +273,6 @@ export class StatusPanel extends Widget {
             return value <= 5 || value > 10e5 ? 5 : value * 60
             this.timerTime = this.TIMER_TIME;
         },
-
     };
 
 
@@ -554,6 +553,10 @@ export class StatusPanel extends Widget {
     }
 
     generateProgressionBlock() {
+        if (this.uiProps.progressionVariant !== "dots") {
+            this.uiProps.progressionVariant = "dots";
+            return;
+        }
         const progressionPointsElement = this.section.querySelector(".status__progression-container");
         const progressionDescriptionElement = this.section.querySelector(".status__description-text");
 
@@ -634,7 +637,7 @@ export class StatusPanel extends Widget {
         focusElement?.scrollIntoView({ behavior: "smooth", block: "end", inline: "center" });
         focusElement?.classList.add("focus");
         this.frontSide.gamePreview.src = this.uiProps.showTargetPreview && focusCheevo ?
-            cheevoImageUrl(focusCheevo?.BadgeName) :
+            cheevoImageUrl(focusCheevo) :
             gameImageUrl(watcher.GAME_DATA.ImageIcon)
 
     }

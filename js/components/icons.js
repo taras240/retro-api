@@ -39,7 +39,8 @@ export const signedIcons = {
     difficulty: (difficulty) => `<p class="description-icon difficult-icon difficult-badge__${difficulty}" data-title="${ui.lang.difficulty} [${difficulty}]"></p>`,
     award: (award) => `<p  class="signed-icon award-type" data-title="${award}">
     ${icons.award(award)}</p>`,
-    empty: (icon) => signedIconTemplate({ icon })
+    empty: (icon) => signedIconTemplate({ icon }),
+    players: (label) => signedIconTemplate({ icon: icons.players, label })
 }
 const unicodeIcon = (symbol) => `<i>${symbol}</i>`
 export const icons = {
@@ -68,6 +69,7 @@ export const icons = {
     search: '<i class="description-icon link_icon search-icon google_link"></i>',
     link: '<i class="description-icon link_icon ra-link_icon"></i>',
     platform: (platformID) => `<img class="image-icon console-icon" src="${RAPlatforms[platformID].IconURL}">`,
+    unlock: '<i class="description-icon unlock_icon"></i>',
 }
 export const genreIcons = {
     [cheevoGenres.KILLER]: `<i class="cheevo-genre__icon">💀</i>`,

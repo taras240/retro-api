@@ -740,7 +740,7 @@ export class Target extends Widget {
                 <h3 class="target__cheevo-header">
                     ${level ? badgeElements.cheevoLevel(level, true) : ""}
                     ${achievement.genres.length > 0 ? achievement.genres?.map(genre => badgeElements.buttonGenreBadge(genre, `ui.target.filterByGenre('${genre}')`)).join("") : ""
-                }<a target="_blanc" data-title="${ui.lang.goToRAHint}" href="${cheevoUrl(cheevoID)}">
+                }<a target="_blanc" data-title="${ui.lang.goToRAHint}" href="${cheevoUrl(achievement)}">
                         ${achievement.Title} ${achievement.genres?.map(genre => genreIcons[genre]).join("")}
                     </a>
                 </h3>
@@ -917,7 +917,7 @@ export class Target extends Widget {
         </div>
         <div class="target__cheevo-details">
           <h3 class="target__cheevo-header">
-            <a target="_blanc" href="${cheevoUrl(cheevo.ID)}">
+            <a target="_blanc" href="${cheevoUrl(cheevo)}">
               ${cheevo.Title}
             </a>
             in

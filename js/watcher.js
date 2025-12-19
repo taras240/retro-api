@@ -113,10 +113,7 @@ export class Watcher {
 
             await this.updateGameData(raProfileInfo.LastGameID);
 
-            if (configData.discordNewGame ||
-                (isStart && configData.discordStartSession)) {
-                sendDiscordAlert({ type: alertTypes.GAME });
-            }
+            ui.showGameChangeAlerts(isStart);
         }
         if (isPointsChanged(raProfileInfo)) {
             updatePoints(raProfileInfo);

@@ -64,7 +64,7 @@ export async function sendDiscordAlert({ message = "", type, value, award, id })
             header: header,
             description: description,
             color: cheevo.isHardcoreEarned ? goldColorCode : silverColorCode,
-            url: cheevoUrl(cheevo?.ID),
+            url: cheevoUrl(cheevo),
             image: cheevo.prevSrc,
         }
         return message;

@@ -1,15 +1,11 @@
 import { UI } from "../ui.js";
-import { config, ui, apiWorker, watcher } from "../script.js";
+import { ui, watcher } from "../script.js";
 import { Widget } from "./widget.js";
-import { sortBy } from "../functions/sortFilter.js";
-import { badgeElements, generateBadges } from "../components/badges.js";
-import { moveEvent } from "../functions/movingWidget.js";
-import { resizeEvent } from "../functions/resizingWidget.js";
-import { icons, signedIcons } from "../components/icons.js";
-import { cheevoElementFull } from "../components/cheevo.js";
+import { icons } from "../components/icons.js";
 import { alertTypes } from "../enums/alerts.js";
-import { gameImageUrl, gameUrl } from "../functions/raLinks.js";
+import { cheevoImageUrl, cheevoUrl, gameImageUrl, gameUrl } from "../functions/raLinks.js";
 import { inputTypes } from "../components/inputElements.js";
+import { alertHtml } from "../components/notifications/alertElement.js";
 
 
 export class Notifications extends Widget {
@@ -44,20 +40,17 @@ export class Notifications extends Widget {
             }
         ];
     }
-    types = {
-        newGame: "newGame",
-        earnedAchivs: "earnedAchivs",
-    }
+
     uiDefaultValues = {
         showTimestamp: true,
         showHeader: false,
         hideBg: false,
-
     }
     uiSetCallbacks = {
     };
     uiValuePreprocessors = {
     };
+    alertsCacheName = "raApiAlertsCache";
 
 
     get NOTIFICATIONS() {
@@ -72,7 +65,14 @@ export class Notifications extends Widget {
         this.addWidgetIcon();
         this.initializeElements();
         this.addEvents();
-        this.setValues();
+        this.setElementsValues();
+        UI.applyPosition({ widget: this });
+        this.updateInterval = setInterval(() => {
+            this.container.querySelectorAll(".notification_timestamp").forEach(timeStamp => {
+                timeStamp.innerText = this.getDeltaTime(timeStamp.dataset.time);
+            })
+        }, 1 * 1000 * 60);
+        this.showSavedAlert()
     }
 
     initializeElements() {
@@ -99,24 +99,100 @@ export class Notifications extends Widget {
         this.section.classList.toggle("compact-timestamp", !this.uiProps.showTimestamp);
         this.section.classList.toggle("compact-header", !this.uiProps.showHeader);
         this.section.classList.toggle("hide-bg", this.uiProps.hideBg);
+    }
+    gameChangeEvent(isNewGame) {
+        if (!isNewGame) return;
+        const gameAlert = [{ type: alertTypes.GAME, value: watcher.GAME_DATA }];
+        this.addAlertsToQuery(gameAlert)
+    }
+
+    saveAlerts(alerts) {
+        const timeStamp = new Date().toISOString();
+        const normalizedAlerts = alerts.map(alert => {
+            if ([alertTypes.GAME, alertTypes.AWARD].includes(alert.type)) {
+                const {
+                    Title,
+                    ImageIcon,
+                    totalPoints,
+                    NumDistinctPlayers,
+                    retroRatio,
+                    NumAchievements,
+                    ConsoleName,
+                    ID
+                } = alert.value;
+
+                const normalizedGameData = {
+                    Title,
+                    ImageIcon,
+                    totalPoints,
+                    NumDistinctPlayers,
+                    retroRatio,
+                    NumAchievements,
+                    ConsoleName,
+                    ID
+                };
+                return { ...alert, value: normalizedGameData }
+            }
+            else if (alert.type === alertTypes.CHEEVO) {
+                const {
+                    Title,
+                    BadgeName,
+                    Points,
+                    Description,
+                    TrueRatio,
+                    retroRatio,
+                    rateEarnedHardcore,
+                    ID,
+                } = alert.value;
+
+                const normalizedGameData = {
+                    Title,
+                    BadgeName,
+                    Points,
+                    Description,
+                    TrueRatio,
+                    retroRatio,
+                    rateEarnedHardcore,
+                    ID,
+                };
+                return { ...alert, value: normalizedGameData }
+            }
+            else {
+                console.log(`notification type doesn't exist`);
+            }
+        });
+        const savedData = this.getSavedAlerts();
+        savedData.length >= 20 && savedData.shift();
+        savedData.push({ timeStamp, alerts: normalizedAlerts });
+        localStorage.setItem(this.alertsCacheName, JSON.stringify(savedData));
+    }
+    getSavedAlerts() {
+        return JSON.parse(localStorage.getItem(this.alertsCacheName)) ?? [];
+    }
+    showSavedAlert() {
+        const savedAlerts = this.getSavedAlerts();
+        savedAlerts.forEach(({ timeStamp, alerts }) => {
+            this.showAlerts(alerts, new Date(timeStamp).toLocaleString());
+        })
 
     }
-    setValues() {
-        UI.applyPosition({ widget: this });
-        this.setElementsValues();
-        this.updateInterval = setInterval(() => {
-            this.container.querySelectorAll(".notification_timestamp").forEach(timeStamp => {
-                timeStamp.innerText = this.getDeltaTime(timeStamp.dataset.time);
-            })
-        }, 1 * 1000 * 60)
+    addAlertsToQuery(alerts = []) {
+        if (this.alertsQueryArray?.length > 0) {
+            this.alertsQueryArray = [...this.alertsQueryArray, ...alerts]
+        }
+        else {
+            this.alertsQueryArray = [...alerts];
+            setTimeout(() => {
+                this.saveAlerts(this.alertsQueryArray);
+                this.showAlerts(this.alertsQueryArray);
+            }, 2000)
+        }
+
     }
-    gameChangeEvent() {
-        const gameAlert = [{ type: alertTypes.GAME, value: watcher.GAME_DATA }];
-        this.pushAlerts(gameAlert)
-    }
-    pushAlerts(alerts) {
-        const generateAlertsBlock = (alertElements) => {
-            const timeStamp = this.generatePopupTime();
+    showAlerts(alerts, time) {
+        if (!alerts) return;
+        const generateAlertsBlock = (alertElements, time) => {
+            const timeStamp = this.generatePopupTime(time);
             const alertsBlockElement = document.createElement("ul");
             alertsBlockElement.classList.add("notification_timeblock-list");
             alertsBlockElement.appendChild(timeStamp);
@@ -125,31 +201,34 @@ export class Notifications extends Widget {
             })
             return alertsBlockElement;
         }
-        if (alerts.length == 0) return;
         let alertElements = [];
-
-        alerts?.forEach(alert => {
+        while (alerts.length > 0) {
+            const alert = alerts.shift();
+            if (!alert) continue;
             switch (alert.type) {
+                case alertTypes.GAME:
+                    alertElements.push(this.gameAlertElement(alert.value))
+                    break;
                 case alertTypes.CHEEVO:
                     alertElements.push(this.cheevoAlertElement(alert.value));
                     break;
-                case alertTypes.GAME:
-                    alertElements.push(this.gameAlertElement(alert.value))
+                case alertTypes.AWARD:
+                    alertElements.push(this.awardAlertElement(alert))
                     break;
                 default:
                     console.log(`notification type doesn't exist`);
                     break;
             }
-        })
+        }
+
         if (alertElements.length > 0) {
-            const alertsBlockElement = generateAlertsBlock(alertElements);
+            const alertsBlockElement = generateAlertsBlock(alertElements, time);
             this.container.prepend(alertsBlockElement);
             const elementHeight = alertsBlockElement.getBoundingClientRect().height;
             this.container.style.setProperty("--offset-height", `${elementHeight}px`);
             alertsBlockElement.classList.add("notification_popup");
         }
     }
-
     generatePopupTime(time) {
         !time && (time = new Date().toLocaleString())
         const toDate = (s) => {
@@ -171,48 +250,109 @@ export class Notifications extends Widget {
         return timestampElement;
     }
 
+
     gameAlertElement(game) {
         const gameMessage = document.createElement("li");
         gameMessage.classList.add("notification-game", "new-game");
-        // <div class="notificaton_header">Launched game</div>
-        gameMessage.innerHTML =
-            `
-        <div class="prev">
-          <img class="prev-img" src="${gameImageUrl(game.ImageIcon)}" alt=" ">
-        </div>
-        <div class="notification_details">
-          <h3 class="achiv-name">
-            <a target="_blanc" href="${gameUrl(game.ID ?? game.GameID)}">
-              ${game.Title}
-            </a>
-          </h3>
-          <p class="list-item__text">${game.Genre ? game.Genre + ",\n" : ""}${game.ConsoleName}</p>
-          <div class="notification_description-icons">
-            <p class="notification_description-text" data-title="${ui.lang.points}">
-              ${icons.points}
-              ${game.totalPoints ?? ""}
-            </p>
-            <p class="notification_description-text" data-title="${ui.lang.retropoints}">
-              ${icons.cheevos}
-              ${game.NumAchievements ?? game.AchievementsTotal}
-            </p>
-            <p class="notification_description-text" data-title="${ui.lang.unlockedBy}">
-              ${icons.players}
-              ${game.NumDistinctPlayersHardcore ?? ""}
-            </p>
-          </div>
-        </div>
-      `;
+        const html = alertHtml({
+            alertType: alertTypes.GAME,
+            imageUrl: gameImageUrl(game.ImageIcon),
+            title: game.Title,
+            titleUrl: gameUrl(game.ID ?? game.GameID),
+            meta: `${game.ConsoleName}`,
+            icons: [
+                {
+                    type: "players",
+                    value: game.NumDistinctPlayers
+                },
+                {
+                    type: "cheevos",
+                    value: game.NumAchievements
+                },
+                {
+                    type: "points",
+                    value: game.totalPoints
+                },
+                {
+                    type: "retroRatio",
+                    value: game.retroRatio
+                },
+            ]
+        });
+        gameMessage.innerHTML = html;
         return gameMessage;
     }
 
     cheevoAlertElement(cheevo) {
-        const cheevoElement = cheevoElementFull(cheevo);
-        cheevoElement.classList.add("notification-achiv", "new-achiv");
-        return cheevoElement;
+        const cheevoAlert = document.createElement("li");
+        cheevoAlert.classList.add("notification-achiv", "new-achiv");
+        const html = alertHtml({
+            alertType: alertTypes.CHEEVO,
+            imageUrl: cheevoImageUrl(cheevo),
+            title: cheevo.Title,
+            badge: icons.progressionAward,
+            titleUrl: cheevoUrl(cheevo),
+            meta: cheevo.Description,
+            icons: [
+                {
+                    type: "points",
+                    value: cheevo.Points
+                },
+                {
+                    type: "retropoints",
+                    value: cheevo.TrueRatio
+                },
+                {
+                    type: "retroRatio",
+                    value: cheevo.retroRatio
+                },
+                {
+                    type: "rarity",
+                    value: cheevo.rateEarnedHardcore
+                },
+            ]
+        });
+        cheevoAlert.innerHTML = html;
+        return cheevoAlert;
     }
 
-
+    awardAlertElement({ award, value: game }) {
+        // {
+        // type: alertTypes.AWARD,
+        // award: "beaten-softcore",
+        // value: this.GAME_DATA
+        // }
+        const gameMessage = document.createElement("li");
+        gameMessage.classList.add("notification-game", "new-game");
+        const html = alertHtml({
+            alertType: award,
+            imageUrl: gameImageUrl(game.ImageIcon),
+            badge: icons.masteryAward,
+            title: game.Title,
+            titleUrl: gameUrl(game.ID ?? game.GameID),
+            meta: `${game.ConsoleName}`,
+            icons: [
+                {
+                    type: "players",
+                    value: game.NumDistinctPlayers
+                },
+                {
+                    type: "cheevos",
+                    value: game.NumAchievements
+                },
+                {
+                    type: "points",
+                    value: game.totalPoints
+                },
+                {
+                    type: "retroRatio",
+                    value: game.retroRatio
+                },
+            ]
+        });
+        gameMessage.innerHTML = html;
+        return gameMessage;
+    }
     getDeltaTime(timeStamp) {
         let date = +timeStamp;
         let now = (new Date()).getTime();

@@ -1,7 +1,7 @@
 import { UI } from "../ui.js";
 import { generateBadges } from "../components/badges.js";
 import { config, ui, apiWorker, watcher } from "../script.js";
-import { cheevoImageUrl, cheevoUrl, gameImageUrl } from "../functions/raLinks.js";
+import { cheevoUrl, gameImageUrl } from "../functions/raLinks.js";
 
 
 export class Aotw {
@@ -106,7 +106,7 @@ export class Aotw {
   
             <h2 class="widget-header-text">
             <a class="" target="_blanc"
-                        href="${cheevoUrl(cheevo.ID)}">
+                        href="${cheevoUrl(cheevo)}">
             AotW</a></h2>
             <button class="header-button info-icon header-icon" onclick="ui.aotw.showGameInfo()">
             </button>
@@ -142,7 +142,7 @@ export class Aotw {
                 </div>
                 <h3 class="progression_achiv-name">
                     <a class="progression_achiv-link" target="_blanc"
-                        href="${cheevoUrl(cheevo.ID)}">${cheevo.Title}</a>
+                        href="${cheevoUrl(cheevo)}">${cheevo.Title}</a>
                 </h3>
                 <div class="progression-details">
                 ${cheevo.Description}

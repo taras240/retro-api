@@ -116,7 +116,8 @@ export const progressBarHtml = (theme = progressStyle.default) => {
                 <div class="${baseClass}-title"></div>
                 <ul class="rp__last-cheevos"></ul>
             </div>
-            <div class="${baseClass}-total">
+            <div class="${baseClass}">
+                <div class="${baseClass}-bg"></div>
                 <div class="${baseClass}-value"></div>
                 <div class="${baseClass}-sessions"></div>
             </div>
@@ -127,7 +128,7 @@ export const updateProgressBarData = (container, gameData, isHardMode, progressT
     if (!container) return;
     const progressMsgElement = container.querySelector(`.${baseClass}-title`);
     const lastCheevosElement = container.querySelector(`.rp__last-cheevos`);
-    const progressBarElement = container.querySelector(`.${baseClass}-total`);
+    const progressBarElement = container.querySelector(`.${baseClass}`);
     const progressSessionsElement = container.querySelector(`.${baseClass}-sessions`)
 
     const { unlocked, total, unlockedRate } = getStats(gameData, isHardMode, progressType);
@@ -141,11 +142,8 @@ export const updateProgressBarData = (container, gameData, isHardMode, progressT
     progressMsgElement.innerHTML = completionMsg(gameData, unlocked, total, unlockedRate, progressType, isHardMode);
 
     lastCheevosElement.innerHTML = lastCheevos.map(cheevo => recentCheevoHtml(cheevo)).join("");
-    progressBarElement.style.setProperty("--unlockRate", unlockedRate);
+    progressBarElement.style.setProperty("--unlockRate", `${100 * unlocked / total}%`);
 
     progressSessionsElement.innerHTML = sessionsProgressHtml(gameData, isHardMode, progressType);
-    progressSessionsElement.classList.toggle("completed", unlocked === total)
-
-
-
+    progressSessionsElement.classList.toggle("completed", unlocked === total);
 }

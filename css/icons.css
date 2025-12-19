@@ -246,6 +246,10 @@
     justify-self: center;
 }
 
+.unlock_icon {
+    mask-image: url(../assets/img/unlock.svg);
+}
+
 .delete-icon {
     mask-image: url(../assets/img/delete.svg);
 }

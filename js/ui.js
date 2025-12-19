@@ -240,7 +240,7 @@ export class UI {
       "statusPanel",
       "status",
       "target",
-      "notifications",
+      // "notifications",
       "gameList",
       "gameCard"
     ]
@@ -252,6 +252,7 @@ export class UI {
     this.note?.updateGame();
     this.progression?.generateProgression();
   }
+
   updateWidgets({ earnedAchievementsIDs = [], isLog = false }) {
     // if (earnedAchievementsIDs?.length === 0) return
     // try {
@@ -290,10 +291,15 @@ export class UI {
 
 
     const alerts = earnedAchievementsIDs.map(cheevoID => ({ type: alertTypes.CHEEVO, value: watcher.CHEEVOS[cheevoID] }));
-    this.notifications.pushAlerts(alerts);
-    // this.notifications.pushNotification({ type: this.notifications.types.earnedAchivs, elements: earnedAchievementsIDs });
+    this.notifications.addAlertsToQuery(alerts);
   }
-
+  showGameChangeAlerts(isStart) {
+    this.notifications.gameChangeEvent(true);
+    if (configData.discordNewGame ||
+      (isStart && configData.discordStartSession)) {
+      sendDiscordAlert({ type: alertTypes.GAME });
+    }
+  }
   showAwardsAlerts(awardsArray = []) {
     pushFSAlerts(awardsArray);
     awardsArray.forEach(award => {
@@ -303,6 +309,8 @@ export class UI {
 
     this.statusPanel.addAlertsToQuery(awardsArray);
     this.status.addAlertsToQuery(awardsArray);
+    this.notifications.addAlertsToQuery(awardsArray);
+
     this.gameCard.section.dataset.award = watcher.GAME_DATA?.award ?? "-";
     this.gameCard.section.dataset.progressionAward = watcher.GAME_DATA?.progressionAward ?? "-";
     awardsArray.length && setTimeout(() => ui.stats.updateChart(), 4000);
