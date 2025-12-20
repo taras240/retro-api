@@ -31,10 +31,21 @@ const normalizeAchievement = (achievement, gameData, cheevosDB) => {
         ...cheevosDB[ID], // Load edited props
     }
 }
+const parseCheevoGroups = (gameData) => {
+    const cheevos = Object.values(gameData.Achievements);
+    const groupRegex = /\[(.+)\]/i;
+    const groups = cheevos.reduce((groups, cheevo) => {
+        const group = groupRegex.exec(cheevo.Description)?.[1];
+        cheevo.group = group;
+        group && groups.add(group);
+        return groups;
+    }, new Set())
+    gameData.groups = [...groups]
+}
 export const normalizeCheevos = (gameData, cheevosDB = {}) => {
     parseCheevosGenres(gameData);
     parseCheevoLevels(gameData);
-
+    parseCheevoGroups(gameData)
     generateCheevosDisplayOrder(gameData);
 
     Object.values(gameData.Achievements)

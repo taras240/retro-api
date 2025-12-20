@@ -162,9 +162,13 @@ export class APIWorker {
     let gameData = await dataResp.json();
     this.gameData = JSON.parse(JSON.stringify(gameData));
     if (withTimesData) {
-      await delay(100);
-      const timesData = await this.getGameTimesInfo({ gameID: gameID, targetUser });
-      gameData = mergeWithTimesData(gameData, timesData);
+      try {
+        await delay(200);
+        const timesData = await this.getGameTimesInfo({ gameID: gameID, targetUser });
+        gameData = mergeWithTimesData(gameData, timesData);
+      }
+      catch (e) { console.log(e) }
+
     }
     normalizeGameData(gameData, config.gamesDB, config.cheevosDB);
     gameData.subsets = await this.getSubsets(gameData.ParentGameID)
@@ -192,7 +196,7 @@ export class APIWorker {
   async getGameInfoWithTimes({ gameID, targetUser }) {
     const gameData = await this.getGameInfoAndProgress({ gameID: gameID });
     //!Uncomment to load times
-    await delay(150);
+    await delay(250);
     let gameTimes;
     try {
       gameTimes = await apiWorker.getGameTimesInfo({ gameID: gameID });

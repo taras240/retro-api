@@ -131,6 +131,10 @@
   pointer-events: none;
 }
 
+.target-achiv.hidden-group {
+  display: none;
+}
+
 .prev {
   /* top: -3px; */
   --image-offset: 0px;

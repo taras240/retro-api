@@ -238,5 +238,6 @@
     "progressEarnedPointsHint": "Зароблено {{count}} {{type}} {{date}}",
     "cheevo": "досягнення",
     "point": "поінт",
-    "retropoint": "ретропоінт"
+    "retropoint": "ретропоінт",
+    "multigame": "Багатоігровка"
 }

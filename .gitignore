@@ -7,6 +7,7 @@ downloader.js
 json/games/rawgParser.js
 json/games/RAWGPlatforms.json
 json/games/rawg-platforms.json
+json/apiTemplates
 node_modules/
 webpack.config.js
 dist/bundle.min.js.LICENSE.txt

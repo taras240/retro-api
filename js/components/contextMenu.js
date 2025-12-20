@@ -11,7 +11,7 @@ const generateContextMenu = ({ menuItems, sectionCode = "", isSubmenu = false })
         const isExpandable = menuItem.hasOwnProperty("elements");
         let menuElement = document.createElement("li");
         menuElement.className = `context-menu_item ${isExpandable && "expandable"}`;
-
+        if (!menuItem) return;
         if (isExpandable) {
             menuElement.innerHTML += menuItem.label;
             menuElement.appendChild(

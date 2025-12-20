@@ -14,7 +14,7 @@ export const filterBy = {
     level: ({ level }, { targetLevel }) => {
         return parseInt(level) === parseInt(targetLevel);
     },
-
+    group: ({ group, targetGroup }) => group === targetGroup,
     leveless: ({ level }) => !level,
 };
 export const cheevosFiterNames = Object.freeze({
@@ -31,6 +31,7 @@ export const filterMethods = {
     missable: "missable",
     progression: "progression",
     genre: "genre",
+    group: "group",
     level: "level"
 };
 

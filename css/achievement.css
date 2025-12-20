@@ -168,6 +168,10 @@
   }
 }
 
+.achiv-block.hidden-group {
+  display: none;
+}
+
 .achiv-block.hidden .preview-container {
   opacity: 0.2;
 }

@@ -158,6 +158,7 @@ export class Target extends Widget {
             },
             this.contextSortMenu(),
             this.contextFilterMenu(),
+            this.contextMultiGameMenu(),
             {
                 label: ui.lang.level_test,
                 elements: [
@@ -270,6 +271,27 @@ export class Target extends Widget {
 
         ],
     })
+    contextMultiGameMenu = () => watcher.GAME_DATA?.groups?.length > 1 ? {
+        label: ui.lang.multigame,
+        elements: [
+            {
+                type: inputTypes.RADIO,
+                name: `${this.sectionID}-mgame`,
+                id: `${this.sectionID}-mgame-all`,
+                label: ui.lang.all,
+                checked: !this.uiProps.mGameSelection,
+                event: `onchange="ui.target.uiProps.mGameSelection = '';"`,
+            },
+            ...watcher?.GAME_DATA?.groups?.map(mGameName => ({
+                type: inputTypes.RADIO,
+                name: `${this.sectionID}-mgame`,
+                id: `${this.sectionID}-mgame-${mGameName}`,
+                label: mGameName,
+                checked: this.uiProps.mGameSelection === mGameName,
+                event: `onchange = "ui.target.uiProps.mGameSelection = '${mGameName}';"`,
+            })) ?? []
+        ]
+    } : "";
 
 
     uiDefaultValues = {
@@ -296,6 +318,7 @@ export class Target extends Widget {
         lockedPreviewFilter: imageFilters.OPACITY,
         showPrevOverlay: true,
         contrastHighlight: false,
+        mGameSelection: "",
     }
     uiSetCallbacks = {
         autoscroll(value) {
@@ -331,6 +354,9 @@ export class Target extends Widget {
         },
         contrastHighlight() {
             this.setElementsValues();
+        },
+        mGameSelection() {
+            this.setMGameSelection();
         }
 
     };
@@ -702,6 +728,7 @@ export class Target extends Widget {
             targetElement.dataset.difficulty = achievement.difficulty;
             targetElement.dataset.DisplayOrder = achievement.DisplayOrder;
             targetElement.dataset.genres = achievement.genres?.join(",");
+            targetElement.dataset.group = achievement.group;
             achievement.DateEarnedHardcore && (targetElement.dataset.DateEarnedHardcore = achievement.DateEarnedHardcore);
             achievement.DateEarned && (targetElement.dataset.DateEarned = achievement.DateEarned);
 
@@ -818,6 +845,18 @@ export class Target extends Widget {
             });
         }
     }
+    setMGameSelection() {
+        const cheevos = this.container.querySelectorAll(".target-achiv");
+
+        if (this.uiProps.mGameSelection && !watcher.GAME_DATA.groups?.includes(this.uiProps.mGameSelection)) {
+            this.uiProps.mGameSelection = "";
+            return;
+        }
+        else {
+            const isHidden = (cheevo) => this.uiProps.mGameSelection && (this.uiProps.mGameSelection !== cheevo.dataset.group);
+            cheevos.forEach((cheevo) => cheevo.classList.toggle("hidden-group", isHidden(cheevo)))
+        }
+    }
     applySort(props = { animation: 500 }) {
         applySort({
             container: this.container,
@@ -894,6 +933,7 @@ export class Target extends Widget {
         // addHeaderBadges(watcher.GAME_DATA.cheevoGenres);
         this.applyFilter();
         this.applySort();
+        this.setMGameSelection();
         this.isDynamicAdding = false;
 
         // config.aotw && this.container.querySelector(`.target-achiv[data-achiv-id='${config.aotw?.ID}']`)?.classList.add("target__aotw");

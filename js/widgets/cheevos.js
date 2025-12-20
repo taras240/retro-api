@@ -112,6 +112,7 @@ export class AchievementsBlock extends Widget {
             },
             this.contextSortMenu(),
             this.contextFilterMenu(),
+            this.contextMultiGameMenu(),
             {
                 label: ui.lang.groupBy,
                 elements: [
@@ -197,6 +198,27 @@ export class AchievementsBlock extends Widget {
             ],
         }
     }
+    contextMultiGameMenu = () => watcher.GAME_DATA?.groups?.length > 1 ? {
+        label: ui.lang.multigame,
+        elements: [
+            {
+                type: inputTypes.RADIO,
+                name: `${this.sectionID}-mgame`,
+                id: `${this.sectionID}-mgame-all`,
+                label: ui.lang.all,
+                checked: !this.uiProps.mGameSelection,
+                event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].uiProps.mGameSelection = '';"`,
+            },
+            ...watcher.GAME_DATA.groups.map(mGameName => ({
+                type: inputTypes.RADIO,
+                name: `${this.sectionID}-mgame`,
+                id: `${this.sectionID}-mgame-${mGameName}`,
+                label: mGameName,
+                checked: this.uiProps.mGameSelection === mGameName,
+                event: `onchange = "ui.achievementsBlock[${this.CLONE_NUMBER}].uiProps.mGameSelection = '${mGameName}';"`,
+            }))
+        ]
+    } : "";
     uiDefaultValues = {
         showHeader: true,
         overlayType: overlayNames.BORDER,
@@ -217,6 +239,7 @@ export class AchievementsBlock extends Widget {
         hideFiltered: false,
         reverseFilter: false,
         lockedPreviewFilter: imageFilters.GRAYSCALE,
+        mGameSelection: "",
     }
     uiSetCallbacks = {
         ACHIV_MIN_SIZE(value) {
@@ -257,6 +280,9 @@ export class AchievementsBlock extends Widget {
         },
         lockedPreviewFilter() {
             this.setElementsValues();
+        },
+        mGameSelection() {
+            this.setMGameSelection();
         }
 
     };
@@ -398,9 +424,11 @@ export class AchievementsBlock extends Widget {
 
         // Підгонка розміру досягнень
         this.fitSizeVertically();
-
+        this.setMGameSelection();
         this.applyFiltering();
+
         this.applySorting({ animation: 0 });
+
         this.uiProps.showLoadAnimation && this.doLoadAnimation();
         this.startAutoScroll();
     }
@@ -425,6 +453,7 @@ export class AchievementsBlock extends Widget {
             achivElement.dataset.DisplayOrder = achievement.DisplayOrder;
             achivElement.dataset.Type = achievement.Type;
             achivElement.dataset.difficulty = achievement.difficulty;
+            achivElement.dataset.group = achievement.group;
             achievement.level && (achivElement.dataset.level = achievement.level);
 
             achivElement.dataset.NumAwardedHardcore = achievement.NumAwardedHardcore;
@@ -555,7 +584,8 @@ export class AchievementsBlock extends Widget {
         for (let cheevoID of earnedAchievementIDs) {
             const cheevo = watcher.CHEEVOS[cheevoID];
             const cheevoElement = this.container.querySelector(`.achiv-block[data-achiv-id="${cheevoID}"]`);
-            if (!this.uiProps.showMario) {
+            const cheevoIsHidden = cheevo.offsetParent === null;
+            if (!this.uiProps.showMario || cheevoIsHidden) {
                 cheevoElement.classList.add("earned");
                 cheevoElement.classList.toggle("hardcore", cheevo.isHardcoreEarned);
             }
@@ -824,6 +854,19 @@ export class AchievementsBlock extends Widget {
             this.filters[filterName] = { filterName, state };
         config.saveUIProperty({ sectionID: this.section.id, property: "filters", value: this.filters });
         this.applyFiltering();
+    }
+    setMGameSelection() {
+        const cheevos = this.container.querySelectorAll(".achiv-block");
+
+        if (this.uiProps.mGameSelection && !watcher.GAME_DATA.groups?.includes(this.uiProps.mGameSelection)) {
+            this.uiProps.mGameSelection = "";
+            return;
+        }
+        else {
+            const isHidden = (cheevo) => this.uiProps.mGameSelection && (this.uiProps.mGameSelection !== cheevo.dataset.group);
+            cheevos.forEach((cheevo) => cheevo.classList.toggle("hidden-group", isHidden(cheevo)))
+        }
+        this.groupCheevos();
     }
     doLoadAnimation() {
         const list = this.container;
