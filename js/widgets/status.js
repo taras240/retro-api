@@ -474,7 +474,7 @@ export class StatusPanel extends Widget {
 
     }
     fillSidebarIcons() {
-        const unlockData = this.uiProps.hardMode ? { ...watcher.GAME_DATA.unlockData.hardcore } : { ...watcher.GAME_DATA.unlockData.soft };
+        const unlockData = this.uiProps.hardMode ? { ...watcher.GAME_DATA.unlockData.hardcore } : { ...watcher.GAME_DATA.unlockData.softcore };
         this.frontSide.iconsContainer.innerHTML = `
             <p class="signed-icon auto-font-size" data-title="${ui.lang.cheevosCount}">
                 ${icons.cheevos}
