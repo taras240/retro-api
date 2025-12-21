@@ -183,7 +183,7 @@ export class Notifications extends Widget {
         else {
             this.alertsQueryArray = [...alerts];
             setTimeout(() => {
-                this.saveAlerts(this.alertsQueryArray);
+                this.saveAlerts([...this.alertsQueryArray]);
                 this.showAlerts(this.alertsQueryArray);
             }, 2000)
         }

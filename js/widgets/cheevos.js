@@ -544,7 +544,7 @@ export class AchievementsBlock extends Widget {
             windowWidth = parseInt(config.ui[this.SECTION_NAME].width);
         }
         container.style.flex = "";
-        const achivs = container.querySelectorAll(".achiv-block:not(.removed)");
+        const achivs = container.querySelectorAll(".achiv-block:not(.removed, .hidden-group)");
         const achivsCount = achivs.length;
         // Перевірка, чи є елементи в блоці досягнень
         if (achivsCount === 0) return;

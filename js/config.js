@@ -81,7 +81,7 @@ export class Config {
     preset: "default",
     fsAlertDuration: 15,
     fsNewCheevo: false,
-    fsNewAward: true,
+    fsNewAward: false,
     minPointsDiscordAlert: 0,
     minRetroPointsDiscordAlert: 0,
     hardOnlyDiscordAlert: false,
