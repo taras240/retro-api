@@ -104,16 +104,24 @@ export class StatusPanel extends Widget {
                         name: "description-variant-radio",
                         id: "show-progression-description",
                         label: ui.lang.progression,
-                        checked: this.uiProps.statusDescriptionVariant === "progression",
-                        event: `onchange="ui.statusPanel.uiProps.statusDescriptionVariant = 'progression';"`,
+                        checked: this.uiProps.gameInfoType === "progression",
+                        event: `onchange="ui.statusPanel.uiProps.gameInfoType = 'progression';"`,
+                    },
+                    {
+                        type: inputTypes.RADIO,
+                        name: "description-variant-radio",
+                        id: "show-game-info-description",
+                        label: ui.lang.progressbar,
+                        checked: this.uiProps.gameInfoType === "progressbar",
+                        event: `onchange="ui.statusPanel.uiProps.gameInfoType = 'progressbar';"`,
                     },
                     {
                         type: inputTypes.RADIO,
                         name: "description-variant-radio",
                         id: "show-game-info-description",
                         label: ui.lang.richPresence,
-                        checked: this.uiProps.statusDescriptionVariant === "gameInfo",
-                        event: `onchange="ui.statusPanel.uiProps.statusDescriptionVariant = 'gameInfo';"`,
+                        checked: this.uiProps.gameInfoType === "gameInfo",
+                        event: `onchange="ui.statusPanel.uiProps.gameInfoType = 'gameInfo';"`,
                     },
 
                     {
@@ -231,7 +239,7 @@ export class StatusPanel extends Widget {
         showMasteryRate: true,
         showGameBg: true,
         showTimeBar: true,
-        statusDescriptionVariant: "progression",
+        gameInfoType: "progression",
         hardMode: true,
         showNewAchiv: true,
         showUpdateBlink: true,
@@ -247,7 +255,7 @@ export class StatusPanel extends Widget {
         timerTime() {
             this.startStatsAnimation();
         },
-        statusDescriptionVariant(value) {
+        gameInfoType(value) {
             const statusVariants = {
                 gameInfo: "show-game-info",
                 progression: "show-game-progress"
@@ -409,7 +417,7 @@ export class StatusPanel extends Widget {
             this.frontSide.retroRatioElement.innerText = masteryRate;
             this.frontSide.retroRatioElement.className = `status__retro-ratio badge badge-gold`;
         }
-        this.uiProps.statusDescriptionVariant = this.uiProps.statusDescriptionVariant;
+        this.uiProps.gameInfoType = this.uiProps.gameInfoType;
         this.progressStatusText.innerText = "";
         const imageSrc = watcher.GAME_DATA.ImageIngame; //"/Images/005200.png";//
         this.container.style.setProperty("--bg-image", `url(${gameImageUrl(imageSrc)})`);
@@ -979,6 +987,29 @@ export class StatusPanel extends Widget {
         else if (!watcher.IS_ONLINE) {
             this.section.classList.add("offline");
         }
+    }
+    generateWidgetElement({ classes, id, headerElementsHtml }) {
+        const widget = document.createElement("section");
+        widget.classList.add(...classes);
+        widget.id = id;
+        const theme = config.ui?.[id]?.statusTheme ?? statusThemes.DEFAULT;
+        const isWatching = watcher?.IS_WATCHING;
+        widget.innerHTML = `
+                <div class="hidden-header-buttons">
+                    ${headerElementsHtml ?? ""}
+                    ${buttonsHtml.close()}
+                </div>
+                ${indicatorHtml()}
+                ${alertHtml()}
+                <div class="rp-content__container">
+                    ${gameInfoHtml()}
+                    ${richPresenceHtml()}
+                    ${progressionBarHtml()}
+                    ${progressBarHtml()}
+                </div>
+                ${tickerHtml()}
+                ${resizerHtml()}`;
+        return widget;
     }
 }
 

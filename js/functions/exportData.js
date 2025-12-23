@@ -59,7 +59,7 @@ async function exportCompletionDataToXlsx() {
         EarnedAchievements: game.NumAwardedHardcore,
         EarnedAchievementsSoftcore: game.NumAwarded,
         PlayedTime: formatTime(config.gamesDB[game.GameID]?.TimePlayed),
-        Notes: config.gamformatTimeesDB[game.GameID]?.notes?.replace(/;|\n/g, " "),
+        Notes: config.gamesDB[game.GameID]?.notes?.replace(/;|\n/g, " "),
     }));
 
     if (!completionResults || completionResults.length == 0) return;

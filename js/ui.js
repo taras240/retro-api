@@ -109,6 +109,7 @@ export class UI {
     this.recap = new Recap();
     this.statusPanel = new StatusPanel();
     this.status = new Status();
+    // this.status2 = new Status(true);
     this.achievementsBlock = [new AchievementsBlock()]; this.createAchievementsTemplate();
     this.target = new Target();
     this.gameCard = new GameCard();
@@ -239,6 +240,7 @@ export class UI {
     const widgetNames = [
       "statusPanel",
       "status",
+      // "status2",
       "target",
       // "notifications",
       "gameList",
@@ -344,7 +346,8 @@ export class UI {
   }
   updateWidgetsRichPresence(richPresence = "Rich presence") {
     this.statusPanel.frontSide.richPresence.innerText = richPresence;
-    this.status.richPresenceElement.innerText = richPresence;
+    this.status.updateRichPresence(richPresence);
+    // this.status2.updateRichPresence(richPresence);
 
     const currentLevel = parseCurrentGameLevel(richPresence);
     this.CURRENT_LEVEL = currentLevel;

@@ -233,18 +233,18 @@ export class Status extends Widget {
             return value * 60;
         }
     };
-    constructor() {
+    constructor(isLegacy = false) {
         super();
-        this.generateWidget();
+        this.generateWidget(isLegacy);
         this.addWidgetIcon();
-        this.initializeElements();
+        // this.initializeElements();
         UI.applyPosition({ widget: this });
         this.setElementsValues();
         this.addEvents();
     }
 
-    initializeElements() {
-        this.section = document.querySelector(".rp__section");
+    initializeElements(widget) {
+        this.section = widget;
         this.sectionID = this.section.id;
         this.watchButton = this.section.querySelector("#rp__watch-button");
         this.indicatorElement = this.section.querySelector(".rp__indicator");
@@ -275,27 +275,24 @@ export class Status extends Widget {
         this.tickerElement = this.section.querySelector(".rp__ticker");
         this.ticker = infiniteLineScrolling({ container: this.tickerElement, textGenerator: generateMagicLineText });
     }
-    generateWidget() {
-        const widgetID = "rp__section";
+    generateWidget(isLegacy) {
+        const widgetID = isLegacy ? "update-section" : "rp__section";
         const headerElementsHtml = `
         `;
 
         const widgetData = {
-            classes: ["rp__section", "section"],
+            classes: isLegacy ? ["status__section", "section"] : ["rp__section", "section"],
             id: widgetID,
             headerElementsHtml: headerElementsHtml,
+            isLegacy
         };
 
         const widget = this.generateWidgetElement(widgetData);
         ui.app.appendChild(widget);
+        this.initializeElements(widget);
     }
-    generateWidgetElement({ classes, id, headerElementsHtml }) {
-        const widget = document.createElement("section");
-        widget.classList.add(...classes);
-        widget.id = id;
-        const theme = config.ui?.[id]?.statusTheme ?? statusThemes.DEFAULT;
-        const isWatching = watcher?.IS_WATCHING;
-        widget.innerHTML = `
+    generateWidgetElement({ classes, id, headerElementsHtml, isLegacy }) {
+        const modernThemeHtml = () => `
             <div class="hidden-header-buttons">
                 ${headerElementsHtml ?? ""}
                 ${buttonsHtml.close()}
@@ -310,6 +307,26 @@ export class Status extends Widget {
             </div>
             ${tickerHtml()}
             ${resizerHtml()}`;
+        const legacyThemeHtml = () => `
+            <div class="hidden-header-buttons">
+                ${headerElementsHtml ?? ""}
+                ${buttonsHtml.close()}
+            </div>
+            ${indicatorHtml()}
+            <div class="status__container">
+                ${alertHtml()}
+                <div class="rp-content__container">
+                    ${gameInfoHtml()}
+                </div>
+            </div>
+            ${resizerHtml()}`
+        const widget = document.createElement("section");
+        widget.classList.add(...classes);
+        widget.id = id;
+        const theme = config.ui?.[id]?.statusTheme ?? statusThemes.DEFAULT;
+        const isWatching = watcher?.IS_WATCHING;
+
+        widget.innerHTML = isLegacy ? legacyThemeHtml() : modernThemeHtml();;
         return widget;
     }
 
@@ -365,7 +382,7 @@ export class Status extends Widget {
         this.section.classList.toggle("show-ticker", this.uiProps.showTicker);
         this.section.classList.toggle("show-progression", this.uiProps.showProgression);
         this.section.classList.toggle("show-progressbar", this.uiProps.showProgressbar);
-        this.richPresenceElement.classList.toggle("hidden", !this.uiProps.showRichPresence)
+        this.richPresenceElement?.classList.toggle("hidden", !this.uiProps.showRichPresence)
         this.gameElements.time && (this.gameElements.time.dataset.position = this.uiProps.timePosition);
         this.uiProps.showTicker && watcher.GAME_DATA && this.ticker.startScrolling();
         this.section.dataset.theme = this.uiProps.statusTheme ?? statusThemes.DEFAULT;
@@ -457,8 +474,10 @@ export class Status extends Widget {
             const time = watcher.getActiveTime(this.uiProps.time, this.uiProps.timerTime);
             this.gameElements.time.innerHTML = time;
         }
-        this.richPresenceElement.innerText = ui.lang.richPresence;
+
+
         fillGameInfoData();
+        this.updateRichPresence();
         this.updateGameInfo();
         this.updateProgressionBar();
         this.updateProgressBar();
@@ -471,6 +490,11 @@ export class Status extends Widget {
         this.updateProgressBar();
         this.doUpdateAnimation();
         // this.gameChangeEvent();
+    }
+    updateRichPresence(richPresenceText) {
+        if (this.richPresenceElement) {
+            this.richPresenceElement.innerText = richPresenceText || ui.lang.richPresence;
+        }
     }
     alertsQuery = [];
     addAlertsToQuery(elements) {
