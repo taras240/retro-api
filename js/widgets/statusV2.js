@@ -31,7 +31,7 @@ import { tickerHtml } from "../components/statusWidget/ticker.js";
 import { richPresenceHtml } from "../components/statusWidget/richPresence.js";
 import { indicatorHtml } from "../components/statusWidget/statusIndicator.js";
 import { statusThemes } from "../enums/statusThemes.js";
-import { StatusPanel } from "./status.js";
+import { StatusPanel } from "../removed/status.js";
 import { alertHtml, updateAlertContainer } from "../components/statusWidget/alert.js";
 import { gameInfoHtml } from "../components/statusWidget/gameInfo.js";
 import { timePosition } from "../enums/timePosition.js";
@@ -47,7 +47,7 @@ export class Status extends Widget {
     widgetIcon = {
         description: "status widget",
         iconID: `side-panel__status1`,
-        onChangeEvent: `ui.status.VISIBLE = this.checked`,
+        onChangeEvent: `ui['${this.widgetName}'].VISIBLE = this.checked`,
         iconClass: "status-icon",
     };
     get contextMenuItems() {
@@ -73,28 +73,28 @@ export class Status extends Widget {
                         id: "show-rp",
                         label: ui.lang.richPresence,
                         checked: this.uiProps.showRichPresence,
-                        event: `onchange="ui.status.uiProps.showRichPresence = this.checked"`,
+                        event: `onchange="ui['${this.widgetName}'].uiProps.showRichPresence = this.checked"`,
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         id: "show-ticker",
                         label: ui.lang.ticker,
                         checked: this.uiProps.showTicker,
-                        event: `onchange="ui.status.uiProps.showTicker = this.checked"`,
+                        event: `onchange="ui['${this.widgetName}'].uiProps.showTicker = this.checked"`,
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         id: "show-progression",
                         label: ui.lang.progression,
                         checked: this.uiProps.showProgression,
-                        event: `onchange="ui.status.uiProps.showProgression = this.checked"`,
+                        event: `onchange="ui['${this.widgetName}'].uiProps.showProgression = this.checked"`,
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         id: "context-show-progressbar",
                         label: ui.lang.progressbar,
                         checked: this.uiProps.showProgressbar,
-                        event: `onchange="ui.status.uiProps.showProgressbar = this.checked"`,
+                        event: `onchange="ui['${this.widgetName}'].uiProps.showProgressbar = this.checked"`,
                     },
                 ],
             },
@@ -107,7 +107,7 @@ export class Status extends Widget {
                     id: `info-type-${type}`,
                     label: ui.lang?.[type] ?? type,
                     checked: this.uiProps.gameInfoType == type,
-                    event: `onclick="ui.status.uiProps.gameInfoType = '${type}';"`,
+                    event: `onclick="ui['${this.widgetName}'].uiProps.gameInfoType = '${type}';"`,
                 })
                 )
             },
@@ -120,7 +120,7 @@ export class Status extends Widget {
                     id: `status-theme-${theme}`,
                     label: ui.lang?.[theme] ?? theme,
                     checked: this.uiProps.statusTheme == theme,
-                    event: `onclick="ui.status.uiProps.statusTheme = '${theme}';"`,
+                    event: `onclick="ui['${this.widgetName}'].uiProps.statusTheme = '${theme}';"`,
                 })
                 )
             },
@@ -133,7 +133,7 @@ export class Status extends Widget {
                     id: `progressbar-type-${type}`,
                     label: ui.lang?.[type] ?? type,
                     checked: this.uiProps.progressType == type,
-                    event: `onclick="ui.status.uiProps.progressType = '${type}';"`,
+                    event: `onclick="ui['${this.widgetName}'].uiProps.progressType = '${type}';"`,
                 })
                 )
             },
@@ -146,7 +146,7 @@ export class Status extends Widget {
                         id: "show-playTime",
                         label: ui.lang.gameTime,
                         checked: this.uiProps.time == "playTime",
-                        event: `onclick="ui.status.uiProps.time = 'playTime';"`,
+                        event: `onclick="ui['${this.widgetName}'].uiProps.time = 'playTime';"`,
                     },
                     {
                         type: inputTypes.RADIO,
@@ -154,7 +154,7 @@ export class Status extends Widget {
                         id: "show-sessionTime",
                         label: ui.lang.sessionGameTime,
                         checked: this.uiProps.time == "sessionTime",
-                        event: `onclick="ui.status.uiProps.time = 'sessionTime';"`,
+                        event: `onclick="ui['${this.widgetName}'].uiProps.time = 'sessionTime';"`,
                     },
                     {
                         type: inputTypes.RADIO,
@@ -162,7 +162,7 @@ export class Status extends Widget {
                         id: "show-totalTime",
                         label: ui.lang.totalTime,
                         checked: this.uiProps.time == "totalSessionTime",
-                        event: `onclick="ui.status.uiProps.time = 'totalSessionTime';"`,
+                        event: `onclick="ui['${this.widgetName}'].uiProps.time = 'totalSessionTime';"`,
                     },
                     {
                         type: inputTypes.RADIO,
@@ -170,7 +170,7 @@ export class Status extends Widget {
                         id: "show-timer",
                         label: ui.lang.timer,
                         checked: this.uiProps.time == "timer",
-                        event: `onclick="ui.status.uiProps.time = 'timer';"`,
+                        event: `onclick="ui['${this.widgetName}'].uiProps.time = 'timer';"`,
                     },
                     {
                         prefix: ui.lang.timer,
@@ -179,8 +179,8 @@ export class Status extends Widget {
                         id: "stats-timer-duration",
                         label: ui.lang.timer,
                         value: ~~(this.uiProps.timerTime / 60 * 100) / 100,
-                        event: `onchange="ui.status.uiProps.timerTime = this.value;"`,
-                        onChange: "ui.status.uiProps.timerTime = this.value;",
+                        event: `onchange="ui['${this.widgetName}'].uiProps.timerTime = this.value;"`,
+                        onChange: "ui['${this.widgetName}'].uiProps.timerTime = this.value;",
                     },
                     ...Object.keys(timePosition).map(position =>
                     ({
@@ -189,7 +189,7 @@ export class Status extends Widget {
                         id: `time-pos-${position}`,
                         label: ui.lang?.[position] ?? position,
                         checked: this.uiProps.timePosition == position,
-                        event: `onclick="ui.status.uiProps.timePosition = '${position}';"`,
+                        event: `onclick="ui['${this.widgetName}'].uiProps.timePosition = '${position}';"`,
                     })
                     )
                 ],
@@ -233,8 +233,9 @@ export class Status extends Widget {
             return value * 60;
         }
     };
-    constructor(isLegacy = false) {
+    constructor(widgetName = "status", isLegacy = false) {
         super();
+        this.widgetName = widgetName;
         this.generateWidget(isLegacy);
         this.addWidgetIcon();
         // this.initializeElements();
@@ -273,7 +274,10 @@ export class Status extends Widget {
             lastCheevos: this.section.querySelector(".rp__last-cheevos"),
         }
         this.tickerElement = this.section.querySelector(".rp__ticker");
-        this.ticker = infiniteLineScrolling({ container: this.tickerElement, textGenerator: generateMagicLineText });
+        this.ticker = infiniteLineScrolling({
+            container: this.tickerElement, textGenerator: () =>
+                generateMagicLineText(watcher.GAME_DATA, watcher.sessionData, watcher.userData)
+        });
     }
     generateWidget(isLegacy) {
         const widgetID = isLegacy ? "update-section" : "rp__section";
@@ -426,6 +430,7 @@ export class Status extends Widget {
     }
     updateGameInfo() {
         const gameInfoContent = this.section.querySelector(".rp__game-info-content");
+        if (!gameInfoContent) return;
         const updateIcons = () => {
             const { ConsoleID, NumAchievements, totalPoints, retroRatio } = watcher.GAME_DATA;
 
@@ -579,6 +584,7 @@ export class Status extends Widget {
     }
     autoscrollAlertInterval = {};
     startAutoScrollElement(element, toLeft = true, pause = 1000) {
+        if (!element) return;
         const containerID = element.id || element.className;
         if (this.autoscrollAlertInterval[containerID]) {
             this.stopAutoScrollElement(element);

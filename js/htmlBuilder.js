@@ -8,7 +8,7 @@ const sections = {
   // settings: "./elements/settings.elem",
   // gamePopup: "./elements/gamePopup.elem",
   // awards: "./elements/awards.elem",
-  status: "./elements/status.elem",
+  // status: "./elements/status.elem",
   // games: "./elements/games.elem",
   note: "./elements/note.elem",
   // user: "./elements/userInfo.elem",
