@@ -25,6 +25,7 @@ export async function sendDiscordAlert({ message = "", type, value, award, id })
             header: header,
             description: description,
             color: limeColorCode,
+            colour: "lime",
             url: gameUrl(gameData.ID),
             image: gameImageUrl(gameData.ImageIcon),
         }
@@ -45,6 +46,7 @@ export async function sendDiscordAlert({ message = "", type, value, award, id })
             header: header,
             description: description,
             color: (award == 'beaten' || award == 'mastered') ? goldColorCode : silverColorCode,
+            colour: (award == 'beaten' || award == 'mastered') ? "gold" : "silver",
             url: gameUrl(gameData.ID),
             image: gameImageUrl(gameData.ImageIcon),
         }
@@ -64,6 +66,7 @@ export async function sendDiscordAlert({ message = "", type, value, award, id })
             header: header,
             description: description,
             color: cheevo.isHardcoreEarned ? goldColorCode : silverColorCode,
+            colour: cheevo.isHardcoreEarned ? "gold" : "silver",
             url: cheevoUrl(cheevo),
             image: cheevo.prevSrc,
         }
@@ -100,6 +103,7 @@ export async function sendDiscordAlert({ message = "", type, value, award, id })
                 title: messageElements.header,
                 url: messageElements.url,
                 color: messageElements.color,
+                colour: messageElements.colour,
                 description: messageElements.description.replace(/\n[ \t]*/g, '\n'),
                 footer: {
                     text: footerLink,
