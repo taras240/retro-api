@@ -337,7 +337,7 @@ export class UI {
       } = configData;
 
       const isMinPointsMatch = cheevo.Points >= minPointsDiscordAlert || cheevo.TrueRatio >= minRetroPointsDiscordAlert;
-      const isTypeMatch = hardOnlyDiscordAlert ? cheevo.isHardcoreEarned : true;
+      const isTypeMatch = hardOnlyDiscordAlert ? cheevo.isEarnedHardcore : true;
 
       if (discordNewCheevo && isMinPointsMatch && isTypeMatch) {
         sendDiscordAlert(alert);
@@ -348,7 +348,7 @@ export class UI {
     this.status.addAlertsToQuery(cheevoAlerts);
   }
   updateWidgetsRichPresence(richPresence = "Rich presence") {
-    this.statusPanel.frontSide.richPresence.innerText = richPresence;
+    this.statusPanel.updateRichPresence(richPresence);//.frontSide.richPresence.innerText = richPresence;
     this.status.updateRichPresence(richPresence);
     // this.status2.updateRichPresence(richPresence);
 

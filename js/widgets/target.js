@@ -631,8 +631,8 @@ export class Target extends Widget {
                 // cheevoElement.scrollIntoView({ behavior: ui.isCEF ? "auto" : "smooth", block: "center", });
                 await delay(600);
                 cheevoElement.classList.add("earned", "show-hard-anim");
-                cheevoElement.classList.toggle("hardcore", cheevo?.isHardcoreEarned);
-                cheevo.isHardcoreEarned && (cheevoElement.dataset.DateEarnedHardcore = cheevo.DateEarnedHardcore);
+                cheevoElement.classList.toggle("hardcore", cheevo?.isEarnedHardcore);
+                cheevo.isEarnedHardcore && (cheevoElement.dataset.DateEarnedHardcore = cheevo.DateEarnedHardcore);
                 cheevoElement.dataset.DateEarned = cheevo.DateEarned;
                 cheevoElement.appendChild(animEl);
                 setTimeout(() => {
@@ -718,7 +718,7 @@ export class Target extends Widget {
             targetElement.classList.toggle("show-level", this.uiProps.showLevel);
             targetElement.classList.toggle("show-genre", this.uiProps.showGenre);
             targetElement.classList.toggle("earned", achievement.isEarned);
-            targetElement.classList.toggle("hardcore", achievement.isHardcoreEarned);
+            targetElement.classList.toggle("hardcore", achievement.isEarnedHardcore);
             targetElement.classList.toggle("rare", achievement.difficulty > 7);
         }
         const setDataToElement = () => {

@@ -46,13 +46,13 @@ async function showFSAlert() {
         `;
         return alertElement;
     }
-    const cheevoAlert = ({ isHardcoreEarned, Title, BadgeName, Points, TrueRatio, rateEarned, rateEarnedHardcore, difficulty, Description }) => {
+    const cheevoAlert = ({ isEarnedHardcore, Title, BadgeName, Points, TrueRatio, rateEarned, rateEarnedHardcore, difficulty, Description }) => {
         app.querySelectorAll(".fs-alert__container").forEach(el => el.remove());
 
         const alertElement = document.createElement('div');
         alertElement.className = "fs-alert__container";
 
-        const alertHeader = isHardcoreEarned ?
+        const alertHeader = isEarnedHardcore ?
             ui.lang.achievementUnlocked :
             `${ui.lang.achievementUnlocked} ${casualBadge()}`;
 

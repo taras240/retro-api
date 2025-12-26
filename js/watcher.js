@@ -41,10 +41,10 @@ export class Watcher {
         ui.gameChangeEvent(isNewGame);
     }
     sessionData = {
-        points: 5,
+        points: 0,
         retropoints: 0,
         softpoints: 0,
-        cheevos: 1,
+        cheevos: 0,
         cheevosSoftcore: 0,
     }
     userData = {
@@ -107,7 +107,7 @@ export class Watcher {
                 retropoints: userSummary.TotalTruePoints,
                 softpoints: userSummary.TotalSoftcorePoints,
                 rank: userSummary.Rank,
-                percentile: ~~(100 * userSummary.Rank / userSummary.TotalRanked),
+                percentile: (100 * userSummary.Rank / userSummary.TotalRanked).toFixed(2),
             }
         }
     }
@@ -247,7 +247,7 @@ export class Watcher {
                     const isHard = HardcoreMode == 1;
                     this.IS_HARD_MODE = isHard;
                     if (isHard) {
-                        cheevo.isHardcoreEarned = true;
+                        cheevo.isEarnedHardcore = true;
                         cheevo.DateEarnedHardcore = Date;
                         this.GAME_DATA.unlockData.hardcore.count++;
                         this.GAME_DATA.unlockData.hardcore.points += cheevo.Points;
@@ -275,7 +275,7 @@ export class Watcher {
                 const cheevo = this.CHEEVOS[lastCheevo.AchievementID];
                 if (cheevo) {
                     const isHardcoreMismatch =
-                        lastCheevo.HardcoreMode === 1 && !cheevo?.isHardcoreEarned;
+                        lastCheevo.HardcoreMode === 1 && !cheevo?.isEarnedHardcore;
                     const isSoftCoreMismatch = !cheevo.isEarned;
                     if (isSoftCoreMismatch || isHardcoreMismatch) {
                         earnedAchievements.push(lastCheevo);
@@ -332,7 +332,7 @@ export class Watcher {
         }
         const checkForZeroPoints = () => {
             this.GAME_DATA.hasZeroPoints = Object.values(this.CHEEVOS).filter(
-                ({ Points, isHardcoreEarned }) => Points === 0 && !isHardcoreEarned)?.length > 0
+                ({ Points, isEarnedHardcore }) => Points === 0 && !isEarnedHardcore)?.length > 0
         }
         try {
             // Get recent achievements

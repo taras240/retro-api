@@ -36,7 +36,7 @@ import { alertHtml, updateAlertContainer } from "../components/statusWidget/aler
 import { gameInfoHtml } from "../components/statusWidget/gameInfo.js";
 import { timePosition } from "../enums/timePosition.js";
 import { gameInfoTypes } from "../enums/gameInfoTypes.js";
-import { gameInfoIconsHtml } from "../components/statusWidget/gameInfoIcons.js";
+import { gameInfoIconsHtml, richInfoHtml } from "../components/statusWidget/gameInfoIcons.js";
 import { sweepEffect } from "../components/windowEffects.js";
 
 export class Status extends Widget {
@@ -214,9 +214,8 @@ export class Status extends Widget {
             this.gameElements.time.innerText = watcher.getActiveTime(this.uiProps.time, this.uiProps.timerTime);
         },
         showTicker(value) {
-            value ? this.ticker.startScrolling() : this.ticker.stopScrolling();
-
             this.setElementsValues();
+            value ? this.updateTicker() : this.ticker?.stopScrolling();
         },
         progressType() {
             this.updateProgressBar();
@@ -274,10 +273,7 @@ export class Status extends Widget {
             lastCheevos: this.section.querySelector(".rp__last-cheevos"),
         }
         this.tickerElement = this.section.querySelector(".rp__ticker");
-        this.ticker = infiniteLineScrolling({
-            container: this.tickerElement, textGenerator: () =>
-                generateMagicLineText(watcher.GAME_DATA, watcher.sessionData, watcher.userData)
-        });
+
     }
     generateWidget(isLegacy) {
         const widgetID = isLegacy ? "update-section" : "rp__section";
@@ -388,7 +384,7 @@ export class Status extends Widget {
         this.section.classList.toggle("show-progressbar", this.uiProps.showProgressbar);
         this.richPresenceElement?.classList.toggle("hidden", !this.uiProps.showRichPresence)
         this.gameElements.time && (this.gameElements.time.dataset.position = this.uiProps.timePosition);
-        this.uiProps.showTicker && watcher.GAME_DATA && this.ticker.startScrolling();
+
         this.section.dataset.theme = this.uiProps.statusTheme ?? statusThemes.DEFAULT;
     }
     doUpdateAnimation() {
@@ -399,10 +395,19 @@ export class Status extends Widget {
             this.addAlertsToQuery([{ type: alertTypes.GAME, value: watcher.GAME_DATA }]);
         }
         this.fillGameData();
-        this.uiProps.showTicker && this.ticker.startScrolling();
         this.doUpdateAnimation();
+        this.updateTicker();
     }
-
+    updateTicker() {
+        if (!this.tickerElement) return;
+        this.ticker?.stopScrolling();
+        this.ticker = infiniteLineScrolling({
+            container: this.tickerElement,
+            textGenerator: () =>
+                generateMagicLineText(watcher.GAME_DATA, watcher.sessionData, watcher.userData)
+        });
+        this.uiProps.showTicker && this.ticker.startScrolling();
+    }
     updateProgressionBar() {
         this.section
             .querySelectorAll(".rp__progression-container")
@@ -455,6 +460,10 @@ export class Status extends Widget {
                 gameInfoContent.innerHTML = gameInfoIconsHtml();
                 updateIcons();
                 break;
+            case gameInfoTypes.richPresence:
+                gameInfoContent.innerHTML = richInfoHtml();
+                updateIcons();
+                break;
             default:
                 gameInfoContent.innerHTML = progressionBarHtml();
                 this.updateProgressionBar();
@@ -489,11 +498,13 @@ export class Status extends Widget {
         this.startAutoScrollElement(this.richPresenceElement, true, 10 * 1000);
     }
     updateProgress({ earnedAchievementIDs }) {
-        earnedAchievementIDs?.length > 0 && (this.IS_HARD_MODE = !!watcher.CHEEVOS[earnedAchievementIDs[0]].isHardcoreEarned);
+        earnedAchievementIDs?.length > 0 && (this.IS_HARD_MODE = !!watcher.CHEEVOS[earnedAchievementIDs[0]].isEarnedHardcore);
 
         this.updateProgressionBar();
         this.updateProgressBar();
+        this.updateTicker();
         this.doUpdateAnimation();
+
         // this.gameChangeEvent();
     }
     updateRichPresence(richPresenceText) {

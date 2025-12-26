@@ -54,9 +54,9 @@ const gameAlertHtml = (gameData) => {
     return alertInnerHtml({ title, badgesHtml, imageUrl: gameImageUrl(ImageIcon) });
 }
 const cheevoAlertHtml = (cheevo) => {
-    const { isHardcoreEarned, Title, Description, BadgeName, Points, TrueRatio, rateEarned, rateEarnedHardcore, difficulty } = cheevo;
+    const { isEarnedHardcore, Title, Description, BadgeName, Points, TrueRatio, rateEarned, rateEarnedHardcore, difficulty } = cheevo;
 
-    let cheevoBadges = isHardcoreEarned ?
+    let cheevoBadges = isEarnedHardcore ?
         `
                     ${goldBadge(icons.points + " +" + Points)}
                     ${goldBadge(icons.retropoints + " +" + TrueRatio)}

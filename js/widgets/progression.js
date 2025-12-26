@@ -97,7 +97,7 @@ export class Progression extends Widget {
         super.addEvents();
     }
     update({ earnedAchievementIDs }) {
-        earnedAchievementIDs[0] && (this.uiProps.hardMode = watcher.CHEEVOS[earnedAchievementIDs[0]].isHardcoreEarned);
+        earnedAchievementIDs[0] && (this.uiProps.hardMode = watcher.CHEEVOS[earnedAchievementIDs[0]].isEarnedHardcore);
         this.generateProgression();
     }
     generateWidget() {
@@ -125,14 +125,14 @@ export class Progression extends Widget {
             const point = `
                 <li class="progression__item ${focusID === cheevo.ID ? "focus" : ""} ${cheevo.Type}-cheevo">
                     <p class="cheevo-date">${formatDateTime(cheevo.DateEarnedHardcore || cheevo.DateEarned, { year: "2-digit" })}</p>
-                    <div class="mark ${cheevo.isEarned ? "earned" : ""} ${cheevo.isHardcoreEarned ? "hardcore" : ""}"></div>
+                    <div class="mark ${cheevo.isEarned ? "earned" : ""} ${cheevo.isEarnedHardcore ? "hardcore" : ""}"></div>
                     <div class="cheevo-container">
                         <h3 class="cheevo-title" data-achiv-id="${cheevo.ID}">${cheevo.Title}</h3>
                         <p class="cheevo-description">
                             ${cheevo.Description}</p>
                         <div class="subcheevos-container">
                             ${subCheevos?.reduce((html, cheevo) => {
-                html += `<h3 class="progression__subcheevo ${cheevo.isEarned ? "earned" : ""} ${cheevo.isHardcoreEarned ? "hardcore" : ""}" data-achiv-id="${cheevo.ID}">${cheevo.Title}</h3>`;
+                html += `<h3 class="progression__subcheevo ${cheevo.isEarned ? "earned" : ""} ${cheevo.isEarnedHardcore ? "hardcore" : ""}" data-achiv-id="${cheevo.ID}">${cheevo.Title}</h3>`;
                 return html;
             }, "")}
                         </div>
@@ -156,7 +156,7 @@ export class Progression extends Widget {
             ?.filter(c => c.Type == cheevoTypes.PROGRESSION || c.Type == cheevoTypes.WIN)
             .sort((a, b) => a.DisplayOrder === 0 ? a.ID - b.ID : a.DisplayOrder - b.DisplayOrder);
 
-        const focusID = cheevos.find(c => this.uiProps.hardMode ? !c.isHardcoreEarned : !c.isEarned)?.ID;
+        const focusID = cheevos.find(c => this.uiProps.hardMode ? !c.isEarnedHardcore : !c.isEarned)?.ID;
 
         listContainer.innerHTML = cheevos?.reduce((html, cheevo) => {
             html += generatePoint(cheevo, cheevos);

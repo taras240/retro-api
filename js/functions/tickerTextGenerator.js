@@ -1,5 +1,5 @@
 import { difficultyNames } from "../enums/difficulty.js";
-import { config, configData, ui, watcher } from "../script.js";
+import { config, configData } from "../script.js";
 import { secondsToBadgeString } from "./time.js";
 
 export function generateMagicLineText(gameData, sessionData, userData) {
@@ -41,7 +41,7 @@ export function generateMagicLineText(gameData, sessionData, userData) {
             hardValue || softValue;
         return text.replace("{1}", value + `/${totalValue}`)
     }
-    const hasGameProgress = stats.softcore.count || stats.hardcore.count;
+
     const gameStatsInfo = "Completion Progress: " + [
         generateGameStat(stats.hardcore.count, stats.softcore.count, stats.NumAchievements, `{1} achievements`),
 
@@ -51,9 +51,7 @@ export function generateMagicLineText(gameData, sessionData, userData) {
 
     ].join(",&nbsp;") + space;
 
-    // const isHard = !!ui.statusPanel?.deltaStats?.deltaPoints;
     const hasSessionData = sessionData.cheevos || sessionData.cheevosSoftcore
-
     const sessionInfo = hasSessionData ? `Session statistics: ` + [
         sessionData.cheevos && `+${sessionData.cheevos} cheevos`,
         sessionData.cheevosSoftcore && `+${sessionData.cheevosSoftcore} softcore cheevos`,
@@ -63,7 +61,7 @@ export function generateMagicLineText(gameData, sessionData, userData) {
     ].filter(Boolean).join(",&nbsp;") + space : "";
 
     const userInfo = (userData?.points || userData?.softpoints) ? `User statistics: ` + [
-        userData?.rank && `position ${userData.rank} in RA rank system (TOP${userData?.percentile.toFixed(2)}%)`,
+        userData?.rank && `position ${userData.rank} in RA rank system (TOP${userData?.percentile}%)`,
         userData?.points && `${userData?.points} total hardpoints`,
         userData?.retropoints && `${userData?.retropoints} total retropoints`,
         userData?.softpoints && `${userData?.softpoints} total softpoints`].filter(Boolean).join(",&nbsp;") + space :

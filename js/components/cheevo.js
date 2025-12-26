@@ -5,7 +5,7 @@ export const cheevoElementFull = (cheevo, isTarget = false) => {
     const cheevoElement = document.createElement("li");
     cheevoElement.classList.add("cheevo-column-item");
     cheevoElement.classList.toggle("earned", cheevo.isEarned);
-    cheevoElement.classList.toggle("hardcore", cheevo.isHardcoreEarned)
+    cheevoElement.classList.toggle("hardcore", cheevo.isEarnedHardcore)
     cheevoElement.dataset.achivId = cheevo.ID;
 
     const subLevel = cheevo.level?.toString()?.split(".")[1];

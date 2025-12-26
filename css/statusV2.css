@@ -149,6 +149,10 @@
 .rp__game-info-content {
     min-width: 0;
     flex: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
 }
 
 .rp__game-platform {
@@ -158,7 +162,6 @@
     opacity: 0.8;
     /* padding-bottom: 0.25rem; */
     font-size: 1.1rem;
-    place-self: center start;
 }
 
 .rp__game-icons {
