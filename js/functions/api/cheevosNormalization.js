@@ -33,17 +33,24 @@ const normalizeAchievement = (achievement, gameData, cheevosDB) => {
 }
 const parseCheevoGroups = (gameData) => {
     const cheevos = Object.values(gameData.Achievements);
+    if (cheevos.length < 20) return;
     const groupRegex = /\[([^\]]+)\]/i;
     const groups = cheevos.reduce((groups, cheevo) => {
         const group = groupRegex.exec(cheevo.Title + cheevo.Description)?.[1];
-        if (group && !/continue|difficulty/i.test(group)) {
+        if (group && !/continue|difficult/i.test(group)) {
             cheevo.group = group;
             groups.add(group);
         }
 
         return groups;
-    }, new Set())
-    gameData.groups = [...groups]
+    }, new Set());
+    const groupsArray = [...groups].filter(group => cheevos.filter(c => c.group === group)?.length > 9);
+    if (groupsArray.length > 1) {
+        const etcGroup = "Other";
+        groupsArray.push(etcGroup);
+        cheevos.forEach(c => !groupsArray.includes(c.group) && (c.group = etcGroup));
+    }
+    gameData.groups = [...groupsArray];
 }
 export const normalizeCheevos = (gameData, cheevosDB = {}) => {
     parseCheevosGenres(gameData);
