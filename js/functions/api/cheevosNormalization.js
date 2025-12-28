@@ -64,7 +64,7 @@ export const normalizeCheevos = (gameData, cheevosDB = {}) => {
 }
 export const getNormalizedAotW = ({ AotwData, userName }) => {
     console.log(AotwData);
-    debugger;
+    // debugger;
     const userEarned = AotwData.Unlocks
         .find(user => user.User.toLowerCase() === userName?.toLowerCase()?.trim())
     return {

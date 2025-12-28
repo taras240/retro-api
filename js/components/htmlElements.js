@@ -17,7 +17,8 @@ export const buttonsHtml = {
     tweek: (onClick) => `<button class="header-button header-icon tweak-button tweak-icon" data-title="${ui.lang.widgetConfigHint}" onclick="${onClick}"></button>`,
 
     removeFromTarget: () => `<button class="header-button header-icon  delete-icon delete-from-target" data-title="${ui.lang.removeFromTargetHint}"></button>`,
-
+    pin: () => `<button class="header-button header-icon bookmark-icon pin-cheevo" data-title="**add/remove pin"></button>`,
+    togglePins: () => `<button class="header-button header-icon pins-icon toggle-pins" data-title="**toggle pins"></button>`,
     close: (onClick) => `<button class="header-icon header-button close-icon" onclick="${onClick}" data-title="${ui.lang.close}"></button>`,
 
     sort: (sectionID, onClick) => `<button class="header-button header-icon sort-icon" id="${sectionID}-sort-button" data-title="${ui.lang.sort}"></button>`,

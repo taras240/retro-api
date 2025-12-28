@@ -8,6 +8,7 @@ import { moveDirections, sumDirections } from "../enums/moveDirections.js";
 import { getHoveredEdge } from "../functions/hoveredEdges.js";
 import { buttonsHtml } from "../components/htmlElements.js";
 import { resizerHtml } from "../components/resizer.js";
+import { divHtml } from "../components/divContainer.js";
 
 export class Widget {
     widgetIcon = {
@@ -129,7 +130,8 @@ export class Widget {
         this.widgetIcon.element = document.getElementById(iconID);
 
     }
-    generateWidgetElement({ classes, id, title, headerElementsHtml, contentClasses }) {
+    generateWidgetElement({ classes, id, title, headerElementsHtml, contentClasses = ["widget-content__container"], contentHtml }) {
+        contentHtml ??= divHtml(contentClasses);
         const widget = document.createElement("section");
         widget.classList.add(...classes);
         widget.id = id;
@@ -140,7 +142,7 @@ export class Widget {
                 ${headerElementsHtml ?? ""}
                 ${buttonsHtml.close()}
             </div>
-            <div class="${contentClasses ? contentClasses.join(" ") : "widget-content__container"}"></div>
+            ${contentHtml}
             ${resizerHtml()}`;
         return widget;
     }

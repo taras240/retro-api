@@ -14,6 +14,7 @@ import { imageFilters } from "../enums/imageFilters.js";
 import { secondsToBadgeString } from "../functions/time.js";
 import { buttonsHtml } from "../components/htmlElements.js";
 import { cacheDataTypes } from "../enums/cacheDataTypes.js";
+import { divHtml } from "../components/divContainer.js";
 
 export class Target extends Widget {
     sectionCode = "-target";
@@ -153,6 +154,13 @@ export class Target extends Widget {
                         label: ui.lang.showCheevoUnlockRateBar,
                         checked: this.uiProps.showCheevoUnlockRateBar,
                         event: `onchange="ui.target.uiProps.showCheevoUnlockRateBar = this.checked;"`,
+                    },
+                    {
+                        type: inputTypes.CHECKBOX,
+                        id: "show-pins",
+                        label: "**Show pins",
+                        checked: this.uiProps.showPins,
+                        event: `onchange="ui.target.uiProps.showPins = this.checked;"`,
                     },
                 ]
             },
@@ -319,6 +327,7 @@ export class Target extends Widget {
         showPrevOverlay: true,
         contrastHighlight: false,
         mGameSelection: "",
+        showPins: false,
     }
     uiSetCallbacks = {
         autoscroll(value) {
@@ -394,9 +403,9 @@ export class Target extends Widget {
     initializeElements() {
         this.section = document.querySelector("#target_section");
         this.sectionID = this.section.id;
-        this.header = document.querySelector(".target-header_container");
-        this.container = document.querySelector(".target-container");
-
+        this.header = this.section.querySelector(".header-container");
+        this.container = this.section.querySelector(".target-container");
+        this.pinnedContainer = this.section.querySelector(".target__pinned-list")
         this.searchInput = this.section.querySelector("#target__searchbar");
 
         // this.moveToTopCheckbox = document.querySelector("#target-move-to-top");
@@ -404,19 +413,23 @@ export class Target extends Widget {
     generateWidget() {
         const widgetID = "target_section";
         const headerElementsHtml = `
+        ${buttonsHtml.togglePins()}
             ${buttonsHtml.filter(widgetID)}
             ${buttonsHtml.sort(widgetID)}
             ${buttonsHtml.tweek()}
             <input type="search" name="" id="target__searchbar" class="text-input target__search-bar" placeholder="${ui.lang.search}">
             ${buttonsHtml.external(widgetID)}
         `;
-
+        const contentHtml = `
+            ${divHtml(["target__pinned-list"])}
+            ${divHtml(["target-container", "content-container", "flex-main-list"])}
+        `
         const widgetData = {
             classes: ["target_section", "section", "compact-header"],
             id: widgetID,
             title: ui.lang.targetSectionName,
-            headerElementsHtml: headerElementsHtml,
-            contentClasses: ["target-container", "content-container", "flex-main-list"],
+            headerElementsHtml,
+            contentHtml,
         };
 
         const widget = this.generateWidgetElement(widgetData);
@@ -511,6 +524,9 @@ export class Target extends Widget {
         this.section.querySelector(`#${this.sectionID}-external_window-button`).addEventListener("click", event => {
             ui.target.toggleExternalWindow();
         });
+        this.header.querySelector(".toggle-pins")?.addEventListener("click", () => {
+            this.uiProps.showPins = !this.uiProps.showPins;
+        })
         this.container.addEventListener("click", (event) => {
             if (event.target.closest(".comments-button")) {
                 const cheevoID = event.target.closest(".target-achiv")?.dataset.achivId;
@@ -521,42 +537,88 @@ export class Target extends Widget {
                 const cheevo = watcher.CHEEVOS[cheevoID];
                 cheevo && cheevoPropsPopup().open(cheevo);
             }
+            else if (event.target.matches(".pin-cheevo")) {
+                const cheevo = event.target.closest(".target-achiv");
+                ui.target.toggleCheevoPin(cheevo);
+            }
             else if (event.target.matches(".delete-from-target")) {
                 const cheevo = event.target.closest(".target-achiv");
                 ui.target.deleteFromTarget(cheevo);
             }
         });
-        const dragElements = (container, onDragEnd) => {
+        this.pinnedContainer.addEventListener("click", (event) => {
+            if (event.target.closest(".comments-button")) {
+                const cheevoID = event.target.closest(".target-achiv")?.dataset.achivId;
+                cheevoID && showComments(cheevoID, 2);
+            }
+            else if (event.target.matches(".edit-cheevo-button")) {
+                const cheevoID = event.target.dataset.cheevoId;
+                const cheevo = watcher.CHEEVOS[cheevoID];
+                cheevo && cheevoPropsPopup().open(cheevo);
+            }
+            else if (event.target.matches(".pin-cheevo")) {
+                const cheevo = event.target.closest(".target-achiv");
+                ui.target.toggleCheevoPin(cheevo);
+            }
+            else if (event.target.matches(".delete-from-target")) {
+                const cheevo = event.target.closest(".target-achiv");
+                ui.target.deleteFromPinned(cheevo);
+            }
+        });
+        const dragElements = (container, onDragEnd, pull) => {
             new Sortable(container, {
                 group: {
-                    name: "cheevos", pull: false
+                    name: "cheevos", pull, put: true, push: "false"
                 },
                 animation: 100,
                 chosenClass: "dragged",
                 onAdd: function (evt) {
-                    const itemEl = evt.item;
-                    const id = itemEl.dataset.achivId;
-                    onDragEnd && onDragEnd(id);
+                    const element = evt.item;
+                    const cheevoID = element.dataset.achivId;
+                    element.remove();
+                    onDragEnd && onDragEnd(cheevoID);
+                },
+                onUpdate: () => {
+                    if (pull) return; //main container doesn't save order
+                    const pinnedIDs = [...container.querySelectorAll(".target-achiv")]?.map(elem => +elem.dataset.achivId);
+                    ui.target.savePinnedData(pinnedIDs);
+                    ui.target.fillPinnedItems(pinnedIDs);
+                    ui.target.markPinned();
+                },
+                onStart: (evt) => {
                 },
                 onEnd: () => ui.addEvents(),
             });
+
         }
         dragElements(this.container, (id) => {
             ui.target.pushCheevo(id);
             this.section.querySelector(".achiv-block")?.remove();
-        })
+        }, "clone")
+        dragElements(this.pinnedContainer, (id) => {
+            const dragToPinned = (cheevoID) => {
+                cheevoID = Number(cheevoID);
+                const pinnedIDs = config.gamesDB[watcher.GAME_DATA.ID]?.pinned ?? [];
+                const isPinned = pinnedIDs.includes(cheevoID);
+                if (isPinned) {
+                    return;
+                };
+                pinnedIDs.push(cheevoID);
+                ui.target.savePinnedData(pinnedIDs);
+                ui.target.fillPinnedItems(pinnedIDs);
+                ui.target.markPinned();
+            }
+            this.section.querySelector(".achiv-block")?.remove();
+            dragToPinned(id);
+        }, false)
         this.searchInput?.addEventListener("input", this.searchInputEvent)
     }
     searchInputEvent(event) {
         event.stopPropagation();
         const clearPrevQuery = () => {
-            [...ui.target.container.querySelectorAll('.target-achiv')].forEach(target => {
-                const id = target.dataset.achivId;
-                const description = target.querySelector(".list-item__text");
-                const header = target.querySelector('.target__cheevo-header a');
-                description && (description.innerText = watcher.CHEEVOS[id]?.Description);
-                header && (header.innerText = watcher.CHEEVOS[id]?.Title);
-            })
+            ui.target.container.querySelectorAll('span.badge.highlight-badge').forEach(el =>
+                el.replaceWith(el.innerText)
+            )
         }
         const markQuery = (query) => {
             const regex = new RegExp(`(${query})`, 'gi');
@@ -575,14 +637,13 @@ export class Target extends Widget {
             })
         }
         clearPrevQuery();
-        ui.target.applySort();
+
         const query = event.target.value;
         if (query && (query.length > 2 || /\d+/.test(query))) {
             markQuery(query);
-            const firstHighlight = document.querySelector('.badge.highlight-badge');
-            if (firstHighlight) {
-                firstHighlight.scrollIntoView({ behavior: ui.isCEF ? "auto" : "smooth", block: "center", });
-            }
+        }
+        else {
+            ui.target.applySort();
         }
     }
     setElementsValues() {
@@ -597,6 +658,7 @@ export class Target extends Widget {
         this.container.style.setProperty("--max-count", this.uiProps.fixedSizeCount);
         this.section.dataset.previewFilter = this.uiProps.lockedPreviewFilter;
         this.section.classList.toggle("contrast-highlight", this.uiProps.contrastHighlight);
+        this.section.classList.toggle("show-pins", this.uiProps.showPins);
     }
     setValues() {
         UI.applyPosition({ widget: this });
@@ -610,6 +672,8 @@ export class Target extends Widget {
         this.genreFilter = "";
         this.uiProps.autoClearTarget && this.clearEarned();
         this.uiProps.autoFillTarget && this.fillItems();
+        this.fillPinnedItems();
+        this.markPinned();
     }
     async updateEarnedAchieves({ earnedAchievementIDs }) {
         const animElement = () => {
@@ -624,23 +688,27 @@ export class Target extends Widget {
         const scrollPosition = this.container.scrollTop;
         for (let cheevoID of earnedAchievementIDs) {
             const cheevo = watcher.CHEEVOS[cheevoID];
-            const cheevoElement = this.container.querySelector(`.target-achiv[data-achiv-id='${cheevoID}']`);
-            if (cheevoElement) {
-                const animEl = animElement();
-                await scrollElementIntoView({ container: this.container, element: cheevoElement, scrollByX: false })
-                // cheevoElement.scrollIntoView({ behavior: ui.isCEF ? "auto" : "smooth", block: "center", });
-                await delay(600);
-                cheevoElement.classList.add("earned", "show-hard-anim");
-                cheevoElement.classList.toggle("hardcore", cheevo?.isHardcoreEarned);
-                cheevo.isHardcoreEarned && (cheevoElement.dataset.DateEarnedHardcore = cheevo.DateEarnedHardcore);
-                cheevoElement.dataset.DateEarned = cheevo.DateEarned;
-                cheevoElement.appendChild(animEl);
-                setTimeout(() => {
-                    cheevoElement.classList.remove("show-hard-anim");
-                    animEl?.remove();
-                }, 2000);
-                await delay(2100);
+            const cheevoElements = [...this.section.querySelectorAll(`.target-achiv[data-achiv-id='${cheevoID}']`)];
+            for (const cheevoElement of cheevoElements) {
+                if (cheevoElement) {
+                    const animEl = animElement();
+                    const container = cheevoElement.parentElement;
+                    await scrollElementIntoView({ container, element: cheevoElement, scrollByX: false })
+                    // cheevoElement.scrollIntoView({ behavior: ui.isCEF ? "auto" : "smooth", block: "center", });
+                    await delay(600);
+                    cheevoElement.classList.add("earned", "show-hard-anim");
+                    cheevoElement.classList.toggle("hardcore", cheevo?.isHardcoreEarned);
+                    cheevo.isHardcoreEarned && (cheevoElement.dataset.DateEarnedHardcore = cheevo.DateEarnedHardcore);
+                    cheevoElement.dataset.DateEarned = cheevo.DateEarned;
+                    cheevoElement.appendChild(animEl);
+                    setTimeout(() => {
+                        cheevoElement.classList.remove("show-hard-anim");
+                        animEl?.remove();
+                    }, 2000);
+                    await delay(2100);
+                }
             }
+
         };
         this.container.scrollTo({
             top: scrollPosition,
@@ -702,11 +770,7 @@ export class Target extends Widget {
 
         return targetAchievements.length > 0;
     }
-    pushCheevo(cheevoID) {
-        // if achiv already exist in target - return
-        if (this.isAchievementInTargetSection({ ID: cheevoID })) {
-            return;
-        }
+    getCheevoElement(cheevoID) {
         const achievement = watcher.CHEEVOS[cheevoID];
         const targetElement = document.createElement("li");
 
@@ -747,7 +811,7 @@ export class Target extends Widget {
             <div class="target__buttons-container">
                 ${buttonsHtml.editCheevoProps(achievement.ID)}
                 ${buttonsHtml.comments()}
-                ${buttonsHtml.removeFromTarget()}
+                ${buttonsHtml.pin()}
             </div>
             <div class="prev">
                 <div class="prev-bg"></div>
@@ -788,7 +852,18 @@ export class Target extends Widget {
         setClassesToElement();
         setDataToElement();
         setElementHtml();
+        return targetElement;
+    }
+    pushCheevo(cheevoID) {
+
+        // if achiv already exist in target - return
+        if (this.isAchievementInTargetSection({ ID: cheevoID })) {
+            return;
+        }
+        const targetElement = this.getCheevoElement(cheevoID);
+
         this.container.appendChild(targetElement);
+
         // for one element adding only
         if (!this.isDynamicAdding) {
             this.applyFilter();
@@ -796,6 +871,18 @@ export class Target extends Widget {
         }
         // if adding earned element
         this.delayedRemove();
+
+    }
+    markPinned() {
+        const gameID = watcher.GAME_DATA?.ID;
+        const pinnedIDs = config.gamesDB[gameID]?.pinned ?? [];
+        this.section.querySelectorAll(".target-achiv")
+            .forEach(cheevoElement => {
+                const cheevoID = +cheevoElement.dataset.achivId;
+                const isPinned = pinnedIDs.includes(cheevoID);
+                cheevoElement.classList.toggle("pinned", isPinned)
+            });
+
     }
     refreshCheevo(id) {
         this.container.querySelector(`.target-achiv[data-achiv-id="${id}"]`)?.remove();
@@ -889,6 +976,13 @@ export class Target extends Widget {
         });
 
     }
+    deleteFromPinned(button) {
+        const element = button.closest(".target-achiv");
+        element?.classList.add('removing');
+
+        setTimeout(() => element?.remove(), 0);
+
+    }
     deleteFromTarget(button) {
         const element = button.closest(".target-achiv");
         element?.classList.add('removing');
@@ -911,6 +1005,42 @@ export class Target extends Widget {
                 setTimeout(() => element.remove(), this.uiProps.autoClearTargetTime * 1000);
             });
         }
+    }
+    pushToPins(cheevoID) {
+        if (!watcher.CHEEVOS[cheevoID]) return;
+        const pinnedCheevoElement = this.getCheevoElement(cheevoID);
+        this.pinnedContainer.appendChild(pinnedCheevoElement);
+    }
+    fillPinnedItems(pinnedIDs) {
+        this.pinnedContainer.innerHTML = "";
+        const gameID = watcher.GAME_DATA?.ID;
+        pinnedIDs ??= config.gamesDB[gameID]?.pinned ?? [];
+        pinnedIDs.forEach(cheevoID => {
+            // const cheevo = watcher.CHEEVOS[cheevoID];
+            this.pushToPins(cheevoID);
+        })
+
+    }
+    toggleCheevoPin(cheevoElement) {
+        const gameID = watcher.GAME_DATA?.ID;
+        let pinnedIDs = config.gamesDB[gameID]?.pinned ?? [];
+        const cheevoID = +cheevoElement.dataset?.achivId ?? -1;
+        const isPinned = pinnedIDs.includes(cheevoID);
+        if (isPinned) {
+            pinnedIDs = pinnedIDs.filter(id => id !== cheevoID);
+            this.pinnedContainer.querySelectorAll(`.target-achiv[data-achiv-id="${cheevoID}"]`).forEach(pin => {
+                pin.remove()
+            })
+        }
+        else {
+            pinnedIDs.push(cheevoID);
+            this.pushToPins(cheevoID);
+        }
+        this.savePinnedData(pinnedIDs, gameID);
+
+        this.markPinned();
+
+
     }
     fillItems() {
         const addHeaderBadges = (genres = []) => {
@@ -979,7 +1109,7 @@ export class Target extends Widget {
         </div>
       `;
         this.section.querySelector(".target__aotw-container")?.remove();
-        this.section.insertBefore(aotwElement, this.container);
+        this.header.after(aotwElement);
     }
     async hideAotw() {
         this.section.querySelector(`.target__aotw-container`)?.remove();
@@ -992,5 +1122,12 @@ export class Target extends Widget {
             }
         })
     }
-
+    savePinnedData(pinnedIDs, gameID) {
+        gameID ??= watcher.GAME_DATA.ID;
+        if (!config.gamesDB[gameID]) {
+            config.gamesDB[gameID] = {};
+        }
+        config.gamesDB[gameID].pinned = pinnedIDs;
+        config.writeConfiguration();
+    }
 }

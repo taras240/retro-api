@@ -29,6 +29,7 @@ export class APIWorker {
   getUrl({ endpoint, targetUser, gameID, minutes, apiKey, userName, achievesCount, count, offset, type, sort }) {
     if (ui.isTest) {
       this.baseUrl = `${window.location.origin}/json/apiTemplates/`;
+      return this.getTestUrl(endpoint)
     }
     let url = new URL(endpoint, this.baseUrl);
 
@@ -340,11 +341,10 @@ export class APIWorker {
     });
     return fetch(url).then((resp) => resp.json());
   }
-  doTestEndpoint({ endpoint }) {
-    let url = this.getUrl({
-      endpoint: endpoint,
-    });
-    return fetch(url).then((resp) => resp.json()).then(obj => console.log(obj));
+  getTestUrl(endpoint) {
+
+    endpoint = endpoint.replace(".php", ".json");
+    return this.baseUrl + endpoint;
   }
 
   async updateCompletionProgress({ savedArray = [], completionProgress = [], batchSize = 500 }) {

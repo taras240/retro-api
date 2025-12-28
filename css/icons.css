@@ -254,6 +254,41 @@
     mask-image: url(../assets/img/delete.svg);
 }
 
+.pins-icon {
+    mask-image: url(../assets/img/bookmark.svg);
+
+}
+
+.show-pins .pins-icon {
+    mask-image: url(../assets/img/bookmark_checked.svg);
+}
+
+.add-bookmark-icon {
+    mask-image: url(../assets/img/bookmark_add.svg);
+}
+
+.bookmark-icon {
+    mask-image: url(../assets/img/bookmark_add.svg);
+}
+
+
+
+.pinned .bookmark-icon {
+    mask-image: url(../assets/img/bookmark_added.svg);
+}
+
+.pinned .bookmark-icon:hover {
+    mask-image: url(../assets/img/bookmark_remove.svg);
+}
+
+.bookmarked-icon {
+    mask-image: url(../assets/img/bookmark_added.svg);
+}
+
+.remove-bookmark-icon {
+    mask-image: url(../assets/img/bookmark_remove.svg);
+}
+
 .q-icon {
     mask-image: url(../assets/img/help.svg);
 }

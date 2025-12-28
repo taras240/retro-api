@@ -9,7 +9,7 @@
   display: flex;
   flex-direction: column;
   cursor: grab;
-
+  overflow-y: hidden;
 }
 
 /* ! fixed size*/
@@ -27,6 +27,7 @@
   max-height: calc(var(--max-count)*calc(var(--cheevo-fixed-height) + 1px) + 3px);
 }
 
+
 .target_section.fixed-size .target__cheevo-details {
   justify-content: space-evenly;
 }
@@ -36,6 +37,30 @@
 
 .target_section.hide-bg {
   background: transparent;
+}
+
+.target__pinned-list {
+  --secondary-color: var(--main-color);
+  display: flex;
+  display: none;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1px;
+  /* padding: 0.; */
+  height: fit-content;
+  max-height: calc(3 * 6.5rem);
+  overflow: scroll;
+  /* border: 1px solid var(--accent-color); */
+  border-bottom: 2px solid var(--accent-color);
+}
+
+.show-pins .target__pinned-list {
+  display: flex;
+}
+
+.target__pinned-list>* {
+  flex: 1 1 auto;
+
 }
 
 .target_section.hide-bg:hover {
@@ -59,7 +84,7 @@
   color: var(--font-color);
   background: var(--secondary-color);
   display: flex;
-  flex-basis: 25rem;
+  flex-basis: 30rem;
   transition: 0.1s;
 }
 
@@ -499,14 +524,13 @@
   height: 100%;
   min-height: 6rem;
   aspect-ratio: 1;
-  mask-image: linear-gradient(to right, black 50%, transparent);
+  width: auto;
 }
 
 .target__aotw-container .prev-img {
   filter: none;
   height: 100%;
   aspect-ratio: 1;
-
 }
 
 
