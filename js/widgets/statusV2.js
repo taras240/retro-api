@@ -14,7 +14,7 @@ import { delay } from "../functions/delay.js";
 import { formatTime } from "../functions/time.js";
 import { gamePropsPopup } from "../components/gamePropsPopup.js";
 import { cheevoTypes } from "../enums/cheevoTypes.js";
-import { gameImageUrl, gameUrl } from "../functions/raLinks.js";
+import { cheevoImageUrl, gameImageUrl, gameUrl } from "../functions/raLinks.js";
 import { infiniteLineScrolling } from "../functions/infiniteLineScrolling.js";
 import { generateMagicLineText } from "../functions/tickerTextGenerator.js";
 import { inputTypes } from "../components/inputElements.js";
@@ -30,7 +30,7 @@ import { resizerHtml } from "../components/resizer.js";
 import { tickerHtml } from "../components/statusWidget/ticker.js";
 import { richPresenceHtml } from "../components/statusWidget/richPresence.js";
 import { indicatorHtml } from "../components/statusWidget/statusIndicator.js";
-import { statusThemes } from "../enums/statusThemes.js";
+import { statusStyles } from "../enums/statusThemes.js";
 import { StatusPanel } from "../removed/status.js";
 import { alertHtml, updateAlertContainer } from "../components/statusWidget/alert.js";
 import { gameInfoHtml } from "../components/statusWidget/gameInfo.js";
@@ -50,6 +50,10 @@ export class Status extends Widget {
         onChangeEvent: `ui['${this.widgetName}'].VISIBLE = this.checked`,
         iconClass: "status-icon",
     };
+    static themes = {
+        legacy: "legacy",
+        default: "default"
+    }
     get contextMenuItems() {
         return [
             {
@@ -65,7 +69,7 @@ export class Status extends Widget {
                     }
                 }),
             },
-            {
+            this.theme !== Status.themes.legacy ? {
                 label: ui.lang.elements,
                 elements: [
                     {
@@ -97,7 +101,7 @@ export class Status extends Widget {
                         event: `onchange="ui['${this.widgetName}'].uiProps.showProgressbar = this.checked"`,
                     },
                 ],
-            },
+            } : "",
             {
                 label: ui.lang.infoPanel,
                 elements: Object.values(gameInfoTypes).map(type =>
@@ -113,7 +117,7 @@ export class Status extends Widget {
             },
             {
                 label: ui.lang.style,
-                elements: Object.values(statusThemes).map(theme =>
+                elements: Object.values(statusStyles).map(theme =>
                 ({
                     type: inputTypes.RADIO,
                     name: "status-theme",
@@ -194,6 +198,20 @@ export class Status extends Widget {
                     )
                 ],
             },
+            {
+                type: inputTypes.CHECKBOX,
+                id: "game-bg",
+                label: ui.lang.gameBg,
+                checked: this.uiProps.showGameBg,
+                event: `onchange="ui['${this.widgetName}'].uiProps.showGameBg = this.checked;"`,
+            },
+            {
+                type: inputTypes.CHECKBOX,
+                id: "show-target-preview",
+                label: ui.lang.focusCheevoPreview,
+                checked: this.uiProps.showTargetPreview,
+                event: `onchange="ui['${this.widgetName}'].uiProps.showTargetPreview = this.checked;"`,
+            },
 
         ];
     }
@@ -205,9 +223,20 @@ export class Status extends Widget {
         showProgressbar: true,
         showProgression: true,
         progressType: progressTypes.cheevos,
-        statusTheme: statusThemes.DEFAULT,
-        timePosition: timePosition.normal,
-        gameInfoType: gameInfoTypes.icons,
+        statusTheme: statusStyles.DEFAULT,
+        timePosition: this.theme === Status.themes.legacy ? timePosition.background : timePosition.normal,
+        gameInfoType: this.theme === Status.themes.legacy ? gameInfoTypes.progressbar : gameInfoTypes.icons,
+        showGameBg: false,
+        showTargetPreview: false,
+    }
+    uiDefaultValuesLegacy = {
+        showRichPresence: false,
+        showTicker: false,
+        showProgressbar: false,
+        showProgression: false,
+        statusTheme: statusStyles.THICK,
+        timePosition: timePosition.background,
+        gameInfoType: gameInfoTypes.progression,
     }
     uiSetCallbacks = {
         time() {
@@ -222,6 +251,9 @@ export class Status extends Widget {
         },
         gameInfoType() {
             this.updateGameInfo();
+        },
+        showTargetPreview() {
+            this.updateFocusPreview();
         }
     };
 
@@ -232,9 +264,16 @@ export class Status extends Widget {
             return value * 60;
         }
     };
+    loadDefaultValues() {
+        if (this.theme === Status.themes.legacy) {
+            Object.assign(this.uiDefaultValues, this.uiDefaultValuesLegacy);
+        }
+    }
     constructor(widgetName = "status", isLegacy = false) {
         super();
+        this.theme = isLegacy ? Status.themes.legacy : Status.themes.default;
         this.widgetName = widgetName;
+        this.loadDefaultValues();
         this.generateWidget(isLegacy);
         this.addWidgetIcon();
         // this.initializeElements();
@@ -323,7 +362,7 @@ export class Status extends Widget {
         const widget = document.createElement("section");
         widget.classList.add(...classes);
         widget.id = id;
-        const theme = config.ui?.[id]?.statusTheme ?? statusThemes.DEFAULT;
+        const theme = config.ui?.[id]?.statusTheme ?? statusStyles.DEFAULT;
         const isWatching = watcher?.IS_WATCHING;
 
         widget.innerHTML = isLegacy ? legacyThemeHtml() : modernThemeHtml();;
@@ -385,9 +424,11 @@ export class Status extends Widget {
         this.richPresenceElement?.classList.toggle("hidden", !this.uiProps.showRichPresence)
         this.gameElements.time && (this.gameElements.time.dataset.position = this.uiProps.timePosition);
 
-        this.section.dataset.theme = this.uiProps.statusTheme ?? statusThemes.DEFAULT;
+        this.section.dataset.theme = this.uiProps.statusTheme ?? statusStyles.DEFAULT;
+        this.section.classList.toggle("game-bg", this.uiProps.showGameBg);
     }
     doUpdateAnimation() {
+        if (this.theme === Status.themes.legacy) return;
         sweepEffect(this.section);
     }
     gameChangeEvent(isNewGame = false) {
@@ -397,6 +438,7 @@ export class Status extends Widget {
         this.fillGameData();
         this.doUpdateAnimation();
         this.updateTicker();
+
     }
     updateTicker() {
         if (!this.tickerElement) return;
@@ -408,11 +450,33 @@ export class Status extends Widget {
         });
         this.uiProps.showTicker && this.ticker.startScrolling();
     }
+    updateFocusPreview() {
+        const isHardMode = this.IS_HARD_MODE;
+        const focusCheevo = Object.values(watcher.CHEEVOS)
+            .filter(c => filterBy.progression(c))
+            .sort((a, b) => sortBy.default(a, b))
+            .find(c => !(isHardMode ? c.isEarnedHardcore : c.isEarned));
+
+        if (focusCheevo && this.uiProps.showTargetPreview) {
+            this.section.querySelector(".rp__game-image")?.setAttribute(
+                "src",
+                cheevoImageUrl(focusCheevo)
+            );
+        }
+        else {
+            this.section.querySelector(".rp__game-image")?.setAttribute(
+                "src",
+                gameImageUrl(watcher.GAME_DATA?.ImageIcon)
+            );
+        }
+
+    }
     updateProgressionBar() {
         this.section
             .querySelectorAll(".rp__progression-container")
             ?.forEach(container => {
                 updateProgressionBar(container, watcher?.GAME_DATA, this.IS_HARD_MODE);
+
                 scrollElementIntoView({
                     container,
                     element: container.querySelector(`.rp__progression-points .focus`),
@@ -473,10 +537,11 @@ export class Status extends Widget {
     }
     fillGameData() {
         const fillGameInfoData = () => {
-            const { ImageIcon, Title, badges, ConsoleName, ConsoleID, ID, NumAchievements, totalPoints, retroRatio } = watcher.GAME_DATA;
+            const { ImageIcon, ImageIngame, Title, badges, ConsoleName, ConsoleID, ID, NumAchievements, totalPoints, retroRatio } = watcher.GAME_DATA;
 
             this.gameElements.icon.src = gameImageUrl(ImageIcon);
 
+            this.section.style.setProperty("--bg-image", `url(${gameImageUrl(ImageIngame)})`);
             this.gameElements.title.innerHTML = `
                 ${Title || ""}
                 ${generateBadges(badges)}
@@ -494,6 +559,7 @@ export class Status extends Widget {
         this.updateRichPresence();
         this.updateGameInfo();
         this.updateProgressionBar();
+        this.updateFocusPreview();
         this.updateProgressBar();
         this.startAutoScrollElement(this.richPresenceElement, true, 10 * 1000);
     }
@@ -501,6 +567,7 @@ export class Status extends Widget {
         earnedAchievementIDs?.length > 0 && (this.IS_HARD_MODE = !!watcher.CHEEVOS[earnedAchievementIDs[0]].isEarnedHardcore);
 
         this.updateProgressionBar();
+        this.updateFocusPreview();
         this.updateProgressBar();
         this.updateTicker();
         this.doUpdateAnimation();
@@ -508,9 +575,9 @@ export class Status extends Widget {
         // this.gameChangeEvent();
     }
     updateRichPresence(richPresenceText) {
-        if (this.richPresenceElement) {
-            this.richPresenceElement.innerText = richPresenceText || ui.lang.richPresence;
-        }
+        this.section.querySelectorAll(".rp__rich-presence")?.forEach(el =>
+            el.innerText = richPresenceText || ui.lang.richPresence
+        )
     }
     alertsQuery = [];
     addAlertsToQuery(elements) {

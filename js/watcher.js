@@ -231,7 +231,6 @@ export class Watcher {
             const gameData = await apiWorker.getGameInfoAndProgress({ gameID: gameID, withTimesData: true });
             this.GAME_DATA = gameData;
         } catch (error) {
-            //this.statusPanel.frontSide.watchButton.classList.add("error");
             this.stop;
             console.error(error);
         }

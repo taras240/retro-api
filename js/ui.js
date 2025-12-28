@@ -400,7 +400,7 @@ export class UI {
   // Функція для зупинки слідкування за досягненнями
   stopWatching() {
     ui.IS_WATCHING = false;
-    this.statusPanel.frontSide.watchButton.classList.remove("active");
+    // this.statusPanel.frontSide.watchButton.classList.remove("active");
     clearInterval(ui.apiTrackerInterval);
   }
 

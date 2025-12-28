@@ -1,4 +1,4 @@
-export const statusThemes = Object.freeze({
+export const statusStyles = Object.freeze({
     DEFAULT: "default",
     THICK: "thick",
 })
