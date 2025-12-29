@@ -48,7 +48,14 @@ const parseCheevoGroups = (gameData) => {
     if (groupsArray.length > 1) {
         const etcGroup = "Other";
         groupsArray.push(etcGroup);
-        cheevos.forEach(c => !groupsArray.includes(c.group) && (c.group = etcGroup));
+        cheevos.forEach(c => {
+            if (!groupsArray.includes(c.group)) {
+                const cheevoText = c.Title + c.Description;
+                const groupTestRegex = (g) => new RegExp(`[\\(\\[]+${g}[\\]\\)]+`, "i")
+                const matchGroup = groupsArray.find(g => groupTestRegex(g).test(cheevoText))
+                c.group = matchGroup || etcGroup;
+            }
+        });
     }
     gameData.groups = [...groupsArray];
 }
