@@ -175,7 +175,8 @@ export const normalizeGameData = (gameData, gamesDB = {}, cheevosDB = {}) => {
     addPointsData(gameData);
     addCompletionData(gameData);
     addSessions(gameData);
-    addSavedData(gameData, gamesDB[gameData.ID])
+    addSavedData(gameData, gamesDB[gameData.ID]);
+    gameData.UserTotalPlaytime && (gameData.TimePlayed = gameData.UserTotalPlaytime);
 }
 export const mergeWithTimesData = (gameData, timesData) => {
     const mergeCheevoData = (gameData, cheevoData, cheevoTimes) => {
