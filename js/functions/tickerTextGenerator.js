@@ -3,7 +3,7 @@ import { config, configData } from "../script.js";
 import { secondsToBadgeString } from "./time.js";
 
 export function generateMagicLineText(gameData, sessionData, userData) {
-    console.log(userData)
+    // console.log(userData)
     const space = `&nbsp;&nbsp;&middot;&nbsp;&nbsp;`;
     if (!gameData) return `no game data${space}`
     const stats = {

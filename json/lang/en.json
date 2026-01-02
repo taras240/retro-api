@@ -65,7 +65,7 @@
     "duration": "Duration",
     "cheevos": "Achievements",
     "softpoints": "Soft Points",
-    "gameTime": "Game Time",
+    "gameTime": "Total Game Time",
     "sessionGameTime": "Session Game Time",
     "timer": "Timer",
     "min": "min.",
@@ -240,5 +240,6 @@
     "point": "point",
     "retropoint": "retroPoint",
     "thick": "Thick",
-    "multigame": "Multigame"
+    "multigame": "Multigame",
+    "sessionTime": "Session Time"
 }

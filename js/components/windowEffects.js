@@ -4,5 +4,5 @@ export const sweepEffect = (container) => {
     const sweepElement = document.createElement("div");
     sweepElement.classList.add("sweep-effect-element");
     container.appendChild(sweepElement);
-    setTimeout(() => sweepElement?.remove(), 10000);
+    setTimeout(() => sweepElement?.remove(), 1000);
 }

@@ -164,7 +164,7 @@ export class Status extends Widget {
                         type: inputTypes.RADIO,
                         name: "context_game-time",
                         id: "show-totalTime",
-                        label: ui.lang.totalTime,
+                        label: ui.lang.sessionTime,
                         checked: this.uiProps.time == "totalSessionTime",
                         event: `onclick="ui['${this.widgetName}'].uiProps.time = 'totalSessionTime';"`,
                     },
@@ -271,17 +271,26 @@ export class Status extends Widget {
     }
     constructor(widgetName = "status", isLegacy = false) {
         super();
-        this.theme = isLegacy ? Status.themes.legacy : Status.themes.default;
-        this.widgetName = widgetName;
+        this.setWidgetData(widgetName, isLegacy);
         this.loadDefaultValues();
-        this.generateWidget(isLegacy);
+        this.generateWidget();
         this.addWidgetIcon();
         // this.initializeElements();
         UI.applyPosition({ widget: this });
         this.setElementsValues();
         this.addEvents();
     }
-
+    setWidgetData(widgetName, isLegacy) {
+        this.widgetName = widgetName;
+        this.theme = isLegacy ? Status.themes.legacy : Status.themes.default;
+        this.widgetIcon = {
+            description: "status widget",
+            iconID: `side-panel__${widgetName}`,
+            onChangeEvent: `ui['${widgetName}'].VISIBLE = this.checked`,
+            iconClass: "status-icon",
+            badgeLabel: isLegacy && "compact",
+        };
+    }
     initializeElements(widget) {
         this.section = widget;
         this.sectionID = this.section.id;
@@ -314,9 +323,11 @@ export class Status extends Widget {
         this.tickerElement = this.section.querySelector(".rp__ticker");
 
     }
-    generateWidget(isLegacy) {
+    generateWidget() {
+        const isLegacy = this.theme === Status.themes.legacy;
         const widgetID = isLegacy ? "update-section" : "rp__section";
         const headerElementsHtml = `
+            ${buttonsHtml.tweek()}
         `;
 
         const widgetData = {
@@ -395,6 +406,9 @@ export class Status extends Widget {
             else if (event.target.matches(".game-props-button")) {
                 event.stopPropagation();
                 gamePropsPopup().open(watcher.GAME_DATA);
+            }
+            else if (event.target.matches(".tweak-button")) {
+                this.contextMenuItems && ui.settings.openSettings(this.contextMenuItems);
             }
             else if (event.target.matches(".close-icon")) {
                 event.stopPropagation();
@@ -581,6 +595,8 @@ export class Status extends Widget {
     }
     alertsQuery = [];
     addAlertsToQuery(elements) {
+        console.log("alerts hidden", elements)
+        return;
         // if (!this.SHOW_NEW_ACHIV) return;
         if (this.alertsQuery.length > 0) {
             this.alertsQuery = [...this.alertsQuery, ...elements];

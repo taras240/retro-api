@@ -266,5 +266,8 @@ input[type="checkbox"]:checked+.side-panel_input::after {
 .side-panel__badge {
     position: absolute;
     top: 50%;
-    right: 5px;
+    right: 0;
+    /* z-index: -1; */
+    pointer-events: none;
+    opacity: 0.8;
 }
