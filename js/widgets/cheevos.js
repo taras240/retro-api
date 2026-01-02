@@ -142,7 +142,15 @@ export class AchievementsBlock extends Widget {
                 ]
 
 
-            }
+            },
+            {
+                type: inputTypes.CHECKBOX,
+                id: `${this.sectionID}-show-borders`,
+                label: ui.lang.showBorders,
+                checked: this.uiProps.showBorders,
+                event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].uiProps.showBorders = this.checked;"`,
+            },
+
 
         ];
     }
@@ -240,6 +248,7 @@ export class AchievementsBlock extends Widget {
         reverseFilter: false,
         lockedPreviewFilter: imageFilters.GRAYSCALE,
         mGameSelection: "",
+        showBorders: true,
     }
     uiSetCallbacks = {
         ACHIV_MIN_SIZE(value) {
@@ -382,7 +391,7 @@ export class AchievementsBlock extends Widget {
         this.container.style.alignContent = this.uiProps.stretchAchievements ? "space-around" : "start";
         this.container.style.justifyContent = this.uiProps.stretchAchievements ? "space-around" : "center";
         this.section.dataset.previewFilter = this.uiProps.lockedPreviewFilter;
-
+        this.section.classList.toggle("borderless", !this.uiProps.showBorders);
     }
     setValues() {
         UI.applyPosition({ widget: this });

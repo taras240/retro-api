@@ -172,6 +172,10 @@
   display: none;
 }
 
+.achivs.borderless .preview-container {
+  border: none !important;
+}
+
 .achiv-block.hidden .preview-container {
   opacity: 0.2;
 }

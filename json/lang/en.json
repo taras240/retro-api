@@ -241,5 +241,6 @@
     "retropoint": "retroPoint",
     "thick": "Thick",
     "multigame": "Multigame",
-    "sessionTime": "Session Time"
+    "sessionTime": "Session Time",
+    "showBorders": "Borders"
 }

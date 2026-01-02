@@ -224,8 +224,8 @@ export class Status extends Widget {
         showProgression: true,
         progressType: progressTypes.cheevos,
         statusTheme: statusStyles.DEFAULT,
-        timePosition: this.theme === Status.themes.legacy ? timePosition.background : timePosition.normal,
-        gameInfoType: this.theme === Status.themes.legacy ? gameInfoTypes.progressbar : gameInfoTypes.icons,
+        timePosition: timePosition.normal,
+        gameInfoType: gameInfoTypes.icons,
         showGameBg: false,
         showTargetPreview: false,
     }
