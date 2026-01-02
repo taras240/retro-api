@@ -28,7 +28,6 @@ import { Games } from "./widgets/games.js";
 // import { Aotw } from "./widgets/aotw.js";
 // import { Status } from "./widgets/statusV2.js";
 import { Status } from "./widgets/statusV2.js";
-import { TwitchIntegration } from "./twitch.js";
 import { GameList } from "./widgets/gamesList.js";
 import { Links } from "./widgets/links.js";
 import { alertTypes } from "./enums/alerts.js";
@@ -52,8 +51,7 @@ export class UI {
   STICK_MARGIN = 1;
   STICK_TOLERANCE = 7;
   hltb = {};
-  // isTest = true;
-  twitchClient = new TwitchIntegration();
+  isTest = false;
   gamePopup = () => gamePropsPopup();
   constructor() {
     this.initUI();
@@ -70,12 +68,20 @@ export class UI {
       const lang = await langRep.json();
       this.lang = { ...defLang, ...lang };
     }
-    await delay(25);
+    // await delay(25);
   }
 
   async initUI() {
+    // Вимкнення вікна завантаження
+    setTimeout(
+      () =>
+        document.querySelector(".loading-section")?.classList.add("hidden"),
+      1
+    );
     await this.loadLang();
+
     await loadSections();
+
     // Ініціалізація елементів
     this.initializeElements();
 
@@ -96,12 +102,7 @@ export class UI {
         })
       }, 3000);
     }
-    // Вимкнення вікна завантаження
-    setTimeout(
-      () =>
-        document.querySelector(".loading-section").classList.add("hidden"),
-      500
-    );
+
 
   }
   initializeElements() {
