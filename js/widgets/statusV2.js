@@ -577,7 +577,7 @@ export class Status extends Widget {
         this.updateProgressionBar();
         this.updateFocusPreview();
         this.updateProgressBar();
-        this.startAutoScrollElement(this.richPresenceElement, true, 10 * 1000);
+        // this.startAutoScrollElement(this.richPresenceElement, true, 10 * 1000);
     }
     updateProgress({ earnedAchievementIDs }) {
         earnedAchievementIDs?.length > 0 && (this.IS_HARD_MODE = !!watcher.CHEEVOS[earnedAchievementIDs[0]].isEarnedHardcore);
