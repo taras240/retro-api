@@ -39,7 +39,6 @@ import { parseCurrentGameLevel } from "./functions/parseRP.js";
 import { dialogWindow } from "./components/dialogWindow.js";
 import { inputTypes } from "./components/inputElements.js";
 import { initBgAnimation } from "./functions/bgAnimations.js";
-import { Recap } from "./widgets/recap.js";
 
 
 
@@ -108,7 +107,6 @@ export class UI {
   }
   initializeElements() {
     this.app = document.querySelector(".wrapper");
-    this.recap = new Recap();
     // this.statusPanel = new StatusPanel();
     this.statusPanel = new Status("statusPanel", true);
     this.status = new Status("status", false);
