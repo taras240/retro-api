@@ -13,12 +13,7 @@ const gameInfoContent = (game, theme) => {
         <div class="rp__game-info">
             <a class="rp__game-title" target="_blank"></a>
             <div class="rp__game-info-grid">
-                
-                    
-                  <div class="rp__game-info-content">
-                  ${progressBarHtml()}
-                    <!--${gameInfoIconsHtml()}-->
-                    </div>
+                <div class="rp__game-info-content"></div>
                 <div class="rp__game-time"></div>
             </div>
         </div>

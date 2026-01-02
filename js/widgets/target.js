@@ -688,27 +688,23 @@ export class Target extends Widget {
         const scrollPosition = this.container.scrollTop;
         for (let cheevoID of earnedAchievementIDs) {
             const cheevo = watcher.CHEEVOS[cheevoID];
-            const cheevoElements = [...this.section.querySelectorAll(`.target-achiv[data-achiv-id='${cheevoID}']`)];
-            for (const cheevoElement of cheevoElements) {
-                if (cheevoElement) {
-                    const animEl = animElement();
-                    const container = cheevoElement.parentElement;
-                    await scrollElementIntoView({ container, element: cheevoElement, scrollByX: false })
-                    // cheevoElement.scrollIntoView({ behavior: ui.isCEF ? "auto" : "smooth", block: "center", });
-                    await delay(600);
-                    cheevoElement.classList.add("earned", "show-hard-anim");
-                    cheevoElement.classList.toggle("hardcore", cheevo?.isHardcoreEarned);
-                    cheevo.isHardcoreEarned && (cheevoElement.dataset.DateEarnedHardcore = cheevo.DateEarnedHardcore);
-                    cheevoElement.dataset.DateEarned = cheevo.DateEarned;
-                    cheevoElement.appendChild(animEl);
-                    setTimeout(() => {
-                        cheevoElement.classList.remove("show-hard-anim");
-                        animEl?.remove();
-                    }, 2000);
-                    await delay(2100);
-                }
+            const cheevoElement = this.container.querySelector(`.target-achiv[data-achiv-id='${cheevoID}']`);
+            if (cheevoElement) {
+                const animEl = animElement();
+                await scrollElementIntoView({ container: this.container, element: cheevoElement, scrollByX: false })
+                // cheevoElement.scrollIntoView({ behavior: ui.isCEF ? "auto" : "smooth", block: "center", });
+                await delay(600);
+                cheevoElement.classList.add("earned", "show-hard-anim");
+                cheevoElement.classList.toggle("hardcore", cheevo?.isEarnedHardcore);
+                cheevo.isEarnedHardcore && (cheevoElement.dataset.DateEarnedHardcore = cheevo.DateEarnedHardcore);
+                cheevoElement.dataset.DateEarned = cheevo.DateEarned;
+                cheevoElement.appendChild(animEl);
+                setTimeout(() => {
+                    cheevoElement.classList.remove("show-hard-anim");
+                    animEl?.remove();
+                }, 2000);
+                await delay(2100);
             }
-
         };
         this.container.scrollTo({
             top: scrollPosition,
@@ -782,7 +778,7 @@ export class Target extends Widget {
             targetElement.classList.toggle("show-level", this.uiProps.showLevel);
             targetElement.classList.toggle("show-genre", this.uiProps.showGenre);
             targetElement.classList.toggle("earned", achievement.isEarned);
-            targetElement.classList.toggle("hardcore", achievement.isHardcoreEarned);
+            targetElement.classList.toggle("hardcore", achievement.isEarnedHardcore);
             targetElement.classList.toggle("rare", achievement.difficulty > 7);
         }
         const setDataToElement = () => {

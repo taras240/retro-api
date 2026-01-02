@@ -15,7 +15,7 @@ import { setPopupPosition } from "./functions/popupPosition.js";
 
 import { AchievementsBlock } from "./widgets/cheevos.js";
 import { Target } from "./widgets/target.js";
-import { StatusPanel } from "./widgets/status.js";
+import { StatusPanel } from "./removed/status.js";
 import { SidePanel } from "./widgets/sidePanel.js";
 import { Settings } from "./widgets/settings.js";
 import { Note } from "./widgets/note.js";
@@ -95,10 +95,11 @@ export class UI {
         : watcher.updateGameData();
 
       setTimeout(() => {
-        apiWorker.getUserSummary({}).then(resp => {
-          this.userInfo?.update({ userSummary: resp });
-          this.stats?.initialSetStats({ userSummary: resp });
-          this.statusPanel?.updateStatistics({ userSummary: resp });
+        apiWorker.getUserSummary({}).then(userSummary => {
+          watcher.updateUserData({ userSummary })
+          this.userInfo?.update({ userSummary });
+          this.stats?.initialSetStats({ userSummary });
+          // this.statusPanel?.updateStatistics({ userSummary });
         })
       }, 3000);
     }
@@ -108,8 +109,9 @@ export class UI {
   initializeElements() {
     this.app = document.querySelector(".wrapper");
     this.recap = new Recap();
-    this.statusPanel = new StatusPanel();
-    this.status = new Status();
+    // this.statusPanel = new StatusPanel();
+    this.statusPanel = new Status("statusPanel", true);
+    this.status = new Status("status", false);
     // this.status2 = new Status(true);
     this.achievementsBlock = [new AchievementsBlock()]; this.createAchievementsTemplate();
     this.target = new Target();
@@ -288,8 +290,9 @@ export class UI {
     const updateDelay = 16 * 1000 * earnedAchievementsIDs.length;
     this.userInfoTimeout = setTimeout(async () => {
       const userSummary = await apiWorker.getUserSummary({ gamesCount: 0, achievesCount: 0 });
+      watcher.updateUserData({ userSummary })
       ui.stats?.updateStats({ currentUserSummary: userSummary });
-      ui.statusPanel?.updateStatistics({ userSummary: userSummary });
+      // ui.statusPanel?.updateStatistics({ userSummary: userSummary });
     }, isLog && updateDelay < 30 * 1000 ? 30 * 1000 : updateDelay);
 
 
@@ -335,7 +338,7 @@ export class UI {
       } = configData;
 
       const isMinPointsMatch = cheevo.Points >= minPointsDiscordAlert || cheevo.TrueRatio >= minRetroPointsDiscordAlert;
-      const isTypeMatch = hardOnlyDiscordAlert ? cheevo.isHardcoreEarned : true;
+      const isTypeMatch = hardOnlyDiscordAlert ? cheevo.isEarnedHardcore : true;
 
       if (discordNewCheevo && isMinPointsMatch && isTypeMatch) {
         sendDiscordAlert(alert);
@@ -346,7 +349,7 @@ export class UI {
     this.status.addAlertsToQuery(cheevoAlerts);
   }
   updateWidgetsRichPresence(richPresence = "Rich presence") {
-    this.statusPanel.frontSide.richPresence.innerText = richPresence;
+    this.statusPanel.updateRichPresence(richPresence);//.frontSide.richPresence.innerText = richPresence;
     this.status.updateRichPresence(richPresence);
     // this.status2.updateRichPresence(richPresence);
 
@@ -398,7 +401,7 @@ export class UI {
   // Функція для зупинки слідкування за досягненнями
   stopWatching() {
     ui.IS_WATCHING = false;
-    this.statusPanel.frontSide.watchButton.classList.remove("active");
+    // this.statusPanel.frontSide.watchButton.classList.remove("active");
     clearInterval(ui.apiTrackerInterval);
   }
 

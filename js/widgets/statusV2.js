@@ -14,7 +14,7 @@ import { delay } from "../functions/delay.js";
 import { formatTime } from "../functions/time.js";
 import { gamePropsPopup } from "../components/gamePropsPopup.js";
 import { cheevoTypes } from "../enums/cheevoTypes.js";
-import { gameImageUrl, gameUrl } from "../functions/raLinks.js";
+import { cheevoImageUrl, gameImageUrl, gameUrl } from "../functions/raLinks.js";
 import { infiniteLineScrolling } from "../functions/infiniteLineScrolling.js";
 import { generateMagicLineText } from "../functions/tickerTextGenerator.js";
 import { inputTypes } from "../components/inputElements.js";
@@ -30,13 +30,13 @@ import { resizerHtml } from "../components/resizer.js";
 import { tickerHtml } from "../components/statusWidget/ticker.js";
 import { richPresenceHtml } from "../components/statusWidget/richPresence.js";
 import { indicatorHtml } from "../components/statusWidget/statusIndicator.js";
-import { statusThemes } from "../enums/statusThemes.js";
-import { StatusPanel } from "./status.js";
+import { statusStyles } from "../enums/statusThemes.js";
+import { StatusPanel } from "../removed/status.js";
 import { alertHtml, updateAlertContainer } from "../components/statusWidget/alert.js";
 import { gameInfoHtml } from "../components/statusWidget/gameInfo.js";
 import { timePosition } from "../enums/timePosition.js";
 import { gameInfoTypes } from "../enums/gameInfoTypes.js";
-import { gameInfoIconsHtml } from "../components/statusWidget/gameInfoIcons.js";
+import { gameInfoIconsHtml, richInfoHtml } from "../components/statusWidget/gameInfoIcons.js";
 import { sweepEffect } from "../components/windowEffects.js";
 
 export class Status extends Widget {
@@ -47,9 +47,13 @@ export class Status extends Widget {
     widgetIcon = {
         description: "status widget",
         iconID: `side-panel__status1`,
-        onChangeEvent: `ui.status.VISIBLE = this.checked`,
+        onChangeEvent: `ui['${this.widgetName}'].VISIBLE = this.checked`,
         iconClass: "status-icon",
     };
+    static themes = {
+        legacy: "legacy",
+        default: "default"
+    }
     get contextMenuItems() {
         return [
             {
@@ -65,7 +69,7 @@ export class Status extends Widget {
                     }
                 }),
             },
-            {
+            this.theme !== Status.themes.legacy ? {
                 label: ui.lang.elements,
                 elements: [
                     {
@@ -73,31 +77,31 @@ export class Status extends Widget {
                         id: "show-rp",
                         label: ui.lang.richPresence,
                         checked: this.uiProps.showRichPresence,
-                        event: `onchange="ui.status.uiProps.showRichPresence = this.checked"`,
+                        event: `onchange="ui['${this.widgetName}'].uiProps.showRichPresence = this.checked"`,
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         id: "show-ticker",
                         label: ui.lang.ticker,
                         checked: this.uiProps.showTicker,
-                        event: `onchange="ui.status.uiProps.showTicker = this.checked"`,
+                        event: `onchange="ui['${this.widgetName}'].uiProps.showTicker = this.checked"`,
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         id: "show-progression",
                         label: ui.lang.progression,
                         checked: this.uiProps.showProgression,
-                        event: `onchange="ui.status.uiProps.showProgression = this.checked"`,
+                        event: `onchange="ui['${this.widgetName}'].uiProps.showProgression = this.checked"`,
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         id: "context-show-progressbar",
                         label: ui.lang.progressbar,
                         checked: this.uiProps.showProgressbar,
-                        event: `onchange="ui.status.uiProps.showProgressbar = this.checked"`,
+                        event: `onchange="ui['${this.widgetName}'].uiProps.showProgressbar = this.checked"`,
                     },
                 ],
-            },
+            } : "",
             {
                 label: ui.lang.infoPanel,
                 elements: Object.values(gameInfoTypes).map(type =>
@@ -107,20 +111,20 @@ export class Status extends Widget {
                     id: `info-type-${type}`,
                     label: ui.lang?.[type] ?? type,
                     checked: this.uiProps.gameInfoType == type,
-                    event: `onclick="ui.status.uiProps.gameInfoType = '${type}';"`,
+                    event: `onclick="ui['${this.widgetName}'].uiProps.gameInfoType = '${type}';"`,
                 })
                 )
             },
             {
                 label: ui.lang.style,
-                elements: Object.values(statusThemes).map(theme =>
+                elements: Object.values(statusStyles).map(theme =>
                 ({
                     type: inputTypes.RADIO,
                     name: "status-theme",
                     id: `status-theme-${theme}`,
                     label: ui.lang?.[theme] ?? theme,
                     checked: this.uiProps.statusTheme == theme,
-                    event: `onclick="ui.status.uiProps.statusTheme = '${theme}';"`,
+                    event: `onclick="ui['${this.widgetName}'].uiProps.statusTheme = '${theme}';"`,
                 })
                 )
             },
@@ -133,7 +137,7 @@ export class Status extends Widget {
                     id: `progressbar-type-${type}`,
                     label: ui.lang?.[type] ?? type,
                     checked: this.uiProps.progressType == type,
-                    event: `onclick="ui.status.uiProps.progressType = '${type}';"`,
+                    event: `onclick="ui['${this.widgetName}'].uiProps.progressType = '${type}';"`,
                 })
                 )
             },
@@ -146,7 +150,7 @@ export class Status extends Widget {
                         id: "show-playTime",
                         label: ui.lang.gameTime,
                         checked: this.uiProps.time == "playTime",
-                        event: `onclick="ui.status.uiProps.time = 'playTime';"`,
+                        event: `onclick="ui['${this.widgetName}'].uiProps.time = 'playTime';"`,
                     },
                     {
                         type: inputTypes.RADIO,
@@ -154,7 +158,7 @@ export class Status extends Widget {
                         id: "show-sessionTime",
                         label: ui.lang.sessionGameTime,
                         checked: this.uiProps.time == "sessionTime",
-                        event: `onclick="ui.status.uiProps.time = 'sessionTime';"`,
+                        event: `onclick="ui['${this.widgetName}'].uiProps.time = 'sessionTime';"`,
                     },
                     {
                         type: inputTypes.RADIO,
@@ -162,7 +166,7 @@ export class Status extends Widget {
                         id: "show-totalTime",
                         label: ui.lang.totalTime,
                         checked: this.uiProps.time == "totalSessionTime",
-                        event: `onclick="ui.status.uiProps.time = 'totalSessionTime';"`,
+                        event: `onclick="ui['${this.widgetName}'].uiProps.time = 'totalSessionTime';"`,
                     },
                     {
                         type: inputTypes.RADIO,
@@ -170,7 +174,7 @@ export class Status extends Widget {
                         id: "show-timer",
                         label: ui.lang.timer,
                         checked: this.uiProps.time == "timer",
-                        event: `onclick="ui.status.uiProps.time = 'timer';"`,
+                        event: `onclick="ui['${this.widgetName}'].uiProps.time = 'timer';"`,
                     },
                     {
                         prefix: ui.lang.timer,
@@ -179,8 +183,8 @@ export class Status extends Widget {
                         id: "stats-timer-duration",
                         label: ui.lang.timer,
                         value: ~~(this.uiProps.timerTime / 60 * 100) / 100,
-                        event: `onchange="ui.status.uiProps.timerTime = this.value;"`,
-                        onChange: "ui.status.uiProps.timerTime = this.value;",
+                        event: `onchange="ui['${this.widgetName}'].uiProps.timerTime = this.value;"`,
+                        onChange: "ui['${this.widgetName}'].uiProps.timerTime = this.value;",
                     },
                     ...Object.keys(timePosition).map(position =>
                     ({
@@ -189,10 +193,24 @@ export class Status extends Widget {
                         id: `time-pos-${position}`,
                         label: ui.lang?.[position] ?? position,
                         checked: this.uiProps.timePosition == position,
-                        event: `onclick="ui.status.uiProps.timePosition = '${position}';"`,
+                        event: `onclick="ui['${this.widgetName}'].uiProps.timePosition = '${position}';"`,
                     })
                     )
                 ],
+            },
+            {
+                type: inputTypes.CHECKBOX,
+                id: "game-bg",
+                label: ui.lang.gameBg,
+                checked: this.uiProps.showGameBg,
+                event: `onchange="ui['${this.widgetName}'].uiProps.showGameBg = this.checked;"`,
+            },
+            {
+                type: inputTypes.CHECKBOX,
+                id: "show-target-preview",
+                label: ui.lang.focusCheevoPreview,
+                checked: this.uiProps.showTargetPreview,
+                event: `onchange="ui['${this.widgetName}'].uiProps.showTargetPreview = this.checked;"`,
             },
 
         ];
@@ -205,24 +223,37 @@ export class Status extends Widget {
         showProgressbar: true,
         showProgression: true,
         progressType: progressTypes.cheevos,
-        statusTheme: statusThemes.DEFAULT,
-        timePosition: timePosition.normal,
-        gameInfoType: gameInfoTypes.icons,
+        statusTheme: statusStyles.DEFAULT,
+        timePosition: this.theme === Status.themes.legacy ? timePosition.background : timePosition.normal,
+        gameInfoType: this.theme === Status.themes.legacy ? gameInfoTypes.progressbar : gameInfoTypes.icons,
+        showGameBg: false,
+        showTargetPreview: false,
+    }
+    uiDefaultValuesLegacy = {
+        showRichPresence: false,
+        showTicker: false,
+        showProgressbar: false,
+        showProgression: false,
+        statusTheme: statusStyles.THICK,
+        timePosition: timePosition.background,
+        gameInfoType: gameInfoTypes.progression,
     }
     uiSetCallbacks = {
         time() {
             this.gameElements.time.innerText = watcher.getActiveTime(this.uiProps.time, this.uiProps.timerTime);
         },
         showTicker(value) {
-            value ? this.ticker.startScrolling() : this.ticker.stopScrolling();
-
             this.setElementsValues();
+            value ? this.updateTicker() : this.ticker?.stopScrolling();
         },
         progressType() {
             this.updateProgressBar();
         },
         gameInfoType() {
             this.updateGameInfo();
+        },
+        showTargetPreview() {
+            this.updateFocusPreview();
         }
     };
 
@@ -233,8 +264,16 @@ export class Status extends Widget {
             return value * 60;
         }
     };
-    constructor(isLegacy = false) {
+    loadDefaultValues() {
+        if (this.theme === Status.themes.legacy) {
+            Object.assign(this.uiDefaultValues, this.uiDefaultValuesLegacy);
+        }
+    }
+    constructor(widgetName = "status", isLegacy = false) {
         super();
+        this.theme = isLegacy ? Status.themes.legacy : Status.themes.default;
+        this.widgetName = widgetName;
+        this.loadDefaultValues();
         this.generateWidget(isLegacy);
         this.addWidgetIcon();
         // this.initializeElements();
@@ -273,7 +312,7 @@ export class Status extends Widget {
             lastCheevos: this.section.querySelector(".rp__last-cheevos"),
         }
         this.tickerElement = this.section.querySelector(".rp__ticker");
-        this.ticker = infiniteLineScrolling({ container: this.tickerElement, textGenerator: generateMagicLineText });
+
     }
     generateWidget(isLegacy) {
         const widgetID = isLegacy ? "update-section" : "rp__section";
@@ -323,7 +362,7 @@ export class Status extends Widget {
         const widget = document.createElement("section");
         widget.classList.add(...classes);
         widget.id = id;
-        const theme = config.ui?.[id]?.statusTheme ?? statusThemes.DEFAULT;
+        const theme = config.ui?.[id]?.statusTheme ?? statusStyles.DEFAULT;
         const isWatching = watcher?.IS_WATCHING;
 
         widget.innerHTML = isLegacy ? legacyThemeHtml() : modernThemeHtml();;
@@ -384,10 +423,12 @@ export class Status extends Widget {
         this.section.classList.toggle("show-progressbar", this.uiProps.showProgressbar);
         this.richPresenceElement?.classList.toggle("hidden", !this.uiProps.showRichPresence)
         this.gameElements.time && (this.gameElements.time.dataset.position = this.uiProps.timePosition);
-        this.uiProps.showTicker && watcher.GAME_DATA && this.ticker.startScrolling();
-        this.section.dataset.theme = this.uiProps.statusTheme ?? statusThemes.DEFAULT;
+
+        this.section.dataset.theme = this.uiProps.statusTheme ?? statusStyles.DEFAULT;
+        this.section.classList.toggle("game-bg", this.uiProps.showGameBg);
     }
     doUpdateAnimation() {
+        if (this.theme === Status.themes.legacy) return;
         sweepEffect(this.section);
     }
     gameChangeEvent(isNewGame = false) {
@@ -395,15 +436,47 @@ export class Status extends Widget {
             this.addAlertsToQuery([{ type: alertTypes.GAME, value: watcher.GAME_DATA }]);
         }
         this.fillGameData();
-        this.uiProps.showTicker && this.ticker.startScrolling();
         this.doUpdateAnimation();
-    }
+        this.updateTicker();
 
+    }
+    updateTicker() {
+        if (!this.tickerElement) return;
+        this.ticker?.stopScrolling();
+        this.ticker = infiniteLineScrolling({
+            container: this.tickerElement,
+            textGenerator: () =>
+                generateMagicLineText(watcher.GAME_DATA, watcher.sessionData, watcher.userData)
+        });
+        this.uiProps.showTicker && this.ticker.startScrolling();
+    }
+    updateFocusPreview() {
+        const isHardMode = this.IS_HARD_MODE;
+        const focusCheevo = Object.values(watcher.CHEEVOS)
+            .filter(c => filterBy.progression(c))
+            .sort((a, b) => sortBy.default(a, b))
+            .find(c => !(isHardMode ? c.isEarnedHardcore : c.isEarned));
+
+        if (focusCheevo && this.uiProps.showTargetPreview) {
+            this.section.querySelector(".rp__game-image")?.setAttribute(
+                "src",
+                cheevoImageUrl(focusCheevo)
+            );
+        }
+        else {
+            this.section.querySelector(".rp__game-image")?.setAttribute(
+                "src",
+                gameImageUrl(watcher.GAME_DATA?.ImageIcon)
+            );
+        }
+
+    }
     updateProgressionBar() {
         this.section
             .querySelectorAll(".rp__progression-container")
             ?.forEach(container => {
                 updateProgressionBar(container, watcher?.GAME_DATA, this.IS_HARD_MODE);
+
                 scrollElementIntoView({
                     container,
                     element: container.querySelector(`.rp__progression-points .focus`),
@@ -426,6 +499,7 @@ export class Status extends Widget {
     }
     updateGameInfo() {
         const gameInfoContent = this.section.querySelector(".rp__game-info-content");
+        if (!gameInfoContent) return;
         const updateIcons = () => {
             const { ConsoleID, NumAchievements, totalPoints, retroRatio } = watcher.GAME_DATA;
 
@@ -450,6 +524,10 @@ export class Status extends Widget {
                 gameInfoContent.innerHTML = gameInfoIconsHtml();
                 updateIcons();
                 break;
+            case gameInfoTypes.richPresence:
+                gameInfoContent.innerHTML = richInfoHtml();
+                updateIcons();
+                break;
             default:
                 gameInfoContent.innerHTML = progressionBarHtml();
                 this.updateProgressionBar();
@@ -459,10 +537,11 @@ export class Status extends Widget {
     }
     fillGameData() {
         const fillGameInfoData = () => {
-            const { ImageIcon, Title, badges, ConsoleName, ConsoleID, ID, NumAchievements, totalPoints, retroRatio } = watcher.GAME_DATA;
+            const { ImageIcon, ImageIngame, Title, badges, ConsoleName, ConsoleID, ID, NumAchievements, totalPoints, retroRatio } = watcher.GAME_DATA;
 
             this.gameElements.icon.src = gameImageUrl(ImageIcon);
 
+            this.section.style.setProperty("--bg-image", `url(${gameImageUrl(ImageIngame)})`);
             this.gameElements.title.innerHTML = `
                 ${Title || ""}
                 ${generateBadges(badges)}
@@ -480,21 +559,25 @@ export class Status extends Widget {
         this.updateRichPresence();
         this.updateGameInfo();
         this.updateProgressionBar();
+        this.updateFocusPreview();
         this.updateProgressBar();
         this.startAutoScrollElement(this.richPresenceElement, true, 10 * 1000);
     }
     updateProgress({ earnedAchievementIDs }) {
-        earnedAchievementIDs?.length > 0 && (this.IS_HARD_MODE = !!watcher.CHEEVOS[earnedAchievementIDs[0]].isHardcoreEarned);
+        earnedAchievementIDs?.length > 0 && (this.IS_HARD_MODE = !!watcher.CHEEVOS[earnedAchievementIDs[0]].isEarnedHardcore);
 
         this.updateProgressionBar();
+        this.updateFocusPreview();
         this.updateProgressBar();
+        this.updateTicker();
         this.doUpdateAnimation();
+
         // this.gameChangeEvent();
     }
     updateRichPresence(richPresenceText) {
-        if (this.richPresenceElement) {
-            this.richPresenceElement.innerText = richPresenceText || ui.lang.richPresence;
-        }
+        this.section.querySelectorAll(".rp__rich-presence")?.forEach(el =>
+            el.innerText = richPresenceText || ui.lang.richPresence
+        )
     }
     alertsQuery = [];
     addAlertsToQuery(elements) {
@@ -579,6 +662,7 @@ export class Status extends Widget {
     }
     autoscrollAlertInterval = {};
     startAutoScrollElement(element, toLeft = true, pause = 1000) {
+        if (!element) return;
         const containerID = element.id || element.className;
         if (this.autoscrollAlertInterval[containerID]) {
             this.stopAutoScrollElement(element);

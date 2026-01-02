@@ -440,7 +440,7 @@ export class AchievementsBlock extends Widget {
             achivElement.classList.toggle("start-load-anim", widget.uiProps.showLoadAnimation);
             achivElement.classList.toggle("overlay", widget.uiProps.showPrevOverlay);
             achivElement.classList.toggle("earned", achievement.isEarned);
-            achivElement.classList.toggle("hardcore", achievement.isHardcoreEarned);
+            achivElement.classList.toggle("hardcore", achievement.isEarnedHardcore);
             achivElement.classList.toggle("rare", achievement.difficulty > 7);
         }
         function setData() {
@@ -587,7 +587,7 @@ export class AchievementsBlock extends Widget {
             const cheevoIsHidden = cheevo.offsetParent === null;
             if (!this.uiProps.showMario || cheevoIsHidden) {
                 cheevoElement.classList.add("earned");
-                cheevoElement.classList.toggle("hardcore", cheevo.isHardcoreEarned);
+                cheevoElement.classList.toggle("hardcore", cheevo.isEarnedHardcore);
             }
             else {
                 await scrollElementIntoView({ container: this.container, element: cheevoElement, scrollByX: false });
@@ -614,7 +614,7 @@ export class AchievementsBlock extends Widget {
         this.startAutoScroll();
     }
     async marioAction(cheevoElement, cheevo) {
-        const isHardcore = cheevo.isHardcoreEarned;
+        const isHardcore = cheevo.isEarnedHardcore;
         const mario = document.createElement("div");
         mario.classList.add("mario__container", "stand");
         this.container.appendChild(mario);

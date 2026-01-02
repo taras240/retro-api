@@ -40,7 +40,21 @@ export class Watcher {
         this.initPlayTime();
         ui.gameChangeEvent(isNewGame);
     }
-
+    sessionData = {
+        points: 0,
+        retropoints: 0,
+        softpoints: 0,
+        cheevos: 0,
+        cheevosSoftcore: 0,
+    }
+    userData = {
+        userName: "",
+        rank: 0,
+        percentile: 0,
+        points: 0,
+        retropoints: 0,
+        softpoints: 0,
+    }
     constructor() {
         this.isActive = false;
     }
@@ -58,6 +72,44 @@ export class Watcher {
     gameChangeEvent() {
         // this.savePlayTime();
         // this.initPlayTime();
+    }
+    updateSessionData(cheevosIDs = []) {
+        cheevosIDs?.forEach(id => {
+            const cheevo = this.CHEEVOS[id];
+            if (cheevo?.isEarnedHardcore) {
+                this.sessionData.points += cheevo.Points;
+                this.sessionData.retropoints += cheevo.TrueRatio;
+                this.sessionData.cheevos++;
+            }
+            else {
+                this.sessionData.softpoints += cheevo.Points;
+                this.sessionData.cheevosSoftcore++;
+            }
+        })
+    }
+    updateUserData({ raProfileInfo, userSummary }) {
+        if (raProfileInfo) {
+            this.userData = {
+                ...this.userData,
+                userName: raProfileInfo.User,
+                points: raProfileInfo.TotalPoints,
+                retropoints: raProfileInfo.TotalTruePoints,
+                softpoints: raProfileInfo.TotalSoftcorePoints,
+                richPresence: raProfileInfo.RichPresenceMsg
+            }
+        }
+        if (userSummary) {
+            this.userData = {
+                ...this.userData,
+                userName: userSummary.User,
+                richPresence: userSummary.RichPresenceMsg,
+                points: userSummary.TotalPoints,
+                retropoints: userSummary.TotalTruePoints,
+                softpoints: userSummary.TotalSoftcorePoints,
+                rank: userSummary.Rank,
+                percentile: (100 * userSummary.Rank / userSummary.TotalRanked).toFixed(2),
+            }
+        }
     }
     async checkForOnline() {
         const parseDate = (UTCTime) => {
@@ -92,32 +144,26 @@ export class Watcher {
     apiTrackerInterval;
     async checkApiUpdates(isStart = false) {
         const isPointsChanged = (raProfileInfo) => {
-            const isPointsChanged = raProfileInfo.TotalPoints != this.points.hardcore || raProfileInfo.TotalSoftcorePoints != this.points.softcore;
+            const isPointsChanged = raProfileInfo.TotalPoints != this.userData.points || raProfileInfo.TotalSoftcorePoints != this.userData.softpoints;
 
             return isPointsChanged;
         }
 
-        const updatePoints = (raProfileInfo) => {
-            this.points.hardcore = raProfileInfo.TotalPoints;
-            this.points.softcore = raProfileInfo.TotalSoftcorePoints;
-        }
-
-
         if (!isStart && (!this.IS_ONLINE)) return;
 
         const raProfileInfo = await apiWorker.getProfileInfo({});
-        //!PrentGameID for Saved set update
+        //PrentGameID for Saved set update
         const isGameChanged = (raProfileInfo.LastGameID != this.GAME_DATA?.ID) && (raProfileInfo.LastGameID != this.GAME_DATA?.ParentGameID);
         if (isGameChanged || isStart) {
             configData.gameID = raProfileInfo.LastGameID;
-            isStart && updatePoints(raProfileInfo);
+            isStart && this.updateUserData({ raProfileInfo });
 
             await this.updateGameData(raProfileInfo.LastGameID);
 
             ui.showGameChangeAlerts(isStart);
         }
         if (isPointsChanged(raProfileInfo)) {
-            updatePoints(raProfileInfo);
+            this.updateUserData({ raProfileInfo });//!<--------------
             this.updateCheevos();
             this.RP_DATA.lastChange = new Date();
             this.zeroCheckTime = new Date();
@@ -185,7 +231,6 @@ export class Watcher {
             const gameData = await apiWorker.getGameInfoAndProgress({ gameID: gameID, withTimesData: true });
             this.GAME_DATA = gameData;
         } catch (error) {
-            //this.statusPanel.frontSide.watchButton.classList.add("error");
             this.stop;
             console.error(error);
         }
@@ -201,7 +246,7 @@ export class Watcher {
                     const isHard = HardcoreMode == 1;
                     this.IS_HARD_MODE = isHard;
                     if (isHard) {
-                        cheevo.isHardcoreEarned = true;
+                        cheevo.isEarnedHardcore = true;
                         cheevo.DateEarnedHardcore = Date;
                         this.GAME_DATA.unlockData.hardcore.count++;
                         this.GAME_DATA.unlockData.hardcore.points += cheevo.Points;
@@ -229,7 +274,7 @@ export class Watcher {
                 const cheevo = this.CHEEVOS[lastCheevo.AchievementID];
                 if (cheevo) {
                     const isHardcoreMismatch =
-                        lastCheevo.HardcoreMode === 1 && !cheevo?.isHardcoreEarned;
+                        lastCheevo.HardcoreMode === 1 && !cheevo?.isEarnedHardcore;
                     const isSoftCoreMismatch = !cheevo.isEarned;
                     if (isSoftCoreMismatch || isHardcoreMismatch) {
                         earnedAchievements.push(lastCheevo);
@@ -286,7 +331,7 @@ export class Watcher {
         }
         const checkForZeroPoints = () => {
             this.GAME_DATA.hasZeroPoints = Object.values(this.CHEEVOS).filter(
-                ({ Points, isHardcoreEarned }) => Points === 0 && !isHardcoreEarned)?.length > 0
+                ({ Points, isEarnedHardcore }) => Points === 0 && !isEarnedHardcore)?.length > 0
         }
         try {
             // Get recent achievements
@@ -301,7 +346,9 @@ export class Watcher {
 
             this.GAME_DATA.hasZeroPoints && checkForZeroPoints();
             if (cheevosIDs && cheevosIDs.length > 0) {
+
                 try {
+                    this.updateSessionData(cheevosIDs);
                     ui.showCheevoAlerts(cheevosIDs);
                     ui.showAwardsAlerts(awardsArray);
                 } catch (e) { }

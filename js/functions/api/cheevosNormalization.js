@@ -21,7 +21,7 @@ const normalizeAchievement = (achievement, gameData, cheevosDB) => {
         ...achievement,
         totalPlayers: NumDistinctPlayers,
         isEarned: !!DateEarned,
-        isHardcoreEarned: !!DateEarnedHardcore,
+        isEarnedHardcore: !!DateEarnedHardcore,
         prevSrc: cheevoImageUrl(achievement),
         rateEarned,
         rateEarnedHardcore,

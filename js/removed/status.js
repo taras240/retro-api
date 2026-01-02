@@ -7,7 +7,7 @@ import { icons, signedIcons } from "../components/icons.js"
 import { generateBadges, badgeElements, goldBadge } from "../components/badges.js";
 
 import { config, configData, ui, watcher } from "../script.js";
-import { Widget } from "./widget.js";
+import { Widget } from "../widgets/widget.js";
 import { filterBy, sortBy } from "../functions/sortFilter.js";
 import { showComments } from "../components/comments.js";
 import { moveEvent } from "../functions/movingWidget.js";

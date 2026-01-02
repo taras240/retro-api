@@ -6,6 +6,8 @@
     --locked-opacity: 0.1;
     --bg-opacity-mask: none;
     --progress-bg-color: var(--accent-color);
+    --alert-heigth: 5.5rem;
+    /* --bg-image:url(); */
     top: 0;
     left: 100px;
     max-height: 100vh;
@@ -21,8 +23,33 @@
     cursor: grab;
 }
 
+.section.status__section {
+    position: absolute;
+    top: calc(100vh - 6rem);
+    left: 30%;
+    height: 6rem;
+    min-width: 300px;
+    min-height: 6rem;
+    max-height: 6rem;
+    width: 500px;
+    perspective: 1500px;
+    border-radius: var(--border-radius);
+    display: flex;
+    cursor: grab;
+    background-color: var(--main-color);
+}
+
+.game-bg:is(.rp__section, .status__section) {
+    background-image: var(--bg-image);
+    background-blend-mode: overlay;
+    background-size: 120%;
+    background-repeat: no-repeat;
+    background-position: center left;
+    image-rendering: pixelated;
+}
+
 .rp__section[data-theme="thick"],
-.status__section {
+.status__section[data-theme="thick"] {
     --progress-border-radius: 1px;
     --progress-height: 1rem;
     --progression-gap: 1px;
@@ -30,6 +57,18 @@
     --focus-opacity: 1;
     --locked-opacity: 0.5;
     --progress-bg-color: var(--accent-color);
+
+}
+
+.status__section {
+    --progress-border-radius: 100px;
+    --progress-height: 0.4rem;
+    --progression-gap: 5px;
+    --focus-opacity: 0.5;
+    --locked-opacity: 0.1;
+    --bg-opacity-mask: none;
+    --progress-bg-color: var(--accent-color);
+    --alert-heigth: 100%;
 }
 
 /* .rp__section:not(.show-cheevos-list) {
@@ -88,6 +127,18 @@
 
 .status__container .rp-content__container {
     padding: 0 0.5rem 0 0;
+}
+
+.status__container {
+    position: relative;
+    width: 100%;
+
+    height: 100%;
+    border-radius: var(--border-radius);
+    transform-style: preserve-3d;
+    transform: rotateX(0deg);
+    font-size: inherit;
+    transition: transform 1s;
 }
 
 /**---------GAME-INFO-------  */
@@ -149,6 +200,10 @@
 .rp__game-info-content {
     min-width: 0;
     flex: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
 }
 
 .rp__game-platform {
@@ -158,7 +213,6 @@
     opacity: 0.8;
     /* padding-bottom: 0.25rem; */
     font-size: 1.1rem;
-    place-self: center start;
 }
 
 .rp__game-icons {
@@ -183,8 +237,9 @@
 .rp__game-time[data-position="background"] {
     position: absolute;
     right: 0;
-    top: 10%;
+    top: 50%;
     opacity: 0.5;
+    transform: translateY(-50%);
 }
 
 .time__blinked-dots {
@@ -500,8 +555,9 @@
     position: absolute;
     z-index: 10;
     display: flex;
+    align-items: center;
     column-gap: 0.5rem;
-    height: 5.5rem;
+    height: var(--alert-heigth);
     width: 100%;
     padding: 0;
     background: var(--main-color);
@@ -644,4 +700,66 @@
 
 .grid-list .target-achiv.hardcore {
     border: 3px solid goldenrod;
+}
+
+.status__watch-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 60%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: var(--secondary-color);
+    display: grid;
+    place-items: center;
+    box-shadow: 0 0 5px 1px var(--secondary-color);
+    opacity: 1;
+    transition: transform 200ms, opacity 200ms;
+    z-index: 10;
+}
+
+.section:hover .status__watch-button {
+    opacity: 1;
+}
+
+.status__watch-button:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.status__watch-button.active {
+    opacity: 0;
+}
+
+.status__watch-button:active {
+    background-color: var(--accent-color);
+    transform: translate(-50%, -50%) scale(1.05);
+}
+
+.status__watch-button::after {
+    content: "";
+    position: absolute;
+    height: 80%;
+    aspect-ratio: 1;
+    background-color: var(--font-color);
+    mask-image: url(../assets/img/play.svg);
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    mask-position: center;
+    opacity: 0.6;
+    transition: opacity 200ms;
+}
+
+.status__watch-button:hover::after {
+    opacity: 1;
+}
+
+.status__watch-button.active::after {
+    mask-image: url(../assets/img/pause.svg);
+}
+
+.status__watch-button.error {
+    background-color: red;
+    border-color: transparent;
 }

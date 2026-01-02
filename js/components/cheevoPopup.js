@@ -27,7 +27,7 @@ export function cheevoPopupElement(cheevo, isFixed = false) {
         cheevo.level?.toString()?.replace(".", "-");
 
     let popup = document.createElement("div");
-    popup.classList.add("cheevo-popup", "popup", cheevo.isHardcoreEarned ? "hardcore" : cheevo.isEarned ? "softcore" : "f",);
+    popup.classList.add("cheevo-popup", "popup", cheevo.isEarnedHardcore ? "hardcore" : cheevo.isEarned ? "softcore" : "f",);
     popup.classList.toggle("fixed", isFixed);
     popup.dataset.id = cheevo.ID;
     popup.innerHTML = `

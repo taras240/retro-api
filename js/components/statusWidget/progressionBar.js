@@ -6,7 +6,7 @@ import { badgeElements } from "../badges.js";
 const mainClass = "rp__progression";
 
 export const updateProgressionBar = (container, gameData, isHardMode = true) => {
-    const isEarned = (cheevo) => cheevo.isHardcoreEarned ||
+    const isEarned = (cheevo) => cheevo.isEarnedHardcore ||
         (cheevo.isEarned && !isHardMode);
     const progressionMessage = (focusCheevo, focusIndex, cheevos) => {
         let message;

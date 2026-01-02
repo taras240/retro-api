@@ -1,6 +1,7 @@
 const FRAME_TIME_MS = 40;
 
 export function infiniteLineScrolling({ container, textGenerator }) {
+
     const markText = (text) => {
         const p = document.createElement('p');
         p.className = 'infinite-line';
@@ -37,12 +38,14 @@ export function infiniteLineScrolling({ container, textGenerator }) {
     };
 
     const startScrolling = () => {
+        if (!container) return;
         stopScrolling();
         fillText();
         scrollInterval = setInterval(() => step(), FRAME_TIME_MS);
     };
 
     const stopScrolling = () => {
+        if (!container) return;
         scrollInterval && clearInterval(scrollInterval);
         container.innerHTML = "";
     };

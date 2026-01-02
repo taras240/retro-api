@@ -24,157 +24,155 @@
     <div id='background-star2'></div>
     <div id='background-star3'></div>
   </div>
-  <div class="wrapper">
-    <section id="side_panel" class="buttons-block expanded">
+  <div class="wrapper"><section id="side_panel" class="buttons-block expanded">
 
-      <div class="setting-radio-group">
+    <div class="setting-radio-group">
         <button class="side-panel_login login-icon" onclick="window.location.href = './login'" data-title="login page">
-          <img id="side-panel-user-image" src="" onerror="this.src='./assets/img/account.svg';" alt="">
+            <img id="side-panel-user-image" src="" onerror="this.src='./assets/img/account.svg';" alt="">
         </button>
-      </div>
+    </div>
 
-      <div class="buttons-block__shortcuts">
+    <div class="buttons-block__shortcuts">
 
-      </div>
+    </div>
 
-      <div class="buttons-block_tools">
+    <div class="buttons-block_tools">
         <div class="setting-radio-group ">
-          <a class="side-panel_input side-panel_link" data-title="go to discord channel"
-            href="https://discord.gg/apzc6kCAbH" target="_blank">
-            <i class="side-panel__icon discord-icon"></i>
-          </a>
+            <a class="side-panel_input side-panel_link" data-title="go to discord channel"
+                href="https://discord.gg/apzc6kCAbH" target="_blank">
+                <i class="side-panel__icon discord-icon"></i>
+            </a>
         </div>
         <div class="setting-radio-group ">
-          <input type="checkbox" name="open-settings-button" id="open-settings-button">
-          </input>
-          <label class="side-panel_input " data-title="settings" for="open-settings-button">
-            <i class="side-panel__icon settings-icon"></i>
-          </label>
+            <input type="checkbox" name="open-settings-button" id="open-settings-button">
+            </input>
+            <label class="side-panel_input " data-title="settings" for="open-settings-button">
+                <i class="side-panel__icon settings-icon"></i>
+            </label>
         </div>
 
 
+    </div>
+
+
+</section><section id="update-section" class="status__section  section">
+  <div class="status__container">
+    <div class="status__header-buttons hidden-header-buttons">
+      <a id="status-game-guide" class="header-button  header-icon tweak-button guide-icon " target="_blank" href="">
+      </a>
+      <button class="comments-button header-button header-icon chat-icon" data-title="show comments">
+      </button>
+      <button class="game-props-button header-button header-icon edit-icon" data-title="edit props">
+      </button>
+      <button class="header-button header-icon tweak-button tweak-icon"
+        onclick="ui.settings.openSettings(ui.statusPanel.contextMenuItems)">
+      </button>
+      <button class="header-button header-icon close-icon" data-title="close">
+    </div>
+
+    <div class="status__user-status status__front-side card-3d">
+      <div class="status__preview-container">
+        <img class="status__game-preview" id="game-preview" src="./assets/img/icon.png" alt=" " />
+        <p class="status__retro-ratio"></p>
+        <button id="watching-button" class="status__watch-button checked"
+          data-title="start/stop autoupdate achievements progression"></button>
+      </div>
+      <div class="status__main-information">
+        <p class="status__title-container" id="game-title">
+          <a target="_blank" class="status__game-title" href="">Game tittle</a>
+        </p>
+        <p id="game-platform" class="status__description-text"></p>
+        <div id="rich-presence" class="rich-presence_text">Waiting...</div>
+
+        <div class="status__footer-container">
+          <div class="status__progression-container">
+          </div>
+        </div>
+
+
+        <div id="magic-line" class="magic-line__container">
+
+        </div>
+      </div>
+      <div class="status__sideblock-container">
+        <div class="status__big-text status__game-time" id="status-progress-text">01:12:78</div>
+        <div class="status__sideblock-icons" id="status__sideblock-icons">
+          <p class="signed-icon auto-font-size" data-title="cheevos count"><i
+              class="description-icon achievements-icon  auto-font-size"></i>0
+          </p>
+
+          <p class="signed-icon auto-font-size" data-title="total points"><i
+              class="description-icon points-icon  auto-font-size"></i>0
+          </p>
+          <p class="signed-icon auto-font-size" data-title="true ratio">
+            <i class="description-icon rarity-icon  auto-font-size"></i>0
+          </p>
+          <p class="signed-icon auto-font-size" data-title="total retropoints"><i
+              class="description-icon retropoints-icon  auto-font-size"></i>0
+          </p>
+
+        </div>
       </div>
 
-
-    </section>
-    <section id="update-section" class="status__section  section">
-      <div class="status__container">
-        <div class="status__header-buttons hidden-header-buttons">
-          <a id="status-game-guide" class="header-button  header-icon tweak-button guide-icon " target="_blank" href="">
-          </a>
-          <button class="comments-button header-button header-icon chat-icon" data-title="show comments">
-          </button>
-          <button class="game-props-button header-button header-icon edit-icon" data-title="edit props">
-          </button>
-          <button class="header-button header-icon tweak-button tweak-icon"
-            onclick="ui.settings.openSettings(ui.statusPanel.contextMenuItems)">
-          </button>
-          <button class="header-button header-icon close-icon" data-title="close">
-        </div>
-
-        <div class="status__user-status status__front-side card-3d">
-          <div class="status__preview-container">
-            <img class="status__game-preview" id="game-preview" src="./assets/img/icon.png" alt=" " />
-            <p class="status__retro-ratio"></p>
-            <button id="watching-button" class="status__watch-button checked"
-              data-title="start/stop autoupdate achievements progression"></button>
-          </div>
-          <div class="status__main-information">
-            <p class="status__title-container" id="game-title">
-              <a target="_blank" class="status__game-title" href="">Game tittle</a>
-            </p>
-            <p id="game-platform" class="status__description-text"></p>
-            <div id="rich-presence" class="rich-presence_text">Waiting...</div>
-
-            <div class="status__footer-container">
-              <div class="status__progression-container">
-              </div>
-            </div>
-
-
-            <div id="magic-line" class="magic-line__container">
-
-            </div>
-          </div>
-          <div class="status__sideblock-container">
-            <div class="status__big-text status__game-time" id="status-progress-text">01:12:78</div>
-            <div class="status__sideblock-icons" id="status__sideblock-icons">
-              <p class="signed-icon auto-font-size" data-title="cheevos count"><i
-                  class="description-icon achievements-icon  auto-font-size"></i>0
-              </p>
-
-              <p class="signed-icon auto-font-size" data-title="total points"><i
-                  class="description-icon points-icon  auto-font-size"></i>0
-              </p>
-              <p class="signed-icon auto-font-size" data-title="true ratio">
-                <i class="description-icon rarity-icon  auto-font-size"></i>0
-              </p>
-              <p class="signed-icon auto-font-size" data-title="total retropoints"><i
-                  class="description-icon retropoints-icon  auto-font-size"></i>0
-              </p>
-
-            </div>
-          </div>
-
-          <div class="status__background"></div>
-          <!-- <div class="status__progress-bar" id="status-progress-bar"></div>
+      <div class="status__background"></div>
+      <!-- <div class="status__progress-bar" id="status-progress-bar"></div>
       <div class="status__progress-bar_delta-values hidden" id="status_progress-bar-delta"></div> -->
 
 
 
-        </div>
-        <div class="status__back-side card-3d">
-          <div class="status__preview-container">
-            <img class="status__game-preview" id="update_achiv-preview"
-              src="https://media.retroachievements.org/Badge/55561.png" alt=" ">
-          </div>
-          <div class="status__text-block show-difficult">
-            <div class="status__alert-header">
-              <p id="update_achiv-title" target="_blank" class="status__alert-title" href="">Kawaiivania
-              </p>
-            </div>
-            <p id="update_achiv-description" class="status__alert-description">Reach the end of Stage 5
-              without
-              using charged attacks</p>
-            <div id="update_achiv-earned-points" class="status__text 
-        status__alert-points">
-              <p class="badge difficult-badge__pro">+5HP </p>
-              <p class="badge difficult-badge__pro">+5RP </p>
-              <p class="badge difficult-badge__pro">TOP58%</p>
-            </div>
-          </div>
-          <div class="status_glass-effect update"></div>
-        </div>
-
+    </div>
+    <div class="status__back-side card-3d">
+      <div class="status__preview-container">
+        <img class="status__game-preview" id="update_achiv-preview"
+          src="https://media.retroachievements.org/Badge/55561.png" alt=" ">
       </div>
+      <div class="status__text-block show-difficult">
+        <div class="status__alert-header">
+          <p id="update_achiv-title" target="_blank" class="status__alert-title" href="">Kawaiivania
+          </p>
+        </div>
+        <p id="update_achiv-description" class="status__alert-description">Reach the end of Stage 5
+          without
+          using charged attacks</p>
+        <div id="update_achiv-earned-points" class="status__text 
+        status__alert-points">
+          <p class="badge difficult-badge__pro">+5HP </p>
+          <p class="badge difficult-badge__pro">+5RP </p>
+          <p class="badge difficult-badge__pro">TOP58%</p>
+        </div>
+      </div>
+      <div class="status_glass-effect update"></div>
+    </div>
 
-      <div class="resizer" id="status-resizer"></div>
-    </section>
-    <section id="note_section" class="note_section  section">
-      <div class="header-container note-header">
+  </div>
+
+  <div class="resizer" id="status-resizer"></div>
+</section><section id="note_section" class="note_section  section">
+    <div class="header-container note-header">
 
         <div class="header-icon note-icon"></div>
 
         <h2 class="widget-header-text note-header-text">
-          <div class="note__tabs-container">
-          </div>
+            <div class="note__tabs-container">
+            </div>
         </h2>
 
         <button class="header-button header-icon close-icon">
         </button>
-      </div>
-      <div class="note-container content-container">
+    </div>
+    <div class="note-container content-container">
         <div class="note__controls">
-          <button title="copy" class="note__control-button copy-icon" onclick="ui.note.copyNoteText()"></button>
-          <button title="paste" class="note__control-button paste-icon" onclick="ui.note.pasteTextToNote()"></button>
-          <button title="DELETE ALL" class="note__control-button clear-icon" onclick="ui.note.clearTextNote()"></button>
+            <button title="copy" class="note__control-button copy-icon" onclick="ui.note.copyNoteText()"></button>
+            <button title="paste" class="note__control-button paste-icon" onclick="ui.note.pasteTextToNote()"></button>
+            <button title="DELETE ALL" class="note__control-button clear-icon"
+                onclick="ui.note.clearTextNote()"></button>
         </div>
 
         <textarea placeholder="Your notes will be here" name="note_textaria" class="note-textaria scrollable"
-          id="note_textarea" cols="auto" rows="auto"></textarea>
-      </div>
-      <div class="resizer"></div>
-    </section>
+            id="note_textarea" cols="auto" rows="auto"></textarea>
+    </div>
+    <div class="resizer"></div>
+</section>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
   <script src="./dist/bundle.min.js"></script>

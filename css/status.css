@@ -3,6 +3,7 @@
   top: calc(100vh - 100px);
   left: 30%;
   height: 70px;
+  height: 6rem !important;
   min-width: 300px;
   min-height: 75px;
   max-height: 150px;
