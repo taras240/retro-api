@@ -242,7 +242,7 @@ export class Status extends Widget {
     }
     uiSetCallbacks = {
         time() {
-            this.gameElements.time.innerText = watcher.getActiveTime(this.uiProps.time, this.uiProps.timerTime);
+            this.gameElements.time.innerHTML = watcher.getActiveTime(this.uiProps.time, this.uiProps.timerTime);
         },
         showTicker(value) {
             this.setElementsValues();
