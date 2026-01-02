@@ -237,6 +237,8 @@ export class Status extends Widget {
         statusTheme: statusStyles.THICK,
         timePosition: timePosition.background,
         gameInfoType: gameInfoTypes.progression,
+        showTargetPreview: false,
+        showGameBg: false,
     }
     uiSetCallbacks = {
         time() {

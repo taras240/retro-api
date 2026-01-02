@@ -670,8 +670,8 @@ export class Target extends Widget {
         //     this.filters = this.uiProps.filters
         // }
         this.genreFilter = "";
-        this.uiProps.autoClearTarget && this.clearEarned();
         this.uiProps.autoFillTarget && this.fillItems();
+        this.uiProps.autoClearTarget && this.clearEarned();
         this.fillPinnedItems();
         this.markPinned();
     }
