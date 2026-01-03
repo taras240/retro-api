@@ -1,6 +1,7 @@
 import { colorPresets } from "./enums/colorPresets.js";
 import { fonts } from "./enums/fontsPreset.js";
 import { loadHandle, openDB, saveHandle } from "./functions/DB.js";
+import { delay } from "./functions/delay.js";
 import { ui } from "./script.js";
 import { UI } from "./ui.js";
 
@@ -208,12 +209,9 @@ export class Config {
     hidden !== undefined ? (this._cfg.ui[id].hidden = hidden) : "";
     this.writeConfiguration();
   }
-  readConfiguration() {
-
-    let config = JSON.parse(localStorage.getItem(CONFIG_FILE_NAME));
-
-    if (!config) {
-      config = {
+  async readConfiguration() {
+    const loadDefaults = () => {
+      const config = {
         identification: {
           RAApi_key: "",
           RAApi_login: "",
@@ -224,11 +222,28 @@ export class Config {
         ui: {},
       };
 
+      localStorage.setItem(CONFIG_FILE_NAME, JSON.stringify(config));
+      this.writeConfiguration();
+      return config;
+    }
+    let config;
+    let savedData = localStorage.getItem(CONFIG_FILE_NAME);
+    if (savedData) {
+      try {
+        config = JSON.parse(savedData);
+      }
+      catch (e) {
+        console.warn("Saved data error, saved data: ", savedData);
+        await delay(1e3);
+      }
+    }
 
+    if (!config) {
+      config = loadDefaults();
     }
     this._cfg = config;
-    localStorage.setItem(CONFIG_FILE_NAME, JSON.stringify(this._cfg));
-    this.writeConfiguration();
+
+
   }
   saveUIProperty({ sectionID, property, value }) {
     if (sectionID && property) {
