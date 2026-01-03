@@ -278,7 +278,7 @@ export class UI {
     //Update status widget
     this.statusPanel.updateProgress({ earnedAchievementIDs: earnedAchievementsIDs });
     this.status.updateProgress({ earnedAchievementIDs: earnedAchievementsIDs });
-
+    this.gameCard?.updateProgress({ earnedAchievementIDs: earnedAchievementsIDs });
     //Update Progression widget
     this.progression.update({ earnedAchievementIDs: earnedAchievementsIDs });
 

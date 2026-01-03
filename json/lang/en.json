@@ -242,5 +242,9 @@
     "thick": "Thick",
     "multigame": "Multigame",
     "sessionTime": "Session Time",
-    "showBorders": "Borders"
+    "showBorders": "Borders",
+    "showTitle": "Title",
+    "showCheevosProgress": "Cheevos Progress",
+    "showPointsProgress": "Points Progress",
+    "showRetropointsProgress": "Retropoints Progress"
 }

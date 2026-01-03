@@ -15,6 +15,8 @@ import { hltbHeaders } from "../enums/hltb.js";
 import { gameImageUrl, gameUrl } from "../functions/raLinks.js";
 import { inputTypes } from "../components/inputElements.js";
 import { buttonsHtml } from "../components/htmlElements.js";
+import { completionMsg } from "../components/statusWidget/progressBar.js";
+import { progressTypes } from "../enums/progressBar.js";
 
 export class GameCard extends Widget {
     widgetIcon = {
@@ -31,7 +33,11 @@ export class GameCard extends Widget {
     uiDefaultValues = {
         showHeader: false,
         showBadges: true,
-        previewType: this.previewTypes.boxart
+        previewType: this.previewTypes.boxart,
+        showTitle: true,
+        showCheevosProgress: false,
+        showRetropointsProgress: false,
+        showPointsProgress: false
         //properties below are disabled :(
         // showCompletion: true,
         // showDeveloper: true,
@@ -71,11 +77,39 @@ export class GameCard extends Widget {
                 checked: this.uiProps.showHeader,
             },
             {
+                label: ui.lang.showTitle,
+                type: inputTypes.CHECKBOX,
+                id: "game-card_show-title",
+                event: `onchange="ui.gameCard.uiProps.showTitle = this.checked"`,
+                checked: this.uiProps.showTitle,
+            },
+            {
                 label: ui.lang.showTitleBadges,
                 type: inputTypes.CHECKBOX,
                 id: "game-card_show-badges",
                 event: `onchange="ui.gameCard.uiProps.showBadges = this.checked"`,
                 checked: this.uiProps.showBadges,
+            },
+            {
+                label: ui.lang.showCheevosProgress,
+                type: inputTypes.CHECKBOX,
+                id: "game-card_show-count-pr",
+                event: `onchange="ui.gameCard.uiProps.showCheevosProgress = this.checked"`,
+                checked: this.uiProps.showCheevosProgress,
+            },
+            {
+                label: ui.lang.showPointsProgress,
+                type: inputTypes.CHECKBOX,
+                id: "game-card_show-points-pr",
+                event: `onchange="ui.gameCard.uiProps.showPointsProgress = this.checked"`,
+                checked: this.uiProps.showPointsProgress,
+            },
+            {
+                label: ui.lang.showRetropointsProgress,
+                type: inputTypes.CHECKBOX,
+                id: "game-card_show-rp-pr",
+                event: `onchange="ui.gameCard.uiProps.showRetropointsProgress = this.checked"`,
+                checked: this.uiProps.showRetropointsProgress,
             },
         ]
     }
@@ -103,6 +137,9 @@ export class GameCard extends Widget {
                     <a id="game-card-header" href="#" target="_blank"> </a>
                 </h2>
                 <div class="game-card__info game-card__genres-container"></div>
+                <div class="game-card__info game-card__progress-container game-card__progress-count"></div>
+                <div class="game-card__info game-card__progress-container game-card__progress-points"></div>
+                <div class="game-card__info game-card__progress-container game-card__progress-retropoints"></div>
             </div>
         `
         const headerElementsHtml = `
@@ -133,6 +170,10 @@ export class GameCard extends Widget {
         this.preview = document.querySelector("#game-card-image");
         this.iconsContainer = this.section.querySelector(".game-card__icons-container");
         this.badgesContainer = this.section.querySelector(".game-card__genres-container");
+        this.progressCountContainer = this.section.querySelector(".game-card__progress-count");
+        this.progressPointsContainer = this.section.querySelector(".game-card__progress-points");
+        this.progressRetropointsContainer = this.section.querySelector(".game-card__progress-retropoints");
+
     }
     setElementsValues() {
         const boxArtHasLeftMargin = (ConsoleID) => [4, 5, 6, 18, 78].includes(ConsoleID);
@@ -142,6 +183,10 @@ export class GameCard extends Widget {
         this.section.dataset.progressionAward = progressionAward;
         this.section.classList.toggle("left-margin-preview", boxArtHasLeftMargin(ConsoleID));
         this.section.classList.toggle("compact-header", !this.uiProps.showHeader);
+        this.section.classList.toggle("progress-count-hidden", !this.uiProps.showCheevosProgress);
+        this.section.classList.toggle("progress-points-hidden", !this.uiProps.showPointsProgress);
+        this.section.classList.toggle("progress-rp-hidden", !this.uiProps.showRetropointsProgress);
+        this.section.classList.toggle("title-hidden", !this.uiProps.showTitle);
 
         switch (this.uiProps.previewType) {
             case this.previewTypes.ingame:
@@ -170,7 +215,17 @@ export class GameCard extends Widget {
             moveEvent(this.section, event);
         })
     }
+    updateProgress({ earnedAchievementIDs }) {
+        this.updateProgressData();
+    }
+    updateProgressData() {
+        const gameData = watcher.GAME_DATA;
+        const isHardMode = watcher.IS_HARD_MODE;
 
+        this.progressCountContainer.innerHTML = completionMsg(gameData, progressTypes.cheevos, isHardMode);
+        this.progressPointsContainer.innerHTML = completionMsg(gameData, progressTypes.points, isHardMode);
+        this.progressRetropointsContainer.innerHTML = completionMsg(gameData, progressTypes.retropoints, isHardMode);
+    }
     async gameChangeEvent(isNewGame) {
         const {
             Title,
@@ -221,7 +276,8 @@ export class GameCard extends Widget {
                 hltb,
 
             ]
-            this.badgesContainer.innerHTML = generateBadges(badgesArray, "selection")
+            this.badgesContainer.innerHTML = generateBadges(badgesArray, "selection");
+            this.updateProgressData();
             // `
             //     ${badgeElements.selection(ConsoleName)}
             //     ${badges ? generateBadges(badges, "selection") : ""} 

@@ -14,6 +14,22 @@
   overflow: hidden;
 }
 
+.game-card_section.title-hidden .game-card__title-container {
+  display: none;
+}
+
+.game-card_section.progress-count-hidden .game-card__progress-count {
+  display: none;
+}
+
+.game-card_section.progress-points-hidden .game-card__progress-points {
+  display: none;
+}
+
+.game-card_section.progress-rp-hidden .game-card__progress-retropoints {
+  display: none;
+}
+
 .game-card_section::after {
   position: absolute;
   content: '';
@@ -101,16 +117,26 @@
   border-radius: 0;
 }
 
+
+
+.game-card__info {
+  font-size: 1.1rem;
+  padding: 0.25rem 0.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .game-card__info.game-card__genres-container {
   width: 100%;
   overflow-x: scroll;
   font-size: 1.2rem;
-  padding: 0.25rem 0.5rem;
+
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   gap: 0.25rem 0.25rem;
-  margin-bottom: 0.5rem;
+
   /* text-wrap: nowrap;
   white-space: nowrap; */
 }
@@ -123,9 +149,6 @@
   display: none;
 }
 
-.game-card__info {
-  font-size: 1.1rem;
-}
 
 .game-card__footer {
   width: 100%;
@@ -156,27 +179,9 @@
   background-color: var(--accent-color);
   box-shadow: 0 0 3px 0px var(--accent-color);
   z-index: 1;
-  /* animation: decor-line-anim 20s linear infinite; */
 
 }
 
-@keyframes decor-line-anim {
-  0% {
-    box-shadow: 0 0 3px 0px var(--accent-color);
-  }
-
-  80% {
-    box-shadow: 0 0 3px 0px var(--accent-color);
-  }
-
-  90% {
-    box-shadow: 0 0 5px 2px var(--accent-color);
-  }
-
-  100% {
-    box-shadow: 0 0 3px 0px var(--accent-color);
-  }
-}
 
 [data-progression-award="beaten-softcore"] .game-card__description {
   /* background: var(--silver-color);
@@ -220,6 +225,10 @@
 [data-progression-award="beaten-softcore"] .game-card__progression-award {
   display: inline-block;
   background-color: var(--silver-color);
+}
+
+.game-card__description {
+  padding-bottom: 0.25rem;
 }
 
 .game-card-info {
