@@ -172,7 +172,7 @@ export class Notifications extends Widget {
     showSavedAlert() {
         const savedAlerts = this.getSavedAlerts();
         savedAlerts.forEach(({ timeStamp, alerts }) => {
-            this.showAlerts(alerts, new Date(timeStamp).toLocaleString());
+            this.showAlerts(alerts, new Date(timeStamp));
         })
 
     }
@@ -229,19 +229,12 @@ export class Notifications extends Widget {
             alertsBlockElement.classList.add("notification_popup");
         }
     }
-    generatePopupTime(time) {
-        !time && (time = new Date().toLocaleString())
-        const toDate = (s) => {
-            const [datePart, timePart] = s.split(', ');
+    generatePopupTime(popupTime) {
 
-            const [day, month, year] = datePart.split('.').map(Number);
+        popupTime ??= new Date().getTime();
 
-            const [hours, minutes] = timePart.split(':').map(Number);
 
-            return new Date(year, month - 1, day, hours, minutes);
-        }
         const timestampElement = document.createElement("li");
-        const popupTime = (time ? toDate(time) : new Date()).getTime();
         timestampElement.dataset.time = popupTime;
         timestampElement.classList.add("notification_timestamp");
         timestampElement.innerHTML = `
