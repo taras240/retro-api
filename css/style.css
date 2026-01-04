@@ -183,3 +183,8 @@ a:hover {
   object-position: center;
   filter: brightness(0.3);
 }
+
+.italic-text {
+  font-style: italic;
+  /* font-style: oblique;  */
+}

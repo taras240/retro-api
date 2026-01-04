@@ -32,7 +32,7 @@ import { richPresenceHtml } from "../components/statusWidget/richPresence.js";
 import { indicatorHtml } from "../components/statusWidget/statusIndicator.js";
 import { statusStyles } from "../enums/statusThemes.js";
 import { StatusPanel } from "../removed/status.js";
-import { alertHtml, updateAlertContainer } from "../components/statusWidget/alert.js";
+import { alertHtml, hideAlert, showAlert } from "../components/statusWidget/alert.js";
 import { gameInfoHtml } from "../components/statusWidget/gameInfo.js";
 import { timePosition } from "../enums/timePosition.js";
 import { gameInfoTypes } from "../enums/gameInfoTypes.js";
@@ -308,11 +308,6 @@ export class Status extends Widget {
         }
         this.alertElements = {
             container: this.section.querySelector(".rp__alert-container"),
-            preview: this.section.querySelector(".rp__alert-preview"),
-            title: this.section.querySelector(".rp__alert-title"),
-            description: this.section.querySelector(".rp__alert-description"),
-            badges: this.section.querySelector(".rp__alert-badges"),
-
         }
         this.richPresenceElement = this.section.querySelector(".rp__rich-presence");
         this.progressionContainer = this.section.querySelector(".rp__progression-container")
@@ -448,6 +443,8 @@ export class Status extends Widget {
         sweepEffect(this.section);
     }
     gameChangeEvent(isNewGame = false) {
+        // this.addAlertsToQuery([{ type: alertTypes.GAME, value: watcher.GAME_DATA }]);
+
         if (isNewGame && watcher.IS_WATCHING) {
             this.addAlertsToQuery([{ type: alertTypes.GAME, value: watcher.GAME_DATA }]);
         }
@@ -591,14 +588,14 @@ export class Status extends Widget {
         // this.gameChangeEvent();
     }
     updateRichPresence(richPresenceText) {
-        this.section.querySelectorAll(".rp__rich-presence")?.forEach(el =>
-            el.innerText = richPresenceText || ui.lang.richPresence
-        )
+        this.section.querySelectorAll(".rp__rich-presence")?.forEach(el => {
+            const message = richPresenceText || ui.lang.richPresence;
+            el.innerText = message;
+            el.dataset.title = message;
+        })
     }
     alertsQuery = [];
     addAlertsToQuery(elements) {
-        console.log("alerts hidden", elements)
-        return;
         // if (!this.SHOW_NEW_ACHIV) return;
         if (this.alertsQuery.length > 0) {
             this.alertsQuery = [...this.alertsQuery, ...elements];
@@ -615,29 +612,16 @@ export class Status extends Widget {
                 this.alertsQuery.shift();
                 return;
             } const onAlertStart = () => {
-                updateAlertContainer(currentAlert, this.alertElements.container);
-                // this.alertElements.container.classList.add("show-alert");
-                // glassAnimation();
-                setTimeout(() => {
-                    // this.startAutoScrollElement(this.alertElements.title);
-                    // this.startAutoScrollElement(this.alertElements.badges);
-                    // this.startAutoScrollElement(this.alertElements.description);
-                }, 2000)
-
-
+                showAlert(currentAlert, this.alertElements.container);
             }
-            const onAlertFinish = () => {
-                this.alertElements.container.classList.add("hide-alert");
-                // setTimeout(() => clearContainer(), 500)
+            const onAlertFinish = async () => {
+                await hideAlert(this.alertElements.container);
                 this.alertsQuery.shift();
-                // this.stopAutoScrollElement(this.alertElements.badges, true);
-                // this.stopAutoScrollElement(this.alertElements.description, true);
-                // this.stopAutoScrollElement(this.alertElements.title, true);
             }
             await delay(1000); //*waiting for previous animation ending
             onAlertStart();
             await delay(this.ACHIV_DURATION); //*waiting alert duration
-            onAlertFinish();
+            await onAlertFinish();
         }
     }
 

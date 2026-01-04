@@ -549,6 +549,180 @@
 
 /**-------------ALERT---------------- */
 .rp__alert-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--alert-heigth);
+    max-width: 100%;
+    max-height: 100%;
+    --main-color: #171a21;
+    --font-color: white;
+    --accent-color: #ff8b10;
+    --line-gr: linear-gradient(to left, transparent, var(--accent-color), transparent);
+    z-index: 10;
+}
+
+.rp__alert-container.hide-alert {
+    opacity: 0;
+    transition: opacity 500ms;
+}
+
+.rp__alert-content {
+    /* --bg-src: url(https://media.retroachievements.org/Badge/10025.png); */
+    position: relative;
+    height: var(--alert-heigth);
+    width: 100%;
+    background: var(--main-color);
+    color: var(--font-color);
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 0.5rem;
+    overflow: hidden;
+}
+
+
+.rp-alert__preview-container {
+    flex-shrink: 0;
+    height: var(--alert-heigth);
+    aspect-ratio: 1;
+    background: var(--bg-src);
+    background-size: auto;
+    background-size: contain;
+    image-rendering: pixelated;
+    z-index: 1;
+}
+
+.rp-alert__ambient {
+    position: absolute;
+    left: 0;
+    width: 120%;
+    height: 120%;
+    aspect-ratio: auto;
+
+    filter: blur(30px);
+
+    background-size: 200% 100%;
+    background-repeat: no-repeat;
+    background-position-x: 100%;
+    mix-blend-mode: color;
+    z-index: 0;
+}
+
+.rp-alert__neon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+
+    animation: neon-anim 500ms ease-in-out forwards;
+}
+
+@keyframes neon-anim {
+    0% {
+        background: var(--accent-color);
+    }
+
+    100% {
+        background: transparent;
+    }
+}
+
+.rp-alert__neon::after,
+.rp-alert__neon::before {
+    content: "";
+    position: absolute;
+
+    width: 100%;
+    height: 1px;
+    background: var(--line-gr);
+    background: var(--accent-color);
+    box-shadow:
+        0 0 10px var(--accent-color),
+        0 0 25px var(--accent-color),
+        0 0 50px var(--accent-color);
+}
+
+.rp-alert__neon::after {
+    bottom: 0;
+    left: 0;
+}
+
+.rp-alert__neon::before {
+    top: 0;
+    left: 0;
+}
+
+
+
+.rp-alert__points {
+    position: absolute;
+    bottom: 0;
+    right: 5px;
+    font-size: 1.5rem;
+    font-family: system-ui;
+    font-weight: bold;
+    color: var(--accent-color);
+    z-index: 2;
+}
+
+.rp-alert__text-container {
+    flex: 1;
+    font-family: system-ui;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 0.25rem;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.rp-alert__text-container p {
+    text-align: start;
+}
+
+.rp-alert__title {
+    color: var(--accent-color);
+    font-size: 1.2rem;
+    font-weight: bold;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* text-align: center; */
+    align-self: center;
+    white-space: nowrap;
+    border-bottom: 1px solid;
+    border-image: var(--line-gr) 1;
+    width: 100%;
+    text-align: center;
+    padding: 0.25rem 0;
+}
+
+.rp-alert__description {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    text-align: center;
+    white-space: wrap;
+    overflow: hidden;
+    opacity: 0.8;
+    /*   flex-grow: 1; */
+}
+
+.rp-alert__hor-decorate {
+    width: 100%;
+    height: 1px;
+    background: var(--line-gr);
+    opacity: 0.5;
+}
+
+/* .rp__alert-container {
     --font-color: black;
     --main-color: linear-gradient(to right,
             #ee0979,
@@ -566,7 +740,6 @@
     box-shadow: inset 0 0 3px 0px black;
     overflow: hidden;
     display: none;
-    /* animation: rp-alert-animation 0.6s ease-in-out forwards; */
 }
 
 .rp__alert-container.show-alert {
@@ -620,7 +793,6 @@
     flex-direction: column;
     row-gap: 0.2rem;
     justify-content: space-evenly;
-    /* align-items: center; */
     width: 100%;
     overflow: hidden;
 }
@@ -662,7 +834,7 @@
     font-size: 1.2rem;
     width: 100%;
     overflow-x: scroll;
-}
+} */
 
 
 /**-------------CHEEVOS-LIST--------  */

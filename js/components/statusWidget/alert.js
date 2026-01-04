@@ -1,4 +1,5 @@
 import { alertTypes } from "../../enums/alerts.js";
+import { delay } from "../../functions/delay.js";
 import { cheevoImageUrl, gameImageUrl } from "../../functions/raLinks.js";
 import { config, watcher } from "../../script.js";
 import { badgeElements, generateBadges, goldBadge } from "../badges.js";
@@ -16,71 +17,52 @@ const deltaTime = (time) => {
             `;
     return timeStr;
 }
-const alertInnerHtml = ({ imageUrl, title, description, badgesHtml }) => {
+const alertInnerHtml = ({ imageUrl, Title, Description, Points = "" }) => {
     return `
-        <div class="rp__alert-preview-container">
-            <img class="rp__alert-preview" src="${imageUrl}" alt="">
-        </div>
-        <div class="rp__alert-info-grid">
-            <h3 class="rp__alert-title">
-                ${title ?? ""}
-            </h3>
-            <div class="rp__alert-description">${description ?? ""}</div>
-            <div class="rp__alert-badges">${badgesHtml ?? ""}</div>
-        </div>
+                <div class="rp-alert__neon"></div>
+                <div class="rp-alert__preview-container"></div>
+                <div class="rp-alert__preview-container rp-alert__ambient"></div>
+                
+                <div class="rp-alert__text-container">
+                    <h2 class="rp-alert__title">${Title}</h2>
+                    <div class="rp-alert__description">${Description}</div>
+                </div>
+                <p class="rp-alert__points">${Points}</p>
     `;
 }
-const gameAlertHtml = (gameData) => {
+const gameAlertElement = (gameData) => {
     const { Title,
-        badges,
         ImageIcon,
         totalPoints,
         ConsoleName,
+        Released,
         totalRetropoints,
         NumAchievements,
         masteryRate,
         beatenRate,
+        retroRatio
     } = gameData;
-
-    const badgesHtml = `
-                ${badgeElements.black(icons.cheevos + NumAchievements)}
-                ${badgeElements.black(icons.points + totalPoints)}
-                ${badgeElements.black(icons.retropoints + totalRetropoints)}
-                ${badgeElements.black(icons.masteryAward + masteryRate + "%")}
-                ${badgeElements.black(icons.progressionAward + beatenRate + "%")}
-            `;
-    const title = `${Title} ${generateBadges(badges)}<i class="badge">${ConsoleName}</i>`;
-
-    return alertInnerHtml({ title, badgesHtml, imageUrl: gameImageUrl(ImageIcon) });
+    const Description = `
+        <p>Console: ${ConsoleName} </p>
+        <p>Released:${Released}</p>
+    `;
+    const gameAlert = document.createElement("div");
+    gameAlert.classList.add("rp__alert-content");
+    gameAlert.style.setProperty("--bg-src", `url(${gameImageUrl(ImageIcon)})`);
+    gameAlert.innerHTML = alertInnerHtml({ Title, Description, Points: retroRatio });
+    return gameAlert;
 }
-const cheevoAlertHtml = (cheevo) => {
+const cheevoAlertElement = (cheevo) => {
     const { isEarnedHardcore, Title, Description, BadgeName, Points, TrueRatio, rateEarned, rateEarnedHardcore, difficulty } = cheevo;
-
-    let cheevoBadges = isEarnedHardcore ?
-        `
-                    ${goldBadge(icons.points + " +" + Points)}
-                    ${goldBadge(icons.retropoints + " +" + TrueRatio)}
-                    ${goldBadge("TOP" + rateEarnedHardcore)}
-                    ${badgeElements.difficultBadge(difficulty)}
-                `
-        : `
-                    ${goldBadge(icons.points + " +" + Points)}
-                    ${goldBadge("TOP" + rateEarned)}
-                    ${badgeElements.difficultBadge(difficulty)}
-                `;
-
-    let genres = cheevo.genres?.map(genre => goldBadge(genre))?.join("\n") ?? "";
-
-    return alertInnerHtml({
-        imageUrl: cheevoImageUrl(cheevo),
-        title: Title,
-        description: Description,
-        badgesHtml: genres + cheevoBadges
-    });
+    const cheevoAlert = document.createElement("div");
+    cheevoAlert.classList.add("rp__alert-content");
+    cheevoAlert.style.setProperty("--bg-src", `url(${cheevoImageUrl(cheevo)})`);
+    cheevoAlert.innerHTML = alertInnerHtml(cheevo);
+    return cheevoAlert;
 }
 
-const awardAlertHtml = (game, award) => {
-    const { Title,
+const awardAlertElement = (game, award) => {
+    const {
         badges,
         ImageIcon,
         totalPoints,
@@ -95,25 +77,21 @@ const awardAlertHtml = (game, award) => {
         TimePlayed
     } = game;
     // let award = 'mastered';
-    const awardRate = award == 'mastered' ? masteryRate :
-        award == 'beaten' ? beatenRate :
-            award == 'completed' ? completedRate : beatenRateSoftcore;
-
     const playTimeInMinutes = deltaTime(TimePlayed);
+    const Description = `
+        <p>Award earned in ${playTimeInMinutes}</p>
+        <p>Unlocked cheevos: ${unlockData.softcore.count}</p>
+    `;
+    const Title = `
+        Game ${award}<i class="italic-text">!</i>
+    `;
+    const Points = unlockData.softcore.points;
+    const awardAlert = document.createElement("div");
+    awardAlert.classList.add("rp__alert-content");
+    awardAlert.style.setProperty("--bg-src", `url(${gameImageUrl(ImageIcon)})`);
+    awardAlert.innerHTML = alertInnerHtml({ Title, Description, Points });
+    return awardAlert;
 
-    let badgesHtml = `
-                ${goldBadge(`${award} IN ${playTimeInMinutes}`)}
-                ${goldBadge(`TOP${awardRate}%`)}
-                ${goldBadge(`${icons.cheevos}${unlockData.hardcore.count}/${NumAchievements}`)}
-                ${goldBadge(`${icons.points}${unlockData.hardcore.points}/${totalPoints}`)}
-                ${goldBadge(`${icons.retropoints}${unlockData.hardcore.retropoints}/${totalRetropoints}`)}
-            `;
-    const title = `${Title} ${generateBadges(badges)} ${goldBadge("GAINED AWARD")}`;
-    return alertInnerHtml({
-        imageUrl: gameImageUrl(ImageIcon),
-        title,
-        badgesHtml
-    });
 }
 const statsAlertHtml = (stats) => {
     let badgesHtml = `
@@ -135,25 +113,32 @@ const statsAlertHtml = (stats) => {
 export const alertHtml = (alert) => {
     return divHtml(["rp__alert-container"]);
 }
-export const updateAlertContainer = (alert, container) => {
+export const showAlert = (alert, alertContainer) => {
+    alertContainer.classList.remove("hide-alert");
     switch (alert.type) {
         case alertTypes.GAME:
-            // container.innerHTML = gameAlertHtml(alert.value);
-            // container.className = "rp__alert-container game-alert show-alert"
+            alertContainer.appendChild(gameAlertElement(alert.value));
+            alertContainer.classList.add("show-alert");
             break;
         case alertTypes.CHEEVO:
-            container.innerHTML = cheevoElementFull(alert.value).innerHTML;
-            container.className = "rp__alert-container cheevo-alert show-alert"
+            alertContainer.appendChild(cheevoAlertElement(alert.value));
+            alertContainer.classList.add("show-alert");
             break;
         case alertTypes.AWARD:
-            container.innerHTML = awardAlertHtml(alert.value, alert.award);
-            container.className = "rp__alert-container award-alert show-alert"
+            alertContainer.appendChild(awardAlertElement(alert.value, alert.award));
+            alertContainer.classList.add("show-alert");
             break;
-        case alertTypes.STATS:
-            container.innerHTML = statsAlertHtml(alert.value);
-            container.className = "rp__alert-container stats-alert show-alert"
-            break;
+        // case alertTypes.STATS:
+        //     container.innerHTML = statsAlertHtml(alert.value);
+        //     container.className = "rp__alert-container stats-alert show-alert"
+        //     break;
         default:
             break;
     }
+}
+export const hideAlert = async (alertContainer, animDurationMs) => {
+    alertContainer.classList.remove("show-alert");
+    alertContainer.classList.add("hide-alert");
+    await delay(animDurationMs ?? 1000);
+    alertContainer.innerHTML = "";
 }

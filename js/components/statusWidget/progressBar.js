@@ -140,8 +140,9 @@ export const updateProgressBarData = (container, gameData, isHardMode, progressT
         .sort((a, b) => sortBy.latest(a, b, 1, true))
         .slice(0, 6)
         .reverse();
+    const message = completionMsg(gameData, progressType, isHardMode)
 
-    progressMsgElement.innerHTML = completionMsg(gameData, progressType, isHardMode);
+    progressMsgElement.innerHTML = message;
 
     lastCheevosElement.innerHTML = lastCheevos.map(cheevo => recentCheevoHtml(cheevo)).join("");
     progressBarElement.style.setProperty("--unlockRate", `${100 * unlocked / total}%`);
