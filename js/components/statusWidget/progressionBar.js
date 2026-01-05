@@ -45,7 +45,7 @@ export const updateProgressionBar = (container, gameData, isHardMode = true) => 
     const focusIndex = cheevos.findIndex(c => !isEarned(c));
     const message = progressionMessage(focusCheevo, focusIndex, cheevos);
     container.innerHTML = `
-        <h3 class="${mainClass}-target" data-title='${message}'>
+        <h3 class="${mainClass}-target" data-title="${focusCheevo?.Description ?? ""}">
             ${message}
         </h3>
         <div class="${mainClass}-points">

@@ -561,6 +561,7 @@
     --accent-color: #ff8b10;
     --line-gr: linear-gradient(to left, transparent, var(--accent-color), transparent);
     z-index: 10;
+    pointer-events: none;
 }
 
 .rp__alert-container.hide-alert {

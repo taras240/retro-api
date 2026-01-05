@@ -37,7 +37,7 @@ const parseCheevoGroups = (gameData) => {
     const groupRegex = /\[([^\]]+)\]/i;
     const groups = cheevos.reduce((groups, cheevo) => {
         const group = groupRegex.exec(cheevo.Title + cheevo.Description)?.[1];
-        if (group && !/continue|difficult/i.test(group)) {
+        if (group && !/continue|difficult|password/i.test(group)) {
             cheevo.group = group;
             groups.add(group);
         }
