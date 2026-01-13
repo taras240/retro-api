@@ -13,7 +13,7 @@ import { inputTypes } from "../components/inputElements.js";
 import { imageFilters } from "../enums/imageFilters.js";
 import { secondsToBadgeString } from "../functions/time.js";
 import { buttonsHtml } from "../components/htmlElements.js";
-import { cacheDataTypes } from "../enums/cacheDataTypes.js";
+import { CACHE_TYPES } from "../enums/cacheDataTypes.js";
 import { divHtml } from "../components/divContainer.js";
 
 export class Target extends Widget {
@@ -1111,7 +1111,7 @@ export class Target extends Widget {
         this.section.querySelector(`.target__aotw-container`)?.remove();
         const aotw = await apiWorker.aotw();
         apiWorker.cache.push({
-            dataType: cacheDataTypes.AOTW,
+            dataType: CACHE_TYPES.AOTW,
             data: {
                 ...aotw,
                 wasShown: true

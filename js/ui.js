@@ -1,7 +1,6 @@
 import { loadSections } from "./htmlBuilder.js";
 
 import { config, ui, apiWorker, watcher, configData } from "./script.js";
-import { gameGenres } from "./enums/gameGenres.js";
 
 import { cheevoPopupElement } from "./components/cheevoPopup.js";
 import { hintElement } from "./components/hint.js";
@@ -30,7 +29,7 @@ import { Games } from "./widgets/games.js";
 import { Status } from "./widgets/statusV2.js";
 import { GameList } from "./widgets/gamesList.js";
 import { Links } from "./widgets/links.js";
-import { alertTypes } from "./enums/alerts.js";
+import { ALERT_TYPES } from "./enums/alerts.js";
 import { gamePropsPopup } from "./components/gamePropsPopup.js";
 import { langPackUrl, local } from "./enums/locals.js";
 import { delay } from "./functions/delay.js";
@@ -75,7 +74,7 @@ export class UI {
     setTimeout(
       () =>
         document.querySelector(".loading-section")?.classList.add("hidden"),
-      1
+      1000
     );
     await this.loadLang();
 
@@ -294,21 +293,21 @@ export class UI {
     }, isLog && updateDelay < 30 * 1000 ? 30 * 1000 : updateDelay);
 
 
-    const alerts = earnedAchievementsIDs.map(cheevoID => ({ type: alertTypes.CHEEVO, value: watcher.CHEEVOS[cheevoID] }));
+    const alerts = earnedAchievementsIDs.map(cheevoID => ({ type: ALERT_TYPES.CHEEVO, value: watcher.CHEEVOS[cheevoID] }));
     this.notifications.addAlertsToQuery(alerts);
   }
   showGameChangeAlerts(isStart) {
     this.notifications.gameChangeEvent(true);
     if (configData.discordNewGame ||
       (isStart && configData.discordStartSession)) {
-      sendDiscordAlert({ type: alertTypes.GAME });
+      sendDiscordAlert({ type: ALERT_TYPES.GAME });
     }
   }
   showAwardsAlerts(awardsArray = []) {
     pushFSAlerts(awardsArray);
     awardsArray.forEach(award => {
       configData.discordNewAward && sendDiscordAlert(award);
-      // { message: alert.award, type: alertTypes.award, id: watcher.GAME_DATA?.ID }
+      // { message: alert.award, type: ALERT_TYPES.award, id: watcher.GAME_DATA?.ID }
     });
 
     this.statusPanel.addAlertsToQuery(awardsArray);
@@ -322,7 +321,7 @@ export class UI {
   showCheevoAlerts(earnedAchievementIDs = []) {
     let cheevoAlerts = earnedAchievementIDs
       .map(id => ({
-        type: alertTypes.CHEEVO,
+        type: ALERT_TYPES.CHEEVO,
         value: watcher.CHEEVOS[id]
       }));
 

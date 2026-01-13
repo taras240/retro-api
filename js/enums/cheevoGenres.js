@@ -1,4 +1,4 @@
-export const cheevoGenres = Object.freeze({
+export const CHEEVO_GENRES = Object.freeze({
     KILLER: 'killer',
     PACIFIST: 'pacifist',
     SCORE: 'score',

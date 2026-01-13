@@ -1,4 +1,4 @@
-export const releaseVersions = Object.freeze({
+export const RELEASE_TYPES = Object.freeze({
     RETAIL: "Retail",
     HACK: "Hack",
     UNLICENSED: "Unlicensed",

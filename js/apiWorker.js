@@ -1,5 +1,5 @@
-import { cacheDataTypes } from "./enums/cacheDataTypes.js";
-import { gameAwardTypes } from "./enums/gameAwards.js";
+import { CACHE_TYPES } from "./enums/cacheDataTypes.js";
+import { GAME_AWARD_TYPES } from "./enums/gameAwards.js";
 import { raEdpoints } from "./enums/RAEndpoints.js";
 import { cacheWorker } from "./functions/api/cacheWorker.js";
 import { getNormalizedAotW } from "./functions/api/cheevosNormalization.js";
@@ -55,10 +55,10 @@ export class APIWorker {
     return url;
   }
   async completionProgress() {
-    let completionProgress = this.cache.getData({ dataType: cacheDataTypes.COMPLETION_PROGRESS });
+    let completionProgress = this.cache.getData({ dataType: CACHE_TYPES.COMPLETION_PROGRESS });
     if (!completionProgress?.Total || (configData.targetUser || config.USER_NAME) !== completionProgress.UserName) {
       await this.updateCompletionProgress({ batchSize: 500 });
-      completionProgress = await this.cache.getData({ dataType: cacheDataTypes.COMPLETION_PROGRESS });
+      completionProgress = await this.cache.getData({ dataType: CACHE_TYPES.COMPLETION_PROGRESS });
       return completionProgress;
     }
     else {
@@ -66,7 +66,7 @@ export class APIWorker {
       return (date - completionProgress.Date < 60 * 1000)
         ? completionProgress
         : this.updateCompletionProgress({ batchSize: 10, savedArray: completionProgress.Results })
-          .then(async () => await this.cache.getData({ dataType: cacheDataTypes.COMPLETION_PROGRESS }))
+          .then(async () => await this.cache.getData({ dataType: CACHE_TYPES.COMPLETION_PROGRESS }))
     }
   }
   getAotW() {
@@ -84,12 +84,12 @@ export class APIWorker {
       const eventStartDate = new Date(dateString)
       return eventStartDate > oneWeekAgo;
     }
-    let aotw = this.cache.getData({ dataType: cacheDataTypes.AOTW });
+    let aotw = this.cache.getData({ dataType: CACHE_TYPES.AOTW });
 
     const isActual = aotw && isActualDate(aotw.StartAt);
     if (!isActual) {
       aotw = await this.getAotW();
-      this.cache.push({ dataType: cacheDataTypes.AOTW, data: aotw })
+      this.cache.push({ dataType: CACHE_TYPES.AOTW, data: aotw })
     }
     return aotw;
   }
@@ -141,8 +141,8 @@ export class APIWorker {
         award:
           game.ConsoleName == 'Events' ? "event" :
             game.AwardType == "Game Beaten" ?
-              game.AwardDataExtra == "1" ? gameAwardTypes.BEATEN : gameAwardTypes.BEATEN_SOFTCORE :
-              game.AwardDataExtra == "1" ? gameAwardTypes.MASTERED : gameAwardTypes.COMPLETED,
+              game.AwardDataExtra == "1" ? GAME_AWARD_TYPES.BEATEN : GAME_AWARD_TYPES.BEATEN_SOFTCORE :
+              game.AwardDataExtra == "1" ? GAME_AWARD_TYPES.MASTERED : GAME_AWARD_TYPES.COMPLETED,
 
       }))
       return awardsObj;
@@ -182,13 +182,13 @@ export class APIWorker {
       targetUser: targetUser || configData.targetUser,
       gameID: gameID || configData.gameID,
     });
-    let cachedData = this.cache.getData({ dataType: cacheDataTypes.GAME_TIMES, ID: gameID });
+    let cachedData = this.cache.getData({ dataType: CACHE_TYPES.GAME_TIMES, ID: gameID });
     if (!cachedData) {
       const gameTimes = await fetch(url).then(resp => resp.json());
 
       cachedData = getNormalizedTimes(gameTimes);
       this.cache.push({
-        dataType: cacheDataTypes.GAME_TIMES,
+        dataType: CACHE_TYPES.GAME_TIMES,
         data: cachedData
       });
     }
@@ -361,7 +361,7 @@ export class APIWorker {
       savedArray = savedArray.filter(game => !completionIDs.includes(game.GameID))
       savedArray = [...completionProgress, ...savedArray];
       this.cache.push({
-        dataType: cacheDataTypes.COMPLETION_PROGRESS,
+        dataType: CACHE_TYPES.COMPLETION_PROGRESS,
         data: {
           Date: new Date(),
           Total: savedArray.length,

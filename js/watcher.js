@@ -1,6 +1,6 @@
 import { dialogWindow } from "./components/dialogWindow.js";
-import { alertTypes } from "./enums/alerts.js";
-import { cheevoTypes } from "./enums/cheevoTypes.js";
+import { ALERT_TYPES } from "./enums/alerts.js";
+import { CHEEVO_TYPES } from "./enums/cheevoTypes.js";
 import { delay } from "./functions/delay.js";
 import { sendDiscordAlert } from "./functions/discord.js";
 import { readLog } from "./functions/logParser.js";
@@ -251,14 +251,14 @@ export class Watcher {
                         this.GAME_DATA.unlockData.hardcore.count++;
                         this.GAME_DATA.unlockData.hardcore.points += cheevo.Points;
                         this.GAME_DATA.unlockData.hardcore.retropoints += cheevo.TrueRatio;
-                        if (cheevo.Type == cheevoTypes.PROGRESSION || cheevo.Type == cheevoTypes.WIN) {
+                        if (cheevo.Type == CHEEVO_TYPES.PROGRESSION || cheevo.Type == CHEEVO_TYPES.WIN) {
                             this.GAME_DATA.unlockData.hardcore.progressionCount++;
                         }
                     }
 
                     this.GAME_DATA.unlockData.softcore.count++;
                     this.GAME_DATA.unlockData.softcore.points += cheevo.Points;
-                    if (cheevo.Type == cheevoTypes.PROGRESSION || cheevo.Type == cheevoTypes.WIN) {
+                    if (cheevo.Type == CHEEVO_TYPES.PROGRESSION || cheevo.Type == CHEEVO_TYPES.WIN) {
                         this.GAME_DATA.unlockData.softcore.progressionCount++;
                     }
 
@@ -293,7 +293,7 @@ export class Watcher {
                 && this.GAME_DATA.unlockData.hardcore.count === this.GAME_DATA.NumAchievements) {
                 this.GAME_DATA.award = 'mastered';
                 awardsArray.push({
-                    type: alertTypes.AWARD,
+                    type: ALERT_TYPES.AWARD,
                     award: "mastered",
                     value: this.GAME_DATA
                 });
@@ -301,7 +301,7 @@ export class Watcher {
             else if (!this.GAME_DATA.award && this.GAME_DATA.unlockData.softcore.count === this.GAME_DATA.NumAchievements) {
                 this.GAME_DATA.award = 'completed';
                 awardsArray.push({
-                    type: alertTypes.AWARD,
+                    type: ALERT_TYPES.AWARD,
                     award: "completed",
                     value: this.GAME_DATA
                 })
@@ -311,7 +311,7 @@ export class Watcher {
                 this.GAME_DATA.unlockData.hardcore.progressionCount >= this.GAME_DATA.progressionSteps) {
                 this.GAME_DATA.progressionAward = 'beaten';
                 awardsArray.push({
-                    type: alertTypes.AWARD,
+                    type: ALERT_TYPES.AWARD,
                     award: "beaten",
                     value: this.GAME_DATA
                 })
@@ -321,7 +321,7 @@ export class Watcher {
                 this.GAME_DATA.unlockData.softcore.progressionCount >= this.GAME_DATA.progressionSteps) {
                 this.GAME_DATA.progressionAward = 'beaten-softcore';
                 awardsArray.push({
-                    type: alertTypes.AWARD,
+                    type: ALERT_TYPES.AWARD,
                     award: "beaten-softcore",
                     value: this.GAME_DATA
                 })
@@ -474,5 +474,61 @@ export class Watcher {
         }
 
         return formatTime(time, true);
+    }
+    onlineStatus = () => {
+        const parseDate = (UTCTime) => {
+            const UTCReg = /(\+00\:00$)|(z$)/gi;
+            !UTCReg.test(UTCTime) && (UTCTime += "+00:00"); // Mark time as UTC Time   
+            const date = new Date(UTCTime);
+            return date
+        }
+        let lastRPMessage;
+        let lastRPMessageDate;
+        let status = "offline";
+        let lastCheckOnline;
+        let lastSeenOnline;
+        //  const doOnline = () => {
+        //             this.RP_DATA.lastChange = new Date();
+        //             this.zeroCheckTime = new Date();
+        //             !this.IS_ONLINE && (this.IS_ONLINE = true, this.checkApiUpdates())
+        //             this.IS_ONLINE = true;
+
+        //         }
+        //         if (!configData.pauseIfOnline) {
+        //             doOnline();
+        //             return;
+        //         }
+        const check = async ({ lastPlayedGame, richPresence }) => {
+            currentDate = new Date();
+            if (richPresence) {
+                if (richPresence !== lastRPMessage) {
+                    isOnline = true;
+                    status = "online";
+                    lastRPMessageDate = currentDate;
+                }
+                else if (currentDate - lastSeenOnline > 5 * 60 * 100) {
+                    isOnline = "false";
+
+                }
+            }
+            lastPlayedGame = (await apiWorker.getRecentlyPlayedGames({ count: 1 }))?.[0] ?? {};
+            const lastPlayedDate = parseDate(lastPlayedGame.LastPlayed);
+            const currentDate = new Date();
+            const isOnline = currentDate - lastPlayedDate < 5 * 60 * 1000;
+            status = isOnline ? "online" : "offline";
+            lastCheckOnline = currentDate;
+
+
+
+
+
+
+            return status;
+
+
+            // this.IS_ONLINE = false;
+            // if (!this.IS_WATCHING) return;
+
+        }
     }
 }

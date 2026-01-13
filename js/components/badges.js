@@ -1,4 +1,4 @@
-import { difficultyNames } from "../enums/difficulty.js";
+import { DIFFICULTY_NAMES } from "../enums/difficulty.js";
 import { genreIcons, icons, signedIcons } from "./icons.js";
 
 export function generateBadges(badges, badgeType = "gameTitle") {
@@ -29,7 +29,7 @@ export const badgeElements = {
         if (difficulty == "") return "";
         const badge = `
             <p class="badge difficult-badge__${difficulty}" >
-                ${prefix} ${difficultyNames[difficulty]}
+                ${prefix} ${DIFFICULTY_NAMES[difficulty]}
                     </p >
             `;
         return badge;

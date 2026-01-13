@@ -3,7 +3,7 @@ import { config, ui, apiWorker } from "../script.js";
 import { Widget } from "./widget.js";
 import { gameImageUrl } from "../functions/raLinks.js";
 import { buttonsHtml } from "../components/htmlElements.js";
-import { gameAwardTypes } from "../enums/gameAwards.js";
+import { GAME_AWARD_TYPES } from "../enums/gameAwards.js";
 
 export class Awards extends Widget {
     widgetIcon = {
@@ -102,7 +102,7 @@ export class Awards extends Widget {
                     <li class="awarded-games total" data-title="${ui.lang.totalAwardsHint}" onclick="ui.awards.filterAwards('all')">
                         ${total}
                     </li>
-                    ${Object.values(gameAwardTypes).map(award => `
+                    ${Object.values(GAME_AWARD_TYPES).map(award => `
                         <li class="awarded-games ${award}" data-title="${ui.lang[award] ?? award}" onclick="ui.awards.filterAwards('${award}')">
                             ${awardsCount(award)}
                         </li>

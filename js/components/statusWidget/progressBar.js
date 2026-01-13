@@ -1,4 +1,4 @@
-import { gameAwardTypes } from "../../enums/gameAwards.js";
+import { GAME_AWARD_TYPES } from "../../enums/gameAwards.js";
 import { progressStyle, progressTypes } from "../../enums/progressBar.js";
 import { formatText } from "../../functions/local.js";
 import { filterBy, sortBy } from "../../functions/sortFilter.js";
@@ -13,9 +13,9 @@ export const completionMsg = (gameData, progressType, isHardMode = true) => {
     const { gameMasteredMsg, gameCompletedMsg, unlockProgressMsg } = ui.lang;
     const progressTypeName = ui.lang?.[`${progressType}Progress`] ?? progressType;
 
-    if (gameData.award === gameAwardTypes.MASTERED) return gameMasteredMsg;
+    if (gameData.award === GAME_AWARD_TYPES.MASTERED) return gameMasteredMsg;
 
-    if (!isHardMode && gameData.award === gameAwardTypes.COMPLETED) return gameCompletedMsg;
+    if (!isHardMode && gameData.award === GAME_AWARD_TYPES.COMPLETED) return gameCompletedMsg;
 
     else return `${badgeElements.gold(`${unlocked}/${total}`)} ${formatText(unlockProgressMsg, { rate: unlockedRate, progressTypeName })}`;
 }

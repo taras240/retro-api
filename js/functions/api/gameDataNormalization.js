@@ -1,5 +1,5 @@
-import { cheevoTypes } from "../../enums/cheevoTypes.js";
-import { gameAwardTypes } from "../../enums/gameAwards.js";
+import { CHEEVO_TYPES } from "../../enums/cheevoTypes.js";
+import { GAME_AWARD_TYPES } from "../../enums/gameAwards.js";
 import { addReleaseBadges } from "../releaseTypeParser.js";
 import { sortBy, sortMethods } from "../sortFilter.js";
 import { normalizeCheevos } from "./cheevosNormalization.js";
@@ -16,7 +16,7 @@ const addPointsData = (gameData) => {
             d.count++;
             d.points += cheevo.Points;
             d.retropoints += cheevo.TrueRatio;
-            [cheevoTypes.PROGRESSION, cheevoTypes.WIN].includes(cheevo.Type) && d.progressionCount++;
+            [CHEEVO_TYPES.PROGRESSION, CHEEVO_TYPES.WIN].includes(cheevo.Type) && d.progressionCount++;
         };
 
         if (cheevo.DateEarnedHardcore) update(data.unlockData.hardcore);
@@ -37,10 +37,10 @@ const addPointsData = (gameData) => {
 }
 
 const addCompletionData = (gameData) => {
-    const progressionArray = cheevosArray.filter(c => c.Type === cheevoTypes.PROGRESSION);
+    const progressionArray = cheevosArray.filter(c => c.Type === CHEEVO_TYPES.PROGRESSION);
     const hasProgression = progressionArray.length > 0;
-    const hasWinCondition = !!cheevosArray.find(c => c.Type === cheevoTypes.WIN);
-    const winConditionArray = hasWinCondition ? cheevosArray.filter(c => c.Type === cheevoTypes.WIN) : [];
+    const hasWinCondition = !!cheevosArray.find(c => c.Type === CHEEVO_TYPES.WIN);
+    const winConditionArray = hasWinCondition ? cheevosArray.filter(c => c.Type === CHEEVO_TYPES.WIN) : [];
 
     const totalRealPlayers = Math.max(...cheevosArray.map(c => c.NumAwarded));
     const hasZeroPoints = cheevosArray.filter(c => !c.DateEarnedHardcore && c.Points === 0).length > 0;
@@ -80,8 +80,8 @@ const addCompletionData = (gameData) => {
     const userAward = () => {
         const isMastered = cheevosArray.length > 0 && cheevosArray.filter(cheevo => !cheevo.DateEarnedHardcore).length === 0;
         const isCompleted = cheevosArray.length > 0 && cheevosArray.filter(cheevo => !cheevo.DateEarned).length === 0;
-        const award = isMastered ? gameAwardTypes.MASTERED :
-            isCompleted ? gameAwardTypes.COMPLETED : null;
+        const award = isMastered ? GAME_AWARD_TYPES.MASTERED :
+            isCompleted ? GAME_AWARD_TYPES.COMPLETED : null;
         return { award }
     }
     const userProgressionAward = () => {
@@ -98,8 +98,8 @@ const addCompletionData = (gameData) => {
             return isProgressionUnlocked && isWinConditionUnlocked
         }
 
-        progressionAward = checkForBeatenAward(false) ? gameAwardTypes.BEATEN :
-            checkForBeatenAward(true) ? gameAwardTypes.BEATEN_SOFTCORE : null
+        progressionAward = checkForBeatenAward(false) ? GAME_AWARD_TYPES.BEATEN :
+            checkForBeatenAward(true) ? GAME_AWARD_TYPES.BEATEN_SOFTCORE : null
 
         return { progressionAward }
     }
@@ -147,6 +147,7 @@ const addSessions = (gameData) => {
         }, [])//{date,cheevos,startDate}
         .map(({ startDate, cheevos, date }) => {
             return {
+                unixTime: startDate.getTime(),
                 startDate: startDate.toLocaleDateString(),
                 endDate: date.toLocaleDateString(),
                 cheevos: cheevos.map(({ ID }) => ID),

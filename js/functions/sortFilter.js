@@ -1,4 +1,4 @@
-import { cheevoTypes } from "../enums/cheevoTypes.js";
+import { CHEEVO_TYPES } from "../enums/cheevoTypes.js";
 import { delay } from "./delay.js";
 import { animateNewOrder } from "./reorderAnimation.js";
 
@@ -6,8 +6,8 @@ export const filterBy = {
     earned: ({ DateEarnedHardcore }) => DateEarnedHardcore,
     earnedSoftcore: ({ DateEarned, DateEarnedHardcore }) => !DateEarnedHardcore && DateEarned,
     notEarned: ({ DateEarnedHardcore, DateEarned }) => !DateEarnedHardcore && !DateEarned,
-    missable: ({ Type }) => Type === cheevoTypes.MISSABLE,
-    progression: ({ Type }) => Type === cheevoTypes.PROGRESSION || Type === cheevoTypes.WIN,
+    missable: ({ Type }) => Type === CHEEVO_TYPES.MISSABLE,
+    progression: ({ Type }) => Type === CHEEVO_TYPES.PROGRESSION || Type === CHEEVO_TYPES.WIN,
     typeless: (cheevo) => !filterBy.progression(cheevo) && !filterBy.missable(cheevo),
     all: () => true,
     genre: ({ genres, genre }) => genres?.includes(genre),
@@ -101,7 +101,13 @@ export const sortBy = {
         (a.DisplayOrder - b.DisplayOrder) * reverse :
         sortBy.unlockRate(a, b, reverse)
     ,
-
+    progression: (a, b) => {
+        if (a.DisplayOrder === b.DisplayOrder) return sortBy.unlockRate(a, b);
+        const order = ({ DisplayOrder, Type }) => Type === CHEEVO_TYPES.PROGRESSION ? DisplayOrder : DisplayOrder * 1e3;
+        const aOrder = order(a);
+        const bOrder = order(b);
+        return aOrder - bOrder;
+    },
     id: (a, b) => a.ID - b.ID,
 
     disable: (a, b) => 0,

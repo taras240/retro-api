@@ -1,4 +1,4 @@
-import { alertTypes } from "../../enums/alerts.js";
+import { ALERT_TYPES } from "../../enums/alerts.js";
 import { delay } from "../../functions/delay.js";
 import { cheevoImageUrl, gameImageUrl } from "../../functions/raLinks.js";
 import { config, watcher } from "../../script.js";
@@ -116,19 +116,19 @@ export const alertHtml = (alert) => {
 export const showAlert = (alert, alertContainer) => {
     alertContainer.classList.remove("hide-alert");
     switch (alert.type) {
-        case alertTypes.GAME:
+        case ALERT_TYPES.GAME:
             alertContainer.appendChild(gameAlertElement(alert.value));
             alertContainer.classList.add("show-alert");
             break;
-        case alertTypes.CHEEVO:
+        case ALERT_TYPES.CHEEVO:
             alertContainer.appendChild(cheevoAlertElement(alert.value));
             alertContainer.classList.add("show-alert");
             break;
-        case alertTypes.AWARD:
+        case ALERT_TYPES.AWARD:
             alertContainer.appendChild(awardAlertElement(alert.value, alert.award));
             alertContainer.classList.add("show-alert");
             break;
-        // case alertTypes.STATS:
+        // case ALERT_TYPES.STATS:
         //     container.innerHTML = statsAlertHtml(alert.value);
         //     container.className = "rp__alert-container stats-alert show-alert"
         //     break;

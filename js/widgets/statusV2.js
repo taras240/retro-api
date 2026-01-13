@@ -1,5 +1,5 @@
 import { UI } from "../ui.js";
-import { alertTypes } from "../enums/alerts.js";
+import { ALERT_TYPES } from "../enums/alerts.js";
 
 import { icons, signedIcons } from "../components/icons.js"
 
@@ -13,7 +13,7 @@ import { resizeEvent } from "../functions/resizingWidget.js";
 import { delay } from "../functions/delay.js";
 import { formatTime } from "../functions/time.js";
 import { gamePropsPopup } from "../components/gamePropsPopup.js";
-import { cheevoTypes } from "../enums/cheevoTypes.js";
+import { CHEEVO_TYPES } from "../enums/cheevoTypes.js";
 import { cheevoImageUrl, gameImageUrl, gameUrl } from "../functions/raLinks.js";
 import { infiniteLineScrolling } from "../functions/infiniteLineScrolling.js";
 import { generateMagicLineText } from "../functions/tickerTextGenerator.js";
@@ -35,7 +35,7 @@ import { StatusPanel } from "../removed/status.js";
 import { alertHtml, hideAlert, showAlert } from "../components/statusWidget/alert.js";
 import { gameInfoHtml } from "../components/statusWidget/gameInfo.js";
 import { timePosition } from "../enums/timePosition.js";
-import { gameInfoTypes } from "../enums/gameInfoTypes.js";
+import { GAME_INFO_TYPES } from "../enums/gameInfoTypes.js";
 import { gameInfoIconsHtml, richInfoHtml } from "../components/statusWidget/gameInfoIcons.js";
 import { sweepEffect } from "../components/windowEffects.js";
 
@@ -104,7 +104,7 @@ export class Status extends Widget {
             } : "",
             {
                 label: ui.lang.infoPanel,
-                elements: Object.values(gameInfoTypes).map(type =>
+                elements: Object.values(GAME_INFO_TYPES).map(type =>
                 ({
                     type: inputTypes.RADIO,
                     name: "info-type",
@@ -225,7 +225,7 @@ export class Status extends Widget {
         progressType: progressTypes.cheevos,
         statusTheme: statusStyles.DEFAULT,
         timePosition: timePosition.normal,
-        gameInfoType: gameInfoTypes.icons,
+        gameInfoType: GAME_INFO_TYPES.icons,
         showGameBg: false,
         showTargetPreview: false,
     }
@@ -236,7 +236,7 @@ export class Status extends Widget {
         showProgression: false,
         statusTheme: statusStyles.THICK,
         timePosition: timePosition.background,
-        gameInfoType: gameInfoTypes.progression,
+        gameInfoType: GAME_INFO_TYPES.progression,
         showTargetPreview: false,
         showGameBg: false,
     }
@@ -443,10 +443,10 @@ export class Status extends Widget {
         sweepEffect(this.section);
     }
     gameChangeEvent(isNewGame = false) {
-        // this.addAlertsToQuery([{ type: alertTypes.GAME, value: watcher.GAME_DATA }]);
+        // this.addAlertsToQuery([{ type: ALERT_TYPES.GAME, value: watcher.GAME_DATA }]);
 
         if (isNewGame && watcher.IS_WATCHING) {
-            this.addAlertsToQuery([{ type: alertTypes.GAME, value: watcher.GAME_DATA }]);
+            this.addAlertsToQuery([{ type: ALERT_TYPES.GAME, value: watcher.GAME_DATA }]);
         }
         this.fillGameData();
         this.doUpdateAnimation();
@@ -525,19 +525,19 @@ export class Status extends Widget {
                 `)
         }
         switch (this.uiProps.gameInfoType) {
-            case gameInfoTypes.progressbar:
+            case GAME_INFO_TYPES.progressbar:
                 gameInfoContent.innerHTML = progressBarHtml();
                 this.updateProgressBar();
                 break;
-            case gameInfoTypes.progression:
+            case GAME_INFO_TYPES.progression:
                 gameInfoContent.innerHTML = progressionBarHtml();
                 this.updateProgressionBar();
                 break;
-            case gameInfoTypes.icons:
+            case GAME_INFO_TYPES.icons:
                 gameInfoContent.innerHTML = gameInfoIconsHtml();
                 updateIcons();
                 break;
-            case gameInfoTypes.richPresence:
+            case GAME_INFO_TYPES.richPresence:
                 gameInfoContent.innerHTML = richInfoHtml();
                 updateIcons();
                 break;

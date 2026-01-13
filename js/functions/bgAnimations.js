@@ -1,4 +1,4 @@
-import { animVariants } from "../enums/bgAnimations.js";
+import { ANIMATIONS } from "../enums/bgAnimations.js";
 import { delay } from "./delay.js";
 
 const moveTypes = Object.freeze({
@@ -8,13 +8,13 @@ const moveTypes = Object.freeze({
 })
 export function initBgAnimation(container, bgAnimType) {
     switch (bgAnimType) {
-        case animVariants.RANDOM_IMAGE:
+        case ANIMATIONS.RANDOM_IMAGE:
             return randomImage(container);
-        case animVariants.PARTICLES_MOVE_RANDOM:
+        case ANIMATIONS.PARTICLES_MOVE_RANDOM:
             return particlesAnimation(container, moveTypes.RANDOM);
-        case animVariants.PARTICLES_MOVE_RIGHT:
+        case ANIMATIONS.PARTICLES_MOVE_RIGHT:
             return particlesAnimation(container, moveTypes.TO_RIGHT);
-        case animVariants.PARTICLES_MOVE_TOP:
+        case ANIMATIONS.PARTICLES_MOVE_TOP:
             return particlesAnimation(container, moveTypes.TO_TOP);
         default:
             return particlesAnimation(container, moveTypes.TO_RIGHT);

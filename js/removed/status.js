@@ -1,6 +1,6 @@
 import { UI } from "../ui.js";
 
-import { alertTypes } from "../enums/alerts.js";
+import { ALERT_TYPES } from "../enums/alerts.js";
 
 import { icons, signedIcons } from "../components/icons.js"
 
@@ -13,10 +13,10 @@ import { showComments } from "../components/comments.js";
 import { moveEvent } from "../functions/movingWidget.js";
 import { resizeEvent } from "../functions/resizingWidget.js";
 import { delay } from "../functions/delay.js";
-import { RAPlatforms } from "../enums/RAPlatforms.js";
+import { RA_PLATFORM_CODES } from "../enums/RAPlatforms.js";
 import { formatTime } from "../functions/time.js";
 import { gamePropsPopup } from "../components/gamePropsPopup.js";
-import { cheevoTypes } from "../enums/cheevoTypes.js";
+import { CHEEVO_TYPES } from "../enums/cheevoTypes.js";
 import { cheevoImageUrl, gameImageUrl, gameUrl } from "../functions/raLinks.js";
 import { infiniteLineScrolling } from "../functions/infiniteLineScrolling.js";
 import { generateMagicLineText } from "../functions/tickerTextGenerator.js";
@@ -392,7 +392,7 @@ export class StatusPanel extends Widget {
             gameTitle.innerHTML = `
                 <a target="_blank" class="status__game-title" href="${gameUrl(ID)}">${Title}</a>
                 ${generateBadges(badges)} 
-                ${generateBadges([RAPlatforms[ConsoleID || 1].Name])}
+                ${generateBadges([RA_PLATFORM_CODES[ConsoleID || 1].Name])}
 
             `;
             setTimeout(() => {
@@ -529,7 +529,7 @@ export class StatusPanel extends Widget {
     }
     gameChangeEvent(isNewGame = false) {
         if (isNewGame && watcher.IS_WATCHING) {
-            this.addAlertsToQuery([{ type: alertTypes.GAME, value: watcher.GAME_DATA }])
+            this.addAlertsToQuery([{ type: ALERT_TYPES.GAME, value: watcher.GAME_DATA }])
         }
         this.updateGameData(true);
 
@@ -576,11 +576,11 @@ export class StatusPanel extends Widget {
         const generateProgressionPoints = {
             dots: () => {
                 const progressionCheevos = Object.values(watcher.CHEEVOS)
-                    .filter(a => a.Type == cheevoTypes.PROGRESSION)
+                    .filter(a => a.Type == CHEEVO_TYPES.PROGRESSION)
                     .sort((a, b) => sortBy.default(a, b));
 
                 const winCheevos = Object.values(watcher.CHEEVOS)
-                    .filter(a => a.Type == cheevoTypes.WIN);
+                    .filter(a => a.Type == CHEEVO_TYPES.WIN);
 
                 const progressionHtml = progressionCheevos.reduce((html, cheevo) => {
                     html += `
@@ -602,11 +602,11 @@ export class StatusPanel extends Widget {
             },
             rects: () => {
                 const progressionCheevos = Object.values(watcher.CHEEVOS)
-                    .filter(a => a.Type == cheevoTypes.PROGRESSION)
+                    .filter(a => a.Type == CHEEVO_TYPES.PROGRESSION)
                     .sort((a, b) => sortBy.default(a, b));
 
                 const winCheevos = Object.values(watcher.CHEEVOS)
-                    .filter(a => a.Type == cheevoTypes.WIN);
+                    .filter(a => a.Type == CHEEVO_TYPES.WIN);
 
                 const progressionHtml = progressionCheevos.reduce((html, cheevo) => {
                     html += `
@@ -705,13 +705,13 @@ export class StatusPanel extends Widget {
             }
             this.deltaStats = deltaStats;
             const statsAlert = {
-                type: alertTypes.STATS, value: {
+                type: ALERT_TYPES.STATS, value: {
                     ...this.currentStats,
                     ...deltaStats,
                     cheevosCount: this.initialStats.cheevosCount,
                 }
             };
-            const queryHasStatistics = this.alertsQuery.find(alert => alert.type === alertTypes.STATS);
+            const queryHasStatistics = this.alertsQuery.find(alert => alert.type === ALERT_TYPES.STATS);
             !queryHasStatistics && this.addAlertsToQuery([statsAlert]);
             ui.status.addAlertsToQuery([statsAlert])
         }
@@ -858,16 +858,16 @@ export class StatusPanel extends Widget {
         const updateAlertData = (alert) => {
             clearContainer();
             switch (alert.type) {
-                case alertTypes.GAME:
+                case ALERT_TYPES.GAME:
                     updateGameData(alert.value);
                     break;
-                case alertTypes.CHEEVO:
+                case ALERT_TYPES.CHEEVO:
                     updateAchivData(alert.value);
                     break;
-                case alertTypes.AWARD:
+                case ALERT_TYPES.AWARD:
                     updateAwardData(alert.value, alert.award);
                     break;
-                case alertTypes.STATS:
+                case ALERT_TYPES.STATS:
                     updateStatsData(alert.value);
                     break;
                 default:

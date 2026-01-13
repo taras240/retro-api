@@ -1,16 +1,16 @@
-import { alertTypes } from "../../enums/alerts.js";
-import { gameAwardTypes } from "../../enums/gameAwards.js";
+import { ALERT_TYPES } from "../../enums/alerts.js";
+import { GAME_AWARD_TYPES } from "../../enums/gameAwards.js";
 import { signedIcons } from "../icons.js";
 
 export const alertHtml = ({ imageUrl, title, titleUrl, meta, icons = [], badge = "", alertType }) => {
 
     const alertBadges = {
-        [alertTypes.CHEEVO]: { title: "unlocked", color: "gold" },
-        [alertTypes.GAME]: { title: "launched", color: "lime" },
-        [gameAwardTypes.BEATEN]: { title: "beaten", color: "orange" },
-        [gameAwardTypes.BEATEN_SOFTCORE]: { title: "beaten*", color: "darkorange" },
-        [gameAwardTypes.MASTERED]: { title: "mastered", color: "violet" },
-        [gameAwardTypes.COMPLETED]: { title: "completed", color: "yellow" },
+        [ALERT_TYPES.CHEEVO]: { title: "unlocked", color: "gold" },
+        [ALERT_TYPES.GAME]: { title: "launched", color: "lime" },
+        [GAME_AWARD_TYPES.BEATEN]: { title: "beaten", color: "orange" },
+        [GAME_AWARD_TYPES.BEATEN_SOFTCORE]: { title: "beaten*", color: "darkorange" },
+        [GAME_AWARD_TYPES.MASTERED]: { title: "mastered", color: "violet" },
+        [GAME_AWARD_TYPES.COMPLETED]: { title: "completed", color: "yellow" },
     }
 
     return `

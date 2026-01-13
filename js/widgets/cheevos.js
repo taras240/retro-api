@@ -3,10 +3,9 @@ import { config, ui, watcher } from "../script.js";
 import { Widget } from "./widget.js";
 import { applyFilter, applySort, cheevosFiterNames, cheevosSortNames, filterBy, filterMethods, sortBy, sortMethods } from "../functions/sortFilter.js";
 import { delay } from "../functions/delay.js";
-import cheevoGrouping from "../enums/cheevoGrouping.js";
+import CHEEVO_GROUPS from "../enums/cheevoGrouping.js";
 import { scrollElementIntoView } from "../functions/scrollingToElement.js";
 import { inputTypes } from "../components/inputElements.js";
-import { overlayNames } from "../enums/cheevoOverlay.js";
 import { imageFilters } from "../enums/imageFilters.js";
 import { buttonsHtml } from "../components/htmlElements.js";
 import { resizerHtml } from "../components/resizer.js";
@@ -123,7 +122,7 @@ export class AchievementsBlock extends Widget {
                         checked: this.uiProps.isGrouping,
                         event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].uiProps.isGrouping = this.checked;"`,
                     },
-                    ...Object.values(cheevoGrouping).map(groupName => ({
+                    ...Object.values(CHEEVO_GROUPS).map(groupName => ({
                         type: inputTypes.RADIO,
                         name: `${this.sectionID}-group`,
                         id: `${this.sectionID}-group-${groupName}`,
@@ -229,12 +228,12 @@ export class AchievementsBlock extends Widget {
     } : "";
     uiDefaultValues = {
         showHeader: true,
-        overlayType: overlayNames.BORDER,
+        // overlayType: overlayNames.BORDER,
         ACHIV_MIN_SIZE: 60,
         ACHIV_MAX_SIZE: 128,
         stretchAchievements: false,
         isGrouping: false,
-        groupBy: cheevoGrouping.UNLOCK_STATUS,
+        groupBy: CHEEVO_GROUPS.UNLOCK_STATUS,
         autoscroll: true,
         showPrevOverlay: true,
         showMario: true,
@@ -387,7 +386,6 @@ export class AchievementsBlock extends Widget {
     setElementsValues() {
         this.section.classList.toggle("hide-bg", !this.uiProps.bgVisibility);
         this.section.classList.toggle("compact", !this.uiProps.showHeader);
-        // this.section.dataset.overlay = this.uiProps.overlayType;
         this.container.style.alignContent = this.uiProps.stretchAchievements ? "space-around" : "start";
         this.container.style.justifyContent = this.uiProps.stretchAchievements ? "space-around" : "center";
         this.section.dataset.previewFilter = this.uiProps.lockedPreviewFilter;
@@ -925,8 +923,8 @@ export class AchievementsBlock extends Widget {
         return newWidget;
     }
     groupCheevos() {
-        const createGroupElement = (title, filter, cheevos, ...props) => {
-            const groupCheevos = [...cheevos].filter(c => filter(c.dataset, ...props));
+        const createGroupElement = (title, filterFunc, cheevos, ...props) => {
+            const groupCheevos = [...cheevos].filter(c => filterFunc(c.dataset, ...props));
             if (groupCheevos.length === 0) return;
             const group = document.createElement("div");
             group.classList.add("cheevos__group");
@@ -954,17 +952,39 @@ export class AchievementsBlock extends Widget {
         }
         switch (this.uiProps.groupBy) {
             case ("unlock_status"):
-            case (cheevoGrouping.UNLOCK_STATUS):
+            case (CHEEVO_GROUPS.UNLOCK_STATUS):
                 createGroupElement(ui.lang.earned, filterBy.earned, cheevos);
                 createGroupElement(ui.lang.earnedSoftcore, filterBy.earnedSoftcore, cheevos);
                 createGroupElement(ui.lang.locked, filterBy.notEarned, cheevos);
                 break;
-            case (cheevoGrouping.TYPE):
+            case (CHEEVO_GROUPS.UNLOCK_DATE):
+                const { sessions } = watcher.GAME_DATA;
+                const daysUnixTime = [...new Set(sessions.map(({ unixTime }) => unixTime))].reverse();
+                const previousUnlocked = sessions.reduce((all, session) =>
+                    [...all, ...session.cheevos], []);
+                const filterByDay = (cheevo, { dayUnixTime, sessions }) => {
+                    const sessionDays = sessions.map(({ unixTime }) => unixTime);
+                    if (dayUnixTime === "Locked") {
+                        return filterBy.notEarned(cheevo)
+                    }
+                    else if (!sessionDays.includes(dayUnixTime)) {
+                        return cheevo.DateEarned && !previousUnlocked.includes(+cheevo.achivId)
+                    }
+
+                    return sessions.find(({ unixTime }) => unixTime === dayUnixTime)?.cheevos?.includes(+cheevo.achivId)
+                }
+                createGroupElement("This Session", filterByDay, cheevos, { dayUnixTime: "This Session", sessions });
+                for (let dayUnixTime of daysUnixTime) {
+                    createGroupElement(new Date(dayUnixTime).toLocaleDateString(), filterByDay, cheevos, { dayUnixTime, sessions })
+                }
+                createGroupElement("Locked", filterByDay, cheevos, { dayUnixTime: "Locked", sessions });
+                break;
+            case (CHEEVO_GROUPS.TYPE):
                 createGroupElement(ui.lang.progression, filterBy.progression, cheevos);
                 createGroupElement(ui.lang.missable, filterBy.missable, cheevos);
                 createGroupElement(ui.lang.other, filterBy.typeless, cheevos);
                 break;
-            case (cheevoGrouping.LEVEL):
+            case (CHEEVO_GROUPS.LEVEL):
 
                 const levels = [...cheevos]
                     .map(({ dataset }) => Number(dataset.level))

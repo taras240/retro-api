@@ -1,4 +1,4 @@
-import { cheevoTypes } from "../../enums/cheevoTypes.js";
+import { CHEEVO_TYPES } from "../../enums/cheevoTypes.js";
 import { sortBy } from "../sortFilter.js";
 
 export function generateCheevosDisplayOrder(game) {
@@ -9,9 +9,16 @@ export function generateCheevosDisplayOrder(game) {
     const sorted = cheevos.sort((a, b) => sortBy.unlockRate(a, b));
 
     sorted.forEach((cheevo, index) => {
-        cheevo.DisplayOrder =
-            [cheevoTypes.PROGRESSION, cheevoTypes.WIN].includes(cheevo.Type)
-                ? index
-                : ++index * 1e3;
+        switch (cheevo.Type) {
+            case CHEEVO_TYPES.PROGRESSION:
+                cheevo.DisplayOrder = index;
+                break;
+            case CHEEVO_TYPES.WIN:
+                cheevo.DisplayOrder = index * 1e3;
+                break;
+            default:
+                cheevo.DisplayOrder = index * 1e6;
+                break;
+        }
     });
 }

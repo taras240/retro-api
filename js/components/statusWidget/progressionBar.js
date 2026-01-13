@@ -1,4 +1,4 @@
-import { cheevoTypes } from "../../enums/cheevoTypes.js";
+import { CHEEVO_TYPES } from "../../enums/cheevoTypes.js";
 import { filterBy, sortBy } from "../../functions/sortFilter.js";
 import { ui } from "../../script.js";
 import { badgeElements } from "../badges.js";
@@ -24,7 +24,7 @@ export const updateProgressionBar = (container, gameData, isHardMode = true) => 
             .map((cheevo) => {
                 const classes = [
                     "rp__progression-point",
-                    cheevo.Type === cheevoTypes.WIN && "win",
+                    cheevo.Type === CHEEVO_TYPES.WIN && "win",
                     isEarned(cheevo) && "earned",
                     focusCheevo?.ID === cheevo.ID && "focus",
                 ]
@@ -39,7 +39,7 @@ export const updateProgressionBar = (container, gameData, isHardMode = true) => 
 
     const cheevos = Object.values(gameData.Achievements)
         .filter(c => filterBy.progression(c))
-        .sort((a, b) => sortBy.default(a, b));
+        .sort((a, b) => sortBy.progression(a, b));
 
     const focusCheevo = cheevos.find(a => !isEarned(a));
     const focusIndex = cheevos.findIndex(c => !isEarned(c));

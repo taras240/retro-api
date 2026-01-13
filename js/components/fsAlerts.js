@@ -1,9 +1,9 @@
 import { configData, ui } from "../script.js";
-import { alertTypes } from "../enums/alerts.js";
+import { ALERT_TYPES } from "../enums/alerts.js";
 import { badgeElements } from "./badges.js";
 import { delay } from "../functions/delay.js";
 import { cheevoImageUrl, gameImageUrl } from "../functions/raLinks.js";
-import { gameAwardTypes } from "../enums/gameAwards.js";
+import { GAME_AWARD_TYPES } from "../enums/gameAwards.js";
 
 let fsAlerts = [];
 function pushFSAlerts(alertsArray) {
@@ -20,7 +20,7 @@ async function showFSAlert() {
     const casualBadge = () => badgeElements.default(ui.lang.casual);
     const awardAlert = (gameData, awardName) => {
         const { ImageIcon, Title } = gameData;
-        const { MASTERED, COMPLETED, BEATEN, BEATEN_SOFTCORE } = gameAwardTypes;
+        const { MASTERED, COMPLETED, BEATEN, BEATEN_SOFTCORE } = GAME_AWARD_TYPES;
         const awardTitles = {
             [MASTERED]: ui.lang.masteryUnlocked,
             [COMPLETED]: `${ui.lang.masteryUnlocked} ${casualBadge()}`,
@@ -80,16 +80,16 @@ async function showFSAlert() {
 
     while (fsAlerts.length > 0) {
         alert = fsAlerts[0];
-        if ((alert.type === alertTypes.CHEEVO && !fsNewCheevo) || (alert.type === alertTypes.AWARD && !fsNewAward)) {
+        if ((alert.type === ALERT_TYPES.CHEEVO && !fsNewCheevo) || (alert.type === ALERT_TYPES.AWARD && !fsNewAward)) {
             fsAlerts.shift();
             continue;
         }
         let alertElement;
         switch (alert.type) {
-            case alertTypes.AWARD:
+            case ALERT_TYPES.AWARD:
                 alertElement = awardAlert(alert.value, alert.award);
                 break;
-            case alertTypes.CHEEVO:
+            case ALERT_TYPES.CHEEVO:
                 alertElement = cheevoAlert(alert.value);
                 break;
         }

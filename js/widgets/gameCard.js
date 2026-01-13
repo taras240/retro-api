@@ -10,7 +10,7 @@ import { moveEvent } from "../functions/movingWidget.js";
 import { resizeEvent } from "../functions/resizingWidget.js";
 import { formatDate, formatDateTime, secondsToBadgeString } from "../functions/time.js";
 import { gamePropsPopup } from "../components/gamePropsPopup.js";
-import { difficultyNames } from "../enums/difficulty.js";
+import { DIFFICULTY_NAMES } from "../enums/difficulty.js";
 import { hltbHeaders } from "../enums/hltb.js";
 import { gameImageUrl, gameUrl } from "../functions/raLinks.js";
 import { inputTypes } from "../components/inputElements.js";
@@ -272,26 +272,12 @@ export class GameCard extends Widget {
                 ...badges,
                 ...(Genre ? Genre.split(",") : []),
                 ...infoBadges,
-                difficultyNames[gameDifficulty],
+                DIFFICULTY_NAMES[gameDifficulty],
                 hltb,
 
             ]
             this.badgesContainer.innerHTML = generateBadges(badgesArray, "selection");
             this.updateProgressData();
-            // `
-            //     ${badgeElements.selection(ConsoleName)}
-            //     ${badges ? generateBadges(badges, "selection") : ""} 
-            //     ${Genre ? generateBadges(Genre.split(","), "selection") : ""} 
-            //     ${infoBadges.map(prop => badgeElements.selection(prop)).join(" ")}
-            //     ${gameDifficulty ? badgeElements.selection(difficultyNames[gameDifficulty]) : ""}
-            //     ${masteryDifficulty !== gameDifficulty ?
-            //         badgeElements.selection("mastery " + difficultyNames[masteryDifficulty]) : ""}
-            //     ${badgeElements.selection(`HLTB: 
-            //         ${timeToBeat ?
-            //                 secondsToBadgeString(timeToBeat) + " | " : ""} 
-            //         ${timeToMaster ?
-            //                 secondsToBadgeString(timeToMaster) : "-"}`)}`;
-
         }
         const generateIcons = () => {
             this.iconsContainer.innerHTML = `

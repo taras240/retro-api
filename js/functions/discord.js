@@ -1,4 +1,4 @@
-import { alertTypes } from "../enums/alerts.js";
+import { ALERT_TYPES } from "../enums/alerts.js";
 import { apiWorker, config, configData, watcher } from "../script.js";
 import { delay } from "./delay.js";
 import { cheevoUrl, gameImageUrl, gameUrl } from "./raLinks.js";
@@ -79,14 +79,14 @@ export async function sendDiscordAlert({ message = "", type, value, award, id })
     const gameData = watcher.GAME_DATA;
 
     switch (type) {
-        case alertTypes.GAME:
+        case ALERT_TYPES.GAME:
             messageElements = gameMessage(gameData);
             break;
-        case alertTypes.AWARD:
+        case ALERT_TYPES.AWARD:
             await delay(2000);
             messageElements = awardMessage(gameData, award);
             break;
-        case alertTypes.CHEEVO:
+        case ALERT_TYPES.CHEEVO:
             const cheevo = value;
             messageElements = cheevoMessage(gameData, cheevo);
             break;

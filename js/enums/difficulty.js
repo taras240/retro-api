@@ -1,4 +1,4 @@
-export const difficultyNames = {
+export const DIFFICULTY_NAMES = {
     11: "rank x",
     10: "rank sss",
     9: "rank ss",
@@ -10,5 +10,5 @@ export const difficultyNames = {
 }
 
 export const masteryDifficulties = Object.fromEntries(
-    Object.entries(difficultyNames).map(([key, value]) => [key, `mastery: ${value}`])
+    Object.entries(DIFFICULTY_NAMES).map(([key, value]) => [key, `mastery: ${value}`])
 );

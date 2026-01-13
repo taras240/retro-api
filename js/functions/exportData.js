@@ -1,4 +1,4 @@
-import { RAPlatforms } from "../enums/RAPlatforms.js";
+import { RA_PLATFORM_CODES } from "../enums/RAPlatforms.js";
 import { apiWorker, config } from "../script.js";
 import { sendJsonToDiscord } from "./discord.js";
 import { formatTime } from "./time.js";
@@ -51,7 +51,7 @@ async function exportCompletionDataToXlsx() {
     const completionResults = completion?.Results.map(game => ({
         Title: game.Title,
         ID: game.GameID,
-        Platform: RAPlatforms[game.ConsoleID]?.Name ?? "-",
+        Platform: RA_PLATFORM_CODES[game.ConsoleID]?.Name ?? "-",
         Award: game.HighestAwardKind,
         AwardDate: game.HighestAwardDate && (new Date(game.HighestAwardDate)).toLocaleString(),
         LastEarnedDate: game.MostRecentAwardedDate && (new Date(game.MostRecentAwardedDate)).toLocaleString(),
@@ -93,7 +93,7 @@ async function exportWantToPlayToCSV() {
     const wantListResults = wantList?.map(game => ({
         Title: game.Title,
         ID: game.ID,
-        ConsoleName: RAPlatforms[game.ConsoleID]?.Name ?? "-",
+        ConsoleName: RA_PLATFORM_CODES[game.ConsoleID]?.Name ?? "-",
         AchievementsPublished: game.AchievementsPublished,
     }));
     const headers = [

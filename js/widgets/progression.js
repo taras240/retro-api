@@ -4,8 +4,9 @@ import { generateBadges, badgeElements } from "../components/badges.js";
 
 import { Widget } from "./widget.js";
 import { formatDateTime } from "../functions/time.js";
-import { cheevoTypes } from "../enums/cheevoTypes.js";
+import { CHEEVO_TYPES } from "../enums/cheevoTypes.js";
 import { inputTypes } from "../components/inputElements.js";
+import { filterBy, sortBy } from "../functions/sortFilter.js";
 export class Progression extends Widget {
     widgetIcon = {
         description: "progression widget",
@@ -119,7 +120,7 @@ export class Progression extends Widget {
                 ?.level ?? pointLevel + 1;
             const subCheevos = pointLevel != null ? Object.values(watcher.CHEEVOS)
                 .filter(c =>
-                    c.level && ![cheevoTypes.PROGRESSION, cheevoTypes.WIN].includes(c.Type) && c.level >= pointLevel && c.level < nextLevel
+                    c.level && ![CHEEVO_TYPES.PROGRESSION, CHEEVO_TYPES.WIN].includes(c.Type) && c.level >= pointLevel && c.level < nextLevel
                 ) : [];
 
             const point = `
@@ -153,8 +154,8 @@ export class Progression extends Widget {
         // }
 
         const cheevos = Object.values(watcher.CHEEVOS)
-            ?.filter(c => c.Type == cheevoTypes.PROGRESSION || c.Type == cheevoTypes.WIN)
-            .sort((a, b) => a.DisplayOrder === 0 ? a.ID - b.ID : a.DisplayOrder - b.DisplayOrder);
+            ?.filter(c => filterBy.progression(c))
+            .sort((a, b) => sortBy.progression(a, b));
 
         const focusID = cheevos.find(c => this.uiProps.hardMode ? !c.isEarnedHardcore : !c.isEarned)?.ID;
 

@@ -2,7 +2,7 @@ import { UI } from "../ui.js";
 import { ui, watcher } from "../script.js";
 import { Widget } from "./widget.js";
 import { icons } from "../components/icons.js";
-import { alertTypes } from "../enums/alerts.js";
+import { ALERT_TYPES } from "../enums/alerts.js";
 import { cheevoImageUrl, cheevoUrl, gameImageUrl, gameUrl } from "../functions/raLinks.js";
 import { inputTypes } from "../components/inputElements.js";
 import { alertHtml } from "../components/notifications/alertElement.js";
@@ -102,14 +102,14 @@ export class Notifications extends Widget {
     }
     gameChangeEvent(isNewGame) {
         if (!isNewGame) return;
-        const gameAlert = [{ type: alertTypes.GAME, value: watcher.GAME_DATA }];
+        const gameAlert = [{ type: ALERT_TYPES.GAME, value: watcher.GAME_DATA }];
         this.addAlertsToQuery(gameAlert)
     }
 
     saveAlerts(alerts) {
         const timeStamp = new Date().toISOString();
         const normalizedAlerts = alerts.map(alert => {
-            if ([alertTypes.GAME, alertTypes.AWARD].includes(alert.type)) {
+            if ([ALERT_TYPES.GAME, ALERT_TYPES.AWARD].includes(alert.type)) {
                 const {
                     Title,
                     ImageIcon,
@@ -133,7 +133,7 @@ export class Notifications extends Widget {
                 };
                 return { ...alert, value: normalizedGameData }
             }
-            else if (alert.type === alertTypes.CHEEVO) {
+            else if (alert.type === ALERT_TYPES.CHEEVO) {
                 const {
                     Title,
                     BadgeName,
@@ -206,13 +206,13 @@ export class Notifications extends Widget {
             const alert = alerts.shift();
             if (!alert) continue;
             switch (alert.type) {
-                case alertTypes.GAME:
+                case ALERT_TYPES.GAME:
                     alertElements.push(this.gameAlertElement(alert.value))
                     break;
-                case alertTypes.CHEEVO:
+                case ALERT_TYPES.CHEEVO:
                     alertElements.push(this.cheevoAlertElement(alert.value));
                     break;
-                case alertTypes.AWARD:
+                case ALERT_TYPES.AWARD:
                     alertElements.push(this.awardAlertElement(alert))
                     break;
                 default:
@@ -248,7 +248,7 @@ export class Notifications extends Widget {
         const gameMessage = document.createElement("li");
         gameMessage.classList.add("notification-game", "new-game");
         const html = alertHtml({
-            alertType: alertTypes.GAME,
+            alertType: ALERT_TYPES.GAME,
             imageUrl: gameImageUrl(game.ImageIcon),
             title: game.Title,
             titleUrl: gameUrl(game.ID ?? game.GameID),
@@ -280,7 +280,7 @@ export class Notifications extends Widget {
         const cheevoAlert = document.createElement("li");
         cheevoAlert.classList.add("notification-achiv", "new-achiv");
         const html = alertHtml({
-            alertType: alertTypes.CHEEVO,
+            alertType: ALERT_TYPES.CHEEVO,
             imageUrl: cheevoImageUrl(cheevo),
             title: cheevo.Title,
             badge: icons.progressionAward,
@@ -311,7 +311,7 @@ export class Notifications extends Widget {
 
     awardAlertElement({ award, value: game }) {
         // {
-        // type: alertTypes.AWARD,
+        // type: ALERT_TYPES.AWARD,
         // award: "beaten-softcore",
         // value: this.GAME_DATA
         // }

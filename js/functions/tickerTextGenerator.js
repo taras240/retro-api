@@ -1,4 +1,4 @@
-import { difficultyNames } from "../enums/difficulty.js";
+import { DIFFICULTY_NAMES } from "../enums/difficulty.js";
 import { config, configData } from "../script.js";
 import { secondsToBadgeString } from "./time.js";
 
@@ -32,7 +32,7 @@ export function generateMagicLineText(gameData, sessionData, userData) {
         stats.retroRatio && `Retro Ratio: ${stats.retroRatio}`,
         stats.timeToBeat && `Time to beat: ${secondsToBadgeString(stats.timeToBeat)}`,
         stats.timeToMaster && `Time to master: ${secondsToBadgeString(stats.timeToMaster)}`,
-        stats.gameDifficulty && `Game Difficulty: ${difficultyNames[stats.gameDifficulty]} (${difficultyNames[stats.masteryDifficulty]})`
+        stats.gameDifficulty && `Game Difficulty: ${DIFFICULTY_NAMES[stats.gameDifficulty]} (${DIFFICULTY_NAMES[stats.masteryDifficulty]})`
     ].filter(Boolean).join(",&nbsp;") + space : "Game ERROR";
 
     const generateGameStat = (hardValue, softValue, totalValue, text) => {

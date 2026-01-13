@@ -1,28 +1,28 @@
-import { cacheDataTypes } from "../../enums/cacheDataTypes.js";
+import { CACHE_TYPES } from "../../enums/cacheDataTypes.js";
 
 export function cacheWorker(cacheFileName) {
     let cachedData = { gameTimes: {} };
     const initialize = () => {
         let cache = JSON.parse(localStorage.getItem(cacheFileName)) || {
-            [cacheDataTypes.GAME_TIMES]: {}
+            [CACHE_TYPES.GAME_TIMES]: {}
         };
         cachedData = cache;
     }
     const clear = () => {
         cachedData = {
-            [cacheDataTypes.GAME_TIMES]: {}
+            [CACHE_TYPES.GAME_TIMES]: {}
         }
         localStorage.setItem(cacheFileName, JSON.stringify(cachedData));
     }
     const getData = ({ dataType, ID }) => {
-        if (dataType === cacheDataTypes.GAME_TIMES) {
+        if (dataType === CACHE_TYPES.GAME_TIMES) {
             return cachedData[dataType]?.[ID];
         }
         return cachedData[dataType];
 
     }
     const push = ({ dataType, data }) => {
-        if (dataType === cacheDataTypes.GAME_TIMES) {
+        if (dataType === CACHE_TYPES.GAME_TIMES) {
             cachedData[dataType] ??= {};
             cachedData[dataType][data.ID] = data;
         } else {

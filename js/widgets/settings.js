@@ -7,7 +7,7 @@ import { stateboxClickHandler } from "../functions/stateBoxClick.js";
 import { local } from "../enums/locals.js";
 import { colorPresets } from "../enums/colorPresets.js";
 import { fonts } from "../enums/fontsPreset.js";
-import { animVariants } from "../enums/bgAnimations.js";
+import { ANIMATIONS } from "../enums/bgAnimations.js";
 export class Settings extends Widget {
     widgetIcon = {
         iconClass: "settings-icon",
@@ -51,7 +51,7 @@ export class Settings extends Widget {
                         label: ui.lang.animType,
                         id: "settings_anims-variant",
                         selectValues: [
-                            ...Object.values(animVariants).map(anim => ({
+                            ...Object.values(ANIMATIONS).map(anim => ({
                                 type: inputTypes.RADIO,
                                 name: "settings_anim-variant",
                                 id: `settings_anim-variant-${anim}`,
@@ -462,7 +462,7 @@ export class Settings extends Widget {
                         event: `onchange="configData.bgVisibility = this.checked;"`,
                     },
 
-                    ...Object.values(animVariants).map(anim => ({
+                    ...Object.values(ANIMATIONS).map(anim => ({
                         type: inputTypes.RADIO,
                         name: "context_anim-variant",
                         id: `context_anim-variant-${anim}`,

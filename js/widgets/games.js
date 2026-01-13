@@ -6,13 +6,13 @@ import { Widget } from "./widget.js";
 import { generateBadges, badgeElements } from "../components/badges.js";
 import { sortBy, sortMethods } from "../functions/sortFilter.js";
 import { input, inputTypes } from "../components/inputElements.js";
-import { gameGenres } from "../enums/gameGenres.js";
-import { RAPlatforms } from "../enums/RAPlatforms.js";
+import { GAME_GENRE_CODES } from "../enums/gameGenres.js";
+import { RA_PLATFORM_CODES } from "../enums/RAPlatforms.js";
 import { platformsByManufacturer } from "../enums/platformManufacturer.js";
 import { hintElement } from "../components/hint.js";
 import { stateboxClickHandler } from "../functions/stateBoxClick.js";
 import { gameImageUrl, gameUrl } from "../functions/raLinks.js";
-import { releaseVersions } from "../enums/releaseVersions.js";
+import { RELEASE_TYPES } from "../enums/releaseVersions.js";
 import { gamesExtMap } from "../enums/gamesExtMap.js";
 import { getGenres } from "../functions/genreIDtoGenre.js";
 import { buttonsHtml } from "../components/htmlElements.js";
@@ -131,14 +131,14 @@ export class Games extends Widget {
         return filters;
     }
     get releaseVersionFilterItems() {
-        const filters = Object.keys(releaseVersions).reduce((items, releaseVersion) => {
+        const filters = Object.keys(RELEASE_TYPES).reduce((items, releaseVersion) => {
             const filterItem = {
                 type: inputTypes.CHECKBOX,
-                label: releaseVersions[releaseVersion],
+                label: RELEASE_TYPES[releaseVersion],
                 name: 'filter-by-release',
                 value: 'release',
-                checked: this.RELEASE_FILTER.includes(releaseVersions[releaseVersion]),
-                onChange: `ui.games.releaseCheckboxChangeEvent(this,'${releaseVersions[releaseVersion]}')`,
+                checked: this.RELEASE_FILTER.includes(RELEASE_TYPES[releaseVersion]),
+                onChange: `ui.games.releaseCheckboxChangeEvent(this,'${RELEASE_TYPES[releaseVersion]}')`,
                 id: `filter-by-release-${releaseVersion}`,
             }
             items.push(filterItem);
@@ -147,10 +147,10 @@ export class Games extends Widget {
         return filters;
     }
     get genresFilterItems() {
-        const filters = Object.keys(gameGenres).reduce((items, genreID) => {
+        const filters = Object.keys(GAME_GENRE_CODES).reduce((items, genreID) => {
             const filterItem = {
                 type: inputTypes.CHECKBOX,
-                label: gameGenres[genreID],
+                label: GAME_GENRE_CODES[genreID],
                 name: 'filter-by-genre',
                 checked: this.GENRE_FILTER.includes(genreID),
                 onChange: `ui.games.genreCheckboxChangeEvent(this,'${genreID}')`,
@@ -258,7 +258,7 @@ export class Games extends Widget {
     }
     set PLATFORMS_FILTER(value) {
 
-        let platformCodes = value.filter(code => Object.keys(RAPlatforms).includes(code));
+        let platformCodes = value.filter(code => Object.keys(RA_PLATFORM_CODES).includes(code));
         this.platformsFilter = platformCodes;
         // config.ui.games_section.platformsFilter = platformCodes;
         // config.writeConfiguration();
@@ -271,7 +271,7 @@ export class Games extends Widget {
     }
     set GENRE_FILTER(value) {
 
-        let genreCodes = value.filter(code => Object.keys(gameGenres).includes(code));
+        let genreCodes = value.filter(code => Object.keys(GAME_GENRE_CODES).includes(code));
         this.genreFilter = genreCodes;
         // config.ui.games_section.genreFilter = genreCodes;
         // config.writeConfiguration();
@@ -301,7 +301,7 @@ export class Games extends Widget {
 
     }
     get RELEASE_FILTER() {
-        return this.releaseFilter ?? [releaseVersions.RETAIL];
+        return this.releaseFilter ?? [RELEASE_TYPES.RETAIL];
     }
     set FAVOURITES_FILTER(value) {
         this.favouritesFilter = value;
@@ -366,7 +366,7 @@ export class Games extends Widget {
         const titleRegex = new RegExp(searchRequest, 'gi');
         this.games = this.titleFilter ?
             this.GAMES.filter(game =>
-                `${game.Title} ${game.badges?.join(' ')} ${RAPlatforms[game.ConsoleID]?.Name ?? "-"}`.match(titleRegex)) :
+                `${game.Title} ${game.badges?.join(' ')} ${RA_PLATFORM_CODES[game.ConsoleID]?.Name ?? "-"}`.match(titleRegex)) :
             this.GAMES;
         this.COOP_FILTER && (this.games = this.games?.filter(game => game.Coop == "true"));
 
@@ -402,7 +402,7 @@ export class Games extends Widget {
         //* Filter by RELEASE type
         this.RELEASE_FILTER.length > 0 && (this.games = this.games.filter(game => {
             for (let releaseVersion of this.RELEASE_FILTER) {
-                if (releaseVersion === releaseVersions.RETAIL) {
+                if (releaseVersion === RELEASE_TYPES.RETAIL) {
                     return game.badges?.length === 0;
                 }
                 return game.badges?.includes(releaseVersion)

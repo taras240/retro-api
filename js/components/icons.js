@@ -16,8 +16,8 @@
 //     search: '<i class="description-icon link_icon search-icon google_link"></i>',
 //     link: '<i class="description-icon link_icon ra-link_icon"></i>',
 
-import { cheevoGenres } from "../enums/cheevoGenres.js"
-import { RAPlatforms } from "../enums/RAPlatforms.js"
+import { CHEEVO_GENRES } from "../enums/cheevoGenres.js"
+import { RA_PLATFORM_CODES } from "../enums/RAPlatforms.js"
 import { ui } from "../script.js"
 
 const signedIconTemplate = ({ icon, label = "", hint = "", }) => {
@@ -34,7 +34,7 @@ export const signedIcons = {
     date: (date) => signedIconTemplate({ icon: icons.date, label: date, hint: ui.lang.date }),
     time: (time) => time ? signedIconTemplate({ icon: icons.time, label: time, hint: ui.lang.time }) : "",
     rating: (rating) => signedIconTemplate({ icon: icons.rating, label: rating, hint: ui.lang.gameRating }),
-    platform: (platformID) => signedIconTemplate({ icon: icons.platform(platformID), label: RAPlatforms[platformID].Name, hint: platformID }),
+    platform: (platformID) => signedIconTemplate({ icon: icons.platform(platformID), label: RA_PLATFORM_CODES[platformID].Name, hint: platformID }),
 
     difficulty: (difficulty) => `<p class="description-icon difficult-icon difficult-badge__${difficulty}" data-title="${ui.lang.difficulty} [${difficulty}]"></p>`,
     award: (award) => `<p  class="signed-icon award-type" data-title="${award}">
@@ -68,18 +68,18 @@ export const icons = {
     apply: '<i class="description-icon link_icon apply-icon"></i>',
     search: '<i class="description-icon link_icon search-icon google_link"></i>',
     link: '<i class="description-icon link_icon ra-link_icon"></i>',
-    platform: (platformID) => `<img class="image-icon console-icon" src="${RAPlatforms[platformID].IconURL}">`,
+    platform: (platformID) => `<img class="image-icon console-icon" src="${RA_PLATFORM_CODES[platformID].IconURL}">`,
     unlock: '<i class="description-icon unlock_icon"></i>',
 }
 export const genreIcons = {
-    [cheevoGenres.KILLER]: `<i class="cheevo-genre__icon">💀</i>`,
-    [cheevoGenres.PACIFIST]: `<i class="cheevo-genre__icon">☮️</i>`,
-    [cheevoGenres.SCORE]: `<i class="cheevo-genre__icon">💲</i>`,
-    [cheevoGenres.TIMETRIAL]: `<i class="cheevo-genre__icon">⏳</i>`,
-    [cheevoGenres.NO_DEATH]: `<i class="cheevo-genre__icon">👼</i>`,//👻
-    [cheevoGenres.NO_DAMAGE]: `<i class="cheevo-genre__icon">❤️</i>`,
-    [cheevoGenres.COLLECTOR]: `<i class="cheevo-genre__icon">👑</i>`,
-    [cheevoGenres.BOSSFIGHT]: `<i class="cheevo-genre__icon">😈</i>`,
+    [CHEEVO_GENRES.KILLER]: `<i class="cheevo-genre__icon">💀</i>`,
+    [CHEEVO_GENRES.PACIFIST]: `<i class="cheevo-genre__icon">☮️</i>`,
+    [CHEEVO_GENRES.SCORE]: `<i class="cheevo-genre__icon">💲</i>`,
+    [CHEEVO_GENRES.TIMETRIAL]: `<i class="cheevo-genre__icon">⏳</i>`,
+    [CHEEVO_GENRES.NO_DEATH]: `<i class="cheevo-genre__icon">👼</i>`,//👻
+    [CHEEVO_GENRES.NO_DAMAGE]: `<i class="cheevo-genre__icon">❤️</i>`,
+    [CHEEVO_GENRES.COLLECTOR]: `<i class="cheevo-genre__icon">👑</i>`,
+    [CHEEVO_GENRES.BOSSFIGHT]: `<i class="cheevo-genre__icon">😈</i>`,
 }
 // export const icons = {
 //     flag: '<i class="description-icon map-icon"></i>',

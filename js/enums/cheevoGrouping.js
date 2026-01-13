@@ -1,8 +1,9 @@
-const cheevoGrouping = Object.freeze({
+const CHEEVO_GROUPS = Object.freeze({
     // DISABLED: 'disabled',
     UNLOCK_STATUS: 'unlockStatus',
     TYPE: 'type',
-    LEVEL: 'level'
+    LEVEL: 'level',
+    UNLOCK_DATE: "unlockDate"
 });
 
-export default cheevoGrouping;
+export default CHEEVO_GROUPS;
