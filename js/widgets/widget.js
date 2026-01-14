@@ -83,7 +83,7 @@ export class Widget {
                 })
             }
             // Drag Section Event
-            else if (event.target.closest(".header-container")) {
+            else if (!event.target.closest("button,input,.button") && event.target.closest(".header-container")) {
                 moveEvent(this.section, event);
             }
 
