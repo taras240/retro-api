@@ -611,27 +611,27 @@ export class Target extends Widget {
             this.section.querySelector(".achiv-block")?.remove();
             dragToPinned(id);
         }, false)
-        this.searchInput?.addEventListener("input", this.searchInputEvent)
+        this.searchInput?.addEventListener("input", (event) => this.searchInputEvent(event))
     }
     searchInputEvent(event) {
         event.stopPropagation();
         const clearPrevQuery = () => {
-            ui.target.container.querySelectorAll('span.badge.highlight-badge').forEach(el =>
+            this.container.querySelectorAll('span.badge.highlight-badge').forEach(el =>
                 el.replaceWith(el.innerText)
             )
         }
         const markQuery = (query) => {
             const regex = new RegExp(`(${query})`, 'gi');
-            [...ui.target.container.querySelectorAll('.target-achiv')].reverse().forEach(cheevo => {
+            [...this.container.querySelectorAll('.target-achiv')].reverse().forEach(cheevo => {
                 const description = cheevo.querySelector('.list-item__text');
                 const title = cheevo.querySelector('.target__cheevo-header a');
                 if (title.innerText.match(regex)) {
-                    ui.target.moveToTop(description.closest('.target-achiv'));
+                    this.moveToTop(description.closest('.target-achiv'));
                     title.innerHTML = title.innerHTML.replace(regex, (g1) => `<span class="badge highlight-badge">${g1}</span>`)
 
                 }
                 if (description.innerText.match(regex)) {
-                    ui.target.moveToTop(description.closest('.target-achiv'));
+                    this.moveToTop(description.closest('.target-achiv'));
                     description.innerHTML = description.innerHTML.replace(regex, (g1) => `<span class="badge highlight-badge">${g1}</span>`)
                 }
             })
@@ -643,7 +643,7 @@ export class Target extends Widget {
             markQuery(query);
         }
         else {
-            ui.target.applySort();
+            this.applySort();
         }
     }
     setElementsValues() {
@@ -885,11 +885,7 @@ export class Target extends Widget {
         this.pushCheevo(id);
     }
     moveToTop(element) {
-        if (this.uiProps.reverseSort == 1) {
-            this.container.prepend(element);
-        } else {
-            this.container.append(element);
-        }
+        this.container.prepend(element);
         this.applyFilter();
     }
 
