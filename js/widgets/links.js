@@ -27,10 +27,6 @@ export class Links extends Widget {
             url: "https://wowroms.com/en/",
         },
         {
-            name: "Emu-Land",
-            url: "https://www.emu-land.net/en/",
-        },
-        {
             name: "GitHub [Project]",
             url: "https://github.com/taras240/retro-api",
         },
