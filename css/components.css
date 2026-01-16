@@ -1244,19 +1244,15 @@ input[type="radio"]:checked+.context-menu_radio::after {
 }
 
 .media-item__award {
+    --height: 8rem;
     position: absolute;
     --alert-color: green;
-    right: 0;
-    bottom: 50%;
+    right: calc(0px - var(--height) / 2);
+    width: var(--height);
     text-transform: uppercase;
-    /* mask-image: url(../assets/img/tr-1.svg);
-    mask-repeat: repeat; */
-    transform: rotateZ(-90deg);
     z-index: 2;
-    writing-mode: sideways-lr;
-    transform: translateY(50%);
+    transform: rotateZ(-90deg) translateY(-50%);
     background: black;
-    height: 120%;
     text-align: center;
     box-shadow: 0 0 200px 20px var(--alert-color);
 }
@@ -1264,6 +1260,5 @@ input[type="radio"]:checked+.context-menu_radio::after {
 .media-item__award-name {
     font-size: 1.0rem;
     color: var(--alert-color);
-    writing-mode: sideways-lr;
     font-weight: bold;
 }
