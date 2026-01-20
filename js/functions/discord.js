@@ -1,4 +1,5 @@
 import { ALERT_TYPES } from "../enums/alerts.js";
+import { GAME_AWARD_TYPES } from "../enums/gameAwards.js";
 import { apiWorker, config, configData, watcher } from "../script.js";
 import { delay } from "./delay.js";
 import { cheevoUrl, gameImageUrl, gameUrl } from "./raLinks.js";
@@ -16,7 +17,7 @@ export async function sendDiscordAlert({ message = "", type, value, award, id })
         const header = `${targetUser} has launched the game: \n${gameData.Title}`;
         const description = `
           Platform: ${gameData.ConsoleName}
-          Realeased: ${gameData.Released}
+          Released: ${gameData.Released}
           Achievements: ${gameData.NumAwardedToUserHardcore} / ${gameData.NumAchievements}
           Points: ${gameData.unlockData.hardcore.points} / ${gameData.unlockData.softcore.points} / ${gameData.totalPoints}
           Retropoints:  ${gameData.unlockData.hardcore.retropoints} / ${gameData.totalRetropoints}
@@ -33,15 +34,28 @@ export async function sendDiscordAlert({ message = "", type, value, award, id })
     }
     const awardMessage = (gameData, award) => {
         const header = `${targetUser} has ${award.toUpperCase()} the game: \n${gameData.Title}`;
+        let description;
+        if (award === GAME_AWARD_TYPES.MASTERED) {
+            description = `
+                Earned in: ${formatTime(gameData.TimePlayed)}
+                Platform: ${gameData.ConsoleName}
+                Released: ${gameData.Released}
+                Achievements: ${gameData.NumAchievements}
+                Points: ${gameData.totalPoints}
+                Retropoints: ${gameData.totalRetropoints}
+            `;
+        }
+        else {
+            description = `
+                Earned in: ${formatTime(gameData.TimePlayed)}
+                Platform: ${gameData.ConsoleName}
+                Released: ${gameData.Released}
+                Achievements: ${gameData?.unlockData?.hardcore.count} / ${gameData?.unlockData?.softcore.count} / ${gameData.NumAchievements}
+                Points: ${gameData.unlockData.hardcore.points} / ${gameData.unlockData.softcore.points} / ${gameData.totalPoints}
+                Retropoints: ${gameData.unlockData.hardcore.retropoints} / ${gameData.totalRetropoints}
+            `;
+        }
 
-        const description = `
-          Earned in: ${formatTime(gameData.TimePlayed)}
-          Platform: ${gameData.ConsoleName}
-          Realeased: ${gameData.Released}
-          Achievements: ${gameData?.unlockData?.hardcore.count} / ${gameData?.unlockData?.softcore.count} / ${gameData.NumAchievements}
-          Points: ${gameData.unlockData.hardcore.points} / ${gameData.unlockData.softcore.points} / ${gameData.totalPoints}
-          Retropoints: ${gameData.unlockData.hardcore.retropoints} / ${gameData.totalRetropoints}
-        `;
         const message = {
             header: header,
             description: description,
