@@ -167,6 +167,7 @@ export class Target extends Widget {
             this.contextSortMenu(),
             this.contextFilterMenu(),
             this.contextMultiGameMenu(),
+            this.contextSetsMenu(),
             {
                 label: ui.lang.level_test,
                 elements: [
@@ -300,7 +301,36 @@ export class Target extends Widget {
             })) ?? []
         ]
     } : "";
+    contextSetsMenu = () => watcher.GAME_DATA?.visibleSubsets?.length ? {
+        label: "**Sets",
+        elements: [
+            (() => {
+                const setID = watcher.GAME_DATA.ID;
+                const setName = "Main";
+                return {
+                    type: inputTypes.CHECKBOX,
+                    name: `${this.sectionID}-set`,
+                    id: `${this.sectionID}-set-${setID}`,
+                    label: setName,
+                    checked: !this.uiProps.hiddenSets.includes(setID),
+                    event: `onchange = "ui.target.updateHiddenSets(${setID});"`,
+                }
+            })(),
+            ...watcher.GAME_DATA.visibleSubsets.map(setID => {
+                const sets = watcher.GAME_DATA.subsets;
+                const setName = Object.keys(sets).find(name => sets[name] === setID);
+                return {
+                    type: inputTypes.CHECKBOX,
+                    name: `${this.sectionID}-set`,
+                    id: `${this.sectionID}-set-${setID}`,
+                    label: setName,
+                    checked: !this.uiProps.hiddenSets.includes(setID),
+                    event: `onchange = "ui.target.updateHiddenSets(${setID});"`,
+                }
 
+            })
+        ]
+    } : "";
 
     uiDefaultValues = {
         isFixedSize: false,
@@ -328,6 +358,7 @@ export class Target extends Widget {
         contrastHighlight: false,
         mGameSelection: "",
         showPins: false,
+        hiddenSets: [],
     }
     uiSetCallbacks = {
         autoscroll(value) {
@@ -366,6 +397,9 @@ export class Target extends Widget {
         },
         mGameSelection() {
             this.setMGameSelection();
+        },
+        hiddenSets() {
+            this.setSubsetSelection();
         }
 
     };
@@ -390,7 +424,20 @@ export class Target extends Widget {
             return filters;
         }
     };
+    updateHiddenSets(setID) {
+        let hiddenIDArray = this.uiProps.hiddenSets;
+        if (!hiddenIDArray?.length) hiddenIDArray = [];
 
+        if (hiddenIDArray.includes(setID)) {
+            hiddenIDArray = hiddenIDArray.filter(id => parseInt(id) !== parseInt(setID));
+        }
+        else {
+            hiddenIDArray.push(setID);
+        }
+
+        this.uiProps.hiddenSets = hiddenIDArray;
+
+    }
     constructor() {
         super();
         this.generateWidget();
@@ -789,6 +836,7 @@ export class Target extends Widget {
             targetElement.dataset.DisplayOrder = achievement.DisplayOrder;
             targetElement.dataset.genres = achievement.genres?.join(",");
             targetElement.dataset.group = achievement.group;
+            targetElement.dataset.setID = achievement.gameID;
             achievement.DateEarnedHardcore && (targetElement.dataset.DateEarnedHardcore = achievement.DateEarnedHardcore);
             achievement.DateEarned && (targetElement.dataset.DateEarned = achievement.DateEarned);
 
@@ -924,6 +972,13 @@ export class Target extends Widget {
             });
         }
     }
+    setSubsetSelection() {
+        if (!watcher.GAME_DATA.visibleSubsets?.length) return;
+        const cheevos = this.container.querySelectorAll(".target-achiv");
+        const hiddenIDArray = this.uiProps.hiddenSets;
+        const isHidden = (cheevo) => hiddenIDArray.includes(parseInt(cheevo.dataset.setID));
+        cheevos.forEach((cheevo) => cheevo.classList.toggle("hidden-set", isHidden(cheevo)))
+    }
     setMGameSelection() {
         const cheevos = this.container.querySelectorAll(".target-achiv");
 
@@ -1056,6 +1111,7 @@ export class Target extends Widget {
         this.applyFilter();
         this.applySort();
         this.setMGameSelection();
+        this.setSubsetSelection();
         this.isDynamicAdding = false;
 
         // config.aotw && this.container.querySelector(`.target-achiv[data-achiv-id='${config.aotw?.ID}']`)?.classList.add("target__aotw");

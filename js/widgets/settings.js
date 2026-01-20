@@ -1,5 +1,5 @@
 import { UI } from "../ui.js";
-import { config, configData, ui } from "../script.js";
+import { config, configData, ui, watcher } from "../script.js";
 import { inputTypes, input } from "../components/inputElements.js";
 import { Widget } from "./widget.js";
 import { obsPresets } from "../enums/obsPresets.js";
@@ -431,6 +431,24 @@ export class Settings extends Widget {
     }
     get contextMenuItems() {
         return [
+            {
+                label: ui.lang.subsets,
+                elements: Object.entries(watcher.GAME_DATA?.subsets).map(([subsetName, subsetID]) => {
+                    subsetID = parseInt(subsetID);
+                    const isMainSet = subsetName === "Main";
+                    if (isMainSet || !subsetID) return "";
+                    const isVisible = config.gameConfig().visibleSubsets?.includes(subsetID);
+                    const checked = isMainSet || isVisible;
+                    return {
+                        type: inputTypes.CHECKBOX,
+                        name: "subset-select",
+                        id: `subset-select-${subsetName}`,
+                        label: subsetName,
+                        checked,
+                        event: `onclick="watcher.setSubset(${subsetID})"`,
+                    }
+                }),
+            },
             {
                 label: ui.lang.selectColors,
                 elements: [

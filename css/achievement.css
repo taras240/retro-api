@@ -168,7 +168,8 @@
   }
 }
 
-.achiv-block.hidden-group {
+.achiv-block.hidden-group,
+.achiv-block.hidden-set {
   display: none;
 }
 

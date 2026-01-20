@@ -1,6 +1,7 @@
 import { dialogWindow } from "./components/dialogWindow.js";
 import { ALERT_TYPES } from "./enums/alerts.js";
 import { CHEEVO_TYPES } from "./enums/cheevoTypes.js";
+import { GAME_AWARD_TYPES } from "./enums/gameAwards.js";
 import { delay } from "./functions/delay.js";
 import { sendDiscordAlert } from "./functions/discord.js";
 import { readLog } from "./functions/logParser.js";
@@ -245,25 +246,35 @@ export class Watcher {
                     const cheevo = this.CHEEVOS[lastCheevo.AchievementID];
                     const isHard = HardcoreMode == 1;
                     this.IS_HARD_MODE = isHard;
+                    let gameData;
+                    if (cheevo.gameID === watcher.GAME_DATA.ID) {
+                        gameData = watcher.GAME_DATA;
+                    }
+                    else {
+                        gameData = watcher.GAME_DATA.subsetsData[cheevo.gameID]
+                    }
+                    gameData ??= {};
                     if (isHard) {
                         cheevo.isEarnedHardcore = true;
                         cheevo.DateEarnedHardcore = Date;
-                        this.GAME_DATA.unlockData.hardcore.count++;
-                        this.GAME_DATA.unlockData.hardcore.points += cheevo.Points;
-                        this.GAME_DATA.unlockData.hardcore.retropoints += cheevo.TrueRatio;
+
+                        gameData.unlockData.hardcore.count++;
+                        gameData.unlockData.hardcore.points += cheevo.Points;
+                        gameData.unlockData.hardcore.retropoints += cheevo.TrueRatio;
                         if (cheevo.Type == CHEEVO_TYPES.PROGRESSION || cheevo.Type == CHEEVO_TYPES.WIN) {
-                            this.GAME_DATA.unlockData.hardcore.progressionCount++;
+                            gameData.unlockData.hardcore.progressionCount++;
                         }
                     }
 
-                    this.GAME_DATA.unlockData.softcore.count++;
-                    this.GAME_DATA.unlockData.softcore.points += cheevo.Points;
+                    gameData.unlockData.softcore.count++;
+                    gameData.unlockData.softcore.points += cheevo.Points;
                     if (cheevo.Type == CHEEVO_TYPES.PROGRESSION || cheevo.Type == CHEEVO_TYPES.WIN) {
-                        this.GAME_DATA.unlockData.softcore.progressionCount++;
+                        gameData.unlockData.softcore.progressionCount++;
                     }
 
                     cheevo.isEarned = true;
                     cheevo.DateEarned = cheevo.DateEarned ?? Date;
+                    gameData.Achievements[lastCheevo.AchievementID] = cheevo;
                     this.CHEEVOS[lastCheevo.AchievementID] = cheevo;
                 });
 
@@ -289,45 +300,49 @@ export class Watcher {
         }
         const checkForNewAwards = () => {
             let awardsArray = [];
-            if (this.GAME_DATA.award !== 'mastered'
-                && this.GAME_DATA.unlockData.hardcore.count === this.GAME_DATA.NumAchievements) {
-                this.GAME_DATA.award = 'mastered';
-                awardsArray.push({
-                    type: ALERT_TYPES.AWARD,
-                    award: "mastered",
-                    value: this.GAME_DATA
-                });
-            }
-            else if (!this.GAME_DATA.award && this.GAME_DATA.unlockData.softcore.count === this.GAME_DATA.NumAchievements) {
-                this.GAME_DATA.award = 'completed';
-                awardsArray.push({
-                    type: ALERT_TYPES.AWARD,
-                    award: "completed",
-                    value: this.GAME_DATA
-                })
-            }
-            if (this.GAME_DATA.progressionSteps > 0 &&
-                this.GAME_DATA.progressionAward !== 'beaten' &&
-                this.GAME_DATA.unlockData.hardcore.progressionCount >= this.GAME_DATA.progressionSteps) {
-                this.GAME_DATA.progressionAward = 'beaten';
-                awardsArray.push({
-                    type: ALERT_TYPES.AWARD,
-                    award: "beaten",
-                    value: this.GAME_DATA
-                })
-            }
-            else if (this.GAME_DATA.progressionSteps > 0 &&
-                !this.GAME_DATA.progressionAward &&
-                this.GAME_DATA.unlockData.softcore.progressionCount >= this.GAME_DATA.progressionSteps) {
-                this.GAME_DATA.progressionAward = 'beaten-softcore';
-                awardsArray.push({
-                    type: ALERT_TYPES.AWARD,
-                    award: "beaten-softcore",
-                    value: this.GAME_DATA
-                })
-            }
+            const gameSets = [this.GAME_DATA, ...Object.values(this.GAME_DATA.subsetsData)];
+            gameSets.forEach(gameSet => {
+                if (gameSet.award !== GAME_AWARD_TYPES.MASTERED
+                    && gameSet.unlockData.hardcore.count === gameSet.NumAchievements) {
+                    gameSet.award = GAME_AWARD_TYPES.MASTERED;
+                    awardsArray.push({
+                        type: ALERT_TYPES.AWARD,
+                        award: GAME_AWARD_TYPES.MASTERED,
+                        value: gameSet
+                    });
+                }
+                else if (!gameSet.award && gameSet.unlockData.softcore.count === gameSet.NumAchievements) {
+                    gameSet.award = GAME_AWARD_TYPES.COMPLETED;
+                    awardsArray.push({
+                        type: ALERT_TYPES.AWARD,
+                        award: GAME_AWARD_TYPES.COMPLETED,
+                        value: gameSet
+                    })
+                }
+                if (gameSet.progressionSteps > 0 &&
+                    gameSet.progressionAward !== GAME_AWARD_TYPES.BEATEN &&
+                    gameSet.unlockData.hardcore.progressionCount >= gameSet.progressionSteps) {
+                    gameSet.progressionAward = GAME_AWARD_TYPES.BEATEN;
+                    awardsArray.push({
+                        type: ALERT_TYPES.AWARD,
+                        award: GAME_AWARD_TYPES.BEATEN,
+                        value: gameSet
+                    })
+                }
+                else if (gameSet.progressionSteps > 0 &&
+                    !gameSet.progressionAward &&
+                    gameSet.unlockData.softcore.progressionCount >= gameSet.progressionSteps) {
+                    gameSet.progressionAward = GAME_AWARD_TYPES.BEATEN_SOFTCORE;
+                    awardsArray.push({
+                        type: ALERT_TYPES.AWARD,
+                        award: GAME_AWARD_TYPES.BEATEN_SOFTCORE,
+                        value: gameSet
+                    })
+                }
+            })
+            const { TimePlayed } = watcher.GAME_DATA.TimePlayed;
 
-            return awardsArray;
+            return awardsArray.map(a => a.value.TimePlayed = TimePlayed);
         }
         const checkForZeroPoints = () => {
             this.GAME_DATA.hasZeroPoints = Object.values(this.CHEEVOS).filter(
@@ -361,7 +376,6 @@ export class Watcher {
         }
     }
     setSubset(subsetID) {
-        console.log(subsetID)
         const gameID = this.GAME_DATA.ID;
         if (subsetID && subsetID === gameID) return;
 

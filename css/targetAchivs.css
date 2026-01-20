@@ -156,7 +156,8 @@
   pointer-events: none;
 }
 
-.target-achiv.hidden-group {
+.target-achiv.hidden-group,
+.target-achiv.hidden-set {
   display: none;
 }
 
