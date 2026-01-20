@@ -112,6 +112,7 @@ export class AchievementsBlock extends Widget {
             this.contextSortMenu(),
             this.contextFilterMenu(),
             this.contextMultiGameMenu(),
+            this.contextSetsMenu(),
             {
                 label: ui.lang.groupBy,
                 elements: [
@@ -226,6 +227,33 @@ export class AchievementsBlock extends Widget {
             }))
         ]
     } : "";
+    contextSetsMenu = () => watcher.GAME_DATA?.visibleSubsets?.length ? {
+        label: "**Sets",
+        elements: [
+            {
+                type: inputTypes.RADIO,
+                name: `${this.sectionID}-set`,
+                id: `${this.sectionID}-set-all`,
+                label: ui.lang.all,
+                checked: !this.uiProps.subsetSelection,
+                event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].uiProps.subsetSelection = '';"`,
+            },
+            ...watcher.GAME_DATA.visibleSubsets.map(setID => {
+                const sets = watcher.GAME_DATA.subsets;
+                const setName = Object.keys(sets).find(name => sets[name] === setID);
+
+                return {
+                    type: inputTypes.RADIO,
+                    name: `${this.sectionID}-set`,
+                    id: `${this.sectionID}-set-${setID}`,
+                    label: setName,
+                    checked: this.uiProps.subsetSelection === setID,
+                    event: `onchange = "ui.achievementsBlock[${this.CLONE_NUMBER}].uiProps.subsetSelection = '${setID}';"`,
+                }
+
+            })
+        ]
+    } : "";
     uiDefaultValues = {
         showHeader: true,
         // overlayType: overlayNames.BORDER,
@@ -291,6 +319,9 @@ export class AchievementsBlock extends Widget {
         },
         mGameSelection() {
             this.setMGameSelection();
+        },
+        subsetSelection() {
+            this.setSubsetSelection();
         }
 
     };
@@ -412,26 +443,35 @@ export class AchievementsBlock extends Widget {
 
 
     // Розбирає отримані досягнення гри та відображає їх на сторінці
-    parseGameAchievements(achivs) {
-        const clearAchievementsSection = () => {
+    parseGameAchievements(gameData) {
+        const clearContainer = () => {
             this.container.innerHTML = "";
         }
-        const addAchievementsToContainer = (achievementsObject) => {
-            Object.values(achievementsObject.Achievements).forEach((achievement) => {
+        const fillCheevosContainer = (gameData) => {
+            Object.values(gameData.Achievements).forEach((achievement) => {
                 const achivElement = this.generateAchievement(achievement);
                 this.container.appendChild(achivElement);
             });
-            this.groupCheevos();
+            if (gameData.visibleSubsets?.length) {
+                console.log(gameData.visibleSubsets?.length)
+                Object.values(gameData.subsetsData).forEach(subset => {
+                    fillCheevosContainer(subset);
+                })
+
+            }
+
         }
         // Очистити вміст розділу досягнень
-        clearAchievementsSection();
+        clearContainer();
 
         // Відсортувати досягнення та відобразити їх
-        addAchievementsToContainer(achivs);
-
+        fillCheevosContainer(gameData);
+        this.groupCheevos();
         // Підгонка розміру досягнень
         this.fitSizeVertically();
+        this.setSubsetSelection();
         this.setMGameSelection();
+
         this.applyFiltering();
 
         this.applySorting({ animation: 0 });
@@ -461,6 +501,7 @@ export class AchievementsBlock extends Widget {
             achivElement.dataset.Type = achievement.Type;
             achivElement.dataset.difficulty = achievement.difficulty;
             achivElement.dataset.group = achievement.group;
+            achivElement.dataset.setID = achievement.gameID;
             achievement.level && (achivElement.dataset.level = achievement.level);
 
             achivElement.dataset.NumAwardedHardcore = achievement.NumAwardedHardcore;
@@ -871,6 +912,19 @@ export class AchievementsBlock extends Widget {
         }
         else {
             const isHidden = (cheevo) => this.uiProps.mGameSelection && (this.uiProps.mGameSelection !== cheevo.dataset.group);
+            cheevos.forEach((cheevo) => cheevo.classList.toggle("hidden-group", isHidden(cheevo)))
+        }
+        this.groupCheevos();
+    }
+    // TODO ----------------------------------
+    setSubsetSelection() {
+        const cheevos = this.container.querySelectorAll(".achiv-block");
+
+        if (!config.gameData()?.selectedSets.length) {
+            return "";
+        }
+        else {
+            const isHidden = (cheevo) => !config.gameData.selectedSets.includes(cheevo.dataset.setID);
             cheevos.forEach((cheevo) => cheevo.classList.toggle("hidden-group", isHidden(cheevo)))
         }
         this.groupCheevos();

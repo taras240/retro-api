@@ -58,14 +58,19 @@ export class Status extends Widget {
         return [
             {
                 label: ui.lang.subsets,
-                elements: Object.keys(watcher.GAME_DATA?.subsets).map(subsetName => {
+                elements: Object.entries(watcher.GAME_DATA?.subsets).map(([subsetName, subsetID]) => {
+                    subsetID = parseInt(subsetID);
+                    const isMainSet = subsetName === "Main";
+                    if (isMainSet || !subsetID) return "";
+                    const isVisible = config.gameConfig().visibleSubsets?.includes(subsetID);
+                    const checked = isMainSet || isVisible;
                     return {
-                        type: inputTypes.RADIO,
+                        type: inputTypes.CHECKBOX,
                         name: "subset-select",
                         id: `subset-select-${subsetName}`,
                         label: subsetName,
-                        checked: watcher.GAME_DATA?.ID === watcher.GAME_DATA?.subsets[subsetName],
-                        event: `onclick="watcher.setSubset('${subsetName}')"`,
+                        checked,
+                        event: `onclick="watcher.setSubset(${subsetID})"`,
                     }
                 }),
             },

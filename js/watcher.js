@@ -28,7 +28,7 @@ export class Watcher {
     }
     zeroCheckTime = new Date();
     get CHEEVOS() {
-        return this.GAME_DATA?.Achievements ?? {};
+        return this.GAME_DATA?.AllAchievements ?? {};
     }
     get GAME_DATA() {
         return this._gameData;
@@ -360,16 +360,21 @@ export class Watcher {
             console.error(error);
         }
     }
-    setSubset(subsetName) {
-        const gameSetID = this.GAME_DATA.subsets?.[subsetName];
-        if (!config.gamesDB[this.GAME_DATA.ParentGameID]) {
-            config.gamesDB[this.GAME_DATA.ParentGameID] = {};
+    setSubset(subsetID) {
+        console.log(subsetID)
+        const gameID = this.GAME_DATA.ID;
+        if (subsetID && subsetID === gameID) return;
+
+        let visibleSubsets = config.gameConfig(gameID).visibleSubsets || [];
+        if (visibleSubsets.includes(subsetID)) {
+            visibleSubsets = visibleSubsets.filter(ID => ID !== subsetID);
+        } else {
+            visibleSubsets.push(subsetID);
         }
-        if (gameSetID) {
-            config.gamesDB[this.GAME_DATA.ParentGameID].lastSetID = gameSetID;
-            config.writeConfiguration();
-            this.updateGameData(gameSetID);
-        }
+        config.saveGameConfig(gameID, { visibleSubsets });
+        config.writeConfiguration();
+        this.updateGameData();
+
 
     }
     start() {

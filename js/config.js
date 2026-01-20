@@ -2,7 +2,7 @@ import { colorPresets } from "./enums/colorPresets.js";
 import { fonts } from "./enums/fontsPreset.js";
 import { loadHandle, openDB, saveHandle } from "./functions/DB.js";
 import { delay } from "./functions/delay.js";
-import { ui } from "./script.js";
+import { ui, watcher } from "./script.js";
 import { UI } from "./ui.js";
 
 const CONFIG_FILE_NAME = "retroApiConfig";
@@ -161,6 +161,16 @@ export class Config {
   get gamesDB() {
     this._cfg.gamesDB || (this._cfg.gamesDB = {})
     return this._cfg.gamesDB;
+  }
+  gameConfig(gameID) {
+    gameID ??= watcher.GAME_DATA.ParentID || watcher.GAME_DATA.ID;
+    const gameConfig = this.gamesDB?.[gameID] || {};
+    return gameConfig;
+  }
+  saveGameConfig(gameID, dataObject) {
+    const savedData = this.gameConfig(gameID);
+    const gameConfig = { ...savedData, ...dataObject };
+    this.gamesDB[gameID] = gameConfig;
   }
   get cheevosDB() {
     this._cfg.cheevosDB || (this._cfg.cheevosDB = {})
