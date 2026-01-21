@@ -171,7 +171,7 @@ export class APIWorker {
     }
     normalizeGameData(gameData, config.gamesDB, config.cheevosDB);
     if (!isSubset) {
-      gameData.subsets = await this.getSubsets(gameData.ID);
+      gameData.availableSubsets = await this.getSubsets(gameData.ID);
       await this.addSubsetsData(gameData);
     }
     return gameData;
@@ -183,6 +183,7 @@ export class APIWorker {
     };
     parentGameData.AllAchievements ??= { ...parentGameData.Achievements };
     parentGameData.subsetsData ??= {};
+
     if (!parentGameData.visibleSubsets?.length) return parentGameData;
 
     for (let subsetID of parentGameData.visibleSubsets) {
@@ -195,6 +196,7 @@ export class APIWorker {
       parentGameData.subsetsData[subsetID] = subsetData;
       Object.assign(parentGameData.AllAchievements, subsetData.Achievements);
     }
+    // parentGameData.visibleSubsets.push(parentGameData.ID);
   }
   //Повертає час який потрібен для здобуття досягнень та нагород
   async getGameTimesInfo({ gameID, targetUser }) {

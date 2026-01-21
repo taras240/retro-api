@@ -243,7 +243,7 @@ export class AchievementsBlock extends Widget {
                 }
             })(),
             ...watcher.GAME_DATA.visibleSubsets.map(setID => {
-                const sets = watcher.GAME_DATA.subsets;
+                const sets = watcher.GAME_DATA.availableSubsets;
                 const setName = Object.keys(sets).find(name => sets[name] === setID);
                 return {
                     type: inputTypes.CHECKBOX,
@@ -470,7 +470,7 @@ export class AchievementsBlock extends Widget {
                 this.container.appendChild(achivElement);
             });
             if (gameData.visibleSubsets?.length) {
-                Object.values(gameData.subsetsData).forEach(subset => {
+                Object.values(gameData.subsetsData)?.forEach(subset => {
                     fillCheevosContainer(subset);
                 })
 
@@ -1000,15 +1000,16 @@ export class AchievementsBlock extends Widget {
                 </div>
             `;
             this.container.appendChild(group);
+            const groupContainer = group.querySelector(".cheevos__group-container");
+            groupCheevos.forEach(c => groupContainer.appendChild(c));
+            if (groupContainer.offsetHeight == 0) group.classList.add("hidden")
 
-            groupCheevos.forEach(c => group
-                .querySelector(".cheevos__group-container")
-                .appendChild(c))
         }
         const removeGroups = (cheevos) => {
             cheevos.forEach(c => this.container.appendChild(c));
             this.fitSizeVertically();
         }
+        const gameData = watcher.GAME_DATA;
         const cheevos = this.container.querySelectorAll(".achiv-block");
         this.container.innerHTML = "";
         if (!this.uiProps.isGrouping) {
@@ -1050,20 +1051,29 @@ export class AchievementsBlock extends Widget {
                 createGroupElement(ui.lang.other, filterBy.typeless, cheevos);
                 break;
             case (CHEEVO_GROUPS.LEVEL):
-
                 const levels = [...cheevos]
                     .map(({ dataset }) => Number(dataset.level))
                     .filter(n => !Number.isNaN(n));
 
                 const maxLevel = Math.max(0, ...levels);
                 const minLevel = Math.min(0, ...levels);
-                const { zones } = watcher.GAME_DATA;
+                const { zones } = gameData;
                 const isNamedLevels = zones?.length > 2;
                 for (let level = minLevel; level <= maxLevel; level++) {
                     createGroupElement(`Level: ${isNamedLevels ? zones[level - 1] : level}`, filterBy.level, cheevos, { targetLevel: level })
                 }
                 createGroupElement(ui.lang.other, filterBy.leveless, cheevos);
                 break;
+            case (CHEEVO_GROUPS.SUBSET):
+
+                const subsets = [gameData.ID, ...gameData.visibleSubsets || []];
+                const awailableSets = gameData.availableSubsets ?? { Main: gameData.ID };
+                for (let setID of subsets) {
+                    const setName = Object.keys(awailableSets).find(setName => awailableSets[setName] === setID);
+                    createGroupElement(setName, filterBy.setID, cheevos, { targetSet: setID })
+                }
+                break;
+
             default: break;
         }
 

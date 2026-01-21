@@ -317,7 +317,7 @@ export class Target extends Widget {
                 }
             })(),
             ...watcher.GAME_DATA.visibleSubsets.map(setID => {
-                const sets = watcher.GAME_DATA.subsets;
+                const sets = watcher.GAME_DATA.availableSubsets;
                 const setName = Object.keys(sets).find(name => sets[name] === setID);
                 return {
                     type: inputTypes.CHECKBOX,

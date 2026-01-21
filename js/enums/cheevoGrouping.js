@@ -4,7 +4,7 @@ const CHEEVO_GROUPS = Object.freeze({
     TYPE: 'type',
     LEVEL: 'level',
     UNLOCK_DATE: "unlockDate",
-    // SUBSET: "subset"
+    SUBSET: "subset"
 });
 
 export default CHEEVO_GROUPS;

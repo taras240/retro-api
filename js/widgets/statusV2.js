@@ -38,6 +38,7 @@ import { timePosition } from "../enums/timePosition.js";
 import { GAME_INFO_TYPES } from "../enums/gameInfoTypes.js";
 import { gameInfoIconsHtml, richInfoHtml } from "../components/statusWidget/gameInfoIcons.js";
 import { sweepEffect } from "../components/windowEffects.js";
+import { getCheevosCount, getPointsCount, getRetropointsCount } from "../functions/gameProperties.js";
 
 export class Status extends Widget {
 
@@ -56,24 +57,8 @@ export class Status extends Widget {
     }
     get contextMenuItems() {
         return [
-            {
-                label: ui.lang.subsets,
-                elements: Object.entries(watcher.GAME_DATA?.subsets).map(([subsetName, subsetID]) => {
-                    subsetID = parseInt(subsetID);
-                    const isMainSet = subsetName === "Main";
-                    if (isMainSet || !subsetID) return "";
-                    const isVisible = config.gameConfig().visibleSubsets?.includes(subsetID);
-                    const checked = isMainSet || isVisible;
-                    return {
-                        type: inputTypes.CHECKBOX,
-                        name: "subset-select",
-                        id: `subset-select-${subsetName}`,
-                        label: subsetName,
-                        checked,
-                        event: `onclick="watcher.setSubset(${subsetID})"`,
-                    }
-                }),
-            },
+            this.contextSetsMenu(),
+
             this.theme !== Status.themes.legacy ? {
                 label: ui.lang.elements,
                 elements: [
@@ -220,6 +205,24 @@ export class Status extends Widget {
 
         ];
     }
+    contextSetsMenu = () => Object.values(watcher.GAME_DATA?.availableSubsets ?? {})?.length > 1 ? {
+        label: ui.lang.subsets,
+        elements: Object.entries(watcher.GAME_DATA?.availableSubsets).map(([subsetName, subsetID]) => {
+            subsetID = parseInt(subsetID);
+            const isMainSet = subsetName === "Main";
+            if (isMainSet || !subsetID) return "";
+            const isVisible = config.gameConfig().visibleSubsets?.includes(subsetID);
+            const checked = isMainSet || isVisible;
+            return {
+                type: inputTypes.CHECKBOX,
+                name: "subset-select",
+                id: `subset-select-${subsetName}`,
+                label: subsetName,
+                checked,
+                event: `onclick="watcher.setSubset(${subsetID})"`,
+            }
+        }),
+    } : "";
     uiDefaultValues = {
         time: "playTime",
         timerTime: 30,
@@ -519,8 +522,14 @@ export class Status extends Widget {
         const gameInfoContent = this.section.querySelector(".rp__game-info-content");
         if (!gameInfoContent) return;
         const updateIcons = () => {
-            const { ConsoleID, NumAchievements, totalPoints, retroRatio } = watcher.GAME_DATA;
-
+            const gameData = watcher.GAME_DATA;
+            let { ConsoleID, NumAchievements, totalPoints, retroRatio, totalRetropoints } = gameData;
+            if (gameData.visibleSubsets?.length) {
+                NumAchievements = getCheevosCount(gameData);
+                totalPoints = getPointsCount(gameData);
+                totalRetropoints = getRetropointsCount(gameData);
+                retroRatio = (totalRetropoints / totalPoints).toFixed(2);
+            }
             this.section.querySelector(".rp__game-platform")?.setHTMLUnsafe(signedIcons.platform(ConsoleID));
 
             this.section.querySelector(".rp__game-icons")?.setHTMLUnsafe(`

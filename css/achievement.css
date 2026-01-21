@@ -569,6 +569,10 @@
   text-align: center;
 }
 
+.cheevos__group.hidden {
+  display: none;
+}
+
 .cheevos__group-header {
   position: relative;
   padding: 0.5rem;

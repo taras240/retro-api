@@ -125,6 +125,7 @@ export const showAlert = (alert, alertContainer) => {
             alertContainer.classList.add("show-alert");
             break;
         case ALERT_TYPES.AWARD:
+            console.log(alert)
             alertContainer.appendChild(awardAlertElement(alert.value, alert.award));
             alertContainer.classList.add("show-alert");
             break;

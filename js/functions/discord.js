@@ -84,7 +84,7 @@ export async function sendDiscordAlert({ message = "", type, value, award, id })
             break;
         case ALERT_TYPES.AWARD:
             await delay(2000);
-            messageElements = awardMessage(gameData, award);
+            messageElements = awardMessage(value, award);
             break;
         case ALERT_TYPES.CHEEVO:
             const cheevo = value;

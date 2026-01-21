@@ -302,13 +302,14 @@ export class Watcher {
             let awardsArray = [];
             const gameSets = [this.GAME_DATA, ...Object.values(this.GAME_DATA.subsetsData)];
             gameSets.forEach(gameSet => {
+
                 if (gameSet.award !== GAME_AWARD_TYPES.MASTERED
                     && gameSet.unlockData.hardcore.count === gameSet.NumAchievements) {
                     gameSet.award = GAME_AWARD_TYPES.MASTERED;
                     awardsArray.push({
                         type: ALERT_TYPES.AWARD,
                         award: GAME_AWARD_TYPES.MASTERED,
-                        value: gameSet
+                        value: structuredClone(gameSet)
                     });
                 }
                 else if (!gameSet.award && gameSet.unlockData.softcore.count === gameSet.NumAchievements) {
@@ -316,7 +317,7 @@ export class Watcher {
                     awardsArray.push({
                         type: ALERT_TYPES.AWARD,
                         award: GAME_AWARD_TYPES.COMPLETED,
-                        value: gameSet
+                        value: structuredClone(gameSet)
                     })
                 }
                 if (gameSet.progressionSteps > 0 &&
@@ -326,7 +327,7 @@ export class Watcher {
                     awardsArray.push({
                         type: ALERT_TYPES.AWARD,
                         award: GAME_AWARD_TYPES.BEATEN,
-                        value: gameSet
+                        value: structuredClone(gameSet)
                     })
                 }
                 else if (gameSet.progressionSteps > 0 &&
@@ -336,13 +337,16 @@ export class Watcher {
                     awardsArray.push({
                         type: ALERT_TYPES.AWARD,
                         award: GAME_AWARD_TYPES.BEATEN_SOFTCORE,
-                        value: gameSet
+                        value: structuredClone(gameSet)
                     })
                 }
             })
-            const { TimePlayed } = watcher.GAME_DATA.TimePlayed;
+            const { TimePlayed } = watcher.GAME_DATA;
 
-            return awardsArray.map(a => a.value.TimePlayed = TimePlayed);
+            return awardsArray.map(award => {
+                award.value.TimePlayed = TimePlayed;
+                return award;
+            });
         }
         const checkForZeroPoints = () => {
             this.GAME_DATA.hasZeroPoints = Object.values(this.CHEEVOS).filter(
