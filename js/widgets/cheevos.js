@@ -228,7 +228,7 @@ export class AchievementsBlock extends Widget {
         ]
     } : "";
     contextSetsMenu = () => watcher.GAME_DATA?.visibleSubsets?.length ? {
-        label: "**Sets",
+        label: ui.lang.subsets,
         elements: [
             (() => {
                 const setID = watcher.GAME_DATA.ID;

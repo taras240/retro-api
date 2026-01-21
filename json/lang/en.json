@@ -247,5 +247,6 @@
     "showCheevosProgress": "Cheevos Progress",
     "showPointsProgress": "Points Progress",
     "showRetropointsProgress": "Retropoints Progress",
-    "subset": "Set Name"
+    "subset": "Set Name",
+    "showPins": "Show Pins"
 }

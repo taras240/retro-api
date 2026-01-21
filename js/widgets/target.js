@@ -158,7 +158,7 @@ export class Target extends Widget {
                     {
                         type: inputTypes.CHECKBOX,
                         id: "show-pins",
-                        label: "**Show pins",
+                        label: ui.lang.showPins,
                         checked: this.uiProps.showPins,
                         event: `onchange="ui.target.uiProps.showPins = this.checked;"`,
                     },
@@ -302,7 +302,7 @@ export class Target extends Widget {
         ]
     } : "";
     contextSetsMenu = () => watcher.GAME_DATA?.visibleSubsets?.length ? {
-        label: "**Sets",
+        label: ui.lang.subsets,
         elements: [
             (() => {
                 const setID = watcher.GAME_DATA.ID;
