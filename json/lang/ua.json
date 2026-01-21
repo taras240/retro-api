@@ -233,11 +233,19 @@
     "icons": "Іконки",
     "cheevoOnHover": "Деталі досягнення при наведенні",
     "loadLastSubset": "Завантажувати дод.набори",
-    "subsets": "Дод. набори",
+    "subsets": "Набори",
     "progressUnlockCheevosHint": "Розблоковано {{count}} {{type}} {{date}}",
     "progressEarnedPointsHint": "Зароблено {{count}} {{type}} {{date}}",
     "cheevo": "досягнення",
     "point": "поінт",
     "retropoint": "ретропоінт",
-    "multigame": "Багатоігровка"
+    "multigame": "Багатоігровка",
+    "sessionTime": "Час сесії",
+    "showBorders": "Рамка",
+    "showTitle": "Назва Гри",
+    "showCheevosProgress": "Прогрес Досягнень",
+    "showPointsProgress": "Прогрес Поінтів",
+    "showRetropointsProgress": "Прогрес Ретропоінтів",
+    "subset": "Назва Набору",
+    "showPins": "Показати Закріплені"
 }

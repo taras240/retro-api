@@ -230,6 +230,21 @@
     "masteredHint": "mastered",
     "animType": "Tipo de Animação",
     "infoPanel": "Painel de Informações",
-    "icons": "Ícones",
-    "cheevoOnHover": "Conquista ao passar o mouse"
+    "loadLastSubset": "Carregar subconjunto salvo",
+    "subsets": "Subconjuntos",
+    "progressUnlockCheevosHint": "Desbloqueou {{count}} {{type}} em {{date}}",
+    "progressEarnedPointsHint": "Ganhou {{count}} {{type}} em {{date}}",
+    "cheevo": "conquista",
+    "point": "ponto",
+    "retropoint": "retroPonto",
+    "thick": "Espesso",
+    "multigame": "Multijogo",
+    "sessionTime": "Tempo da sessão",
+    "showBorders": "Bordas",
+    "showTitle": "Título",
+    "showCheevosProgress": "Progresso de conquistas",
+    "showPointsProgress": "Progresso de pontos",
+    "showRetropointsProgress": "Progresso de retropontos",
+    "subset": "Nome do conjunto",
+    "showPins": "Mostrar pins"
 }
