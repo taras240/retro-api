@@ -168,7 +168,8 @@
   }
 }
 
-.achiv-block.hidden-group {
+.achiv-block.hidden-group,
+.achiv-block.hidden-set {
   display: none;
 }
 
@@ -566,6 +567,10 @@
 .cheevos__group {
   width: 100%;
   text-align: center;
+}
+
+.cheevos__group.hidden {
+  display: none;
 }
 
 .cheevos__group-header {

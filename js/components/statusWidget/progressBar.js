@@ -1,5 +1,6 @@
 import { GAME_AWARD_TYPES } from "../../enums/gameAwards.js";
 import { progressStyle, progressTypes } from "../../enums/progressBar.js";
+import { getCheevosCount, getPointsCount, getRetropointsCount } from "../../functions/gameProperties.js";
 import { formatText } from "../../functions/local.js";
 import { filterBy, sortBy } from "../../functions/sortFilter.js";
 import { ui } from "../../script.js";
@@ -20,6 +21,7 @@ export const completionMsg = (gameData, progressType, isHardMode = true) => {
     else return `${badgeElements.gold(`${unlocked}/${total}`)} ${formatText(unlockProgressMsg, { rate: unlockedRate, progressTypeName })}`;
 }
 const sessionsProgressHtml = (gameData, isHardMode, progressType) => {
+    if (gameData.visibleSubsets?.length) return "";
     let totalCount, count = 0;
     let hint = "";
     return gameData.sessions.map(session => {
@@ -29,6 +31,7 @@ const sessionsProgressHtml = (gameData, isHardMode, progressType) => {
         switch (progressType) {
             case progressTypes.cheevos:
                 count = isHardMode ? cheevosCountHardcore : cheevosCount;
+
                 totalCount = gameData.NumAchievements;
                 hint = formatText(ui.lang.progressUnlockCheevosHint, {
                     count,
@@ -38,7 +41,7 @@ const sessionsProgressHtml = (gameData, isHardMode, progressType) => {
                 break;
             case progressTypes.points:
                 count = session.cheevos.reduce((points, ID) => {
-                    const cheevo = gameData.Achievements[ID];
+                    const cheevo = gameData.AllAchievements[ID];
                     ((isHardMode && cheevo.DateEarnedHardcore) || (!isHardMode && cheevo.DateEarned)) && (points += cheevo.Points);
                     return points;
                 }, 0);
@@ -51,7 +54,7 @@ const sessionsProgressHtml = (gameData, isHardMode, progressType) => {
                 break;
             case progressTypes.retropoints:
                 count = session.cheevos.reduce((retropoints, ID) => {
-                    const cheevo = gameData.Achievements[ID];
+                    const cheevo = gameData.AllAchievements[ID];
                     (isHardMode && cheevo.DateEarnedHardcore) && (retropoints += cheevo.TrueRatio);
                     return retropoints;
                 }, 0);
@@ -76,36 +79,47 @@ const sessionsProgressHtml = (gameData, isHardMode, progressType) => {
     }).join("")
 }
 const getUnlockedCount = (gameData, isHardMode) => {
-    if (isHardMode) {
-        return gameData?.unlockData?.hardcore?.count ?? 0;
-    }
-    return gameData?.unlockData?.softcore?.count ?? 0;
+    let softCount, hardCount = 0;
+    const sets = [gameData, ...Object.values(gameData.subsetsData)];
+    sets.forEach(set => {
+        hardCount += set?.unlockData?.hardcore?.count ?? 0;
+        softCount += set?.unlockData?.softcore?.count ?? 0;
+    })
+    return isHardMode ? hardCount : softCount;
 }
 const getUnlockedPoints = (gameData, isHardMode) => {
-    if (isHardMode) {
-        return gameData?.unlockData?.hardcore?.points ?? 0;
-    }
-    return gameData?.unlockData?.soft?.points ?? 0;
+    let softPoints, hardPoints = 0;
+    const sets = [gameData, ...Object.values(gameData.subsetsData)];
+    sets.forEach(set => {
+        hardPoints += set?.unlockData?.hardcore?.points ?? 0;
+        softPoints += set?.unlockData?.softcore?.points ?? 0;
+    })
+    return isHardMode ? hardPoints : softPoints;
 }
 const getUnlockedRetroPoints = (gameData) => {
-    return gameData?.unlockData?.hardcore?.retropoints ?? 0;
+    let retropoints = 0;
+    const sets = [gameData, ...Object.values(gameData.subsetsData)];
+    sets.forEach(set => {
+        retropoints += set?.unlockData?.hardcore?.retropoints ?? 0;
+    })
+    return retropoints;
 }
 const getStats = (gameData, isHardMode, progressType) => {
     let unlocked, total, unlockedRate;
     switch (progressType) {
         case progressTypes.points:
             unlocked = getUnlockedPoints(gameData, isHardMode);
-            total = gameData?.totalPoints || 1;
+            total = getPointsCount(gameData);
             unlockedRate = Math.round(100 * unlocked / total) + "%";
             break;
         case progressTypes.retropoints:
             unlocked = getUnlockedRetroPoints(gameData, isHardMode);
-            total = gameData?.totalRetropoints || 1;
+            total = getRetropointsCount(gameData);
             unlockedRate = Math.round(100 * unlocked / total) + "%";
             break;
         default:
             unlocked = getUnlockedCount(gameData, isHardMode);
-            total = gameData?.NumAchievements || 1;
+            total = getCheevosCount(gameData);
             unlockedRate = Math.round(100 * unlocked / total) + "%";
             break;
     }
@@ -135,7 +149,7 @@ export const updateProgressBarData = (container, gameData, isHardMode, progressT
 
     const { unlocked, total, unlockedRate } = getStats(gameData, isHardMode, progressType);
 
-    const lastCheevos = Object.values(gameData?.Achievements ?? {})
+    const lastCheevos = Object.values(gameData?.AllAchievements ?? {})
         .filter(a => filterBy.earned(a))
         .sort((a, b) => sortBy.latest(a, b, 1, true))
         .slice(0, 6)

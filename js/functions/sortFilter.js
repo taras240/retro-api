@@ -16,6 +16,9 @@ export const filterBy = {
     },
     group: ({ group, targetGroup }) => group === targetGroup,
     leveless: ({ level }) => !level,
+    setID: ({ setID }, { targetSet }) => {
+        return setID == targetSet
+    },
 };
 export const cheevosFiterNames = Object.freeze({
     UNLOCKED: "earned",

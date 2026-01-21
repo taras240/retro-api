@@ -149,9 +149,7 @@ export class APIWorker {
     });
   }
   // Отримання прогресу гри користувача
-  async getGameInfoAndProgress({ targetUser, gameID, withTimesData = false }) {
-    const lastPlayedSubsetID = config.gamesDB?.[gameID]?.lastSetID ?? gameID;
-    gameID = configData.loadLastSubset ? lastPlayedSubsetID : gameID;
+  async getGameInfoAndProgress({ targetUser, gameID, withTimesData = false, isSubset = false }) {
 
     let url = this.getUrl({
       endpoint: raEdpoints.gameInfoAndProgress,
@@ -172,8 +170,33 @@ export class APIWorker {
 
     }
     normalizeGameData(gameData, config.gamesDB, config.cheevosDB);
-    gameData.subsets = await this.getSubsets(gameData.ParentGameID)
+    if (!isSubset) {
+      gameData.availableSubsets = await this.getSubsets(gameData.ID);
+      await this.addSubsetsData(gameData);
+    }
     return gameData;
+  }
+  async addSubsetsData(parentGameData) {
+    if (ui.isTest) {
+
+      return
+    };
+    parentGameData.AllAchievements ??= { ...parentGameData.Achievements };
+    parentGameData.subsetsData ??= {};
+
+    if (!parentGameData.visibleSubsets?.length) return parentGameData;
+
+    for (let subsetID of parentGameData.visibleSubsets) {
+      await delay(250);
+      const subsetData = await this.getGameInfoAndProgress({
+        gameID: subsetID,
+        isSubset: true,
+        withTimesData: false,
+      });
+      parentGameData.subsetsData[subsetID] = subsetData;
+      Object.assign(parentGameData.AllAchievements, subsetData.Achievements);
+    }
+    // parentGameData.visibleSubsets.push(parentGameData.ID);
   }
   //Повертає час який потрібен для здобуття досягнень та нагород
   async getGameTimesInfo({ gameID, targetUser }) {

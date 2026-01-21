@@ -17,6 +17,7 @@ import { inputTypes } from "../components/inputElements.js";
 import { buttonsHtml } from "../components/htmlElements.js";
 import { completionMsg } from "../components/statusWidget/progressBar.js";
 import { progressTypes } from "../enums/progressBar.js";
+import { getCheevosCount, getPointsCount, getRetropointsCount } from "../functions/gameProperties.js";
 
 export class GameCard extends Widget {
     widgetIcon = {
@@ -247,7 +248,7 @@ export class GameCard extends Widget {
             timeToBeat,
             timeToMaster
         } = watcher.GAME_DATA;
-
+        const gameData = watcher.GAME_DATA;
         const fillInfoValues = async () => {
             const generateInfoBadges = () => {
                 const infoBadges = [];
@@ -280,10 +281,14 @@ export class GameCard extends Widget {
             this.updateProgressData();
         }
         const generateIcons = () => {
+            const cheevosCount = getCheevosCount(gameData);
+            const pointsCount = getPointsCount(gameData);
+            const retropointsCount = getRetropointsCount(gameData);
+            const retroRatio = (retropointsCount / pointsCount).toFixed(2);
             this.iconsContainer.innerHTML = `
-                ${badgeElements.black(signedIcons.cheevos(NumAchievements))}
-                ${badgeElements.black(signedIcons.points(totalPoints))}
-                ${badgeElements.black(signedIcons.retropoints(totalRetropoints))}
+                ${badgeElements.black(signedIcons.cheevos(cheevosCount))}
+                ${badgeElements.black(signedIcons.points(pointsCount))}
+                ${badgeElements.black(signedIcons.retropoints(retropointsCount))}
                 ${badgeElements.black(signedIcons.retroRatio(retroRatio))}
             `;
         }

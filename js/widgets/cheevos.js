@@ -112,6 +112,7 @@ export class AchievementsBlock extends Widget {
             this.contextSortMenu(),
             this.contextFilterMenu(),
             this.contextMultiGameMenu(),
+            this.contextSetsMenu(),
             {
                 label: ui.lang.groupBy,
                 elements: [
@@ -226,6 +227,36 @@ export class AchievementsBlock extends Widget {
             }))
         ]
     } : "";
+    contextSetsMenu = () => watcher.GAME_DATA?.visibleSubsets?.length ? {
+        label: "**Sets",
+        elements: [
+            (() => {
+                const setID = watcher.GAME_DATA.ID;
+                const setName = "Main";
+                return {
+                    type: inputTypes.CHECKBOX,
+                    name: `${this.sectionID}-set`,
+                    id: `${this.sectionID}-set-${setID}`,
+                    label: setName,
+                    checked: !this.uiProps.hiddenSets.includes(setID),
+                    event: `onchange = "ui.achievementsBlock[${this.CLONE_NUMBER}].updateHiddenSets(${setID});"`,
+                }
+            })(),
+            ...watcher.GAME_DATA.visibleSubsets.map(setID => {
+                const sets = watcher.GAME_DATA.availableSubsets;
+                const setName = Object.keys(sets).find(name => sets[name] === setID);
+                return {
+                    type: inputTypes.CHECKBOX,
+                    name: `${this.sectionID}-set`,
+                    id: `${this.sectionID}-set-${setID}`,
+                    label: setName,
+                    checked: !this.uiProps.hiddenSets.includes(setID),
+                    event: `onchange = "ui.achievementsBlock[${this.CLONE_NUMBER}].updateHiddenSets(${setID});"`,
+                }
+
+            })
+        ]
+    } : "";
     uiDefaultValues = {
         showHeader: true,
         // overlayType: overlayNames.BORDER,
@@ -248,6 +279,7 @@ export class AchievementsBlock extends Widget {
         lockedPreviewFilter: imageFilters.GRAYSCALE,
         mGameSelection: "",
         showBorders: true,
+        hiddenSets: [],
     }
     uiSetCallbacks = {
         ACHIV_MIN_SIZE(value) {
@@ -291,6 +323,9 @@ export class AchievementsBlock extends Widget {
         },
         mGameSelection() {
             this.setMGameSelection();
+        },
+        hiddenSets() {
+            this.setSubsetSelection();
         }
 
     };
@@ -306,7 +341,20 @@ export class AchievementsBlock extends Widget {
         },
     };
 
+    updateHiddenSets(setID) {
+        let hiddenIDArray = this.uiProps.hiddenSets;
+        if (!hiddenIDArray?.length) hiddenIDArray = [];
 
+        if (hiddenIDArray.includes(setID)) {
+            hiddenIDArray = hiddenIDArray.filter(id => parseInt(id) !== parseInt(setID));
+        }
+        else {
+            hiddenIDArray.push(setID);
+        }
+
+        this.uiProps.hiddenSets = hiddenIDArray;
+
+    }
 
     get SECTION_NAME() {
         if (this.CLONE_NUMBER === 0) {
@@ -412,26 +460,34 @@ export class AchievementsBlock extends Widget {
 
 
     // Розбирає отримані досягнення гри та відображає їх на сторінці
-    parseGameAchievements(achivs) {
-        const clearAchievementsSection = () => {
+    parseGameAchievements(gameData) {
+        const clearContainer = () => {
             this.container.innerHTML = "";
         }
-        const addAchievementsToContainer = (achievementsObject) => {
-            Object.values(achievementsObject.Achievements).forEach((achievement) => {
+        const fillCheevosContainer = (gameData) => {
+            Object.values(gameData.Achievements).forEach((achievement) => {
                 const achivElement = this.generateAchievement(achievement);
                 this.container.appendChild(achivElement);
             });
-            this.groupCheevos();
+            if (gameData.visibleSubsets?.length) {
+                Object.values(gameData.subsetsData)?.forEach(subset => {
+                    fillCheevosContainer(subset);
+                })
+
+            }
+
         }
         // Очистити вміст розділу досягнень
-        clearAchievementsSection();
+        clearContainer();
 
         // Відсортувати досягнення та відобразити їх
-        addAchievementsToContainer(achivs);
-
+        fillCheevosContainer(gameData);
+        this.groupCheevos();
         // Підгонка розміру досягнень
         this.fitSizeVertically();
+        this.setSubsetSelection();
         this.setMGameSelection();
+
         this.applyFiltering();
 
         this.applySorting({ animation: 0 });
@@ -461,6 +517,7 @@ export class AchievementsBlock extends Widget {
             achivElement.dataset.Type = achievement.Type;
             achivElement.dataset.difficulty = achievement.difficulty;
             achivElement.dataset.group = achievement.group;
+            achivElement.dataset.setID = achievement.gameID;
             achievement.level && (achivElement.dataset.level = achievement.level);
 
             achivElement.dataset.NumAwardedHardcore = achievement.NumAwardedHardcore;
@@ -551,7 +608,7 @@ export class AchievementsBlock extends Widget {
             windowWidth = parseInt(config.ui[this.SECTION_NAME].width);
         }
         container.style.flex = "";
-        const achivs = container.querySelectorAll(".achiv-block:not(.removed, .hidden-group)");
+        const achivs = container.querySelectorAll(".achiv-block:not(.removed, .hidden-group, .hidden-set)");
         const achivsCount = achivs.length;
         // Перевірка, чи є елементи в блоці досягнень
         if (achivsCount === 0) return;
@@ -875,6 +932,14 @@ export class AchievementsBlock extends Widget {
         }
         this.groupCheevos();
     }
+    setSubsetSelection() {
+        if (!watcher.GAME_DATA.visibleSubsets?.length) return;
+        const cheevos = this.container.querySelectorAll(".achiv-block");
+        const hiddenIDArray = this.uiProps.hiddenSets;
+        const isHidden = (cheevo) => hiddenIDArray.includes(parseInt(cheevo.dataset.setID));
+        cheevos.forEach((cheevo) => cheevo.classList.toggle("hidden-set", isHidden(cheevo)))
+        this.groupCheevos();
+    }
     doLoadAnimation() {
         const list = this.container;
         const cheevos = list.querySelectorAll(".achiv-block");
@@ -935,15 +1000,16 @@ export class AchievementsBlock extends Widget {
                 </div>
             `;
             this.container.appendChild(group);
+            const groupContainer = group.querySelector(".cheevos__group-container");
+            groupCheevos.forEach(c => groupContainer.appendChild(c));
+            if (groupContainer.offsetHeight == 0) group.classList.add("hidden")
 
-            groupCheevos.forEach(c => group
-                .querySelector(".cheevos__group-container")
-                .appendChild(c))
         }
         const removeGroups = (cheevos) => {
             cheevos.forEach(c => this.container.appendChild(c));
             this.fitSizeVertically();
         }
+        const gameData = watcher.GAME_DATA;
         const cheevos = this.container.querySelectorAll(".achiv-block");
         this.container.innerHTML = "";
         if (!this.uiProps.isGrouping) {
@@ -985,20 +1051,29 @@ export class AchievementsBlock extends Widget {
                 createGroupElement(ui.lang.other, filterBy.typeless, cheevos);
                 break;
             case (CHEEVO_GROUPS.LEVEL):
-
                 const levels = [...cheevos]
                     .map(({ dataset }) => Number(dataset.level))
                     .filter(n => !Number.isNaN(n));
 
                 const maxLevel = Math.max(0, ...levels);
                 const minLevel = Math.min(0, ...levels);
-                const { zones } = watcher.GAME_DATA;
+                const { zones } = gameData;
                 const isNamedLevels = zones?.length > 2;
                 for (let level = minLevel; level <= maxLevel; level++) {
                     createGroupElement(`Level: ${isNamedLevels ? zones[level - 1] : level}`, filterBy.level, cheevos, { targetLevel: level })
                 }
                 createGroupElement(ui.lang.other, filterBy.leveless, cheevos);
                 break;
+            case (CHEEVO_GROUPS.SUBSET):
+
+                const subsets = [gameData.ID, ...gameData.visibleSubsets || []];
+                const awailableSets = gameData.availableSubsets ?? { Main: gameData.ID };
+                for (let setID of subsets) {
+                    const setName = Object.keys(awailableSets).find(setName => awailableSets[setName] === setID);
+                    createGroupElement(setName, filterBy.setID, cheevos, { targetSet: setID })
+                }
+                break;
+
             default: break;
         }
 
