@@ -193,13 +193,13 @@ export class Settings extends Widget {
                         value: configData.gameID,
                         onChange: "configData.gameID = this.value;",
                     },
-                    {
-                        type: inputTypes.CHECKBOX,
-                        label: ui.lang.loadLastSubset,
-                        id: "settings_load-last-subset",
-                        onChange: "configData.loadLastSubset = this.checked;",
-                        checked: configData.loadLastSubset,
-                    },
+                    // {
+                    //     type: inputTypes.CHECKBOX,
+                    //     label: ui.lang.loadLastSubset,
+                    //     id: "settings_load-last-subset",
+                    //     onChange: "configData.loadLastSubset = this.checked;",
+                    //     checked: configData.loadLastSubset,
+                    // },
                 ]
             },
             {

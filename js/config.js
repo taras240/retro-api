@@ -96,7 +96,7 @@ export class Config {
     discordWebhook: "", //_cfg.discordWebhook,
     parseLog: false, //logfileHandle for retroarch
     showCheevoOnHover: false,
-    loadLastSubset: true,
+    loadLastSubset: false,
   }
   configValuePreprocessors = {
     updateDelaySec: (value) => parseInt(value) < 5 ? 5 : parseInt(value),
