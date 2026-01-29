@@ -46,77 +46,6 @@
   --overlay-earned-rare: var(--overlay-earned);
 }
 
-.achivs[data-overlay="border"] {
-  --overlay-closed: url("../assets/img/overlay_sets/border/closed.png");
-  --overlay-earned: url("../assets/img/overlay_sets/border/earned-1.png");
-  --overlay-earned-rare: url("../assets/img/overlay_sets/border/earned-2.png");
-  --overlay-earned-soft: url("../assets/img/overlay_sets/border/earned_soft.png");
-}
-
-.achivs[data-overlay="digger"] {
-  --overlay-closed: url("../assets/img/overlay_sets/digger/closed-1.png");
-  --overlay-earned: url("../assets/img/overlay_sets/digger/earned.png");
-  --overlay-earned-soft: url("../assets/img/overlay_sets/digger/earned_soft.png");
-}
-
-.achivs[data-overlay="digger"] [data-rarity="rare"] {
-  --overlay-closed: url("../assets/img/overlay_sets/digger/closed-2.png");
-}
-
-.achivs[data-overlay="digger"] [data-rarity="mythycal"] {
-  --overlay-closed: url("../assets/img/overlay_sets/digger/closed-3.png");
-}
-
-.achivs[data-overlay="digger"] [data-rarity="normal"] {
-  --overlay-closed: url("../assets/img/overlay_sets/digger/closed.png");
-}
-
-.achivs[data-overlay="mario_q"] {
-  --overlay-closed: url("../assets/img/overlay_sets/mario_q/closed-1.png");
-  --overlay-earned: url("../assets/img/overlay_sets/mario_q/earned.webp");
-  --overlay-earned-soft: url("../assets/img/overlay_sets/mario_q/earned_soft.png");
-}
-
-
-
-.achivs[data-overlay="mario_q"] [data-rarity="rare"],
-.achivs[data-overlay="mario_q"] [data-rarity="normal"] {
-  --overlay-closed: url("../assets/img/overlay_sets/mario_q/closed.png");
-}
-
-.achivs[data-overlay="mario_q"] [data-type="missable"][data-rarity="rare"],
-.achivs[data-overlay="mario_q"] [data-type="missable"][data-rarity="normal"] {
-  --overlay-closed: url("../assets/img/overlay_sets/mario_q/missable_q.png");
-}
-
-.achivs[data-overlay="mario_q"] [data-rarity="mythycal"] {
-  --overlay-closed: url("../assets/img/overlay_sets/mario_q/closed-2.png");
-}
-
-.achivs[data-overlay="cd_box"] {
-  --overlay-closed: url("../assets/img/overlay_sets/cd_box/closed.png");
-  --overlay-earned: url("../assets/img/overlay_sets/cd_box/earned.png");
-  --overlay-earned-soft: url("../assets/img/overlay_sets/cd_box/earned_soft.png");
-}
-
-.achivs[data-overlay="kirby"] {
-  --overlay-closed: url("../assets/img/overlay_sets/kirby/closed.png");
-  --overlay-earned: url("../assets/img/overlay_sets/kirby/earned.png");
-  --overlay-earned-soft: url("../assets/img/overlay_sets/kirby/earned_soft.png");
-}
-
-.achivs[data-overlay="megaman"] {
-  --overlay-closed: url("../assets/img/overlay_sets/megaman/closed.png");
-  --overlay-earned: url("../assets/img/overlay_sets/megaman/earned.png");
-  --overlay-earned-soft: url("../assets/img/overlay_sets/megaman/earned_soft.png");
-}
-
-.achivs[data-overlay="sonic"] {
-  --overlay-closed: url("../assets/img/overlay_sets/sonic/closed.png");
-  --overlay-earned: url("../assets/img/overlay_sets/sonic/earned.png");
-  --overlay-earned-soft: url("../assets/img/overlay_sets/sonic/earned_soft.png");
-}
-
 .achivs [data-type="missable"]:not(.earned) .preview-container::before {
   filter: invert(1)
 }
@@ -151,10 +80,10 @@
 }
 
 .achiv-block.mario-dumb {
-  animation: hardcore-earned-animation 0.25s forwards cubic-bezier(0, .52, .96, 1.7);
+  animation: mario-dumb 0.25s forwards cubic-bezier(0, .52, .96, 1.7);
 }
 
-@keyframes hardcore-earned-animation {
+@keyframes mario-dumb {
   0% {
     top: 0;
   }
@@ -375,10 +304,10 @@
   top: 0%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: calc(var(--achiv-height) / 2.5);
+  font-size: calc(var(--achiv-height) / 3);
   background-color: black;
   border-radius: 5px;
-  padding: 2px;
+  padding: 0 0.25rem 0.25rem 0;
   color: goldenrod;
 
   font-weight: 600;
@@ -512,6 +441,38 @@
     opacity: 0;
   }
 }
+
+/**---------------------------------------[ SMB3 ]----------------- */
+.person-container {
+  position: absolute;
+
+  height: var(--height);
+  aspect-ratio: 1;
+
+  background-repeat: no-repeat;
+  background-size: auto calc(var(--height) * 2);
+
+  image-rendering: pixelated;
+  z-index: 100;
+  /* якщо піксель-арт */
+
+}
+
+.smb3_small-m {
+  --height: 64px;
+  background-image: url(../assets/img/mario_sprites/smb3_sprites.png);
+}
+
+.smb3_small-m.to-left {
+  transform: rotateY(0);
+
+}
+
+.smb3_small-m.to-right {
+  transform: rotateY(180deg);
+
+}
+
 
 /** MOVING TO START ANIM  */
 .achiv-block.move {
