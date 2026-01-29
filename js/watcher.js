@@ -154,7 +154,7 @@ export class Watcher {
 
         const raProfileInfo = await apiWorker.getProfileInfo({});
         //PrentGameID for Saved set update
-        const isGameChanged = (raProfileInfo.LastGameID != this.GAME_DATA?.ID) && (raProfileInfo.LastGameID != this.GAME_DATA?.ParentGameID);
+        const isGameChanged = (raProfileInfo.LastGameID != this.GAME_DATA?.ID); //&& (raProfileInfo.LastGameID != this.GAME_DATA?.ParentGameID);
         if (isGameChanged || isStart) {
             configData.gameID = raProfileInfo.LastGameID;
             isStart && this.updateUserData({ raProfileInfo });
