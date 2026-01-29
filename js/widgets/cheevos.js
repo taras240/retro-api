@@ -656,7 +656,7 @@ export class AchievementsBlock extends Widget {
             if (!cheevo) continue;
             const cheevoElement = this.container.querySelector(`.achiv-block[data-achiv-id="${cheevoID}"]`);
             const cheevoIsHidden = cheevo?.offsetParent === null;
-            if (!this.uiProps.showMario || cheevoIsHidden) {
+            if (!this.uiProps.showMario || cheevoIsHidden || !this.VISIBLE) {
                 unlockChevo(cheevoElement, cheevo);
             }
             else {
