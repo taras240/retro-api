@@ -1,71 +1,119 @@
 import { icons, signedIcons } from "../../components/icons.js";
 import { delay } from "../delay.js";
-
+const characters = {
+    smbMario: {
+        spriteFile: "smb3_1.png",
+        standSpriteOffset: 0,
+        walkSpritesOffset: 0,
+        walkSpritesCount: 2,
+        jumpSpritesCount: 1,
+        jumpSpritesOffset: 2,
+        spriteHeight: 16,
+        spriteWidth: 16,
+        collisionOffset: 0,
+    },
+    smbLuigi: {
+        spriteFile: "smb3_2.png",
+        standSpriteOffset: 0,
+        walkSpritesOffset: 0,
+        walkSpritesCount: 2,
+        jumpSpritesCount: 1,
+        jumpSpritesOffset: 2,
+        spriteHeight: 16,
+        spriteWidth: 16,
+        collisionOffset: 0,
+    },
+    smwMario: {
+        spriteFile: "smw_1.png",
+        standSpriteOffset: 0,
+        walkSpritesOffset: 1,
+        walkSpritesCount: 2,
+        jumpSpritesCount: 1,
+        jumpSpritesOffset: 4,
+        spriteHeight: 24,
+        spriteWidth: 16,
+        collisionOffset: 4,
+    }
+}
+const updateFrame = ({ character, curSprite, sptiteOffset }) => {
+    const spriteWidth = character.offsetWidth;
+    const posX = `-${(sptiteOffset + curSprite) * spriteWidth}px`;
+    character.style.backgroundPositionX = posX;
+}
 export function smb3UnlockAnimation() {
     const FRAME_TIME = 1000 / 50;
-    const CHARACTER_MIN_SIZE = 48;
+    const CHARACTER_MIN_SIZE = 36;
     const pageWidth = document.body.offsetWidth;
-    const walkSpritesCount = 2;
-    const walkSpritesOffset = 0;
-    const jumpSpritesCount = 1;
-    const jumpSpritesOffset = 2;
+    let characterPreset;
 
     let speedX, speedY, g, maxJumpHeight = 0;
 
-    const setCharacter = (character, characterStyle) => {
-        characterStyle ??= Math.floor(Math.random() * 2);
-        character.style.backgroundPositionY = `-${characterStyle * character.offsetHeight}px`;
+    const setCharacterPreset = (cheevoBox) => {
+        const { TrueRatio, Points } = cheevoBox?.dataset;
+        const rarity = TrueRatio / Points;
+        if (rarity >= 4) {
+            characterPreset = characters.smwMario;
+        }
+        else if (rarity >= 2) {
+            characterPreset = characters.smbMario;
+        }
+        else {
+            characterPreset = characters.smbLuigi;
+        }
+
+
+        // character.style.backgroundPositionY = `-${character.offsetHeight}px`;
     }
     const calcMoveProperties = ({ character }) => {
         const characterSize = character.offsetWidth;
         speedX = 2.5 * characterSize;
         speedY = 22 * characterSize;
-        g = 6e3;
-        maxJumpHeight = 2 * characterSize;// (speedY ** 2) / (2 * g);
+        g = 5e3;
+        maxJumpHeight = 1.1 * characterSize;// (speedY ** 2) / (2 * g);
     }
+    const stand = async (character, duration) => {
+        const { standSpriteOffset } = characterPreset;
+
+        updateFrame({ character, curSprite: 0, sptiteOffset: standSpriteOffset });
+
+        await delay(duration);
+    }
+
     const walkAnimation = (character) => {
-        const startSpritePos = walkSpritesOffset;
+        // const startSpritePos = walkSpritesOffset;
         let walkInterval;
-        let curSprite = 0;
-        const spritesCount = walkSpritesCount;
-        const spriteWidth = character.offsetWidth;
+
+        const { walkSpritesCount, walkSpritesOffset, standSpriteOffset } = characterPreset;
+        let curSprite = walkSpritesOffset;
+
         const start = () => {
             walkInterval = setInterval(() => {
                 curSprite++;
-                if (curSprite >= spritesCount) curSprite = 0;
-
-                const posX = `-${startSpritePos + curSprite * spriteWidth}px`;
-                character.style.backgroundPositionX = posX;
+                if (curSprite >= walkSpritesCount) curSprite = 0;
+                updateFrame({ character, curSprite, sptiteOffset: walkSpritesOffset });
             }, 100);
         }
         const stop = () => {
             walkInterval && clearInterval(walkInterval);
-            character.style.backgroundPositionX = `${startSpritePos}px`;
+            updateFrame({ character, curSprite: 0, sptiteOffset: standSpriteOffset, });
         }
         return { start, stop };
     }
     const jumpAnimation = (character) => {
         let jumpInterval;
+        const { jumpSpritesCount, jumpSpritesOffset } = characterPreset;
         let curSprite = 0;
-        const spritesCount = jumpSpritesCount;
-        const spriteWidth = character.offsetWidth;
-        const startSpritePos = jumpSpritesOffset * spriteWidth;
-
-        const updateFrame = (curSprite) => {
-            const posX = `-${startSpritePos + curSprite * spriteWidth}px`;
-            character.style.backgroundPositionX = posX;
-        }
-
         const start = () => {
-            updateFrame(curSprite);
+            updateFrame({ character, curSprite, sptiteOffset: jumpSpritesOffset, });
             jumpInterval = setInterval(() => {
                 curSprite++;
-                if (curSprite >= spritesCount) curSprite = 0;
-                updateFrame(curSprite);
+                if (curSprite >= jumpSpritesCount) curSprite = 0;
+                updateFrame({ character, curSprite, sptiteOffset: jumpSpritesOffset, });
             }, 100);
         }
         const stop = () => {
             jumpInterval && clearInterval(jumpInterval);
+            updateFrame({ character, curSprite: 0, sptiteOffset: 0, });
             character.style.backgroundPositionX = `${0}px`;
         }
         return { start, stop };
@@ -108,6 +156,9 @@ export function smb3UnlockAnimation() {
     }
     const jumpToPos = async ({ character, targetPos, onCollision }) => {
         const startPos = character.offsetTop;
+        const { collisionOffset, spriteHeight } = characterPreset;
+        const offset = character.offsetHeight * collisionOffset / spriteHeight;
+        targetPos -= offset;
         const jumpAnim = jumpAnimation(character);
         jumpAnim.start();
 
@@ -136,21 +187,26 @@ export function smb3UnlockAnimation() {
     const createPerson = (boxSizes) => {
 
         const character = document.createElement("div");
-        const personHeight = boxSizes.height > CHARACTER_MIN_SIZE ? boxSizes.height : CHARACTER_MIN_SIZE;
-        character.style.setProperty("--height", `${personHeight}px`)
-        character.classList.add("person-container", "smb3_small-m");
+        const personHeight = Math.max(boxSizes.height, CHARACTER_MIN_SIZE);
+        const personWidth = personHeight * characterPreset.spriteWidth / characterPreset.spriteHeight;
+        character.style.setProperty("--width", `${personWidth}px`);
+        character.style.setProperty("--height", `${personHeight}px`);
+        character.style.backgroundImage = `url(../assets/img/mario_sprites/${characterPreset.spriteFile})`
+        character.classList.add("person-container");
+
         return character;
     }
     const removePerson = (character) => {
         character?.remove();
     }
     async function doAction(cheevoBox, unlockCallback) {
+        setCharacterPreset(cheevoBox);
         const boxSizes = cheevoBox.getBoundingClientRect();
 
         const character = createPerson(boxSizes);
         document.body.append(character);
         calcMoveProperties({ character, cheevoBox })
-        setCharacter(character)
+
         const startPos = {
             top: boxSizes.top + boxSizes.height + maxJumpHeight,
             left: boxSizes.left < pageWidth - boxSizes.right ? -character.offsetWidth : pageWidth,
@@ -190,13 +246,13 @@ export function smb3UnlockAnimation() {
 
         setStartPosition();
         await walkToPos({ character, targetPos: targetPos.X });
-        await delay(250);
+        await stand(character, 250);
         await jumpToPos({
             character,
             targetPos: targetPos.Y,
             onCollision: () => onCollision(cheevoBox)
         });
-        await delay(250);
+        await stand(character, 250);
         await walkToPos({ character, targetPos: startPos.left });
         removePerson(character);
 

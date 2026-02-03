@@ -447,10 +447,10 @@
   position: absolute;
 
   height: var(--height);
-  aspect-ratio: 1;
+  width: var(--width);
 
   background-repeat: no-repeat;
-  background-size: auto calc(var(--height) * 2);
+  background-size: auto calc(var(--height));
 
   image-rendering: pixelated;
   z-index: 100;
@@ -458,19 +458,18 @@
 
 }
 
-.smb3_small-m {
+/* .smb3_small-m {
   --height: 64px;
   background-image: url(../assets/img/mario_sprites/smb3_sprites.png);
-}
+} */
 
-.smb3_small-m.to-left {
+.person-container.to-left {
   transform: rotateY(0);
 
 }
 
-.smb3_small-m.to-right {
+.person-container.to-right {
   transform: rotateY(180deg);
-
 }
 
 
