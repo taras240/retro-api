@@ -673,12 +673,13 @@ export class AchievementsBlock extends Widget {
             cheevo.DateEarnedHardcore && (cheevoElement.dataset.DateEarnedHardcore = cheevo.DateEarnedHardcore);
             cheevoElement.dataset.DateEarned = cheevo.DateEarned;
         };
+        await delay(2000);
         this.container.scrollTo({
             top: 0,
             left: 0,
             behavior: 'smooth'
         });
-        await delay(2000);
+
         this.applyFiltering();
         await this.applySorting();
         await delay(2000);
