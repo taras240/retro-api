@@ -678,7 +678,7 @@ export class AchievementsBlock extends Widget {
             left: 0,
             behavior: 'smooth'
         });
-        await delay(500);
+        await delay(2000);
         this.applyFiltering();
         await this.applySorting();
         await delay(2000);

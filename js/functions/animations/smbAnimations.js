@@ -242,8 +242,8 @@ export function smb3UnlockAnimation() {
             character.style.top = `${startPos.top}px`;
             character.style.left = `${startPos.left}px`;
         }
-        const onCollision = (cheevoBox) => {
-            const showCoin = (cheevoBox) => {
+        const onCollision = async (cheevoBox) => {
+            const showCoin = async (cheevoBox) => {
                 const coin = document.createElement("div");
                 coin.classList.add("coin__container");
                 coin.style.setProperty("--achiv-height", `${boxSizes.height}px`)
@@ -254,15 +254,16 @@ export function smb3UnlockAnimation() {
                     <div class='coins__coin'></div>
                 `;
                 document.body.appendChild(coin);
-                setTimeout(() => coin?.remove(), 5000)
                 coin.style.top = boxSizes.top - boxSizes.height / 2 + "px";
                 coin.style.left = boxSizes.left + "px";
+                await delay(3000);
+                coin?.remove();
 
             }
             cheevoBox.classList.add("mario-dumb");
-            showCoin(cheevoBox);
+            await showCoin(cheevoBox);
+            cheevoBox.classList.remove("mario-dumb")
             unlockCallback?.();
-            setTimeout(() => cheevoBox.classList.remove("mario-dumb"), 2000)
         }
 
         const targetPos = {
