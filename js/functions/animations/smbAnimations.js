@@ -29,10 +29,30 @@ const characters = {
         walkSpritesOffset: 1,
         walkSpritesCount: 2,
         jumpSpritesCount: 1,
-        jumpSpritesOffset: 4,
+        jumpSpritesOffset: 3,
         spriteHeight: 24,
-        spriteWidth: 16,
+        spriteWidth: 18,
         collisionOffset: 4,
+    }, smbasMario: {
+        spriteFile: "smbas_1.png",
+        standSpriteOffset: 0,
+        walkSpritesOffset: 0,
+        walkSpritesCount: 2,
+        jumpSpritesCount: 1,
+        jumpSpritesOffset: 2,
+        spriteHeight: 16,
+        spriteWidth: 16,
+        collisionOffset: 0,
+    }, smbasLuigi: {
+        spriteFile: "smbas_2.png",
+        standSpriteOffset: 0,
+        walkSpritesOffset: 0,
+        walkSpritesCount: 2,
+        jumpSpritesCount: 1,
+        jumpSpritesOffset: 2,
+        spriteHeight: 16,
+        spriteWidth: 16,
+        collisionOffset: 0,
     }
 }
 const updateFrame = ({ character, curSprite, sptiteOffset }) => {
@@ -54,13 +74,19 @@ export function smb3UnlockAnimation() {
         if (rarity >= 4) {
             characterPreset = characters.smwMario;
         }
-        else if (rarity >= 2) {
+        else if (rarity > 3) {
+            characterPreset = characters.smbasMario;
+        }
+        else if (rarity > 2) {
+            characterPreset = characters.smbasLuigi;
+        }
+        else if (rarity > 1) {
             characterPreset = characters.smbMario;
         }
         else {
             characterPreset = characters.smbLuigi;
         }
-
+        characterPreset = characters.smbasLuigi;
 
         // character.style.backgroundPositionY = `-${character.offsetHeight}px`;
     }
