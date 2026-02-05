@@ -86,7 +86,6 @@ export function smb3UnlockAnimation() {
         else {
             characterPreset = characters.smbLuigi;
         }
-        characterPreset = characters.smbasLuigi;
 
         // character.style.backgroundPositionY = `-${character.offsetHeight}px`;
     }
