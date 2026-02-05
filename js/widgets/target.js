@@ -15,6 +15,7 @@ import { secondsToBadgeString } from "../functions/time.js";
 import { buttonsHtml } from "../components/htmlElements.js";
 import { CACHE_TYPES } from "../enums/cacheDataTypes.js";
 import { divHtml } from "../components/divContainer.js";
+import { fromHtml } from "../functions/html.js";
 
 export class Target extends Widget {
     sectionCode = "-target";
@@ -38,14 +39,15 @@ export class Target extends Widget {
                         type: inputTypes.CHECKBOX,
                         id: "hide-target-bg",
                         checked: !this.uiProps.hideBg,
-                        event: `onchange="ui.target.uiProps.hideBg = !this.checked;"`,
+                        onChange: (event) => this.uiProps.hideBg = !event.currentTarget.checked,
+                        // event: `onchange="ui.target.uiProps.hideBg = !this.checked;"`,
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         id: "fixed-count-switcher",
                         label: ui.lang.fixedSize,
                         checked: this.uiProps.isFixedSize,
-                        event: `onchange="ui.target.uiProps.isFixedSize = this.checked;"`,
+                        onChange: (event) => this.uiProps.isFixedSize = event.currentTarget.checked,
                     },
                     {
                         prefix: ui.lang.cheevosCount,
@@ -54,8 +56,7 @@ export class Target extends Widget {
                         id: "fixed-count",
                         label: ui.lang.cheevosCount,
                         value: this.uiProps.fixedSizeCount,
-                        event: `onchange="ui.target.uiProps.fixedSizeCount = this.value;"`,
-                        onChange: `ui.target.uiProps.fixedSizeCount = this.value;`,
+                        onChange: (event) => this.uiProps.fixedSizeCount = event.currentTarget.value,
                     },
 
 
@@ -64,14 +65,14 @@ export class Target extends Widget {
                         id: "autoscroll-target",
                         label: ui.lang.autoscroll,
                         checked: this.uiProps.autoscroll,
-                        event: `onchange="ui.target.uiProps.autoscroll = this.checked;"`,
+                        onChange: (event) => this.uiProps.autoscroll = event.currentTarget.checked
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         id: "contrast-highlight-target",
                         label: ui.lang.contrastHighlight,
                         checked: this.uiProps.contrastHighlight,
-                        event: `onchange="ui.target.uiProps.contrastHighlight = this.checked;"`,
+                        onChange: (event) => this.uiProps.contrastHighlight = event.currentTarget.checked,
                     },
                     // {
                     //     type: inputTypes.CHECKBOX,
@@ -99,7 +100,7 @@ export class Target extends Widget {
                         id: "show-overlay",
                         label: ui.lang.showOverlay,
                         checked: this.uiProps.showPrevOverlay,
-                        event: `onchange="ui.target.uiProps.showPrevOverlay = this.checked"`,
+                        onChange: (event) => this.uiProps.showPrevOverlay = event.currentTarget.checked,
                     },
                     ...Object.values(imageFilters).map(filterName => ({
                         type: inputTypes.RADIO,
@@ -107,7 +108,7 @@ export class Target extends Widget {
                         id: `${this.sectionID}-preview-filter-${filterName}`,
                         label: filterName,
                         checked: this.uiProps.lockedPreviewFilter === filterName,
-                        event: `onchange="ui.target.uiProps.lockedPreviewFilter = '${filterName}';"`
+                        onChange: () => this.uiProps.lockedPreviewFilter = filterName,
                     }))]
             },
             {
@@ -118,28 +119,28 @@ export class Target extends Widget {
                         type: inputTypes.CHECKBOX,
                         id: "hide-target-header",
                         checked: this.uiProps.showHeader,
-                        event: `onchange="ui.target.uiProps.showHeader = this.checked;"`,
+                        onChange: (event) => this.uiProps.showHeader = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         id: "show-genre-badge",
                         label: ui.lang.showGenreBadges,
                         checked: this.uiProps.showGenre,
-                        event: `onchange="ui.target.uiProps.showGenre = this.checked;"`,
+                        onChange: (event) => this.uiProps.showGenre = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         id: "show-level",
                         label: ui.lang.showLevel,
                         checked: this.uiProps.showLevel,
-                        event: `onchange="ui.target.uiProps.showLevel = this.checked"`,
+                        onChange: (event) => this.uiProps.showLevel = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         id: "show-events-checkbox",
                         label: ui.lang.showEvents,
                         checked: this.uiProps.showEvents,
-                        event: `onchange="ui.target.uiProps.showEvents = this.checked"`,
+                        onChange: (event) => this.uiProps.showEvents = event.currentTarget.checked,
                     },
                     // {
                     //     type: inputTypes.CHECKBOX,
@@ -153,14 +154,14 @@ export class Target extends Widget {
                         id: "progression-bar",
                         label: ui.lang.showCheevoUnlockRateBar,
                         checked: this.uiProps.showCheevoUnlockRateBar,
-                        event: `onchange="ui.target.uiProps.showCheevoUnlockRateBar = this.checked;"`,
+                        onChange: (event) => this.uiProps.showCheevoUnlockRateBar = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         id: "show-pins",
                         label: ui.lang.showPins,
                         checked: this.uiProps.showPins,
-                        event: `onchange="ui.target.uiProps.showPins = this.checked;"`,
+                        onChange: (event) => this.uiProps.showPins = event.currentTarget.checked,
                     },
                 ]
             },
@@ -176,14 +177,14 @@ export class Target extends Widget {
                         id: "hide-passed-levels",
                         label: ui.lang.hidePassedLevels,
                         checked: this.uiProps.hidePassedLevels,
-                        event: `onchange="ui.target.uiProps.hidePassedLevels = this.checked;"`,
+                        onChange: (event) => this.uiProps.hidePassedLevels = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         id: "highlight-passed",
                         label: ui.lang.highLightPassedLevels,
                         checked: this.uiProps.highlightPassedLevels,
-                        event: `onchange="ui.target.uiProps.highlightPassedLevels = this.checked;"`,
+                        onChange: (event) => this.uiProps.highlightPassedLevels = event.currentTarget.checked,
                     },
 
                 ],
@@ -195,27 +196,27 @@ export class Target extends Widget {
                         type: inputTypes.BUTTON,
                         id: "fill",
                         label: ui.lang.fillAll,
-                        event: `onclick="ui.target.fillItems()"`,
+                        onClick: () => this.fillItems(),
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         id: "autofill",
                         label: ui.lang.autofill,
                         checked: this.uiProps.autoFillTarget,
-                        event: `onchange="ui.target.uiProps.autoFillTarget = this.checked;"`,
+                        onChange: (event) => this.uiProps.autoFillTarget = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.BUTTON,
                         id: "clear-all",
                         label: ui.lang.clearAll,
-                        event: `onclick="ui.target.clearAllAchivements();"`,
+                        onClick: () => this.clearAllAchivements(),
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         id: "autoclear",
                         label: ui.lang.autoclearEarned,
                         checked: this.uiProps.autoClearTarget,
-                        event: `onchange="ui.target.uiProps.autoClearTarget = this.checked;"`,
+                        onChange: (event) => this.uiProps.autoClearTarget = event.currentTarget.checked,
                     },
                     {
                         prefix: ui.lang.clearDelay,
@@ -224,8 +225,7 @@ export class Target extends Widget {
                         id: "autoclear-delay",
                         label: ui.lang.clearDelay,
                         value: this.uiProps.autoClearTargetTime,
-                        event: `onchange="ui.target.uiProps.autoClearTargetTime = this.value;"`,
-                        onChange: "ui.target.uiProps.autoClearTargetTime = this.value;"
+                        onChange: (event) => this.uiProps.autoClearTargetTime = event.currentTarget.value,
                     },
                 ],
             },
@@ -240,21 +240,21 @@ export class Target extends Widget {
                 id: `${this.sectionID}-sort-${sortName}`,
                 label: ui.lang[sortName],
                 checked: this.uiProps.sortName === sortName,
-                event: `onchange="ui.target.uiProps.sortName = '${sortName}';"`
+                onChange: () => this.uiProps.sortName = sortName,
             })),
             {
                 type: inputTypes.CHECKBOX,
                 id: "reverse-sort",
                 label: ui.lang.reverse,
                 checked: this.uiProps.reverseSort == -1,
-                event: `onchange="ui.target.uiProps.reverseSort = this.checked"`,
+                onChange: (event) => this.uiProps.reverseSort = event.currentTarget.checked,
             },
             {
                 type: inputTypes.CHECKBOX,
                 id: "strict-sort",
                 label: ui.lang.strictMode,
                 checked: this.uiProps.strictSort,
-                event: `onchange="ui.target.uiProps.strictSort = this.checked"`,
+                onChange: (event) => this.uiProps.strictSort = event.currentTarget.checked,
             },
         ],
     })
@@ -268,14 +268,14 @@ export class Target extends Widget {
                 label: ui.lang[filterName],
                 value: filterName,
                 state: `${this.uiProps.filters[filterName]?.state ?? 0}`,
-                event: `ui.target.uiProps.filters = ({ state, filterName })`,
+                onChange: () => this.uiProps.filters = ({ state, filterName }),
             })),
             {
                 type: inputTypes.CHECKBOX,
                 id: "hide-filtered",
                 label: ui.lang.hideFiltered,
                 checked: this.uiProps.hideFiltered,
-                event: `onchange="ui.target.uiProps.hideFiltered = this.checked;"`,
+                onChange: (event) => this.uiProps.hideFiltered = event.currentTarget.checked,
             },
 
         ],
@@ -289,7 +289,7 @@ export class Target extends Widget {
                 id: `${this.sectionID}-mgame-all`,
                 label: ui.lang.all,
                 checked: !this.uiProps.mGameSelection,
-                event: `onchange="ui.target.uiProps.mGameSelection = '';"`,
+                onChange: () => this.uiProps.mGameSelection = "",
             },
             ...watcher?.GAME_DATA?.groups?.map(mGameName => ({
                 type: inputTypes.RADIO,
@@ -297,7 +297,7 @@ export class Target extends Widget {
                 id: `${this.sectionID}-mgame-${mGameName}`,
                 label: mGameName,
                 checked: this.uiProps.mGameSelection === mGameName,
-                event: `onchange = "ui.target.uiProps.mGameSelection = '${mGameName}';"`,
+                onChange: () => this.uiProps.mGameSelection = mGameName,
             })) ?? []
         ]
     } : "";
@@ -313,7 +313,7 @@ export class Target extends Widget {
                     id: `${this.sectionID}-set-${setID}`,
                     label: setName,
                     checked: !this.uiProps.hiddenSets.includes(setID),
-                    event: `onchange = "ui.target.updateHiddenSets(${setID});"`,
+                    onChange: () => this.updateHiddenSets(setID),
                 }
             })(),
             ...watcher.GAME_DATA.visibleSubsets.map(setID => {
@@ -325,7 +325,7 @@ export class Target extends Widget {
                     id: `${this.sectionID}-set-${setID}`,
                     label: setName,
                     checked: !this.uiProps.hiddenSets.includes(setID),
-                    event: `onchange = "ui.target.updateHiddenSets(${setID});"`,
+                    onChange: () => this.updateHiddenSets(setID),
                 }
 
             })
@@ -1127,35 +1127,44 @@ export class Target extends Widget {
         this.container.querySelector(`.target-achiv[data-achiv-id='${cheevo.ID}']`)?.classList.add("target__aotw")
         const aotwElement = document.createElement("div");
         aotwElement.classList.add("target__aotw-container", "target__aotw", "show-difficult", "show-level");
-        aotwElement.innerHTML = `
-        <button class="description-icon target__hide-aotw" 
-          onclick="ui.target.hideAotw()"></button>
-        <div class="prev">
-          <img class="prev-img" src="${gameImageUrl(cheevo.BadgeURL)}" alt=" ">
-        </div>
-        <div class="target__cheevo-details">
-          <h3 class="target__cheevo-header">
-            <a target="_blanc" href="${cheevoUrl(cheevo)}">
-              ${cheevo.Title}
-            </a>
-            in
-            <a target="_blanc" href="${gameUrl(cheevo.GameID)}">
-              ${cheevo.GameTitle}
-            </a>
-          </h3>
-          <div class="list-item__text">
-          ${badgeElements.black("AotW Event")}
-            ${cheevo.Description}
-          </div>
-          <div class="icons-row-list">
-            ${icons.cheevoType(cheevo?.Type)}
-            ${signedIcons.points(cheevo.Points)}
-            ${signedIcons.retropoints(cheevo.TrueRatio)}
-            ${signedIcons.rarity(rarity.toFixed(2) + "%")}
-            ${signedIcons.retroRatio((cheevo.TrueRatio / Math.max(1, cheevo.Points)).toFixed(2))}
-          </div>
-        </div>
-      `;
+        const hideAotwButton = fromHtml(`
+                <button class="description-icon target__hide-aotw"></button>
+        `);
+        hideAotwButton.addEventListener("click", () => this.hideAotw());
+
+        const aotwPreview = fromHtml(`
+            <div class="prev">
+                <img class="prev-img" src="${gameImageUrl(cheevo.BadgeURL)}">
+            </div>
+        `);
+        const aotwDetails = fromHtml(`
+            <div class="target__cheevo-details">
+                <h3 class="target__cheevo-header">
+                    <a target="_blanc" href="${cheevoUrl(cheevo)}">
+                    ${cheevo.Title}
+                    </a>
+                    in
+                    <a target="_blanc" href="${gameUrl(cheevo.GameID)}">
+                    ${cheevo.GameTitle}
+                    </a>
+                </h3>
+                <div class="list-item__text">
+                ${badgeElements.black("AotW Event")}
+                    ${cheevo.Description}
+                </div>
+                <div class="icons-row-list">
+                    ${icons.cheevoType(cheevo?.Type)}
+                    ${signedIcons.points(cheevo.Points)}
+                    ${signedIcons.retropoints(cheevo.TrueRatio)}
+                    ${signedIcons.rarity(rarity.toFixed(2) + "%")}
+                    ${signedIcons.retroRatio((cheevo.TrueRatio / Math.max(1, cheevo.Points)).toFixed(2))}
+                </div>
+            </div>
+        `)
+        aotwElement.append(
+            hideAotwButton,
+            aotwPreview,
+            aotwDetails);
         this.section.querySelector(".target__aotw-container")?.remove();
         this.header.after(aotwElement);
     }

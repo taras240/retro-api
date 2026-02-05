@@ -1,3 +1,4 @@
+import { fromHtml } from "../functions/html.js";
 import { ui } from "../script.js";
 import { inputTypes } from "./inputElements.js";
 
@@ -9,10 +10,11 @@ const generateContextMenu = ({ menuItems, sectionCode = "", isSubmenu = false })
 
     menuItems.forEach((menuItem) => {
         const isExpandable = menuItem.hasOwnProperty("elements");
-        let menuElement = document.createElement("li");
-        menuElement.className = `context-menu_item ${isExpandable && "expandable"}`;
+        let menuElement;
         if (!menuItem) return;
         if (isExpandable) {
+            menuElement = document.createElement("li");
+            menuElement.className = `context-menu_item ${isExpandable && "expandable"}`
             menuElement.innerHTML += menuItem.label;
             menuElement.appendChild(
                 generateContextMenu({
@@ -23,7 +25,7 @@ const generateContextMenu = ({ menuItems, sectionCode = "", isSubmenu = false })
             );
         }
         else {
-            menuElement.innerHTML += contextInputs[menuItem.type](menuItem);
+            menuElement = ContextInput(menuItem);
         }
         contextElement.appendChild(menuElement);
     });
@@ -35,19 +37,33 @@ const generateContextMenu = ({ menuItems, sectionCode = "", isSubmenu = false })
         contextElement.addEventListener("click", (e) => e.stopPropagation());
     }
     contextElement.querySelectorAll(".context-menu_statebox")?.forEach(statebox => statebox.addEventListener("click", stateboxClick));
+    console.log(contextElement)
     return contextElement;
 }
+const ContextInput = (item) => {
+    const input = fromHtml(`
+        <li class="context-menu_item">
+            ${contextInputs[item.type](item)}
+        </li>
+        `);
+    console.log(item)
+    item.onChange && input?.querySelector("input")?.addEventListener("change", item.onChange);
+    return input;
 
+}
 const contextInputs = {
-    [inputTypes.CHECKBOX]: ({ type, name, id, checked, event, label, sectionCode = "" }) => `
-        <input 
-            type="${type}" 
-            name="context-${name || id}${sectionCode}" 
-            id="context-${id}${sectionCode}" 
-            ${event ?? ""}
-            ${checked ? "checked" : ""} 
-            ></input>
-        <label class="context-menu_${type}" for="context-${id}${sectionCode}">${label}</label>`,
+    [inputTypes.CHECKBOX]: ({ type, name, id, checked, event, label, onChange, sectionCode = "" }) => `
+        <div>
+            <input 
+                type="${type}" 
+                name="context-${name || id}${sectionCode}" 
+                id="context-${id}${sectionCode}" 
+                ${event ?? ""}
+                ${checked ? "checked" : ""} 
+                ></input>
+            <label class="context-menu_${type}" for="context-${id}${sectionCode}">${label}</label>
+        </div>
+    ` ,
     radio: (props) => contextInputs.checkbox(props),
     statebox: ({ state, type, value, id, event, label, sectionCode = "" }) => `
         <div 
