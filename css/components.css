@@ -900,6 +900,15 @@ input:checked+.checkbox-input::before {
     border-radius: 3px;
 }
 
+.context__input-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
+    text-wrap: nowrap;
+}
+
 .context-menu_item.expandable {
     padding: 0.5rem;
     padding-right: 1.5rem;
@@ -1001,8 +1010,7 @@ input[type="radio"]:checked+.context-menu_radio::after {
 }
 
 .context-menu_statebox:hover::after,
-.context-menu_item:hover>.context-menu_checkbox::after,
-.context-menu_item:hover>.context-menu_radio::after {
+.context__input-container:hover>:is(.context-menu_checkbox, .context-menu_radio)::after {
     background-color: var(--context-font-color);
 }
 

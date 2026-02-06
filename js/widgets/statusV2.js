@@ -67,28 +67,28 @@ export class Status extends Widget {
                         id: "show-rp",
                         label: ui.lang.richPresence,
                         checked: this.uiProps.showRichPresence,
-                        event: `onchange="ui['${this.widgetName}'].uiProps.showRichPresence = this.checked"`,
+                        onChange: (event) => this.uiProps.showRichPresence = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         id: "show-ticker",
                         label: ui.lang.ticker,
                         checked: this.uiProps.showTicker,
-                        event: `onchange="ui['${this.widgetName}'].uiProps.showTicker = this.checked"`,
+                        onChange: (event) => this.uiProps.showTicker = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         id: "show-progression",
                         label: ui.lang.progression,
                         checked: this.uiProps.showProgression,
-                        event: `onchange="ui['${this.widgetName}'].uiProps.showProgression = this.checked"`,
+                        onChange: (event) => this.uiProps.showProgression = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         id: "context-show-progressbar",
                         label: ui.lang.progressbar,
                         checked: this.uiProps.showProgressbar,
-                        event: `onchange="ui['${this.widgetName}'].uiProps.showProgressbar = this.checked"`,
+                        onChange: (event) => this.uiProps.showProgressbar = event.currentTarget.checked,
                     },
                 ],
             } : "",
@@ -101,7 +101,7 @@ export class Status extends Widget {
                     id: `info-type-${type}`,
                     label: ui.lang?.[type] ?? type,
                     checked: this.uiProps.gameInfoType == type,
-                    event: `onclick="ui['${this.widgetName}'].uiProps.gameInfoType = '${type}';"`,
+                    onChange: () => this.uiProps.gameInfoType = type,
                 })
                 )
             },
@@ -114,7 +114,7 @@ export class Status extends Widget {
                     id: `status-theme-${theme}`,
                     label: ui.lang?.[theme] ?? theme,
                     checked: this.uiProps.statusTheme == theme,
-                    event: `onclick="ui['${this.widgetName}'].uiProps.statusTheme = '${theme}';"`,
+                    onChange: () => this.uiProps.statusTheme = theme,
                 })
                 )
             },
@@ -127,7 +127,7 @@ export class Status extends Widget {
                     id: `progressbar-type-${type}`,
                     label: ui.lang?.[type] ?? type,
                     checked: this.uiProps.progressType == type,
-                    event: `onclick="ui['${this.widgetName}'].uiProps.progressType = '${type}';"`,
+                    onChange: () => this.uiProps.progressType = type,
                 })
                 )
             },
@@ -140,7 +140,7 @@ export class Status extends Widget {
                         id: "show-playTime",
                         label: ui.lang.gameTime,
                         checked: this.uiProps.time == "playTime",
-                        event: `onclick="ui['${this.widgetName}'].uiProps.time = 'playTime';"`,
+                        onChange: () => this.uiProps.time = 'playTime',
                     },
                     {
                         type: inputTypes.RADIO,
@@ -148,7 +148,7 @@ export class Status extends Widget {
                         id: "show-sessionTime",
                         label: ui.lang.sessionGameTime,
                         checked: this.uiProps.time == "sessionTime",
-                        event: `onclick="ui['${this.widgetName}'].uiProps.time = 'sessionTime';"`,
+                        onChange: () => this.uiProps.time = 'sessionTime',
                     },
                     {
                         type: inputTypes.RADIO,
@@ -156,7 +156,7 @@ export class Status extends Widget {
                         id: "show-totalTime",
                         label: ui.lang.sessionTime,
                         checked: this.uiProps.time == "totalSessionTime",
-                        event: `onclick="ui['${this.widgetName}'].uiProps.time = 'totalSessionTime';"`,
+                        onChange: () => this.uiProps.time = 'totalSessionTime',
                     },
                     {
                         type: inputTypes.RADIO,
@@ -164,7 +164,7 @@ export class Status extends Widget {
                         id: "show-timer",
                         label: ui.lang.timer,
                         checked: this.uiProps.time == "timer",
-                        event: `onclick="ui['${this.widgetName}'].uiProps.time = 'timer';"`,
+                        onChange: () => this.uiProps.time = 'timer',
                     },
                     {
                         prefix: ui.lang.timer,
@@ -173,8 +173,7 @@ export class Status extends Widget {
                         id: "stats-timer-duration",
                         label: ui.lang.timer,
                         value: ~~(this.uiProps.timerTime / 60 * 100) / 100,
-                        event: `onchange="ui['${this.widgetName}'].uiProps.timerTime = this.value;"`,
-                        onChange: "ui['${this.widgetName}'].uiProps.timerTime = this.value;",
+                        onChange: (event) => this.uiProps.timerTime = event.currentTarget.checked,
                     },
                     ...Object.keys(timePosition).map(position =>
                     ({
@@ -183,7 +182,7 @@ export class Status extends Widget {
                         id: `time-pos-${position}`,
                         label: ui.lang?.[position] ?? position,
                         checked: this.uiProps.timePosition == position,
-                        event: `onclick="ui['${this.widgetName}'].uiProps.timePosition = '${position}';"`,
+                        onChange: () => this.uiProps.timePosition = position,
                     })
                     )
                 ],
@@ -193,14 +192,14 @@ export class Status extends Widget {
                 id: "game-bg",
                 label: ui.lang.gameBg,
                 checked: this.uiProps.showGameBg,
-                event: `onchange="ui['${this.widgetName}'].uiProps.showGameBg = this.checked;"`,
+                onChange: (event) => this.uiProps.showGameBg = event.currentTarget.checked,
             },
             {
                 type: inputTypes.CHECKBOX,
                 id: "show-target-preview",
                 label: ui.lang.focusCheevoPreview,
                 checked: this.uiProps.showTargetPreview,
-                event: `onchange="ui['${this.widgetName}'].uiProps.showTargetPreview = this.checked;"`,
+                onChange: (event) => this.uiProps.showTargetPreview = event.currentTarget.checked,
             },
 
         ];
@@ -219,7 +218,7 @@ export class Status extends Widget {
                 id: `subset-select-${subsetName}`,
                 label: subsetName,
                 checked,
-                event: `onclick="watcher.setSubset(${subsetID})"`,
+                onChange: () => watcher.setSubset(subsetID),
             }
         }),
     } : "";

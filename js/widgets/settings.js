@@ -1,5 +1,5 @@
 import { UI } from "../ui.js";
-import { config, configData, ui, watcher } from "../script.js";
+import { apiWorker, config, configData, ui, watcher } from "../script.js";
 import { inputTypes, input } from "../components/inputElements.js";
 import { Widget } from "./widget.js";
 import { obsPresets } from "../enums/obsPresets.js";
@@ -28,7 +28,7 @@ export class Settings extends Widget {
                                 id: `settings_color-scheme-${presetName}`,
                                 label: presetName,
                                 checked: configData.preset === presetName,
-                                event: `onchange=\"configData.preset = '${presetName}'\"`,
+                                onChange: () => configData.preset = presetName,
                             })),
                             {
                                 type: inputTypes.RADIO,
@@ -36,15 +36,15 @@ export class Settings extends Widget {
                                 id: `settings_color-scheme-custom`,
                                 label: "custom",
                                 checked: configData.preset === "custom",
-                                event: `onchange=\"configData.preset = 'custom'\"`,
+                                onChange: () => configData.preset = 'custom',
                             }]
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         label: ui.lang.showBgAnimation,
                         id: "settings_show-bg",
-                        onChange: "configData.bgVisibility = this.checked;",
                         checked: configData.bgVisibility,
+                        onChange: (event) => configData.bgVisibility = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.SELECTOR,
@@ -57,22 +57,22 @@ export class Settings extends Widget {
                                 id: `settings_anim-variant-${anim}`,
                                 label: anim,
                                 checked: configData.bgAnimType === anim,
-                                event: `onchange=\"configData.bgAnimType = '${anim}'\"`,
+                                onChange: () => configData.bgAnimType = anim,
                             })),]
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         label: ui.lang.stickyWindows,
                         id: "settings_sticky-windows",
-                        onChange: "ui.settings.IS_WINDOWS_STICKY = this.checked;",
                         checked: this.IS_WINDOWS_STICKY,
+                        onChange: (event) => ui.settings.IS_WINDOWS_STICKY = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         label: ui.lang.cheevoOnHover,
                         id: "settings_cheevo-on-hover",
-                        onChange: "configData.showCheevoOnHover = this.checked;",
                         checked: configData.showCheevoOnHover,
+                        onChange: (event) => configData.showCheevoOnHover = event.currentTarget.checked,
                     },
                 ]
             },
@@ -84,35 +84,35 @@ export class Settings extends Widget {
                         id: "main-color-input",
                         label: "main color",
                         value: configData.customColors.mainColor,
-                        onChange: "configData.customColors = {colorProperty: 'mainColor', color: this.value};",
+                        onChange: () => configData.customColors = { colorProperty: 'mainColor', color: this.value },
                     },
                     {
                         type: inputTypes.COLOR,
                         id: "secondary-color-input",
                         label: "secondary color",
                         value: configData.customColors.secondaryColor,
-                        onChange: "configData.customColors  = {colorProperty: 'secondaryColor', color: this.value};",
+                        onChange: () => configData.customColors = { colorProperty: 'secondaryColor', color: this.value },
                     },
                     {
                         type: inputTypes.COLOR,
                         id: "accent-color-input",
                         label: "accent color",
                         value: configData.customColors.accentColor,
-                        onChange: "configData.customColors = {colorProperty: 'accentColor', color: this.value};",
+                        onChange: () => configData.customColors = { colorProperty: 'accentColor', color: this.value },
                     },
                     {
                         type: inputTypes.COLOR,
                         id: "selection-color-input",
                         label: "selection color",
                         value: configData.customColors.selectionColor,
-                        onChange: "configData.customColors = {colorProperty: 'selectionColor', color: this.value};",
+                        onChange: () => configData.customColors = { colorProperty: 'selectionColor', color: this.value },
                     },
                     {
                         type: inputTypes.COLOR,
                         id: "font-color-input",
                         label: "font color",
                         value: configData.customColors.fontColor,
-                        onChange: "configData.customColors  = {colorProperty: 'fontColor', color: this.value};",
+                        onChange: () => configData.customColors = { colorProperty: 'fontColor', color: this.value },
                     },
                 ]
             },
@@ -130,7 +130,7 @@ export class Settings extends Widget {
                                 id: `settings_font-family-${fontName}`,
                                 label: fontName,
                                 checked: configData.fontFamilyName === fontName,
-                                event: `onchange="configData.fontFamilyName = '${fontName}';"`,
+                                onChange: () => configData.fontFamilyName = fontName,
                             })),
                             // {
                             //     type: inputTypes.RADIO,
@@ -153,13 +153,13 @@ export class Settings extends Widget {
                         type: inputTypes.BUTTON,
                         label: "-",
                         id: "settings_font-size-decrease",
-                        onClick: "configData.fontSize = parseFloat(configData.fontSize) - 0.5;",
+                        onClick: () => configData.fontSize = parseFloat(configData.fontSize) - 0.5,
                     },
                     {
                         type: inputTypes.BUTTON,
                         label: "+",
                         id: "settings_font-size-increase",
-                        onClick: "configData.fontSize = parseFloat(configData.fontSize) + 0.5;",
+                        onClick: () => configData.fontSize = parseFloat(configData.fontSize) + 0.5,
                     },
                 ]
             },
@@ -171,27 +171,27 @@ export class Settings extends Widget {
                         label: configData.targetUser || config.USER_NAME,
                         id: "settings_target-user-input",
                         value: configData.targetUser,
-                        onChange: "configData.targetUser = this.value",
                         title: ui.lang.targetUserInputHint,
+                        onChange: (event) => configData.targetUser = event.currentTarget.value,
                     },
                     {
                         type: inputTypes.BUTTON,
                         label: ui.lang.checkGameID,
                         id: "settings_check-game-id",
-                        onClick: "watcher.updateGameData(document.getElementById('settings_game-id-input').value)",
+                        onClick: () => watcher.updateGameData(document.getElementById('settings_game-id-input').value),
                     },
                     {
                         type: inputTypes.BUTTON,
                         label: ui.lang.getLastID,
                         id: "settings_get-last-id",
-                        onClick: "ui.settings.getLastGameID()",
+                        onClick: () => ui.settings.getLastGameID(),
                     },
                     {
                         type: inputTypes.NUM_INPUT,
                         label: ui.lang.gameID,
                         id: "settings_game-id-input",
                         value: configData.gameID,
-                        onChange: "configData.gameID = this.value;",
+                        onChange: (event) => configData.gameID = event.currentTarget.value,
                     },
                     // {
                     //     type: inputTypes.CHECKBOX,
@@ -209,23 +209,23 @@ export class Settings extends Widget {
                         type: inputTypes.CHECKBOX,
                         label: ui.lang.startOnLoad,
                         id: "settings_start-on-load",
-                        onChange: "configData.startOnLoad = this.checked;",
                         checked: configData.startOnLoad,
+                        onChange: (event) => configData.startOnLoad = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         label: ui.lang.pauseIfOffline,
                         id: "settings_autopause",
-                        onChange: "configData.pauseIfOnline = this.checked;",
                         checked: configData.pauseIfOnline,
+                        onChange: (event) => configData.pauseIfOnline = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.NUM_INPUT,
                         label: "sec",
                         id: "settings_update-delay-input",
                         value: configData.updateDelaySec,
-                        onChange: "configData.updateDelaySec = this.value",
                         title: ui.lang.autoupdateInputHint,
+                        onChange: (event) => configData.updateDelaySec = event.currentTarget.value,
                     },
 
                 ]
@@ -237,14 +237,14 @@ export class Settings extends Widget {
                         type: inputTypes.CHECKBOX,
                         label: ui.lang.enableLogParser,
                         id: "settings_enable-log-parser",
-                        onChange: "configData.parseLog = this.checked;",
                         checked: configData.parseLog,
+                        onChange: (event) => configData.parseLog = event.currentTarget.checked,
                     },
                     {
                         label: ui.lang.selectRarchLog,
                         type: inputTypes.BUTTON,
                         id: "context_open-log-selector",
-                        onClick: "config.selectLogFile('rarch')",
+                        onClick: () => config.selectLogFile('rarch'),
                     },
                 ]
             },
@@ -255,23 +255,23 @@ export class Settings extends Widget {
                         type: inputTypes.CHECKBOX,
                         label: ui.lang.earnCheevoAlert,
                         id: "settings_fsalert-cheevo",
-                        onChange: "configData.fsNewCheevo = this.checked;",
                         checked: configData.fsNewCheevo,
+                        onChange: (event) => configData.fsNewCheevo = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         label: ui.lang.earnAwardAlert,
                         id: "settings_fsalert-award",
-                        onChange: "configData.fsNewAward = this.checked;",
                         checked: configData.fsNewAward,
+                        onChange: (event) => configData.fsNewAward = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.NUM_INPUT,
                         label: ui.lang.duration,
                         id: "settings_fsakert-duration-input",
                         value: configData.fsAlertDuration,
-                        onChange: "configData.fsAlertDuration = this.value",
-                        title: ui.lang.fsAlertDurationInputHint
+                        title: ui.lang.fsAlertDurationInputHint,
+                        onChange: (event) => configData.fsAlertDuration = event.currentTarget.value,
                     }
                 ]
             },
@@ -283,28 +283,28 @@ export class Settings extends Widget {
                         label: ui.lang.pasteWebhook,
                         id: "settings_discord-hook-input",
                         value: configData.discordWebhook ?? "",
-                        onChange: "configData.discordWebhook = value;",
+                        onChange: (event) => configData.discordWebhook = event.currentTarget.value,
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         label: ui.lang.startGameAlert,
                         id: "settings_discord-start-game",
-                        onChange: "configData.discordNewGame = this.checked;",
                         checked: configData.discordNewGame,
+                        onChange: (event) => configData.discordNewGame = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         label: ui.lang.startSession,
                         id: "settings_discord-start-session",
-                        onChange: "configData.discordStartSession = this.checked;",
                         checked: configData.discordStartSession,
+                        onChange: (event) => configData.discordStartSession = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         label: ui.lang.earnCheevoAlert,
                         id: "settings_discord-new-cheevo",
-                        onChange: "configData.discordNewCheevo = this.checked;",
                         checked: configData.discordNewCheevo,
+                        onChange: (event) => configData.discordNewCheevo = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.NUM_INPUT,
@@ -312,7 +312,7 @@ export class Settings extends Widget {
                         id: "settings_min-points-alert",
                         title: ui.lang.DSAlertMinPointsInputHint,
                         value: configData.minPointsDiscordAlert,
-                        onChange: "configData.minPointsDiscordAlert = this.value;",
+                        onChange: (event) => configData.minPointsDiscordAlert = event.currentTarget.value,
                     },
                     {
                         type: inputTypes.NUM_INPUT,
@@ -320,21 +320,21 @@ export class Settings extends Widget {
                         title: ui.lang.DSAlertMinTruePointsInputHint,
                         id: "settings_min-retropoints-alert",
                         value: configData.minRetroPointsDiscordAlert,
-                        onChange: "configData.minRetroPointsDiscordAlert = this.value;",
+                        onChange: (event) => configData.minRetroPointsDiscordAlert = event.currentTarget.value,
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         label: "Hardcore Only",
                         id: "settings_discord-hard-award",
-                        onChange: "configData.hardOnlyDiscordAlert = this.checked;",
                         checked: configData.hardOnlyDiscordAlert,
+                        onChange: (event) => configData.hardOnlyDiscordAlert = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         label: ui.lang.earnAwardAlert,
                         id: "settings_discord-new-award",
-                        onChange: "configData.discordNewAward = this.checked;",
                         checked: configData.discordNewAward,
+                        onChange: (event) => configData.discordNewAward = event.currentTarget.checked,
                     },
 
                 ]
@@ -347,24 +347,24 @@ export class Settings extends Widget {
                         type: inputTypes.RADIO,
                         label: "English",
                         id: "settings_lang-en",
-                        onChange: `ui.settings.LANG = '${local.en}';`,
                         checked: this.LANG === local.en,
+                        onChange: () => ui.settings.LANG = local.en,
                     },
                     {
                         name: "settings-language",
                         type: inputTypes.RADIO,
                         label: "Português (Brasil)",
                         id: "settings_lang-br",
-                        onChange: `ui.settings.LANG = '${local.br}';`,
                         checked: this.LANG === local.br,
+                        onChange: () => ui.settings.LANG = local.br,
                     },
                     {
                         name: "settings-language",
                         type: inputTypes.RADIO,
                         label: "Українська",
                         id: "settings_lang-ua",
-                        onChange: `ui.settings.LANG = '${local.ua}';`,
                         checked: this.LANG === local.ua,
+                        onChange: () => ui.settings.LANG = local.ua,
                     },
                 ]
             },
@@ -375,31 +375,31 @@ export class Settings extends Widget {
                         label: ui.lang.exportCompletion,
                         type: inputTypes.BUTTON,
                         id: "context_export-completion",
-                        onClick: "ui.exportCompletionDataToXlsx()",
+                        onClick: () => ui.exportCompletionDataToXlsx(),
                     },
                     {
                         label: ui.lang.exportWantToPlay,
                         type: inputTypes.BUTTON,
                         id: "context_export-wtp-list",
-                        onClick: "ui.exportWantToPlayToCSV()",
+                        onClick: () => ui.exportWantToPlayToCSV(),
                     },
                     {
                         label: ui.lang.exportSettings,
                         type: inputTypes.BUTTON,
                         id: "context_export-settings",
-                        onClick: "ui.exportSettingsToJson()",
+                        onClick: () => ui.exportSettingsToJson(),
                     },
                     {
                         label: ui.lang.importSettings,
                         type: inputTypes.BUTTON,
                         id: "context_import-settings",
-                        onClick: "ui.importSettingsFromJson()",
+                        onClick: () => ui.importSettingsFromJson(),
                     },
                     {
                         label: ui.lang.clearCache,
                         type: inputTypes.BUTTON,
                         id: "context_clear-cache",
-                        onClick: "apiWorker.cache.clear()",
+                        onClick: () => apiWorker.cache.clear(),
                     }]
 
             }
@@ -441,7 +441,7 @@ export class Settings extends Widget {
                         id: `context_color- scheme - ${presetName}`,
                         label: presetName,
                         checked: configData.preset === presetName,
-                        event: `onchange =\"configData.preset = '${presetName}'\"`,
+                        onChange: () => configData.preset = presetName,
                     })),
                     {
                         type: inputTypes.RADIO,
@@ -449,7 +449,7 @@ export class Settings extends Widget {
                         id: `settings_color-scheme-custom`,
                         label: "custom",
                         checked: configData.preset === "custom",
-                        event: `onchange=\"configData.preset = 'custom'\"`,
+                        onChange: () => configData.preset = 'custom',
                     }]
             },
             {
@@ -460,7 +460,7 @@ export class Settings extends Widget {
                         type: inputTypes.CHECKBOX,
                         id: "context_show-bg-animation",
                         checked: configData.bgVisibility,
-                        event: `onchange="configData.bgVisibility = this.checked;"`,
+                        onChange: (event) => configData.bgVisibility = event.currentTarget.checked,
                     },
 
                     ...Object.values(ANIMATIONS).map(anim => ({
@@ -469,7 +469,7 @@ export class Settings extends Widget {
                         id: `context_anim-variant-${anim}`,
                         label: anim,
                         checked: configData.bgAnimType === anim,
-                        event: `onchange=\"configData.bgAnimType = '${anim}'\"`,
+                        onChange: () => configData.bgAnimType = anim,
                     })),
                 ]
             },
@@ -479,7 +479,7 @@ export class Settings extends Widget {
                 type: inputTypes.CHECKBOX,
                 id: "context_show-start-on-load",
                 checked: configData.startOnLoad,
-                event: `onchange="configData.startOnLoad = this.checked;"`,
+                onChange: (event) => configData.startOnLoad = event.currentTarget.checked,
             },
         ]
     }
@@ -497,7 +497,7 @@ export class Settings extends Widget {
                 id: `subset-select-${subsetName}`,
                 label: subsetName,
                 checked,
-                event: `onclick="watcher.setSubset(${subsetID})"`,
+                onChange: (event) => watcher.setSubset(subsetID),
             }
         }),
     } : "";

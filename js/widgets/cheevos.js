@@ -27,28 +27,28 @@ export class AchievementsBlock extends Widget {
                         id: "show-load-anim",
                         label: ui.lang.showLoadAnimation,
                         checked: this.uiProps.showLoadAnimation,
-                        event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].uiProps.showLoadAnimation = this.checked"`,
+                        onChange: (event) => this.uiProps.showLoadAnimation = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         id: "show-mario",
                         label: ui.lang.unlockAnimation,
                         checked: this.uiProps.showMario,
-                        event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].uiProps.showMario = this.checked"`,
+                        onChange: (event) => this.uiProps.showMario = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         id: "autoscroll-achieves",
                         label: ui.lang.autoscroll,
                         checked: this.uiProps.autoscroll,
-                        event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].uiProps.autoscroll = this.checked;"`,
+                        onChange: (event) => this.uiProps.autoscroll = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
                         id: "stretch-achieves",
                         label: ui.lang.stretch,
                         checked: this.uiProps.stretchAchievements,
-                        event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].uiProps.stretchAchievements = this.checked;"`,
+                        onChange: (event) => this.uiProps.stretchAchievements = event.currentTarget.checked,
                     },
                     {
                         prefix: ui.lang.minSize,
@@ -57,8 +57,7 @@ export class AchievementsBlock extends Widget {
                         id: "menu_min-size",
                         label: ui.lang.minSize,
                         value: this.uiProps.ACHIV_MIN_SIZE,
-                        event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].uiProps.ACHIV_MIN_SIZE = this.value;"`,
-                        onChange: `ui.achievementsBlock[${this.CLONE_NUMBER}].uiProps.ACHIV_MIN_SIZE = this.value;`,
+                        onChange: (event) => this.uiProps.ACHIV_MIN_SIZE = event.currentTarget.value,
                     },
                     {
                         prefix: ui.lang.maxSize,
@@ -67,8 +66,7 @@ export class AchievementsBlock extends Widget {
                         id: "menu_max-size",
                         label: ui.lang.maxSize,
                         value: this.uiProps.ACHIV_MAX_SIZE,
-                        event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].uiProps.ACHIV_MAX_SIZE = this.value;"`,
-                        onChange: `ui.achievementsBlock[${this.CLONE_NUMBER}].uiProps.ACHIV_MAX_SIZE = this.value;`,
+                        onChange: (event) => this.uiProps.ACHIV_MAX_SIZE = event.currentTarget.value,
                     },
 
                 ]
@@ -81,14 +79,14 @@ export class AchievementsBlock extends Widget {
                         type: inputTypes.CHECKBOX,
                         id: "hide-achivs-header",
                         checked: this.uiProps.showHeader,
-                        event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].uiProps.showHeader = this.checked;"`,
+                        onChange: (event) => this.uiProps.showHeader = event.currentTarget.checked,
                     },
                     {
                         label: ui.lang.showBackground,
                         type: inputTypes.CHECKBOX,
                         id: "show-bg",
                         checked: this.uiProps.bgVisibility,
-                        event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].uiProps.bgVisibility = this.checked;"`,
+                        onChange: (event) => this.uiProps.bgVisibility = event.currentTarget.checked,
                     },]
             },
             {
@@ -99,7 +97,7 @@ export class AchievementsBlock extends Widget {
                         id: "hide-unearned",
                         label: ui.lang.showOverlay,
                         checked: this.uiProps.showPrevOverlay,
-                        event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].uiProps.showPrevOverlay = this.checked"`,
+                        onChange: (event) => this.uiProps.showPrevOverlay = event.currentTarget.checked,
                     },
                     ...Object.values(imageFilters).map(filterName => ({
                         type: inputTypes.RADIO,
@@ -107,7 +105,7 @@ export class AchievementsBlock extends Widget {
                         id: `${this.sectionID}-preview-filter-${filterName}`,
                         label: filterName,
                         checked: this.uiProps.lockedPreviewFilter === filterName,
-                        event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].uiProps.lockedPreviewFilter = '${filterName}';"`
+                        onChange: () => this.uiProps.lockedPreviewFilter = filterName,
                     })),
                 ]
             },
@@ -123,7 +121,7 @@ export class AchievementsBlock extends Widget {
                         id: "grouping",
                         label: ui.lang.groupElements,
                         checked: this.uiProps.isGrouping,
-                        event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].uiProps.isGrouping = this.checked;"`,
+                        onChange: (event) => this.uiProps.isGrouping = event.currentTarget.checked,
                     },
                     ...Object.values(CHEEVO_GROUPS).map(groupName => ({
                         type: inputTypes.RADIO,
@@ -132,14 +130,14 @@ export class AchievementsBlock extends Widget {
                         label: ui.lang[groupName],
                         value: groupName,
                         checked: this.uiProps.groupBy === groupName,
-                        event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].uiProps.groupBy = '${groupName}';"`,
+                        onChange: () => this.uiProps.groupBy = groupName,
                     })),
                     {
                         type: inputTypes.CHECKBOX,
                         id: "grouping-title",
                         label: ui.lang.showCheevosGroupTitle,
                         checked: this.uiProps.showGroupHeader,
-                        event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].uiProps.showGroupHeader = this.checked;"`,
+                        onChange: (event) => this.uiProps.showGroupHeader = event.currentTarget.checked,
                     },
                 ]
 
@@ -150,7 +148,7 @@ export class AchievementsBlock extends Widget {
                 id: `${this.sectionID}-show-borders`,
                 label: ui.lang.showBorders,
                 checked: this.uiProps.showBorders,
-                event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].uiProps.showBorders = this.checked;"`,
+                onChange: (event) => this.uiProps.showBorders = event.currentTarget.checked,
             },
 
 
@@ -166,21 +164,21 @@ export class AchievementsBlock extends Widget {
                     id: `${this.sectionID}-sort-${sortName}`,
                     label: ui.lang[sortName],
                     checked: this.uiProps.sortName === sortName,
-                    event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].uiProps.sortName = '${sortName}';"`
+                    onChange: () => this.uiProps.sortName = sortName,
                 })),
                 {
                     type: inputTypes.CHECKBOX,
                     id: "reverse-sort",
                     label: ui.lang.reverse,
                     checked: this.uiProps.reverseSort == -1,
-                    event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].uiProps.reverseSort = this.checked"`,
+                    onChange: (event) => this.uiProps.reverseSort = event.currentTarget.checked,
                 },
                 {
                     type: inputTypes.CHECKBOX,
                     id: "strict-sort",
                     label: ui.lang.strictMode,
                     checked: this.uiProps.strictSort,
-                    event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].uiProps.strictSort = this.checked"`,
+                    onChange: (event) => this.uiProps.strictSort = event.currentTarget.checked,
                 },
             ],
         };
@@ -195,15 +193,17 @@ export class AchievementsBlock extends Widget {
                     id: `${this.sectionID}-filter-${filterName}`,
                     label: ui.lang[filterName],
                     value: filterName,
+                    property: "filterName",
                     state: `${this.uiProps.filters[filterName]?.state ?? 0}`,
-                    event: `ui.achievementsBlock[${this.CLONE_NUMBER}].setFilter({ state, filterName })`,
+                    onChange: (stateData) => this.setFilter(stateData),
+                    // event: `ui.achievementsBlock[${this.CLONE_NUMBER}].setFilter({ state, filterName })`,
                 })),
                 {
                     type: inputTypes.CHECKBOX,
                     id: "hide-filtered",
                     label: ui.lang.hideFiltered,
                     checked: this.uiProps.hideFiltered,
-                    event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].uiProps.hideFiltered = this.checked;"`,
+                    onChange: (event) => this.uiProps.hideFiltered = event.currentTarget.checked,
                 },
             ],
         }
@@ -217,7 +217,7 @@ export class AchievementsBlock extends Widget {
                 id: `${this.sectionID}-mgame-all`,
                 label: ui.lang.all,
                 checked: !this.uiProps.mGameSelection,
-                event: `onchange="ui.achievementsBlock[${this.CLONE_NUMBER}].uiProps.mGameSelection = '';"`,
+                onChange: () => this.uiProps.mGameSelection = "",
             },
             ...watcher.GAME_DATA.groups.map(mGameName => ({
                 type: inputTypes.RADIO,
@@ -225,7 +225,7 @@ export class AchievementsBlock extends Widget {
                 id: `${this.sectionID}-mgame-${mGameName}`,
                 label: mGameName,
                 checked: this.uiProps.mGameSelection === mGameName,
-                event: `onchange = "ui.achievementsBlock[${this.CLONE_NUMBER}].uiProps.mGameSelection = '${mGameName}';"`,
+                onChange: () => this.uiProps.mGameSelection = mGameName,
             }))
         ]
     } : "";
@@ -241,7 +241,7 @@ export class AchievementsBlock extends Widget {
                     id: `${this.sectionID}-set-${setID}`,
                     label: setName,
                     checked: !this.uiProps.hiddenSets.includes(setID),
-                    event: `onchange = "ui.achievementsBlock[${this.CLONE_NUMBER}].updateHiddenSets(${setID});"`,
+                    onChange: () => this.updateHiddenSets(setID),
                 }
             })(),
             ...watcher.GAME_DATA.visibleSubsets.map(setID => {
@@ -253,7 +253,7 @@ export class AchievementsBlock extends Widget {
                     id: `${this.sectionID}-set-${setID}`,
                     label: setName,
                     checked: !this.uiProps.hiddenSets.includes(setID),
-                    event: `onchange = "ui.achievementsBlock[${this.CLONE_NUMBER}].updateHiddenSets(${setID});"`,
+                    onChange: () => this.updateHiddenSets(setID),
                 }
 
             })
@@ -790,7 +790,7 @@ export class AchievementsBlock extends Widget {
         this.groupCheevos();
         // this.fitSizeVertically()
     }
-    setFilter({ filterName, state, type, event }) {
+    setFilter({ filterName, state }) {
         // console.log(filterName, state, event)
         state === 0 ?
             delete this.filters[filterName] :

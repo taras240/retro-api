@@ -24,14 +24,14 @@ export class Progression extends Widget {
                         type: inputTypes.CHECKBOX,
                         id: "show-header",
                         checked: this.uiProps.showHeader,
-                        event: `onchange="ui.progression.uiProps.showHeader = this.checked;"`,
+                        onChange: (event) => this.uiProps.showHeader = event.currentTarget.checked,
                     },
                     {
                         label: ui.lang.showBackground,
                         type: inputTypes.CHECKBOX,
                         id: "show-bg",
                         checked: this.uiProps.showBG,
-                        event: `onchange="ui.progression.uiProps.showBG = this.checked;"`,
+                        onChange: (event) => this.uiProps.showBG = event.currentTarget.checked,
                     },]
             },
             {
@@ -42,14 +42,14 @@ export class Progression extends Widget {
                         type: inputTypes.CHECKBOX,
                         id: "show-sublevels",
                         checked: this.uiProps.showSublevels,
-                        event: `onchange="ui.progression.uiProps.showSublevels = this.checked;"`,
+                        onChange: (event) => this.uiProps.showSublevels = event.currentTarget.checked,
                     },
                     {
                         label: ui.lang.showAllDesc,
                         type: inputTypes.CHECKBOX,
                         id: "show-all-descr",
                         checked: this.uiProps.showAllDescriptions,
-                        event: `onchange="ui.progression.uiProps.showAllDescriptions = this.checked;"`,
+                        onChange: (event) => this.uiProps.showAllDescriptions = event.currentTarget.checked,
                     },
 
                 ]

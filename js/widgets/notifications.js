@@ -22,21 +22,21 @@ export class Notifications extends Widget {
                 type: inputTypes.CHECKBOX,
                 id: "hide-notification-header",
                 checked: this.uiProps.showHeader,
-                event: `onchange="ui.notifications.uiProps.showHeader = this.checked;"`,
+                onChange: (event) => this.uiProps.showHeader = event.currentTarget.checked,
             },
             {
                 label: ui.lang.transparentBg,
                 type: inputTypes.CHECKBOX,
                 id: "hide-notification-bg",
                 checked: this.uiProps.hideBg,
-                event: `onchange="ui.notifications.uiProps.hideBg = this.checked;"`,
+                onChange: (event) => this.uiProps.hideBg = event.currentTarget.checked,
             },
             {
                 label: ui.lang.showTimestamps,
                 type: inputTypes.CHECKBOX,
                 id: "show-notification-time",
                 checked: this.uiProps.showTimestamp,
-                event: `onchange="ui.notifications.uiProps.showTimestamp = this.checked;"`,
+                onChange: (event) => this.uiProps.showTimestamp = event.currentTarget.checked,
             }
         ];
     }

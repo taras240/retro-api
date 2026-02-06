@@ -25,7 +25,7 @@ const statebox = ({ state, type, value, id, event, label, sectionCode }) => `
         data-state="${state ?? 0}" 
         data-value="${value}" 
         data-event="${event}"
-        id="${id + sectionCode}"
+        id="${id + sectionCode}">
         <p class="statebox__label">${label}</p>
     </div>
 `;

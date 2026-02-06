@@ -7,22 +7,22 @@ const generateContextMenu = ({ menuItems, sectionCode = "", isSubmenu = false })
     contextElement.className = isSubmenu ?
         "context-menu_item-menu context-submenu" :
         "achievement_context-menu context-menu hidden";
-
     menuItems.forEach((menuItem) => {
         const isExpandable = menuItem.hasOwnProperty("elements");
         let menuElement;
         if (!menuItem) return;
         if (isExpandable) {
-            menuElement = document.createElement("li");
-            menuElement.className = `context-menu_item ${isExpandable && "expandable"}`
-            menuElement.innerHTML += menuItem.label;
-            menuElement.appendChild(
-                generateContextMenu({
-                    menuItems: menuItem.elements,
-                    isSubmenu: true,
-                    sectionCode: sectionCode,
-                })
-            );
+            menuElement = fromHtml(`
+                <li class="context-menu_item expandable">
+                    ${menuItem.label}
+                </li>
+            `);
+            const subMenu = generateContextMenu({
+                menuItems: menuItem.elements,
+                isSubmenu: true,
+                sectionCode: sectionCode,
+            })
+            menuElement.append(subMenu);
         }
         else {
             menuElement = ContextInput(menuItem);
@@ -36,8 +36,7 @@ const generateContextMenu = ({ menuItems, sectionCode = "", isSubmenu = false })
     if (!ui.AUTOCLOSE_CONTEXTMENU) {
         contextElement.addEventListener("click", (e) => e.stopPropagation());
     }
-    contextElement.querySelectorAll(".context-menu_statebox")?.forEach(statebox => statebox.addEventListener("click", stateboxClick));
-    console.log(contextElement)
+    // contextElement.querySelectorAll(".context-menu_statebox")?.forEach(statebox => statebox.addEventListener("click", stateboxClick));
     return contextElement;
 }
 const ContextInput = (item) => {
@@ -46,14 +45,28 @@ const ContextInput = (item) => {
             ${contextInputs[item.type](item)}
         </li>
         `);
-    console.log(item)
-    item.onChange && input?.querySelector("input")?.addEventListener("change", item.onChange);
+    item.onChange && input?.querySelector("input")?.addEventListener("change", (event) => {
+        const statebox = event.target.closest(".context-statebox");
+        if (statebox) {
+            const { property } = statebox.dataset;
+            const prevState = +statebox.dataset.state;
+            const state = prevState === 1 ? -1 : prevState + 1;
+            const value = statebox.dataset.value;
+            statebox.dataset.state = state;
+            item.onChange({ state, [property]: value })
+        }
+        else {
+            item.onChange(event);
+        }
+
+    });
+    item.onClick && input?.querySelector("button")?.addEventListener("click", item.onClick);
     return input;
 
 }
 const contextInputs = {
     [inputTypes.CHECKBOX]: ({ type, name, id, checked, event, label, onChange, sectionCode = "" }) => `
-        <div>
+        <div class="context__input-container">
             <input 
                 type="${type}" 
                 name="context-${name || id}${sectionCode}" 
@@ -65,14 +78,20 @@ const contextInputs = {
         </div>
     ` ,
     radio: (props) => contextInputs.checkbox(props),
-    statebox: ({ state, type, value, id, event, label, sectionCode = "" }) => `
+    statebox: ({ state, type, value, id, event, label, property, sectionCode = "" }) => `
         <div 
-            class="context-menu_statebox" 
+            class="context-menu_statebox context-statebox" 
             data-state="${state ?? 0}" 
             data-value="${value}" 
             data-event="${event}"
-            id="context-${id + sectionCode}"
-            <p class="statebox__label">${label}</p>
+            data-property="${property}">
+            <input 
+                type="checkbox" 
+                name="context-${id}-checkbox"
+                id="context-${id}${sectionCode}"
+                checked
+                ></input>
+            <label class="statebox__label" for="context-${id}${sectionCode}">${label}</label>
         </div>
     `,
     [inputTypes.NUM_INPUT]: ({ prefix, type, id, event, title, value, postfix, sectionCode = "" }) => `
@@ -120,11 +139,11 @@ const contextInputs = {
             </button>`,
 }
 function stateboxClick(event) {
-    const statebox = event.target;
-    const prevState = +statebox.dataset.state;
-    const state = prevState === 1 ? -1 : prevState + 1;
-    const filterName = statebox.dataset.value;
-    statebox.dataset.state = state;
-    statebox.dataset.event && new Function("event", "state", "filterName", statebox.dataset.event)(event, state, filterName);
+    // const statebox = event.target;
+    // const prevState = +statebox.dataset.state;
+    // const state = prevState === 1 ? -1 : prevState + 1;
+    // const filterName = statebox.dataset.value;
+    // statebox.dataset.state = state;
+    // statebox.dataset.event && new Function("event", "state", "filterName", statebox.dataset.event)(event, state, filterName);
 }
 export { generateContextMenu }

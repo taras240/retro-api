@@ -267,8 +267,9 @@ export class Target extends Widget {
                 id: `${this.sectionID}-filter-${filterName}`,
                 label: ui.lang[filterName],
                 value: filterName,
+                property: "filterName",
                 state: `${this.uiProps.filters[filterName]?.state ?? 0}`,
-                onChange: () => this.uiProps.filters = ({ state, filterName }),
+                onChange: (stateData) => this.uiProps.filters = (stateData),
             })),
             {
                 type: inputTypes.CHECKBOX,

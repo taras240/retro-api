@@ -66,7 +66,7 @@ export class GameCard extends Widget {
                         id: `game-card_preview-${previewKey}`,
                         label: ui.lang[previewKey],
                         checked: this.uiProps.previewType === this.previewTypes[previewKey],
-                        event: `onchange="ui.gameCard.uiProps.previewType = '${this.previewTypes[previewKey]}';"`
+                        onChange: () => this.uiProps.previewType = this.previewTypes[previewKey],
                     })),
                 ]
             },
@@ -74,43 +74,43 @@ export class GameCard extends Widget {
                 label: ui.lang.showHeader,
                 type: inputTypes.CHECKBOX,
                 id: "game-card_show-header",
-                event: `onchange="ui.gameCard.uiProps.showHeader = this.checked"`,
                 checked: this.uiProps.showHeader,
+                onChange: (event) => this.uiProps.showHeader = event.currentTarget.checked,
             },
             {
                 label: ui.lang.showTitle,
                 type: inputTypes.CHECKBOX,
                 id: "game-card_show-title",
-                event: `onchange="ui.gameCard.uiProps.showTitle = this.checked"`,
                 checked: this.uiProps.showTitle,
+                onChange: (event) => this.uiProps.showTitle = event.currentTarget.checked,
             },
             {
                 label: ui.lang.showTitleBadges,
                 type: inputTypes.CHECKBOX,
                 id: "game-card_show-badges",
-                event: `onchange="ui.gameCard.uiProps.showBadges = this.checked"`,
                 checked: this.uiProps.showBadges,
+                onChange: (event) => this.uiProps.showBadges = event.currentTarget.checked,
             },
             {
                 label: ui.lang.showCheevosProgress,
                 type: inputTypes.CHECKBOX,
                 id: "game-card_show-count-pr",
-                event: `onchange="ui.gameCard.uiProps.showCheevosProgress = this.checked"`,
                 checked: this.uiProps.showCheevosProgress,
+                onChange: (event) => this.uiProps.showCheevosProgress = event.currentTarget.checked,
             },
             {
                 label: ui.lang.showPointsProgress,
                 type: inputTypes.CHECKBOX,
                 id: "game-card_show-points-pr",
-                event: `onchange="ui.gameCard.uiProps.showPointsProgress = this.checked"`,
                 checked: this.uiProps.showPointsProgress,
+                onChange: (event) => this.uiProps.showPointsProgress = event.currentTarget.checked,
             },
             {
                 label: ui.lang.showRetropointsProgress,
                 type: inputTypes.CHECKBOX,
                 id: "game-card_show-rp-pr",
-                event: `onchange="ui.gameCard.uiProps.showRetropointsProgress = this.checked"`,
                 checked: this.uiProps.showRetropointsProgress,
+                onChange: (event) => this.uiProps.showRetropointsProgress = event.currentTarget.checked,
             },
         ]
     }

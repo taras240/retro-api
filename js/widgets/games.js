@@ -1,7 +1,7 @@
 import { UI } from "../ui.js";
 import { icons, signedIcons } from "../components/icons.js"
 
-import { config, ui, apiWorker } from "../script.js";
+import { config, ui, apiWorker, watcher } from "../script.js";
 import { Widget } from "./widget.js";
 import { generateBadges, badgeElements } from "../components/badges.js";
 import { sortBy, sortMethods } from "../functions/sortFilter.js";
@@ -31,14 +31,15 @@ export class Games extends Widget {
                 type: inputTypes.BUTTON,
                 id: "update-game",
                 label: "**Update game**",
-                event: `onclick="watcher.updateGameData(${gameID})"`,
+                event: `onclick=""`,
+                onClick: () => watcher.updateGameData(gameID),
             },
             {
                 type: inputTypes.CHECKBOX,
                 id: "add-to-favourites",
                 label: `fav`,
                 checked: ui.games.FAVOURITES.includes(+gameID),
-                event: `onclick="ui.games.addToFavourite(event,${gameID})"`,
+                onClick: (event) => ui.games.addToFavourite(event, gameID),
             },
         ];
     }

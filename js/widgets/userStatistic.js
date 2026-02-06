@@ -25,7 +25,7 @@ export class UserStatistic extends Widget {
                         id: "show-points",
                         label: ui.lang.points,
                         checked: this.uiProps.showHP,
-                        event: `onchange="ui.stats.uiProps.showHP = this.checked;"`,
+                        onChange: (event) => this.uiProps.showHP = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
@@ -33,7 +33,7 @@ export class UserStatistic extends Widget {
                         id: "show-retropoints",
                         label: ui.lang.retropoints,
                         checked: this.uiProps.showRP,
-                        event: `onchange="ui.stats.uiProps.showRP = this.checked;"`,
+                        onChange: (event) => this.uiProps.showRP = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
@@ -41,7 +41,7 @@ export class UserStatistic extends Widget {
                         id: "show-softpoints",
                         label: ui.lang.softpoints,
                         checked: this.uiProps.showSP,
-                        event: `onchange="ui.stats.uiProps.showSP = this.checked;"`,
+                        onChange: (event) => this.uiProps.showSP = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
@@ -49,7 +49,7 @@ export class UserStatistic extends Widget {
                         id: "show-rank",
                         label: ui.lang.rank,
                         checked: this.uiProps.showRank,
-                        event: `onchange="ui.stats.uiProps.showRank = this.checked;"`,
+                        onChange: (event) => this.uiProps.showRank = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
@@ -57,7 +57,7 @@ export class UserStatistic extends Widget {
                         id: "show-percentile",
                         label: ui.lang.percentile,
                         checked: this.uiProps.showPercentile,
-                        event: `onchange="ui.stats.uiProps.showPercentile = this.checked;"`,
+                        onChange: (event) => this.uiProps.showPercentile = event.currentTarget.checked,
                     },
 
                     {
@@ -66,7 +66,7 @@ export class UserStatistic extends Widget {
                         id: "show-true-ratio",
                         label: ui.lang.trueRatio,
                         checked: this.uiProps.showTrueRatio,
-                        event: `onchange="ui.stats.uiProps.showTrueRatio = this.checked;"`,
+                        onChange: (event) => this.uiProps.showTrueRatio = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
@@ -74,7 +74,7 @@ export class UserStatistic extends Widget {
                         id: "show-completion-chart",
                         label: ui.lang.completionChart,
                         checked: this.uiProps.completionChart,
-                        event: `onchange="ui.stats.uiProps.completionChart = this.checked;"`,
+                        onChange: (event) => this.uiProps.completionChart = event.currentTarget.checked,
                     },
                 ]
             },
@@ -87,7 +87,7 @@ export class UserStatistic extends Widget {
                         id: "show-header",
                         label: ui.lang.showHeader,
                         checked: this.uiProps.showHeader,
-                        event: `onchange="ui.stats.uiProps.showHeader = this.checked;"`,
+                        onChange: (event) => this.uiProps.showHeader = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
@@ -95,7 +95,7 @@ export class UserStatistic extends Widget {
                         id: "show-bg",
                         label: ui.lang.showBackground,
                         checked: this.uiProps.showBG,
-                        event: `onchange="ui.stats.uiProps.showBG = this.checked;"`,
+                        onChange: (event) => this.uiProps.showBG = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.RADIO,
@@ -103,7 +103,7 @@ export class UserStatistic extends Widget {
                         id: `list-type-list`,
                         label: "List",
                         checked: this.uiProps.listMode,
-                        event: `onchange="ui.stats.uiProps.listMode = true;"`
+                        onChange: (event) => this.uiProps.listMode = true,
                     },
                     {
                         type: inputTypes.RADIO,
@@ -111,7 +111,7 @@ export class UserStatistic extends Widget {
                         id: `list-type-grid`,
                         label: "Grid",
                         checked: !this.uiProps.listMode,
-                        event: `onchange="ui.stats.uiProps.listMode = false;"`
+                        onChange: (event) => this.uiProps.listMode = false,
                     }
 
                 ]
@@ -122,7 +122,7 @@ export class UserStatistic extends Widget {
                 id: "show-session-progress",
                 label: ui.lang.showSessionProgress,
                 checked: this.uiProps.showSessionProgress,
-                event: `onchange="ui.stats.uiProps.showSessionProgress = this.checked;"`,
+                onChange: (event) => this.uiProps.showSessionProgress = event.currentTarget.checked,
             }
 
 
