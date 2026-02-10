@@ -36,9 +36,10 @@ export class GameCard extends Widget {
         showBadges: true,
         previewType: this.previewTypes.boxart,
         showTitle: true,
+        showIcons: true,
         showCheevosProgress: false,
         showRetropointsProgress: false,
-        showPointsProgress: false
+        showPointsProgress: false,
         //properties below are disabled :(
         // showCompletion: true,
         // showDeveloper: true,
@@ -83,6 +84,13 @@ export class GameCard extends Widget {
                 id: "game-card_show-title",
                 event: `onchange="ui.gameCard.uiProps.showTitle = this.checked"`,
                 checked: this.uiProps.showTitle,
+            },
+            {
+                label: ui.lang.showIcons,
+                type: inputTypes.CHECKBOX,
+                id: "game-card_show-icons",
+                event: `onchange="ui.gameCard.uiProps.showIcons = this.checked"`,
+                checked: this.uiProps.showIcons,
             },
             {
                 label: ui.lang.showTitleBadges,
@@ -188,7 +196,7 @@ export class GameCard extends Widget {
         this.section.classList.toggle("progress-points-hidden", !this.uiProps.showPointsProgress);
         this.section.classList.toggle("progress-rp-hidden", !this.uiProps.showRetropointsProgress);
         this.section.classList.toggle("title-hidden", !this.uiProps.showTitle);
-
+        this.iconsContainer?.classList.toggle("hidden", !this.uiProps.showIcons)
         switch (this.uiProps.previewType) {
             case this.previewTypes.ingame:
                 this.preview.src = gameImageUrl(watcher?.GAME_DATA?.ImageIngame);

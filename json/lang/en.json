@@ -248,5 +248,6 @@
     "showPointsProgress": "Points Progress",
     "showRetropointsProgress": "Retropoints Progress",
     "subset": "Set Name",
-    "showPins": "Show Pins"
+    "showPins": "Show Pins",
+    "showIcons": "Icons"
 }
