@@ -1,13 +1,13 @@
 import { UI } from "../ui.js";
 import { apiWorker, config, configData, ui, watcher } from "../script.js";
-import { inputTypes, input } from "../components/inputElements.js";
+import { inputTypes, input, inputElement } from "../components/inputElements.js";
 import { Widget } from "./widget.js";
 import { obsPresets } from "../enums/obsPresets.js";
-import { stateboxClickHandler } from "../functions/stateBoxClick.js";
 import { local } from "../enums/locals.js";
 import { colorPresets } from "../enums/colorPresets.js";
 import { fonts } from "../enums/fontsPreset.js";
 import { ANIMATIONS } from "../enums/bgAnimations.js";
+import { fromHtml } from "../functions/html.js";
 export class Settings extends Widget {
     widgetIcon = {
         iconClass: "settings-icon",
@@ -527,20 +527,23 @@ export class Settings extends Widget {
             const container = this.section.querySelector(".content-container");
             container.innerHTML = ``;
             settingsItems.forEach(setting => {
+                if (!setting) return;
                 if (setting.elements) {
                     const settingItemsLine = document.createElement("li");
                     settingItemsLine.classList.add("settings_setting-line");
-                    settingItemsLine.innerHTML = `
-                    <h3 class="settings_setting-header">
-                        ${setting?.label}
-                    </h3>`;
+                    const settingLabel = fromHtml(`
+                            <h3 class="settings_setting-header">
+                                ${setting?.label}
+                            </h3>
+                        `)
+                    settingItemsLine.append(settingLabel);
                     setting.elements.forEach(settingItem => {
-                        settingItemsLine.innerHTML += (input(settingItem));
+                        settingItemsLine.append(inputElement(settingItem));
                     });
                     container.appendChild(settingItemsLine);
                 }
                 else {
-                    container.innerHTML += (input(setting));
+                    container.append(inputElement(setting));
                 }
             })
 
@@ -551,7 +554,6 @@ export class Settings extends Widget {
         this.section.querySelector(".resizer")?.remove();
 
         generateSettingsContainer(settingsItems);
-        this.section.querySelectorAll(".statebox").forEach(sbox => sbox.addEventListener("click", stateboxClickHandler))
     }
 
     openSettings(settingsItems = this.settingsItems) {

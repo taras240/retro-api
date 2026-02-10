@@ -57,7 +57,7 @@ export class AchievementsBlock extends Widget {
                         id: "menu_min-size",
                         label: ui.lang.minSize,
                         value: this.uiProps.ACHIV_MIN_SIZE,
-                        onChange: (event) => this.uiProps.ACHIV_MIN_SIZE = event.currentTarget.value,
+                        onInput: (event) => this.uiProps.ACHIV_MIN_SIZE = event.currentTarget.value,
                     },
                     {
                         prefix: ui.lang.maxSize,
@@ -66,7 +66,7 @@ export class AchievementsBlock extends Widget {
                         id: "menu_max-size",
                         label: ui.lang.maxSize,
                         value: this.uiProps.ACHIV_MAX_SIZE,
-                        onChange: (event) => this.uiProps.ACHIV_MAX_SIZE = event.currentTarget.value,
+                        onInput: (event) => this.uiProps.ACHIV_MAX_SIZE = event.currentTarget.value,
                     },
 
                 ]

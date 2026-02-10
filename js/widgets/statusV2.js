@@ -172,8 +172,8 @@ export class Status extends Widget {
                         type: inputTypes.NUM_INPUT,
                         id: "stats-timer-duration",
                         label: ui.lang.timer,
-                        value: ~~(this.uiProps.timerTime / 60 * 100) / 100,
-                        onChange: (event) => this.uiProps.timerTime = event.currentTarget.checked,
+                        value: ~~(parseFloat(this.uiProps.timerTime) / 60 * 100) / 100,
+                        onInput: (event) => this.uiProps.timerTime = event.currentTarget.value,
                     },
                     ...Object.keys(timePosition).map(position =>
                     ({

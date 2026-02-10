@@ -50,13 +50,13 @@ export class Target extends Widget {
                         onChange: (event) => this.uiProps.isFixedSize = event.currentTarget.checked,
                     },
                     {
+                        type: inputTypes.NUM_INPUT,
                         prefix: ui.lang.cheevosCount,
                         postfix: "",
-                        type: inputTypes.NUM_INPUT,
                         id: "fixed-count",
                         label: ui.lang.cheevosCount,
                         value: this.uiProps.fixedSizeCount,
-                        onChange: (event) => this.uiProps.fixedSizeCount = event.currentTarget.value,
+                        onInput: (event) => this.uiProps.fixedSizeCount = event.currentTarget.value,
                     },
 
 

@@ -447,7 +447,7 @@
     display: block;
     position: relative;
     text-wrap: nowrap;
-    padding: 2px 15px;
+    padding: 2px 1rem;
     border-radius: var(--border-radius);
     border: 1px solid var(--selection-color);
     background-color: var(--secondary-color);
@@ -455,25 +455,45 @@
     transition: .2s;
 }
 
+.statebox__container {
+    border-radius: var(--border-radius);
+    border: 1px solid var(--selection-color);
+    background-color: var(--secondary-color);
+}
+
+.statebox-input {
+    display: block;
+    position: relative;
+    text-wrap: nowrap;
+    padding: 2px 1rem;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+}
+
 .checkbox-input:hover {
     background-color: var(--accent-color);
 
 }
 
-.statebox[data-state="1"],
+/* , */
 input:checked+.checkbox-input {
     background-color: var(--accent-color);
     color: var(--font-color);
     padding-left: 30px;
 }
 
-.statebox[data-state="-1"] {
-    background-color: crimson;
-    color: white;
-    padding-left: 30px;
+.statebox__container[data-state="1"] {
+    background-color: greenyellow;
+    color: black;
 }
 
-.statebox[data-state="1"]::before,
+.statebox__container[data-state="-1"] {
+    background-color: crimson;
+    color: white;
+    /* padding-left: 30px; */
+}
+
+/* .statebox[data-state="1"]::before, */
 input:checked+.checkbox-input::before {
     content: "";
     position: absolute;
@@ -488,7 +508,7 @@ input:checked+.checkbox-input::before {
     background-color: var(--font-color);
 }
 
-.statebox[data-state="-1"]::before {
+/* .statebox[data-state="-1"]::before {
     content: "";
     position: absolute;
     height: 80%;
@@ -500,7 +520,7 @@ input:checked+.checkbox-input::before {
     mask-repeat: no-repeat;
     mask-position: center;
     background-color: white;
-}
+} */
 
 .text-input {
     padding: 2px 15px;
@@ -956,9 +976,10 @@ input:checked+.checkbox-input::before {
     padding: 0.5rem;
 }
 
-.context-menu_statebox,
+
 .context-menu_checkbox,
-.context-menu_radio {
+.context-menu_radio,
+.context-menu_statebox .statebox__label {
     position: relative;
     display: block;
     width: 100%;
@@ -966,6 +987,13 @@ input:checked+.checkbox-input::before {
     cursor: pointer;
     padding: 0.5rem;
     padding-left: 1.75rem;
+}
+
+.context-menu_statebox {
+    position: relative;
+    display: block;
+    width: 100%;
+    font-size: inherit;
 }
 
 .context-menu_statebox::after,
@@ -998,7 +1026,6 @@ input[type="checkbox"]:checked+.context-menu_checkbox::after {
 
 .context-menu_statebox[data-state="-1"]::after {
     mask-image: url(../assets/img/nagative-box.svg);
-    /* background-color: crimson; */
 }
 
 input[type="radio"]+.context-menu_radio::after {

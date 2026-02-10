@@ -1,6 +1,6 @@
 import { fromHtml } from "../functions/html.js";
 import { ui } from "../script.js";
-import { inputTypes } from "./inputElements.js";
+import { addEvents, inputTypes } from "./inputElements.js";
 
 const generateContextMenu = ({ menuItems, sectionCode = "", isSubmenu = false }) => {
     const contextElement = document.createElement("ul");
@@ -39,28 +39,32 @@ const generateContextMenu = ({ menuItems, sectionCode = "", isSubmenu = false })
     // contextElement.querySelectorAll(".context-menu_statebox")?.forEach(statebox => statebox.addEventListener("click", stateboxClick));
     return contextElement;
 }
-const ContextInput = (item) => {
+const ContextInput = (props) => {
+    const { onChange, onClick, onInput } = props;
     const input = fromHtml(`
         <li class="context-menu_item">
-            ${contextInputs[item.type](item)}
+            ${contextInputs[props.type](props)}
         </li>
         `);
-    item.onChange && input?.querySelector("input")?.addEventListener("change", (event) => {
-        const statebox = event.target.closest(".context-statebox");
-        if (statebox) {
-            const { property } = statebox.dataset;
-            const prevState = +statebox.dataset.state;
-            const state = prevState === 1 ? -1 : prevState + 1;
-            const value = statebox.dataset.value;
-            statebox.dataset.state = state;
-            item.onChange({ state, [property]: value })
-        }
-        else {
-            item.onChange(event);
-        }
+    addEvents(input, props);
+    // if (onChange) {
+    //     input?.querySelector("input")?.addEventListener("change", (event) => {
+    //         const statebox = event.target.closest(".context-statebox");
+    //         if (statebox) {
+    //             const currentState = updateStateBox(statebox)
+    //             onChange(currentState);
+    //         }
+    //         else {
+    //             onChange(event);
+    //         }
+    //     });
+    // }
+    // if (onInput) {
+    //     input?.querySelector("input")?.addEventListener("input", (event) => onInput(event))
+    // }
 
-    });
-    item.onClick && input?.querySelector("button")?.addEventListener("click", item.onClick);
+    // if (onClick) input?.querySelector("button")?.addEventListener("click", item.onClick);
+
     return input;
 
 }
@@ -80,10 +84,9 @@ const contextInputs = {
     radio: (props) => contextInputs.checkbox(props),
     statebox: ({ state, type, value, id, event, label, property, sectionCode = "" }) => `
         <div 
-            class="context-menu_statebox context-statebox" 
+            class="context-menu_statebox context-statebox statebox" 
             data-state="${state ?? 0}" 
             data-value="${value}" 
-            data-event="${event}"
             data-property="${property}">
             <input 
                 type="checkbox" 

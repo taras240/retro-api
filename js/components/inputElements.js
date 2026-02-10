@@ -1,3 +1,5 @@
+import { fromHtml } from "../functions/html.js";
+import { updateStateBox } from "../functions/stateBoxClick.js";
 
 
 const checkbox = ({ event, onChange, id, checked, label, name, isRadio }) => {
@@ -7,8 +9,6 @@ const checkbox = ({ event, onChange, id, checked, label, name, isRadio }) => {
             `type="${isRadio ? "radio" : "checkbox"}"`,
             id && `id="${id}"`,
             `name="${name || id}"`,
-            event,
-            onChange && `onchange="${onChange}"`,
             checked && "checked"
         ].filter(Boolean).join(" ")}
             >
@@ -19,24 +19,29 @@ const checkbox = ({ event, onChange, id, checked, label, name, isRadio }) => {
     `;
 
 }
-const statebox = ({ state, type, value, id, event, label, sectionCode }) => `
+const statebox = ({ state, type, property, value, id, label, sectionCode }) => `
     <div 
-        class="statebox statebox__container checkbox-input" 
-        data-state="${state ?? 0}" 
-        data-value="${value}" 
-        data-event="${event}"
-        id="${id + sectionCode}">
-        <p class="statebox__label">${label}</p>
-    </div>
+            class="statebox statebox__container" 
+            data-state="${state ?? 0}" 
+            data-value="${value}" 
+            data-property="${property}">
+            <input 
+                type="checkbox" 
+                name="statebox-${id}-checkbox"
+                id="statebox-${id}${sectionCode}"
+                checked
+                ></input>
+            <label class="statebox__label statebox-input" for="statebox-${id}${sectionCode}">${label}</label>
+        </div>
 `;
-
 
 const radioButton = (props) => {
     return checkbox({ ...props, isRadio: true });
 }
 
-const textInput = ({ prefix, title, id, value, label, onChange, isNumber, isSearch, placeholder }) => {
+const textInput = ({ prefix, title, id, value, label, isNumber, isSearch, placeholder }) => {
     return `
+    <div>
         <input ${[
             `type="${isNumber ? "number" : isSearch ? "search" : "text"}"`,
             (title || prefix) && `data-title="${title || prefix}"`,
@@ -44,11 +49,11 @@ const textInput = ({ prefix, title, id, value, label, onChange, isNumber, isSear
             id && `id="${id}"`,
             value !== undefined && `value="${value}"`,
             label && `placeholder="${label}"`,
-            onChange && `onchange="${onChange}"`,
         ]
             .filter(Boolean)
             .join(" ")}
         />
+        </div>
     `;
 
 }
@@ -66,8 +71,7 @@ const selectorInput = ({ id, label, selectValues }) => {
                 id && `id="${id}"`,
                 `type="${type ? type : "radio"}"`,
                 name && `name="${name}"`,
-                checked && "checked",
-                event
+                checked && "checked"
             ].filter(Boolean).join(" ")}></input>
                     <label class="context-menu_${type ? type : "radio"}" for="${id}">
                         ${label}
@@ -90,8 +94,7 @@ const button = ({ event, onClick, label, id }) => {
         <button ${[
             id && `id="${id}"`,
             'class="button-input"',
-            event,
-            onClick && `onclick="${onClick}"`]
+        ]
             .filter(Boolean)
             .join(" ")}>
             ${label}
@@ -104,17 +107,17 @@ const group = ({ label }) => {
        <div class="group-header">${label}</div>
     `
 }
-const colorInput = ({ onChange, value, id, label }) => {
+const colorInput = ({ value, id, label, onChange }) => {
     const onColorChange = `const container = this.closest('.color-input__container');
     if (container) container.style.setProperty('--color', this.value);
-     container.querySelector('.text-input').value = this.value;container.querySelector('.color-input').value = this.value;${onChange}`
+     container.querySelector('.text-input').value = this.value;container.querySelector('.color-input').value = this.value;${onChange}`;
+
     return `
         <div class="color-input__container" style="--color:${value}">
             <div class="color-input__preview" onclick="this.nextElementSibling.click()"></div>
             <input 
                 type="color" 
                 class="color-input" 
-                onchange="${onColorChange}" 
                 value="${value}" 
                 id="${id}" 
                 data-title="${label}" 
@@ -123,7 +126,43 @@ const colorInput = ({ onChange, value, id, label }) => {
         </div>
     `;
 }
-const input = (inputData) => {
+
+const inputElement = (props) => {
+
+    const inputElement = fromHtml(inputHtml(props));
+    addEvents(inputElement, props)
+    return inputElement;
+}
+const addEvents = (element, props) => {
+
+    const { onChange, onClick, onInput } = props;
+    const input = element?.querySelector("input");
+    if (onChange) {
+        input?.addEventListener("change", (event) => {
+            const statebox = event.target.closest(".statebox");
+            if (statebox) {
+                const currentState = updateStateBox(statebox)
+                onChange(currentState);
+            }
+            else {
+                onChange(event);
+            }
+        });
+    }
+    if (onInput) {
+        input?.addEventListener("input", onInput)
+    }
+    if (onClick) {
+        const button = element?.matches('button')
+            ? element
+            : element?.closest('button') || element?.querySelector('button');
+
+
+        button?.addEventListener('click', onClick);
+
+    }
+}
+const inputHtml = (inputData) => {
     switch (inputData.type) {
         case inputTypes.TEXT_INPUT:
             return textInput(inputData);
@@ -149,7 +188,7 @@ const input = (inputData) => {
             return `[${inputData.type} N/A]`;
     }
 }
-export const inputTypes = Object.freeze({
+const inputTypes = Object.freeze({
     CHECKBOX: "checkbox",
     STATEBOX: "statebox",
     RADIO: "radio",
@@ -161,5 +200,5 @@ export const inputTypes = Object.freeze({
     GROUP: "group",
     COLOR: "color"
 })
-export { input }
+export { inputTypes, inputHtml as input, inputElement, addEvents }
 // export { checkbox, statebox, radioButton, numberInput, textInput, searchInput, selectorInput, button, }

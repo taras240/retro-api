@@ -10,7 +10,6 @@ import { GAME_GENRE_CODES } from "../enums/gameGenres.js";
 import { RA_PLATFORM_CODES } from "../enums/RAPlatforms.js";
 import { platformsByManufacturer } from "../enums/platformManufacturer.js";
 import { hintElement } from "../components/hint.js";
-import { stateboxClickHandler } from "../functions/stateBoxClick.js";
 import { gameImageUrl, gameUrl } from "../functions/raLinks.js";
 import { RELEASE_TYPES } from "../enums/releaseVersions.js";
 import { gamesExtMap } from "../enums/gamesExtMap.js";
@@ -543,9 +542,6 @@ export class Games extends Widget {
                 });
             }
         });
-        this.section.querySelectorAll(".statebox").forEach(box =>
-            box.addEventListener("click", stateboxClickHandler)
-        )
 
     }
     async loadWantToPlay() {
