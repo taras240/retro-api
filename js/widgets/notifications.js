@@ -6,6 +6,7 @@ import { ALERT_TYPES } from "../enums/alerts.js";
 import { cheevoImageUrl, cheevoUrl, gameImageUrl, gameUrl } from "../functions/raLinks.js";
 import { inputTypes } from "../components/inputElements.js";
 import { alertHtml } from "../components/notifications/alertElement.js";
+import { buttonsHtml } from "../components/htmlElements.js";
 
 
 export class Notifications extends Widget {
@@ -17,6 +18,32 @@ export class Notifications extends Widget {
     };
     get contextMenuItems() {
         return [
+            {
+                label: ui.lang.alertTypes,
+                elements: [
+                    {
+                        label: ui.lang.showGameAlerts,
+                        type: inputTypes.CHECKBOX,
+                        id: "show-notification-game",
+                        checked: this.uiProps.showGameAlerts,
+                        event: `onchange="ui.notifications.uiProps.showGameAlerts = this.checked;"`,
+                    },
+                    {
+                        label: ui.lang.showAwardAlerts,
+                        type: inputTypes.CHECKBOX,
+                        id: "show-notification-award",
+                        checked: this.uiProps.showAwardAlerts,
+                        event: `onchange="ui.notifications.uiProps.showAwardAlerts = this.checked;"`,
+                    },
+                    {
+                        label: ui.lang.showCheevoAlerts,
+                        type: inputTypes.CHECKBOX,
+                        id: "show-notification-cheevo",
+                        checked: this.uiProps.showCheevoAlerts,
+                        event: `onchange="ui.notifications.uiProps.showCheevoAlerts = this.checked;"`,
+                    }
+                ]
+            },
             {
                 label: ui.lang.showHeader,
                 type: inputTypes.CHECKBOX,
@@ -37,7 +64,8 @@ export class Notifications extends Widget {
                 id: "show-notification-time",
                 checked: this.uiProps.showTimestamp,
                 event: `onchange="ui.notifications.uiProps.showTimestamp = this.checked;"`,
-            }
+            },
+
         ];
     }
 
@@ -45,8 +73,14 @@ export class Notifications extends Widget {
         showTimestamp: true,
         showHeader: false,
         hideBg: false,
+        showCheevoAlerts: true,
+        showAwardAlerts: true,
+        showGameAlerts: true,
     }
     uiSetCallbacks = {
+        showCheevoAlerts: () => this.showSavedAlert(),
+        showAwardAlerts: () => this.showSavedAlert(),
+        showGameAlerts: () => this.showSavedAlert(),
     };
     uiValuePreprocessors = {
     };
@@ -72,7 +106,7 @@ export class Notifications extends Widget {
                 timeStamp.innerText = this.getDeltaTime(timeStamp.dataset.time);
             })
         }, 1 * 1000 * 60);
-        this.showSavedAlert()
+        this.showSavedAlert();
     }
 
     initializeElements() {
@@ -82,10 +116,12 @@ export class Notifications extends Widget {
         this.resizer = this.section.querySelector(".resizer");
     }
     generateWidget() {
+        const headerElementsHtml = buttonsHtml.tweek();
         const widgetData = {
             classes: ["notification_section", "bg-visible", "section", "compact-header"],
             id: "notification_section",
             title: ui.lang.alertsSectionName,
+            headerElementsHtml,
             contentClasses: ["notification-container", "content-container"],
         };
 
@@ -103,7 +139,7 @@ export class Notifications extends Widget {
     gameChangeEvent(isNewGame) {
         if (!isNewGame) return;
         const gameAlert = [{ type: ALERT_TYPES.GAME, value: watcher.GAME_DATA }];
-        this.addAlertsToQuery(gameAlert)
+        this.addAlertsToQuery(gameAlert);
     }
 
     saveAlerts(alerts) {
@@ -170,6 +206,7 @@ export class Notifications extends Widget {
         return JSON.parse(localStorage.getItem(this.alertsCacheName)) ?? [];
     }
     showSavedAlert() {
+        this.container.innerHTML = "";
         const savedAlerts = this.getSavedAlerts();
         savedAlerts.forEach(({ timeStamp, alerts }) => {
             this.showAlerts(alerts, new Date(timeStamp));
@@ -207,13 +244,13 @@ export class Notifications extends Widget {
             if (!alert) continue;
             switch (alert.type) {
                 case ALERT_TYPES.GAME:
-                    alertElements.push(this.gameAlertElement(alert.value))
+                    this.uiProps.showGameAlerts && alertElements.push(this.gameAlertElement(alert.value))
                     break;
                 case ALERT_TYPES.CHEEVO:
-                    alertElements.push(this.cheevoAlertElement(alert.value));
+                    this.uiProps.showCheevoAlerts && alertElements.push(this.cheevoAlertElement(alert.value));
                     break;
                 case ALERT_TYPES.AWARD:
-                    alertElements.push(this.awardAlertElement(alert))
+                    this.uiProps.showAwardAlerts && alertElements.push(this.awardAlertElement(alert))
                     break;
                 default:
                     console.log(`notification type doesn't exist`);
@@ -350,7 +387,7 @@ export class Notifications extends Widget {
         let date = +timeStamp;
         let now = (new Date()).getTime();
         let deltaSeconds = ~~((now - date) / 1000);
-        return deltaSeconds < 2 * 60 ? "moment ago" :
+        return deltaSeconds < 3 * 60 ? "moment ago" :
             deltaSeconds < 10 * 60 ? `few minutes ago` :
                 deltaSeconds < 60 * 60 ? `${~~(deltaSeconds / 60)} minutes ago` :
                     deltaSeconds < 60 * 60 * 12 ? new Date(date).toLocaleTimeString().replace(/:[^:]*$/gi, "") :
