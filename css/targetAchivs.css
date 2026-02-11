@@ -23,7 +23,7 @@
 }
 
 .target_section.fixed-size .target-container {
-  --cheevo-fixed-height: 7.5rem;
+  --cheevo-fixed-height: 6.5rem;
   max-height: calc(var(--max-count)*calc(var(--cheevo-fixed-height) + 1px) + 3px);
 }
 
@@ -386,6 +386,10 @@
 .list-item__text {
   font-size: 1rem;
   color: var(--font-color);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
 
 .target__buttons-container {

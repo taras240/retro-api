@@ -288,7 +288,7 @@ export class Notifications extends Widget {
             imageUrl: gameImageUrl(game.ImageIcon),
             title: game.Title,
             titleUrl: gameUrl(game.ID ?? game.GameID),
-            meta: `${game.ConsoleName}`,
+            meta: game.ConsoleName,
             icons: [
                 {
                     type: "players",

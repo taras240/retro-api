@@ -1275,8 +1275,12 @@ input[type="radio"]:checked+.context-menu_radio::after {
 }
 
 .media-item__meta {
-    white-space: nowrap;
-    text-wrap: nowrap;
+    /* white-space: nowrap;
+    text-wrap: nowrap; */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
 }
 
 .media-item__award {
