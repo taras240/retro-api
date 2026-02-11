@@ -26,21 +26,21 @@ export class Notifications extends Widget {
                         type: inputTypes.CHECKBOX,
                         id: "show-notification-game",
                         checked: this.uiProps.showGameAlerts,
-                        event: `onchange="ui.notifications.uiProps.showGameAlerts = this.checked;"`,
+                        onChange: (event) => this.uiProps.showGameAlerts = event.currentTarget.checked,
                     },
                     {
                         label: ui.lang.showAwardAlerts,
                         type: inputTypes.CHECKBOX,
                         id: "show-notification-award",
                         checked: this.uiProps.showAwardAlerts,
-                        event: `onchange="ui.notifications.uiProps.showAwardAlerts = this.checked;"`,
+                        onChange: (event) => this.uiProps.showAwardAlerts = event.currentTarget.checked,
                     },
                     {
                         label: ui.lang.showCheevoAlerts,
                         type: inputTypes.CHECKBOX,
                         id: "show-notification-cheevo",
                         checked: this.uiProps.showCheevoAlerts,
-                        event: `onchange="ui.notifications.uiProps.showCheevoAlerts = this.checked;"`,
+                        onChange: (event) => this.uiProps.showCheevoAlerts = event.currentTarget.checked,
                     }
                 ]
             },
