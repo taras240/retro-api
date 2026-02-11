@@ -854,8 +854,7 @@ export class AchievementsBlock extends Widget {
         <div class="header-container achievements-header_container">
           <div class="header-icon achievements-icon">
           </div>
-          <h2 class="widget-header-text achivs-header-text">${ui.lang.cheevosSectionName}${this.CLONE_NUMBER === 0 ? "" : " ~"
-            }</h2>
+          <h2 class="widget-header-text achivs-header-text">${ui.lang.cheevosSectionName}</h2>
             ${buttonsHtml.filter(this.SECTION_NAME)}
             ${buttonsHtml.sort(this.SECTION_NAME)}
             ${buttonsHtml.tweek()}

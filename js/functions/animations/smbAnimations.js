@@ -86,7 +86,6 @@ export function smb3UnlockAnimation() {
         else {
             characterPreset = characters.smbLuigi;
         }
-        characterPreset = characters.smbasLuigi;
 
         // character.style.backgroundPositionY = `-${character.offsetHeight}px`;
     }
@@ -261,9 +260,10 @@ export function smb3UnlockAnimation() {
 
             }
             cheevoBox.classList.add("mario-dumb");
+            unlockCallback?.();
             await showCoin(cheevoBox);
             cheevoBox.classList.remove("mario-dumb")
-            unlockCallback?.();
+
         }
 
         const targetPos = {

@@ -83,6 +83,10 @@
   z-index: 1;
 }
 
+.game-card__icons-container.hidden {
+  display: none;
+}
+
 /* .game-card__icons-container::after {
   content: "";
   position: absolute;
