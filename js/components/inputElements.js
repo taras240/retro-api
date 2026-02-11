@@ -1,5 +1,6 @@
 import { fromHtml } from "../functions/html.js";
 import { updateStateBox } from "../functions/stateBoxClick.js";
+import { ui } from "../script.js";
 
 
 const checkbox = ({ event, onChange, id, checked, label, name, isRadio }) => {
@@ -64,27 +65,10 @@ const searchInput = (props) => {
     return textInput({ ...props, isSearch: true });
 }
 
-const selectorInput = ({ id, label, selectValues }) => {
-    const selectButton = ({ name, checked, event, label, id, type }) => {
-        return `<li class="context-menu_item">
-                    <input ${[
-                id && `id="${id}"`,
-                `type="${type ? type : "radio"}"`,
-                name && `name="${name}"`,
-                checked && "checked"
-            ].filter(Boolean).join(" ")}></input>
-                    <label class="context-menu_${type ? type : "radio"}" for="${id}">
-                        ${label}
-                    </label>
-                </li>
-            `;
-    }
+const selectorInput = ({ id, label }) => {
     return `
-        <button class="select-button" id="${id}" onclick="this.classList.toggle('extended'); event.stopPropagation();">
-            <div class="select-label">${label}</div>
-            <div class="select-menu">
-                ${selectValues?.map(el => selectButton(el)).join("\n")}
-            </div>
+        <button class="select-button" id="${id}">
+            ${label}
         </button>
     `;
 }
@@ -108,9 +92,7 @@ const group = ({ label }) => {
     `
 }
 const colorInput = ({ value, id, label, onChange }) => {
-    const onColorChange = `const container = this.closest('.color-input__container');
-    if (container) container.style.setProperty('--color', this.value);
-     container.querySelector('.text-input').value = this.value;container.querySelector('.color-input').value = this.value;${onChange}`;
+
 
     return `
         <div class="color-input__container" style="--color:${value}">
@@ -122,7 +104,7 @@ const colorInput = ({ value, id, label, onChange }) => {
                 id="${id}" 
                 data-title="${label}" 
             />
-            ${textInput({ title: label, label: value, value, onChange: onColorChange })}
+            ${textInput({ title: label, label: value, value })}
         </div>
     `;
 }
@@ -134,33 +116,58 @@ const inputElement = (props) => {
     return inputElement;
 }
 const addEvents = (element, props) => {
+    const onColorChange = (event) => {
+        const textInput = event.currentTarget;
+        const container = textInput.closest('.color-input__container');
 
-    const { onChange, onClick, onInput } = props;
-    const input = element?.querySelector("input");
-    if (onChange) {
-        input?.addEventListener("change", (event) => {
-            const statebox = event.target.closest(".statebox");
-            if (statebox) {
-                const currentState = updateStateBox(statebox)
-                onChange(currentState);
-            }
-            else {
-                onChange(event);
-            }
+        if (container) {
+            container.style.setProperty('--color', textInput.value)
+        };
+    }
+
+    const { onChange, onClick, onInput, type } = props;
+    if (type === inputTypes.COLOR) {
+        const textInput = element.querySelector('input[type="text"]');
+        const colorInput = element.querySelector('input[type="color"]');
+
+        textInput?.addEventListener("input", (event) => {
+            onColorChange(event);
+            onChange(event);
         });
-    }
-    if (onInput) {
-        input?.addEventListener("input", onInput)
-    }
-    if (onClick) {
-        const button = element?.matches('button')
-            ? element
-            : element?.closest('button') || element?.querySelector('button');
+        colorInput?.addEventListener("change", (event) => {
+            const colorValue = event.currentTarget.value;
+            textInput.value = colorValue;
+            onChange(event);
+        });
 
 
-        button?.addEventListener('click', onClick);
-
     }
+    else {
+        const input = element?.querySelector("input");
+        if (onChange) {
+            input?.addEventListener("change", (event) => {
+                const statebox = event.target.closest(".statebox");
+                if (statebox) {
+                    const currentState = updateStateBox(statebox)
+                    onChange(currentState);
+                }
+                else {
+                    onChange(event);
+                }
+            });
+        }
+        if (onInput) {
+            input?.addEventListener("input", onInput)
+        }
+        if (onClick) {
+            const button = element?.matches('button')
+                ? element
+                : element?.closest('button') || element?.querySelector('button');
+
+            button?.addEventListener('click', onClick);
+        }
+    }
+
 }
 const inputHtml = (inputData) => {
     switch (inputData.type) {

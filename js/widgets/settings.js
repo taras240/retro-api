@@ -21,23 +21,26 @@ export class Settings extends Widget {
                         type: inputTypes.SELECTOR,
                         label: ui.lang.selectColors,
                         id: "settings_colors-selector",
-                        selectValues: [
-                            ...Object.keys(colorPresets).map(presetName => ({
-                                type: inputTypes.RADIO,
-                                name: "settings_color-scheme",
-                                id: `settings_color-scheme-${presetName}`,
-                                label: presetName,
-                                checked: configData.preset === presetName,
-                                onChange: () => configData.preset = presetName,
-                            })),
-                            {
-                                type: inputTypes.RADIO,
-                                name: "settings_color-scheme",
-                                id: `settings_color-scheme-custom`,
-                                label: "custom",
-                                checked: configData.preset === "custom",
-                                onChange: () => configData.preset = 'custom',
-                            }]
+                        onClick: (event) => ui.showContextmenu({
+                            event, menuItems: [
+                                ...Object.keys(colorPresets).map(presetName => ({
+                                    type: inputTypes.RADIO,
+                                    name: "settings_color-scheme",
+                                    id: `settings_color-scheme-${presetName}`,
+                                    label: presetName,
+                                    checked: configData.preset === presetName,
+                                    onChange: () => configData.preset = presetName,
+                                })),
+                                {
+                                    type: inputTypes.RADIO,
+                                    name: "settings_color-scheme",
+                                    id: `settings_color-scheme-custom`,
+                                    label: "custom",
+                                    checked: configData.preset === "custom",
+                                    onChange: () => configData.preset = 'custom',
+                                }]
+                        }),
+
                     },
                     {
                         type: inputTypes.CHECKBOX,
@@ -50,15 +53,17 @@ export class Settings extends Widget {
                         type: inputTypes.SELECTOR,
                         label: ui.lang.animType,
                         id: "settings_anims-variant",
-                        selectValues: [
-                            ...Object.values(ANIMATIONS).map(anim => ({
-                                type: inputTypes.RADIO,
-                                name: "settings_anim-variant",
-                                id: `settings_anim-variant-${anim}`,
-                                label: anim,
-                                checked: configData.bgAnimType === anim,
-                                onChange: () => configData.bgAnimType = anim,
-                            })),]
+                        onClick: (event) => ui.showContextmenu({
+                            event, menuItems: [
+                                ...Object.values(ANIMATIONS).map(anim => ({
+                                    type: inputTypes.RADIO,
+                                    name: "settings_anim-variant",
+                                    id: `settings_anim-variant-${anim}`,
+                                    label: anim,
+                                    checked: configData.bgAnimType === anim,
+                                    onChange: () => configData.bgAnimType = anim,
+                                }))]
+                        })
                     },
                     {
                         type: inputTypes.CHECKBOX,
@@ -84,35 +89,35 @@ export class Settings extends Widget {
                         id: "main-color-input",
                         label: "main color",
                         value: configData.customColors.mainColor,
-                        onChange: () => configData.customColors = { colorProperty: 'mainColor', color: this.value },
+                        onChange: (event) => configData.customColors = { colorProperty: 'mainColor', color: event.currentTarget.value },
                     },
                     {
                         type: inputTypes.COLOR,
                         id: "secondary-color-input",
                         label: "secondary color",
                         value: configData.customColors.secondaryColor,
-                        onChange: () => configData.customColors = { colorProperty: 'secondaryColor', color: this.value },
+                        onChange: (event) => configData.customColors = { colorProperty: 'secondaryColor', color: event.currentTarget.value },
                     },
                     {
                         type: inputTypes.COLOR,
                         id: "accent-color-input",
                         label: "accent color",
                         value: configData.customColors.accentColor,
-                        onChange: () => configData.customColors = { colorProperty: 'accentColor', color: this.value },
+                        onChange: (event) => configData.customColors = { colorProperty: 'accentColor', color: event.currentTarget.value },
                     },
                     {
                         type: inputTypes.COLOR,
                         id: "selection-color-input",
                         label: "selection color",
                         value: configData.customColors.selectionColor,
-                        onChange: () => configData.customColors = { colorProperty: 'selectionColor', color: this.value },
+                        onChange: (event) => configData.customColors = { colorProperty: 'selectionColor', color: event.currentTarget.value },
                     },
                     {
                         type: inputTypes.COLOR,
                         id: "font-color-input",
                         label: "font color",
                         value: configData.customColors.fontColor,
-                        onChange: () => configData.customColors = { colorProperty: 'fontColor', color: this.value },
+                        onChange: (event) => configData.customColors = { colorProperty: 'fontColor', color: event.currentTarget.value },
                     },
                 ]
             },
@@ -123,24 +128,27 @@ export class Settings extends Widget {
                         type: inputTypes.SELECTOR,
                         label: ui.lang.selectFont,
                         id: "settings_font-family",
-                        selectValues: [
-                            ...Object.keys(fonts).map(fontName => ({
-                                type: inputTypes.RADIO,
-                                name: "settings_font-family",
-                                id: `settings_font-family-${fontName}`,
-                                label: fontName,
-                                checked: configData.fontFamilyName === fontName,
-                                onChange: () => configData.fontFamilyName = fontName,
-                            })),
-                            // {
-                            //     type: inputTypes.RADIO,
-                            //     name: "settings_font-family",
-                            //     id: "settings_font-family-Custom",
-                            //     label: "Custom",
-                            //     checked: ui.settings.FONT_NAME === "custom",
-                            //     event: "onchange=\"ui.settings.selectFont('custom');\"",
-                            // },
-                        ]
+                        onClick: (event) => ui.showContextmenu({
+                            event, menuItems: [
+                                ...Object.keys(fonts).map(fontName => ({
+                                    type: inputTypes.RADIO,
+                                    name: "settings_font-family",
+                                    id: `settings_font-family-${fontName}`,
+                                    label: fontName,
+                                    checked: configData.fontFamilyName === fontName,
+                                    onChange: () => configData.fontFamilyName = fontName,
+                                }))
+
+                                // {
+                                //     type: inputTypes.RADIO,
+                                //     name: "settings_font-family",
+                                //     id: "settings_font-family-Custom",
+                                //     label: "Custom",
+                                //     checked: ui.settings.FONT_NAME === "custom",
+                                //     event: "onchange=\"ui.settings.selectFont('custom');\"",
+                                // },
+                            ]
+                        })
                     },
                     // {
                     //     type: inputTypes.SEARCH_INPUT,

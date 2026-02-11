@@ -1009,6 +1009,7 @@ input[type="radio"]+.context-menu_radio::after {
     background-color: var(--font-color);
     opacity: 0.8;
     mask-size: cover;
+    pointer-events: none;
 }
 
 .context-menu_statebox[data-state="0"]::after,
