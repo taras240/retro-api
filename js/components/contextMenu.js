@@ -36,7 +36,6 @@ const generateContextMenu = ({ menuItems, sectionCode = "", isSubmenu = false })
     if (!ui.AUTOCLOSE_CONTEXTMENU) {
         contextElement.addEventListener("click", (e) => e.stopPropagation());
     }
-    // contextElement.querySelectorAll(".context-menu_statebox")?.forEach(statebox => statebox.addEventListener("click", stateboxClick));
     return contextElement;
 }
 const ContextInput = (props) => {
@@ -47,24 +46,6 @@ const ContextInput = (props) => {
         </li>
         `);
     addEvents(input, props);
-    // if (onChange) {
-    //     input?.querySelector("input")?.addEventListener("change", (event) => {
-    //         const statebox = event.target.closest(".context-statebox");
-    //         if (statebox) {
-    //             const currentState = updateStateBox(statebox)
-    //             onChange(currentState);
-    //         }
-    //         else {
-    //             onChange(event);
-    //         }
-    //     });
-    // }
-    // if (onInput) {
-    //     input?.querySelector("input")?.addEventListener("input", (event) => onInput(event))
-    // }
-
-    // if (onClick) input?.querySelector("button")?.addEventListener("click", item.onClick);
-
     return input;
 
 }
@@ -141,12 +122,5 @@ const contextInputs = {
                 ${label ?? "NOLABEL"}
             </button>`,
 }
-function stateboxClick(event) {
-    // const statebox = event.target;
-    // const prevState = +statebox.dataset.state;
-    // const state = prevState === 1 ? -1 : prevState + 1;
-    // const filterName = statebox.dataset.value;
-    // statebox.dataset.state = state;
-    // statebox.dataset.event && new Function("event", "state", "filterName", statebox.dataset.event)(event, state, filterName);
-}
+
 export { generateContextMenu }

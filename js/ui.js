@@ -49,7 +49,7 @@ export class UI {
   STICK_MARGIN = 1;
   STICK_TOLERANCE = 7;
   hltb = {};
-  isTest = true;
+  // isTest = true;
   gamePopup = () => gamePropsPopup();
   constructor() {
     this.initUI();
@@ -365,10 +365,9 @@ export class UI {
     const setContextPosition = () => {
       this.contextMenu.style.left = event.x + "px";
       this.contextMenu.style.top = event.y + "px";
-
-      (window.innerWidth - event.x < this.contextMenu.offsetWidth * 3) &&
+      (window.innerWidth - event.x < this.contextMenu.offsetWidth * 2) &&
         (this.contextMenu.classList.add("to-left"));
-      (window.innerHeight - event.y < this.contextMenu.offsetHeight * 2)
+      (window.innerHeight - event.y < this.contextMenu.offsetHeight + 50)
         && (this.contextMenu.classList.add("to-top"));
     }
 
