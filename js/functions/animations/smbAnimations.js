@@ -216,7 +216,7 @@ export function smb3UnlockAnimation() {
         const personWidth = personHeight * characterPreset.spriteWidth / characterPreset.spriteHeight;
         character.style.setProperty("--width", `${personWidth}px`);
         character.style.setProperty("--height", `${personHeight}px`);
-        character.style.backgroundImage = `url(../assets/img/mario_sprites/${characterPreset.spriteFile})`
+        character.style.backgroundImage = `url(./assets/img/mario_sprites/${characterPreset.spriteFile})`
         character.classList.add("person-container");
 
         return character;
