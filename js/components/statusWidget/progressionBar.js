@@ -6,13 +6,14 @@ import { badgeElements } from "../badges.js";
 const mainClass = "rp__progression";
 
 export const updateProgressionBar = (container, gameData, isHardMode = true) => {
+    const mainSetID = gameData.availableSubsets?.Main;
     const isEarned = (cheevo) => cheevo.isEarnedHardcore ||
         (cheevo.isEarned && !isHardMode);
     const progressionMessage = (focusCheevo, focusIndex, cheevos) => {
         let message;
         if (focusIndex >= 0) {
             message = `${badgeElements.gold(`${focusIndex + 1}/${cheevos.length}`)} ${focusCheevo.Description}`;
-        } else if (gameData?.progressionAward) {
+        } else if (gameData?.progressionAward || gameData.subsetsData?.[mainSetID]?.progressionAward) {
             message = ui.lang.gameBeatenMsg;
         } else {
             message = ui.lang.noProgressionMsg;
@@ -37,7 +38,7 @@ export const updateProgressionBar = (container, gameData, isHardMode = true) => 
     }
     if (!gameData) return "n/a";
 
-    const cheevos = Object.values(gameData.Achievements)
+    const cheevos = Object.values(gameData.AllAchievements)
         .filter(c => filterBy.progression(c))
         .sort((a, b) => sortBy.progression(a, b));
 
