@@ -20,8 +20,15 @@ export class APIWorker {
   _subsetsList;
   async getSubsets(gameID) {
     if (!this._subsetsList) {
-      this._subsetsList = await fetch(`./json/games/all-subsets.json`).then(resp => resp.json());
+      const subsets = await fetch(`./json/games/all-subsets.json`).then(resp => resp.json());
+      this._subsetsList = {};
+      subsets.forEach(gameSets => {
+        Object.values(gameSets).forEach(setID => {
+          this._subsetsList[setID] = gameSets;
+        })
+      })
     }
+
     const subsets = this._subsetsList[gameID] ?? { Main: gameID };
     return subsets;
   }

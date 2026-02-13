@@ -495,10 +495,10 @@ export class Settings extends Widget {
         label: ui.lang.subsets,
         elements: Object.entries(watcher.GAME_DATA?.availableSubsets).map(([subsetName, subsetID]) => {
             subsetID = parseInt(subsetID);
-            const isMainSet = subsetName === "Main";
-            if (isMainSet || !subsetID) return "";
+            const isCurrentSet = subsetID === watcher.GAME_DATA.ID;
+            if (isCurrentSet || !subsetID) return "";
             const isVisible = config.gameConfig().visibleSubsets?.includes(subsetID);
-            const checked = isMainSet || isVisible;
+            const checked = isCurrentSet || isVisible;
             return {
                 type: inputTypes.CHECKBOX,
                 name: "subset-select",

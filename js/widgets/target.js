@@ -307,7 +307,10 @@ export class Target extends Widget {
         elements: [
             (() => {
                 const setID = watcher.GAME_DATA.ID;
-                const setName = "Main";
+                let setName = "Main";
+                Object.entries(watcher.GAME_DATA.availableSubsets).forEach(([name, id]) => {
+                    if (id == setID) setName = name;
+                })
                 return {
                     type: inputTypes.CHECKBOX,
                     name: `${this.sectionID}-set`,
