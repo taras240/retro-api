@@ -652,6 +652,10 @@ export class AchievementsBlock extends Widget {
         const unlockChevo = (cheevoElement, cheevo) => {
             cheevoElement.classList.add("earned");
             cheevoElement.classList.toggle("hardcore", cheevo.isEarnedHardcore);
+            cheevoElement.classList.remove("hidden");
+
+            cheevo.isEarnedHardcore && (cheevoElement.dataset.DateEarnedHardcore = cheevo.DateEarnedHardcore);
+            cheevoElement.dataset.DateEarned = cheevo.DateEarned;
         }
         await delay(100);
         this.stopAutoScroll();
@@ -674,8 +678,7 @@ export class AchievementsBlock extends Widget {
             // if (this.SORT_NAME == sortMethods.latest && !this.IS_GROUPING) {
             //     await this.moveToTop(cheevoElement);
             // }
-            cheevo.DateEarnedHardcore && (cheevoElement.dataset.DateEarnedHardcore = cheevo.DateEarnedHardcore);
-            cheevoElement.dataset.DateEarned = cheevo.DateEarned;
+
         };
         await delay(2000);
         this.container.scrollTo({
