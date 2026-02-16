@@ -4,6 +4,7 @@ import { Widget } from "./widget.js";
 import { sortBy } from "../functions/sortFilter.js";
 import { generateBadges } from "../components/badges.js";
 import { gameImageUrl, gameImageUrlByID, gameUrl } from "../functions/raLinks.js";
+import { gamesFromJson } from "../functions/gamesJson.js";
 
 
 export class GameList extends Widget {
@@ -64,8 +65,8 @@ export class GameList extends Widget {
     async generateGamesSet() {
         const gameID = this.gameSetID = watcher.GAME_DATA?.ID;
         const gamesSet = await loadGamesSet(gameID);
+        if (!gamesSet) return;
         const gamesAwards = (await apiWorker.completionProgress())?.Results;
-
         const header = this.section.querySelector(".widget-header-text");
         const setList = this.section.querySelector(".widget-content__container");
 
@@ -90,7 +91,7 @@ export class GameList extends Widget {
             return html;
         }, "");
         header.innerHTML = `${gamesSet.name} Series`
-        setList.innerHTML = `<ul class="flex-main-list">${gamesHtml}<ul>`;
+        setList.innerHTML = `<ul class="flex-main-list column-list">${gamesHtml}<ul>`;
         setList.querySelector(".focus")?.scrollIntoView();
     }
 }
@@ -102,15 +103,18 @@ const loadGamesSet = async (gameID = 1) => {
     const setNames = Object.keys(watcher.gamesSets);
     for (let i = 0; i < setNames.length; i++) {
         const setName = setNames[i];
-        if (watcher.gamesSets[setName].find(g => g.ID === gameID))
-            return { name: setName, value: watcher.gamesSets[setName] };
+        if (watcher.gamesSets[setName].find(g => g.ID === gameID)) {
+            const setData = { name: setName, value: watcher.gamesSets[setName] }
+            return setData;
+        }
     }
     return undefined;
 }
+
 const loadGameInfo = async (gameID) => {
     if (!ui.gamesExtInfo) {
-        const infoResponce = await fetch(`./json/games/all_ext.json`);
-        ui.gamesExtInfo = await infoResponce.json();
+        const gamesInfo = await gamesFromJson();
+        ui.gamesExtInfo = gamesInfo;
     }
     return gameID ? ui.gamesExtInfo.find(g => g.ID == gameID) : undefined;
 }

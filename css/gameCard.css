@@ -337,6 +337,8 @@
   grid-template-columns: auto 1fr;
   transition: 0.2s;
   background-color: var(--secondary-color);
+  flex-shrink: 0;
+  width: 100%;
 
 }
 

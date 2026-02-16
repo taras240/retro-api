@@ -1081,7 +1081,13 @@ input[type="radio"]:checked+.context-menu_radio::after {
     align-content: flex-start;
     gap: 1px;
     transition: none;
-    flex: 1;
+}
+
+.column-list.flex-main-list {
+    height: 100%;
+    flex-direction: column;
+    width: 100%;
+    flex-wrap: nowrap;
 }
 
 .flex-column-list {

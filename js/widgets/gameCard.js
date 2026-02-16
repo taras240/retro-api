@@ -11,7 +11,6 @@ import { resizeEvent } from "../functions/resizingWidget.js";
 import { formatDate, formatDateTime, secondsToBadgeString } from "../functions/time.js";
 import { gamePropsPopup } from "../components/gamePropsPopup.js";
 import { DIFFICULTY_NAMES } from "../enums/difficulty.js";
-import { hltbHeaders } from "../enums/hltb.js";
 import { gameImageUrl, gameUrl } from "../functions/raLinks.js";
 import { inputTypes } from "../components/inputElements.js";
 import { buttonsHtml } from "../components/htmlElements.js";
