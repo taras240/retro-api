@@ -474,19 +474,19 @@ export class UI {
             type: inputTypes.BUTTON,
             id: "dialog-download",
             label: ui.lang.download,
-            event: `onclick="ui.exportSettingsToJson({direction:'file'});"`,
+            onClick: () => ui.exportSettingsToJson({ direction: 'file' }),
           },
           {
             type: inputTypes.BUTTON,
             id: "dialog-copy",
             label: ui.lang.copyToClipboard,
-            event: `onclick="ui.exportSettingsToJson({direction:'clipboard'});"`,
+            onClick: () => ui.exportSettingsToJson({ direction: 'clipboard' }),
           },
           {
             type: inputTypes.BUTTON,
             id: "dialog-discord",
             label: ui.lang.sendToDS,
-            event: `onclick="ui.exportSettingsToJson({direction:'discord'});"`,
+            onClick: () => ui.exportSettingsToJson({ direction: 'discord' }),
           },
         ]
       });

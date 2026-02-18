@@ -96,8 +96,8 @@ export class Config {
     parseLog: false,
     showCheevoOnHover: false,
     loadLastSubset: false,
-    startOnLoad: false,
-    pauseIfOffline: false,
+    startOnLoad: true,
+    pauseIfOffline: true,
     watcherMode: WATCHER_MODES.auto,
 
   }

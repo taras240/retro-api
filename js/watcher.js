@@ -14,7 +14,7 @@ export class Watcher {
     IS_HARD_MODE = true;
     isWatching = false;
     RECENT_ACHIVES_RANGE_MINUTES = 10;//Math.max(config.updateDelay * 5 / 60, 5);
-    CHECK_FOR_ONLINE_DELAY_MS = 3 * 60 * 1000; // If user offline and wathing is ON, it check for online with delay
+    CHECK_FOR_ONLINE_DELAY_MS = 2 * 60 * 1000; // If user offline and wathing is ON, it check for online with delay
     CHECK_FOR_ONLINE_AFTER_SILENCE_MS = 3 * 60 * 1000; // If there is no activity for this time, it will be check for online
     watcherInterval;
     playTime = {
@@ -447,9 +447,9 @@ export class Watcher {
                 }, 1000)
             }
             //Set autoupdate interval
-            this.apiTrackerInterval = setInterval(() => {
+            this.apiTrackerInterval = setInterval(async () => {
+                await this.checkApiUpdates();
                 widgetsOnTickEvent();
-                this.checkApiUpdates();
             }, configData.updateDelaySec * 1000);
         }
         const widgetsOnStartEvent = () => {
