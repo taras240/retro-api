@@ -2,7 +2,7 @@ import { ONLINE_STATUS } from "../../enums/onlineStatus.js";
 
 export function onlineChecker({ getLastPlayedFunc, currentStatus, options = {} } = {}) {
     const rpTimeout = typeof options.rpTimeout === 'number' ? options.rpTimeout : 3 * 60 * 1000; // default 5 minutes
-    const lastPlayedTimeout = typeof options.lastPlayedTimeout === 'number' ? options.lastPlayedTimeout : 3 * 60 * 1000; // default 5 minutes
+    const lastPlayedTimeout = typeof options.lastPlayedTimeout === 'number' ? options.lastPlayedTimeout : 5 * 60 * 1000; // default 5 minutes
 
     const parseDate = (value) => {
         if (!value) return null;
