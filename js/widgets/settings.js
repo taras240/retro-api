@@ -509,13 +509,13 @@ export class Settings extends Widget {
                 ]
             },
 
-            {
-                label: ui.lang.startOnLoad,
-                type: inputTypes.CHECKBOX,
-                id: "context_show-start-on-load",
-                checked: configData.startOnLoad,
-                onChange: (event) => configData.startOnLoad = event.currentTarget.checked,
-            },
+            // {
+            //     label: ui.lang.startOnLoad,
+            //     type: inputTypes.CHECKBOX,
+            //     id: "context_show-start-on-load",
+            //     checked: configData.startOnLoad,
+            //     onChange: (event) => configData.startOnLoad = event.currentTarget.checked,
+            // },
         ]
     }
     contextSetsMenu = () => Object.values(watcher.GAME_DATA?.availableSubsets ?? {})?.length > 1 ? {
