@@ -70,6 +70,21 @@
   z-index: 2;
 }
 
+.game-card_image-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: var(--preview-bg);
+  background-size: cover;
+  background-position: center;
+  opacity: 0.8;
+  filter: blur(2px);
+  z-index: -1;
+}
+
 .game-card__icons-container {
   position: absolute;
   bottom: 0;
@@ -163,7 +178,6 @@
 }
 
 
-
 .game-card_image {
   width: 100%;
   object-position: center;
@@ -172,6 +186,16 @@
   image-rendering: auto;
   /* border-radius: var(--border-radius); */
   pointer-events: none;
+}
+
+.game-card_image[data-size="cover"] {
+  object-fit: cover;
+}
+
+.game-card_image[data-size="contain"] {
+  object-fit: contain;
+  border-radius: var(--border-radius);
+  filter: drop-shadow(0 0 3rem black);
 }
 
 .left-margin-preview .game-card_image {

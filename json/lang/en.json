@@ -254,5 +254,6 @@
     "showCheevoAlerts": "Cheevo",
     "showAwardAlerts": "Award",
     "showGameAlerts": "Game Launch",
-    "watcherMode": "Mode"
+    "watcherMode": "Mode",
+    "previewSize": "Preview Size"
 }

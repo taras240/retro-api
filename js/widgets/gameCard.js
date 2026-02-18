@@ -17,7 +17,10 @@ import { buttonsHtml } from "../components/htmlElements.js";
 import { completionMsg } from "../components/statusWidget/progressBar.js";
 import { progressTypes } from "../enums/progressBar.js";
 import { getCheevosCount, getPointsCount, getRetropointsCount } from "../functions/gameProperties.js";
-
+const PREVIEW_SIZE = {
+    cover: "cover",
+    contain: "contain"
+}
 export class GameCard extends Widget {
     widgetIcon = {
         description: "game info widget",
@@ -39,6 +42,7 @@ export class GameCard extends Widget {
         showCheevosProgress: false,
         showRetropointsProgress: false,
         showPointsProgress: false,
+        previewSize: PREVIEW_SIZE.cover,
         //properties below are disabled :(
         // showCompletion: true,
         // showDeveloper: true,
@@ -67,6 +71,19 @@ export class GameCard extends Widget {
                         label: ui.lang[previewKey],
                         checked: this.uiProps.previewType === this.previewTypes[previewKey],
                         onChange: () => this.uiProps.previewType = this.previewTypes[previewKey],
+                    })),
+                ]
+            },
+            {
+                label: ui.lang.previewSize,
+                elements: [
+                    ...Object.keys(PREVIEW_SIZE).map(previewKey => ({
+                        type: inputTypes.RADIO,
+                        name: `game-card_preview-size`,
+                        id: `game-card_preview-size-${previewKey}`,
+                        label: previewKey,
+                        checked: this.uiProps.previewSize === PREVIEW_SIZE[previewKey],
+                        onChange: () => this.uiProps.previewSize = PREVIEW_SIZE[previewKey],
                     })),
                 ]
             },
@@ -189,24 +206,28 @@ export class GameCard extends Widget {
         this.badgesContainer.classList.toggle("hidden", !this.uiProps.showBadges);
         this.section.dataset.award = award;
         this.section.dataset.progressionAward = progressionAward;
-        this.section.classList.toggle("left-margin-preview", boxArtHasLeftMargin(ConsoleID));
+        // this.section.classList.toggle("left-margin-preview", boxArtHasLeftMargin(ConsoleID));
         this.section.classList.toggle("compact-header", !this.uiProps.showHeader);
         this.section.classList.toggle("progress-count-hidden", !this.uiProps.showCheevosProgress);
         this.section.classList.toggle("progress-points-hidden", !this.uiProps.showPointsProgress);
         this.section.classList.toggle("progress-rp-hidden", !this.uiProps.showRetropointsProgress);
         this.section.classList.toggle("title-hidden", !this.uiProps.showTitle);
-        this.iconsContainer?.classList.toggle("hidden", !this.uiProps.showIcons)
+        this.iconsContainer?.classList.toggle("hidden", !this.uiProps.showIcons);
+        let previewSrc;
         switch (this.uiProps.previewType) {
             case this.previewTypes.ingame:
-                this.preview.src = gameImageUrl(watcher?.GAME_DATA?.ImageIngame);
+                previewSrc = gameImageUrl(watcher?.GAME_DATA?.ImageIngame);
                 break;
             case this.previewTypes.titleScreen:
-                this.preview.src = gameImageUrl(watcher?.GAME_DATA?.ImageTitle);
+                previewSrc = gameImageUrl(watcher?.GAME_DATA?.ImageTitle);
                 break;
             default:
-                this.preview.src = gameImageUrl(watcher?.GAME_DATA?.ImageBoxArt);
+                previewSrc = gameImageUrl(watcher?.GAME_DATA?.ImageBoxArt);
                 break;
         }
+        this.preview.src = previewSrc;
+        this.preview.dataset.size = this.uiProps.previewSize;
+        this.section.querySelector(".game-card_image-container")?.style.setProperty("--preview-bg", `url(${previewSrc})`);
     }
     addEvents() {
         super.addEvents();
