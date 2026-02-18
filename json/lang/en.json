@@ -253,5 +253,6 @@
     "alertTypes": "Alert Types",
     "showCheevoAlerts": "Cheevo",
     "showAwardAlerts": "Award",
-    "showGameAlerts": "Game Launch"
+    "showGameAlerts": "Game Launch",
+    "previewSize": "Preview Size"
 }
