@@ -132,7 +132,7 @@ export class Watcher {
             return;
         }
 
-        const status = this.online.check();
+        const status = await this.online.check();
         console.log(`Online status: ${status}, Last seen online: ${this.online.getLastSeen()}`);
         if (status === ONLINE_STATUS.online) {
             doOnline();
