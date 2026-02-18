@@ -2,20 +2,20 @@ import { dialogWindow } from "./components/dialogWindow.js";
 import { ALERT_TYPES } from "./enums/alerts.js";
 import { CHEEVO_TYPES } from "./enums/cheevoTypes.js";
 import { GAME_AWARD_TYPES } from "./enums/gameAwards.js";
+import { ONLINE_STATUS } from "./enums/onlineStatus.js";
+import { WATCHER_MODES } from "./enums/watcherModes.js";
 import { delay } from "./functions/delay.js";
 import { sendDiscordAlert } from "./functions/discord.js";
 import { readLog } from "./functions/logParser.js";
 import { formatTime } from "./functions/time.js";
+import { onlineChecker } from "./functions/watcher/onlineStatus.js";
 import { apiWorker, config, configData, ui, watcher } from "./script.js";
 export class Watcher {
-    RP_DATA = { text: "", lastChange: "" };
-    IS_ONLINE = true;
     IS_HARD_MODE = true;
-    IS_WATCHING = false;
+    isWatching = false;
     RECENT_ACHIVES_RANGE_MINUTES = 10;//Math.max(config.updateDelay * 5 / 60, 5);
-    CHECK_FOR_ONLINE_DELAY_MS = 1 * 60 * 1000; // If user offline and wathing is ON, it check for online with delay
+    CHECK_FOR_ONLINE_DELAY_MS = 3 * 60 * 1000; // If user offline and wathing is ON, it check for online with delay
     CHECK_FOR_ONLINE_AFTER_SILENCE_MS = 3 * 60 * 1000; // If there is no activity for this time, it will be check for online
-
     watcherInterval;
     playTime = {
         totalGameTime: 0,
@@ -41,6 +41,10 @@ export class Watcher {
         this.initPlayTime();
         ui.gameChangeEvent(isNewGame);
     }
+    get isOnline() {
+        const status = this.online.getStatus();
+        return status === ONLINE_STATUS.online;
+    }
     sessionData = {
         points: 0,
         retropoints: 0,
@@ -58,6 +62,10 @@ export class Watcher {
     }
     constructor() {
         this.isActive = false;
+        this.online = onlineChecker({
+            getLastPlayedFunc: async () => (await apiWorker.getRecentlyPlayedGames({ count: 1 }))[0],
+            currentStatus: ONLINE_STATUS.offline,
+        });
     }
     initPlayTime = () => {
         const gameID = this.GAME_DATA?.ID ?? 0;
@@ -113,77 +121,79 @@ export class Watcher {
         }
     }
     async checkForOnline() {
-        const parseDate = (UTCTime) => {
-            const UTCReg = /(\+00\:00$)|(z$)/gi;
-            !UTCReg.test(UTCTime) && (UTCTime += "+00:00"); // Mark time as UTC Time   
-            const date = new Date(UTCTime);
-            return date
-        }
+        const now = new Date();
         const doOnline = () => {
-            this.RP_DATA.lastChange = new Date();
-            this.zeroCheckTime = new Date();
-            !this.IS_ONLINE && (this.IS_ONLINE = true, this.checkApiUpdates())
-            this.IS_ONLINE = true;
-
+            this.zeroCheckTime = now;
+            this.checkApiUpdates();
         }
-        if (!configData.pauseIfOnline) {
+        if (!configData.pauseIfOffline && !this.isOnline) {
+            this.online.setOnline();
             doOnline();
             return;
         }
-        console.log("Checking for online...");
-        const lastPlayedGame = (await apiWorker.getRecentlyPlayedGames({ count: 1 }))[0];
-        const LastPlayedDate = parseDate(lastPlayedGame.LastPlayed);
-        if (new Date() - LastPlayedDate < 5 * 60 * 1000) {
+
+        const status = this.online.check();
+        console.log(`Online status: ${status}, Last seen online: ${this.online.getLastSeen()}`);
+        if (status === ONLINE_STATUS.online) {
             doOnline();
         }
         else {
-            this.IS_ONLINE = false;
-            if (!this.IS_WATCHING) return;
+            if (!this.isWatching) return;
             setTimeout(() => this.checkForOnline(), this.CHECK_FOR_ONLINE_DELAY_MS)
         }
     }
     apiTrackerInterval;
     async checkApiUpdates(isStart = false) {
+        const now = new Date();
         const isPointsChanged = (raProfileInfo) => {
             const isPointsChanged = raProfileInfo.TotalPoints != this.userData.points || raProfileInfo.TotalSoftcorePoints != this.userData.softpoints;
 
             return isPointsChanged;
         }
+        const onPointsChanged = (raProfileInfo) => {
+            this.updateUserData({ raProfileInfo });
+            this.updateCheevos();
+            this.online.setOnline();
+            this.zeroCheckTime = now;
+        }
+        const isGameChanged = (raProfileInfo) => {
+            const gameChanged = (raProfileInfo.LastGameID != this.GAME_DATA?.ID);
+            return gameChanged || isStart;
+        }
+        const onGameChanged = async (raProfileInfo) => {
+            configData.gameID = raProfileInfo.LastGameID;
+            if (isStart) {
+                this.updateUserData({ raProfileInfo });
+            }
+            this.online.setOnline();
+            await this.updateGameData(raProfileInfo.LastGameID);
+            ui.showGameChangeAlerts(isStart);
 
-        if (!isStart && (!this.IS_ONLINE)) return;
+        }
+        if (!isStart && (configData.pauseIfOffline && !this.isOnline)) return;
 
         const raProfileInfo = await apiWorker.getProfileInfo({});
-        //PrentGameID for Saved set update
-        const isGameChanged = (raProfileInfo.LastGameID != this.GAME_DATA?.ID); //&& (raProfileInfo.LastGameID != this.GAME_DATA?.ParentGameID);
-        if (isGameChanged || isStart) {
-            configData.gameID = raProfileInfo.LastGameID;
-            isStart && this.updateUserData({ raProfileInfo });
 
-            await this.updateGameData(raProfileInfo.LastGameID);
-
-            ui.showGameChangeAlerts(isStart);
+        if (isGameChanged(raProfileInfo)) {
+            await onGameChanged(raProfileInfo);
         }
         if (isPointsChanged(raProfileInfo)) {
-            this.updateUserData({ raProfileInfo });//!<--------------
-            this.updateCheevos();
-            this.RP_DATA.lastChange = new Date();
-            this.zeroCheckTime = new Date();
+            onPointsChanged(raProfileInfo);
         }
-        else if (this.GAME_DATA.hasZeroPoints && new Date() - this.zeroCheckTime > 60 * 1000) {
+        else if (this.GAME_DATA.hasZeroPoints && now - this.zeroCheckTime > 60 * 1000) {
             this.updateCheevos();
-            this.zeroCheckTime = new Date();
+            this.zeroCheckTime = now;
         }
 
         const richPresence = raProfileInfo.RichPresenceMsg;
         ui.updateWidgetsRichPresence(richPresence);
+        this.online.updateWithRPMessage({ richPresence })
 
-        if (richPresence !== this.RP_DATA.text || !configData.pauseIfOnline) {
-            this.RP_DATA.lastChange = new Date();
-            this.RP_DATA.text = raProfileInfo.RichPresenceMsg;
-            this.IS_ONLINE = true;
-        }
-        else if (!isStart && this.RP_DATA.lastChange && new Date() - this.RP_DATA.lastChange > this.CHECK_FOR_ONLINE_AFTER_SILENCE_MS) {
+        if (!this.isOnline && configData.pauseIfOffline) {
             await this.checkForOnline();
+        }
+        else if (!configData.pauseIfOffline) {
+            this.online.setOnline();
         }
     }
     isLogOK = false;
@@ -395,9 +405,29 @@ export class Watcher {
 
 
     }
+    async autostart() {
+        switch (configData.watcherMode) {
+            case (WATCHER_MODES.auto):
+            case (WATCHER_MODES.autoStart):
+                this.start();
+                break;
+
+            default:
+                this.updateGameData();
+                break;
+        }
+        setTimeout(() => {
+            apiWorker.getUserSummary({}).then(userSummary => {
+                this.updateUserData({ userSummary })
+                ui.userInfo?.update({ userSummary });
+                ui.stats?.initialSetStats({ userSummary });
+                // this.statusPanel?.updateStatistics({ userSummary });
+            })
+        }, 3000);
+    }
     start() {
         const increasePlayTime = () => {
-            if (!this.IS_ONLINE) return;
+            if (!this.isOnline) return;
             this.playTime.totalGameTime++;
             this.playTime.gameTime++;
             this.playTime.sessionTime++;
@@ -410,7 +440,7 @@ export class Watcher {
         const startApiWorker = () => {
             //Updating current game and getting cheevos
             this.checkApiUpdates(true);
-            this.IS_WATCHING = true;
+            this.isWatching = true;
             if (configData.parseLog) {
                 this.logWatcherInterval = setInterval(() => {
                     this.checkLogUpdates();
@@ -445,7 +475,7 @@ export class Watcher {
     stop() {
         clearInterval(this.apiTrackerInterval);
         clearInterval(this.logWatcherInterval);
-        this.IS_WATCHING = false;
+        this.isWatching = false;
         this.isActive = false;
         this.playTime.totalGameTime && this.savePlayTime();
         this.watcherInterval && clearInterval(this.watcherInterval);
@@ -498,60 +528,5 @@ export class Watcher {
 
         return formatTime(time, true);
     }
-    onlineStatus = () => {
-        const parseDate = (UTCTime) => {
-            const UTCReg = /(\+00\:00$)|(z$)/gi;
-            !UTCReg.test(UTCTime) && (UTCTime += "+00:00"); // Mark time as UTC Time   
-            const date = new Date(UTCTime);
-            return date
-        }
-        let lastRPMessage;
-        let lastRPMessageDate;
-        let status = "offline";
-        let lastCheckOnline;
-        let lastSeenOnline;
-        //  const doOnline = () => {
-        //             this.RP_DATA.lastChange = new Date();
-        //             this.zeroCheckTime = new Date();
-        //             !this.IS_ONLINE && (this.IS_ONLINE = true, this.checkApiUpdates())
-        //             this.IS_ONLINE = true;
 
-        //         }
-        //         if (!configData.pauseIfOnline) {
-        //             doOnline();
-        //             return;
-        //         }
-        const check = async ({ lastPlayedGame, richPresence }) => {
-            currentDate = new Date();
-            if (richPresence) {
-                if (richPresence !== lastRPMessage) {
-                    isOnline = true;
-                    status = "online";
-                    lastRPMessageDate = currentDate;
-                }
-                else if (currentDate - lastSeenOnline > 5 * 60 * 100) {
-                    isOnline = "false";
-
-                }
-            }
-            lastPlayedGame = (await apiWorker.getRecentlyPlayedGames({ count: 1 }))?.[0] ?? {};
-            const lastPlayedDate = parseDate(lastPlayedGame.LastPlayed);
-            const currentDate = new Date();
-            const isOnline = currentDate - lastPlayedDate < 5 * 60 * 1000;
-            status = isOnline ? "online" : "offline";
-            lastCheckOnline = currentDate;
-
-
-
-
-
-
-            return status;
-
-
-            // this.IS_ONLINE = false;
-            // if (!this.IS_WATCHING) return;
-
-        }
-    }
 }

@@ -8,6 +8,7 @@ import { colorPresets } from "../enums/colorPresets.js";
 import { fonts } from "../enums/fontsPreset.js";
 import { ANIMATIONS } from "../enums/bgAnimations.js";
 import { fromHtml } from "../functions/html.js";
+import { WATCHER_MODES } from "../enums/watcherModes.js";
 export class Settings extends Widget {
     widgetIcon = {
         iconClass: "settings-icon",
@@ -213,19 +214,45 @@ export class Settings extends Widget {
             {
                 label: ui.lang.autoupdate,
                 elements: [
+                    // {
+                    //     type: inputTypes.CHECKBOX,
+                    //     label: ui.lang.startOnLoad,
+                    //     id: "settings_start-on-load",
+                    //     checked: configData.startOnLoad,
+                    //     onChange: (event) => configData.startOnLoad = event.currentTarget.checked,
+                    // },
+                    // {
+                    //     type: inputTypes.CHECKBOX,
+                    //     label: ui.lang.pauseIfOffline,
+                    //     id: "settings_autopause",
+                    //     checked: configData.pauseIfOffline,
+                    //     onChange: (event) => configData.pauseIfOffline = event.currentTarget.checked,
+                    // },
                     {
-                        type: inputTypes.CHECKBOX,
-                        label: ui.lang.startOnLoad,
-                        id: "settings_start-on-load",
-                        checked: configData.startOnLoad,
-                        onChange: (event) => configData.startOnLoad = event.currentTarget.checked,
-                    },
-                    {
-                        type: inputTypes.CHECKBOX,
-                        label: ui.lang.pauseIfOffline,
-                        id: "settings_autopause",
-                        checked: configData.pauseIfOnline,
-                        onChange: (event) => configData.pauseIfOnline = event.currentTarget.checked,
+                        type: inputTypes.SELECTOR,
+                        label: ui.lang.watcherMode,
+                        id: "settings_watcher-mode",
+                        onClick: (event) => ui.showContextmenu({
+                            event, menuItems: [
+                                ...Object.keys(WATCHER_MODES).map(mode => ({
+                                    type: inputTypes.RADIO,
+                                    name: "settings_watcher-mode",
+                                    id: `settings_watcher-mode-${mode}`,
+                                    label: mode,
+                                    checked: configData.watcherMode === mode,
+                                    onChange: () => configData.watcherMode = mode,
+                                }))
+
+                                // {
+                                //     type: inputTypes.RADIO,
+                                //     name: "settings_font-family",
+                                //     id: "settings_font-family-Custom",
+                                //     label: "Custom",
+                                //     checked: ui.settings.FONT_NAME === "custom",
+                                //     event: "onchange=\"ui.settings.selectFont('custom');\"",
+                                // },
+                            ]
+                        })
                     },
                     {
                         type: inputTypes.NUM_INPUT,

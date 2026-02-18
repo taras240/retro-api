@@ -87,19 +87,8 @@ export class UI {
     UI.updateColors();
     configData.bgVisibility = configData.bgVisibility;
 
-    if (config.identConfirmed) { //&& !this.isTest
-      configData.startOnLoad
-        ? watcher.start()
-        : watcher.updateGameData();
-
-      setTimeout(() => {
-        apiWorker.getUserSummary({}).then(userSummary => {
-          watcher.updateUserData({ userSummary })
-          this.userInfo?.update({ userSummary });
-          this.stats?.initialSetStats({ userSummary });
-          // this.statusPanel?.updateStatistics({ userSummary });
-        })
-      }, 3000);
+    if (config.identConfirmed) {
+      watcher.autostart();
     }
 
 

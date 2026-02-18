@@ -378,7 +378,6 @@ export class Status extends Widget {
         widget.classList.add(...classes);
         widget.id = id;
         const theme = config.ui?.[id]?.statusTheme ?? statusStyles.DEFAULT;
-        const isWatching = watcher?.IS_WATCHING;
 
         widget.innerHTML = isLegacy ? legacyThemeHtml() : modernThemeHtml();;
         return widget;
@@ -451,9 +450,9 @@ export class Status extends Widget {
     }
     gameChangeEvent(isNewGame = false) {
         // this.addAlertsToQuery([{ type: ALERT_TYPES.GAME, value: watcher.GAME_DATA }]);
-
-        if (isNewGame && watcher.IS_WATCHING) {
-            this.addAlertsToQuery([{ type: ALERT_TYPES.GAME, value: watcher.GAME_DATA }]);
+        const { isWatching, GAME_DATA } = watcher;
+        if (isNewGame && isWatching) {
+            this.addAlertsToQuery([{ type: ALERT_TYPES.GAME, value: GAME_DATA }]);
         }
         this.fillGameData();
         this.doUpdateAnimation();
@@ -640,7 +639,7 @@ export class Status extends Widget {
 
     timeWatcher() {
         this.watchButton.classList.toggle("active", watcher.isActive);
-        this.section.classList.toggle("watching", watcher.IS_ONLINE && watcher.isActive);
+        this.section.classList.toggle("watching", watcher.isOnline && watcher.isActive);
         const start = () => {
             this.timeWatcher().stop();
             this.indicatorElement.classList.add("online");
@@ -664,14 +663,14 @@ export class Status extends Widget {
     BLINK_ON_UPDATE = true;
     blinkUpdate() {
         this.indicatorElement.classList.remove("offline", "blink");
-        this.section.classList.toggle("offline", !watcher.IS_ONLINE);
-        this.indicatorElement.classList.toggle("online", watcher.IS_ONLINE);
-        this.indicatorElement.classList.toggle("realtime", (watcher.IS_ONLINE && watcher.isLogOK));
-        if (this.BLINK_ON_UPDATE && watcher.IS_ONLINE) {
+        this.section.classList.toggle("offline", !watcher.isOnline);
+        this.indicatorElement.classList.toggle("online", watcher.isOnline);
+        this.indicatorElement.classList.toggle("realtime", (watcher.isOnline && watcher.isLogOK));
+        if (this.BLINK_ON_UPDATE && watcher.isOnline) {
             // this.indicatorElement.classList.add("blink");
             // setTimeout(() => this.indicatorElement.classList.remove("blink", "offline"), 1000);
         }
-        else if (!watcher.IS_ONLINE) {
+        else if (!watcher.isOnline) {
             // this.indicatorElement.classList.add("offline");
         }
     }

@@ -1,12 +1,13 @@
 import { colorPresets } from "./enums/colorPresets.js";
 import { fonts } from "./enums/fontsPreset.js";
+import { WATCHER_MODES } from "./enums/watcherModes.js";
 import { loadHandle, openDB, saveHandle } from "./functions/DB.js";
 import { delay } from "./functions/delay.js";
 import { ui, watcher } from "./script.js";
 import { UI } from "./ui.js";
 
 const CONFIG_FILE_NAME = "retroApiConfig";
-const CONFIG_VERSION = 3.12;
+const CONFIG_VERSION = 3.13;
 export class Config {
   //! ----------[ Login information ]------------------
   get version() {
@@ -74,7 +75,6 @@ export class Config {
   configDefaultValues = {
     bgVisibility: false,
     bgAnimType: "",
-    startOnLoad: false,
     targetUser: "",
     gameID: 1,
     updateDelaySec: 5,
@@ -87,16 +87,19 @@ export class Config {
     minRetroPointsDiscordAlert: 0,
     hardOnlyDiscordAlert: false,
     fontSize: 14,
-    fontFamilyName: "default", //fontSelectorName
-    pauseIfOnline: false, //config.ui.pauseOffline
-    discordNewGame: true, //_cfg?.discordNewGame
-    discordNewCheevo: true, //_cfg?.discordNewCheevo
-    discordNewAward: true, //_cfg?.discordNewAward
-    discordStartSession: true, //_cfg?.discordStartSession
-    discordWebhook: "", //_cfg.discordWebhook,
-    parseLog: false, //logfileHandle for retroarch
+    fontFamilyName: "default",
+    discordNewGame: true,
+    discordNewCheevo: true,
+    discordNewAward: true,
+    discordStartSession: true,
+    discordWebhook: "",
+    parseLog: false,
     showCheevoOnHover: false,
     loadLastSubset: false,
+    startOnLoad: false,
+    pauseIfOffline: false,
+    watcherMode: WATCHER_MODES.auto,
+
   }
   configValuePreprocessors = {
     updateDelaySec: (value) => parseInt(value) < 5 ? 5 : parseInt(value),
@@ -112,6 +115,7 @@ export class Config {
     fsAlertDuration: (value) => value < 5 ? 5 : value > 60 ? 60 : value,
     minPointsDiscordAlert: (value) => parseInt(value) >= 0 ? value : 0,
     minRetroPointsDiscordAlert: (value) => parseInt(value) >= 0 ? value : 0,
+
 
   };
   configSetCallbacks = {
@@ -151,6 +155,11 @@ export class Config {
       else {
         document.documentElement.style.setProperty("--font-family", `system-ui, sans-serif`);
       }
+    },
+    watcherMode: (value) => {
+      this.configData.pauseIfOffline = [WATCHER_MODES.autoPause, WATCHER_MODES.auto].includes(value)
+
+      this.configData.startOnLoad = [WATCHER_MODES.autoStart, WATCHER_MODES.auto].includes(value)
     }
 
   }
@@ -185,8 +194,21 @@ export class Config {
     this.fixConfig();
   }
   fixConfig = () => {
-    if (this.version === CONFIG_VERSION) return;
+    // if (this.version === CONFIG_VERSION) return;
     try {
+      const autoPause = this._cfg?.settings?.pauseIfOffline ?? true;
+      const autoStart = this._cfg?.settings?.startOnLoad ?? true;
+      let watcherMode = WATCHER_MODES.auto;
+      if (autoStart) {
+
+        if (!autoPause) watcherMode = WATCHER_MODES.autoStart;
+      }
+      else {
+        if (autoPause) watcherMode = WATCHER_MODES.autoPause;
+        else watcherMode = WATCHER_MODES.manual;
+      }
+
+      this._cfg.settings.watcherMode = watcherMode;
 
       delete this._cfg.apiWorker;
       delete this._cfg.aotw;
