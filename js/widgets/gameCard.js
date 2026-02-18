@@ -42,7 +42,7 @@ export class GameCard extends Widget {
         showCheevosProgress: false,
         showRetropointsProgress: false,
         showPointsProgress: false,
-        previewSize: PREVIEW_SIZE.contain,
+        previewSize: PREVIEW_SIZE.cover,
         //properties below are disabled :(
         // showCompletion: true,
         // showDeveloper: true,
