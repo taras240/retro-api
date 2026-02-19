@@ -662,12 +662,12 @@ export class Status extends Widget {
     }
     BLINK_ON_UPDATE = true;
     blinkUpdate() {
-        this.indicatorElement.classList.remove("offline", "blink");
+        // this.indicatorElement.classList.remove("offline", "blink");
+        this.section.classList.toggle("offline", !watcher.isOnline);
         this.indicatorElement.classList.toggle("offline", !watcher.isOnline);
         this.indicatorElement.classList.toggle("online", watcher.isOnline);
+        this.section.classList.toggle("watching", watcher.isWatching);
         this.indicatorElement.classList.toggle("realtime", (watcher.isOnline && watcher.isLogOK));
-
-
     }
     autoscrollAlertInterval = {};
     startAutoScrollElement(element, toLeft = true, pause = 1000) {
