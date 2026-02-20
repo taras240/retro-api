@@ -27,7 +27,7 @@
     top: 0;
     left: 100px;
     max-height: 100vh;
-    min-width: 26rem;
+    min-width: 250px;
     min-height: 3rem;
     height: 50vh;
     height: fit-content !important;
@@ -37,8 +37,18 @@
     display: flex;
     flex-direction: column;
     cursor: grab;
+    container-type: inline-size;
 }
 
+@container (max-width: 349px) {
+    .rp__preview-container {
+        display: none !important;
+    }
+
+    .rp__last-cheevos {
+        display: none !important;
+    }
+}
 
 
 .section.status__section {
@@ -203,6 +213,8 @@
     overflow: hidden;
     border-radius: 2px;
 }
+
+
 
 .hide-game-info .rp__game-container {
     display: none;
@@ -440,6 +452,7 @@
     justify-content: space-between;
     align-items: end;
     margin-bottom: 0.5rem;
+    /* container-type: inline-size; */
 }
 
 .rp__last-cheevos {
