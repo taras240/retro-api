@@ -441,7 +441,19 @@
     min-width: 5rem;
 }
 
-:is(.show-progressbar, .rp__game-info) .rp__progressbar-container {
+.rp__progressbar-container:not([data-type="cheevos"]) .rp__last-cheevos {
+    display: none !important;
+}
+
+:is(.show-progressbar, .rp__game-info) .rp__progressbar-container[data-type="cheevos"] {
+    display: flex;
+}
+
+:is(.show-points-progress, .rp__game-info) .rp__progressbar-container[data-type="points"] {
+    display: flex;
+}
+
+:is(.show-retropoints-progress, .rp__game-info) .rp__progressbar-container[data-type="retropoints"] {
     display: flex;
 }
 

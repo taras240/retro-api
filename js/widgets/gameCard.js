@@ -15,7 +15,7 @@ import { gameImageUrl, gameUrl } from "../functions/raLinks.js";
 import { inputTypes } from "../components/inputElements.js";
 import { buttonsHtml } from "../components/htmlElements.js";
 import { completionMsg } from "../components/statusWidget/progressBar.js";
-import { progressTypes } from "../enums/progressBar.js";
+import { PROGRESS_TYPES } from "../enums/progressBar.js";
 import { getCheevosCount, getPointsCount, getRetropointsCount } from "../functions/gameProperties.js";
 const PREVIEW_SIZE = {
     cover: "cover",
@@ -251,9 +251,9 @@ export class GameCard extends Widget {
         const gameData = watcher.GAME_DATA;
         const isHardMode = watcher.IS_HARD_MODE;
 
-        this.progressCountContainer.innerHTML = completionMsg(gameData, progressTypes.cheevos, isHardMode);
-        this.progressPointsContainer.innerHTML = completionMsg(gameData, progressTypes.points, isHardMode);
-        this.progressRetropointsContainer.innerHTML = completionMsg(gameData, progressTypes.retropoints, isHardMode);
+        this.progressCountContainer.innerHTML = completionMsg(gameData, PROGRESS_TYPES.cheevos, isHardMode);
+        this.progressPointsContainer.innerHTML = completionMsg(gameData, PROGRESS_TYPES.points, isHardMode);
+        this.progressRetropointsContainer.innerHTML = completionMsg(gameData, PROGRESS_TYPES.retropoints, isHardMode);
     }
     async gameChangeEvent(isNewGame) {
         const {

@@ -24,7 +24,7 @@ import { moveDirections } from "../enums/moveDirections.js";
 import { recentCheevoHtml } from "../components/statusWidget/recentCheevo.js";
 import { progressionBarHtml, updateProgressionBar } from "../components/statusWidget/progressionBar.js";
 import { progressBarHtml, updateProgressBarData } from "../components/statusWidget/progressBar.js";
-import { progressTypes } from "../enums/progressBar.js";
+import { PROGRESS_TYPES } from "../enums/progressBar.js";
 import { buttonsHtml } from "../components/htmlElements.js";
 import { resizerHtml } from "../components/resizer.js";
 import { tickerHtml } from "../components/statusWidget/ticker.js";
@@ -94,9 +94,23 @@ export class Status extends Widget {
                     {
                         type: inputTypes.CHECKBOX,
                         id: "context-show-progressbar",
-                        label: ui.lang.progressbar,
+                        label: `${ui.lang.cheevos} ${ui.lang.progressbar}`,
                         checked: this.uiProps.showProgressbar,
                         onChange: (event) => this.uiProps.showProgressbar = event.currentTarget.checked,
+                    },
+                    {
+                        type: inputTypes.CHECKBOX,
+                        id: "context-show-points-progress",
+                        label: `${ui.lang.points} ${ui.lang.progressbar}`,
+                        checked: this.uiProps.showPointsProgress,
+                        onChange: (event) => this.uiProps.showPointsProgress = event.currentTarget.checked,
+                    },
+                    {
+                        type: inputTypes.CHECKBOX,
+                        id: "context-show-retropoints-progress",
+                        label: `${ui.lang.retropoints} ${ui.lang.progressbar} `,
+                        checked: this.uiProps.showRetropointsProgress,
+                        onChange: (event) => this.uiProps.showRetropointsProgress = event.currentTarget.checked,
                     },
                 ],
             } : "",
@@ -124,6 +138,19 @@ export class Status extends Widget {
                 ]
             },
             {
+                label: ui.lang.progressbar,
+                elements: Object.values(PROGRESS_TYPES).map(type =>
+                ({
+                    type: inputTypes.RADIO,
+                    name: "progressbar-type",
+                    id: `progressbar-type-${type}`,
+                    label: ui.lang?.[type] ?? type,
+                    checked: this.uiProps.progressType == type,
+                    onChange: () => this.uiProps.progressType = type,
+                })
+                )
+            },
+            {
                 label: ui.lang.style,
                 elements: Object.values(statusStyles).map(theme =>
                 ({
@@ -136,19 +163,7 @@ export class Status extends Widget {
                 })
                 )
             },
-            {
-                label: ui.lang.progressbar,
-                elements: Object.values(progressTypes).map(type =>
-                ({
-                    type: inputTypes.RADIO,
-                    name: "progressbar-type",
-                    id: `progressbar-type-${type}`,
-                    label: ui.lang?.[type] ?? type,
-                    checked: this.uiProps.progressType == type,
-                    onChange: () => this.uiProps.progressType = type,
-                })
-                )
-            },
+
             {
                 label: ui.lang.time,
                 elements: [
@@ -247,8 +262,10 @@ export class Status extends Widget {
         showRichPresence: true,
         showTicker: true,
         showProgressbar: true,
+        showPointsProgress: false,
+        showRetropointsProgress: false,
         showProgression: true,
-        progressType: progressTypes.cheevos,
+        progressType: PROGRESS_TYPES.cheevos,
         statusTheme: statusStyles.DEFAULT,
         timePosition: timePosition.normal,
         gameInfoType: GAME_INFO_TYPES.icons,
@@ -276,7 +293,7 @@ export class Status extends Widget {
             value ? this.updateTicker() : this.ticker?.stopScrolling();
         },
         progressType() {
-            this.updateProgressBar();
+            this.updateGameInfo();
         },
         gameInfoType() {
             this.updateGameInfo();
@@ -380,7 +397,9 @@ export class Status extends Widget {
                 ${gameInfoHtml()}
                 ${richPresenceHtml()}
                 ${progressionBarHtml()}
-                ${progressBarHtml()}
+                ${progressBarHtml(PROGRESS_TYPES.cheevos)}
+                ${progressBarHtml(PROGRESS_TYPES.points)}
+                ${progressBarHtml(PROGRESS_TYPES.retropoints)}
             </div>
             ${tickerHtml()}
             ${resizerHtml()}`;
@@ -462,6 +481,8 @@ export class Status extends Widget {
         this.section.classList.toggle("show-ticker", this.uiProps.showTicker);
         this.section.classList.toggle("show-progression", this.uiProps.showProgression);
         this.section.classList.toggle("show-progressbar", this.uiProps.showProgressbar);
+        this.section.classList.toggle("show-points-progress", this.uiProps.showPointsProgress);
+        this.section.classList.toggle("show-retropoints-progress", this.uiProps.showRetropointsProgress);
         this.richPresenceElement?.classList.toggle("hidden", !this.uiProps.showRichPresence)
         this.gameElements.time && (this.gameElements.time.dataset.position = this.uiProps.timePosition);
 
@@ -537,7 +558,6 @@ export class Status extends Widget {
                 container,
                 watcher?.GAME_DATA,
                 this.IS_HARD_MODE,
-                this.uiProps.progressType
             ));
     }
     updateGameInfo() {
@@ -562,7 +582,7 @@ export class Status extends Widget {
         }
         switch (this.uiProps.gameInfoType) {
             case GAME_INFO_TYPES.progressbar:
-                gameInfoContent.innerHTML = progressBarHtml();
+                gameInfoContent.innerHTML = progressBarHtml(this.uiProps.progressType);
                 this.updateProgressBar();
                 break;
             case GAME_INFO_TYPES.progression:
@@ -572,7 +592,7 @@ export class Status extends Widget {
 
                 if (this.uiProps.switchProgressionIfBeaten && (isGameBeaten || !isProgressionAvailable) && !isProgressbarVisible) {
                     gameInfoContent.innerHTML = progressBarHtml();
-                    this.updateProgressBar();
+                    this.updateProgressBar(this.uiProps.progressType);
                 }
                 else {
                     gameInfoContent.innerHTML = progressionBarHtml();

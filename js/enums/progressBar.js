@@ -1,4 +1,4 @@
-export const progressTypes = Object.freeze({
+export const PROGRESS_TYPES = Object.freeze({
     cheevos: "cheevos",
     points: "points",
     retropoints: "retropoints",
