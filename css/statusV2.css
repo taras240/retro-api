@@ -1,12 +1,28 @@
+.status__section,
 .rp__section {
-    --progress-border-radius: 100px;
+    --progress-border-radius: 5px;
+    --progress-value-border-radius: 5px;
+    --progression-border-radius: 5px;
     --progress-height: 0.4rem;
     --progression-gap: 5px;
     --focus-opacity: 0.5;
     --locked-opacity: 0.1;
     --bg-opacity-mask: none;
     --progress-bg-color: var(--accent-color);
+    --progress-value-bg: var(--accent-color);
+    --progression-bg-color: var(--accent-color);
+    --progression-bg-win-color: goldenrod;
+    --progression-focus-color: var(--accent-color);
+    --progression-unlock-color: var(--accent-color);
+    --progression-unlock-win-color: goldenrod;
     --alert-heigth: 5.5rem;
+}
+
+.status__section {
+    --alert-heigth: 100%;
+}
+
+.rp__section {
     /* --bg-image:url(); */
     top: 0;
     left: 100px;
@@ -22,6 +38,8 @@
     flex-direction: column;
     cursor: grab;
 }
+
+
 
 .section.status__section {
     position: absolute;
@@ -51,6 +69,8 @@
 .rp__section[data-theme="thick"],
 .status__section[data-theme="thick"] {
     --progress-border-radius: 1px;
+    --progress-value-border-radius: 1px;
+    --progression-border-radius: 0;
     --progress-height: 1rem;
     --progression-gap: 1px;
     --bg-opacity-mask: url(../assets/img/tr-1.svg);
@@ -60,16 +80,36 @@
 
 }
 
-.status__section {
-    --progress-border-radius: 100px;
-    --progress-height: 0.4rem;
-    --progression-gap: 5px;
-    --focus-opacity: 0.5;
-    --locked-opacity: 0.1;
-    --bg-opacity-mask: none;
-    --progress-bg-color: var(--accent-color);
-    --alert-heigth: 100%;
+.rp__section[data-theme="RA"],
+.status__section[data-theme="RA"] {
+    --progress-border-radius: 5px;
+    --progress-value-border-radius: 5px 0 0 5px;
+    --progression-border-radius: 0;
+    --progression-gap: 0;
+    --focus-opacity: 1;
+    --locked-opacity: 1;
+    --progress-bg-color: black;
+    --progression-bg-color: black;
+    --progression-bg-win-color: black;
+    --progression-focus-color: black;
+    --progress-value-bg: linear-gradient(to right, #f59e0b, gold);
+    --progression-unlock-color: #16a34a;
+    --progression-unlock-win-color: goldenrod;
 }
+
+.section:where(.rp__section, .status__section)[data-theme="RA"] :nth-last-child(1 of .rp__progression-point:not(.win)) {
+    border-radius: 0 var(--progress-border-radius) var(--progress-border-radius) 0;
+
+}
+
+.section:where(.rp__section, .status__section)[data-theme="RA"] :nth-child(1 of .rp__progression-point.win) {
+    border-radius: var(--progress-border-radius) 0 0 var(--progress-border-radius);
+}
+
+.section:where(.rp__section, .status__section)[data-theme="RA"] .rp__progression-point:not(.win)+.rp__progression-point.win {
+    margin-left: 0.5rem;
+}
+
 
 /* .rp__section:not(.show-cheevos-list) {
     height: fit-content !important;
@@ -286,7 +326,6 @@
     margin-bottom: 0.5rem;
 }
 
-
 .rp__progression-points {
     width: 100%;
     display: flex;
@@ -297,6 +336,8 @@
     overflow-x: scroll;
     height: var(--progress-height);
     margin-bottom: 0.2rem;
+    border-radius: var(--progress-border-radius);
+    overflow: hidden;
     /* padding: 0.25rem 0 0.5rem; */
 }
 
@@ -312,10 +353,12 @@
     flex-basis: 1rem;
     flex-grow: 2;
     flex-shrink: 0;
+    border-radius: var(--progress-border-radius);
+    overflow: hidden;
 }
 
 .rp__progression-point {
-    --color: var(--accent-color);
+    --color: var(--progression-bg-color);
     height: 100%;
     flex-basis: 0.4rem;
     flex-grow: 1;
@@ -323,12 +366,14 @@
     font-size: inherit;
     /* border: 1px solid var(--color); */
     background-color: var(--color);
-    border-radius: var(--progress-border-radius);
+    border-radius: var(--progression-border-radius);
     opacity: var(--locked-opacity);
     mask-image: var(--bg-opacity-mask);
     mask-repeat: repeat;
     transition: opacity 0.2s, flex-grow 0.2s;
 }
+
+
 
 .rp__progression-point.focus {
     flex-grow: 1.5;
@@ -339,11 +384,12 @@
 
 .rp__progression-point.win {
     flex-basis: 1rem;
-    --color: goldenrod;
+    --color: var(--progression-bg-win-color);
+
 }
 
 .rp__progression-point.earned {
-    --color: var(--accent-color);
+    --color: var(--progression-unlock-color);
     box-shadow: 0 0 2px 0px var(--color);
     background-color: var(--color);
     border-color: transparent;
@@ -354,13 +400,14 @@
 }
 
 .rp__progression-point.win.earned {
-    --color: goldenrod;
+    --color: var(--progression-unlock-win-color);
     opacity: 1;
 }
 
-.rp__progression-point.win.earned.hardcore {
+/* .rp__progression-point.win.earned.hardcore {
     --color: gold;
-}
+} */
+
 
 /**-----------PROGRESSBAR------------------  */
 .rp__progressbar-container {
@@ -450,6 +497,7 @@
     height: var(--progress-height);
     border-radius: var(--progress-border-radius);
     margin: 0 0 0.2rem;
+    overflow: hidden;
 }
 
 .rp__progressbar-bg {
@@ -460,8 +508,10 @@
     height: 100%;
     opacity: var(--locked-opacity);
     background-color: var(--progress-bg-color);
+    border-radius: var(--progress-border-radius);
     mask-image: var(--bg-opacity-mask);
     mask-repeat: repeat;
+    z-index: -1;
 }
 
 .rp__progressbar::before,
@@ -469,16 +519,16 @@
     position: absolute;
     width: var(--unlockRate);
     height: 100%;
-    background-color: var(--accent-color);
+    background: var(--progress-value-bg);
     /* box-shadow: 0 0 2px 0px var(--accent-color); */
-    border-radius: inherit;
+    border-radius: var(--progress-value-border-radius);
 
 }
 
 .rp__progressbar::before {
     --margin: 0px;
     content: "";
-    background-color: lime;
+    background: lime;
     width: calc(var(--unlockRate) - var(--margin)*2);
     margin-left: var(--margin);
 }
@@ -523,6 +573,7 @@
 .rp__progressbar-session:hover {
     background-color: var(--font-color);
 }
+
 
 /**-------------TICKER--------------  */
 .rp__ticker {

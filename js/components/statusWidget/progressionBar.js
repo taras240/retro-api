@@ -37,10 +37,14 @@ export const updateProgressionBar = (container, gameData, isHardMode = true) => 
             .join("");
     }
     if (!gameData) return "n/a";
+    const reorderCheevos = (cheevos) => {
+        const sortedCheevos = cheevos.sort((a, b) => sortBy.progression(a, b)).sort((a, b) => sortBy.latest(a, b))
+        const progresionCheevos = sortedCheevos.filter(c => c.Type === CHEEVO_TYPES.PROGRESSION);
+        const winCheevos = sortedCheevos.filter(c => c.Type === CHEEVO_TYPES.WIN);
+        return [...progresionCheevos, ...winCheevos];
+    }
+    const cheevos = reorderCheevos(Object.values(gameData.AllAchievements))
 
-    const cheevos = Object.values(gameData.AllAchievements)
-        .filter(c => filterBy.progression(c))
-        .sort((a, b) => sortBy.progression(a, b));
 
     const focusCheevo = cheevos.find(a => !isEarned(a));
     const focusIndex = cheevos.findIndex(c => !isEarned(c));
