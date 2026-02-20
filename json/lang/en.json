@@ -255,5 +255,6 @@
     "showAwardAlerts": "Award",
     "showGameAlerts": "Game Launch",
     "watcherMode": "Mode",
-    "previewSize": "Preview Size"
+    "previewSize": "Preview Size",
+    "switchProgressionIfBeaten": "Adaptive progression"
 }

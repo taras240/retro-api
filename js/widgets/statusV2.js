@@ -39,6 +39,7 @@ import { GAME_INFO_TYPES } from "../enums/gameInfoTypes.js";
 import { gameInfoIconsHtml, richInfoHtml } from "../components/statusWidget/gameInfoIcons.js";
 import { sweepEffect } from "../components/windowEffects.js";
 import { getCheevosCount, getPointsCount, getRetropointsCount } from "../functions/gameProperties.js";
+import { GAME_AWARD_TYPES } from "../enums/gameAwards.js";
 
 export class Status extends Widget {
 
@@ -94,7 +95,7 @@ export class Status extends Widget {
             } : "",
             {
                 label: ui.lang.infoPanel,
-                elements: Object.values(GAME_INFO_TYPES).map(type =>
+                elements: [...Object.values(GAME_INFO_TYPES).map(type =>
                 ({
                     type: inputTypes.RADIO,
                     name: "info-type",
@@ -103,7 +104,16 @@ export class Status extends Widget {
                     checked: this.uiProps.gameInfoType == type,
                     onChange: () => this.uiProps.gameInfoType = type,
                 })
-                )
+                ),
+                {
+                    type: inputTypes.CHECKBOX,
+                    name: "info-type-switch",
+                    id: `info-type-switch`,
+                    label: ui.lang.switchProgressionIfBeaten,
+                    checked: this.uiProps.switchProgressionIfBeaten,
+                    onChange: (event) => this.uiProps.switchProgressionIfBeaten = event.currentTarget.checked,
+                }
+                ]
             },
             {
                 label: ui.lang.style,
@@ -235,6 +245,7 @@ export class Status extends Widget {
         gameInfoType: GAME_INFO_TYPES.icons,
         showGameBg: false,
         showTargetPreview: false,
+        switchProgressionIfBeaten: false,
     }
     uiDefaultValuesLegacy = {
         showRichPresence: false,
@@ -246,6 +257,7 @@ export class Status extends Widget {
         gameInfoType: GAME_INFO_TYPES.progression,
         showTargetPreview: false,
         showGameBg: false,
+        switchProgressionIfBeaten: true,
     }
     uiSetCallbacks = {
         time() {
@@ -263,6 +275,9 @@ export class Status extends Widget {
         },
         showTargetPreview() {
             this.updateFocusPreview();
+        },
+        switchProgressionIfBeaten() {
+            this.updateGameInfo();
         }
     };
 
@@ -542,8 +557,18 @@ export class Status extends Widget {
                 this.updateProgressBar();
                 break;
             case GAME_INFO_TYPES.progression:
-                gameInfoContent.innerHTML = progressionBarHtml();
-                this.updateProgressionBar();
+                const isProgressbarVisible = this.uiProps.showProgressbar;
+                const isGameBeaten = watcher.GAME_DATA.progressionAward === GAME_AWARD_TYPES.BEATEN;
+                const isProgressionAwailable = watcher.GAME_DATA.progressionSteps || watcher.GAME_DATA.subsetsData?.progressionSteps;
+
+                if (this.uiProps.switchProgressionIfBeaten && (isGameBeaten || !isProgressionAwailable) && !isProgressbarVisible) {
+                    gameInfoContent.innerHTML = progressBarHtml();
+                    this.updateProgressBar();
+                }
+                else {
+                    gameInfoContent.innerHTML = progressionBarHtml();
+                    this.updateProgressionBar();
+                }
                 break;
             case GAME_INFO_TYPES.icons:
                 gameInfoContent.innerHTML = gameInfoIconsHtml();
