@@ -65,6 +65,13 @@ export class Status extends Widget {
                 elements: [
                     {
                         type: inputTypes.CHECKBOX,
+                        id: "show-game-info",
+                        label: ui.lang.infoPanel,
+                        checked: this.uiProps.showGameInfo,
+                        onChange: (event) => this.uiProps.showGameInfo = event.currentTarget.checked,
+                    },
+                    {
+                        type: inputTypes.CHECKBOX,
                         id: "show-rp",
                         label: ui.lang.richPresence,
                         checked: this.uiProps.showRichPresence,
@@ -236,6 +243,7 @@ export class Status extends Widget {
     uiDefaultValues = {
         time: "playTime",
         timerTime: 30,
+        showGameInfo: true,
         showRichPresence: true,
         showTicker: true,
         showProgressbar: true,
@@ -450,6 +458,7 @@ export class Status extends Widget {
         });
     }
     setElementsValues() {
+        this.section.classList.toggle("hide-game-info", !this.uiProps.showGameInfo)
         this.section.classList.toggle("show-ticker", this.uiProps.showTicker);
         this.section.classList.toggle("show-progression", this.uiProps.showProgression);
         this.section.classList.toggle("show-progressbar", this.uiProps.showProgressbar);

@@ -28,7 +28,7 @@
     left: 100px;
     max-height: 100vh;
     min-width: 26rem;
-    min-height: 6rem;
+    min-height: 3rem;
     height: 50vh;
     height: fit-content !important;
     width: 350px;
@@ -204,6 +204,10 @@
     border-radius: 2px;
 }
 
+.hide-game-info .rp__game-container {
+    display: none;
+}
+
 .rp__game-image {
     height: 100%;
     aspect-ratio: 1;
@@ -217,6 +221,7 @@
     flex: 1;
     overflow: hidden;
 }
+
 
 .rp__game-title {
     width: fit-content;
@@ -615,6 +620,10 @@
     --line-gr: linear-gradient(to left, transparent, var(--accent-color), transparent);
     z-index: 10;
     pointer-events: none;
+}
+
+.hide-game-info .rp__alert-container {
+    display: none !important;
 }
 
 .rp__alert-container.hide-alert {
