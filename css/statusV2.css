@@ -95,6 +95,8 @@
     --progress-value-bg: linear-gradient(to right, #f59e0b, gold);
     --progression-unlock-color: #16a34a;
     --progression-unlock-win-color: goldenrod;
+    /* --font-family: Verdana, system-ui;
+    --main-color: #161616; */
 }
 
 .section:where(.rp__section, .status__section)[data-theme="RA"] :nth-last-child(1 of .rp__progression-point:not(.win)) {
@@ -211,7 +213,7 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: center;
     flex: 1;
     overflow: hidden;
 }
