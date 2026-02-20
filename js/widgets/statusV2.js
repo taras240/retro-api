@@ -110,6 +110,7 @@ export class Status extends Widget {
                     name: "info-type-switch",
                     id: `info-type-switch`,
                     label: ui.lang.switchProgressionIfBeaten,
+                    hint: ui.lang.switchProgressionIfBeatenHint,
                     checked: this.uiProps.switchProgressionIfBeaten,
                     onChange: (event) => this.uiProps.switchProgressionIfBeaten = event.currentTarget.checked,
                 }
@@ -245,7 +246,7 @@ export class Status extends Widget {
         gameInfoType: GAME_INFO_TYPES.icons,
         showGameBg: false,
         showTargetPreview: false,
-        switchProgressionIfBeaten: false,
+        switchProgressionIfBeaten: true,
     }
     uiDefaultValuesLegacy = {
         showRichPresence: false,
@@ -257,7 +258,6 @@ export class Status extends Widget {
         gameInfoType: GAME_INFO_TYPES.progression,
         showTargetPreview: false,
         showGameBg: false,
-        switchProgressionIfBeaten: true,
     }
     uiSetCallbacks = {
         time() {
@@ -559,9 +559,9 @@ export class Status extends Widget {
             case GAME_INFO_TYPES.progression:
                 const isProgressbarVisible = this.uiProps.showProgressbar;
                 const isGameBeaten = watcher.GAME_DATA.progressionAward === GAME_AWARD_TYPES.BEATEN;
-                const isProgressionAwailable = watcher.GAME_DATA.progressionSteps || watcher.GAME_DATA.subsetsData?.progressionSteps;
+                const isProgressionAvailable = watcher.GAME_DATA.progressionSteps || watcher.GAME_DATA.subsetsData?.progressionSteps;
 
-                if (this.uiProps.switchProgressionIfBeaten && (isGameBeaten || !isProgressionAwailable) && !isProgressbarVisible) {
+                if (this.uiProps.switchProgressionIfBeaten && (isGameBeaten || !isProgressionAvailable) && !isProgressbarVisible) {
                     gameInfoContent.innerHTML = progressBarHtml();
                     this.updateProgressBar();
                 }

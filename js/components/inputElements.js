@@ -110,8 +110,9 @@ const colorInput = ({ value, id, label, onChange }) => {
 }
 
 const inputElement = (props) => {
-
+    const { hint } = props;
     const inputElement = fromHtml(inputHtml(props));
+    hint && (inputElement.dataset.title = hint);
     addEvents(inputElement, props)
     return inputElement;
 }

@@ -665,7 +665,7 @@ input:checked+.checkbox-input::before {
     visibility: hidden;
     opacity: 0;
     font-size: 1.0rem;
-    z-index: 1000;
+    z-index: 1001;
     transition: opacity 0.2s;
 
 }
@@ -887,7 +887,7 @@ input:checked+.checkbox-input::before {
     min-width: 150px;
     width: max-content;
     user-select: none;
-    z-index: 10000;
+    z-index: 1000;
     padding: 0.35rem;
     background-color: transparent;
     --font-color: white;

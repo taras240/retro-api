@@ -39,12 +39,13 @@ const generateContextMenu = ({ menuItems, sectionCode = "", isSubmenu = false })
     return contextElement;
 }
 const ContextInput = (props) => {
-    const { onChange, onClick, onInput } = props;
+    const { onChange, onClick, onInput, hint } = props;
     const input = fromHtml(`
         <li class="context-menu_item">
             ${contextInputs[props.type](props)}
         </li>
         `);
+    hint && (input.dataset.title = hint);
     addEvents(input, props);
     return input;
 

@@ -256,5 +256,6 @@
     "showGameAlerts": "Game Launch",
     "watcherMode": "Mode",
     "previewSize": "Preview Size",
-    "switchProgressionIfBeaten": "Adaptive progression"
+    "switchProgressionIfBeaten": "Adaptive progression",
+    "switchProgressionIfBeatenHint": "If progression is unavailable or the game is beaten, the progressbar will be shown"
 }
