@@ -5,7 +5,7 @@ import { config, ui, apiWorker, watcher } from "../script.js";
 import { Widget } from "./widget.js";
 import { generateBadges, badgeElements } from "../components/badges.js";
 import { sortBy, sortMethods } from "../functions/sortFilter.js";
-import { input, inputTypes } from "../components/inputElements.js";
+import { inputElement, inputTypes } from "../components/inputElements.js";
 import { GAME_GENRE_CODES } from "../enums/gameGenres.js";
 import { RA_PLATFORM_CODES } from "../enums/RAPlatforms.js";
 import { platformsByManufacturer } from "../enums/platformManufacturer.js";
@@ -16,6 +16,7 @@ import { gamesExtMap } from "../enums/gamesExtMap.js";
 import { getGenres } from "../functions/genreIDtoGenre.js";
 import { buttonsHtml } from "../components/htmlElements.js";
 import { gamesFromJson } from "../functions/gamesJson.js";
+import { fromHtml } from "../functions/html.js";
 
 export class Games extends Widget {
     widgetIcon = {
@@ -47,45 +48,47 @@ export class Games extends Widget {
             type: inputTypes.SELECTOR,
             label: ui.lang.sort,
             id: "games__sort-selector",
-            selectValues: [
-                {
-                    type: inputTypes.RADIO,
-                    name: "games__sort-type",
-                    id: `games__sort-type-${sortMethods.date}`,
-                    label: ui.lang.releaseDate,
-                    checked: this.SORT_NAME === sortMethods.date,
-                    event: `onchange=\"ui.games.SORT_NAME = '${sortMethods.date}'\"`,
-                },
-                {
-                    type: inputTypes.RADIO,
-                    name: "games__sort-type",
-                    id: `games__sort-type-${sortMethods.points}`,
-                    label: ui.lang.points,
-                    checked: this.SORT_NAME === sortMethods.points,
-                    event: `onchange=\"ui.games.SORT_NAME = '${sortMethods.points}'\"`,
-                },
-                {
-                    type: inputTypes.CHECKBOX,
-                    name: "games__sort-type-order",
-                    id: `games__sort-type-order`,
-                    label: ui.lang.reverse,
-                    checked: this.REVERSE_SORT,
-                    event: `onchange=\"ui.games.REVERSE_SORT = this.checked\"`,
-                }]
+            onClick: (event) => ui.showContextmenu({
+                event, menuItems: [
+                    {
+                        type: inputTypes.RADIO,
+                        name: "games__sort-type",
+                        id: `games__sort-type-${sortMethods.date}`,
+                        label: ui.lang.releaseDate,
+                        checked: this.SORT_NAME === sortMethods.date,
+                        onChange: () => this.SORT_NAME = sortMethods.date,
+                    },
+                    {
+                        type: inputTypes.RADIO,
+                        name: "games__sort-type",
+                        id: `games__sort-type-${sortMethods.points}`,
+                        label: ui.lang.points,
+                        checked: this.SORT_NAME === sortMethods.points,
+                        onChange: () => this.SORT_NAME = sortMethods.points,
+                    },
+                    {
+                        type: inputTypes.CHECKBOX,
+                        name: "games__sort-type-order",
+                        id: `games__sort-type-order`,
+                        label: ui.lang.reverse,
+                        checked: this.REVERSE_SORT,
+                        onChange: (event) => this.REVERSE_SORT = event.currentTarget.checked,
+                    }]
+            }),
         },
         {
             type: inputTypes.CHECKBOX,
             label: ui.lang.filter,
             id: "games__filter-list-checkbox",
-            onChange: "ui.games.showFilters(this.checked)",
             checked: false,
+            onChange: (event) => this.showFilters(event.currentTarget.checked),
         },
         {
             type: inputTypes.SEARCH_INPUT,
             label: ui.lang.search,
             id: "games__search-text-input",
             value: "",
-            onChange: "ui.games.searchInputEvent(event)",
+            onInput: (event) => this.searchInputEvent(event),
             title: ui.lang.searchGameInputHint
         },
         ]
@@ -102,8 +105,8 @@ export class Games extends Widget {
                     type: inputTypes.CHECKBOX,
                     name: 'filter-by-platform',
                     checked: this.PLATFORMS_FILTER.includes(platformsByManufacturer[brend][platformName]),
-                    onChange: `ui.games.platformCheckboxChangeEvent(this,${platformsByManufacturer[brend][platformName]})`,
                     id: `filter-by-platform-${platformsByManufacturer[brend][platformName]}`,
+                    onChange: (event) => this.platformCheckboxChangeEvent(event.currentTarget, platformsByManufacturer[brend][platformName]),
                 }
                 items.push(filterItem);
                 return items;
@@ -115,51 +118,37 @@ export class Games extends Widget {
         return filters;
     }
     get awardsFilterItems() {
-        const filters = Object.keys(this.awardTypes).reduce((items, awardType) => {
-            const filterItem = {
-                type: inputTypes.CHECKBOX,
-                label: this.awardTypes[awardType],
-                name: 'filter-by-award',
-                value: 'award',
-                checked: this.AWARD_FILTER.includes(awardType),
-                onChange: `ui.games.awardCheckboxChangeEvent(this,'${awardType}')`,
-                id: `filter-by-award-${awardType}`,
-            }
-            items.push(filterItem);
-            return items;
-        }, [])
-        return filters;
+        return Object.keys(this.awardTypes).map((awardType) => ({
+            type: inputTypes.CHECKBOX,
+            label: this.awardTypes[awardType],
+            name: 'filter-by-award',
+            value: 'award',
+            checked: this.AWARD_FILTER.includes(awardType),
+            id: `filter-by-award-${awardType}`,
+            onChange: (event) => this.awardCheckboxChangeEvent(event.currentTarget, awardType),
+        })
+        )
     }
     get releaseVersionFilterItems() {
-        const filters = Object.keys(RELEASE_TYPES).reduce((items, releaseVersion) => {
-            const filterItem = {
-                type: inputTypes.CHECKBOX,
-                label: RELEASE_TYPES[releaseVersion],
-                name: 'filter-by-release',
-                value: 'release',
-                checked: this.RELEASE_FILTER.includes(RELEASE_TYPES[releaseVersion]),
-                onChange: `ui.games.releaseCheckboxChangeEvent(this,'${RELEASE_TYPES[releaseVersion]}')`,
-                id: `filter-by-release-${releaseVersion}`,
-            }
-            items.push(filterItem);
-            return items;
-        }, [])
-        return filters;
+        return Object.keys(RELEASE_TYPES).map(releaseVersion => ({
+            type: inputTypes.CHECKBOX,
+            label: RELEASE_TYPES[releaseVersion],
+            name: 'filter-by-release',
+            value: 'release',
+            checked: this.RELEASE_FILTER.includes(RELEASE_TYPES[releaseVersion]),
+            id: `filter-by-release-${releaseVersion}`,
+            onChange: (event) => this.releaseCheckboxChangeEvent(event.currentTarget, RELEASE_TYPES[releaseVersion]),
+        }))
     }
     get genresFilterItems() {
-        const filters = Object.keys(GAME_GENRE_CODES).reduce((items, genreID) => {
-            const filterItem = {
-                type: inputTypes.CHECKBOX,
-                label: GAME_GENRE_CODES[genreID],
-                name: 'filter-by-genre',
-                checked: this.GENRE_FILTER.includes(genreID),
-                onChange: `ui.games.genreCheckboxChangeEvent(this,'${genreID}')`,
-                id: `filter-by-genre-${genreID}`,
-            }
-            items.push(filterItem);
-            return items;
-        }, [])
-        return filters;
+        return Object.keys(GAME_GENRE_CODES).map((genreID) => ({
+            type: inputTypes.CHECKBOX,
+            label: GAME_GENRE_CODES[genreID],
+            name: 'filter-by-genre',
+            checked: this.GENRE_FILTER.includes(genreID),
+            id: `filter-by-genre-${genreID}`,
+            onChange: (event) => this.genreCheckboxChangeEvent(event.currentTarget, genreID),
+        }))
     }
     get sortItems() {
         const items = [
@@ -168,16 +157,16 @@ export class Games extends Widget {
                 label: ui.lang.released,
                 name: 'games__sort-by',
                 checked: this.SORT_NAME === sortMethods.date,
-                onChange: `ui.games.SORT_NAME = '${sortMethods.date}'`,
                 id: `games__sort-by-date`,
+                onChange: () => this.SORT_NAME = sortMethods.date,
             },
             {
                 type: inputTypes.RADIO,
                 label: ui.lang.points,
                 name: 'games__sort-by',
                 checked: this.SORT_NAME === sortMethods.points,
-                onChange: `ui.games.SORT_NAME = '${sortMethods.points}'`,
                 id: `games__sort-by-points`,
+                onChange: () => this.SORT_NAME = sortMethods.points,
             }
         ]
 
@@ -461,7 +450,9 @@ export class Games extends Widget {
       `;
         UI.applyPosition({ widget: this });
 
-        this.section.querySelector(".games__main-controls").innerHTML = this.headerControls.map(control => input(control)).join("\n");
+        this.section.querySelector(".games__main-controls").append(
+            ...this.headerControls.map(control => inputElement(control))
+        );
 
     }
     generateWidget() {
@@ -697,7 +688,7 @@ export class Games extends Widget {
             else {
                 const filterItem = document.createElement("li");
                 filterItem.classList.add("checkbox-input_container");
-                filterItem.innerHTML = input(item);
+                filterItem.append(inputElement(item));
                 list.appendChild(filterItem);
             }
             return list;
@@ -781,13 +772,19 @@ export class Games extends Widget {
                             type: inputTypes.NUM_INPUT,
                             id: "side-list-released-from",
                             label: `${ui.lang.from}`,
-                            onChange: `ui.games.YEARS_FILTER =  {...ui.games.YEARS_FILTER, from: Number(this.value) || 0}`,
+                            onChange: (event) => this.YEARS_FILTER = {
+                                ...ui.games.YEARS_FILTER,
+                                from: Number(event.currentTarget.value) || 0
+                            },
                         },
                         {
                             type: inputTypes.NUM_INPUT,
                             id: "side-list-released-to",
                             label: `${ui.lang.to}`,
-                            onChange: `ui.games.YEARS_FILTER =  {...ui.games.YEARS_FILTER, to: Number(this.value) || Infinity}`,
+                            onChange: (event) => this.YEARS_FILTER = {
+                                ...ui.games.YEARS_FILTER,
+                                to: Number(event.currentTarget.value) || Infinity
+                            },
                         },
                     ]
                 },
@@ -798,14 +795,20 @@ export class Games extends Widget {
                             type: inputTypes.NUM_INPUT,
                             id: "side-list-cheevos-from",
                             label: `${ui.lang.from}`,
-                            onChange: `ui.games.CHEEVOS_COUNT_FILTER =  {...ui.games.CHEEVOS_COUNT_FILTER, from: Number(this.value) || 0}`,
+                            onChange: (event) => this.CHEEVOS_COUNT_FILTER = {
+                                ...this.CHEEVOS_COUNT_FILTER,
+                                from: Number(event.currentTarget.value) || 0
+                            },
                             // event: `onclick="watcher.updateGameData(${gameID})"`,
                         },
                         {
                             type: inputTypes.NUM_INPUT,
                             id: "side-list-cheevos-to",
                             label: `${ui.lang.to}`,
-                            onChange: `ui.games.CHEEVOS_COUNT_FILTER =  {...ui.games.CHEEVOS_COUNT_FILTER, to: Number(this.value) || Infinity}`,
+                            onChange: (event) => this.CHEEVOS_COUNT_FILTER = {
+                                ...this.CHEEVOS_COUNT_FILTER,
+                                to: Number(event.currentTarget.value) || Infinity
+                            },
                         },
                     ]
                 },
@@ -816,13 +819,19 @@ export class Games extends Widget {
                             type: inputTypes.NUM_INPUT,
                             id: "side-list-ppc-from",
                             label: `${ui.lang.from}`,
-                            onChange: `ui.games.POINTS_PER_CHEEVO_FILTER = {...ui.games.POINTS_PER_CHEEVO_FILTER, from: Number(this.value) || 0}`,
+                            onChange: (event) => this.POINTS_PER_CHEEVO_FILTER = {
+                                ...this.POINTS_PER_CHEEVO_FILTER,
+                                from: Number(event.currentTarget.value) || 0
+                            },
                         },
                         {
                             type: inputTypes.NUM_INPUT,
                             id: "side-list-ppc-to",
                             label: `${ui.lang.to}`,
-                            onChange: `ui.games.POINTS_PER_CHEEVO_FILTER = {...ui.games.POINTS_PER_CHEEVO_FILTER, to: Number(this.value) || Infinity}`,
+                            onChange: (event) => this.POINTS_PER_CHEEVO_FILTER = {
+                                ...this.POINTS_PER_CHEEVO_FILTER,
+                                to: Number(event.currentTarget.value) || Infinity
+                            },
                         },
                     ]
                 },
@@ -833,13 +842,19 @@ export class Games extends Widget {
                             type: inputTypes.NUM_INPUT,
                             id: "side-list-hltb-from",
                             label: `${ui.lang.from}`,
-                            onChange: `ui.games.HLTB_FILTER =  {...ui.games.HLTB_FILTER, from: Number(this.value) || 0}`,
+                            onChange: (event) => this.HLTB_FILTER = {
+                                ...this.HLTB_FILTER,
+                                from: Number(event.currentTarget.value) || 0
+                            },
                         },
                         {
                             type: inputTypes.NUM_INPUT,
                             id: "side-list-released-to",
                             label: `${ui.lang.to}`,
-                            onChange: `ui.games.HLTB_FILTER =  {...ui.games.HLTB_FILTER, to: Number(this.value) || Infinity}`,
+                            onChange: (event) => this.HLTB_FILTER = {
+                                ...this.HLTB_FILTER,
+                                to: Number(event.currentTarget.value) || Infinity,
+                            }
                         },
                     ]
                 },
@@ -858,14 +873,14 @@ export class Games extends Widget {
                             type: inputTypes.CHECKBOX,
                             label: "WTPlay",
                             checked: this.FAVOURITES_FILTER,
-                            onChange: `ui.games.FAVOURITES_FILTER = this.checked`,
+                            onChange: (event) => this.FAVOURITES_FILTER = event.currentTarget.checked,
                             id: `filter-by-wtp`,
                         },
                         {
                             type: inputTypes.CHECKBOX,
                             label: "Coop",
                             checked: this.COOP_FILTER,
-                            onChange: `ui.games.COOP_FILTER = this.checked`,
+                            onChange: (event) => this.COOP_FILTER = event.currentTarget.checked,
                             id: `filter-by-coop`,
                         }
                     ]
@@ -879,22 +894,36 @@ export class Games extends Widget {
             const menuHeader = (title) => `<h3 class="side-menu__item-header">
                         ${title}
                     </h3>`;
-            const menuItem = () => `
-                <div class="side-menu__item-container">
-                    ${title ? menuHeader(title) : "<br>"}
-                    <div class="side-menu__item-inputs">
-                        ${elements.map(element => typeof element === 'object' ? input(element) : element).join("\n")}
+            const menuItem = () => {
+                const menuElement = fromHtml(`
+                        <div class="side-menu__item-container">
+                            ${title ? menuHeader(title) : "<br>"}
+                        </div>
+                    `);
+                const menuContent = fromHtml(`
+                        <div class="side-menu__item-inputs"></div>
+                    `);
+                menuContent.append(...elements.map(el => inputElement(el)));
+                menuElement.append(menuContent);
+                return menuElement;
+                // ${elements.map(element => typeof element === 'object' ? input(element) : element).join("\n")}
+
+            };
+            const submenuItem = (submenu, title) => {
+                const container = fromHtml(`
+                    <div class="side-menu__item-container side-menu__subitem" >
+                        ${title ? menuHeader(title) : "<br>"}
                     </div>
-                </div>
-            `;
-            const submenuItem = (submenu, title) => `
-                <div class="side-menu__item-container side-menu__subitem" >
-                    ${title ? menuHeader(title) : "<br>"}
-                    <div class="side-menu__subitem-content side-menu__submenu">
-                        ${this.sideMenuElement(submenu, title).outerHTML}
-                    </div>
-                </div>
-            `;
+                    `)
+                    ;
+                const submenuContent = fromHtml(`
+                        <div class="side-menu__subitem-content side-menu__submenu"></div>
+                    `);
+                const content = this.sideMenuElement(submenu, title);
+                submenuContent.append(content);
+                container.append(submenuContent);
+                return container;
+            }
             switch (type) {
                 case "submenu":
                     return submenuItem(submenu, title);
@@ -903,15 +932,20 @@ export class Games extends Widget {
             }
 
         };
-        const sideMenu = document.createElement("div");
-        sideMenu.classList.add("section__side-menu");
-        sideMenu.innerHTML = `
-            <h2 class="side-menu__header">${title}</h2>
-            <div class="side-menu__content scrollable">
-                ${menu.map(item => generateMenuItem(item)).join("")}
+        const sideMenu = fromHtml(`
+            <div class="section__side-menu">
+                <h2 class="side-menu__header">${title}</h2>
             </div>
-        `;
-
+        `);
+        const sideMenuContainer = fromHtml(`
+            <div class="side-menu__content scrollable"></div>`);
+        menu.forEach(item => {
+            const menu = generateMenuItem(item)
+            sideMenuContainer.append(menu);
+            // console.log(item, menu)
+        })
+        // ${menu.map(item => generateMenuItem(item)).join("")}
+        sideMenu.append(sideMenuContainer);
         return sideMenu;
     }
 }

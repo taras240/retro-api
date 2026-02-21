@@ -147,7 +147,7 @@ export const updateProgressBarData = (container, gameData, isHardMode, progressT
     const lastCheevosElement = container.querySelector(`.rp__last-cheevos`);
     const progressBarElement = container.querySelector(`.${baseClass}`);
     const progressSessionsElement = container.querySelector(`.${baseClass}-sessions`)
-    progressType = progressType ?? container.dataset.type ?? PROGRESS_TYPES.cheevos;
+    progressType = container.dataset.type ?? PROGRESS_TYPES.cheevos;
     const { unlocked, total, unlockedRate } = getStats(gameData, isHardMode, progressType);
 
     const lastCheevos = Object.values(gameData?.AllAchievements ?? {})
