@@ -196,7 +196,6 @@ export class AchievementsBlock extends Widget {
                     property: "filterName",
                     state: `${this.uiProps.filters[filterName]?.state ?? 0}`,
                     onChange: (stateData) => this.setFilter(stateData),
-                    // event: `ui.achievementsBlock[${this.CLONE_NUMBER}].setFilter({ state, filterName })`,
                 })),
                 {
                     type: inputTypes.CHECKBOX,
@@ -289,10 +288,10 @@ export class AchievementsBlock extends Widget {
     }
     uiSetCallbacks = {
         ACHIV_MIN_SIZE(value) {
-            this.fitSizeVertically();
+            this.fitCheevoSize();
         },
         ACHIV_MAX_SIZE(value) {
-            this.fitSizeVertically();
+            this.fitCheevoSize();
         },
         isGrouping(value) {
             this.groupCheevos();
@@ -399,11 +398,11 @@ export class AchievementsBlock extends Widget {
         this.sectionID = this.section.id;
         document.querySelector(".wrapper").appendChild(this.section);
 
-        this.container = this.section.querySelector(`.achievements-container`); //Контейнер  з досягненнями
+        this.container = this.section.querySelector(`.achievements-container`);
         this.resizer = this.section.querySelector(
             `#achivs-resizer${this.CLONE_NUMBER}`
-        ); // Ресайзер блока досягнень
-        this.resizeCallback = () => this.fitSizeVertically(true)
+        );
+        this.resizeCallback = () => this.fitCheevoSize(true)
     }
     addEvents() {
         super.addEvents();
@@ -421,7 +420,7 @@ export class AchievementsBlock extends Widget {
         //         event: event,
         //         section: this.section,
         //         callback: () => {
-        //             this.fitSizeVertically(true);
+        //             this.fitCheevoSize(true);
         //         },
         //     });
         // });
@@ -490,7 +489,7 @@ export class AchievementsBlock extends Widget {
         fillCheevosContainer(gameData);
         this.groupCheevos();
         // Підгонка розміру досягнень
-        this.fitSizeVertically();
+        this.fitCheevoSize();
         this.setSubsetSelection();
         this.setMGameSelection();
 
@@ -534,12 +533,12 @@ export class AchievementsBlock extends Widget {
         }
         function setHtmlCode() {
             achivElement.innerHTML = `
-        <div class="preview-container">
-          <img class="achiv-preview" src="${achievement.prevSrc}"  alt="${achievement.Title} icon"/>
-          <div class="prev-lock-overlay"></div>
-          <div class="box-inner-shadow"></div>
-        </div>
-        `;
+                <div class="preview-container">
+                    <img class="achiv-preview" src="${achievement.prevSrc}"  alt="${achievement.Title} icon"/>
+                    <div class="prev-lock-overlay"></div>
+                    <div class="box-inner-shadow"></div>
+                </div>
+            `;
         }
 
         const achivElement = document.createElement("li");
@@ -550,56 +549,7 @@ export class AchievementsBlock extends Widget {
         return achivElement;
     }
 
-    // async moveToTop(element) {
-    //     if (this.container.offsetHeight < this.container.scrollHeight) {
-    //         // this.applySorting();
-    //         return;
-    //     }
-    //     const toEnd = this.REVERSE_SORT === -1;
-    //     const dur = 1000;
-
-    //     this.container.style.setProperty("--duration", `${dur}ms`);
-
-    //     const targetElement = element;
-    //     const firstElement = this.container.querySelector(".achiv-block");
-    //     const lastElement = this.container.querySelector(".achiv-block:last-of-type");
-
-    //     const shrinkElement = document.createElement("li");
-    //     const growElement = document.createElement("li");
-
-    //     shrinkElement.classList.add("shrink-element");
-    //     growElement.classList.add("grow-element")
-
-    //     const targetPos = {
-    //         xPos: toEnd ? lastElement.offsetLeft : firstElement.offsetLeft,
-    //         yPos: toEnd ? lastElement.offsetTop : firstElement.offsetTop
-    //     }
-    //     const curPos = {
-    //         xPos: targetElement.offsetLeft,
-    //         yPos: targetElement.offsetTop
-    //     }
-
-    //     targetElement.style.left = curPos.xPos + 'px';
-    //     targetElement.style.top = curPos.yPos + 'px';
-    //     targetElement.classList.add("move");
-    //     toEnd ? this.container.append(growElement) : this.container.prepend(growElement);
-    //     this.container.insertBefore(shrinkElement, targetElement);
-
-    //     await delay(50);//waiting for frame
-    //     targetElement.style.left = targetPos.xPos + 'px';
-    //     targetElement.style.top = targetPos.yPos + 'px';
-
-    //     await delay(dur + 100);//waiting for animation end
-    //     growElement.remove();
-    //     shrinkElement.remove();
-    //     targetElement.classList.remove("move");
-    //     targetElement.style.left = 'auto';
-    //     targetElement.style.top = 'auto';
-    //     toEnd ? this.container.append(targetElement) : this.container.prepend(targetElement);
-    //     this.applyFiltering();
-    // }
-    // Автопідбір розміру значків ачівментсів
-    fitSizeVertically(isLoadDynamic = false) {
+    fitCheevoSize(isLoadDynamic = false) {
         // Отримання посилання на блок досягнень та його дочірні елементи
         const { section, container, sectionID } = this;
 
@@ -663,21 +613,16 @@ export class AchievementsBlock extends Widget {
             const cheevo = watcher.CHEEVOS[cheevoID];
             if (!cheevo) continue;
             const cheevoElement = this.container.querySelector(`.achiv-block[data-achiv-id="${cheevoID}"]`);
+            if (!cheevoElement) continue; // guard against missing nodes
             const cheevoIsHidden = cheevo?.offsetParent === null;
             if (!this.uiProps.showMario || cheevoIsHidden || !this.VISIBLE) {
                 unlockChevo(cheevoElement, cheevo);
             }
             else {
                 await scrollElementIntoView({ container: this.container, element: cheevoElement, scrollByX: false });
-                // cheevoElement.scrollIntoView({ behavior: ui.isCEF ? "auto" : "smooth", block: "center", });
-                // await delay(1200);
                 await smb3UnlockAnimation().doAction(cheevoElement, () => unlockChevo(cheevoElement, cheevo))
-                // await marioAction(cheevoElement, cheevo, this);
             }
             await delay(100);
-            // if (this.SORT_NAME == sortMethods.latest && !this.IS_GROUPING) {
-            //     await this.moveToTop(cheevoElement);
-            // }
 
         };
         await delay(2000);
@@ -697,24 +642,34 @@ export class AchievementsBlock extends Widget {
     startAutoScroll(toBottom = true) {
         clearTimeout(this.autoscrollInterval.timeout);
         clearInterval(this.autoscrollInterval.interval);
-
-        let refreshRateMiliSecs = 50;
-
-        let scrollContainer = this.container;
-        let speedInPixels = 1;
+        const FPS = 25;
+        const frameTime = 1000 / FPS;
+        const scrollContainer = this.container;
         const pauseOnEndMilisecs = 15 * 1000;
+
+        // initialize handlers & speed state once to avoid accumulating listeners
+        if (!this.autoscrollInterval.mouseEnterHandler) {
+            this.autoscrollInterval.speedInPixels = 1;
+            this.autoscrollInterval.mouseEnterHandler = () => { this.autoscrollInterval.speedInPixels = 0; };
+            this.autoscrollInterval.mouseLeaveHandler = () => { this.autoscrollInterval.speedInPixels = 1; };
+        }
+
+        // remove previous handlers (safe) and attach the managed handlers
+        scrollContainer.removeEventListener("mouseenter", this.autoscrollInterval.mouseEnterHandler);
+        scrollContainer.removeEventListener("mouseleave", this.autoscrollInterval.mouseLeaveHandler);
+        scrollContainer.addEventListener("mouseenter", this.autoscrollInterval.mouseEnterHandler);
+        scrollContainer.addEventListener("mouseleave", this.autoscrollInterval.mouseLeaveHandler);
+
         // Часовий інтервал для прокручування вниз
         if (this.uiProps.autoscroll) {
             this.autoscrollInterval.interval = setInterval(() => {
                 if (scrollContainer.scrollHeight - scrollContainer.clientHeight <= 10) {
                     this.stopAutoScroll();
                 }
+                const speedInPixels = this.autoscrollInterval.speedInPixels || 0;
                 if (toBottom) {
                     scrollContainer.scrollTop += speedInPixels;
-                    if (
-                        scrollContainer.scrollTop + scrollContainer.clientHeight >=
-                        scrollContainer.scrollHeight
-                    ) {
+                    if (scrollContainer.scrollTop + scrollContainer.clientHeight >= scrollContainer.scrollHeight) {
                         clearInterval(this.autoscrollInterval.interval);
                         this.autoscrollInterval.timeout = setTimeout(() => this.startAutoScroll(false), pauseOnEndMilisecs);
                     }
@@ -725,16 +680,7 @@ export class AchievementsBlock extends Widget {
                         this.autoscrollInterval.timeout = setTimeout(() => this.startAutoScroll(true), pauseOnEndMilisecs);
                     }
                 }
-            }, refreshRateMiliSecs);
-            // Припиняємо прокручування при наведенні миші на контейнер
-            scrollContainer.addEventListener("mouseenter", () => {
-                speedInPixels = 0; // Зупиняємо інтервал прокрутки
-            });
-
-            // Відновлюємо прокрутку при відведенні миші від контейнера
-            scrollContainer.addEventListener("mouseleave", () => {
-                speedInPixels = 1;
-            });
+            }, frameTime);
         }
     }
     stopAutoScroll() {
@@ -795,7 +741,7 @@ export class AchievementsBlock extends Widget {
             isHide: this.uiProps.hideFiltered,
         });
         this.groupCheevos();
-        // this.fitSizeVertically()
+        // this.fitCheevoSize()
     }
     setFilter({ filterName, state }) {
         // console.log(filterName, state, event)
@@ -880,9 +826,10 @@ export class AchievementsBlock extends Widget {
             group.classList.add("cheevos__group");
             group.classList.toggle("compact", !this.uiProps.showGroupHeader);
             group.innerHTML = `
-                <div class="cheevos__group-header"><h3 class="cheevos__group-title">${title}</h3></div>
-                <div class="cheevos__group-container"></div>
+                <div class="cheevos__group-header">
+                    <h3 class="cheevos__group-title">${title}</h3>
                 </div>
+                <div class="cheevos__group-container"></div>
             `;
             this.container.appendChild(group);
             const groupContainer = group.querySelector(".cheevos__group-container");
@@ -892,7 +839,7 @@ export class AchievementsBlock extends Widget {
         }
         const removeGroups = (cheevos) => {
             cheevos.forEach(c => this.container.appendChild(c));
-            this.fitSizeVertically();
+            this.fitCheevoSize();
         }
         const gameData = watcher.GAME_DATA;
         const cheevos = this.container.querySelectorAll(".achiv-block");
@@ -915,7 +862,7 @@ export class AchievementsBlock extends Widget {
                     [...all, ...session.cheevos], []);
                 const filterByDay = (cheevo, { dayUnixTime, sessions }) => {
                     const sessionDays = sessions.map(({ unixTime }) => unixTime);
-                    if (dayUnixTime === "Locked") {
+                    if (dayUnixTime === ui.lang.locked) {
                         return filterBy.notEarned(cheevo)
                     }
                     else if (!sessionDays.includes(dayUnixTime)) {
@@ -924,11 +871,11 @@ export class AchievementsBlock extends Widget {
 
                     return sessions.find(({ unixTime }) => unixTime === dayUnixTime)?.cheevos?.includes(+cheevo.achivId)
                 }
-                createGroupElement("This Session", filterByDay, cheevos, { dayUnixTime: "This Session", sessions });
+                createGroupElement(ui.lang.thisSession, filterByDay, cheevos, { dayUnixTime: ui.lang.thisSession, sessions });
                 for (let dayUnixTime of daysUnixTime) {
                     createGroupElement(new Date(dayUnixTime).toLocaleDateString(), filterByDay, cheevos, { dayUnixTime, sessions })
                 }
-                createGroupElement("Locked", filterByDay, cheevos, { dayUnixTime: "Locked", sessions });
+                createGroupElement(ui.lang.locked, filterByDay, cheevos, { dayUnixTime: ui.lang.locked, sessions });
                 break;
             case (CHEEVO_GROUPS.TYPE):
                 createGroupElement(ui.lang.progression, filterBy.progression, cheevos);
@@ -945,7 +892,7 @@ export class AchievementsBlock extends Widget {
                 const { zones } = gameData;
                 const isNamedLevels = zones?.length > 2;
                 for (let level = minLevel; level <= maxLevel; level++) {
-                    createGroupElement(`Level: ${isNamedLevels ? zones[level - 1] : level}`, filterBy.level, cheevos, { targetLevel: level })
+                    createGroupElement(`${ui.lang.level}: ${isNamedLevels ? zones[level - 1] : level}`, filterBy.level, cheevos, { targetLevel: level })
                 }
                 createGroupElement(ui.lang.other, filterBy.leveless, cheevos);
                 break;
@@ -962,6 +909,6 @@ export class AchievementsBlock extends Widget {
             default: break;
         }
 
-        this.fitSizeVertically();
+        this.fitCheevoSize();
     }
 }

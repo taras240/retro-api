@@ -257,5 +257,6 @@
     "watcherMode": "Mode",
     "previewSize": "Preview Size",
     "switchProgressionIfBeaten": "Adaptive progression",
-    "switchProgressionIfBeatenHint": "If progression is unavailable or the game is beaten, the progressbar will be shown"
+    "switchProgressionIfBeatenHint": "If progression is unavailable or the game is beaten, the progressbar will be shown",
+    "thisSession": "This Session"
 }
