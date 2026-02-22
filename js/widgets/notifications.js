@@ -383,13 +383,28 @@ export class Notifications extends Widget {
         return gameMessage;
     }
     getDeltaTime(timeStamp) {
-        let date = +timeStamp;
-        let now = (new Date()).getTime();
-        let deltaSeconds = ~~((now - date) / 1000);
-        return deltaSeconds < 3 * 60 ? "moment ago" :
-            deltaSeconds < 10 * 60 ? `few minutes ago` :
-                deltaSeconds < 60 * 60 ? `${~~(deltaSeconds / 60)} minutes ago` :
-                    deltaSeconds < 60 * 60 * 12 ? new Date(date).toLocaleTimeString().replace(/:[^:]*$/gi, "") :
-                        new Date(date).toLocaleString().replace(/:[^:]*$/gi, "");
+        const MS = 1000;
+        const MIN = 60 * MS;
+        const HOUR = 60 * MIN;
+
+        const date = +timeStamp;
+        const delta = Date.now() - date;
+
+        if (delta < 10 * MIN) return "moments ago";
+
+        if (delta < HOUR) {
+            const minutes = Math.floor(delta / MIN);
+            return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
+        }
+
+        const hours = Math.round(delta / HOUR);
+
+        if (hours < 6) return `around ${hours} hour${hours > 1 ? "s" : ""} ago`;
+
+        const trimSeconds = (str) => str.replace(/:\d{2}$/, "");
+
+        if (hours < 12) return trimSeconds(new Date(date).toLocaleTimeString());
+
+        return trimSeconds(new Date(date).toLocaleString());
     }
 }
