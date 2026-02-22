@@ -513,11 +513,11 @@ export class Games extends Widget {
             }
 
         });
-        this.section.querySelectorAll(".side-menu__subitem").forEach(subitem => {
+        this.section.querySelectorAll(".side-menu__item-container.submenu").forEach(subitem => {
             const itemHeader = subitem.querySelector(".side-menu__item-header");
             const mainHeader = subitem.querySelector(".side-menu__header");
-            const content = subitem.querySelector('.side-menu__subitem-content');
-            const submenu = subitem.querySelector('.side-menu__submenu');
+            const content = subitem.querySelector('.side-menu__item-inputs.submenu');
+            const submenu = subitem.querySelector('.side-menu__item-inputs.submenu');
 
             if (itemHeader && content) {
                 itemHeader.addEventListener("click", (event) => {
@@ -744,10 +744,10 @@ export class Games extends Widget {
     }
     sideMenuElement(menu, title) {
         if (!menu) {
-            title = `${ui.lang.filters}`;
+            title = ui.lang.filters;
             menu = [
                 {
-                    title: `${ui.lang.platform}`,
+                    title: ui.lang.platform,
                     type: "submenu",
                     submenu: [
                         {
@@ -757,7 +757,7 @@ export class Games extends Widget {
                     ]
                 },
                 {
-                    title: `${ui.lang.genre}`,
+                    title: ui.lang.genre,
                     type: "submenu",
                     submenu: [
                         {
@@ -771,7 +771,7 @@ export class Games extends Widget {
                         {
                             type: inputTypes.NUM_INPUT,
                             id: "side-list-released-from",
-                            label: `${ui.lang.from}`,
+                            label: ui.lang.from,
                             onChange: (event) => this.YEARS_FILTER = {
                                 ...ui.games.YEARS_FILTER,
                                 from: Number(event.currentTarget.value) || 0
@@ -780,7 +780,7 @@ export class Games extends Widget {
                         {
                             type: inputTypes.NUM_INPUT,
                             id: "side-list-released-to",
-                            label: `${ui.lang.to}`,
+                            label: ui.lang.to,
                             onChange: (event) => this.YEARS_FILTER = {
                                 ...ui.games.YEARS_FILTER,
                                 to: Number(event.currentTarget.value) || Infinity
@@ -794,17 +794,16 @@ export class Games extends Widget {
                         {
                             type: inputTypes.NUM_INPUT,
                             id: "side-list-cheevos-from",
-                            label: `${ui.lang.from}`,
+                            label: ui.lang.from,
                             onChange: (event) => this.CHEEVOS_COUNT_FILTER = {
                                 ...this.CHEEVOS_COUNT_FILTER,
                                 from: Number(event.currentTarget.value) || 0
                             },
-                            // event: `onclick="watcher.updateGameData(${gameID})"`,
                         },
                         {
                             type: inputTypes.NUM_INPUT,
                             id: "side-list-cheevos-to",
-                            label: `${ui.lang.to}`,
+                            label: ui.lang.to,
                             onChange: (event) => this.CHEEVOS_COUNT_FILTER = {
                                 ...this.CHEEVOS_COUNT_FILTER,
                                 to: Number(event.currentTarget.value) || Infinity
@@ -818,7 +817,7 @@ export class Games extends Widget {
                         {
                             type: inputTypes.NUM_INPUT,
                             id: "side-list-ppc-from",
-                            label: `${ui.lang.from}`,
+                            label: ui.lang.from,
                             onChange: (event) => this.POINTS_PER_CHEEVO_FILTER = {
                                 ...this.POINTS_PER_CHEEVO_FILTER,
                                 from: Number(event.currentTarget.value) || 0
@@ -827,7 +826,7 @@ export class Games extends Widget {
                         {
                             type: inputTypes.NUM_INPUT,
                             id: "side-list-ppc-to",
-                            label: `${ui.lang.to}`,
+                            label: ui.lang.to,
                             onChange: (event) => this.POINTS_PER_CHEEVO_FILTER = {
                                 ...this.POINTS_PER_CHEEVO_FILTER,
                                 to: Number(event.currentTarget.value) || Infinity
@@ -841,7 +840,7 @@ export class Games extends Widget {
                         {
                             type: inputTypes.NUM_INPUT,
                             id: "side-list-hltb-from",
-                            label: `${ui.lang.from}`,
+                            label: ui.lang.from,
                             onChange: (event) => this.HLTB_FILTER = {
                                 ...this.HLTB_FILTER,
                                 from: Number(event.currentTarget.value) || 0
@@ -850,7 +849,7 @@ export class Games extends Widget {
                         {
                             type: inputTypes.NUM_INPUT,
                             id: "side-list-released-to",
-                            label: `${ui.lang.to}`,
+                            label: ui.lang.to,
                             onChange: (event) => this.HLTB_FILTER = {
                                 ...this.HLTB_FILTER,
                                 to: Number(event.currentTarget.value) || Infinity,
@@ -895,42 +894,29 @@ export class Games extends Widget {
                         ${title}
                     </h3>`;
             const menuItem = () => {
+                const submenuClass = submenu ? "submenu" : "";
                 const menuElement = fromHtml(`
-                        <div class="side-menu__item-container">
+                        <div class="side-menu__item-container ${submenuClass}">
                             ${title ? menuHeader(title) : "<br>"}
                         </div>
                     `);
                 const menuContent = fromHtml(`
-                        <div class="side-menu__item-inputs"></div>
+                        <div class="side-menu__item-inputs ${submenuClass}"></div>
                     `);
-                menuContent.append(...elements.map(el => inputElement(el)));
+                if (submenu) {
+                    menuContent.append(this.sideMenuElement(submenu, title));
+                }
+                else {
+                    menuContent.append(
+                        ...elements?.map(el => inputElement(el))
+                    );
+                }
+
                 menuElement.append(menuContent);
                 return menuElement;
-                // ${elements.map(element => typeof element === 'object' ? input(element) : element).join("\n")}
 
             };
-            const submenuItem = (submenu, title) => {
-                const container = fromHtml(`
-                    <div class="side-menu__item-container side-menu__subitem" >
-                        ${title ? menuHeader(title) : "<br>"}
-                    </div>
-                    `)
-                    ;
-                const submenuContent = fromHtml(`
-                        <div class="side-menu__subitem-content side-menu__submenu"></div>
-                    `);
-                const content = this.sideMenuElement(submenu, title);
-                submenuContent.append(content);
-                container.append(submenuContent);
-                return container;
-            }
-            switch (type) {
-                case "submenu":
-                    return submenuItem(submenu, title);
-                default:
-                    return menuItem();
-            }
-
+            return menuItem();
         };
         const sideMenu = fromHtml(`
             <div class="section__side-menu">
@@ -942,9 +928,7 @@ export class Games extends Widget {
         menu.forEach(item => {
             const menu = generateMenuItem(item)
             sideMenuContainer.append(menu);
-            // console.log(item, menu)
         })
-        // ${menu.map(item => generateMenuItem(item)).join("")}
         sideMenu.append(sideMenuContainer);
         return sideMenu;
     }
