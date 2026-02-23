@@ -79,7 +79,8 @@ const sessionsProgressHtml = (gameData, isHardMode, progressType) => {
     }).join("")
 }
 const getUnlockedCount = (gameData, isHardMode) => {
-    let softCount, hardCount = 0;
+    let softCount = 0;
+    let hardCount = 0;
     const sets = [gameData, ...Object.values(gameData.subsetsData)];
     sets.forEach(set => {
         hardCount += set?.unlockData?.hardcore?.count ?? 0;
@@ -88,7 +89,8 @@ const getUnlockedCount = (gameData, isHardMode) => {
     return isHardMode ? hardCount : softCount;
 }
 const getUnlockedPoints = (gameData, isHardMode) => {
-    let softPoints, hardPoints = 0;
+    let softPoints = 0;
+    let hardPoints = 0;
     const sets = [gameData, ...Object.values(gameData.subsetsData)];
     sets.forEach(set => {
         hardPoints += set?.unlockData?.hardcore?.points ?? 0;

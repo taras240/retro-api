@@ -38,7 +38,8 @@ export const updateProgressionBar = (container, gameData, isHardMode = true) => 
     }
     if (!gameData) return "n/a";
     const reorderCheevos = (cheevos) => {
-        const sortedCheevos = cheevos.sort((a, b) => sortBy.progression(a, b)).sort((a, b) => sortBy.latest(a, b))
+        const sortedCheevos = cheevos.sort((a, b) => sortBy.progression(a, b)).sort((a, b) =>
+            isHardMode ? sortBy.latestHardcore(a, b) : sortBy.latest(a, b))
         const progresionCheevos = sortedCheevos.filter(c => c.Type === CHEEVO_TYPES.PROGRESSION);
         const winCheevos = sortedCheevos.filter(c => c.Type === CHEEVO_TYPES.WIN);
         return [...progresionCheevos, ...winCheevos];

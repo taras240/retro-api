@@ -1,8 +1,12 @@
 .status__section,
 .rp__section {
+    --session-border-color: var(--main-color);
+    --progress-container-padding: 0px;
+    --progress-border-thickness: 0;
     --progress-border-radius: 5px;
-    --progress-value-border-radius: 5px;
     --progression-border-radius: 5px;
+    --progress-value-border-radius: 5px;
+    --progression-value-border-radius: 5px;
     --progress-height: 0.4rem;
     --progression-gap: 5px;
     --focus-opacity: 0.5;
@@ -81,6 +85,8 @@
     --progress-border-radius: 1px;
     --progress-value-border-radius: 1px;
     --progression-border-radius: 0;
+    --progression-value-border-radius: 0;
+    --progress-value-border-radius: 0;
     --progress-height: 1rem;
     --progression-gap: 1px;
     --bg-opacity-mask: url(../assets/img/tr-1.svg);
@@ -95,6 +101,8 @@
     --progress-border-radius: 5px;
     --progress-value-border-radius: 5px 0 0 5px;
     --progression-border-radius: 0;
+    --progression-value-border-radius: 0;
+    --progress-value-border-radius: 0;
     --progression-gap: 0;
     --focus-opacity: 1;
     --locked-opacity: 1;
@@ -122,6 +130,40 @@
     margin-left: 0.5rem;
 }
 
+.rp__section[data-theme="megaman"],
+.status__section[data-theme="megaman"] {
+    --session-border-color: transparent;
+    --progress-container-padding: 1px;
+    --progress-border-thickness: 2px;
+    --progress-border-color: white;
+    --progress-border-radius: 3px;
+    --progress-value-border-radius: 0;
+    --progression-border-radius: 3px;
+    --progression-value-border-radius: 0;
+    --progress-height: 1.5rem;
+    --progression-gap: 2px;
+    --bg-opacity-mask: url(../assets/img/mm-mask.svg);
+    --progress-value-mask: url(../assets/img/mm-mask.svg);
+    --progression-unlocked-mask: url(../assets/img/mm-mask.svg);
+    --progression-bg-color: transparent;
+    --progression-bg-win-color: transparent;
+    --focus-opacity: 1;
+    --locked-opacity: 0.5;
+    --progress-bg-color: transparent;
+    --progress-value-bg: linear-gradient(to bottom,
+            gold 0 35%,
+            white 35% 70%,
+            gold 65% 100%);
+    --progression-unlock-color: linear-gradient(to bottom,
+            #16a34a 0 35%,
+            #a0ffc1 35% 70%,
+            #16a34a 65% 100%);
+    --progression-unlock-win-color: linear-gradient(to bottom,
+            gold 0 35%,
+            white 35% 70%,
+            gold 65% 100%);
+    ;
+}
 
 /* .rp__section:not(.show-cheevos-list) {
     height: fit-content !important;
@@ -357,7 +399,8 @@
     margin-bottom: 0.2rem;
     border-radius: var(--progress-border-radius);
     overflow: hidden;
-    /* padding: 0.25rem 0 0.5rem; */
+    border: var(--progress-border-thickness) solid var(--progress-border-color);
+    padding: var(--progress-container-padding);
 }
 
 /* --border-radius: 1px;
@@ -385,7 +428,7 @@
     font-size: inherit;
     /* border: 1px solid var(--color); */
     background-color: var(--color);
-    border-radius: var(--progression-border-radius);
+    border-radius: var(--progression-value-border-radius);
     opacity: var(--locked-opacity);
     mask-image: var(--bg-opacity-mask);
     mask-repeat: repeat;
@@ -410,17 +453,27 @@
 .rp__progression-point.earned {
     --color: var(--progression-unlock-color);
     box-shadow: 0 0 2px 0px var(--color);
-    background-color: var(--color);
+    background: var(--color);
     border-color: transparent;
     border: none;
     box-shadow: none;
     opacity: 1;
-    mask-image: none;
+    mask-image: var(--progression-unlocked-mask);
 }
 
 .rp__progression-point.win.earned {
     --color: var(--progression-unlock-win-color);
     opacity: 1;
+}
+
+.rp__progression-point:hover {
+    --color: var(--font-color);
+    mask-image: none;
+}
+
+.rp__progression-point.win:hover {
+    --color: gold;
+    mask-image: none;
 }
 
 /* .rp__progression-point.win.earned.hardcore {
@@ -530,6 +583,8 @@
     border-radius: var(--progress-border-radius);
     margin: 0 0 0.2rem;
     overflow: hidden;
+    border: var(--progress-border-thickness) solid var(--progress-border-color);
+    padding: var(--progress-container-padding);
 }
 
 .rp__progressbar-bg {
@@ -537,7 +592,7 @@
     left: 0;
     top: 0;
     width: 100%;
-    height: 100%;
+    height: calc(100% - var(--progress-container-padding) * 2);
     opacity: var(--locked-opacity);
     background-color: var(--progress-bg-color);
     border-radius: var(--progress-border-radius);
@@ -550,11 +605,11 @@
 .rp__progressbar-value {
     position: absolute;
     width: var(--unlockRate);
-    height: 100%;
+    height: calc(100% - var(--progress-container-padding) * 2);
     background: var(--progress-value-bg);
     /* box-shadow: 0 0 2px 0px var(--accent-color); */
     border-radius: var(--progress-value-border-radius);
-
+    mask-image: var(--progress-value-mask);
 }
 
 .rp__progressbar::before {
@@ -579,7 +634,7 @@
     background: transparent;
     display: flex;
     flex-direction: row;
-    border-radius: var(--progress-border-radius);
+    border-radius: var(--progress-value-border-radius);
     overflow: hidden;
 }
 
@@ -594,7 +649,7 @@
     width: calc(var(--percentage));
     height: 100%;
     background: transparent;
-    border-right: 1px solid var(--main-color);
+    border-right: 1px solid var(--session-border-color);
     cursor: default;
 }
 
