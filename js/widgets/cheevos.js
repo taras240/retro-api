@@ -642,7 +642,7 @@ export class AchievementsBlock extends Widget {
     startAutoScroll(toBottom = true) {
         clearTimeout(this.autoscrollInterval.timeout);
         clearInterval(this.autoscrollInterval.interval);
-        const FPS = 25;
+        const FPS = 20;
         const frameTime = 1000 / FPS;
         const scrollContainer = this.container;
         const pauseOnEndMilisecs = 15 * 1000;
