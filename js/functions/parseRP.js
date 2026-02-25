@@ -2,28 +2,37 @@ import { RPLevelNames } from "../enums/levelNames.js";
 import { watcher } from "../script.js";
 import { replaceNumberWords } from "./numbersParser.js";
 
+const parseNumber = (levelString) => {
+    if (!levelString || !/\d/.test(levelString)) return;
+    const str = String(levelString);
+    const normalized = str.replace(/-/, ".").replace(/[^\d.]|\.$/g, "");
+    return parseFloat(normalized);
+};
+const findPreferredLevel = (matchesArray) => {
+    if (!matchesArray || !matchesArray.length) return;
+    return matchesArray?.find(l => /-/.test(l)) ?? matchesArray[0];
+};
+
 export const parseCurrentGameLevel = (richPresence) => {
 
     const levelNamesString = RPLevelNames.join("|");
 
     const checkLevel = (inputStr, zoneNames) => {
-        const regexLevel = new RegExp(`(${levelNamesString})(\\s|-\\s*|:\\s*)((\\d+-\\d+)|(\\d+))`, 'gi');
-        const regexZoneName = new RegExp(`\\b${zoneNames?.join("\\b|\\b")}\\b`, 'gi');
-        const match = inputStr.match(regexZoneName);
-        const zoneIndex = match ? watcher.GAME_DATA.zones?.indexOf(match[0]) : undefined;
-        const levelMatches = inputStr.matchAll(regexLevel);
+        const regexLevel = new RegExp(`(${levelNamesString})([\\s-:]*)(\\d+[-\\d]*\\w{0,1})`, 'gi');
 
-        let level;
-        // console.log(levelMatches);
-        // if (!levelMatches) return;
-        for (const match of levelMatches) {
-            level = match[3]?.replace('-', '.');
-        }
+        const levelMatches = inputStr.match(regexLevel);
+        let level = findPreferredLevel(levelMatches);
 
-        if (zoneIndex >= 0) {
-            level = `${zoneIndex + 1}${level?.includes(".") ? "." + level : ""}`;
+        if (zoneNames?.length) {
+            const regexZoneName = new RegExp(`\\b${zoneNames?.join("\\b|\\b")}\\b`, 'gi');
+            const match = inputStr.match(regexZoneName);
+            const zoneIndex = match ? watcher.GAME_DATA.zones?.indexOf(match[0]) : -1;
+
+            if (zoneIndex >= 0) {
+                level = `${zoneIndex + 1}.${level ? parseNumber(level) : ""}`;
+            }
         }
-        return Number(level);
+        return parseNumber(level);
     };
 
     const inputStr = replaceNumberWords(richPresence);
