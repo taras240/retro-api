@@ -1,7 +1,7 @@
 import { ONLINE_STATUS } from "../../enums/onlineStatus.js";
 
 export function onlineChecker({ getLastPlayedFunc, currentStatus, options = {} } = {}) {
-    const rpTimeout = typeof options.rpTimeout === 'number' ? options.rpTimeout : 3 * 60 * 1000; // default 5 minutes
+    const rpTimeout = typeof options.rpTimeout === 'number' ? options.rpTimeout : 3 * 60 * 1000; // default 3 minutes
     const lastPlayedTimeout = typeof options.lastPlayedTimeout === 'number' ? options.lastPlayedTimeout : 5 * 60 * 1000; // default 5 minutes
 
     const parseDate = (value) => {
@@ -22,12 +22,13 @@ export function onlineChecker({ getLastPlayedFunc, currentStatus, options = {} }
 
     if (currentStatus === ONLINE_STATUS.online) {
         status = ONLINE_STATUS.online;
-        lastCheckOnline = lastSeenOnline = new Date();
+        lastCheckOnline = Date.now();
+        lastSeenOnline = Date.now();
     }
 
     const check = async ({ lastPlayedGame, richPresence } = {}) => {
         status = ONLINE_STATUS.offline;
-        const now = new Date();
+        const now = Date.now();
         lastCheckOnline = now;
 
         // Rich presence takes priority: if a new RP message arrives, mark online
@@ -55,11 +56,12 @@ export function onlineChecker({ getLastPlayedFunc, currentStatus, options = {} }
         return status;
     };
     const updateWithRPMessage = ({ richPresence }) => {
-        const now = new Date();
+        const now = Date.now();
         if (richPresence !== lastRPMessage) {
             setOnline({ richPresence });
 
         } else {
+
             // same RP message: consider stale if no recent "seen" update
             if (lastSeenOnline && (now - lastSeenOnline) > rpTimeout) {
                 status = ONLINE_STATUS.offline;
@@ -68,7 +70,7 @@ export function onlineChecker({ getLastPlayedFunc, currentStatus, options = {} }
         return status;
     }
     const setOnline = ({ richPresence } = {}) => {
-        const now = new Date();
+        const now = Date.now();
         lastRPMessage = richPresence || now.toString();
         lastRPMessageDate = now;
         status = ONLINE_STATUS.online;
@@ -77,8 +79,8 @@ export function onlineChecker({ getLastPlayedFunc, currentStatus, options = {} }
 
     }
     const getStatus = () => status;
-    const getLastCheck = () => lastCheckOnline;
-    const getLastSeen = () => lastSeenOnline;
+    const getLastCheck = () => new Date(lastCheckOnline);
+    const getLastSeen = () => new Date(lastSeenOnline);
     const getLastRPMessage = () => ({ message: lastRPMessage, date: lastRPMessageDate });
     const reset = () => {
         lastRPMessage = null;
@@ -87,6 +89,12 @@ export function onlineChecker({ getLastPlayedFunc, currentStatus, options = {} }
         lastCheckOnline = null;
         lastSeenOnline = null;
     };
-
-    return { check, updateWithRPMessage, setOnline, getStatus, getLastCheck, getLastSeen, getLastRPMessage, reset };
+    const setOffline = () => {
+        const now = Date.now();
+        lastRPMessageDate = now - rpTimeout;
+        status = ONLINE_STATUS.offline;
+        lastSeenOnline = lastRPMessageDate;
+        lastCheckOnline = now;
+    }
+    return { check, updateWithRPMessage, setOnline, getStatus, getLastCheck, getLastSeen, getLastRPMessage, reset, setOffline };
 }

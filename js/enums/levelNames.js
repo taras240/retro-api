@@ -1,7 +1,7 @@
 export const allLevelNames = [
     'Level', 'Levels', 'Stage\\b', 'Stages', 'Area', 'World', 'Mission', 'Chapter', 'Section',
-    'Zone', 'Phase', 'Realm', 'Domain', 'Episode', 'Act', 'Acts', 'Tier', 'Floor', 'Floors',
-    'Dimension', 'Region', 'Scene', 'Screen', 'Round\\b', 'Course', 'Board'
+    'Zone', 'Phase', 'Phases', 'Realm', 'Domain', 'Episode', 'Act', 'Acts', 'Tier', 'Floor', 'Floors',
+    'Dimension', 'Region', 'Scene', 'Screen', 'Round\\b', 'Course', 'Board', "Quest"
 ];
 
 export const RPLevelNames = [...allLevelNames, ...allLevelNames.map(l => l.toLowerCase()), '🚩', '\\bin\\b'];

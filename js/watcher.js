@@ -125,6 +125,7 @@ export class Watcher {
         const doOnline = () => {
             this.zeroCheckTime = now;
             this.checkApiUpdates();
+            this.onlineCheckTimeOut && clearTimeout(this.onlineCheckTimeOut)
         }
         if (!configData.pauseIfOffline && !this.isOnline) {
             this.online.setOnline();
@@ -139,7 +140,7 @@ export class Watcher {
         }
         else {
             if (!this.isWatching) return;
-            setTimeout(() => this.checkForOnline(), this.CHECK_FOR_ONLINE_DELAY_MS)
+            this.onlineCheckTimeOut = setTimeout(() => this.checkForOnline(), this.CHECK_FOR_ONLINE_DELAY_MS);
         }
     }
     apiTrackerInterval;
@@ -170,7 +171,7 @@ export class Watcher {
             ui.showGameChangeAlerts(isStart);
 
         }
-        if (!isStart && (configData.pauseIfOffline && !this.isOnline)) return;
+        if (!isStart && (configData.pauseIfOffline && this.onlineCheckTimeOut)) return;
 
         const raProfileInfo = await apiWorker.getProfileInfo({});
 
