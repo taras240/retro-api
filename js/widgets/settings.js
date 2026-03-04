@@ -202,6 +202,14 @@ export class Settings extends Widget {
                         value: configData.gameID,
                         onChange: (event) => configData.gameID = event.currentTarget.value,
                     },
+                    {
+                        type: inputTypes.CHECKBOX,
+                        label: ui.lang.subsetBugFix,
+                        id: "settings_enable-subset-bug-fix",
+                        checked: configData.preventSubsetBug,
+                        onChange: (event) => configData.preventSubsetBug = event.currentTarget.checked,
+                        hint: ui.lang.subsetBugFixHint,
+                    }
                     // {
                     //     type: inputTypes.CHECKBOX,
                     //     label: ui.lang.loadLastSubset,

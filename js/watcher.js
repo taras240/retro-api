@@ -157,8 +157,13 @@ export class Watcher {
             this.online.setOnline();
             this.zeroCheckTime = now;
         }
-        const isGameChanged = (raProfileInfo) => {
-            const gameChanged = (raProfileInfo.LastGameID != this.GAME_DATA?.ID);
+        const isGameChanged = (raProfileInfo, isStart = false) => {
+            let gameChanged = (raProfileInfo.LastGameID !== this.GAME_DATA?.ID);
+            if (!isStart && gameChanged && configData.preventSubsetBug) {
+                const subsets = this.GAME_DATA?.availableSubsets ?? {};
+                const isSubset = Object.values(subsets).includes(raProfileInfo.LastGameID);
+                gameChanged = !isSubset;
+            }
             return gameChanged || isStart;
         }
         const onGameChanged = async (raProfileInfo) => {
@@ -175,7 +180,7 @@ export class Watcher {
 
         const raProfileInfo = await apiWorker.getProfileInfo({});
 
-        if (isGameChanged(raProfileInfo)) {
+        if (isGameChanged(raProfileInfo, isStart)) {
             await onGameChanged(raProfileInfo);
         }
         if (isPointsChanged(raProfileInfo)) {

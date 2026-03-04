@@ -258,5 +258,7 @@
     "previewSize": "Preview Size",
     "switchProgressionIfBeaten": "Adaptive progression",
     "switchProgressionIfBeatenHint": "If progression is unavailable or the game is beaten, the progressbar will be shown",
-    "thisSession": "This Session"
+    "thisSession": "This Session",
+    "subsetBugFix": "Subset Bug Fix",
+    "subsetBugFixHint": "Prevent switching to the subset; only allow it on Start/Pause."
 }
