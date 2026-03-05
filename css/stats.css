@@ -207,6 +207,10 @@
     width: fit-content;
 }
 
+.legend__award.hidden {
+    display: none;
+}
+
 .legend__award::before {
     content: '';
     position: absolute;

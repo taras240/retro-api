@@ -314,26 +314,37 @@ export class UserStatistic extends Widget {
         this.userSummary = currentUserSummary;
     }
     async updateChart() {
+        const AWARD_KINDS = [
+            { kind: 'mastered', cssVar: '--m', legendClass: 'mastered' },
+            { kind: 'completed', cssVar: '--c', legendClass: 'completed' },
+            { kind: 'beaten-hardcore', cssVar: '--b', legendClass: 'beaten' },
+            { kind: 'beaten-softcore', cssVar: '--b-s', legendClass: 'beaten-soft' },
+        ];
+
         if (!this.uiProps.completionChart) return;
-        const chartContainer = this.section.querySelector(".stats__chart-container");
-        const completionData = await apiWorker.completionProgress();//"beaten-hardcore"
+        const completionData = await apiWorker.completionProgress();
         const allGames = completionData?.Results ?? [];
         const allGamesCount = allGames.length;
-        const masteryRate = allGames.filter(g => g.HighestAwardKind === 'mastered').length / allGamesCount * 100;
-        const completionRate = allGames.filter(g => g.HighestAwardKind === 'completed').length / allGamesCount * 100;
-        const beatenRate = allGames.filter(g => g.HighestAwardKind === 'beaten-hardcore').length / allGamesCount * 100;
-        const beatenSoftRate = allGames.filter(g => g.HighestAwardKind === 'beaten-softcore').length / allGamesCount * 100;
 
-        chartContainer.style.setProperty('--m', masteryRate + '%');
-        chartContainer.style.setProperty('--c', completionRate + '%');
-        chartContainer.style.setProperty('--b', beatenRate + '%');
-        chartContainer.style.setProperty('--b-s', beatenSoftRate + '%');
+        if (!allGamesCount) return;
 
-        this.section.querySelector('.legend__value-mastered').innerText = masteryRate.toFixed(2) + '%';
-        this.section.querySelector('.legend__value-completed').innerText = completionRate.toFixed(2) + '%';
-        this.section.querySelector('.legend__value-beaten').innerText = beatenRate.toFixed(2) + '%';
-        this.section.querySelector('.legend__value-beaten-soft').innerText = beatenSoftRate.toFixed(2) + '%';
-        this.section.querySelector('.legend__value-progress').innerText = (100 - masteryRate - completionRate - beatenRate - beatenSoftRate).toFixed(2) + '%';
+        const rates = AWARD_KINDS.reduce((acc, { kind, cssVar, legendClass }) => {
+            const rate = allGames.filter(g => g.HighestAwardKind === kind).length / allGamesCount * 100;
+            acc[legendClass] = { rate, cssVar };
+            return acc;
+        }, {});
+
+        const chartContainer = this.section.querySelector(".stats__chart-container");
+        const totalRated = Object.values(rates).reduce((sum, { rate }) => sum + rate, 0);
+
+        Object.entries(rates).forEach(([legendClass, { cssVar, rate }]) => {
+            chartContainer.style.setProperty(cssVar, rate + '%');
+            chartContainer.querySelector(`.legend__${legendClass}`)?.classList.toggle("hidden", !rate);
+            chartContainer.querySelector(`.legend__value-${legendClass}`).innerText = rate.toFixed(2) + '%';
+        });
+
+        this.section.querySelector('.legend__value-progress').innerText =
+            (100 - totalRated).toFixed(2) + '%';
 
     }
     statusProperties = {
