@@ -125,7 +125,9 @@ export class Watcher {
         const doOnline = () => {
             this.zeroCheckTime = now;
             this.checkApiUpdates();
-            this.onlineCheckTimeOut && clearTimeout(this.onlineCheckTimeOut)
+            this.onlineCheckTimeOut && clearTimeout(this.onlineCheckTimeOut);
+            this.onlineCheckTimeOut = null;
+
         }
         if (!configData.pauseIfOffline && !this.isOnline) {
             this.online.setOnline();
