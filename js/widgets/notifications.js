@@ -142,7 +142,7 @@ export class Notifications extends Widget {
     }
 
     saveAlerts(alerts) {
-        const timeStamp = new Date().toISOString();
+        const timeStamp = Date.now();
         const normalizedAlerts = alerts.map(alert => {
             if ([ALERT_TYPES.GAME, ALERT_TYPES.AWARD].includes(alert.type)) {
                 const {
@@ -208,7 +208,7 @@ export class Notifications extends Widget {
         this.container.innerHTML = "";
         const savedAlerts = this.getSavedAlerts();
         savedAlerts.forEach(({ timeStamp, alerts }) => {
-            this.showAlerts(alerts, new Date(timeStamp));
+            this.showAlerts(alerts, new Date(timeStamp).getTime());
         })
 
     }
