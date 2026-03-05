@@ -348,7 +348,7 @@ export class UserStatistic extends Widget {
 
     }
     statusProperties = {
-        percentile: { label: ui.lang.percentile, id: "stats_rank-rate", class: 'stats__rank-value' },
+        percentile: { label: ui.lang.top, id: "stats_rank-rate", class: 'stats__rank-value' },
         rank: { label: ui.lang.rank, id: "stats_rank", class: 'stats__rank-value' },
         points: { label: ui.lang.points, id: "stats_points", },
         retropoints: { label: ui.lang.retropoints, id: "stats_retropoints", },

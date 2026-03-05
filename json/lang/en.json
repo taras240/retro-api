@@ -260,5 +260,6 @@
     "switchProgressionIfBeatenHint": "If progression is unavailable or the game is beaten, the progressbar will be shown",
     "thisSession": "This Session",
     "subsetBugFix": "Subset Bug Fix",
-    "subsetBugFixHint": "Prevent switching to the subset; only allow it on Start/Pause."
+    "subsetBugFixHint": "Prevent switching to the subset; only allow it on Start/Pause.",
+    "top": "Top"
 }
