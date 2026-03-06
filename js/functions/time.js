@@ -1,22 +1,34 @@
-export function formatTime(seconds, shortType = false) {
-    if (!isFinite(seconds)) return ("");
-    const isNegative = seconds < 0;
-    seconds = Math.abs(seconds);
+export function formatTime(totalSeconds, shortType = false) {
+    if (!isFinite(totalSeconds)) return ("");
 
-    let hours = Math.floor(seconds / 3600);
-    let minutes = Math.floor((seconds % 3600) / 60);
-    let remainingSeconds = seconds % 60;
+    const { hours, minutes, seconds, isNegative } = parseTimeParts(totalSeconds);
 
-    // Додавання ведучих нулів, якщо необхідно
-    hours = hours.toString().padStart(2, "0");
-    minutes = minutes.toString().padStart(2, "0");
-    remainingSeconds = remainingSeconds.toString().padStart(2, "0");
-
-    const fullTime = `${isNegative ? "-" : ""}${hours > 0 ? hours + ":" : ""}${minutes}:${remainingSeconds}`;
+    const fullTime = `${isNegative ? "-" : ""}${hours > 0 ? hours + ":" : ""}${minutes}:${seconds}`;
     const shortTime = hours == 0
         ? fullTime
         : `${isNegative ? "-" : ""}${hours}<i class="time__blinked-dots">:</i>${minutes}`;
     return shortType ? shortTime : fullTime;
+}
+export function parseTimeParts(totalSeconds) {
+    if (!isFinite(totalSeconds)) return ({
+        seconds: "00",
+        minutes: "00",
+        hours: "00"
+    });
+
+    const isNegative = totalSeconds < 0;
+    totalSeconds = Math.abs(totalSeconds);
+
+    let hours = Math.floor(totalSeconds / 3600);
+    let minutes = Math.floor((totalSeconds % 3600) / 60);
+    let seconds = totalSeconds % 60;
+
+    // Додавання ведучих нулів, якщо необхідно
+    hours = hours.toString().padStart(2, "0");
+    minutes = minutes.toString().padStart(2, "0");
+    seconds = seconds.toString().padStart(2, "0");
+
+    return { hours, minutes, seconds, isNegative };
 }
 export function secondsToBadgeString(seconds) {
     if (!seconds) return "--/--";

@@ -261,5 +261,6 @@
     "thisSession": "This Session",
     "subsetBugFix": "Subset Bug Fix",
     "subsetBugFixHint": "Prevent switching to the subset; only allow it on Start/Pause.",
-    "top": "Top"
+    "top": "Top",
+    "blinkOnUpdate": "Blink On Update"
 }

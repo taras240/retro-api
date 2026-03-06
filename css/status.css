@@ -39,19 +39,7 @@
   transition: .2s;
 }
 
-@keyframes update-blink {
-  0% {
-    background-color: var(--main-color);
-  }
 
-  50% {
-    background-color: var(--color);
-  }
-
-  100% {
-    background-color: var(--main-color);
-  }
-}
 
 
 .show-ticker .magic-line__container {

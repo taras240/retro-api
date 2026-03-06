@@ -14,7 +14,12 @@ const gameInfoContent = (game, theme) => {
             <a class="rp__game-title" target="_blank"></a>
             <div class="rp__game-info-grid">
                 <div class="rp__game-info-content"></div>
-                <div class="rp__game-time"></div>
+                <div class="rp__game-time">
+                    <span class="rp__time-mark"></span>
+                    <span class="rp__time-hours"></span>
+                    <span class="rp__time-minutes"></span>
+                    <span class="rp__time-seconds"></span>
+                </div>
             </div>
         </div>
     `;

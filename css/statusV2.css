@@ -180,23 +180,35 @@
     border-radius: 50%;
     opacity: 0.2;
     z-index: 1;
+    transition: background-color 200ms, opacity 200ms;
 }
 
 .rp__indicator.blink {
-    --color: var(--font-color);
-    animation: update-blink 1s;
+    --color: rgb(0, 180, 0) !important;
+    opacity: 1;
 }
 
+/* @keyframes update-blink {
+  0% {
+    background-color: var(--main-color);
+  }
+
+  50% {
+    background-color: var(--color);
+  }
+
+  100% {
+    background-color: var(--main-color);
+  }
+} */
 .rp__indicator.online {
     --color: rgb(0, 99, 0);
     opacity: 1;
-    transition: .2s;
 }
 
 .rp__indicator.online.realtime {
     --color: rgb(81, 255, 0);
     opacity: 1;
-    transition: .2s;
 }
 
 /* .rp__indicator.online::after {
@@ -206,7 +218,6 @@
 .rp__indicator.offline {
     background-color: goldenrod;
     opacity: 1;
-    transition: .2s;
 }
 
 .rp-content__container {
@@ -333,6 +344,9 @@
     white-space: nowrap;
     flex-grow: 0;
     flex-shrink: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 .rp__game-time[data-position="background"] {
@@ -343,9 +357,40 @@
     transform: translateY(-50%);
 }
 
-.time__blinked-dots {
-    font-weight: inherit;
-    font-size: inherit;
+.rp__time-hours.hidden {
+    display: none;
+}
+
+.rp__time-hours::after {
+    content: ":";
+}
+
+.watching:not(.offline) .rp__time-hours::after {
+    animation-delay: 1s;
+    animation: blink-time-dots 5s infinite;
+}
+
+.rp__time-seconds.hidden {
+    display: none;
+}
+
+.rp__time-seconds::before {
+    content: ":";
+    opacity: 1;
+}
+
+@keyframes blink-time-dots {
+    25% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+
+    75% {
+        opacity: 1;
+    }
 }
 
 /**--------RICH PRESENCE----------  */

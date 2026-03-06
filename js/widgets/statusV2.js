@@ -1,19 +1,17 @@
 import { UI } from "../ui.js";
 import { ALERT_TYPES } from "../enums/alerts.js";
 
-import { icons, signedIcons } from "../components/icons.js"
+import { signedIcons } from "../components/icons.js"
 
-import { generateBadges, badgeElements, goldBadge } from "../components/badges.js";
-import { apiWorker, config, ui, watcher } from "../script.js";
+import { generateBadges } from "../components/badges.js";
+import { config, ui, watcher } from "../script.js";
 import { Widget } from "./widget.js";
 import { filterBy, sortBy } from "../functions/sortFilter.js";
 import { showComments } from "../components/comments.js";
 import { moveEvent } from "../functions/movingWidget.js";
 import { resizeEvent } from "../functions/resizingWidget.js";
 import { delay } from "../functions/delay.js";
-import { formatTime } from "../functions/time.js";
 import { gamePropsPopup } from "../components/gamePropsPopup.js";
-import { CHEEVO_TYPES } from "../enums/cheevoTypes.js";
 import { cheevoImageUrl, gameImageUrl, gameUrl } from "../functions/raLinks.js";
 import { infiniteLineScrolling } from "../functions/infiniteLineScrolling.js";
 import { generateMagicLineText } from "../functions/tickerTextGenerator.js";
@@ -21,7 +19,6 @@ import { inputTypes } from "../components/inputElements.js";
 import { scrollElementIntoView } from "../functions/scrollingToElement.js";
 import { getHoveredEdge } from "../functions/hoveredEdges.js";
 import { moveDirections } from "../enums/moveDirections.js";
-import { recentCheevoHtml } from "../components/statusWidget/recentCheevo.js";
 import { progressionBarHtml, updateProgressionBar } from "../components/statusWidget/progressionBar.js";
 import { progressBarHtml, updateProgressBarData } from "../components/statusWidget/progressBar.js";
 import { PROGRESS_TYPES } from "../enums/progressBar.js";
@@ -31,7 +28,6 @@ import { tickerHtml } from "../components/statusWidget/ticker.js";
 import { richPresenceHtml } from "../components/statusWidget/richPresence.js";
 import { indicatorHtml } from "../components/statusWidget/statusIndicator.js";
 import { statusStyles } from "../enums/statusThemes.js";
-import { StatusPanel } from "../removed/status.js";
 import { alertHtml, hideAlert, showAlert } from "../components/statusWidget/alert.js";
 import { gameInfoHtml } from "../components/statusWidget/gameInfo.js";
 import { timePosition } from "../enums/timePosition.js";
@@ -40,6 +36,7 @@ import { gameInfoIconsHtml, richInfoHtml } from "../components/statusWidget/game
 import { sweepEffect } from "../components/windowEffects.js";
 import { getCheevosCount, getPointsCount, getRetropointsCount } from "../functions/gameProperties.js";
 import { GAME_AWARD_TYPES } from "../enums/gameAwards.js";
+import { parseTimeParts } from "../functions/time.js";
 
 export class Status extends Widget {
 
@@ -234,6 +231,13 @@ export class Status extends Widget {
                 checked: this.uiProps.showTargetPreview,
                 onChange: (event) => this.uiProps.showTargetPreview = event.currentTarget.checked,
             },
+            {
+                type: inputTypes.CHECKBOX,
+                id: "blink-on-update",
+                label: ui.lang.blinkOnUpdate,
+                checked: this.uiProps.blinkOnUpdate,
+                onChange: (event) => this.uiProps.blinkOnUpdate = event.currentTarget.checked,
+            },
 
         ];
     }
@@ -272,6 +276,7 @@ export class Status extends Widget {
         showGameBg: false,
         showTargetPreview: false,
         switchProgressionIfBeaten: true,
+        blinkOnUpdate: true,
     }
     uiDefaultValuesLegacy = {
         showRichPresence: false,
@@ -286,7 +291,7 @@ export class Status extends Widget {
     }
     uiSetCallbacks = {
         time() {
-            this.gameElements.time.innerHTML = watcher.getActiveTime(this.uiProps.time, this.uiProps.timerTime);
+            this.updateTime();
         },
         showTicker(value) {
             this.setElementsValues();
@@ -342,29 +347,36 @@ export class Status extends Widget {
     }
     initializeElements(widget) {
         this.section = widget;
-        this.sectionID = this.section.id;
-        this.watchButton = this.section.querySelector("#rp__watch-button");
-        this.indicatorElement = this.section.querySelector(".rp__indicator");
+        this.sectionID = widget.id;
+        this.watchButton = widget.querySelector("#rp__watch-button");
+        this.indicatorElement = widget.querySelector(".rp__indicator");
         this.gameElements = {
-            icon: this.section.querySelector(".rp__game-image"),
+            icon: widget.querySelector(".rp__game-image"),
 
-            title: this.section.querySelector(".rp__game-title"),
-            platform: this.section.querySelector(".rp__game-platform"),
-            gameIcons: this.section.querySelector(".rp__game-icons"),
-            time: this.section.querySelector(".rp__game-time"),
+            title: widget.querySelector(".rp__game-title"),
+            platform: widget.querySelector(".rp__game-platform"),
+            gameIcons: widget.querySelector(".rp__game-icons"),
+            time: widget.querySelector(".rp__game-time"),
+            timeElements: {
+                hoursElement: widget.querySelector(".rp__time-hours"),
+                minutesElement: widget.querySelector(".rp__time-minutes"),
+                secondsElement: widget.querySelector(".rp__time-seconds"),
+                markElement: widget.querySelector(".rp__time-mark"),
+            }
+
         }
         this.alertElements = {
-            container: this.section.querySelector(".rp__alert-container"),
+            container: widget.querySelector(".rp__alert-container"),
         }
-        this.richPresenceElement = this.section.querySelector(".rp__rich-presence");
-        this.progressionContainer = this.section.querySelector(".rp__progression-container")
+        this.richPresenceElement = widget.querySelector(".rp__rich-presence");
+        this.progressionContainer = widget.querySelector(".rp__progression-container")
 
         this.progressbarElements = {
-            container: this.section.querySelector(".rp__progressbar-container"),
-            title: this.section.querySelector(".rp__progressbar-title"),
-            lastCheevos: this.section.querySelector(".rp__last-cheevos"),
+            container: widget.querySelector(".rp__progressbar-container"),
+            title: widget.querySelector(".rp__progressbar-title"),
+            lastCheevos: widget.querySelector(".rp__last-cheevos"),
         }
-        this.tickerElement = this.section.querySelector(".rp__ticker");
+        this.tickerElement = widget.querySelector(".rp__ticker");
 
     }
     generateWidget() {
@@ -614,6 +626,22 @@ export class Status extends Widget {
         }
 
     }
+    updateTime() {
+        const timeSeconds = watcher.getActiveTime(this.uiProps.time, this.uiProps.timerTime);
+        const timeParts = parseTimeParts(timeSeconds);
+
+        const { hours, minutes, seconds, isNegative } = timeParts;
+
+        const { hoursElement, minutesElement, secondsElement, markElement } = this.gameElements.timeElements;
+        hoursElement.classList.toggle("hidden", hours == 0);
+        secondsElement.classList.toggle("hidden", hours > 0);
+
+        markElement.innerText = isNegative ? "-" : "";
+        hoursElement.innerText = hours;
+        minutesElement.innerText = minutes;
+        secondsElement.innerText = seconds;
+
+    }
     fillGameData() {
         const fillGameInfoData = () => {
             const { ImageIcon, ImageIngame, Title, badges, ConsoleName, ConsoleID, ID, NumAchievements, totalPoints, retroRatio } = watcher.GAME_DATA;
@@ -629,12 +657,11 @@ export class Status extends Widget {
 
             setTimeout(() => this.startAutoScrollElement(this.gameElements.title, true, 10 * 1000), 10 * 1000);
 
-            const time = watcher.getActiveTime(this.uiProps.time, this.uiProps.timerTime);
-            this.gameElements.time.innerHTML = time;
         }
 
 
         fillGameInfoData();
+        this.updateTime();
         this.updateRichPresence();
         this.updateGameInfo();
         this.updateProgressionBar();
@@ -701,10 +728,7 @@ export class Status extends Widget {
                 if (this.uiProps.time === "timer" && watcher.playTime.timer < 0) {
                     this.section.classList.add("timer-timeout");
                 }
-                const time = watcher.getActiveTime(this.uiProps.time, this.uiProps.timerTime);
-                if (time && time !== this.gameElements.time.innerHTML) {
-                    this.gameElements.time.innerHTML = time;
-                }
+                this.updateTime();
 
             }, 1000)
         }
@@ -714,14 +738,17 @@ export class Status extends Widget {
         }
         return { start, stop };
     }
-    BLINK_ON_UPDATE = true;
+
     blinkUpdate() {
+        const { isOnline, isWatching, isLogOK } = watcher;
         // this.indicatorElement.classList.remove("offline", "blink");
-        this.section.classList.toggle("offline", !watcher.isOnline);
-        this.indicatorElement.classList.toggle("offline", !watcher.isOnline);
-        this.indicatorElement.classList.toggle("online", watcher.isOnline);
-        this.section.classList.toggle("watching", watcher.isWatching);
-        this.indicatorElement.classList.toggle("realtime", (watcher.isOnline && watcher.isLogOK));
+        this.section.classList.toggle("offline", !isOnline);
+        this.indicatorElement.classList.toggle("offline", !isOnline);
+        this.indicatorElement.classList.toggle("online", isOnline);
+        this.indicatorElement.classList.toggle("blink", this.uiProps.blinkOnUpdate && isOnline);
+        this.section.classList.toggle("watching", isWatching);
+        this.indicatorElement.classList.toggle("realtime", (isOnline && isLogOK))
+        setTimeout(() => this.indicatorElement.classList.remove("blink"), 500);
     }
     autoscrollAlertInterval = {};
     startAutoScrollElement(element, toLeft = true, pause = 1000) {

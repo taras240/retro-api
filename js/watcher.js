@@ -4,10 +4,8 @@ import { CHEEVO_TYPES } from "./enums/cheevoTypes.js";
 import { GAME_AWARD_TYPES } from "./enums/gameAwards.js";
 import { ONLINE_STATUS } from "./enums/onlineStatus.js";
 import { WATCHER_MODES } from "./enums/watcherModes.js";
-import { delay } from "./functions/delay.js";
-import { sendDiscordAlert } from "./functions/discord.js";
 import { readLog } from "./functions/logParser.js";
-import { formatTime } from "./functions/time.js";
+import { parseTimeParts } from "./functions/time.js";
 import { onlineChecker } from "./functions/watcher/onlineStatus.js";
 import { apiWorker, config, configData, ui, watcher } from "./script.js";
 export class Watcher {
@@ -463,6 +461,7 @@ export class Watcher {
         const widgetsOnStartEvent = () => {
             ui.statusPanel.timeWatcher().start();
             ui.status.timeWatcher().start();
+            setTimeout(widgetsOnTickEvent, 5000);
         }
         const widgetsOnTickEvent = () => {
             ui.statusPanel.blinkUpdate();
@@ -534,7 +533,7 @@ export class Watcher {
                 break;
         }
 
-        return formatTime(time, true);
+        return time;
     }
 
 }
