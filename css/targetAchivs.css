@@ -48,6 +48,7 @@
 }
 
 .target__pinned-list {
+  flex-shrink: 0;
   --secondary-color: var(--main-color);
   display: flex;
   display: none;
