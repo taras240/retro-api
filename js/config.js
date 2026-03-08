@@ -99,7 +99,7 @@ export class Config {
     startOnLoad: true,
     pauseIfOffline: true,
     watcherMode: WATCHER_MODES.auto,
-    preventSubsetBug: false,
+    preventSubsetBug: true,
 
   }
   configValuePreprocessors = {
