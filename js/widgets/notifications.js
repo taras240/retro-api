@@ -85,13 +85,6 @@ export class Notifications extends Widget {
     };
     alertsCacheName = "raApiAlertsCache";
 
-
-    get NOTIFICATIONS() {
-        return this._notifications ?? {
-            time: "",
-            notifications: [],
-        };
-    }
     constructor() {
         super();
         this.generateWidget();
@@ -135,12 +128,15 @@ export class Notifications extends Widget {
         this.section.classList.toggle("compact-header", !this.uiProps.showHeader);
         this.section.classList.toggle("hide-bg", this.uiProps.hideBg);
     }
-    gameChangeEvent(isNewGame) {
-        if (!isNewGame) return;
-        const gameAlert = [{ type: ALERT_TYPES.GAME, value: watcher.GAME_DATA }];
+    gameChangeEvent({ gameData, isNewGame, isWatching }) {
+        if (!isNewGame || !isWatching) return;
+        const gameAlert = [{ type: ALERT_TYPES.GAME, value: gameData }];
         this.addAlertsToQuery(gameAlert);
     }
-
+    startSessionEvent({ gameData }) {
+        const gameAlert = [{ type: ALERT_TYPES.GAME, value: gameData }];
+        this.addAlertsToQuery(gameAlert);
+    }
     saveAlerts(alerts) {
         const timeStamp = Date.now();
         const normalizedAlerts = alerts.map(alert => {

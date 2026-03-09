@@ -97,6 +97,9 @@ export class Progression extends Widget {
     addEvents() {
         super.addEvents();
     }
+    gameChangeEvent({ gameData }) {
+        this.generateProgression()
+    }
     update({ earnedAchievementIDs }) {
         earnedAchievementIDs[0] && (this.uiProps.hardMode = watcher.CHEEVOS[earnedAchievementIDs[0]].isEarnedHardcore);
         this.generateProgression();

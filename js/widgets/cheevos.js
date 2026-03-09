@@ -462,7 +462,9 @@ export class AchievementsBlock extends Widget {
             { sectionID: this.section.id, property: "filters" }
         ) ?? {};
     }
-
+    gameChangeEvent({ gameData, isNewGame }) {
+        this.parseGameAchievements(gameData);
+    }
 
     // Розбирає отримані досягнення гри та відображає їх на сторінці
     parseGameAchievements(gameData) {

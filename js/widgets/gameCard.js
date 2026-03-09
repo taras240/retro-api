@@ -255,7 +255,7 @@ export class GameCard extends Widget {
         this.progressPointsContainer.innerHTML = completionMsg(gameData, PROGRESS_TYPES.points, isHardMode);
         this.progressRetropointsContainer.innerHTML = completionMsg(gameData, PROGRESS_TYPES.retropoints, isHardMode);
     }
-    async gameChangeEvent(isNewGame) {
+    async gameChangeEvent({ gameData, isNewGame }) {
         const {
             Title,
             ID,
@@ -275,8 +275,7 @@ export class GameCard extends Widget {
             masteryDifficulty,
             timeToBeat,
             timeToMaster
-        } = watcher.GAME_DATA;
-        const gameData = watcher.GAME_DATA;
+        } = gameData;
         const fillInfoValues = async () => {
             const generateInfoBadges = () => {
                 const infoBadges = [];

@@ -4,10 +4,11 @@ import { CHEEVO_TYPES } from "./enums/cheevoTypes.js";
 import { GAME_AWARD_TYPES } from "./enums/gameAwards.js";
 import { ONLINE_STATUS } from "./enums/onlineStatus.js";
 import { WATCHER_MODES } from "./enums/watcherModes.js";
+import { sendDiscordAlert } from "./functions/discord.js";
 import { readLog } from "./functions/logParser.js";
 import { parseTimeParts } from "./functions/time.js";
 import { onlineChecker } from "./functions/watcher/onlineStatus.js";
-import { apiWorker, config, configData, ui, watcher } from "./script.js";
+import { APIEvents, apiWorker, config, configData, ui, watcher } from "./script.js";
 export class Watcher {
     IS_HARD_MODE = true;
     isWatching = false;
@@ -37,7 +38,7 @@ export class Watcher {
         const isNewGame = this.GAME_DATA && gameObject.ID != this.GAME_DATA?.ID;
         this._gameData = gameObject;
         this.initPlayTime();
-        ui.gameChangeEvent(isNewGame);
+        this.gameChangeEvent(gameObject, isNewGame)
     }
     get isOnline() {
         const status = this.online.getStatus();
@@ -76,9 +77,25 @@ export class Watcher {
             timer: 60,
         }
     }
-    gameChangeEvent() {
-        // this.savePlayTime();
-        // this.initPlayTime();
+    gameChangeEvent(gameData, isNewGame) {
+        const { isWatching } = this;
+        const { discordNewGame } = configData;
+        APIEvents.dispatchEvent(new CustomEvent("gameChange", {
+            detail: { gameData, isNewGame, isWatching }
+        }));
+
+        if (discordNewGame && isWatching) {
+            sendDiscordAlert({ type: ALERT_TYPES.GAME });
+        }
+    }
+    onStartSession() {
+        APIEvents.dispatchEvent(new CustomEvent("startSession", {
+            detail: { gameData: this.GAME_DATA }
+        }));
+        const { discordNewGame, discordStartSession } = configData;
+        if (!discordNewGame && discordStartSession) {
+            sendDiscordAlert({ type: ALERT_TYPES.GAME });
+        }
     }
     updateSessionData(cheevosIDs = []) {
         cheevosIDs?.forEach(id => {
@@ -173,8 +190,7 @@ export class Watcher {
             }
             this.online.setOnline();
             await this.updateGameData(raProfileInfo.LastGameID);
-            ui.showGameChangeAlerts(isStart);
-
+            isStart && this.onStartSession()
         }
         if (!isStart && (configData.pauseIfOffline && this.onlineCheckTimeOut)) return;
 

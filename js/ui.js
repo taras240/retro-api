@@ -225,24 +225,6 @@ export class UI {
       this.bgAnimation.start();
     }
   }
-  gameChangeEvent(isNewGame) {
-    const widgetNames = [
-      "statusPanel",
-      "status",
-      // "status2",
-      "target",
-      // "notifications",
-      "gameList",
-      "gameCard"
-    ]
-    this.achievementsBlock.forEach((widget) =>
-      widget?.parseGameAchievements(watcher.GAME_DATA)
-    );
-    widgetNames.forEach(widgetName => this[widgetName]?.gameChangeEvent(isNewGame))
-
-    this.note?.updateGame();
-    this.progression?.generateProgression();
-  }
 
   updateWidgets({ earnedAchievementsIDs = [], isLog = false }) {
     // if (earnedAchievementsIDs?.length === 0) return
@@ -284,13 +266,6 @@ export class UI {
 
     const alerts = earnedAchievementsIDs.map(cheevoID => ({ type: ALERT_TYPES.CHEEVO, value: watcher.CHEEVOS[cheevoID] }));
     this.notifications.addAlertsToQuery(alerts);
-  }
-  showGameChangeAlerts(isStart) {
-    this.notifications.gameChangeEvent(true);
-    if (configData.discordNewGame ||
-      (isStart && configData.discordStartSession)) {
-      sendDiscordAlert({ type: ALERT_TYPES.GAME });
-    }
   }
   showAwardsAlerts(awardsArray = []) {
     pushFSAlerts(awardsArray);

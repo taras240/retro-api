@@ -1,7 +1,7 @@
 import { UI } from "../ui.js";
 import { generateBadges, badgeElements, goldBadge } from "../components/badges.js";
 
-import { config, ui, apiWorker } from "../script.js";
+import { config, ui, APIEvents } from "../script.js";
 import { moveEvent } from "../functions/movingWidget.js";
 import { resizeEvent } from "../functions/resizingWidget.js";
 import { moveDirections, sumDirections } from "../enums/moveDirections.js";
@@ -20,7 +20,11 @@ export class Widget {
     };
     uiProps = new Proxy({}, {
         get: (_, property) => {
-            const defValue = this.uiDefaultValues[property] ?? true;
+            const defValue = this.uiDefaultValues?.[property] ?? true;
+            const loader = this.uiValueLoader?.[property];
+            if (loader) {
+                return loader() ?? defValue;
+            }
             return config.getUIProperty({ sectionID: this.sectionID, property }) ?? defValue;
         },
         set: (_, property, value) => {
@@ -28,9 +32,13 @@ export class Widget {
             if (typeof preprocessor === 'function') {
                 value = preprocessor(value);
             }
-
-            config.saveUIProperty({ sectionID: this.sectionID, property, value });
-
+            const saver = this.uiValueSaver?.[property];
+            if (typeof saver === 'function') {
+                saver(value);
+            }
+            else {
+                config.saveUIProperty({ sectionID: this.sectionID, property, value });
+            }
             const callback = this.uiSetCallbacks?.[property];
             if (typeof callback === 'function') {
                 callback.call(this, value);
@@ -49,6 +57,8 @@ export class Widget {
     };
     uiValuePreprocessors = {
     };
+    uiValueLoader = {}
+    uiValueSaver = {}
     get VISIBLE() {
         return !this.section.classList.contains("hidden") && !!config.ui[this.section?.id];;
     }
@@ -109,7 +119,11 @@ export class Widget {
             });
         });
 
+        APIEvents.addEventListener("gameChange", (e) => this.gameChangeEvent(e?.detail ?? {}));
+        APIEvents.addEventListener("startSession", (e) => this.startSessionEvent(e?.detail ?? {}))
     }
+    gameChangeEvent({ gameData, inNewGame, isWatching }) { }
+    startSessionEvent({ gameData }) { }
     addWidgetIcon() {
         const isChecked = config.ui?.[this.section?.id]?.hidden === false ?? !this.VISIBLE;
         const { iconID, onChangeEvent, description, iconClass, badgeLabel } = this.widgetIcon;

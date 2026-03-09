@@ -3,6 +3,7 @@ import { config, ui, watcher } from "../script.js";
 import { Widget } from "./widget.js";
 import { moveEvent } from "../functions/movingWidget.js";
 import { resizeEvent } from "../functions/resizingWidget.js";
+import { fromHtml } from "../functions/html.js";
 export class Note extends Widget {
     widgetIcon = {
         description: "notes widget",
@@ -10,7 +11,7 @@ export class Note extends Widget {
         onChangeEvent: `ui.note.VISIBLE = this.checked`,
         iconClass: "note-icon",
     };
-    AUTOSAVE_INTERVAL_MILISECS = 2000;
+    AUTOSAVE_INTERVAL_MS = 1000;
     get notesTabs() {
         return [
             {
@@ -18,49 +19,49 @@ export class Note extends Widget {
                 name: "note__tabs",
                 id: "notes__main-tab",
                 label: ui.lang.mainNote,
-                checked: this.CURRENT_TAB === 'main',
-                onChange: `ui.note.CURRENT_TAB = 'main'`,
+                checked: this.uiProps.currentTab === 'main',
+                onChange: () => this.uiProps.currentTab = 'main',
             },
             {
                 type: "radio",
                 name: "note__tabs",
                 id: "notes__game-tab",
                 label: ui.lang.gameNote,
-                checked: this.CURRENT_TAB === 'game',
-                onChange: `ui.note.CURRENT_TAB = 'game'`,
+                checked: this.uiProps.currentTab === 'game',
+                onChange: () => this.uiProps.currentTab = 'game',
             },
         ]
     }
-    get NOTES_VALUE() {
-        return config._cfg.ui?.note_section?.notes ?? "";
+    uiDefaultValues = {
+        currentTab: "main",
+        gameNotes: "",
+        notes: ""
     }
-    set NOTES_VALUE(value) {
-        config._cfg.ui.note_section.notes = value;
-        config.writeConfiguration();
+    uiSetCallbacks = {
+        currentTab(value) {
+            this.switchActiveTab(value);
+        }
+    };
+    uiValuePreprocessors = {
+
+    };
+    uiValueLoader = {
+        gameNotes() {
+            const gameID = watcher.GAME_DATA?.ID ?? 0;
+            return config.gamesDB[gameID]?.notes ?? "";
+        }
     }
-    get GAME_NOTES_VALUE() {
-        const gameID = watcher.GAME_DATA?.ID ?? 0;
-        return config.gamesDB[gameID]?.notes ?? "";
+    uiValueSaver = {
+        gameNotes(note) {
+            const gameID = watcher.GAME_DATA?.ID ?? 0;
+            config.gamesDB[gameID].notes = note;
+            config.writeConfiguration();
+        }
     }
-    set GAME_NOTES_VALUE(value) {
-        const gameID = watcher.GAME_DATA?.ID ?? 0;
-        config.gamesDB[gameID].notes = value;
-        config.writeConfiguration();
-    }
-    get CURRENT_TAB() {
-        return config._cfg.ui?.note_section?.currentTab ?? "main";
-    }
-    set CURRENT_TAB(value) {
-        config._cfg.ui.note_section.currentTab = value;
-        config.writeConfiguration();
-        this.switchActiveTab();
-    }
+
     constructor() {
         super();
         this.addWidgetIcon();
-        if (!config._cfg.ui.note_section) {
-            config._cfg.ui.note_section = {};
-        }
         this.initializeElements();
         this.generateTabs();
         this.addEvents();
@@ -70,69 +71,73 @@ export class Note extends Widget {
     }
     initializeElements() {
         this.section = document.querySelector("#note_section");
-
+        this.sectionID = this.section.id;
         this.header = this.section.querySelector(".header-container");
         this.resizer = this.section.querySelector("#note-resizer");
         this.textarea = this.section.querySelector(".note-textaria");
     }
     generateTabs() {
-        const tabsHtml = this.notesTabs.reduce((tabsHtml, tab) => {
-            const tabHtml = `
-          <div class="checkbox-input_container" onmousedown="event.stopPropagation()">
-            <input  onchange="${tab.onChange}" type="radio" id="${tab.id}" ${tab.checked ? "checked" : ""} name="${tab.name}">
-            <label class="radio-tab" for="${tab.id}">${tab.label}</label>
-          </div>
-        `;
-            tabsHtml += tabHtml;
-            return tabsHtml;
-        }, '');
-
-        document.querySelector(".note__tabs-container").innerHTML = tabsHtml;
+        const tabElement = ({ onChange, label, name, id, checked }) => {
+            const element = fromHtml(`
+                    <div class="checkbox-input_container">
+                        <input type="radio" id="${id}" ${checked ? "checked" : ""} name="${name}">
+                        <label class="radio-tab" for="${id}">${label}</label>
+                    </div>
+                `);
+            element.addEventListener("mousedown", e => e.stopPropagation());
+            element.querySelector("input")?.addEventListener("change", event => onChange(event));
+            return element;
+        }
+        this.section.querySelector(".note__tabs-container").append(...this.notesTabs.map(tab => tabElement(tab)));
 
     }
     addEvents() {
         super.addEvents();
         this.delayedSave = {};
-        this.textarea.addEventListener("input", this.textInputHandler)
+        this.textarea.addEventListener("input", (event) => this.textInputHandler(event))
+    }
+    setElementsValues() { }
+    gameChangeEvent({ gameData }) {
+        this.updateGame();
     }
     textInputHandler(event) {
         const gameID = watcher.GAME_DATA?.ID ?? 0;
-        const noteID = ui.note.CURRENT_TAB == "main" ? 'main' : gameID;
-        const noteText = ui.note.textarea.value;
+        const noteID = this.uiProps.currentTab == "main" ? 'main' : gameID;
+        const noteText = this.textarea.value;
 
-        clearTimeout(ui.note.delayedSave[noteID]);
+        clearTimeout(this.delayedSave[noteID]);
 
-        ui.note.delayedSave[noteID] = setTimeout(() => {
-            ui.note.saveNoteValue({ id: noteID, value: noteText })
+        this.delayedSave[noteID] = setTimeout(() => {
+            this.saveNoteValue({ id: noteID, value: noteText })
         },
-            ui.note.AUTOSAVE_INTERVAL_MILISECS);
+            this.AUTOSAVE_INTERVAL_MS);
 
     }
     saveNoteValue({ id, value }) {
         switch (id) {
             case "main":
-                this.NOTES_VALUE = value;
+                this.uiProps.notes = value;
                 break;
             default:
-                this.GAME_NOTES_VALUE = value;
+                this.uiProps.gameNotes = value;
         }
     }
     setValues() {
         this.switchActiveTab();
     }
     switchActiveTab() {
-        switch (this.CURRENT_TAB) {
+        switch (this.uiProps.currentTab) {
             case 'main':
-                this.textarea.value = this.NOTES_VALUE;
+                this.textarea.value = this.uiProps.notes;
                 break;
             case 'game':
-                this.textarea.value = this.GAME_NOTES_VALUE;
+                this.textarea.value = this.uiProps.gameNotes;
                 break;
         }
     }
     updateGame() {
-        if (this.CURRENT_TAB === 'game') {
-            this.textarea.value = this.GAME_NOTES_VALUE;
+        if (this.uiProps.currentTab === 'game') {
+            this.textarea.value = this.uiProps.gameNotes;
         }
     }
     async copyNoteText() {

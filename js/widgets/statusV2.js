@@ -4,7 +4,7 @@ import { ALERT_TYPES } from "../enums/alerts.js";
 import { signedIcons } from "../components/icons.js"
 
 import { generateBadges } from "../components/badges.js";
-import { config, ui, watcher } from "../script.js";
+import { APIEvents, config, ui, watcher } from "../script.js";
 import { Widget } from "./widget.js";
 import { filterBy, sortBy } from "../functions/sortFilter.js";
 import { showComments } from "../components/comments.js";
@@ -487,6 +487,8 @@ export class Status extends Widget {
             watcher.isActive ?
                 watcher.stop() : watcher.start();
         });
+        APIEvents.addEventListener("gameChange", (e) => this.gameChangeEvent(e?.detail ?? {}))
+
     }
     setElementsValues() {
         this.section.classList.toggle("hide-game-info", !this.uiProps.showGameInfo)
@@ -505,11 +507,10 @@ export class Status extends Widget {
         if (this.theme === Status.themes.legacy) return;
         sweepEffect(this.section);
     }
-    gameChangeEvent(isNewGame = false) {
+    gameChangeEvent({ gameData, isNewGame, isWatching }) {
         // this.addAlertsToQuery([{ type: ALERT_TYPES.GAME, value: watcher.GAME_DATA }]);
-        const { isWatching, GAME_DATA } = watcher;
         if (isNewGame && isWatching) {
-            this.addAlertsToQuery([{ type: ALERT_TYPES.GAME, value: GAME_DATA }]);
+            this.addAlertsToQuery([{ type: ALERT_TYPES.GAME, value: gameData }]);
         }
         this.fillGameData();
         this.doUpdateAnimation();

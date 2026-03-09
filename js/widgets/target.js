@@ -716,7 +716,7 @@ export class Target extends Widget {
         this.setElementsValues();
         this.startAutoScroll();
     }
-    gameChangeEvent(isNewGame) {
+    gameChangeEvent({ isNewGame }) {
         // if (true || isNewGame) {
         //     this.filters = this.uiProps.filters
         // }
