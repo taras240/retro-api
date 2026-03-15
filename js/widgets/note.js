@@ -97,7 +97,7 @@ export class Note extends Widget {
         this.textarea.addEventListener("input", (event) => this.textInputHandler(event))
     }
     setElementsValues() { }
-    gameChangeEvent({ gameData }) {
+    onGameChange({ gameData }) {
         this.updateGame();
     }
     textInputHandler(event) {

@@ -36,7 +36,7 @@ export class GameList extends Widget {
         this.section = document.getElementById("game-list");
         this.content = this.section.querySelector(".widget-content__container");
     }
-    gameChangeEvent() {
+    onGameChange() {
         this.VISIBLE && this.generateGamesSet();
     }
     setElementsVisibility() {

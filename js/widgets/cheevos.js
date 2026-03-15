@@ -11,6 +11,7 @@ import { buttonsHtml } from "../components/htmlElements.js";
 import { resizerHtml } from "../components/resizer.js";
 import { marioAction } from "../functions/animations/smbAnimOld.js";
 import { smb3UnlockAnimation } from "../functions/animations/smbAnimations.js";
+import { parseCurrentGameLevel } from "../functions/parseRP.js";
 export class AchievementsBlock extends Widget {
     widgetIcon = {
         description: "cheevos widget",
@@ -462,10 +463,54 @@ export class AchievementsBlock extends Widget {
             { sectionID: this.section.id, property: "filters" }
         ) ?? {};
     }
-    gameChangeEvent({ gameData, isNewGame }) {
+    onGameChange({ gameData, isNewGame }) {
         this.parseGameAchievements(gameData);
     }
+    onStatsUpdate({ userData }) {
+        const { richPresence } = userData;
+        const currentLevel = parseCurrentGameLevel(richPresence);
+        this.highlightCurrentLevel(currentLevel);
 
+    }
+    async onCheevoUnlocks({ cheevos = [] }) {
+        const unlockChevo = (cheevoElement, cheevo) => {
+            cheevoElement.classList.add("earned");
+            cheevoElement.classList.toggle("hardcore", cheevo.isEarnedHardcore);
+            cheevoElement.classList.remove("hidden");
+
+            cheevo.isEarnedHardcore && (cheevoElement.dataset.DateEarnedHardcore = cheevo.DateEarnedHardcore);
+            cheevoElement.dataset.DateEarned = cheevo.DateEarned;
+        }
+        await delay(100);
+        this.stopAutoScroll();
+        for (let cheevo of cheevos) {
+            if (!cheevo) continue;
+            const cheevoID = cheevo.ID;
+            const cheevoElement = this.container.querySelector(`.achiv-block[data-achiv-id="${cheevoID}"]`);
+            if (!cheevoElement) continue; // guard against missing nodes
+            const cheevoIsHidden = cheevo?.offsetParent === null;
+            if (!this.uiProps.showMario || cheevoIsHidden || !this.VISIBLE) {
+                unlockChevo(cheevoElement, cheevo);
+            }
+            else {
+                await scrollElementIntoView({ container: this.container, element: cheevoElement, scrollByX: false });
+                await smb3UnlockAnimation().doAction(cheevoElement, () => unlockChevo(cheevoElement, cheevo))
+            }
+            await delay(100);
+
+        };
+        await delay(2000);
+        this.container.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: 'smooth'
+        });
+
+        this.applyFiltering();
+        await this.applySorting();
+        await delay(2000);
+        this.startAutoScroll();
+    }
     // Розбирає отримані досягнення гри та відображає їх на сторінці
     parseGameAchievements(gameData) {
         const clearContainer = () => {
@@ -600,47 +645,6 @@ export class AchievementsBlock extends Widget {
         this.section.style.setProperty("--achiv-height", achivWidth + "px");
     }
     autoscrollInterval = {};
-    async updateEarnedAchieves({ earnedAchievementIDs }) {
-        const unlockChevo = (cheevoElement, cheevo) => {
-            cheevoElement.classList.add("earned");
-            cheevoElement.classList.toggle("hardcore", cheevo.isEarnedHardcore);
-            cheevoElement.classList.remove("hidden");
-
-            cheevo.isEarnedHardcore && (cheevoElement.dataset.DateEarnedHardcore = cheevo.DateEarnedHardcore);
-            cheevoElement.dataset.DateEarned = cheevo.DateEarned;
-        }
-        await delay(100);
-        this.stopAutoScroll();
-        for (let cheevoID of earnedAchievementIDs) {
-            const cheevo = watcher.CHEEVOS[cheevoID];
-            if (!cheevo) continue;
-            const cheevoElement = this.container.querySelector(`.achiv-block[data-achiv-id="${cheevoID}"]`);
-            if (!cheevoElement) continue; // guard against missing nodes
-            const cheevoIsHidden = cheevo?.offsetParent === null;
-            if (!this.uiProps.showMario || cheevoIsHidden || !this.VISIBLE) {
-                unlockChevo(cheevoElement, cheevo);
-            }
-            else {
-                await scrollElementIntoView({ container: this.container, element: cheevoElement, scrollByX: false });
-                await smb3UnlockAnimation().doAction(cheevoElement, () => unlockChevo(cheevoElement, cheevo))
-            }
-            await delay(100);
-
-        };
-        await delay(2000);
-        this.container.scrollTo({
-            top: 0,
-            left: 0,
-            behavior: 'smooth'
-        });
-
-        this.applyFiltering();
-        await this.applySorting();
-        await delay(2000);
-        this.startAutoScroll();
-    }
-
-
     startAutoScroll(toBottom = true) {
         clearTimeout(this.autoscrollInterval.timeout);
         clearInterval(this.autoscrollInterval.interval);

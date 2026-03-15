@@ -226,47 +226,7 @@ export class UI {
     }
   }
 
-  updateWidgets({ earnedAchievementsIDs = [], isLog = false }) {
-    // if (earnedAchievementsIDs?.length === 0) return
-    // try {
-    //   this.aotw?.checkCheevo({ earnedAchievementIDs: earnedAchievementsIDs });
-    // } catch (e) { console.log(e) }
-
-
-    //Update Achievements widgets
-    this.achievementsBlock.forEach(template =>
-      template.updateEarnedAchieves({ earnedAchievementIDs: earnedAchievementsIDs })
-    )
-
-    // Update Target widget
-    this.target.updateEarnedAchieves({ earnedAchievementIDs: earnedAchievementsIDs })
-    this.target.delayedRemove();
-
-    //Update Awards widget
-    this.awards.VISIBLE && this.awards.updateAwards();
-
-    //Update status widget
-    this.statusPanel.updateProgress({ earnedAchievementIDs: earnedAchievementsIDs });
-    this.status.updateProgress({ earnedAchievementIDs: earnedAchievementsIDs });
-    this.gameCard?.updateProgress({ earnedAchievementIDs: earnedAchievementsIDs });
-    //Update Progression widget
-    this.progression.update({ earnedAchievementIDs: earnedAchievementsIDs });
-
-    //Update Stats widget & UserInfo widget
-    this.userInfoTimeout && clearTimeout(this.userInfoTimeout);
-
-    const updateDelay = 16 * 1000 * earnedAchievementsIDs.length;
-    this.userInfoTimeout = setTimeout(async () => {
-      const userSummary = await apiWorker.getUserSummary({ gamesCount: 0, achievesCount: 0 });
-      watcher.updateUserData({ userSummary })
-      ui.stats?.updateStats({ currentUserSummary: userSummary });
-      // ui.statusPanel?.updateStatistics({ userSummary: userSummary });
-    }, isLog && updateDelay < 30 * 1000 ? 30 * 1000 : updateDelay);
-
-
-    const alerts = earnedAchievementsIDs.map(cheevoID => ({ type: ALERT_TYPES.CHEEVO, value: watcher.CHEEVOS[cheevoID] }));
-    this.notifications.addAlertsToQuery(alerts);
-  }
+  updateWidgets({ earnedAchievementsIDs = [], isLog = false }) { }
   showAwardsAlerts(awardsArray = []) {
     pushFSAlerts(awardsArray);
     awardsArray.forEach(award => {
@@ -282,11 +242,11 @@ export class UI {
     this.gameCard.section.dataset.progressionAward = watcher.GAME_DATA?.progressionAward ?? "-";
     awardsArray.length && setTimeout(() => ui.stats.updateChart(), 4000);
   }
-  showCheevoAlerts(earnedAchievementIDs = []) {
-    let cheevoAlerts = earnedAchievementIDs
-      .map(id => ({
+  showCheevoAlerts(cheevos = []) {
+    const cheevoAlerts = cheevos
+      .map(cheevo => ({
         type: ALERT_TYPES.CHEEVO,
-        value: watcher.CHEEVOS[id]
+        value: cheevo
       }));
 
     cheevoAlerts.forEach(alert => {
@@ -306,25 +266,7 @@ export class UI {
       }
     })
     pushFSAlerts(cheevoAlerts);
-    this.statusPanel.addAlertsToQuery(cheevoAlerts);
-    this.status.addAlertsToQuery(cheevoAlerts);
   }
-  updateWidgetsRichPresence(richPresence = "Rich presence") {
-    this.statusPanel.updateRichPresence(richPresence);//.frontSide.richPresence.innerText = richPresence;
-    this.status.updateRichPresence(richPresence);
-    // this.status2.updateRichPresence(richPresence);
-
-    const currentLevel = parseCurrentGameLevel(richPresence);
-    this.CURRENT_LEVEL = currentLevel;
-
-    if (currentLevel) {
-      this.target.highlightCurrentLevel(currentLevel);
-      this.achievementsBlock.forEach(widget =>
-        widget.highlightCurrentLevel(currentLevel)
-      )
-    }
-  }
-
   showContextmenu({ event, menuItems, sectionCode = "" }) {
     const setContextPosition = () => {
       this.contextMenu.style.left = event.x + "px";

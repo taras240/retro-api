@@ -128,15 +128,20 @@ export class Notifications extends Widget {
         this.section.classList.toggle("compact-header", !this.uiProps.showHeader);
         this.section.classList.toggle("hide-bg", this.uiProps.hideBg);
     }
-    gameChangeEvent({ gameData, isNewGame, isWatching }) {
+    onGameChange({ gameData, isNewGame, isWatching }) {
         if (!isNewGame || !isWatching) return;
         const gameAlert = [{ type: ALERT_TYPES.GAME, value: gameData }];
         this.addAlertsToQuery(gameAlert);
     }
-    startSessionEvent({ gameData }) {
+    onStartSession({ gameData }) {
         const gameAlert = [{ type: ALERT_TYPES.GAME, value: gameData }];
         this.addAlertsToQuery(gameAlert);
     }
+    onCheevoUnlocks({ cheevos }) {
+        const alerts = cheevos.map(cheevo => ({ type: ALERT_TYPES.CHEEVO, value: cheevo }));
+        this.addAlertsToQuery(alerts);
+    }
+
     saveAlerts(alerts) {
         const timeStamp = Date.now();
         const normalizedAlerts = alerts.map(alert => {

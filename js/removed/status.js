@@ -527,7 +527,7 @@ export class StatusPanel extends Widget {
             this.awards.progressionAward = watcher.GAME_DATA.progressionAward
         )
     }
-    gameChangeEvent(isNewGame = false) {
+    onGameChange(isNewGame = false) {
         if (isNewGame && watcher.IS_WATCHING) {
             this.addAlertsToQuery([{ type: ALERT_TYPES.GAME, value: watcher.GAME_DATA }])
         }

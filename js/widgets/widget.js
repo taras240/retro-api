@@ -68,7 +68,7 @@ export class Widget {
     }
 
     constructor() {
-
+        this.addAPIEvents();
     }
     addEvents() {
         this.section.addEventListener('mousedown', (event) => {
@@ -119,11 +119,22 @@ export class Widget {
             });
         });
 
-        APIEvents.addEventListener("gameChange", (e) => this.gameChangeEvent(e?.detail ?? {}));
-        APIEvents.addEventListener("startSession", (e) => this.startSessionEvent(e?.detail ?? {}))
+
     }
-    gameChangeEvent({ gameData, inNewGame, isWatching }) { }
-    startSessionEvent({ gameData }) { }
+    addAPIEvents() {
+        APIEvents.addEventListener("gameChange", (e) => this.onGameChange(e?.detail ?? {}));
+        APIEvents.addEventListener("startSession", (e) => this.onStartSession(e?.detail ?? {}));
+        APIEvents.addEventListener("stopSession", (e) => this.onStopSession());
+        APIEvents.addEventListener("cheevoUnlocks", (e) => this.onCheevoUnlocks(e?.detail ?? {}));
+        APIEvents.addEventListener("statsUpdate", (e) => this.onStatsUpdate(e?.detail ?? {}));
+        APIEvents.addEventListener("APIRequest", () => this.onAPIRequest());
+    }
+    onGameChange({ gameData, inNewGame, isWatching }) { }
+    onCheevoUnlocks({ cheevos }) { }
+    onStartSession({ gameData }) { }
+    onStatsUpdate({ userData }) { }
+    onStopSession() { }
+    onAPIRequest() { }
     addWidgetIcon() {
         const isChecked = config.ui?.[this.section?.id]?.hidden === false ?? !this.VISIBLE;
         const { iconID, onChangeEvent, description, iconClass, badgeLabel } = this.widgetIcon;

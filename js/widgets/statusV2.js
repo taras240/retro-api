@@ -487,8 +487,52 @@ export class Status extends Widget {
             watcher.isActive ?
                 watcher.stop() : watcher.start();
         });
-        APIEvents.addEventListener("gameChange", (e) => this.gameChangeEvent(e?.detail ?? {}))
+    }
+    onGameChange({ gameData, isNewGame, isWatching }) {
+        // this.addAlertsToQuery([{ type: ALERT_TYPES.GAME, value: watcher.GAME_DATA }]);
+        if (isNewGame && isWatching) {
+            this.addAlertsToQuery([{ type: ALERT_TYPES.GAME, value: gameData }]);
+        }
+        this.fillGameData();
+        this.doUpdateAnimation();
+        this.updateTicker();
 
+    }
+    onCheevoUnlocks({ cheevos }) {
+        if (!cheevos?.length) return;
+        const pushCheevoAlerts = (cheevos) => {
+            const cheevoAlerts = cheevos
+                .map(cheevo => ({
+                    type: ALERT_TYPES.CHEEVO,
+                    value: cheevo
+                }));
+            this.addAlertsToQuery(cheevoAlerts);
+        }
+        this.IS_HARD_MODE = cheevos[0].isEarnedHardcore;
+
+        this.updateProgressionBar();
+        this.updateFocusPreview();
+        this.updateProgressBar();
+        this.updateTicker();
+        this.doUpdateAnimation();
+
+        pushCheevoAlerts(cheevos);
+
+    }
+    onStartSession({ }) {
+        this.timeWatcher().start();
+        this.watchButton.classList.add("active");
+    }
+    onStopSession() {
+        this.timeWatcher().stop();
+        this.watchButton.classList.remove("active");
+    }
+    onStatsUpdate({ userData }) {
+        const { richPresence } = userData;
+        this.updateRichPresence(richPresence)
+    }
+    onAPIRequest() {
+        this.blinkUpdate();
     }
     setElementsValues() {
         this.section.classList.toggle("hide-game-info", !this.uiProps.showGameInfo)
@@ -507,16 +551,7 @@ export class Status extends Widget {
         if (this.theme === Status.themes.legacy) return;
         sweepEffect(this.section);
     }
-    gameChangeEvent({ gameData, isNewGame, isWatching }) {
-        // this.addAlertsToQuery([{ type: ALERT_TYPES.GAME, value: watcher.GAME_DATA }]);
-        if (isNewGame && isWatching) {
-            this.addAlertsToQuery([{ type: ALERT_TYPES.GAME, value: gameData }]);
-        }
-        this.fillGameData();
-        this.doUpdateAnimation();
-        this.updateTicker();
 
-    }
     updateTicker() {
         if (!this.tickerElement) return;
         this.ticker?.stopScrolling();
@@ -670,17 +705,6 @@ export class Status extends Widget {
         this.updateProgressBar();
         // this.startAutoScrollElement(this.richPresenceElement, true, 10 * 1000);
     }
-    updateProgress({ earnedAchievementIDs }) {
-        earnedAchievementIDs?.length > 0 && (this.IS_HARD_MODE = !!watcher.CHEEVOS[earnedAchievementIDs[0]].isEarnedHardcore);
-
-        this.updateProgressionBar();
-        this.updateFocusPreview();
-        this.updateProgressBar();
-        this.updateTicker();
-        this.doUpdateAnimation();
-
-        // this.gameChangeEvent();
-    }
     updateRichPresence(richPresenceText) {
         this.section.querySelectorAll(".rp__rich-presence")?.forEach(el => {
             const message = richPresenceText || ui.lang.richPresence;
@@ -720,7 +744,7 @@ export class Status extends Widget {
     }
 
     timeWatcher() {
-        this.watchButton.classList.toggle("active", watcher.isActive);
+
         this.section.classList.toggle("watching", watcher.isOnline && watcher.isActive);
         const start = () => {
             this.timeWatcher().stop();

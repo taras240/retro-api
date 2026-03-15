@@ -244,7 +244,7 @@ export class GameCard extends Widget {
             moveEvent(this.section, event);
         })
     }
-    updateProgress({ earnedAchievementIDs }) {
+    onCheevoUnlocks({ cheevos }) {
         this.updateProgressData();
     }
     updateProgressData() {
@@ -255,7 +255,7 @@ export class GameCard extends Widget {
         this.progressPointsContainer.innerHTML = completionMsg(gameData, PROGRESS_TYPES.points, isHardMode);
         this.progressRetropointsContainer.innerHTML = completionMsg(gameData, PROGRESS_TYPES.retropoints, isHardMode);
     }
-    async gameChangeEvent({ gameData, isNewGame }) {
+    async onGameChange({ gameData, isNewGame }) {
         const {
             Title,
             ID,

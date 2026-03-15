@@ -97,11 +97,12 @@ export class Progression extends Widget {
     addEvents() {
         super.addEvents();
     }
-    gameChangeEvent({ gameData }) {
+    onGameChange({ gameData }) {
         this.generateProgression()
     }
-    update({ earnedAchievementIDs }) {
-        earnedAchievementIDs[0] && (this.uiProps.hardMode = watcher.CHEEVOS[earnedAchievementIDs[0]].isEarnedHardcore);
+    onCheevoUnlocks({ cheevos }) {
+        if (cheevos.length === 0) return;
+        this.uiProps.hardMode = cheevos[0].isEarnedHardcore;
         this.generateProgression();
     }
     generateWidget() {

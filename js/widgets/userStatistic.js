@@ -6,6 +6,7 @@ import { moveEvent } from "../functions/movingWidget.js";
 import { resizeEvent } from "../functions/resizingWidget.js";
 import { inputTypes } from "../components/inputElements.js";
 import { buttonsHtml } from "../components/htmlElements.js";
+import { normalizeUserData } from "../functions/api/userDataNormalization.js";
 
 export class UserStatistic extends Widget {
     widgetIcon = {
@@ -228,90 +229,88 @@ export class UserStatistic extends Widget {
         //     moveEvent(this.section, event);
         // })
     }
-    initialSetStats({ userSummary, completionProgress }) {
-        this.initialData = {
-            Rank: userSummary.Rank,
-            rankRate: +(100 * userSummary.Rank / userSummary.TotalRanked).toFixed(2),
-            TotalPoints: userSummary.TotalPoints,
-            TotalSoftcorePoints: userSummary.TotalSoftcorePoints,
-            TotalTruePoints: userSummary.TotalTruePoints,
-            trueRatio: +(userSummary.TotalTruePoints / userSummary.TotalPoints).toFixed(2),
-
-        }
-        if (userSummary) {
-            this.userSummary = userSummary;
-            this.initialUserSummary = userSummary;
-            this.rankElement.innerText = userSummary.Rank;
-            this.rankRateElement.innerText = (100 * userSummary.Rank / userSummary.TotalRanked).toFixed(2) + '%';
-            this.pointsElement.innerText = userSummary.TotalPoints;
-            this.softpointsElement.innerText = userSummary.TotalSoftcorePoints;
-            this.retropointsElement.innerText = userSummary.TotalTruePoints;
-            this.trueRatioElement.innerText = (userSummary.TotalTruePoints / userSummary.TotalPoints).toFixed(2);
-        }
-        if (completionProgress) {
+    initialSetStats({ userData }) {
+        this.initialData = userData;
+        if (userData) {
+            this.userData = userData;
+            this.initialUserData = userData;
+            this.rankElement.innerText = userData.rank;
+            this.rankRateElement.innerText = userData.percentile + '%';
+            this.pointsElement.innerText = userData.points;
+            this.softpointsElement.innerText = userData.softpoints;
+            this.retropointsElement.innerText = userData.retropoints;
+            this.trueRatioElement.innerText = userData.trueRatio.toFixed(2);
         }
         setTimeout(() => this.updateChart(), 1000);
     }
-    async updateStats({ currentUserSummary }) {
-        if (!currentUserSummary) {
-            currentUserSummary = await apiWorker.getUserSummary({ gamesCount: "0", achievesCount: 0 });
+    async onStatsUpdate({ userData }) {
+        this.updateStats({ userData });
+    }
+
+    async updateStats({ userData }) {
+        if (!userData) {
+            const userSummary = await apiWorker.getUserSummary({ gamesCount: "0", achievesCount: 0 });
+            userData = {
+                ...this.userData,
+                ...normalizeUserData({ userSummary })
+            };
         };
-
+        if (!this.initialData) {
+            if (!userData.rank) return;
+            this.initialData = userData;
+            this.userData = userData;
+        }
         const setValue = (element, property) => {
-
             let delta = 0;
             let sessionDelta = 0;
             let value = 0;
             let oldValue = 0;
             switch (property) {
                 case "rankRate":
-                    value = (100 * currentUserSummary.Rank / currentUserSummary.TotalRanked).toFixed(2);
-                    oldValue = (100 * this.userSummary.Rank / this.userSummary.TotalRanked).toFixed(2);
+                    value = userData.percentile;
+                    oldValue = this.userData.percentile;
                     delta = +(value - oldValue).toFixed(2);
-                    sessionDelta = -(value - this.initialData.rankRate).toFixed(2)
+                    sessionDelta = -(value - this.initialData.percentile).toFixed(2);
                     value += "%";
                     break;
                 case "trueRatio":
-                    value = (currentUserSummary.TotalTruePoints / currentUserSummary.TotalPoints).toFixed(2);
-                    oldValue = (this.userSummary.TotalTruePoints / this.userSummary.TotalPoints).toFixed(2);
+                    value = userData.trueRatio.toFixed(2);
+                    oldValue = this.userData.trueRatio.toFixed(2);
                     delta = +(value - oldValue).toFixed(2);
-                    sessionDelta = +(value - this.initialData.trueRatio).toFixed(2)
+                    sessionDelta = +(value - this.initialData.trueRatio).toFixed(2);
                     break;
-                case "Rank":
-                    delta = currentUserSummary[property] - this.userSummary[property];
-                    sessionDelta = this.initialData[property] - currentUserSummary[property];
-                    value = currentUserSummary[property];
+                case "rank":
+                    delta = userData.rank - this.userData.rank;
+                    sessionDelta = this.initialData.rank - userData.rank;
+                    value = userData.rank;
                     break;
                 default:
-                    delta = currentUserSummary[property] - this.userSummary[property];
-                    sessionDelta = currentUserSummary[property] - this.initialData[property];
-                    value = currentUserSummary[property];
+                    delta = userData[property] - this.userData[property];
+                    sessionDelta = userData[property] - this.initialData[property];
+                    value = userData[property];
             }
-            if (delta == 0) return;
-            const isNegativeDelta = delta < 0;
-
+            const isDeltaPositive = delta >= 0;
             const isSessionNegativeDelta = sessionDelta < 0;
 
-            element.classList.add("delta");
-            element.classList.toggle('negative', isNegativeDelta);
-            element.dataset.delta = `${isNegativeDelta || delta == 0 ? "" : "+"}${delta}`;
+            element.classList.toggle('negative', !isDeltaPositive);
+            element.dataset.delta = `${isDeltaPositive ? "+" : ""}${delta}`;
+            const deltaText = !!sessionDelta ?
+                !isSessionNegativeDelta ?
+                    `▴${sessionDelta}` : `▾${-1 * sessionDelta}` : "";
+            element.innerHTML = value + ` <span class="session-progress ${isSessionNegativeDelta ? "negative" : ""}">${deltaText}</span>`;
             const delay = 0;
+            element.classList.add("delta");
             setTimeout(() => {
-                const deltaText = sessionDelta == 0 ?
-                    "" : !isSessionNegativeDelta ?
-                        `▴${sessionDelta}` : `▾${-1 * sessionDelta}`
-                element.innerHTML = value + ` <span class="session-progress ${isSessionNegativeDelta ? "negative" : ""}">${deltaText}</span>`;
                 element.classList.remove("delta");
-            }, delay)
+            }, delay);
         }
         setValue(this.rankRateElement, "rankRate");
-        setValue(this.rankElement, "Rank");
-        setValue(this.pointsElement, "TotalPoints");
-        setValue(this.softpointsElement, "TotalSoftcorePoints");
-        setValue(this.retropointsElement, "TotalTruePoints");
+        setValue(this.rankElement, "rank");
+        setValue(this.pointsElement, "points");
+        setValue(this.softpointsElement, "softpoints");
+        setValue(this.retropointsElement, "retropoints");
         setValue(this.trueRatioElement, "trueRatio");
-
-        this.userSummary = currentUserSummary;
+        this.userData = { ...this.userData, ...userData };
     }
     async updateChart() {
         const AWARD_KINDS = [

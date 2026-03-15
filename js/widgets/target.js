@@ -16,6 +16,7 @@ import { buttonsHtml } from "../components/htmlElements.js";
 import { CACHE_TYPES } from "../enums/cacheDataTypes.js";
 import { divHtml } from "../components/divContainer.js";
 import { fromHtml } from "../functions/html.js";
+import { parseCurrentGameLevel } from "../functions/parseRP.js";
 
 export class Target extends Widget {
     sectionCode = "-target";
@@ -716,7 +717,7 @@ export class Target extends Widget {
         this.setElementsValues();
         this.startAutoScroll();
     }
-    gameChangeEvent({ isNewGame }) {
+    onGameChange({ isNewGame }) {
         // if (true || isNewGame) {
         //     this.filters = this.uiProps.filters
         // }
@@ -726,7 +727,13 @@ export class Target extends Widget {
         this.fillPinnedItems();
         this.markPinned();
     }
-    async updateEarnedAchieves({ earnedAchievementIDs }) {
+    onStatsUpdate({ userData }) {
+        const { richPresence } = userData;
+        const currentLevel = parseCurrentGameLevel(richPresence);
+        this.highlightCurrentLevel(currentLevel);
+
+    }
+    async onCheevoUnlocks({ cheevos }) {
         const animElement = () => {
             const animContainer = document.createElement("div");
             animContainer.classList.add("target-unlock-anim");
@@ -737,8 +744,8 @@ export class Target extends Widget {
             return animContainer;
         }
         const scrollPosition = this.container.scrollTop;
-        for (let cheevoID of earnedAchievementIDs) {
-            const cheevo = watcher.CHEEVOS[cheevoID];
+        for (let cheevo of cheevos) {
+            const cheevoID = cheevo.ID;
             const cheevoElement = this.container.querySelector(`.target-achiv[data-achiv-id='${cheevoID}']`);
             if (cheevoElement) {
                 const animEl = animElement();
@@ -764,6 +771,7 @@ export class Target extends Widget {
         this.applyFilter();
         this.applySort();
         this.genreFilter && this.filterByGenre(this.genreFilter, true);
+        this.delayedRemove();
     }
     autoscrollInterval;
     startAutoScroll(toBottom = true) {

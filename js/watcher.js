@@ -4,9 +4,11 @@ import { CHEEVO_TYPES } from "./enums/cheevoTypes.js";
 import { GAME_AWARD_TYPES } from "./enums/gameAwards.js";
 import { ONLINE_STATUS } from "./enums/onlineStatus.js";
 import { WATCHER_MODES } from "./enums/watcherModes.js";
+import { normalizeUserData } from "./functions/api/userDataNormalization.js";
 import { sendDiscordAlert } from "./functions/discord.js";
 import { readLog } from "./functions/logParser.js";
 import { parseTimeParts } from "./functions/time.js";
+import { getAwardAlerts } from "./functions/watcher/awardsAlerts.js";
 import { onlineChecker } from "./functions/watcher/onlineStatus.js";
 import { APIEvents, apiWorker, config, configData, ui, watcher } from "./script.js";
 export class Watcher {
@@ -38,7 +40,7 @@ export class Watcher {
         const isNewGame = this.GAME_DATA && gameObject.ID != this.GAME_DATA?.ID;
         this._gameData = gameObject;
         this.initPlayTime();
-        this.gameChangeEvent(gameObject, isNewGame)
+        this.onGameChange(gameObject, isNewGame)
     }
     get isOnline() {
         const status = this.online.getStatus();
@@ -77,16 +79,17 @@ export class Watcher {
             timer: 60,
         }
     }
-    gameChangeEvent(gameData, isNewGame) {
+    onGameChange(gameData, isNewGame) {
         const { isWatching } = this;
         const { discordNewGame } = configData;
         APIEvents.dispatchEvent(new CustomEvent("gameChange", {
             detail: { gameData, isNewGame, isWatching }
         }));
 
-        if (discordNewGame && isWatching) {
+        if (discordNewGame && isWatching && isNewGame) {
             sendDiscordAlert({ type: ALERT_TYPES.GAME });
         }
+        this.updateUserData({ delay: 2e3 });
     }
     onStartSession() {
         APIEvents.dispatchEvent(new CustomEvent("startSession", {
@@ -96,10 +99,33 @@ export class Watcher {
         if (!discordNewGame && discordStartSession) {
             sendDiscordAlert({ type: ALERT_TYPES.GAME });
         }
+
     }
-    updateSessionData(cheevosIDs = []) {
-        cheevosIDs?.forEach(id => {
-            const cheevo = this.CHEEVOS[id];
+    onStopSession() {
+        APIEvents.dispatchEvent(new CustomEvent("stopSession"));
+    }
+    onCheevoUnlocks(cheevos = []) {
+        const awardsArray = getAwardAlerts({ gameData: this.GAME_DATA });
+        this.updateUserData({ delay: 32e3 });
+
+        APIEvents.dispatchEvent(new CustomEvent("cheevoUnlocks", {
+            detail: { cheevos }
+        }));
+
+
+        ui.showCheevoAlerts(cheevos);
+        ui.showAwardsAlerts(awardsArray);
+    }
+    onStatsUpdate() {
+        APIEvents.dispatchEvent(new CustomEvent("statsUpdate", {
+            detail: { userData: this.userData }
+        }));
+    }
+    onAPIRequest() {
+        APIEvents.dispatchEvent(new CustomEvent("APIRequest"));
+    }
+    updateSessionData(cheevos = []) {
+        cheevos?.forEach(cheevo => {
             if (cheevo?.isEarnedHardcore) {
                 this.sessionData.points += cheevo.Points;
                 this.sessionData.retropoints += cheevo.TrueRatio;
@@ -111,29 +137,21 @@ export class Watcher {
             }
         })
     }
-    updateUserData({ raProfileInfo, userSummary }) {
-        if (raProfileInfo) {
-            this.userData = {
-                ...this.userData,
-                userName: raProfileInfo.User,
-                points: raProfileInfo.TotalPoints,
-                retropoints: raProfileInfo.TotalTruePoints,
-                softpoints: raProfileInfo.TotalSoftcorePoints,
-                richPresence: raProfileInfo.RichPresenceMsg
-            }
+
+    updateUserData({ raProfileInfo, userSummary, isLog, delay = 0 }) {
+        if (!userSummary && !raProfileInfo) {
+            this.userInfoTimeout && clearTimeout(this.userInfoTimeout);
+
+            this.userInfoTimeout = setTimeout(async () => {
+                const userSummary = await apiWorker.getUserSummary({ gamesCount: 0, achievesCount: 0 });
+                this.updateUserData({ userSummary });
+            }, delay);
+            return;
         }
-        if (userSummary) {
-            this.userData = {
-                ...this.userData,
-                userName: userSummary.User,
-                richPresence: userSummary.RichPresenceMsg,
-                points: userSummary.TotalPoints,
-                retropoints: userSummary.TotalTruePoints,
-                softpoints: userSummary.TotalSoftcorePoints,
-                rank: userSummary.Rank,
-                percentile: (100 * userSummary.Rank / userSummary.TotalRanked).toFixed(2),
-            }
-        }
+        const userData = normalizeUserData({ userSummary, raProfileInfo });
+        this.userData = { ...this.userData, ...userData }
+
+        this.onStatsUpdate();
     }
     async checkForOnline() {
         const now = new Date();
@@ -208,7 +226,6 @@ export class Watcher {
         }
 
         const richPresence = raProfileInfo.RichPresenceMsg;
-        ui.updateWidgetsRichPresence(richPresence);
         this.online.updateWithRPMessage({ richPresence })
 
         if (!this.isOnline && configData.pauseIfOffline) {
@@ -217,6 +234,7 @@ export class Watcher {
         else if (!configData.pauseIfOffline) {
             this.online.setOnline();
         }
+        this.onAPIRequest();
     }
     isLogOK = false;
     async checkLogUpdates() {
@@ -264,7 +282,7 @@ export class Watcher {
             const gameData = await apiWorker.getGameInfoAndProgress({ gameID: gameID, withTimesData: true });
             this.GAME_DATA = gameData;
         } catch (error) {
-            this.stop;
+            this.stop();
             console.error(error);
         }
     }
@@ -276,7 +294,7 @@ export class Watcher {
                 earnedAchievements?.forEach((lastCheevo) => {
                     const { HardcoreMode, Date } = lastCheevo;
                     const cheevo = this.CHEEVOS[lastCheevo.AchievementID];
-                    const isHard = HardcoreMode == 1;
+                    const isHard = HardcoreMode === 1;
                     this.IS_HARD_MODE = isHard;
                     let gameData;
                     if (cheevo.gameID === watcher.GAME_DATA.ID) {
@@ -317,69 +335,19 @@ export class Watcher {
                 const cheevo = this.CHEEVOS[lastCheevo.AchievementID];
                 if (cheevo) {
                     const isHardcoreMismatch =
-                        lastCheevo.HardcoreMode === 1 && !cheevo?.isEarnedHardcore;
+                        lastCheevo.HardcoreMode === 1 && !cheevo.isEarnedHardcore;
                     const isSoftCoreMismatch = !cheevo.isEarned;
                     if (isSoftCoreMismatch || isHardcoreMismatch) {
                         earnedAchievements.push(lastCheevo);
                     }
                 }
             });
-            // console.log(earnedAchievements)
             updateAchievements(earnedAchievements);
             const cheevosIDs = earnedAchievements?.map((cheevo) => cheevo.AchievementID);
-            return cheevosIDs;
-
+            const cheevos = cheevosIDs.map(cheevoID => this.CHEEVOS[cheevoID]).filter(c => c);
+            return cheevos;
         }
-        const checkForNewAwards = () => {
-            let awardsArray = [];
-            const gameSets = [this.GAME_DATA, ...Object.values(this.GAME_DATA.subsetsData)];
-            gameSets.forEach(gameSet => {
 
-                if (gameSet.award !== GAME_AWARD_TYPES.MASTERED
-                    && gameSet.unlockData.hardcore.count === gameSet.NumAchievements) {
-                    gameSet.award = GAME_AWARD_TYPES.MASTERED;
-                    awardsArray.push({
-                        type: ALERT_TYPES.AWARD,
-                        award: GAME_AWARD_TYPES.MASTERED,
-                        value: structuredClone(gameSet)
-                    });
-                }
-                else if (!gameSet.award && gameSet.unlockData.softcore.count === gameSet.NumAchievements) {
-                    gameSet.award = GAME_AWARD_TYPES.COMPLETED;
-                    awardsArray.push({
-                        type: ALERT_TYPES.AWARD,
-                        award: GAME_AWARD_TYPES.COMPLETED,
-                        value: structuredClone(gameSet)
-                    })
-                }
-                if (gameSet.progressionSteps > 0 &&
-                    gameSet.progressionAward !== GAME_AWARD_TYPES.BEATEN &&
-                    gameSet.unlockData.hardcore.progressionCount >= gameSet.progressionSteps) {
-                    gameSet.progressionAward = GAME_AWARD_TYPES.BEATEN;
-                    awardsArray.push({
-                        type: ALERT_TYPES.AWARD,
-                        award: GAME_AWARD_TYPES.BEATEN,
-                        value: structuredClone(gameSet)
-                    })
-                }
-                else if (gameSet.progressionSteps > 0 &&
-                    !gameSet.progressionAward &&
-                    gameSet.unlockData.softcore.progressionCount >= gameSet.progressionSteps) {
-                    gameSet.progressionAward = GAME_AWARD_TYPES.BEATEN_SOFTCORE;
-                    awardsArray.push({
-                        type: ALERT_TYPES.AWARD,
-                        award: GAME_AWARD_TYPES.BEATEN_SOFTCORE,
-                        value: structuredClone(gameSet)
-                    })
-                }
-            })
-            const { TimePlayed } = watcher.GAME_DATA;
-
-            return awardsArray.map(award => {
-                award.value.TimePlayed = TimePlayed;
-                return award;
-            });
-        }
         const checkForZeroPoints = () => {
             this.GAME_DATA.hasZeroPoints = Object.values(this.CHEEVOS).filter(
                 ({ Points, isEarnedHardcore }) => Points === 0 && !isEarnedHardcore)?.length > 0
@@ -392,19 +360,11 @@ export class Watcher {
                 });
             }
 
-            const cheevosIDs = checkForNewCheevos(cheevos);
-            const awardsArray = checkForNewAwards();
-
+            const cheevosArray = checkForNewCheevos(cheevos);
             this.GAME_DATA.hasZeroPoints && checkForZeroPoints();
-            if (cheevosIDs && cheevosIDs.length > 0) {
-
-                try {
-                    this.updateSessionData(cheevosIDs);
-                    ui.showCheevoAlerts(cheevosIDs);
-                    ui.showAwardsAlerts(awardsArray);
-                } catch (e) { }
-
-                ui.updateWidgets({ earnedAchievementsIDs: cheevosIDs, isLog });
+            if (cheevosArray && cheevosArray.length > 0) {
+                this.onCheevoUnlocks(cheevosArray);
+                this.updateSessionData(cheevosArray);
             }
 
         } catch (error) {
@@ -438,14 +398,6 @@ export class Watcher {
                 this.updateGameData();
                 break;
         }
-        setTimeout(() => {
-            apiWorker.getUserSummary({}).then(userSummary => {
-                this.updateUserData({ userSummary })
-                ui.userInfo?.update({ userSummary });
-                ui.stats?.initialSetStats({ userSummary });
-                // this.statusPanel?.updateStatistics({ userSummary });
-            })
-        }, 3000);
     }
     start() {
         const increasePlayTime = () => {
@@ -471,24 +423,13 @@ export class Watcher {
             //Set autoupdate interval
             this.apiTrackerInterval = setInterval(async () => {
                 await this.checkApiUpdates();
-                widgetsOnTickEvent();
             }, configData.updateDelaySec * 1000);
-        }
-        const widgetsOnStartEvent = () => {
-            ui.statusPanel.timeWatcher().start();
-            ui.status.timeWatcher().start();
-            setTimeout(widgetsOnTickEvent, 5000);
-        }
-        const widgetsOnTickEvent = () => {
-            ui.statusPanel.blinkUpdate();
-            ui.status.blinkUpdate();
         }
         this.stop()
 
         startApiWorker();
         startTimer();
 
-        widgetsOnStartEvent();
 
         this.watcherInterval = setInterval(() => {
             increasePlayTime();
@@ -496,6 +437,7 @@ export class Watcher {
         }, 1000)
     }
     stop() {
+        this.onStopSession();
         clearInterval(this.apiTrackerInterval);
         clearInterval(this.logWatcherInterval);
         this.isWatching = false;
@@ -503,17 +445,11 @@ export class Watcher {
         this.playTime.totalGameTime && this.savePlayTime();
         this.watcherInterval && clearInterval(this.watcherInterval);
         this.playTime.sessionTime = 0;
-        ui.statusPanel.timeWatcher().stop();
-        ui.status.timeWatcher().stop();
-
     }
     reset() {
         const updateWidgets = () => {
             const isNewGame = false;
-            ui.statusPanel.gameChangeEvent(isNewGame);
-            ui.status?.gameChangeEvent(isNewGame);
-            ui.gameList?.gameChangeEvent();
-            ui.gameCard?.gameChangeEvent(isNewGame);
+            this.onGameChange(this.GAME_DATA, isNewGame);
         }
         this._gameData = { ...this._gameData, ...config.gamesDB[this._gameData.ID] }
         this.initPlayTime();
