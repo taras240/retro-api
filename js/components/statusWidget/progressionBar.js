@@ -9,12 +9,12 @@ export const updateProgressionBar = (container, gameData, isHardMode = true) => 
     const mainSetID = gameData.availableSubsets?.Main;
     const isEarned = (cheevo) => cheevo.isEarnedHardcore ||
         (cheevo.isEarned && !isHardMode);
-    const progressionMessage = (focusCheevo, focusIndex, cheevos) => {
+    const progressionMessage = (focusCheevo, focusIndex, cheevos, winCount) => {
         let message;
         if (focusIndex >= 0) {
             message = `${badgeElements.gold(`${focusIndex + 1}/${cheevos.length}`)} ${focusCheevo.Description}`;
         } else if (gameData?.progressionAward || gameData.subsetsData?.[mainSetID]?.progressionAward) {
-            message = ui.lang.gameBeatenMsg;
+            message = winCount > 1 ? ui.lang.gameBeatenAllEndingsMsg : ui.lang.gameBeatenMsg;
         } else {
             message = ui.lang.noProgressionMsg;
         }
@@ -45,11 +45,11 @@ export const updateProgressionBar = (container, gameData, isHardMode = true) => 
         return [...progresionCheevos, ...winCheevos];
     }
     const cheevos = reorderCheevos(Object.values(gameData.AllAchievements))
-
+    const winCount = Object.values(gameData.AllAchievements).filter(c => c.Type == CHEEVO_TYPES.WIN).length;
 
     const focusCheevo = cheevos.find(a => !isEarned(a));
     const focusIndex = cheevos.findIndex(c => !isEarned(c));
-    const message = progressionMessage(focusCheevo, focusIndex, cheevos);
+    const message = progressionMessage(focusCheevo, focusIndex, cheevos, winCount);
     container.innerHTML = `
         <h3 class="${mainClass}-target" data-title="${focusCheevo?.Description ?? ""}">
             ${message}
