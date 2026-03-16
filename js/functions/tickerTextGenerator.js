@@ -47,10 +47,9 @@ export function generateMagicLineText(gameData, sessionData, userData) {
 
         generateGameStat(stats.hardcore.points, stats.softcore.points, stats.totalPoints, "{1} points"),
 
-        generateGameStat(stats.hardcore.retropoints, stats.hardcore.retropoints, stats.totalPoints, "{1} retropoints"),
+        generateGameStat(stats.hardcore.retropoints, stats.hardcore.retropoints, stats.totalRetropoints, "{1} retropoints"),
 
     ].join(",&nbsp;") + space;
-
     const hasSessionData = sessionData.cheevos || sessionData.cheevosSoftcore
     const sessionInfo = hasSessionData ? `Session statistics: ` + [
         sessionData.cheevos && `+${sessionData.cheevos} cheevos`,
