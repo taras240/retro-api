@@ -382,7 +382,7 @@
     content: ":";
 }
 
-.watching:not(.offline) .rp__time-hours::after {
+.watching .rp__time-hours::after {
     animation-delay: 1s;
     animation: blink-time-dots 5s infinite;
 }

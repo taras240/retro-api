@@ -4,7 +4,7 @@ import { ALERT_TYPES } from "../enums/alerts.js";
 import { signedIcons } from "../components/icons.js"
 
 import { generateBadges } from "../components/badges.js";
-import { APIEvents, config, ui, watcher } from "../script.js";
+import { APIEvents, config, configData, ui, watcher } from "../script.js";
 import { Widget } from "./widget.js";
 import { filterBy, sortBy } from "../functions/sortFilter.js";
 import { showComments } from "../components/comments.js";
@@ -766,12 +766,13 @@ export class Status extends Widget {
 
     blinkUpdate() {
         const { isOnline, isWatching, isLogOK } = watcher;
+        const { pauseIfOffline } = configData;
         // this.indicatorElement.classList.remove("offline", "blink");
         this.section.classList.toggle("offline", !isOnline);
+        this.section.classList.toggle("watching", isWatching && (isOnline || !pauseIfOffline));
         this.indicatorElement.classList.toggle("offline", !isOnline);
         this.indicatorElement.classList.toggle("online", isOnline);
         this.indicatorElement.classList.toggle("blink", this.uiProps.blinkOnUpdate);
-        this.section.classList.toggle("watching", isWatching);
         this.indicatorElement.classList.toggle("realtime", (isOnline && isLogOK))
         setTimeout(() => this.indicatorElement.classList.remove("blink"), 500);
     }

@@ -170,6 +170,7 @@ export class Watcher {
         // }
 
         const status = await this.online.check();
+        this.onAPIRequest();
         console.log(`Online status: ${status}, Last seen online: ${this.online.getLastSeen()}`);
         if (status === ONLINE_STATUS.online) {
             doOnline();
