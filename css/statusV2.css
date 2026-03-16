@@ -44,6 +44,23 @@
     container-type: inline-size;
 }
 
+.status__section.offline::after,
+.rp__section.offline::after {
+    content: "offline";
+    border: 1px solid crimson;
+    border-radius: 3px;
+    color: crimson;
+    font-weight: bold;
+    text-transform: uppercase;
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    z-index: 5;
+    background: black;
+    padding: 0 0.25rem;
+    box-shadow: 2px 2px 3px 0 black;
+}
+
 @container (max-width: 349px) {
     .rp__preview-container {
         display: none !important;
