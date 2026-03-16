@@ -247,5 +247,20 @@
     "showPointsProgress": "Прогрес Поінтів",
     "showRetropointsProgress": "Прогрес Ретропоінтів",
     "subset": "Назва Набору",
-    "showPins": "Показати Закріплені"
+    "showPins": "Показати Закріплені",
+    "showIcons": "Іконки",
+    "alertTypes": "Типи Алертів",
+    "showCheevoAlerts": "Досягнення",
+    "showAwardAlerts": "Нагороди",
+    "showGameAlerts": "Запуск Гри",
+    "watcherMode": "Режим",
+    "previewSize": "Розмір Прев'ю",
+    "switchProgressionIfBeaten": "Адаптивний прогресбар",
+    "switchProgressionIfBeatenHint": "Якщо прогрес проходження недоступний або гра пройдена - буде показано прогрес досягнень",
+    "thisSession": "Ця Сесія",
+    "subsetBugFix": "Виправити Субсет-баг",
+    "subsetBugFixHint": "Не переключати на субсет гри; дозволити тільки при старті",
+    "top": "Топ",
+    "blinkOnUpdate": "Блимати при оновленні",
+    "gameBeatenAllEndingsMsg": "Гру пройдено на всі кінцівки."
 }

@@ -246,5 +246,20 @@
     "showPointsProgress": "Progresso de pontos",
     "showRetropointsProgress": "Progresso de retropontos",
     "subset": "Nome do conjunto",
-    "showPins": "Mostrar pins"
+    "showPins": "Mostrar pins",
+    "showIcons": "Ícones",
+    "alertTypes": "Tipos de alerta",
+    "showCheevoAlerts": "Conquista",
+    "showAwardAlerts": "Prêmio",
+    "showGameAlerts": "Início do jogo",
+    "watcherMode": "Modo",
+    "previewSize": "Tamanho da pré-visualização",
+    "switchProgressionIfBeaten": "Progressão adaptativa",
+    "switchProgressionIfBeatenHint": "Se a progressão não estiver disponível ou o jogo já tiver sido concluído, a barra de progresso será exibida",
+    "thisSession": "Nesta sessão",
+    "subsetBugFix": "Bugfix do subset",
+    "subsetBugFixHint": "Impede a troca para o subset; permite apenas ao pressionar Iniciar/Pausar.",
+    "top": "Topo",
+    "blinkOnUpdate": "Piscar ao atualizar",
+    "gameBeatenAllEndingsMsg": "Jogo concluído com todos os finais"
 }
