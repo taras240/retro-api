@@ -391,7 +391,7 @@ export class Settings extends Widget {
                         label: "English",
                         id: "settings_lang-en",
                         checked: this.LANG === local.en,
-                        onChange: () => ui.settings.LANG = local.en,
+                        onChange: () => this.LANG = local.en,
                     },
                     {
                         name: "settings-language",
@@ -399,7 +399,7 @@ export class Settings extends Widget {
                         label: "Português (Brasil)",
                         id: "settings_lang-br",
                         checked: this.LANG === local.br,
-                        onChange: () => ui.settings.LANG = local.br,
+                        onChange: () => this.LANG = local.br,
                     },
                     {
                         name: "settings-language",
@@ -407,7 +407,7 @@ export class Settings extends Widget {
                         label: "Українська",
                         id: "settings_lang-ua",
                         checked: this.LANG === local.ua,
-                        onChange: () => ui.settings.LANG = local.ua,
+                        onChange: () => this.LANG = local.ua,
                     },
                 ]
             },
@@ -440,9 +440,17 @@ export class Settings extends Widget {
                     },
                     {
                         label: ui.lang.clearCache,
+                        hint: ui.lang.clearCacheHint,
                         type: inputTypes.BUTTON,
                         id: "context_clear-cache",
                         onClick: () => apiWorker.cache.clear(),
+                    },
+                    {
+                        label: ui.lang.resetSettings,
+                        hint: ui.lang.resetSettingsHint,
+                        type: inputTypes.BUTTON,
+                        id: "context_clear-settings",
+                        onClick: () => ui.resetSettings(),
                     }]
 
             }

@@ -310,6 +310,10 @@ export class Config {
       localStorage.setItem(CONFIG_FILE_NAME, JSON.stringify(this._cfg));
     }, 500)
   }
+  resetSettings() {
+    localStorage.removeItem(CONFIG_FILE_NAME);
+    setTimeout(() => location.reload(), 1000)
+  }
   async selectLogFile(emuName) {
 
     async function readFile(fileHandle) {

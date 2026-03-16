@@ -406,10 +406,27 @@ export class UI {
     else {
       exportSettingsToJson(props);
     }
-
-
   }
-
+  resetSettings = () => {
+    const dialog = dialogWindow({
+      title: ui.lang.resetSettings,
+      message: ui.lang.resetSettingsHint,
+      elements: [
+        {
+          type: inputTypes.BUTTON,
+          id: "dialog-copy",
+          label: ui.lang.cancel,
+        },
+        {
+          type: inputTypes.BUTTON,
+          id: "dialog-download",
+          label: ui.lang.resetSettings,
+          onClick: () => config.resetSettings(),
+        },
+      ]
+    });
+    ui.app.appendChild(dialog);
+  }
   importSettingsFromJson() {
     const fileInput = document.createElement('input');
     fileInput.type = 'file';

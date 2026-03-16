@@ -13,6 +13,7 @@ export const dialogWindow = ({ title = "Message!", message = "", elements = [] }
     const inputs = elements.map(el => inputElement(el));
     const dialogInputsContainer = fromHtml(`<div class="dialog__inputs-row"></div>`);
     dialogInputsContainer.append(...inputs);
+    inputs.forEach(input => input.addEventListener("click", () => window.remove()))
     window.append(dialogInputsContainer);
     return window;
 }
