@@ -729,9 +729,9 @@ export class Target extends Widget {
     }
     onStatsUpdate({ userData }) {
         const { richPresence } = userData;
-        const currentLevel = parseCurrentGameLevel(richPresence);
+        const gameData = watcher.GAME_DATA;
+        const currentLevel = parseCurrentGameLevel(richPresence, gameData);
         this.highlightCurrentLevel(currentLevel);
-
     }
     async onCheevoUnlocks({ cheevos }) {
         const animElement = () => {
@@ -1014,6 +1014,7 @@ export class Target extends Widget {
         });
     }
     highlightCurrentLevel(currentLevel) {
+
         [...this.container.querySelectorAll('.target-achiv')].forEach(cheevo => {
             cheevo.classList.remove("highlight");
             cheevo.classList.remove("passed");

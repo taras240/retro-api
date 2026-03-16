@@ -216,7 +216,7 @@
 } */
 
 .rp__indicator.offline {
-    background-color: goldenrod;
+    --color: goldenrod;
     opacity: 1;
 }
 

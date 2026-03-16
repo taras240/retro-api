@@ -145,6 +145,7 @@ export class Watcher {
             this.userInfoTimeout = setTimeout(async () => {
                 const userSummary = await apiWorker.getUserSummary({ gamesCount: 0, achievesCount: 0 });
                 this.updateUserData({ userSummary });
+                this.onAPIRequest();
             }, delay);
             return;
         }
@@ -162,11 +163,11 @@ export class Watcher {
             this.onlineCheckTimeOut = null;
 
         }
-        if (!configData.pauseIfOffline && !this.isOnline) {
-            this.online.setOnline();
-            doOnline();
-            return;
-        }
+        // if (!configData.pauseIfOffline && !this.isOnline) {
+        //     this.online.setOnline();
+        //     doOnline();
+        //     return;
+        // }
 
         const status = await this.online.check();
         console.log(`Online status: ${status}, Last seen online: ${this.online.getLastSeen()}`);
@@ -206,13 +207,14 @@ export class Watcher {
             if (isStart) {
                 this.updateUserData({ raProfileInfo });
             }
-            this.online.setOnline();
+            // this.online.setOnline();
             await this.updateGameData(raProfileInfo.LastGameID);
             isStart && this.onStartSession()
         }
         if (!isStart && (configData.pauseIfOffline && this.onlineCheckTimeOut)) return;
 
         const raProfileInfo = await apiWorker.getProfileInfo({});
+        this.onAPIRequest();
 
         if (isGameChanged(raProfileInfo, isStart)) {
             await onGameChanged(raProfileInfo);
@@ -227,14 +229,15 @@ export class Watcher {
 
         const richPresence = raProfileInfo.RichPresenceMsg;
         this.online.updateWithRPMessage({ richPresence })
-
+        this.updateUserData({ raProfileInfo });
         if (!this.isOnline && configData.pauseIfOffline) {
             await this.checkForOnline();
+            this.onAPIRequest();
         }
         else if (!configData.pauseIfOffline) {
-            this.online.setOnline();
+            // this.online.setOnline();
         }
-        this.onAPIRequest();
+
     }
     isLogOK = false;
     async checkLogUpdates() {
@@ -271,6 +274,7 @@ export class Watcher {
         const getLastGameID = async () => {
             const gameID = Object.values(await apiWorker.getRecentlyPlayedGames({ count: 1 }))[0]?.ID;
             configData.gameID = gameID;
+            this.onAPIRequest();
             return gameID;
         }
 
@@ -281,6 +285,7 @@ export class Watcher {
         try {
             const gameData = await apiWorker.getGameInfoAndProgress({ gameID: gameID, withTimesData: true });
             this.GAME_DATA = gameData;
+            this.onAPIRequest();
         } catch (error) {
             this.stop();
             console.error(error);
@@ -358,6 +363,7 @@ export class Watcher {
                 cheevos = await apiWorker.getRecentAchieves({
                     minutes: this.RECENT_ACHIVES_RANGE_MINUTES,
                 });
+                this.onAPIRequest();
             }
 
             const cheevosArray = checkForNewCheevos(cheevos);
@@ -401,7 +407,7 @@ export class Watcher {
     }
     start() {
         const increasePlayTime = () => {
-            if (!this.isOnline) return;
+            if (!this.isOnline && configData.pauseIfOffline) return;
             this.playTime.totalGameTime++;
             this.playTime.gameTime++;
             this.playTime.sessionTime++;

@@ -529,7 +529,7 @@ export class Status extends Widget {
     }
     onStatsUpdate({ userData }) {
         const { richPresence } = userData;
-        this.updateRichPresence(richPresence)
+        this.updateRichPresence(richPresence);
     }
     onAPIRequest() {
         this.blinkUpdate();
@@ -770,7 +770,7 @@ export class Status extends Widget {
         this.section.classList.toggle("offline", !isOnline);
         this.indicatorElement.classList.toggle("offline", !isOnline);
         this.indicatorElement.classList.toggle("online", isOnline);
-        this.indicatorElement.classList.toggle("blink", this.uiProps.blinkOnUpdate && isOnline);
+        this.indicatorElement.classList.toggle("blink", this.uiProps.blinkOnUpdate);
         this.section.classList.toggle("watching", isWatching);
         this.indicatorElement.classList.toggle("realtime", (isOnline && isLogOK))
         setTimeout(() => this.indicatorElement.classList.remove("blink"), 500);

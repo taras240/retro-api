@@ -1,10 +1,9 @@
 import { loadSections } from "./htmlBuilder.js";
 
-import { config, ui, apiWorker, watcher, configData } from "./script.js";
+import { config, ui, watcher, configData } from "./script.js";
 
 import { cheevoPopupElement } from "./components/cheevoPopup.js";
 import { hintElement } from "./components/hint.js";
-import { generateBadges } from "./components/badges.js";
 import { generateContextMenu } from "./components/contextMenu.js";
 import { pushFSAlerts } from "./components/fsAlerts.js";
 
@@ -14,7 +13,6 @@ import { setPopupPosition } from "./functions/popupPosition.js";
 
 import { AchievementsBlock } from "./widgets/cheevos.js";
 import { Target } from "./widgets/target.js";
-import { StatusPanel } from "./removed/status.js";
 import { SidePanel } from "./widgets/sidePanel.js";
 import { Settings } from "./widgets/settings.js";
 import { Note } from "./widgets/note.js";
@@ -24,17 +22,13 @@ import { Progression } from "./widgets/progression.js";
 import { UserStatistic } from "./widgets/userStatistic.js";
 import { Notifications } from "./widgets/notifications.js";
 import { Games } from "./widgets/games.js";
-// import { Aotw } from "./widgets/aotw.js";
-// import { Status } from "./widgets/statusV2.js";
 import { Status } from "./widgets/statusV2.js";
 import { GameList } from "./widgets/gamesList.js";
 import { Links } from "./widgets/links.js";
 import { ALERT_TYPES } from "./enums/alerts.js";
 import { gamePropsPopup } from "./components/gamePropsPopup.js";
 import { langPackUrl, local } from "./enums/locals.js";
-import { delay } from "./functions/delay.js";
 import { colorPresets } from "./enums/colorPresets.js";
-import { parseCurrentGameLevel } from "./functions/parseRP.js";
 import { dialogWindow } from "./components/dialogWindow.js";
 import { inputTypes } from "./components/inputElements.js";
 import { initBgAnimation } from "./functions/bgAnimations.js";

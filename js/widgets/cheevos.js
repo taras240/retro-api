@@ -468,7 +468,8 @@ export class AchievementsBlock extends Widget {
     }
     onStatsUpdate({ userData }) {
         const { richPresence } = userData;
-        const currentLevel = parseCurrentGameLevel(richPresence);
+        const gameData = watcher.GAME_DATA;
+        const currentLevel = parseCurrentGameLevel(richPresence, gameData);
         this.highlightCurrentLevel(currentLevel);
 
     }

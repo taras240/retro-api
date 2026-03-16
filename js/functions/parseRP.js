@@ -13,8 +13,8 @@ const findPreferredLevel = (matchesArray) => {
     return matchesArray?.find(l => /-/.test(l)) ?? matchesArray[0];
 };
 
-export const parseCurrentGameLevel = (richPresence) => {
-
+export const parseCurrentGameLevel = (richPresence, gameData) => {
+    if (!gameData || !richPresence) return;
     const levelNamesString = RPLevelNames.join("|");
 
     const checkLevel = (inputStr, zoneNames) => {
@@ -26,7 +26,7 @@ export const parseCurrentGameLevel = (richPresence) => {
         if (zoneNames?.length) {
             const regexZoneName = new RegExp(`\\b${zoneNames?.join("\\b|\\b")}\\b`, 'gi');
             const match = inputStr.match(regexZoneName);
-            const zoneIndex = match ? watcher.GAME_DATA.zones?.indexOf(match[0]) : -1;
+            const zoneIndex = match ? gameData.zones?.indexOf(match[0]) : -1;
 
             if (zoneIndex >= 0) {
                 level = `${zoneIndex + 1}.${level ? parseNumber(level) : ""}`;
@@ -37,7 +37,7 @@ export const parseCurrentGameLevel = (richPresence) => {
 
     const inputStr = replaceNumberWords(richPresence);
 
-    const levelNumber = checkLevel(inputStr, watcher.GAME_DATA.zones);
+    const levelNumber = checkLevel(inputStr, gameData.zones);
     return Number.isFinite(levelNumber) ? levelNumber : false;
 
 }

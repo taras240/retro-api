@@ -55,11 +55,14 @@ export function onlineChecker({ getLastPlayedFunc, currentStatus, options = {} }
 
         return status;
     };
-    const updateWithRPMessage = ({ richPresence }) => {
+    const updateWithRPMessage = async ({ richPresence }) => {
         const now = Date.now();
-        if (richPresence !== lastRPMessage) {
+        if (!lastRPMessage) {
+            await check({});
+            lastRPMessage = richPresence;
+        }
+        else if (richPresence !== lastRPMessage) {
             setOnline({ richPresence });
-
         } else {
 
             // same RP message: consider stale if no recent "seen" update
