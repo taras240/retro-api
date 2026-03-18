@@ -6,7 +6,7 @@ export function generateCheevosDisplayOrder(game) {
 
     if (cheevos.length === 0 || cheevos[0].DisplayOrder !== 0) return;
 
-    const sorted = cheevos.sort((a, b) => sortBy.unlockRate(a, b));
+    const sorted = cheevos.sort((a, b) => sortBy.id(a, b));
 
     sorted.forEach((cheevo, index) => {
         switch (cheevo.Type) {
@@ -14,10 +14,10 @@ export function generateCheevosDisplayOrder(game) {
                 cheevo.DisplayOrder = index;
                 break;
             case CHEEVO_TYPES.WIN:
-                cheevo.DisplayOrder = index * 1e3;
+                cheevo.DisplayOrder = (index + 1) * 1e3;
                 break;
             default:
-                cheevo.DisplayOrder = index * 1e6;
+                cheevo.DisplayOrder = (index + 1) * 1e6;
                 break;
         }
     });

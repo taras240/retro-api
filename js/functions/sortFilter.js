@@ -102,7 +102,7 @@ export const sortBy = {
     },
     default: (a, b, reverse = 1) => a.DisplayOrder != 0 ?
         (a.DisplayOrder - b.DisplayOrder) * reverse :
-        sortBy.unlockRate(a, b, reverse)
+        sortBy.id(a, b, reverse)
     ,
     progression: (a, b) => {
         if (a.DisplayOrder === b.DisplayOrder) return sortBy.unlockRate(a, b);
@@ -111,7 +111,7 @@ export const sortBy = {
         const bOrder = order(b);
         return aOrder - bOrder;
     },
-    id: (a, b) => a.ID - b.ID,
+    id: (a, b, reverse = 1) => (a.ID - b.ID) * reverse,
 
     disable: (a, b) => 0,
 
