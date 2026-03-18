@@ -149,13 +149,6 @@ export class UserStatistic extends Widget {
             this.updateChart();
         },
     }
-    saveProppertySetting(property, value) {
-        if (!config.ui.stats_section) {
-            config.ui.stats_section = {};
-        }
-        config.ui.stats_section[property] = value;
-        config.writeConfiguration();
-    }
     initialUserSummary;
     userSummary;
     constructor() {
@@ -166,6 +159,7 @@ export class UserStatistic extends Widget {
         this.setElementsValues();
         this.addEvents();
         UI.applyPosition({ widget: this });
+        setTimeout(() => this.updateChart(), 4e3);
     }
     generateWidget() {
         const headerElementsHtml = `
@@ -230,18 +224,7 @@ export class UserStatistic extends Widget {
         // })
     }
     initialSetStats({ userData }) {
-        this.initialData = userData;
-        if (userData) {
-            this.userData = userData;
-            this.initialUserData = userData;
-            this.rankElement.innerText = userData.rank;
-            this.rankRateElement.innerText = userData.percentile + '%';
-            this.pointsElement.innerText = userData.points;
-            this.softpointsElement.innerText = userData.softpoints;
-            this.retropointsElement.innerText = userData.retropoints;
-            this.trueRatioElement.innerText = userData.trueRatio.toFixed(2);
-        }
-        setTimeout(() => this.updateChart(), 1000);
+
     }
     async onStatsUpdate({ userData }) {
         this.updateStats({ userData });
