@@ -848,7 +848,7 @@ export class Games extends Widget {
                         },
                         {
                             type: inputTypes.NUM_INPUT,
-                            id: "side-list-released-to",
+                            id: "side-list-hltb-to",
                             label: ui.lang.to,
                             onChange: (event) => this.HLTB_FILTER = {
                                 ...this.HLTB_FILTER,

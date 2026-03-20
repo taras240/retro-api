@@ -60,6 +60,22 @@ export class UserStatistic extends Widget {
                         checked: this.uiProps.showPercentile,
                         onChange: (event) => this.uiProps.showPercentile = event.currentTarget.checked,
                     },
+                    {
+                        type: inputTypes.CHECKBOX,
+                        name: "show-unlocks-hardcore",
+                        id: "show-unlocks-hardcore",
+                        label: ui.lang.unlocks,
+                        checked: this.uiProps.showUnlocksHardcore,
+                        onChange: (event) => this.uiProps.showUnlocksHardcore = event.currentTarget.checked,
+                    },
+                    {
+                        type: inputTypes.CHECKBOX,
+                        name: "show-unlocks-softcore",
+                        id: "show-unlocks-softcore",
+                        label: ui.lang.unlocksTotal,
+                        checked: this.uiProps.showUnlocksSoftcore,
+                        onChange: (event) => this.uiProps.showUnlocksSoftcore = event.currentTarget.checked,
+                    },
 
                     {
                         type: inputTypes.CHECKBOX,
@@ -142,12 +158,22 @@ export class UserStatistic extends Widget {
         showHP: true,
         showHeader: false,
         showBG: true,
+        showUnlocksSoftcore: false,
+        showUnlocksHardcore: false,
     }
     uiSetCallbacks = {
         completionChart() {
             this.setElementsValues();
-            this.updateChart();
+            this.updateCompletionStats();
         },
+        showUnlocksSoftcore() {
+            this.setElementsValues();
+            this.updateCompletionStats();
+        },
+        showUnlocksHardcore() {
+            this.setElementsValues();
+            this.updateCompletionStats();
+        }
     }
     initialUserSummary;
     userSummary;
@@ -157,9 +183,10 @@ export class UserStatistic extends Widget {
         this.addWidgetIcon();
         this.initializeElements();
         this.setElementsValues();
+
         this.addEvents();
         UI.applyPosition({ widget: this });
-        setTimeout(() => this.updateChart(), 4e3);
+
     }
     generateWidget() {
         const headerElementsHtml = `
@@ -191,6 +218,8 @@ export class UserStatistic extends Widget {
         this.rankElement = this.section.querySelector('#stats_rank');
         this.pointsElement = this.section.querySelector('#stats_points');
         this.retropointsElement = this.section.querySelector('#stats_retropoints');
+        this.softcoreUnlocksElement = this.section.querySelector('#stats_cheevos-softcore');
+        this.hardcoreUnlocksElement = this.section.querySelector('#stats_cheevos-hardcore');
         this.softpointsElement = this.section.querySelector('#stats_softpoints');
         this.trueRatioElement = this.section.querySelector('#stats_true-ratio');
         this.completionElement = this.section.querySelector(".stats__chart-container");
@@ -215,6 +244,9 @@ export class UserStatistic extends Widget {
         this.container.classList.toggle("show-session-progress", this.uiProps.showSessionProgress);
         this.container.classList.toggle("list-mode", this.uiProps.listMode)
 
+        this.softcoreUnlocksElement.closest("li").classList.toggle("hidden", !this.uiProps.showUnlocksSoftcore);
+        this.hardcoreUnlocksElement.closest("li").classList.toggle("hidden", !this.uiProps.showUnlocksHardcore);
+
     }
     addEvents() {
         super.addEvents();
@@ -223,13 +255,39 @@ export class UserStatistic extends Widget {
         //     moveEvent(this.section, event);
         // })
     }
-    initialSetStats({ userData }) {
-
+    async updateCompletionStats() {
+        const { completionChart, showUnlocksHardcore, showUnlocksSoftcore } = this.uiProps;
+        if (!(completionChart || showUnlocksHardcore || showUnlocksSoftcore)) return;
+        const completionData = await apiWorker.completionProgress();
+        this.updateChart(completionData);
+        const getCheevosCount = (completionData) => {
+            const gamesArray = completionData?.Results ?? [];
+            const unlocksData = gamesArray.reduce((unlocksData, game) => {
+                const { NumAwardedHardcore, NumAwarded } = game;
+                unlocksData.softcoreUnlocks += NumAwarded;
+                unlocksData.hardcoreUnlocks += NumAwardedHardcore;
+                return unlocksData;
+            }, { softcoreUnlocks: 0, hardcoreUnlocks: 0 });
+            return unlocksData;
+        }
+        const unlocksData = getCheevosCount(completionData);
+        Object.assign(this.initialData, unlocksData);
+        Object.assign(this.userData, unlocksData);
+        this.updateStats({ userData: unlocksData });
     }
     async onStatsUpdate({ userData }) {
         this.updateStats({ userData });
     }
 
+    onCheevoUnlocks({ cheevos = [] }) {
+        const { softcoreUnlocks = 0, hardcoreUnlocks = 0 } = this.userData || {};
+        const unlocksData = cheevos.reduce((acc, cheevo) => {
+            if (cheevo.isEarned) acc.softcoreUnlocks++;
+            if (cheevo.isEarnedHardcore) acc.hardcoreUnlocks++;
+            return acc;
+        }, { softcoreUnlocks, hardcoreUnlocks });
+        this.updateStats({ userData: unlocksData });
+    }
     async updateStats({ userData }) {
         if (!userData) {
             const userSummary = await apiWorker.getUserSummary({ gamesCount: "0", achievesCount: 0 });
@@ -242,14 +300,16 @@ export class UserStatistic extends Widget {
             if (!userData.rank) return;
             this.initialData = userData;
             this.userData = userData;
+            setTimeout(() => this.updateCompletionStats(), 4e3);
         }
         const setValue = (element, property) => {
+            if (!this.userData[property] || !userData[property]) return;
             let delta = 0;
             let sessionDelta = 0;
             let value = 0;
             let oldValue = 0;
             switch (property) {
-                case "rankRate":
+                case "percentile":
                     value = userData.percentile;
                     oldValue = this.userData.percentile;
                     delta = +(value - oldValue).toFixed(2);
@@ -287,24 +347,23 @@ export class UserStatistic extends Widget {
                 element.classList.remove("delta");
             }, delay);
         }
-        setValue(this.rankRateElement, "rankRate");
+        setValue(this.rankRateElement, "percentile");
         setValue(this.rankElement, "rank");
+        setValue(this.hardcoreUnlocksElement, "hardcoreUnlocks");
+        setValue(this.softcoreUnlocksElement, "softcoreUnlocks");
         setValue(this.pointsElement, "points");
         setValue(this.softpointsElement, "softpoints");
         setValue(this.retropointsElement, "retropoints");
         setValue(this.trueRatioElement, "trueRatio");
         this.userData = { ...this.userData, ...userData };
     }
-    async updateChart() {
+    async updateChart(completionData = {}) {
         const AWARD_KINDS = [
             { kind: 'mastered', cssVar: '--m', legendClass: 'mastered' },
             { kind: 'completed', cssVar: '--c', legendClass: 'completed' },
             { kind: 'beaten-hardcore', cssVar: '--b', legendClass: 'beaten' },
             { kind: 'beaten-softcore', cssVar: '--b-s', legendClass: 'beaten-soft' },
         ];
-
-        if (!this.uiProps.completionChart) return;
-        const completionData = await apiWorker.completionProgress();
         const allGames = completionData?.Results ?? [];
         const allGamesCount = allGames.length;
 
@@ -332,6 +391,8 @@ export class UserStatistic extends Widget {
     statusProperties = {
         percentile: { label: ui.lang.top, id: "stats_rank-rate", class: 'stats__rank-value' },
         rank: { label: ui.lang.rank, id: "stats_rank", class: 'stats__rank-value' },
+        unlocks: { label: ui.lang.cheevos, id: "stats_cheevos-hardcore", },
+        unlocksSoftcore: { label: ui.lang.cheevos, id: "stats_cheevos-softcore", },
         points: { label: ui.lang.points, id: "stats_points", },
         retropoints: { label: ui.lang.retropoints, id: "stats_retropoints", },
         trueRatio: { label: ui.lang.trueRatio, id: "stats_true-ratio", },
@@ -357,11 +418,11 @@ export class UserStatistic extends Widget {
                 <div class="round-stat__total" id="sector"></div>
                 </div>
                 <div class="round-stat__legend">
-                    <div class="legend__award legend__mastered">mastered: <span class="legend__value-mastered">0%</span></div>
-                    <div class="legend__award legend__completed">completed: <span class="legend__value-completed">0%</div>
-                    <div class="legend__award legend__beaten">beaten: <span class="legend__value-beaten">0%</div>
-                    <div class="legend__award legend__beaten-soft">beaten soft: <span class="legend__value-beaten-soft">0%</div>
-                    <div class="legend__award legend__started">in progress: <span class="legend__value-progress">0%</div>
+                    <div class="legend__award legend__mastered">${ui.lang.mastered}: <span class="legend__value-mastered"></span></div>
+                    <div class="legend__award legend__completed">${ui.lang.completed}: <span class="legend__value-completed"></div>
+                    <div class="legend__award legend__beaten">${ui.lang.beaten}: <span class="legend__value-beaten"></div>
+                    <div class="legend__award legend__beaten-soft">${ui.lang.beatenSoftcore}: <span class="legend__value-beaten-soft"></div>
+                    <div class="legend__award legend__started">${ui.lang.inProgress}: <span class="legend__value-progress"></div>
                 </div>
             </div>
             </li>

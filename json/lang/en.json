@@ -268,5 +268,12 @@
     "resetSettingsHint": "This will reset all your settings. Make sure to save your configuration first.",
     "ok": "OK",
     "cancel": "Cancel",
-    "clearCacheHint": "This will clear all cached data for unlock times, AOTW, and completion progress."
+    "clearCacheHint": "This will clear all cached data for unlock times, AOTW, and completion progress.",
+    "unlocks": "Unlocks",
+    "unlocksTotal": "Unlocks Total",
+    "mastered": "Mastered",
+    "completed": "Completed",
+    "beaten": "Beaten",
+    "beatenSoftcore": "Beaten (Casual)",
+    "inProgress": "In progress"
 }
