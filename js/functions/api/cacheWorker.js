@@ -21,6 +21,15 @@ export function cacheWorker(cacheFileName) {
         return cachedData[dataType];
 
     }
+    const clearProperty = ({ dataType }) => {
+        if (dataType === CACHE_TYPES.GAME_TIMES) {
+            cachedData[dataType] = {};
+
+        } else {
+            delete cachedData[dataType];
+        }
+        localStorage.setItem(cacheFileName, JSON.stringify(cachedData));
+    }
     const push = ({ dataType, data }) => {
         if (dataType === CACHE_TYPES.GAME_TIMES) {
             cachedData[dataType] ??= {};
@@ -31,5 +40,5 @@ export function cacheWorker(cacheFileName) {
         localStorage.setItem(cacheFileName, JSON.stringify(cachedData));
     }
     initialize();
-    return { initialize, clear, getData, push };
+    return { initialize, clear, clearProperty, getData, push };
 }

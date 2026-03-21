@@ -5,6 +5,7 @@ import { cacheWorker } from "./functions/api/cacheWorker.js";
 import { getNormalizedAotW } from "./functions/api/cheevosNormalization.js";
 import { mergeWithTimesData, normalizeGameData } from "./functions/api/gameDataNormalization.js";
 import { getNormalizedTimes } from "./functions/api/gameTimesData.js";
+import { groupSubsets } from "./functions/api/groupSubsets.js";
 import { delay } from "./functions/delay.js";
 import { addReleaseBadges } from "./functions/releaseTypeParser.js";
 import { formatDateTime } from "./functions/time.js";
@@ -20,7 +21,9 @@ export class APIWorker {
   _subsetsList;
   async getSubsets(gameID) {
     if (!this._subsetsList) {
-      const subsets = await fetch(`./json/games/all-subsets.json`).then(resp => resp.json());
+      let subsets = this.cache.getData({ dataType: CACHE_TYPES.SUBSETS_LIST });
+      subsets ??= await fetch(`./json/games/all-subsets.json`)?.then(resp => resp.json()) ?? [];
+
       this._subsetsList = {};
       subsets.forEach(gameSets => {
         Object.values(gameSets).forEach(setID => {
@@ -33,7 +36,7 @@ export class APIWorker {
     return subsets;
   }
 
-  getUrl({ endpoint, targetUser, gameID, minutes, apiKey, userName, achievesCount, count, offset, type, sort }) {
+  getUrl({ endpoint, targetUser, gameID, minutes, apiKey, userName, achievesCount, count, offset, type, sort, hashes }) {
     if (ui.isTest) {
       this.baseUrl = `${window.location.origin}/json/apiTemplates/`;
       return this.getTestUrl(endpoint)
@@ -48,7 +51,7 @@ export class APIWorker {
       m: minutes || 2000,
       i: gameID || configData.gameID,
       f: 1,
-      h: 1,
+      h: hashes ?? 1,
       a: achievesCount || 5,
       c: count || 20,
       o: offset || 0,
@@ -99,6 +102,45 @@ export class APIWorker {
       this.cache.push({ dataType: CACHE_TYPES.AOTW, data: aotw })
     }
     return aotw;
+  }
+  getConsolesList({ supportedOnly = true }) {
+    const url = new URL(raEdpoints.consolesList, this.baseUrl);
+    const params = {
+      y: config.API_KEY,
+      g: supportedOnly ? 1 : 0,   //active systems - 1
+      a: 1,                       //gaming systems only - 1
+    };
+    url.search = new URLSearchParams(params);
+
+    return fetch(url).then(resp => resp.json());
+  }
+  getConsoleGamesList({ ID }) {
+    if (!ID) return;
+    const url = new URL(raEdpoints.consoleGamesList, this.baseUrl);
+    const params = {
+      y: config.API_KEY,
+      i: ID,
+      h: 0,               //with hashes - 1
+      f: 1,               //with cheevos - 1
+      c: 0,               //max results count, 0 - all
+      o: 0,               //offset
+    };
+    url.search = new URLSearchParams(params);
+    return fetch(url).then(resp => resp.json());
+  }
+  async getSubsetsList({ onProgressChange }) {
+    const consoles = await this.getConsolesList({});
+    const gamesList = [];
+    for (const console of consoles) {
+      onProgressChange?.(console);
+      await delay(500);
+      const games = await this.getConsoleGamesList(console);
+      const consoleSubsets = groupSubsets(games);
+      // console.log(console.ID, consoleSubsets);
+      gamesList.push(...consoleSubsets);
+    }
+    this.cache.push({ dataType: CACHE_TYPES.SUBSETS_LIST, data: gamesList });
+    return gamesList;
   }
   getUserGameRank({ targetUser, gameID }) {
     let url = this.getUrl({ endpoint: raEdpoints.userRankAndScore });

@@ -67,7 +67,7 @@ export class UI {
     // Вимкнення вікна завантаження
     setTimeout(
       () =>
-        document.querySelector(".loading-section")?.classList.add("hidden"),
+        this.toggleLoading(false),
       1000
     );
     await this.loadLang();
@@ -219,7 +219,12 @@ export class UI {
       this.bgAnimation.start();
     }
   }
+  toggleLoading(isLoading, message) {
+    const loading = document.querySelector(".loading-section");
+    loading.classList.toggle("hidden", !isLoading);
+    loading.dataset.message = message ?? "Loading...";
 
+  }
   updateWidgets({ earnedAchievementsIDs = [], isLog = false }) { }
   showAwardsAlerts(awardsArray = []) {
     pushFSAlerts(awardsArray);

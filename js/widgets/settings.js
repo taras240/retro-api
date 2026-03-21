@@ -209,7 +209,14 @@ export class Settings extends Widget {
                         checked: configData.preventSubsetBug,
                         onChange: (event) => configData.preventSubsetBug = event.currentTarget.checked,
                         hint: ui.lang.subsetBugFixHint,
-                    }
+                    },
+                    {
+                        type: inputTypes.BUTTON,
+                        label: ui.lang.makeSubsetsList,
+                        hint: ui.lang.makeSubsetsListHint,
+                        id: "settings_make-subsets-list",
+                        onClick: () => this.makeSubsetsCache(),
+                    },
                     // {
                     //     type: inputTypes.CHECKBOX,
                     //     label: ui.lang.loadLastSubset,
@@ -630,6 +637,22 @@ export class Settings extends Widget {
             configData.gameID = resp.LastGameID;
             watcher.updateGameData();
         });
+    }
+    async makeSubsetsCache() {
+        const progressMessage = ({ Name }) => `Getting ${Name} subsets...`;
+        ui.toggleLoading(true);
+        try {
+            watcher.stop();
+            await apiWorker.getSubsetsList({
+                onProgressChange: (props) => ui.toggleLoading(true, progressMessage(props))
+            });
+        }
+        catch (e) {
+            console.warn(e)
+        }
+        finally {
+            ui.toggleLoading(false);
+        }
     }
 
 }

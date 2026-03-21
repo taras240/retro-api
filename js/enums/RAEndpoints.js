@@ -14,4 +14,6 @@ export const raEdpoints = Object.freeze({
     achievementOfTheWeek: "API_GetAchievementOfTheWeek.php",
     comments: "API_GetComments.php",
     wantToPlay: "API_GetUserWantToPlayList.php",
+    consoleGamesList: "API_GetGameList.php",
+    consolesList: "API_GetConsoleIDs.php",
 });
