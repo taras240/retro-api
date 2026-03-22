@@ -21,9 +21,10 @@ export class APIWorker {
   _subsetsList;
   async getSubsets(gameID) {
     if (!this._subsetsList) {
-      let subsets = this.cache.getData({ dataType: CACHE_TYPES.SUBSETS_LIST });
-      subsets ??= await fetch(`./json/games/all-subsets.json`)?.then(resp => resp.json()) ?? [];
+      const cachedSubsets = this.cache.getData({ dataType: CACHE_TYPES.SUBSETS_LIST }) ?? [];
+      const fileSubsets = await fetch(`./json/games/all-subsets.json`).then(resp => resp.json());
 
+      const subsets = cachedSubsets.length >= fileSubsets.length ? cachedSubsets : fileSubsets;
       this._subsetsList = {};
       subsets.forEach(gameSets => {
         Object.values(gameSets).forEach(setID => {
@@ -136,10 +137,10 @@ export class APIWorker {
       await delay(500);
       const games = await this.getConsoleGamesList(console);
       const consoleSubsets = groupSubsets(games);
-      // console.log(console.ID, consoleSubsets);
       gamesList.push(...consoleSubsets);
     }
     this.cache.push({ dataType: CACHE_TYPES.SUBSETS_LIST, data: gamesList });
+    this._subsetsList = undefined;
     return gamesList;
   }
   getUserGameRank({ targetUser, gameID }) {

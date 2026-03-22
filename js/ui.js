@@ -426,7 +426,10 @@ export class UI {
           type: inputTypes.BUTTON,
           id: "dialog-download",
           label: ui.lang.resetSettings,
-          onClick: () => config.resetSettings(),
+          onClick: () => {
+            watcher.stop();
+            config.resetSettings();
+          },
         },
       ]
     });

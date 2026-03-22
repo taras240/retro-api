@@ -77,7 +77,7 @@ export class Config {
     bgAnimType: "",
     targetUser: "",
     gameID: 1,
-    updateDelaySec: 5,
+    updateDelaySec: 15,
     customColors: colorPresets.default,
     preset: "default",
     fsAlertDuration: 15,
@@ -250,7 +250,6 @@ export class Config {
           RAApi_login: "",
         },
         settings: {
-          updateDelaySec: 5,
         },
         ui: {},
       };
@@ -305,14 +304,15 @@ export class Config {
   }
   delayedWrite;
   writeConfiguration() {
-    clearTimeout(this.delayedWrite);
+    this.delayedWrite && clearTimeout(this.delayedWrite);
     this.delayedWrite = setTimeout(() => {
       localStorage.setItem(CONFIG_FILE_NAME, JSON.stringify(this._cfg));
     }, 500)
   }
   resetSettings() {
+    this.delayedWrite && clearTimeout(this.delayedWrite);
     localStorage.removeItem(CONFIG_FILE_NAME);
-    setTimeout(() => location.reload(), 1000)
+    location.reload();
   }
   async selectLogFile(emuName) {
 

@@ -218,6 +218,25 @@ export class Status extends Widget {
                 ],
             },
             {
+                label: ui.lang.autoscroll,
+                elements: [
+                    {
+                        type: inputTypes.CHECKBOX,
+                        id: "rp-scroll-title",
+                        label: ui.lang.title,
+                        checked: this.uiProps.scrollTitle,
+                        onChange: (event) => this.uiProps.scrollTitle = event.currentTarget.checked,
+                    },
+                    {
+                        type: inputTypes.CHECKBOX,
+                        id: "rp-scroll-rp",
+                        label: ui.lang.richPresence,
+                        checked: this.uiProps.scrollRP,
+                        onChange: (event) => this.uiProps.scrollRP = event.currentTarget.checked,
+                    },
+                ]
+            },
+            {
                 type: inputTypes.CHECKBOX,
                 id: "game-bg",
                 label: ui.lang.gameBg,
@@ -277,6 +296,8 @@ export class Status extends Widget {
         showTargetPreview: false,
         switchProgressionIfBeaten: true,
         blinkOnUpdate: true,
+        scrollRP: false,
+        scrollTitle: true,
     }
     uiDefaultValuesLegacy = {
         showRichPresence: false,
@@ -308,6 +329,14 @@ export class Status extends Widget {
         },
         switchProgressionIfBeaten() {
             this.updateGameInfo();
+        },
+        scrollTitle() {
+            this.setElementsValues();
+            this.startElementsAutoscroll();
+        },
+        scrollRP() {
+            this.setElementsValues();
+            this.startElementsAutoscroll();
         }
     };
 
@@ -496,6 +525,7 @@ export class Status extends Widget {
         this.fillGameData();
         this.doUpdateAnimation();
         this.updateTicker();
+        this.startElementsAutoscroll();
 
     }
     onCheevoUnlocks({ cheevos }) {
@@ -535,6 +565,10 @@ export class Status extends Widget {
         this.blinkUpdate();
     }
     setElementsValues() {
+        const addScrollableFlags = () => {
+            this.section.querySelectorAll(".rp__rich-presence").forEach(rp => rp.classList.toggle("autoscroll", this.uiProps.scrollRP));
+            this.section.querySelector(".rp__game-title").classList.toggle("autoscroll", this.uiProps.scrollTitle);
+        }
         this.section.classList.toggle("hide-game-info", !this.uiProps.showGameInfo)
         this.section.classList.toggle("show-ticker", this.uiProps.showTicker);
         this.section.classList.toggle("show-progression", this.uiProps.showProgression);
@@ -546,6 +580,7 @@ export class Status extends Widget {
 
         this.section.dataset.theme = this.uiProps.statusTheme ?? statusStyles.DEFAULT;
         this.section.classList.toggle("game-bg", this.uiProps.showGameBg);
+        addScrollableFlags();
     }
     doUpdateAnimation() {
         if (this.theme === Status.themes.legacy) return;
@@ -660,7 +695,7 @@ export class Status extends Widget {
                 this.updateProgressionBar();
                 break;
         }
-
+        this.setElementsValues();
     }
     updateTime() {
         const timeSeconds = watcher.getActiveTime(this.uiProps.time, this.uiProps.timerTime);
@@ -690,11 +725,7 @@ export class Status extends Widget {
                 ${generateBadges(badges)}
             `;
             this.gameElements.title.href = gameUrl(ID);
-
-            setTimeout(() => this.startAutoScrollElement(this.gameElements.title, true, 10 * 1000), 10 * 1000);
-
         }
-
 
         fillGameInfoData();
         this.updateTime();
@@ -703,7 +734,6 @@ export class Status extends Widget {
         this.updateProgressionBar();
         this.updateFocusPreview();
         this.updateProgressBar();
-        // this.startAutoScrollElement(this.richPresenceElement, true, 10 * 1000);
     }
     updateRichPresence(richPresenceText) {
         this.section.querySelectorAll(".rp__rich-presence")?.forEach(el => {
@@ -776,48 +806,75 @@ export class Status extends Widget {
         this.indicatorElement.classList.toggle("realtime", (isOnline && isLogOK))
         setTimeout(() => this.indicatorElement.classList.remove("blink"), 500);
     }
-    autoscrollAlertInterval = {};
-    startAutoScrollElement(element, toLeft = true, pause = 1000) {
+    async startElementsAutoscroll(delaySec = 10) {
+        await delay(delaySec * 1e3);
+        const elements = this.section.querySelectorAll(".autoscroll");
+        elements.forEach(element => {
+            this.stopAutoScrollElement(element);
+            this.startAutoScrollElement(element)
+        });
+    }
+    autoscrollIntervals = {};
+    _getScrollId(element) {
+        element.dataset.autoscrollId ??= Math.random().toString(36).substr(2, 9);
+        return element.dataset.autoscrollId;
+    }
+    startAutoScrollElement(element, toLeft = true, pause = 10e3) {
         if (!element) return;
-        const containerID = element.id || element.className;
-        if (this.autoscrollAlertInterval[containerID]) {
+        const containerID = this._getScrollId(element);
+
+
+        if (this.autoscrollIntervals[containerID]) {
             this.stopAutoScrollElement(element);
         } else {
-            this.autoscrollAlertInterval[containerID] = {};
+            this.autoscrollIntervals[containerID] = {};
         }
         const refreshRateMiliSecs = 50;
         const scrollContainer = element;
-        // Часовий інтервал для прокручування вниз
-        this.autoscrollAlertInterval[containerID].interval = setInterval(() => {
-            if (scrollContainer.clientWidth == scrollContainer.scrollWidth) {
+
+        this.autoscrollIntervals[containerID] = {};  // завжди ініціалізуємо після stop
+        this.autoscrollIntervals[containerID].interval = setInterval(() => {
+            // якщо запис вже видалено — зупиняємось
+            if (!this.autoscrollIntervals[containerID]) return;
+            const isScrollable = element.classList.contains("autoscroll");
+            if (!isScrollable || scrollContainer.clientWidth >= scrollContainer.scrollWidth) {
+                scrollContainer.scrollLeft = 0;
                 this.stopAutoScrollElement(element);
-                this.autoscrollAlertInterval[containerID].timeout = setTimeout(() => this.startAutoScrollElement(element, true, pause), 10 * 1000);
-            }
-            else if (toLeft) {
+                this.autoscrollIntervals[containerID] = {};
+                this.autoscrollIntervals[containerID].timeout = setTimeout(
+                    () => this.startAutoScrollElement(element, true, pause),
+                    10e3
+                );
+            } else if (toLeft) {
                 scrollContainer.scrollLeft++;
-                if (
-                    scrollContainer.scrollLeft + scrollContainer.clientWidth >=
-                    scrollContainer.scrollWidth
-                ) {
+                if (scrollContainer.scrollLeft + scrollContainer.clientWidth >= scrollContainer.scrollWidth) {
                     this.stopAutoScrollElement(element);
-                    this.autoscrollAlertInterval[containerID].timeout = setTimeout(() => this.startAutoScrollElement(element, false, pause), pause);
+                    this.autoscrollIntervals[containerID] = {};
+                    this.autoscrollIntervals[containerID].timeout = setTimeout(
+                        () => this.startAutoScrollElement(element, false, pause),
+                        pause
+                    );
                 }
             } else {
                 scrollContainer.scrollLeft = Math.max(0, scrollContainer.scrollLeft - 1);
-                if (scrollContainer.scrollLeft == 0) {
+                if (scrollContainer.scrollLeft === 0) {
                     this.stopAutoScrollElement(element);
-                    this.autoscrollAlertInterval[containerID].timeout = setTimeout(() => this.startAutoScrollElement(element, true, pause), pause);
+                    this.autoscrollIntervals[containerID] = {};
+                    this.autoscrollIntervals[containerID].timeout = setTimeout(
+                        () => this.startAutoScrollElement(element, true, pause),
+                        pause
+                    );
                 }
             }
         }, refreshRateMiliSecs);
-
     }
     stopAutoScrollElement(element, reset = false) {
         reset && (element.scrollLeft = 0);
-        const containerID = element.id || element.className;
-        if (this.autoscrollAlertInterval[containerID]) {
-            clearInterval(this.autoscrollAlertInterval[containerID].interval);
-            clearTimeout(this.autoscrollAlertInterval[containerID].timeout);
+        const containerID = this._getScrollId(element);
+        if (this.autoscrollIntervals[containerID]) {
+            clearInterval(this.autoscrollIntervals[containerID].interval);
+            clearTimeout(this.autoscrollIntervals[containerID].timeout);
+            delete this.autoscrollIntervals[containerID];
         }
     }
 

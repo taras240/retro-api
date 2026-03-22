@@ -312,6 +312,8 @@
     font-weight: 500;
     text-wrap: nowrap;
     overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     /* text-transform: uppercase; */
 }
 
@@ -1140,4 +1142,8 @@
 .status__watch-button.error {
     background-color: red;
     border-color: transparent;
+}
+
+.autoscroll {
+    text-overflow: unset !important;
 }
