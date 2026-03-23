@@ -34,6 +34,10 @@
     flex: 1;
 }
 
+.event__game-item {
+    --percentage: 50%;
+}
+
 .event__game-item.main-column-item.right-bg-icon:after {
     content: attr(data-points);
     font-size: 3rem;
@@ -41,6 +45,21 @@
     color: lime;
     display: grid;
     place-items: center;
+}
+
+.event__game-item>* {
+    z-index: 1;
+}
+
+.event__game-item:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: var(--percentage);
+    height: 100%;
+    background: var(--accent-color);
+    opacity: 0.3;
 }
 
 .event__accent-text {

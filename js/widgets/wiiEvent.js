@@ -86,6 +86,7 @@ export class WiiEvent extends Widget {
         const gamesListElement = async () => {
             const GameElement = (game) => {
                 const { ImageIcon, ID, Title, NumAchievements, NumAwardedHardcore, maxEventPoints, eventPoints } = game;
+                const percentage = 100 * NumAwardedHardcore / NumAchievements;
                 const gameElement = fromHtml(`
                     <li class="event__game-item game-info__set-item main-column-item right-bg-icon award-type">
                         <img class="awards__game-preview" src="${gameImageUrl(ImageIcon)}">
@@ -98,7 +99,7 @@ export class WiiEvent extends Widget {
                     </li>
                 `);
                 gameElement.dataset.points = eventPoints ? eventPoints : "";
-
+                gameElement.style.setProperty("--percentage", percentage + "%")
                 return gameElement;
             }
             const container = fromHtml(`<ul class="flex-main-list"></ul>`);
