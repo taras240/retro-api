@@ -85,7 +85,7 @@ export class WiiEvent extends Widget {
         }
         const gamesListElement = async () => {
             const GameElement = (game) => {
-                const { ImageIcon, ID, Title, NumAchievements, NumAwardedHardcore, awardPoints, eventPoints } = game;
+                const { ImageIcon, ID, Title, NumAchievements, NumAwardedHardcore, maxEventPoints, eventPoints } = game;
                 const gameElement = fromHtml(`
                     <li class="event__game-item game-info__set-item main-column-item right-bg-icon award-type">
                         <img class="awards__game-preview" src="${gameImageUrl(ImageIcon)}">
@@ -94,7 +94,7 @@ export class WiiEvent extends Widget {
                         </h3>
                         <p class="awards__game-description">Achievements: ${NumAwardedHardcore
                     }/${NumAchievements}</p>
-                        <p class="awards__game-description">${badgeElements.gold(`Max event Points: ${awardPoints * 2}`)}</p>
+                        <p class="awards__game-description">${badgeElements.gold(`Max event Points: ${maxEventPoints}`)}</p>
                     </li>
                 `);
                 gameElement.dataset.points = eventPoints ? eventPoints : "";
@@ -104,7 +104,7 @@ export class WiiEvent extends Widget {
             const container = fromHtml(`<ul class="flex-main-list"></ul>`);
             eventGamesArray
                 .sort((g1, g2) => g1.Title.localeCompare(g2.Title))
-                .sort((g1, g2) => g1.awardPoints - g2.awardPoints)
+                .sort((g1, g2) => g2.bonusMult - g1.bonusMult)
                 .forEach(game => {
                     const gameElement = GameElement(game);
                     container.append(gameElement);
@@ -131,10 +131,10 @@ export class WiiEvent extends Widget {
         const completionProgress = (await apiWorker.completionProgress())?.Results ?? [];
         const eventGamesArray = completionProgress.map(game => {
             if (game.ConsoleID !== 19) return;
-            // const game = allGames.find(game => game.ID == gameID);
-            // const gameComletion = completionProgress.find(game => game.GameID == gameID);
-            game.awardPoints = eventGames[game.GameID] ?? 1;
-            game.eventPoints = game.awardPoints * (awardMultiplier[game.HighestAwardKind] ?? 0)
+            const isSubset = /subset/gi.test(game.Title);
+            game.bonusMult = eventGames[game.GameID] ?? 1;
+            game.maxEventPoints = (isSubset ? 1 : 2) * game.bonusMult;
+            game.eventPoints = game.HighestAwardKind === "mastered" ? game.maxEventPoints : game.bonusMult * (awardMultiplier[game.HighestAwardKind] ?? 0)
             return game;
         }).filter(g => g)
 
