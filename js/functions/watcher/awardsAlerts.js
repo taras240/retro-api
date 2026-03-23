@@ -1,4 +1,5 @@
 import { ALERT_TYPES } from "../../enums/alerts.js";
+import { CHEEVO_TYPES } from "../../enums/cheevoTypes.js";
 import { GAME_AWARD_TYPES } from "../../enums/gameAwards.js";
 
 export function getAwardAlerts({ gameData }) {
@@ -6,6 +7,11 @@ export function getAwardAlerts({ gameData }) {
     const subsetsData = Object.values(gameData.subsetsData ?? {});
     const gameSets = [gameData, ...subsetsData];
     const { TimePlayed } = gameData;
+
+    const hasMissedProgressionSoftcore = Object.values(gameData.AllAchievements)
+        .filter(c => c.Type === CHEEVO_TYPES.PROGRESSION && !c.isEarned).length;
+    const hasMissedProgression = Object.values(gameData.AllAchievements)
+        .filter(c => c.Type === CHEEVO_TYPES.PROGRESSION && !c.isEarnedHardcore).length;
     gameSets.forEach(gameSet => {
 
         if (gameSet.award !== GAME_AWARD_TYPES.MASTERED
@@ -27,7 +33,8 @@ export function getAwardAlerts({ gameData }) {
         }
         if (gameSet.progressionSteps > 0 &&
             gameSet.progressionAward !== GAME_AWARD_TYPES.BEATEN &&
-            gameSet.unlockData.hardcore.progressionCount >= gameSet.progressionSteps) {
+            gameSet.unlockData.hardcore.progressionCount >= gameSet.progressionSteps &&
+            !hasMissedProgression) {
             gameSet.progressionAward = GAME_AWARD_TYPES.BEATEN;
             awardsArray.push({
                 type: ALERT_TYPES.AWARD,
@@ -37,7 +44,8 @@ export function getAwardAlerts({ gameData }) {
         }
         else if (gameSet.progressionSteps > 0 &&
             !gameSet.progressionAward &&
-            gameSet.unlockData.softcore.progressionCount >= gameSet.progressionSteps) {
+            gameSet.unlockData.softcore.progressionCount >= gameSet.progressionSteps &&
+            !hasMissedProgressionSoftcore) {
             gameSet.progressionAward = GAME_AWARD_TYPES.BEATEN_SOFTCORE;
             awardsArray.push({
                 type: ALERT_TYPES.AWARD,
