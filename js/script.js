@@ -25,7 +25,9 @@ else {
   window.watcher = watcher;
   // userAuthData = new UserAuthData();
 }
-if (!config.identConfirmed) {
+const isBot = /googlebot|bingbot|crawler/i.test(req.headers['user-agent']);
+const isProtected = req.path.startsWith('/dashboard');
+if (!config.identConfirmed && !isBot && !isProtected) {
   console.log('redirect to login')
   window.location.href = "./login";
 }

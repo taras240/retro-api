@@ -2,103 +2,113 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta property="og:title" content="Retrocheevos" />
-  <meta property="og:description" content="Your ultimate companion for hunting achievements" />
-  <meta property="og:url" content="https://retrocheevos.vercel.app/" />
-  <meta property="og:type" content="website" />
-  <link rel="icon" href="./favicon.ico">
-  <title>RAchievements</title>
-  <link rel="stylesheet" href="./dist/style.css" />
-  <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#2196f3">
-
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta property="og:title" content="Retrocheevos - Retro Achievements Tracker & Progress Stats">
+    <meta property="og:description"
+        content="Track retro game achievements, view detailed stats, and monitor your progress across classic games. Built for true achievement hunters." />
+    <meta property="og:image" content="https://retrocheevos.vercel.app/preview.png">
+    <meta property="og:url" content="https://retrocheevos.vercel.app/" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="description"
+        content="Track retro game achievements, view detailed stats, and monitor your progress across classic games. Built for true achievement hunters.">
+    <link rel="icon" href="./favicon.ico">
+    <title>Retrocheevos - Retro Achievements Tracker & Progress Stats</title>
+    <link rel="stylesheet" href="./dist/style.css" />
+    <link rel="manifest" href="/manifest.json">
+    <link rel="canonical" href="https://retrocheevos.vercel.app/">
+    <meta name="theme-color" content="#2196f3">
 </head>
 
 <body data-color-preset="default">
-  <div class="loading-section" id="loading-section">
-  </div>
-  <div class="background" id="background-animation">
-    <div id='background-star'></div>
-    <div id='background-star2'></div>
-    <div id='background-star3'></div>
-  </div>
-  <div class="wrapper"><section id="side_panel" class="buttons-block expanded">
-
-    <div class="setting-radio-group">
-        <button class="side-panel_login login-icon" onclick="window.location.href = './login'" data-title="login page">
-            <img id="side-panel-user-image" src="" onerror="this.src='./assets/img/account.svg';" alt="">
-        </button>
+    <div class="loading-section" id="loading-section">
     </div>
-
-    <div class="buttons-block__shortcuts">
-
+    <div class="background" id="background-animation">
+        <div id='background-star'></div>
+        <div id='background-star2'></div>
+        <div id='background-star3'></div>
     </div>
+    <div class="wrapper">
+        <section id="side_panel" class="buttons-block expanded">
 
-    <div class="buttons-block_tools">
-        <div class="setting-radio-group ">
-            <a class="side-panel_input side-panel_link" data-title="go to discord channel"
-                href="https://discord.gg/apzc6kCAbH" target="_blank">
-                <i class="side-panel__icon discord-icon"></i>
-            </a>
-        </div>
-        <div class="setting-radio-group ">
-            <input type="checkbox" name="open-settings-button" id="open-settings-button">
-            </input>
-            <label class="side-panel_input " data-title="settings" for="open-settings-button">
-                <i class="side-panel__icon settings-icon"></i>
-            </label>
-        </div>
-
-
-    </div>
-
-
-</section><section id="note_section" class="note_section  section">
-    <div class="header-container note-header">
-
-        <div class="header-icon note-icon"></div>
-
-        <h2 class="widget-header-text note-header-text">
-            <div class="note__tabs-container">
+            <div class="setting-radio-group">
+                <button class="side-panel_login login-icon" onclick="window.location.href = './login'"
+                    data-title="login page">
+                    <img id="side-panel-user-image" src="" onerror="this.src='./assets/img/account.svg';" alt="">
+                </button>
             </div>
-        </h2>
 
-        <button class="header-button header-icon close-icon">
-        </button>
-    </div>
-    <div class="note-container content-container">
-        <div class="note__controls">
-            <button title="copy" class="note__control-button copy-icon" onclick="ui.note.copyNoteText()"></button>
-            <button title="paste" class="note__control-button paste-icon" onclick="ui.note.pasteTextToNote()"></button>
-            <button title="DELETE ALL" class="note__control-button clear-icon"
-                onclick="ui.note.clearTextNote()"></button>
-        </div>
+            <div class="buttons-block__shortcuts">
 
-        <textarea placeholder="Your notes will be here" name="note_textaria" class="note-textaria scrollable"
-            id="note_textarea" cols="auto" rows="auto"></textarea>
+            </div>
+
+            <div class="buttons-block_tools">
+                <div class="setting-radio-group ">
+                    <a class="side-panel_input side-panel_link" data-title="go to discord channel"
+                        href="https://discord.gg/apzc6kCAbH" target="_blank">
+                        <i class="side-panel__icon discord-icon"></i>
+                    </a>
+                </div>
+                <div class="setting-radio-group ">
+                    <input type="checkbox" name="open-settings-button" id="open-settings-button">
+                    </input>
+                    <label class="side-panel_input " data-title="settings" for="open-settings-button">
+                        <i class="side-panel__icon settings-icon"></i>
+                    </label>
+                </div>
+
+
+            </div>
+
+
+        </section>
+        <section id="note_section" class="note_section  section">
+            <div class="header-container note-header">
+
+                <div class="header-icon note-icon"></div>
+
+                <h2 class="widget-header-text note-header-text">
+                    <div class="note__tabs-container">
+                    </div>
+                </h2>
+
+                <button class="header-button header-icon close-icon">
+                </button>
+            </div>
+            <div class="note-container content-container">
+                <div class="note__controls">
+                    <button title="copy" class="note__control-button copy-icon"
+                        onclick="ui.note.copyNoteText()"></button>
+                    <button title="paste" class="note__control-button paste-icon"
+                        onclick="ui.note.pasteTextToNote()"></button>
+                    <button title="DELETE ALL" class="note__control-button clear-icon"
+                        onclick="ui.note.clearTextNote()"></button>
+                </div>
+
+                <textarea placeholder="Your notes will be here" name="note_textaria" class="note-textaria scrollable"
+                    id="note_textarea" cols="auto" rows="auto"></textarea>
+            </div>
+            <div class="resizer"></div>
+        </section>
     </div>
-    <div class="resizer"></div>
-</section>
-  </div>
-  <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
-  <script src="./dist/bundle.min.js"></script>
-  <script>
-    window.va = window.va || function () {
-      (window.vaq = window.vaq || []).push(arguments);
-    };
-  </script>
-  <script defer src="/_vercel/insights/script.js"></script>
-  <script>
-    // // sw.js
-    // self.addEventListener("install", () => {
-    //   console.log("Service Worker Installed");
-    // });
-    // if ("serviceWorker" in navigator) {
-    //   navigator.serviceWorker.register("/sw.js");
-    // }
-  </script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <script src="./dist/bundle.min.js"></script>
+    <script>
+        window.va = window.va || function () {
+            (window.vaq = window.vaq || []).push(arguments);
+        };
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+    <script>
+        // // sw.js
+        // self.addEventListener("install", () => {
+        //   console.log("Service Worker Installed");
+        // });
+        // if ("serviceWorker" in navigator) {
+        //   navigator.serviceWorker.register("/sw.js");
+        // }
+    </script>
 </body>
 
 </html>
