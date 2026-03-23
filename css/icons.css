@@ -561,6 +561,10 @@
     mask-image: url(../assets/img/game-stats.svg);
 }
 
+.wii-icon {
+    mask-image: url(../assets/img/wii.svg);
+}
+
 /** Difficult badges */
 .difficult-badge__11 {
     position: relative;

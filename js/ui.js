@@ -32,6 +32,7 @@ import { colorPresets } from "./enums/colorPresets.js";
 import { dialogWindow } from "./components/dialogWindow.js";
 import { inputTypes } from "./components/inputElements.js";
 import { initBgAnimation } from "./functions/bgAnimations.js";
+import { WiiEvent } from "./widgets/wiiEvent.js";
 
 
 
@@ -90,6 +91,7 @@ export class UI {
   initializeElements() {
     this.app = document.querySelector(".wrapper");
     // this.statusPanel = new StatusPanel();
+    this.wiiEvent = new WiiEvent();
     this.statusPanel = new Status("statusPanel", true);
     this.status = new Status("status", false);
     // this.status2 = new Status(true);
@@ -105,6 +107,7 @@ export class UI {
     this.games = new Games();
     this.settings = new Settings();
     this.links = new Links();
+
     this.buttons = new SidePanel();
 
   }

@@ -1,0 +1,50 @@
+.wii-event_section {
+    min-width: 740px;
+    min-height: 600px;
+    left: 100px;
+    top: 100px;
+
+}
+
+.launch__rules-list {
+    display: flex;
+    justify-content: space-evenly;
+    padding: 0.5rem;
+    background: var(--selection-color);
+    column-gap: 0.5rem;
+}
+
+.launch__summary-line {
+    padding: 0.5rem 1rem;
+    background: var(--selection-color);
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.wii-event-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.wii-event-container>.flex-main-list {
+    flex: 1;
+}
+
+.event__game-item.main-column-item.right-bg-icon:after {
+    content: attr(data-points);
+    font-size: 3rem;
+    /* font-weight: bold; */
+    color: lime;
+    display: grid;
+    place-items: center;
+}
+
+.event__accent-text {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: lime;
+}
