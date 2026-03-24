@@ -40,9 +40,10 @@
 
 .event__game-item.main-column-item.right-bg-icon:after {
     content: attr(data-points);
-    font-size: 3rem;
+    font-size: 2rem;
     /* font-weight: bold; */
-    color: lime;
+    color: #16a34a;
+    font-weight: bold;
     display: grid;
     place-items: center;
 }
@@ -65,5 +66,5 @@
 .event__accent-text {
     font-size: 1.5rem;
     font-weight: bold;
-    color: lime;
+    color: #16a34a;
 }

@@ -132,10 +132,10 @@ export class WiiEvent extends Widget {
         const completionProgress = (await apiWorker.completionProgress())?.Results ?? [];
         const eventGamesArray = completionProgress.map(game => {
             if (game.ConsoleID !== 19) return;
-            const isSubset = /subset/gi.test(game.Title);
+            // const isSubset = /subset/gi.test(game.Title);
             game.bonusMult = eventGames[game.GameID] ?? 1;
-            game.maxEventPoints = (isSubset ? 1 : 2) * game.bonusMult;
-            game.eventPoints = game.HighestAwardKind === "mastered" ? game.maxEventPoints : game.bonusMult * (awardMultiplier[game.HighestAwardKind] ?? 0)
+            game.maxEventPoints = 2 * game.bonusMult;
+            game.eventPoints = game.bonusMult * (awardMultiplier[game.HighestAwardKind] ?? 0)
             return game;
         }).filter(g => g)
 
