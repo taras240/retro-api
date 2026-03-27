@@ -207,14 +207,16 @@ export class Watcher {
         const onGameChanged = async (raProfileInfo) => {
             const getGameID = async (raProfileInfo) => {
                 const profileGameID = raProfileInfo.LastGameID;
-                const subsets = await apiWorker.getSubsets(36547);
-                const hasSubsets = (gameID) => Object.values(subsets).includes(gameID);
-                if (hasSubsets(profileGameID) && configData.preventSubsetBug) {
+                const subsets = await apiWorker.getSubsets(profileGameID);
+
+                const hasSubsets = Object.values(subsets).length > 1;
+
+                if (hasSubsets && configData.preventSubsetBug) {
                     await delay(250);
                     const completionData = await apiWorker.getUserCompletionProgress({ count: 1, offset: 0 });
                     const completionGameID = completionData?.Results?.[0]?.GameID ?? profileGameID;
                     await delay(250);
-                    return hasSubsets(completionGameID) ? completionGameID : profileGameID;
+                    return Object.values(subsets).includes(completionGameID) ? completionGameID : profileGameID;
                 }
                 return profileGameID;
             }
