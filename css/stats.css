@@ -156,10 +156,10 @@
 
 .round-stat__container {
     --line-width: 50%;
-    --m-color: gold;
-    --c-color: red;
-    --b-color: lime;
-    --b-s-color: cornflowerblue;
+    --m-color: var(--gold-color);
+    --c-color: var(--blue-color);
+    --b-color: var(--ra-progress-color);
+    --b-s-color: var(--silver-color);
     --s-color: black;
     position: relative;
     display: flex;

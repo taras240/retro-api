@@ -56,7 +56,7 @@
     top: 0.5rem;
     right: 0.5rem;
     z-index: 5;
-    background: transparent;
+    background: black;
     padding: 0 0.25rem;
     box-shadow: 2px 2px 3px 0 black;
 }
@@ -128,7 +128,7 @@
     --progression-bg-win-color: black;
     --progression-focus-color: black;
     --progress-value-bg: linear-gradient(to right, #f59e0b, gold);
-    --progression-unlock-color: #16a34a;
+    --progression-unlock-color: var(--ra-progress-color);
     --progression-unlock-win-color: goldenrod;
     /* --font-family: Verdana, system-ui;
     --main-color: #161616; */

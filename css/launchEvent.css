@@ -42,7 +42,7 @@
     content: attr(data-points);
     font-size: 2rem;
     /* font-weight: bold; */
-    color: #16a34a;
+    color: var(--ra-progress-color);
     font-weight: bold;
     display: grid;
     place-items: center;
@@ -66,5 +66,5 @@
 .event__accent-text {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #16a34a;
+    color: var(--ra-progress-color);
 }
