@@ -5,6 +5,7 @@ import { GAME_AWARD_TYPES } from "./enums/gameAwards.js";
 import { ONLINE_STATUS } from "./enums/onlineStatus.js";
 import { WATCHER_MODES } from "./enums/watcherModes.js";
 import { normalizeUserData } from "./functions/api/userDataNormalization.js";
+import { delay } from "./functions/delay.js";
 import { sendDiscordAlert } from "./functions/discord.js";
 import { readLog } from "./functions/logParser.js";
 import { parseTimeParts } from "./functions/time.js";
@@ -204,12 +205,26 @@ export class Watcher {
             return gameChanged || isStart;
         }
         const onGameChanged = async (raProfileInfo) => {
-            configData.gameID = raProfileInfo.LastGameID;
+            const getGameID = async (raProfileInfo) => {
+                const profileGameID = raProfileInfo.LastGameID;
+                const subsets = await apiWorker.getSubsets(36547);
+                const hasSubsets = (gameID) => Object.values(subsets).includes(gameID);
+                if (hasSubsets(profileGameID) && configData.preventSubsetBug) {
+                    await delay(250);
+                    const completionData = await apiWorker.getUserCompletionProgress({ count: 1, offset: 0 });
+                    const completionGameID = completionData?.Results?.[0]?.GameID ?? profileGameID;
+                    await delay(250);
+                    return hasSubsets(completionGameID) ? completionGameID : profileGameID;
+                }
+                return profileGameID;
+            }
+            const newGameID = await getGameID(raProfileInfo);
+            configData.gameID = newGameID;
             if (isStart) {
                 this.updateUserData({ raProfileInfo });
             }
             // this.online.setOnline();
-            await this.updateGameData(raProfileInfo.LastGameID);
+            await this.updateGameData(newGameID);
             isStart && this.onStartSession()
         }
         if (!isStart && (configData.pauseIfOffline && this.onlineCheckTimeOut)) return;

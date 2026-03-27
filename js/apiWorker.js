@@ -156,7 +156,7 @@ export class APIWorker {
     return fetch(url).then((resp) => resp.json());
   }
   //Отримати прогрес завершення користувача
-  getUserCompelitionProgress({ targetUser, count, offset }) {
+  getUserCompletionProgress({ targetUser, count, offset }) {
     let url = this.getUrl({
       targetUser: targetUser || configData.targetUser,
       count: count || 100,
@@ -421,7 +421,7 @@ export class APIWorker {
   }
 
   async updateCompletionProgress({ savedArray = [], completionProgress = [], batchSize = 500 }) {
-    let completionOffset = await this.getUserCompelitionProgress({ count: batchSize, offset: completionProgress.length });
+    let completionOffset = await this.getUserCompletionProgress({ count: batchSize, offset: completionProgress.length });
     completionProgress = [...completionProgress, ...completionOffset.Results];
     let lastGame = completionProgress.at(-1);
 
