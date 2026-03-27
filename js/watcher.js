@@ -15,7 +15,7 @@ import { APIEvents, apiWorker, config, configData, ui, watcher } from "./script.
 export class Watcher {
     IS_HARD_MODE = true;
     isWatching = false;
-    RECENT_ACHIVES_RANGE_MINUTES = 10;//Math.max(config.updateDelay * 5 / 60, 5);
+    RECENT_ACHIVES_RANGE_MINUTES = 30;//Math.max(config.updateDelay * 5 / 60, 5);
     CHECK_FOR_ONLINE_DELAY_MS = 2 * 60 * 1000; // If user offline and wathing is ON, it check for online with delay
     CHECK_FOR_ONLINE_AFTER_SILENCE_MS = 3 * 60 * 1000; // If there is no activity for this time, it will be check for online
     watcherInterval;
@@ -190,8 +190,12 @@ export class Watcher {
             return isPointsChanged;
         }
         const onPointsChanged = (raProfileInfo) => {
+            const deltaPoints = {
+                hardcore: raProfileInfo.TotalPoints - this.userData.points,
+                softcore: raProfileInfo.TotalSoftcorePoints - this.userData.softpoints
+            }
             this.updateUserData({ raProfileInfo });
-            this.updateCheevos();
+            this.updateCheevos(false, [], deltaPoints);
             this.online.setOnline();
             this.zeroCheckTime = now;
         }
@@ -310,7 +314,7 @@ export class Watcher {
         }
     }
 
-    async updateCheevos(isLog = false, cheevos) {
+    async updateCheevos(isLog = false, cheevos, deltaPoints) {
         // console.log(cheevos)
         const checkForNewCheevos = (lastEarnedAchieves) => {
             const updateAchievements = (earnedAchievements) => {
@@ -389,6 +393,21 @@ export class Watcher {
             if (cheevosArray && cheevosArray.length > 0) {
                 this.onCheevoUnlocks(cheevosArray);
                 this.updateSessionData(cheevosArray);
+            }
+            if (deltaPoints) {
+                const pointsEarned = cheevosArray.reduce((acc, { isEarnedHardcore, Points }) => {
+                    if (isEarnedHardcore) {
+                        acc.hardcore += Points;
+                    } else {
+                        acc.softcore += Points;
+                    }
+                    return acc;
+                }, { hardcore: 0, softcore: 0 });
+                const isHardcoreMismatch = deltaPoints.hardcore > pointsEarned.hardcore;
+                const isSoftcoreMismatch = deltaPoints.softcore > pointsEarned.softcore;
+                if (isHardcoreMismatch || isSoftcoreMismatch) {
+                    setTimeout(() => this.updateCheevos(), 16e3);
+                }
             }
 
         } catch (error) {
