@@ -215,14 +215,14 @@ export class Notifications extends Widget {
     }
     addAlertsToQuery(alerts = []) {
         if (this.alertsQueryArray?.length > 0) {
-            this.alertsQueryArray = [...this.alertsQueryArray, ...alerts]
+            this.alertsQueryArray.unshift(...alerts);
         }
         else {
             this.alertsQueryArray = [...alerts];
             setTimeout(() => {
                 this.saveAlerts([...this.alertsQueryArray]);
                 this.showAlerts(this.alertsQueryArray);
-            }, 2000)
+            }, 2000);
         }
 
     }
