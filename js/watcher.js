@@ -350,7 +350,7 @@ export class Watcher {
                     }
 
                     cheevo.isEarned = true;
-                    cheevo.DateEarned = cheevo.DateEarned ?? Date;
+                    cheevo.DateEarned ??= Date;
                     gameData.Achievements[lastCheevo.AchievementID] = cheevo;
                     this.CHEEVOS[lastCheevo.AchievementID] = cheevo;
                 });

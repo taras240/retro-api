@@ -7,6 +7,7 @@ import { resizeEvent } from "../functions/resizingWidget.js";
 import { inputTypes } from "../components/inputElements.js";
 import { buttonsHtml } from "../components/htmlElements.js";
 import { normalizeUserData } from "../functions/api/userDataNormalization.js";
+import { applySort, sortBy, sortMethods } from "../functions/sortFilter.js";
 
 export class UserStatistic extends Widget {
     widgetIcon = {
@@ -187,6 +188,7 @@ export class UserStatistic extends Widget {
         this.addEvents();
         UI.applyPosition({ widget: this });
 
+        this.applyDisplayOrder();
     }
     generateWidget() {
         const headerElementsHtml = `
@@ -246,7 +248,6 @@ export class UserStatistic extends Widget {
 
         this.softcoreUnlocksElement.closest("li").classList.toggle("hidden", !this.uiProps.showUnlocksSoftcore);
         this.hardcoreUnlocksElement.closest("li").classList.toggle("hidden", !this.uiProps.showUnlocksHardcore);
-
     }
     addEvents() {
         super.addEvents();
@@ -254,6 +255,33 @@ export class UserStatistic extends Widget {
         //     if (event.button !== 0 || event.target.closest(".resizer, button")) return;
         //     moveEvent(this.section, event);
         // })
+        new Sortable(this.container, {
+            group: {
+                name: "stats", pull: false, push: false,
+            },
+            animation: 100,
+            chosenClass: "dragged",
+            onEnd: () => this.saveDisplayOrder(),
+        });
+    }
+    saveDisplayOrder() {
+        const stats = [...this.container.querySelectorAll("li")];
+        const displayOrder = stats.reduce((acc, { id }, index) => {
+            acc[id] = index;
+            return acc;
+        }, {});
+        this.uiProps.displayOrder = displayOrder;
+        // console.log(displayOrder)
+    }
+    applyDisplayOrder() {
+        applySort({
+            container: this.container,
+            itemClassName: ".stats__stat-container",
+            sortMethod: sortBy.default,
+            reverse: 1,
+            animationDuration: 0
+        });
+        // console.log("sort")
     }
     async updateCompletionStats() {
         const { completionChart, showUnlocksHardcore, showUnlocksSoftcore } = this.uiProps;
@@ -399,19 +427,23 @@ export class UserStatistic extends Widget {
         softpoints: { label: ui.lang.softpoints, id: "stats_softpoints", }
     }
     generateStatsElements() {
+        const order = this.uiProps.displayOrder ?? {};
         const statusHtml = Object.values(this.statusProperties)
             .reduce((html, stat) => {
                 const elHtml = `
-          <li class="stats__stat-container">
-              <h2 class="stats__title">${stat.label}</h2>
-              <p id="${stat.id}" class="stats__value ${stat.class}"></p>
-          </li>
-          `;
+                    <li 
+                        class="stats__stat-container" 
+                        id="${stat.id}-container" 
+                        data--display-order="${order[`${stat.id}-container`] ?? 0}">
+                            <h2 class="stats__title">${stat.label}</h2>
+                            <p id="${stat.id}" class="stats__value ${stat.class}"></p>
+                    </li>
+                `;
                 html += elHtml;
                 return html;
             }, '');
         const pieChartHtml = `
-            <li class="stats__stat-container stats__chart-container">
+            <li class="stats__stat-container stats__chart-container" id="stats_completion-chart" data--display-order="${order[`stats_completion-chart`] ?? 0}">
             
             <div class="round-stat__container ">
                 <div class="circle">
