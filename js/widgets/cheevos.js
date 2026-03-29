@@ -12,6 +12,7 @@ import { resizerHtml } from "../components/resizer.js";
 import { marioAction } from "../functions/animations/smbAnimOld.js";
 import { smb3UnlockAnimation } from "../functions/animations/smbAnimations.js";
 import { parseCurrentGameLevel } from "../functions/parseRP.js";
+import { createAutoScroll } from "../functions/autosScroll.js";
 export class AchievementsBlock extends Widget {
     widgetIcon = {
         description: "cheevos widget",
@@ -43,6 +44,24 @@ export class AchievementsBlock extends Widget {
                         label: ui.lang.autoscroll,
                         checked: this.uiProps.autoscroll,
                         onChange: (event) => this.uiProps.autoscroll = event.currentTarget.checked,
+                    },
+                    {
+                        prefix: ui.lang.scrollSpeed,
+                        postfix: "px/s",
+                        type: inputTypes.NUM_INPUT,
+                        id: "menu_scroll-speed",
+                        hint: ui.lang.scrollSpeed,
+                        value: this.uiProps.scrollSpeed,
+                        onInput: (event) => this.uiProps.scrollSpeed = event.currentTarget.value,
+                    },
+                    {
+                        prefix: ui.lang.scrollPauseDuration,
+                        postfix: "sec",
+                        type: inputTypes.NUM_INPUT,
+                        id: "menu_scroll-pause-dur",
+                        hint: ui.lang.scrollPauseDuration,
+                        value: this.uiProps.scrollPauseDuration,
+                        onInput: (event) => this.uiProps.scrollPauseDuration = event.currentTarget.value,
                     },
                     {
                         type: inputTypes.CHECKBOX,
@@ -286,6 +305,8 @@ export class AchievementsBlock extends Widget {
         mGameSelection: "",
         showBorders: true,
         hiddenSets: [],
+        scrollSpeed: 20,
+        scrollPauseDuration: 15,
     }
     uiSetCallbacks = {
         ACHIV_MIN_SIZE(value) {
@@ -332,8 +353,17 @@ export class AchievementsBlock extends Widget {
         },
         hiddenSets() {
             this.setSubsetSelection();
+        },
+        scrollSpeed(value) {
+            value = value < 10 ? 10 : value;
+            this.autoscroll?.setSpeed(value);
+        },
+        scrollPauseDuration(value) {
+            value = value < 0 ? 0 : value;
+            this.autoscroll?.stop();
+            this.autoscroll = null;
+            this.startAutoScroll();
         }
-
     };
     uiValuePreprocessors = {
         ACHIV_MIN_SIZE(value) {
@@ -345,6 +375,12 @@ export class AchievementsBlock extends Widget {
         reverseSort(value) {
             return value ? -1 : 1;
         },
+        scrollSpeed(value) {
+            return (value <= 10) ? 10 : value;
+        },
+        scrollPauseDuration(value) {
+            return value < 0 ? 0 : value;
+        }
     };
 
     updateHiddenSets(setID) {
@@ -413,21 +449,6 @@ export class AchievementsBlock extends Widget {
         this.section.querySelector(`#${this.SECTION_NAME}-sort-button`).addEventListener("click", event => {
             ui.showContextmenu({ event, menuItems: this.contextSortMenu().elements, sectionCode: this.SECTION_NAME })
         });
-        // this.resizer.addEventListener("mousedown", (event) => {
-        //     event.stopPropagation();
-        //     this.section.classList.add("resized");
-        //     this.stopAutoScroll();
-        //     resizeEvent({
-        //         event: event,
-        //         section: this.section,
-        //         callback: () => {
-        //             this.fitCheevoSize(true);
-        //         },
-        //     });
-        // });
-        // this.resizer.addEventListener("mouseup", () => {
-        //     this.startAutoScroll();
-        // });
         new Sortable(this.container, {
             group: {
                 name: "cheevos", pull: "clone", push: "false",
@@ -506,9 +527,11 @@ export class AchievementsBlock extends Widget {
             left: 0,
             behavior: 'smooth'
         });
+        await delay(2000);
 
         this.applyFiltering();
         await this.applySorting();
+
         await delay(2000);
         this.startAutoScroll();
     }
@@ -645,54 +668,16 @@ export class AchievementsBlock extends Widget {
 
         this.section.style.setProperty("--achiv-height", achivWidth + "px");
     }
-    autoscrollInterval = {};
-    startAutoScroll(toBottom = true) {
-        clearTimeout(this.autoscrollInterval.timeout);
-        clearInterval(this.autoscrollInterval.interval);
-        const FPS = 20;
-        const frameTime = 1000 / FPS;
-        const scrollContainer = this.container;
-        const pauseOnEndMilisecs = 15 * 1000;
-
-        // initialize handlers & speed state once to avoid accumulating listeners
-        if (!this.autoscrollInterval.mouseEnterHandler) {
-            this.autoscrollInterval.speedInPixels = 1;
-            this.autoscrollInterval.mouseEnterHandler = () => { this.autoscrollInterval.speedInPixels = 0; };
-            this.autoscrollInterval.mouseLeaveHandler = () => { this.autoscrollInterval.speedInPixels = 1; };
-        }
-
-        // remove previous handlers (safe) and attach the managed handlers
-        scrollContainer.removeEventListener("mouseenter", this.autoscrollInterval.mouseEnterHandler);
-        scrollContainer.removeEventListener("mouseleave", this.autoscrollInterval.mouseLeaveHandler);
-        scrollContainer.addEventListener("mouseenter", this.autoscrollInterval.mouseEnterHandler);
-        scrollContainer.addEventListener("mouseleave", this.autoscrollInterval.mouseLeaveHandler);
-
-        // Часовий інтервал для прокручування вниз
-        if (this.uiProps.autoscroll) {
-            this.autoscrollInterval.interval = setInterval(() => {
-                if (scrollContainer.scrollHeight - scrollContainer.clientHeight <= 10) {
-                    this.stopAutoScroll();
-                }
-                const speedInPixels = this.autoscrollInterval.speedInPixels || 0;
-                if (toBottom) {
-                    scrollContainer.scrollTop += speedInPixels;
-                    if (scrollContainer.scrollTop + scrollContainer.clientHeight >= scrollContainer.scrollHeight) {
-                        clearInterval(this.autoscrollInterval.interval);
-                        this.autoscrollInterval.timeout = setTimeout(() => this.startAutoScroll(false), pauseOnEndMilisecs);
-                    }
-                } else {
-                    scrollContainer.scrollTop -= speedInPixels;
-                    if (scrollContainer.scrollTop === 0) {
-                        clearInterval(this.autoscrollInterval.interval);
-                        this.autoscrollInterval.timeout = setTimeout(() => this.startAutoScroll(true), pauseOnEndMilisecs);
-                    }
-                }
-            }, frameTime);
-        }
+    autoscroll;
+    startAutoScroll() {
+        this.autoscroll ??= createAutoScroll(this.container, {
+            speed: this.uiProps.scrollSpeed,
+            pauseOnEndMs: this.uiProps.scrollPauseDuration * 1e3,
+        });
+        this.autoscroll.start();
     }
     stopAutoScroll() {
-        clearInterval(this.autoscrollInterval.interval);
-        clearTimeout(this.autoscrollInterval.timeout);
+        this.autoscroll?.stop();
     }
     isAllEarnedAchievesVisible() {
         let isVisible = true;

@@ -17,6 +17,7 @@ import { CACHE_TYPES } from "../enums/cacheDataTypes.js";
 import { divHtml } from "../components/divContainer.js";
 import { fromHtml } from "../functions/html.js";
 import { parseCurrentGameLevel } from "../functions/parseRP.js";
+import { createAutoScroll } from "../functions/autosScroll.js";
 
 export class Target extends Widget {
     sectionCode = "-target";
@@ -67,6 +68,24 @@ export class Target extends Widget {
                         label: ui.lang.autoscroll,
                         checked: this.uiProps.autoscroll,
                         onChange: (event) => this.uiProps.autoscroll = event.currentTarget.checked
+                    },
+                    {
+                        prefix: ui.lang.scrollSpeed,
+                        postfix: "px/s",
+                        type: inputTypes.NUM_INPUT,
+                        id: "menu_scroll-speed",
+                        hint: ui.lang.scrollSpeed,
+                        value: this.uiProps.scrollSpeed,
+                        onInput: (event) => this.uiProps.scrollSpeed = event.currentTarget.value,
+                    },
+                    {
+                        prefix: ui.lang.scrollPauseDuration,
+                        postfix: "sec",
+                        type: inputTypes.NUM_INPUT,
+                        id: "menu_scroll-pause-dur",
+                        hint: ui.lang.scrollPauseDuration,
+                        value: this.uiProps.scrollPauseDuration,
+                        onInput: (event) => this.uiProps.scrollPauseDuration = event.currentTarget.value,
                     },
                     {
                         type: inputTypes.CHECKBOX,
@@ -364,6 +383,8 @@ export class Target extends Widget {
         mGameSelection: "",
         showPins: false,
         hiddenSets: [],
+        scrollSpeed: 20,
+        scrollPauseDuration: 15,
     }
     uiSetCallbacks = {
         autoscroll(value) {
@@ -405,6 +426,16 @@ export class Target extends Widget {
         },
         hiddenSets() {
             this.setSubsetSelection();
+        },
+        scrollSpeed(value) {
+            value = value < 10 ? 10 : value;
+            this.autoscroll?.setSpeed(value);
+        },
+        scrollPauseDuration(value) {
+            value = value < 0 ? 0 : value;
+            this.autoscroll?.stop();
+            this.autoscroll = null;
+            this.startAutoScroll();
         }
 
     };
@@ -427,6 +458,12 @@ export class Target extends Widget {
                 delete filters[filterName] :
                 filters[filterName] = { filterName, state };
             return filters;
+        },
+        scrollSpeed(value) {
+            return (value <= 10) ? 10 : value;
+        },
+        scrollPauseDuration(value) {
+            return value < 0 ? 0 : value;
         }
     };
     updateHiddenSets(setID) {
@@ -773,50 +810,16 @@ export class Target extends Widget {
         this.genreFilter && this.filterByGenre(this.genreFilter, true);
         this.delayedRemove();
     }
-    autoscrollInterval;
-    startAutoScroll(toBottom = true) {
-        this.stopAutoScroll();
-        let refreshRateMiliSecs = 50;
-
-        let scrollContainer = this.container;
-        let speedInPixels = 1;
-        const pauseOnEndMilisecs = 2000;
-        // Часовий інтервал для прокручування вниз
-        if (this.uiProps.autoscroll) {
-            this.autoscrollInterval = setInterval(() => {
-                if (scrollContainer.scrollHeight - scrollContainer.clientHeight <= 10) {
-                    this.stopAutoScroll();
-                }
-                if (toBottom) {
-                    scrollContainer.scrollTop += speedInPixels;
-                    if (
-                        scrollContainer.scrollTop + scrollContainer.clientHeight >=
-                        scrollContainer.scrollHeight
-                    ) {
-                        this.stopAutoScroll();
-                        setTimeout(() => this.startAutoScroll(false), pauseOnEndMilisecs);
-                    }
-                } else {
-                    scrollContainer.scrollTop -= speedInPixels;
-                    if (scrollContainer.scrollTop === 0) {
-                        this.stopAutoScroll();
-                        setTimeout(() => this.startAutoScroll(true), pauseOnEndMilisecs);
-                    }
-                }
-            }, refreshRateMiliSecs);
-            // Припиняємо прокручування при наведенні миші на контейнер
-            scrollContainer.addEventListener("mouseenter", () => {
-                speedInPixels = 0; // Зупиняємо інтервал прокрутки
-            });
-
-            // Відновлюємо прокрутку при відведенні миші від контейнера
-            scrollContainer.addEventListener("mouseleave", () => {
-                speedInPixels = 1;
-            });
-        }
+    autoscroll;
+    startAutoScroll() {
+        this.autoscroll ??= createAutoScroll(this.container, {
+            speed: this.uiProps.scrollSpeed,
+            pauseOnEndMs: this.uiProps.scrollPauseDuration * 1e3,
+        });
+        this.autoscroll.start();
     }
     stopAutoScroll() {
-        clearInterval(this.autoscrollInterval);
+        this.autoscroll?.stop();
     }
     isAchievementInTargetSection({ ID, targetContainer = this.container }) {
         const targetAchievements = [

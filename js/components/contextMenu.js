@@ -79,25 +79,25 @@ const contextInputs = {
             <label class="statebox__label" for="context-${id}${sectionCode}">${label}</label>
         </div>
     `,
-    [inputTypes.NUM_INPUT]: ({ prefix, type, id, event, title, value, postfix, sectionCode = "" }) => `
+    [inputTypes.NUM_INPUT]: ({ prefix, type, id, event, hint, value, postfix, sectionCode = "" }) => `
         ${prefix}
         <input 
             class="context-menu_${type}" 
             id="context-${id}-${sectionCode}" 
             type="number" 
-            data-title="${title}" 
+            data-title="${hint || ""}" 
             value="${value ?? ""}" 
             ${event || ""} 
             onclick="event.stopPropagation()">
                 ${postfix ?? ""} 
         </input>`,
-    [inputTypes.TEXT_INPUT]: ({ prefix, type, id, event, title, value, postfix, sectionCode = "" }) => `
+    [inputTypes.TEXT_INPUT]: ({ prefix, type, id, event, hint, value, postfix, sectionCode = "" }) => `
         ${prefix}
         <input 
             class="context-menu_${type}" 
             id="context-${id}-${sectionCode}" 
             type="text" 
-            data-title="${title}" 
+            data-title="${hint || ""}" 
             value="${value ?? ""}" 
             ${event || ""} 
             onclick="event.stopPropagation()">
