@@ -376,6 +376,10 @@
     transform: translateY(-50%);
 }
 
+.rp__game-time[data-position="hidden"] {
+    display: none;
+}
+
 .rp__time-hours.hidden {
     display: none;
 }
