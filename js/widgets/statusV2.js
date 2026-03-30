@@ -37,6 +37,7 @@ import { sweepEffect } from "../components/windowEffects.js";
 import { getCheevosCount, getPointsCount, getRetropointsCount } from "../functions/gameProperties.js";
 import { GAME_AWARD_TYPES } from "../enums/gameAwards.js";
 import { parseTimeParts } from "../functions/time.js";
+import { createAutoScroll } from "../functions/autosScroll.js";
 
 export class Status extends Widget {
 
@@ -234,6 +235,24 @@ export class Status extends Widget {
                         checked: this.uiProps.scrollRP,
                         onChange: (event) => this.uiProps.scrollRP = event.currentTarget.checked,
                     },
+                    {
+                        prefix: ui.lang.scrollSpeed,
+                        postfix: "px/s",
+                        type: inputTypes.NUM_INPUT,
+                        id: "menu_scroll-speed",
+                        hint: ui.lang.scrollSpeed,
+                        value: this.uiProps.scrollSpeed,
+                        onInput: (event) => this.uiProps.scrollSpeed = event.currentTarget.value,
+                    },
+                    {
+                        prefix: ui.lang.scrollPauseDuration,
+                        postfix: "sec",
+                        type: inputTypes.NUM_INPUT,
+                        id: "menu_scroll-pause-dur",
+                        hint: ui.lang.scrollPauseDuration,
+                        value: this.uiProps.scrollPauseDuration,
+                        onInput: (event) => this.uiProps.scrollPauseDuration = event.currentTarget.value,
+                    },
                 ]
             },
             {
@@ -298,6 +317,8 @@ export class Status extends Widget {
         blinkOnUpdate: true,
         scrollRP: false,
         scrollTitle: true,
+        scrollSpeed: 20,
+        scrollPauseDuration: 15,
     }
     uiDefaultValuesLegacy = {
         showRichPresence: false,
@@ -332,11 +353,19 @@ export class Status extends Widget {
         },
         scrollTitle() {
             this.setElementsValues();
-            this.startElementsAutoscroll();
+            this.startElementsAutoscroll(0);
         },
         scrollRP() {
             this.setElementsValues();
-            this.startElementsAutoscroll();
+            this.startElementsAutoscroll(0);
+        },
+        scrollSpeed(value) {
+            value = value < 10 ? 10 : value;
+            Object.values(this.autoscrollIntervals ?? {}).forEach(scr => scr.setSpeed(value));
+            this.ticker?.setSpeed(value);
+        },
+        scrollPauseDuration(value) {
+            value = value < 0 ? 0 : value;
         }
     };
 
@@ -345,6 +374,12 @@ export class Status extends Widget {
             if (value <= 0) value = 1;
             if (value > 24 * 60) value = 24 * 60;
             return value * 60;
+        },
+        scrollSpeed(value) {
+            return (value <= 10) ? 10 : value;
+        },
+        scrollPauseDuration(value) {
+            return value < 0 ? 0 : value;
         }
     };
     loadDefaultValues() {
@@ -593,7 +628,8 @@ export class Status extends Widget {
         this.ticker = infiniteLineScrolling({
             container: this.tickerElement,
             textGenerator: () =>
-                generateMagicLineText(watcher.GAME_DATA, watcher.sessionData, watcher.userData)
+                generateMagicLineText(watcher.GAME_DATA, watcher.sessionData, watcher.userData),
+            speed: this.uiProps.scrollSpeed,
         });
         this.uiProps.showTicker && this.ticker.startScrolling();
     }
@@ -738,7 +774,9 @@ export class Status extends Widget {
     updateRichPresence(richPresenceText) {
         this.section.querySelectorAll(".rp__rich-presence")?.forEach(el => {
             const message = richPresenceText || ui.lang.richPresence;
-            el.innerText = message;
+            el.innerHTML = message.replace(
+                /\p{Extended_Pictographic}(?:\u200D\p{Extended_Pictographic})*/gu,
+                (emoji) => `<span class="emoji">${emoji}</span>`);
             el.dataset.title = message;
         })
     }
@@ -808,9 +846,9 @@ export class Status extends Widget {
     }
     async startElementsAutoscroll(delaySec = 10) {
         await delay(delaySec * 1e3);
+        this.stopAllAutoscrolls();
         const elements = this.section.querySelectorAll(".autoscroll");
         elements.forEach(element => {
-            this.stopAutoScrollElement(element);
             this.startAutoScrollElement(element)
         });
     }
@@ -819,65 +857,21 @@ export class Status extends Widget {
         element.dataset.autoscrollId ??= Math.random().toString(36).substr(2, 9);
         return element.dataset.autoscrollId;
     }
-    startAutoScrollElement(element, toLeft = true, pause = 10e3) {
+    startAutoScrollElement(element) {
         if (!element) return;
         const containerID = this._getScrollId(element);
-
-
-        if (this.autoscrollIntervals[containerID]) {
-            this.stopAutoScrollElement(element);
-        } else {
-            this.autoscrollIntervals[containerID] = {};
-        }
-        const refreshRateMiliSecs = 50;
-        const scrollContainer = element;
-
-        this.autoscrollIntervals[containerID] = {};  // завжди ініціалізуємо після stop
-        this.autoscrollIntervals[containerID].interval = setInterval(() => {
-            // якщо запис вже видалено — зупиняємось
-            if (!this.autoscrollIntervals[containerID]) return;
-            const isScrollable = element.classList.contains("autoscroll");
-            if (!isScrollable || scrollContainer.clientWidth >= scrollContainer.scrollWidth) {
-                scrollContainer.scrollLeft = 0;
-                this.stopAutoScrollElement(element);
-                this.autoscrollIntervals[containerID] = {};
-                this.autoscrollIntervals[containerID].timeout = setTimeout(
-                    () => this.startAutoScrollElement(element, true, pause),
-                    10e3
-                );
-            } else if (toLeft) {
-                scrollContainer.scrollLeft++;
-                if (scrollContainer.scrollLeft + scrollContainer.clientWidth >= scrollContainer.scrollWidth) {
-                    this.stopAutoScrollElement(element);
-                    this.autoscrollIntervals[containerID] = {};
-                    this.autoscrollIntervals[containerID].timeout = setTimeout(
-                        () => this.startAutoScrollElement(element, false, pause),
-                        pause
-                    );
-                }
-            } else {
-                scrollContainer.scrollLeft = Math.max(0, scrollContainer.scrollLeft - 1);
-                if (scrollContainer.scrollLeft === 0) {
-                    this.stopAutoScrollElement(element);
-                    this.autoscrollIntervals[containerID] = {};
-                    this.autoscrollIntervals[containerID].timeout = setTimeout(
-                        () => this.startAutoScrollElement(element, true, pause),
-                        pause
-                    );
-                }
-            }
-        }, refreshRateMiliSecs);
+        this.autoscrollIntervals[containerID] ??= createAutoScroll(element, {
+            axis: "x",
+            speed: this.uiProps.scrollSpeed,
+            pauseOnEndMs: this.uiProps.scrollPauseDuration * 1e3,
+        });
+        this.autoscrollIntervals[containerID].start();
     }
     stopAutoScrollElement(element, reset = false) {
-        reset && (element.scrollLeft = 0);
         const containerID = this._getScrollId(element);
-        if (this.autoscrollIntervals[containerID]) {
-            clearInterval(this.autoscrollIntervals[containerID].interval);
-            clearTimeout(this.autoscrollIntervals[containerID].timeout);
-            delete this.autoscrollIntervals[containerID];
-        }
+        this.autoscrollIntervals[containerID]?.stop();
     }
-
-
-
+    stopAllAutoscrolls() {
+        Object.values(this.autoscrollIntervals).forEach(scr => scr.stop(true))
+    }
 }

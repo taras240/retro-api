@@ -1,6 +1,9 @@
-const FRAME_TIME_MS = 40;
-
-export function infiniteLineScrolling({ container, textGenerator }) {
+export function infiniteLineScrolling({ container, textGenerator, speed = 20 }) {
+    let rafId = null;
+    let lastTime = null;
+    let remainder = 0;
+    let speedMultiplier = 1;
+    let lineCount = 0;
 
     const markText = (text) => {
         const p = document.createElement('p');
@@ -9,47 +12,74 @@ export function infiniteLineScrolling({ container, textGenerator }) {
         return p;
     };
 
+    const appendLine = () => {
+        container.appendChild(markText(textGenerator()));
+        lineCount++;
+    };
+
     const fillText = () => {
-        const fragment = document.createDocumentFragment();
-        while (container.scrollWidth / container.offsetWidth < 3 || container.querySelectorAll("p").length < 3) {
-            fragment.appendChild(markText(textGenerator()));
-            container.appendChild(fragment);
+        // Один reflow замість двох перевірок у while
+        while (lineCount < 3 || container.scrollWidth < container.offsetWidth * 3) {
+            appendLine();
         }
     };
 
-    let scrollInterval = null;
-    const step = async () => {
-        if (!container.offsetWidth) return;
-        container.scrollBy({ left: 1, behavior: 'auto' });
-        const linePart = container.querySelector('.infinite-line');
-        if (linePart) {
-            const deltaPosX = linePart.offsetWidth - container.scrollLeft;
-            if (deltaPosX <= 0) {
-                linePart.remove();
-                const newEl = markText(textGenerator());
-                container.appendChild(newEl);
-                container.scrollLeft = 0;
+    const step = (now) => {
+        if (!container.offsetWidth) {
+            rafId = requestAnimationFrame(step);
+            return;
+        }
+
+        if (!lastTime) lastTime = now;
+        const delta = now - lastTime;
+        lastTime = now;
+
+        const exact = (speed * delta / 1000) * speedMultiplier + remainder;
+        const whole = Math.trunc(exact);
+        remainder = exact - whole;
+
+        container.scrollLeft += whole;
+
+        const firstLine = container.firstElementChild;
+        if (firstLine) {
+            if (firstLine.offsetWidth <= container.scrollLeft) {
+                container.scrollLeft -= firstLine.offsetWidth;
+                firstLine.remove();
+                lineCount--;
+
+                appendLine();
             }
         }
 
-        if (container.querySelectorAll("p").length < 3 || container.scrollWidth / container.offsetWidth < 3) {
+        if (lineCount < 3 || container.scrollWidth < container.offsetWidth * 3) {
             fillText();
         }
 
+        rafId = requestAnimationFrame(step);
     };
 
     const startScrolling = () => {
         if (!container) return;
         stopScrolling();
         fillText();
-        scrollInterval = setInterval(() => step(), FRAME_TIME_MS);
+        rafId = requestAnimationFrame(step);
     };
 
     const stopScrolling = () => {
         if (!container) return;
-        scrollInterval && clearInterval(scrollInterval);
-        container.innerHTML = "";
+        if (rafId) {
+            cancelAnimationFrame(rafId); // ← виправлено витік
+            rafId = null;
+        }
+        lastTime = null;
+        remainder = 0;
+        lineCount = 0;
+        container.innerHTML = '';
     };
 
-    return { startScrolling, stopScrolling };
+    const setSpeed = (targetSpeed) => {
+        if (targetSpeed > 0) speed = targetSpeed;
+    };
+
+    return { startScrolling, stopScrolling, setSpeed };
 }

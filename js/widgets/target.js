@@ -60,8 +60,34 @@ export class Target extends Widget {
                         value: this.uiProps.fixedSizeCount,
                         onInput: (event) => this.uiProps.fixedSizeCount = event.currentTarget.value,
                     },
-
-
+                    {
+                        type: inputTypes.CHECKBOX,
+                        id: "contrast-highlight-target",
+                        label: ui.lang.contrastHighlight,
+                        checked: this.uiProps.contrastHighlight,
+                        onChange: (event) => this.uiProps.contrastHighlight = event.currentTarget.checked,
+                    },
+                    // {
+                    //     type: inputTypes.CHECKBOX,
+                    //     name: "hide-unearned",
+                    //     id: "hide-unearned",
+                    //     label: ui.lang.showOverlay,
+                    //     checked: this.SHOW_PREV_OVERLAY,
+                    //     event: `onchange="ui.target.SHOW_PREV_OVERLAY = this.checked"`,
+                    // },
+                    // {
+                    //     type: inputTypes.CHECKBOX,
+                    //     name: "show-border",
+                    //     id: "show-border",
+                    //     label: ui.lang.showImageBorder,
+                    //     checked: this.SHOW_PREV_BORDER,
+                    //     event: `onchange="ui.target.SHOW_PREV_BORDER = this.checked"`,
+                    // },
+                ]
+            },
+            {
+                label: ui.lang.autoscroll,
+                elements: [
                     {
                         type: inputTypes.CHECKBOX,
                         id: "autoscroll-target",
@@ -87,29 +113,6 @@ export class Target extends Widget {
                         value: this.uiProps.scrollPauseDuration,
                         onInput: (event) => this.uiProps.scrollPauseDuration = event.currentTarget.value,
                     },
-                    {
-                        type: inputTypes.CHECKBOX,
-                        id: "contrast-highlight-target",
-                        label: ui.lang.contrastHighlight,
-                        checked: this.uiProps.contrastHighlight,
-                        onChange: (event) => this.uiProps.contrastHighlight = event.currentTarget.checked,
-                    },
-                    // {
-                    //     type: inputTypes.CHECKBOX,
-                    //     name: "hide-unearned",
-                    //     id: "hide-unearned",
-                    //     label: ui.lang.showOverlay,
-                    //     checked: this.SHOW_PREV_OVERLAY,
-                    //     event: `onchange="ui.target.SHOW_PREV_OVERLAY = this.checked"`,
-                    // },
-                    // {
-                    //     type: inputTypes.CHECKBOX,
-                    //     name: "show-border",
-                    //     id: "show-border",
-                    //     label: ui.lang.showImageBorder,
-                    //     checked: this.SHOW_PREV_BORDER,
-                    //     event: `onchange="ui.target.SHOW_PREV_BORDER = this.checked"`,
-                    // },
                 ]
             },
             {
@@ -816,7 +819,7 @@ export class Target extends Widget {
             speed: this.uiProps.scrollSpeed,
             pauseOnEndMs: this.uiProps.scrollPauseDuration * 1e3,
         });
-        this.autoscroll.start();
+        this.uiProps.autoscroll && this.autoscroll.start();
     }
     stopAutoScroll() {
         this.autoscroll?.stop();

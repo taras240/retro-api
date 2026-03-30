@@ -40,31 +40,6 @@ export class AchievementsBlock extends Widget {
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        id: "autoscroll-achieves",
-                        label: ui.lang.autoscroll,
-                        checked: this.uiProps.autoscroll,
-                        onChange: (event) => this.uiProps.autoscroll = event.currentTarget.checked,
-                    },
-                    {
-                        prefix: ui.lang.scrollSpeed,
-                        postfix: "px/s",
-                        type: inputTypes.NUM_INPUT,
-                        id: "menu_scroll-speed",
-                        hint: ui.lang.scrollSpeed,
-                        value: this.uiProps.scrollSpeed,
-                        onInput: (event) => this.uiProps.scrollSpeed = event.currentTarget.value,
-                    },
-                    {
-                        prefix: ui.lang.scrollPauseDuration,
-                        postfix: "sec",
-                        type: inputTypes.NUM_INPUT,
-                        id: "menu_scroll-pause-dur",
-                        hint: ui.lang.scrollPauseDuration,
-                        value: this.uiProps.scrollPauseDuration,
-                        onInput: (event) => this.uiProps.scrollPauseDuration = event.currentTarget.value,
-                    },
-                    {
-                        type: inputTypes.CHECKBOX,
                         id: "stretch-achieves",
                         label: ui.lang.stretch,
                         checked: this.uiProps.stretchAchievements,
@@ -89,6 +64,36 @@ export class AchievementsBlock extends Widget {
                         onInput: (event) => this.uiProps.ACHIV_MAX_SIZE = event.currentTarget.value,
                     },
 
+                ]
+            },
+            {
+                label: ui.lang.autoscroll,
+                elements: [
+                    {
+                        type: inputTypes.CHECKBOX,
+                        id: "autoscroll-achieves",
+                        label: ui.lang.autoscroll,
+                        checked: this.uiProps.autoscroll,
+                        onChange: (event) => this.uiProps.autoscroll = event.currentTarget.checked,
+                    },
+                    {
+                        prefix: ui.lang.scrollSpeed,
+                        postfix: "px/s",
+                        type: inputTypes.NUM_INPUT,
+                        id: "menu_scroll-speed",
+                        hint: ui.lang.scrollSpeed,
+                        value: this.uiProps.scrollSpeed,
+                        onInput: (event) => this.uiProps.scrollSpeed = event.currentTarget.value,
+                    },
+                    {
+                        prefix: ui.lang.scrollPauseDuration,
+                        postfix: "sec",
+                        type: inputTypes.NUM_INPUT,
+                        id: "menu_scroll-pause-dur",
+                        hint: ui.lang.scrollPauseDuration,
+                        value: this.uiProps.scrollPauseDuration,
+                        onInput: (event) => this.uiProps.scrollPauseDuration = event.currentTarget.value,
+                    },
                 ]
             },
             {
@@ -674,7 +679,7 @@ export class AchievementsBlock extends Widget {
             speed: this.uiProps.scrollSpeed,
             pauseOnEndMs: this.uiProps.scrollPauseDuration * 1e3,
         });
-        this.autoscroll.start();
+        this.uiProps.autoscroll && this.autoscroll.start();
     }
     stopAutoScroll() {
         this.autoscroll?.stop();

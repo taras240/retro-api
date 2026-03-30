@@ -51,12 +51,15 @@ export function createAutoScroll(container, options = {}) {
         container.removeEventListener("mouseleave", mouseLeaveHandler);
     }
 
-    function stop() {
+    function stop(reset = false) {
         clearTimeout(hoverTimeout);
         clearTimeout(pauseTimeout);
         if (rafId) cancelAnimationFrame(rafId);
         rafId = null;
         removeHoverEvents();
+        if (reset) {
+            setPos(0);
+        }
     }
 
     function pause(delay = pauseOnEndMs) {
@@ -71,7 +74,7 @@ export function createAutoScroll(container, options = {}) {
 
     function tick(now) {
         if (!container) {
-            rafId = requestAnimationFrame(tick);
+            stop();
             return;
         }
 
