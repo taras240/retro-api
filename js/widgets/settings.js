@@ -204,6 +204,14 @@ export class Settings extends Widget {
                     },
                     {
                         type: inputTypes.CHECKBOX,
+                        label: ui.lang.ignoreSubsets,
+                        id: "settings_ignore-subsets",
+                        checked: configData.ignoreSubsets,
+                        onChange: (event) => configData.ignoreSubsets = event.currentTarget.checked,
+                        hint: ui.lang.ignoreSubsetsHint,
+                    },
+                    {
+                        type: inputTypes.CHECKBOX,
                         label: ui.lang.subsetBugFix,
                         id: "settings_enable-subset-bug-fix",
                         checked: configData.preventSubsetBug,

@@ -201,7 +201,8 @@ export class Watcher {
         }
         const isGameChanged = (raProfileInfo, isStart = false) => {
             let gameChanged = (raProfileInfo.LastGameID !== this.GAME_DATA?.ID);
-            if (!isStart && gameChanged && configData.preventSubsetBug) {
+            const ignoreSubsets = configData.preventSubsetBug || configData.ignoreSubsets;
+            if (!isStart && gameChanged && ignoreSubsets) {
                 const subsets = this.GAME_DATA?.availableSubsets ?? {};
                 const isSubset = Object.values(subsets).includes(raProfileInfo.LastGameID);
                 gameChanged = !isSubset;
@@ -214,8 +215,11 @@ export class Watcher {
                 const subsets = await apiWorker.getSubsets(profileGameID);
 
                 const hasSubsets = Object.values(subsets).length > 1;
-
-                if (hasSubsets && configData.preventSubsetBug) {
+                if (hasSubsets && configData.ignoreSubsets) {
+                    console.log(subsets.Main);
+                    return subsets.Main ?? profileGameID;
+                }
+                else if (hasSubsets && configData.preventSubsetBug) {
                     await delay(250);
                     const completionData = await apiWorker.getUserCompletionProgress({ count: 1, offset: 0 });
                     const completionGameID = completionData?.Results?.[0]?.GameID ?? profileGameID;

@@ -260,7 +260,7 @@
     "switchProgressionIfBeatenHint": "If progression is unavailable or the game is beaten, the progressbar will be shown",
     "thisSession": "This Session",
     "subsetBugFix": "Subset Bug Fix",
-    "subsetBugFixHint": "Prevent switching to the subset; only allow it on Start/Pause.",
+    "subsetBugFixHint": "Prevent switching between game subsets; only allow it on start tracking.",
     "top": "Top",
     "blinkOnUpdate": "Blink On Update",
     "gameBeatenAllEndingsMsg": "Game beaten with all endings",
@@ -279,5 +279,7 @@
     "makeSubsetsList": "Update subsets list",
     "makeSubsetsListHint": "If subsets data is outdated, you can fetch it manually. This will take about a minute.",
     "scrollSpeed": "Scroll Speed",
-    "scrollPauseDuration": "Scroll Pause"
+    "scrollPauseDuration": "Scroll Pause",
+    "ignoreSubsets": "Ignore Subsets",
+    "ignoreSubsetsHint": "Always load Main Set"
 }

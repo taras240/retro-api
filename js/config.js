@@ -100,6 +100,7 @@ export class Config {
     pauseIfOffline: true,
     watcherMode: WATCHER_MODES.auto,
     preventSubsetBug: true,
+    ignoreSubsets: true,
 
   }
   configValuePreprocessors = {
