@@ -258,7 +258,7 @@
     "switchProgressionIfBeaten": "Адаптивний прогресбар",
     "switchProgressionIfBeatenHint": "Якщо прогрес проходження недоступний або гра пройдена - буде показано прогрес досягнень",
     "thisSession": "Ця Сесія",
-    "subsetBugFix": "Виправити Субсет-баг",
+    "subsetBugFix": "Виправити Сабсет-баг",
     "subsetBugFixHint": "Не переключати на субсет гри; дозволити тільки при старті",
     "top": "Топ",
     "blinkOnUpdate": "Блимати при оновленні",
