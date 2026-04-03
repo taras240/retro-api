@@ -16,8 +16,8 @@ export class PopupWindow extends Widget {
         this.generatePopupElement(popupData);
         this.initializeElements();
         this.addEvents();
-        this.VISIBLE = true;
         this.applyPosition();
+        this.switchVisibility();
     }
     generatePopupElement({ id, classList = [], title, content }) {
         this.close(id);
@@ -36,8 +36,10 @@ export class PopupWindow extends Widget {
             ${resizerHtml()}`;
         this.section = widget;
         ui.app.appendChild(widget);
+        this.section = widget;
     }
     initializeElements() {
+        this.sectionID = this.section.id;
     }
     addEvents() {
         super.addEvents();
@@ -59,7 +61,10 @@ export class PopupWindow extends Widget {
             }
         });
     }
-    close(id) {
-        id ? document.querySelector(`#${id}`)?.remove() : super.close();
+    switchVisibility() {
+        this.section.classList.remove("disposed", "hidden");
+    }
+    close() {
+        this.section?.remove();
     }
 }

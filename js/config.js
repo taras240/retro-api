@@ -1,5 +1,6 @@
 import { colorPresets } from "./enums/colorPresets.js";
 import { fonts } from "./enums/fontsPreset.js";
+import { uiLayouts } from "./enums/uiLayouts.js";
 import { WATCHER_MODES } from "./enums/watcherModes.js";
 import { loadHandle, openDB, saveHandle } from "./functions/DB.js";
 import { delay } from "./functions/delay.js";
@@ -166,8 +167,26 @@ export class Config {
 
   }
 
+  get uiLayoutName() {
+    const urlLayout = this.urlConfig?.uiLayout;
+    const presetName = urlLayout || (this._cfg.uiLayoutName ?? "default");
+    return presetName;
+  }
+  set uiLayoutName(name) {
+    if (name == this.uiLayoutName) return;
+    const availableLayouts = Object.keys(uiLayouts);
+    if (!availableLayouts.includes(name)) name = "default";
+    this._cfg.uiLayoutName = name
+    this.writeConfiguration(0);
+    location.reload();
+  }
+  get uiLayoutID() {
+    const presetID = uiLayouts[this.uiLayoutName] ?? "";
+    return presetID;
+  }
   get ui() {
-    return this._cfg.ui;
+    this._cfg[`ui${this.uiLayoutID}`] ??= {};
+    return this._cfg[`ui${this.uiLayoutID}`];
   }
   get gamesDB() {
     this._cfg.gamesDB || (this._cfg.gamesDB = {})
@@ -194,6 +213,7 @@ export class Config {
   constructor() {
     this.readConfiguration();
     this.fixConfig();
+    this.readLocationParams();
   }
   fixConfig = () => {
     // if (this.version === CONFIG_VERSION) return;
@@ -222,12 +242,19 @@ export class Config {
       console.error(err)
     }
   }
+  readLocationParams = () => {
+    const params = new URLSearchParams(location.search);
+    const allowed = ["uiLayout"];
 
+    this.urlConfig = Object.fromEntries(
+      [...params].filter(([key]) => allowed.includes(key))
+    );
+  };
 
   setNewPosition({ id, xPos, yPos, width, height, hidden }) {
     // console.log(id, hidden);
-    if (!this._cfg.ui.hasOwnProperty(id)) {
-      this._cfg.ui[id] = {
+    if (!this.ui.hasOwnProperty(id)) {
+      this.ui[id] = {
         id: id,
         x: xPos,
         y: yPos,
@@ -236,11 +263,11 @@ export class Config {
         hidden: hidden,
       };
     }
-    xPos ? (this._cfg.ui[id].x = xPos) : "";
-    yPos ? (this._cfg.ui[id].y = yPos) : "";
-    width ? (this._cfg.ui[id].width = width + "px") : "";
-    height ? (this._cfg.ui[id].height = height + "px") : "";
-    hidden !== undefined ? (this._cfg.ui[id].hidden = hidden) : "";
+    xPos ? (this.ui[id].x = xPos) : "";
+    yPos ? (this.ui[id].y = yPos) : "";
+    width ? (this.ui[id].width = width + "px") : "";
+    height ? (this.ui[id].height = height + "px") : "";
+    hidden !== undefined ? (this.ui[id].hidden = hidden) : "";
     this.writeConfiguration();
   }
   async readConfiguration() {
@@ -304,11 +331,15 @@ export class Config {
     }
   }
   delayedWrite;
-  writeConfiguration() {
+  writeConfiguration(delay = 500) {
+    const writeCFG = () => localStorage.setItem(CONFIG_FILE_NAME, JSON.stringify(this._cfg));
     this.delayedWrite && clearTimeout(this.delayedWrite);
-    this.delayedWrite = setTimeout(() => {
-      localStorage.setItem(CONFIG_FILE_NAME, JSON.stringify(this._cfg));
-    }, 500)
+    if (delay > 0) {
+      this.delayedWrite = setTimeout(() => writeCFG(), delay)
+    }
+    else {
+      writeCFG();
+    }
   }
   resetSettings() {
     this.delayedWrite && clearTimeout(this.delayedWrite);

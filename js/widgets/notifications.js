@@ -62,6 +62,13 @@ export class Notifications extends Widget {
                 id: "show-notification-time",
                 checked: this.uiProps.showTimestamp,
                 onChange: (event) => this.uiProps.showTimestamp = event.currentTarget.checked,
+            },
+            {
+                label: ui.lang.showSavedAlerts,
+                type: inputTypes.CHECKBOX,
+                id: "show-showSaved-alerts",
+                checked: this.uiProps.showSavedAlerts,
+                onChange: (event) => this.uiProps.showSavedAlerts = event.currentTarget.checked,
             }
         ];
     }
@@ -73,6 +80,7 @@ export class Notifications extends Widget {
         showCheevoAlerts: true,
         showAwardAlerts: true,
         showGameAlerts: true,
+        showSavedAlerts: true,
     }
     uiSetCallbacks = {
         showCheevoAlerts: () => this.showSavedAlert(),
@@ -204,6 +212,7 @@ export class Notifications extends Widget {
         return JSON.parse(localStorage.getItem(this.alertsCacheName)) ?? [];
     }
     showSavedAlert() {
+        if (!this.uiProps.showSavedAlerts) return;
         this.container.innerHTML = "";
         const savedAlerts = this.getSavedAlerts();
         savedAlerts.forEach(({ timeStamp, alerts }) => {

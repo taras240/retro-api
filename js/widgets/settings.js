@@ -9,6 +9,7 @@ import { fonts } from "../enums/fontsPreset.js";
 import { ANIMATIONS } from "../enums/bgAnimations.js";
 import { fromHtml } from "../functions/html.js";
 import { WATCHER_MODES } from "../enums/watcherModes.js";
+import { uiLayouts } from "../enums/uiLayouts.js";
 export class Settings extends Widget {
     widgetIcon = {
         iconClass: "settings-icon",
@@ -18,6 +19,22 @@ export class Settings extends Widget {
             {
                 label: ui.lang.style,
                 elements: [
+                    {
+                        type: inputTypes.SELECTOR,
+                        label: ui.lang.uiLayouts,
+                        id: "settings_ui-preset-selector",
+                        onClick: (event) => ui.showContextmenu({
+                            event, menuItems: [
+                                ...Object.keys(uiLayouts).map(presetName => ({
+                                    type: inputTypes.RADIO,
+                                    name: "context_ui-preset",
+                                    id: `context_ui-preset-${presetName}`,
+                                    label: presetName,
+                                    checked: config.uiLayoutName === presetName,
+                                    onChange: () => config.uiLayoutName = presetName,
+                                }))]
+                        }),
+                    },
                     {
                         type: inputTypes.SELECTOR,
                         label: ui.lang.selectColors,
@@ -504,7 +521,7 @@ export class Settings extends Widget {
                     ...Object.keys(colorPresets).map(presetName => ({
                         type: inputTypes.RADIO,
                         name: "context_color-scheme",
-                        id: `context_color- scheme - ${presetName}`,
+                        id: `context_color-scheme-${presetName}`,
                         label: presetName,
                         checked: configData.preset === presetName,
                         onChange: () => configData.preset = presetName,
@@ -539,14 +556,18 @@ export class Settings extends Widget {
                     })),
                 ]
             },
-
-            // {
-            //     label: ui.lang.startOnLoad,
-            //     type: inputTypes.CHECKBOX,
-            //     id: "context_show-start-on-load",
-            //     checked: configData.startOnLoad,
-            //     onChange: (event) => configData.startOnLoad = event.currentTarget.checked,
-            // },
+            {
+                label: ui.lang.uiLayouts,
+                elements: [
+                    ...Object.keys(uiLayouts).map(presetName => ({
+                        type: inputTypes.RADIO,
+                        name: "context_ui-preset",
+                        id: `context_ui-preset-${presetName}`,
+                        label: presetName,
+                        checked: config.uiLayoutName === presetName,
+                        onChange: () => config.uiLayoutName = presetName,
+                    }))]
+            },
         ]
     }
     contextSetsMenu = () => Object.values(watcher.GAME_DATA?.availableSubsets ?? {})?.length > 1 ? {
