@@ -13,7 +13,6 @@ export const cheevoElementFull = (cheevo, isTarget = false) => {
     const rarity = 100 * cheevo.NumAwardedHardcore / cheevo.totalPlayers;
     const sideButtonsHtml = `
         <div class="target__buttons-container">
-                <button class="header-button header-icon  target__comments-button edit-cheevo-button edit-icon" data-title="edit props" data-cheevo-id="${cheevo.ID}"></button>
                 <button class="header-button header-icon  target__comments-button comments-button chat-icon" data-title="${ui.lang.showCommentsHint}"></button>
                 <button class="header-button header-icon  delete-icon delete-from-target" data-title="remove"></button>
         </div>

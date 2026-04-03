@@ -4,8 +4,6 @@ import { Widget } from "./widget.js";
 export class Links extends Widget {
     widgetIcon = {
         description: "links widget",
-        iconID: `side-panel__links`,
-        onChangeEvent: `ui.links.VISIBLE = this.checked`,
         iconClass: "link-icon",
     };
     links = [
@@ -46,7 +44,7 @@ export class Links extends Widget {
         this.addEvents();
         this.generateWidgetContent();
 
-        UI.applyPosition({ widget: this });
+        this.applyPosition();
 
     }
     generateWidget() {

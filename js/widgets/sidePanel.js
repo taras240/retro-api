@@ -36,7 +36,6 @@ export class SidePanel {
         // Додаємо подію для відслідковування руху миші touchmove 
         document.addEventListener("touchstart", (e) => this.touchVisibilityHandler(e));
         this.settings.addEventListener("click", (e) => {
-            // UI.switchSectionVisibility(ui.settings);
             const settingsWidget = document.querySelector("#settings_section");
             settingsWidget ? settingsWidget.remove() : ui.settings.openSettings();
         });

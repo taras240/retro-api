@@ -413,22 +413,16 @@ export class AchievementsBlock extends Widget {
     get CLONE_NUMBER() {
         return this._cloneNumber;
     }
-    set CLONE_NUMBER(widget) {
-        if (widget?.length) {
-            this._cloneNumber = widget.length;
-        } else (this._cloneNumber = 0);
-
+    set CLONE_NUMBER(widgetCount) {
+        this._cloneNumber = widgetCount - 1;
         this.widgetIcon = {
             ...this.widgetIcon,
-            iconID: `side-panel__cheevos-${this.CLONE_NUMBER}`,
-            onChangeEvent: `ui.achievementsBlock[${this.CLONE_NUMBER}].VISIBLE = this.checked`,
         };
     }
 
-    constructor(isClone = false) {
+    constructor(widgetCount = 1) {
         super();
-        this.CLONE_NUMBER = ui.achievementsBlock;
-        this.isClone = isClone;
+        this.CLONE_NUMBER = widgetCount;
         this.addWidgetIcon();
         this.initializeElements();
         this.addEvents();
@@ -472,7 +466,7 @@ export class AchievementsBlock extends Widget {
         this.section.classList.toggle("borderless", !this.uiProps.showBorders);
     }
     setValues() {
-        UI.applyPosition({ widget: this });
+        this.applyPosition();
         this.setElementsValues();
 
         if (config.ui[this.SECTION_NAME]) {

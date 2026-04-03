@@ -12,8 +12,6 @@ import { buttonsHtml } from "../components/htmlElements.js";
 export class Notifications extends Widget {
     widgetIcon = {
         description: "notifications widget",
-        iconID: "side-panel__notifications",
-        onChangeEvent: `ui.notifications.VISIBLE = this.checked`,
         iconClass: "notification-icon",
     };
     get contextMenuItems() {
@@ -92,7 +90,7 @@ export class Notifications extends Widget {
         this.initializeElements();
         this.addEvents();
         this.setElementsValues();
-        UI.applyPosition({ widget: this });
+        this.applyPosition();
         this.updateInterval = setInterval(() => {
             this.container.querySelectorAll(".notification_timestamp").forEach(timeStamp => {
                 timeStamp.innerText = this.getDeltaTime(timeStamp.dataset.time);

@@ -502,9 +502,6 @@ export class Watcher {
         this.initPlayTime();
         updateWidgets();
     }
-    resetCheevo(id) {
-        ui.target?.refreshCheevo(id);
-    }
     savePlayTime() {
         const playTime = this.playTime.totalGameTime;
         if (playTime > 5) {

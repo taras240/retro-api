@@ -12,8 +12,6 @@ import { applySort, sortBy, sortMethods } from "../functions/sortFilter.js";
 export class UserStatistic extends Widget {
     widgetIcon = {
         description: "user statistics widget",
-        iconID: `side-panel__stats`,
-        onChangeEvent: `ui.stats.VISIBLE = this.checked`,
         iconClass: "stats-icon",
     };
     get contextMenuItems() {
@@ -186,7 +184,7 @@ export class UserStatistic extends Widget {
         this.setElementsValues();
 
         this.addEvents();
-        UI.applyPosition({ widget: this });
+        this.applyPosition();
 
         this.applyDisplayOrder();
     }

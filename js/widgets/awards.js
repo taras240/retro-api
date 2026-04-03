@@ -8,8 +8,6 @@ import { GAME_AWARD_TYPES } from "../enums/gameAwards.js";
 export class Awards extends Widget {
     widgetIcon = {
         description: "awards widget",
-        iconID: "side-panel__awards",
-        onChangeEvent: `ui.awards.VISIBLE = this.checked`,
         iconClass: "awards-icon",
     };
 
@@ -19,7 +17,7 @@ export class Awards extends Widget {
         this.addWidgetIcon();
         this.initializeElements();
         this.addEvents();
-        UI.applyPosition({ widget: this });
+        this.applyPosition();
     }
     generateWidget() {
         const headerElementsHtml = `

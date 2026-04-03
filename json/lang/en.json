@@ -6,7 +6,7 @@
     "alertsSectionName": "Alerts",
     "progressionSectionName": "Progression",
     "settingsSectionName": "Settings",
-    "targetSectionName": "Target",
+    "targetSectionName": "Cheevos List",
     "statisticsSectionName": "Stats",
     "style": "Style",
     "sort": "Sort By",
@@ -221,7 +221,7 @@
     "timeToUnlock": "Time To Unlock",
     "clearCache": "Clear Cache",
     "gameCard": "Game Card",
-    "widgetConfigHint": "open config",
+    "widgetConfigHint": "Open Settings",
     "close": "Close",
     "fullscreen": "Fullscreen",
     "previewType": "Preview Type",
@@ -281,5 +281,7 @@
     "scrollSpeed": "Scroll Speed",
     "scrollPauseDuration": "Scroll Pause",
     "ignoreSubsets": "Ignore Subsets",
-    "ignoreSubsetsHint": "Always load Main Set"
+    "ignoreSubsetsHint": "Always load Main Set",
+    "togglePins": "Show/Hide Pins",
+    "addPin": "Add/Remove Pin"
 }

@@ -30,7 +30,7 @@ const normalizeAchievement = (achievement, gameData, cheevosDB) => {
         trend,
         retroRatio,
         difficulty: getCheevoDifficulty(trend, TrueRatio, NumAwardedHardcore),
-        ...cheevosDB[ID], // Load edited props
+        // ...cheevosDB[ID], // Load edited props
     }
 }
 const parseCheevoGroups = (gameData) => {

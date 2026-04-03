@@ -17,7 +17,7 @@ export class PopupWindow extends Widget {
         this.initializeElements();
         this.addEvents();
         this.VISIBLE = true;
-        UI.applyPosition({ widget: this });
+        this.applyPosition();
     }
     generatePopupElement({ id, classList = [], title, content }) {
         this.close(id);

@@ -10,8 +10,6 @@ import { gamesFromJson } from "../functions/gamesJson.js";
 export class GameList extends Widget {
     widgetIcon = {
         description: "game series",
-        iconID: `side-panel__game-list`,
-        onChangeEvent: `ui.gameList.VISIBLE = this.checked`,
         iconClass: "playlist-icon",
     };
 
@@ -30,7 +28,7 @@ export class GameList extends Widget {
 
         this.setElementsVisibility();
         this.addEvents();
-        UI.applyPosition({ widget: this });
+        this.applyPosition();
     }
     initializeElements() {
         this.section = document.getElementById("game-list");

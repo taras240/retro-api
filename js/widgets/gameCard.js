@@ -5,11 +5,8 @@ import { generateBadges, badgeElements } from "../components/badges.js";
 import { signedIcons } from "../components/icons.js"
 
 import { showComments } from "../components/comments.js";
-import { generateContextMenu } from "../components/contextMenu.js";
 import { moveEvent } from "../functions/movingWidget.js";
-import { resizeEvent } from "../functions/resizingWidget.js";
 import { formatDate, formatDateTime, secondsToBadgeString } from "../functions/time.js";
-import { gamePropsPopup } from "../components/gamePropsPopup.js";
 import { DIFFICULTY_NAMES } from "../enums/difficulty.js";
 import { gameImageUrl, gameUrl } from "../functions/raLinks.js";
 import { inputTypes } from "../components/inputElements.js";
@@ -24,8 +21,6 @@ const PREVIEW_SIZE = {
 export class GameCard extends Widget {
     widgetIcon = {
         description: "game info widget",
-        iconID: `side-panel__gamecard`,
-        onChangeEvent: `ui.gameCard.VISIBLE = this.checked`,
         iconClass: "game-info-icon",
     };
     previewTypes = {
@@ -146,7 +141,7 @@ export class GameCard extends Widget {
         this.initializeElements();
         this.addEvents();
 
-        UI.applyPosition({ widget: this });
+        this.applyPosition();
     }
     generateWidget() {
         const innerContentHtml = `
@@ -169,7 +164,6 @@ export class GameCard extends Widget {
         `
         const headerElementsHtml = `
             ${buttonsHtml.comments()}
-            ${buttonsHtml.editGameProps()}
             ${buttonsHtml.tweek()}
         `;
 
@@ -235,10 +229,6 @@ export class GameCard extends Widget {
             const gameID = watcher.GAME_DATA?.ID;
             gameID && showComments(gameID, 1);
         })
-        this.section.querySelector(".game-props-button").addEventListener("click", (event) => {
-            event.stopPropagation();
-            gamePropsPopup().open(watcher.GAME_DATA);
-        });
         this.section.addEventListener("mousedown", event => {
             if (event.button !== 0 || event.target.closest(".resizer, button") || this.section.classList.contains("resized")) return;
             moveEvent(this.section, event);

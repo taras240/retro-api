@@ -10,8 +10,6 @@ import { filterBy, sortBy } from "../functions/sortFilter.js";
 export class Progression extends Widget {
     widgetIcon = {
         description: "progression widget",
-        iconID: `side-panel__progression`,
-        onChangeEvent: `ui.progression.VISIBLE = this.checked`,
         iconClass: "progression",
     };
     get contextMenuItems() {
@@ -79,7 +77,7 @@ export class Progression extends Widget {
         this.initializeElements();
         this.setElementsValues();
         this.addEvents();
-        UI.applyPosition({ widget: this });
+        this.applyPosition();
         this.generateProgression();
     }
     initializeElements() {

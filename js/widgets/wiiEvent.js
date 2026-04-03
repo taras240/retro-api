@@ -11,9 +11,6 @@ import { Widget } from "./widget.js";
 export class WiiEvent extends Widget {
     widgetIcon = {
         description: "Wii widget",
-        iconID: "side-panel__wii",
-        onChangeEvent: `ui.wiiEvent.VISIBLE = this.checked`,
-        // onChangeEvent: (event)=> this.VISIBLE = event.currentTarget.checked,
         iconClass: "wii-icon",
     };
     constructor() {
@@ -22,7 +19,7 @@ export class WiiEvent extends Widget {
         this.addWidgetIcon();
         this.initializeElements();
         this.addEvents();
-        UI.applyPosition({ widget: this });
+        this.applyPosition();
         // this.generateContent();
     }
     generateWidget() {

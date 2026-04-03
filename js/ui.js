@@ -26,13 +26,13 @@ import { Status } from "./widgets/statusV2.js";
 import { GameList } from "./widgets/gamesList.js";
 import { Links } from "./widgets/links.js";
 import { ALERT_TYPES } from "./enums/alerts.js";
-import { gamePropsPopup } from "./components/gamePropsPopup.js";
 import { langPackUrl, local } from "./enums/locals.js";
 import { colorPresets } from "./enums/colorPresets.js";
 import { dialogWindow } from "./components/dialogWindow.js";
 import { inputTypes } from "./components/inputElements.js";
 import { initBgAnimation } from "./functions/bgAnimations.js";
 import { WiiEvent } from "./widgets/wiiEvent.js";
+import { delay } from "./functions/delay.js";
 
 
 
@@ -45,8 +45,8 @@ export class UI {
   STICK_TOLERANCE = 7;
   hltb = {};
   // isTest = true;
-  gamePopup = () => gamePropsPopup();
   constructor() {
+    this.toggleLoading(false);
     this.initUI();
   }
   async loadLang() {
@@ -61,18 +61,10 @@ export class UI {
       const lang = await langRep.json();
       this.lang = { ...defLang, ...lang };
     }
-    // await delay(25);
   }
 
   async initUI() {
-    // Вимкнення вікна завантаження
-    setTimeout(
-      () =>
-        this.toggleLoading(false),
-      1000
-    );
     await this.loadLang();
-
     await loadSections();
 
     // Ініціалізація елементів
@@ -86,16 +78,15 @@ export class UI {
       watcher.autostart();
     }
 
-
   }
   initializeElements() {
     this.app = document.querySelector(".wrapper");
     // this.statusPanel = new StatusPanel();
-    this.wiiEvent = new WiiEvent();
+    new WiiEvent();
     this.statusPanel = new Status("statusPanel", true);
     this.status = new Status("status", false);
-    // this.status2 = new Status(true);
-    this.achievementsBlock = [new AchievementsBlock()]; this.createAchievementsTemplate();
+    new AchievementsBlock(1);
+    new AchievementsBlock(2);
     this.target = new Target();
     this.gameCard = new GameCard();
     this.stats = new UserStatistic();
@@ -106,41 +97,12 @@ export class UI {
     this.notifications = new Notifications();
     this.games = new Games();
     this.settings = new Settings();
-    this.links = new Links();
+    new Links();
 
     this.buttons = new SidePanel();
 
   }
 
-  static applyPosition({ widget }) {
-    if (!widget) return;
-    const id = widget.section.id;
-    const setSidePanelIconValues = () => {
-      widget.widgetIcon?.element && (widget.widgetIcon.element.checked = config.ui?.[widget.section?.id]?.hidden === false ?? !widget.VISIBLE);
-    }
-    const hideWidget = () => {
-      widget.section.classList.add("hidden", "disposed");
-    }
-    if (config.ui[id]) {
-      // Getting positions and dimensions from config.ui
-      const { x, y, width, height, hidden } = config.ui[id];
-      const { clientWidth, clientHeight } = ui.app;
-      const xValue = parseInt(x);
-      const yValue = parseInt(y);
-      // Set positions and dimensions for widget if they are saved in config.ui
-      x && (widget.section.style.left = xValue < 0 ? 0 : xValue > (clientWidth - 10) ? `${clientWidth - 100}px` : x);
-      y && (widget.section.style.top = yValue < 0 ? 0 : yValue > (clientHeight - 10) ? `${clientHeight - 100}px` : y);
-      width && (widget.section.style.width = width);
-      height && (widget.section.style.height = height);
-
-      const isHidden = hidden ?? true;
-      isHidden && hideWidget();
-    }
-    else {
-      !widget.VISIBLE && hideWidget();
-    }
-    setSidePanelIconValues();
-  }
   addEvents() {
     const mouseMoveEvent = async (event) => {
       const checkSideBar = (event) => {
@@ -293,21 +255,6 @@ export class UI {
 
     this.contextMenu.classList.remove("hidden");
   }
-  createAchievementsTemplate() {
-    if (this.achievementsBlock.length === 2) {
-      UI.switchSectionVisibility(this.achievementsBlock[1]);
-    } else {
-      this.achievementsBlock.push(new AchievementsBlock(true));
-      watcher.GAME_DATA && this.achievementsBlock.at(-1).parseGameAchievements(watcher.GAME_DATA);
-    }
-  }
-
-  // Функція для зупинки слідкування за досягненнями
-  stopWatching() {
-    ui.IS_WATCHING = false;
-    // this.statusPanel.frontSide.watchButton.classList.remove("active");
-    clearInterval(ui.apiTrackerInterval);
-  }
 
   static updateColors(presetName) {
     const getColors = (presetName) => {
@@ -353,33 +300,6 @@ export class UI {
     style.setProperty("--selection-color", selectionColor);
   }
 
-  static addDraggingEventForElements(container, onDragEnd) {
-
-  }
-
-
-
-  static switchSectionVisibility({ section, visible = false }) {
-    if (section.classList.contains("hidden") || visible) {
-      //set visible
-      section.classList.remove("disposed");
-      setTimeout(() => section.classList.remove("hidden"), 100);
-      config.setNewPosition({
-        id: section.id,
-        hidden: false,
-      })
-    }
-    else {
-      //set hidden
-      section.classList.add("hidden")
-      setTimeout(() => section.classList.add("disposed"), 300);
-      config.setNewPosition({
-        id: section.id,
-        hidden: true,
-      })
-    }
-
-  }
 
   exportCompletionDataToXlsx = () => exportToCSV.completion();
   exportWantToPlayToCSV = () => exportToCSV.wantToPlay();

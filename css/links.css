@@ -1,4 +1,5 @@
 .links-list {
+    width: 100%;
     gap: 0.5rem;
     overflow: hidden;
     flex-direction: column;

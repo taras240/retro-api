@@ -7,8 +7,6 @@ import { generateBadges } from "../components/badges.js";
 export class GameStatistics extends Widget {
     widgetIcon = {
         description: "game statistics",
-        iconID: `side-panel__game-statistics`,
-        onChangeEvent: `ui.gameStats.VISIBLE = this.checked`,
         iconClass: "game-stats",
         badgeLabel: "new",
     };
@@ -21,7 +19,7 @@ export class GameStatistics extends Widget {
         this.initializeElements();
         this.setElementsVisibility();
         this.addEvents();
-        UI.applyPosition({ widget: this });
+        this.applyPosition();
         this.generateWidgetContent();
     }
     initializeElements() {

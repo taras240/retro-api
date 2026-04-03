@@ -11,7 +11,6 @@ import { showComments } from "../components/comments.js";
 import { moveEvent } from "../functions/movingWidget.js";
 import { resizeEvent } from "../functions/resizingWidget.js";
 import { delay } from "../functions/delay.js";
-import { gamePropsPopup } from "../components/gamePropsPopup.js";
 import { cheevoImageUrl, gameImageUrl, gameUrl } from "../functions/raLinks.js";
 import { infiniteLineScrolling } from "../functions/infiniteLineScrolling.js";
 import { generateMagicLineText } from "../functions/tickerTextGenerator.js";
@@ -46,8 +45,6 @@ export class Status extends Widget {
 
     widgetIcon = {
         description: "status widget",
-        iconID: `side-panel__status1`,
-        onChangeEvent: `ui['${this.widgetName}'].VISIBLE = this.checked`,
         iconClass: "status-icon",
     };
     static themes = {
@@ -394,7 +391,7 @@ export class Status extends Widget {
         this.generateWidget();
         this.addWidgetIcon();
         // this.initializeElements();
-        UI.applyPosition({ widget: this });
+        this.applyPosition();
         this.setElementsValues();
         this.addEvents();
     }
@@ -403,8 +400,6 @@ export class Status extends Widget {
         this.theme = isLegacy ? Status.themes.legacy : Status.themes.default;
         this.widgetIcon = {
             description: "status widget",
-            iconID: `side-panel__${widgetName}`,
-            onChangeEvent: `ui['${widgetName}'].VISIBLE = this.checked`,
             iconClass: "status-icon",
             badgeLabel: isLegacy && "compact",
         };
@@ -523,10 +518,6 @@ export class Status extends Widget {
             else if (event.target.matches(".comments-button")) {
                 event.stopPropagation();
                 showComments(watcher.GAME_DATA?.ID, 1);
-            }
-            else if (event.target.matches(".game-props-button")) {
-                event.stopPropagation();
-                gamePropsPopup().open(watcher.GAME_DATA);
             }
             else if (event.target.matches(".tweak-button")) {
                 this.contextMenuItems && ui.settings.openSettings(this.contextMenuItems);
@@ -854,7 +845,7 @@ export class Status extends Widget {
     }
     autoscrollIntervals = {};
     _getScrollId(element) {
-        element.dataset.autoscrollId ??= Math.random().toString(36).substr(2, 9);
+        element.dataset.autoscrollId ??= Math.random().toString(36).slice(2, 9);
         return element.dataset.autoscrollId;
     }
     startAutoScrollElement(element) {

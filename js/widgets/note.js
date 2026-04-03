@@ -7,8 +7,6 @@ import { fromHtml } from "../functions/html.js";
 export class Note extends Widget {
     widgetIcon = {
         description: "notes widget",
-        iconID: `side-panel__note`,
-        onChangeEvent: `ui.note.VISIBLE = this.checked`,
         iconClass: "note-icon",
     };
     AUTOSAVE_INTERVAL_MS = 1000;
@@ -66,7 +64,7 @@ export class Note extends Widget {
         this.generateTabs();
         this.addEvents();
         this.setValues();
-        UI.applyPosition({ widget: this });
+        this.applyPosition();
 
     }
     initializeElements() {
