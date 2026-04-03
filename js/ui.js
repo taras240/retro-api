@@ -37,7 +37,7 @@ import { delay } from "./functions/delay.js";
 
 
 export class UI {
-  VERSION = "0.82";
+  VERSION = "0.83";
   isCEF = !('Notification' in window);
   CURRENT_LEVEL;
   AUTOCLOSE_CONTEXTMENU = false;

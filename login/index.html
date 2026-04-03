@@ -39,11 +39,13 @@
 
     <script type="module">
         import { Config } from '../login/config.js';
+
         const config = new Config();
 
         const submitLogin = () => {
-            let userName = userNameInput.value;
-            let apiKey = apiKeyInput.value;
+            const urlParams = new URLSearchParams(location.search);
+            const userName = userNameInput.value;
+            const apiKey = apiKeyInput.value;
             verifyUserIdent({ userName: userName, apiKey: apiKey })
                 .then((userObj) => {
                     if (!userObj.ID) errorLogin();
@@ -53,7 +55,7 @@
                             apiKey: apiKey,
                             userObj: userObj,
                         });
-                        setTimeout(() => window.location.href = "../", 1000);
+                        setTimeout(() => window.location.href = `../?${urlParams.toString()}`, 1000);
                     }
                 })
                 .catch(() => errorLogin());
@@ -80,7 +82,8 @@
         const userNameInput = document.querySelector("#login__ra-username");
         const apiKeyInput = document.querySelector("#login__ra-api");
         const submitButton = document.querySelector("#submit-login");
-        submitButton.addEventListener('click', submitLogin);
+
+        submitButton.addEventListener('click', () => submitLogin());
         userNameInput.value = config.USER_NAME ?? "";
         apiKeyInput.value = config.API_KEY ?? "";
     </script>

@@ -27,7 +27,8 @@ else {
 }
 if (!config.identConfirmed) {
   console.log('redirect to login')
-  window.location.href = "./login";
+  const urlParams = new URLSearchParams(location.search);
+  window.location.href = `./login?${urlParams.toString()}`;
 }
 // document.addEventListener('keydown', checkKonamiCode);
 // let konamiCode = [];

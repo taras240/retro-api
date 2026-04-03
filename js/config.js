@@ -7,7 +7,7 @@ import { delay } from "./functions/delay.js";
 import { ui, watcher } from "./script.js";
 import { UI } from "./ui.js";
 
-const CONFIG_FILE_NAME = "retroApiConfig";
+let CONFIG_FILE_NAME = "retroApiConfig";
 const CONFIG_VERSION = 3.13;
 export class Config {
   //! ----------[ Login information ]------------------
@@ -211,9 +211,11 @@ export class Config {
     return fileHandle;
   }
   constructor() {
+    this.readLocationParams();
+    console.log(this.urlConfig.cfgID)
+    CONFIG_FILE_NAME += this.urlConfig.id ?? "";
     this.readConfiguration();
     this.fixConfig();
-    this.readLocationParams();
   }
   fixConfig = () => {
     // if (this.version === CONFIG_VERSION) return;
@@ -244,8 +246,7 @@ export class Config {
   }
   readLocationParams = () => {
     const params = new URLSearchParams(location.search);
-    const allowed = ["uiLayout"];
-
+    const allowed = ["uiLayout", "id"];
     this.urlConfig = Object.fromEntries(
       [...params].filter(([key]) => allowed.includes(key))
     );
