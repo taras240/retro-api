@@ -148,6 +148,10 @@ export class Notifications extends Widget {
         this.addAlertsToQuery(alerts);
     }
 
+    onAwardsEarned({ awardsArray }) {
+        if (!awardsArray?.length) return;
+        this.addAlertsToQuery(awardsArray);
+    }
     saveAlerts(alerts) {
         const timeStamp = Date.now();
         const normalizedAlerts = alerts.map(alert => {

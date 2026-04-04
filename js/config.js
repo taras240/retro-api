@@ -212,7 +212,6 @@ export class Config {
   }
   constructor() {
     this.readLocationParams();
-    console.log(this.urlConfig.cfgID)
     CONFIG_FILE_NAME += this.urlConfig.id ?? "";
     this.readConfiguration();
     this.fixConfig();

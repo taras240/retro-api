@@ -90,7 +90,7 @@ export class Watcher {
         if (discordNewGame && isWatching && isNewGame) {
             sendDiscordAlert({ type: ALERT_TYPES.GAME });
         }
-        this.updateUserData({ delay: 2e3 });
+        this.updateUserData({ delay: 2e3, isInit: true });
     }
     onStartSession() {
         APIEvents.dispatchEvent(new CustomEvent("startSession", {
@@ -106,16 +106,33 @@ export class Watcher {
         APIEvents.dispatchEvent(new CustomEvent("stopSession"));
     }
     onCheevoUnlocks(cheevos = []) {
-        const awardsArray = getAwardAlerts({ gameData: this.GAME_DATA });
+
         this.updateUserData({ delay: 32e3 });
 
         APIEvents.dispatchEvent(new CustomEvent("cheevoUnlocks", {
             detail: { cheevos }
         }));
+        try {
+            ui.showCheevoAlerts(cheevos);
+        }
+        catch (err) {
+            console.error("Cheevo Alerts error:", err);
+        }
 
+    }
+    onAwardsEarned(cheevos = []) {
+        const awardsArray = getAwardAlerts({ gameData: this.GAME_DATA });
 
-        ui.showCheevoAlerts(cheevos);
-        ui.showAwardsAlerts(awardsArray);
+        // const awardData = {type: "award", award: "mastered", value: gameData};
+        if (awardsArray) APIEvents.dispatchEvent(new CustomEvent("awardsEarned", {
+            detail: { awardsArray }
+        }));
+        try {
+            ui.showAwardsAlerts(awardsArray);
+        }
+        catch (err) {
+            console.error("Award Alerts error:", err);
+        }
     }
     onStatsUpdate() {
         APIEvents.dispatchEvent(new CustomEvent("statsUpdate", {
@@ -139,18 +156,18 @@ export class Watcher {
         })
     }
 
-    updateUserData({ raProfileInfo, userSummary, isLog, delay = 0 }) {
+    updateUserData({ raProfileInfo, userSummary, isInit, delay = 0 }) {
         if (!userSummary && !raProfileInfo) {
             this.userInfoTimeout && clearTimeout(this.userInfoTimeout);
 
             this.userInfoTimeout = setTimeout(async () => {
-                const userSummary = await apiWorker.getUserSummary({ gamesCount: 0, achievesCount: 0 });
-                this.updateUserData({ userSummary });
                 this.onAPIRequest();
+                const userSummary = await apiWorker.getUserSummary({ gamesCount: 0, achievesCount: 0 });
+                this.updateUserData({ userSummary, isInit });
             }, delay);
             return;
         }
-        const userData = normalizeUserData({ userSummary, raProfileInfo });
+        const userData = normalizeUserData({ userSummary, raProfileInfo, isInit });
         this.userData = { ...this.userData, ...userData }
 
         this.onStatsUpdate();
@@ -185,9 +202,10 @@ export class Watcher {
     async checkApiUpdates(isStart = false) {
         const now = new Date();
         const isPointsChanged = (raProfileInfo) => {
-            const isPointsChanged = raProfileInfo.TotalPoints != this.userData.points || raProfileInfo.TotalSoftcorePoints != this.userData.softpoints;
+            const isHarcoreMissmatch = raProfileInfo.TotalPoints !== this.userData.points
+            const isSoftcoreMissmatch = raProfileInfo.TotalSoftcorePoints !== this.userData.softpoints;
 
-            return isPointsChanged;
+            return isHarcoreMissmatch || isSoftcoreMissmatch;
         }
         const onPointsChanged = (raProfileInfo) => {
             const deltaPoints = {
@@ -396,6 +414,7 @@ export class Watcher {
             this.GAME_DATA.hasZeroPoints && checkForZeroPoints();
             if (cheevosArray && cheevosArray.length > 0) {
                 this.onCheevoUnlocks(cheevosArray);
+                this.onAwardsEarned(cheevosArray);
                 this.updateSessionData(cheevosArray);
             }
             if (deltaPoints) {

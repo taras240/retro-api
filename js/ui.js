@@ -198,13 +198,8 @@ export class UI {
       // { message: alert.award, type: ALERT_TYPES.award, id: watcher.GAME_DATA?.ID }
     });
 
-    this.statusPanel.addAlertsToQuery(awardsArray);
-    this.status.addAlertsToQuery(awardsArray);
-    this.notifications.addAlertsToQuery(awardsArray);
 
-    this.gameCard.section.dataset.award = watcher.GAME_DATA?.award ?? "-";
-    this.gameCard.section.dataset.progressionAward = watcher.GAME_DATA?.progressionAward ?? "-";
-    awardsArray.length && setTimeout(() => ui.stats.updateChart(), 4000);
+    //! awardsArray.length && setTimeout(() => ui.stats.updateChart(), 4000);
   }
   showCheevoAlerts(cheevos = []) {
     const cheevoAlerts = cheevos

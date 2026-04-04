@@ -8,14 +8,17 @@ export function getAwardAlerts({ gameData }) {
     const gameSets = [gameData, ...subsetsData];
     const { TimePlayed } = gameData;
 
-    const hasMissedProgressionSoftcore = Object.values(gameData.AllAchievements)
+    const hasMissedProgressionSoftcore = () => Object.values(gameData.AllAchievements)
         .filter(c => c.Type === CHEEVO_TYPES.PROGRESSION && !c.isEarned).length;
-    const hasMissedProgression = Object.values(gameData.AllAchievements)
+    const hasMissedProgression = () => Object.values(gameData.AllAchievements)
         .filter(c => c.Type === CHEEVO_TYPES.PROGRESSION && !c.isEarnedHardcore).length;
     gameSets.forEach(gameSet => {
+        const hardcoreUnlocks = gameSet.unlockData.hardcore.count;
+        const softcoreUnlocks = gameSet.unlockData.softcore.count;
+        const cheevosCount = gameSet.NumAchievements;
 
         if (gameSet.award !== GAME_AWARD_TYPES.MASTERED
-            && gameSet.unlockData.hardcore.count === gameSet.NumAchievements) {
+            && hardcoreUnlocks === cheevosCount) {
             gameSet.award = GAME_AWARD_TYPES.MASTERED;
             awardsArray.push({
                 type: ALERT_TYPES.AWARD,
@@ -23,7 +26,7 @@ export function getAwardAlerts({ gameData }) {
                 value: { ...structuredClone(gameSet), TimePlayed }
             });
         }
-        else if (!gameSet.award && gameSet.unlockData.softcore.count === gameSet.NumAchievements) {
+        else if (!gameSet.award && softcoreUnlocks === cheevosCount) {
             gameSet.award = GAME_AWARD_TYPES.COMPLETED;
             awardsArray.push({
                 type: ALERT_TYPES.AWARD,
@@ -31,10 +34,15 @@ export function getAwardAlerts({ gameData }) {
                 value: structuredClone(gameSet)
             })
         }
+
+        const progressionSteps = gameSet.progressionSteps;
+        const unlockedStepsHardcore = gameSet.unlockData.hardcore.progressionCount;
+        const unlockedStepsSoftcore = gameSet.unlockData.softcore.progressionCount;
+
         if (gameSet.progressionSteps > 0 &&
             gameSet.progressionAward !== GAME_AWARD_TYPES.BEATEN &&
-            gameSet.unlockData.hardcore.progressionCount >= gameSet.progressionSteps &&
-            !hasMissedProgression) {
+            unlockedStepsHardcore >= progressionSteps &&
+            !hasMissedProgression()) {
             gameSet.progressionAward = GAME_AWARD_TYPES.BEATEN;
             awardsArray.push({
                 type: ALERT_TYPES.AWARD,
@@ -44,8 +52,8 @@ export function getAwardAlerts({ gameData }) {
         }
         else if (gameSet.progressionSteps > 0 &&
             !gameSet.progressionAward &&
-            gameSet.unlockData.softcore.progressionCount >= gameSet.progressionSteps &&
-            !hasMissedProgressionSoftcore) {
+            unlockedStepsSoftcore >= progressionSteps &&
+            !hasMissedProgressionSoftcore()) {
             gameSet.progressionAward = GAME_AWARD_TYPES.BEATEN_SOFTCORE;
             awardsArray.push({
                 type: ALERT_TYPES.AWARD,

@@ -575,6 +575,10 @@ export class Status extends Widget {
         pushCheevoAlerts(cheevos);
 
     }
+    onAwardsEarned({ awardsArray }) {
+        if (!awardsArray?.length) return;
+        this.addAlertsToQuery(awardsArray);
+    }
     onStartSession({ }) {
         this.timeWatcher().start();
         this.watchButton.classList.add("active");

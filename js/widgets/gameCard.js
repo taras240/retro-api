@@ -237,6 +237,13 @@ export class GameCard extends Widget {
     onCheevoUnlocks({ cheevos }) {
         this.updateProgressData();
     }
+
+    onAwardsEarned({ awardsArray }) {
+        if (!awardsArray?.length) return;
+        const { progressionAward, award } = watcher.GAME_DATA;
+        if (progressionAward) this.section.dataset.progressionAward = progressionAward;
+        if (awardsArray) this.section.dataset.award = award;
+    }
     updateProgressData() {
         const gameData = watcher.GAME_DATA;
         const isHardMode = watcher.IS_HARD_MODE;

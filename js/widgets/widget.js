@@ -123,16 +123,30 @@ export class Widget {
 
     }
     addAPIEvents() {
-        APIEvents.addEventListener("gameChange", (e) => this.onGameChange(e?.detail ?? {}));
-        APIEvents.addEventListener("startSession", (e) => this.onStartSession(e?.detail ?? {}));
-        APIEvents.addEventListener("stopSession", (e) => this.onStopSession());
-        APIEvents.addEventListener("cheevoUnlocks", (e) => this.onCheevoUnlocks(e?.detail ?? {}));
-        APIEvents.addEventListener("statsUpdate", (e) => this.onStatsUpdate(e?.detail ?? {}));
-        APIEvents.addEventListener("APIRequest", () => this.onAPIRequest());
+        const events = {
+            gameChange: (e) => this.onGameChange(e?.detail ?? {}),
+            startSession: (e) => this.onStartSession(e?.detail ?? {}),
+            stopSession: () => this.onStopSession(),
+            cheevoUnlocks: (e) => this.onCheevoUnlocks(e?.detail ?? {}),
+            awardsEarned: (e) => this.onAwardsEarned(e?.detail ?? {}),
+            statsUpdate: (e) => this.onStatsUpdate(e?.detail ?? {}),
+            APIRequest: () => this.onAPIRequest(),
+        };
+
+        for (const [name, handler] of Object.entries(events)) {
+            APIEvents.addEventListener(name, (e) => {
+                try {
+                    handler(e);
+                } catch (err) {
+                    console.error(`Widget ${this.sectionID} ${name} error:`, err);
+                }
+            });
+        }
     }
     setElementsValues() { }
     onGameChange({ gameData, inNewGame, isWatching }) { }
     onCheevoUnlocks({ cheevos }) { }
+    onAwardsEarned({ awardsArray }) { }
     onStartSession({ gameData }) { }
     onStatsUpdate({ userData }) { }
     onStopSession() { }
