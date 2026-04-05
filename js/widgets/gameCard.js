@@ -242,7 +242,7 @@ export class GameCard extends Widget {
         if (!awardsArray?.length) return;
         const { progressionAward, award } = watcher.GAME_DATA;
         if (progressionAward) this.section.dataset.progressionAward = progressionAward;
-        if (awardsArray) this.section.dataset.award = award;
+        if (award) this.section.dataset.award = award;
     }
     updateProgressData() {
         const gameData = watcher.GAME_DATA;

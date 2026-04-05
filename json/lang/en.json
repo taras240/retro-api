@@ -284,6 +284,6 @@
     "ignoreSubsetsHint": "Always load Main Set",
     "togglePins": "Show/Hide Pins",
     "addPin": "Add/Remove Pin",
-    "uiLayouts": "Widget Layouts",
-    "showSavedAlerts": "Show Saved Alerts"
+    "uiLayouts": "Widgets Layouts",
+    "showSavedAlerts": "Saved Alerts"
 }

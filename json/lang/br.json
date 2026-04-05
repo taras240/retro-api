@@ -278,6 +278,8 @@
     "makeSubsetsListHint": "Se os dados dos subsets estiverem desatualizados, você pode atualizá-los manualmente. Isso levará cerca de um minuto.",
     "scrollSpeed": "Velocidade de rolagem",
     "scrollPauseDuration": "Pausa da rolagem",
-    "ignoreSubsets": "Ignorar subsets",
-    "ignoreSubsetsHint": "Sempre carregar o conjunto principal"
+    "togglePins": "Mostrar/Ocultar Pins",
+    "addPin": "Adicionar/Remover Pin",
+    "uiLayouts": "Layouts de Widgets",
+    "showSavedAlerts": "Alertas salvos"
 }

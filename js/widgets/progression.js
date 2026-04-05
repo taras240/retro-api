@@ -15,42 +15,39 @@ export class Progression extends Widget {
     get contextMenuItems() {
         return [
             {
-                label: ui.lang.elements,
-                elements: [
-                    {
-                        label: ui.lang.showHeader,
-                        type: inputTypes.CHECKBOX,
-                        id: "show-header",
-                        checked: this.uiProps.showHeader,
-                        onChange: (event) => this.uiProps.showHeader = event.currentTarget.checked,
-                    },
-                    {
-                        label: ui.lang.showBackground,
-                        type: inputTypes.CHECKBOX,
-                        id: "show-bg",
-                        checked: this.uiProps.showBG,
-                        onChange: (event) => this.uiProps.showBG = event.currentTarget.checked,
-                    },]
+                label: ui.lang.showHeader,
+                type: inputTypes.CHECKBOX,
+                id: "show-header",
+                checked: this.uiProps.showHeader,
+                onChange: (event) => this.uiProps.showHeader = event.currentTarget.checked,
             },
             {
-                label: ui.lang.style,
-                elements: [
-                    {
-                        label: ui.lang.showSubLevels,
-                        type: inputTypes.CHECKBOX,
-                        id: "show-sublevels",
-                        checked: this.uiProps.showSublevels,
-                        onChange: (event) => this.uiProps.showSublevels = event.currentTarget.checked,
-                    },
-                    {
-                        label: ui.lang.showAllDesc,
-                        type: inputTypes.CHECKBOX,
-                        id: "show-all-descr",
-                        checked: this.uiProps.showAllDescriptions,
-                        onChange: (event) => this.uiProps.showAllDescriptions = event.currentTarget.checked,
-                    },
-
-                ]
+                label: ui.lang.showBackground,
+                type: inputTypes.CHECKBOX,
+                id: "show-bg",
+                checked: this.uiProps.showBG,
+                onChange: (event) => this.uiProps.showBG = event.currentTarget.checked,
+            },
+            {
+                label: ui.lang.showSubLevels,
+                type: inputTypes.CHECKBOX,
+                id: "show-sublevels",
+                checked: this.uiProps.showSublevels,
+                onChange: (event) => this.uiProps.showSublevels = event.currentTarget.checked,
+            },
+            {
+                label: ui.lang.showAllDesc,
+                type: inputTypes.CHECKBOX,
+                id: "show-all-descr",
+                checked: this.uiProps.showAllDescriptions,
+                onChange: (event) => this.uiProps.showAllDescriptions = event.currentTarget.checked,
+            },
+            {
+                label: ui.lang.showTimestamps,
+                type: inputTypes.CHECKBOX,
+                id: "show-timestamps",
+                checked: this.uiProps.showTimestamps,
+                onChange: (event) => this.uiProps.showTimestamps = event.currentTarget.checked,
             },
 
         ];
@@ -61,6 +58,7 @@ export class Progression extends Widget {
         hardMode: true,
         showSublevels: true,
         showAllDescriptions: false,
+        showTimestamps: true,
 
     }
     uiSetCallbacks = {
@@ -91,6 +89,8 @@ export class Progression extends Widget {
         this.section.classList.toggle("hide-bg", !this.uiProps.showBG);
         this.section.classList.toggle("show-all-descriptions", this.uiProps.showAllDescriptions);
         this.section.classList.toggle("show-sublevels", this.uiProps.showSublevels);
+        this.section.classList.toggle("hide-timestamps", !this.uiProps.showTimestamps);
+
     }
     addEvents() {
         super.addEvents();

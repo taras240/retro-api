@@ -53,6 +53,18 @@
     flex-shrink: 0;
 }
 
+.section.hide-timestamps .progression__item {
+    grid-template-columns: 2rem 1fr;
+}
+
+.cheevo-date {
+    text-align: right;
+    font-size: 1rem;
+}
+
+.section.hide-timestamps .cheevo-date {
+    display: none;
+}
 
 
 .progression__item:last-child {
@@ -104,10 +116,6 @@
     background: var(--mark-color);
 }
 
-.cheevo-date {
-    text-align: right;
-    font-size: 1rem;
-}
 
 .cheevo-container {
     display: flex;
