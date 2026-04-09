@@ -578,6 +578,7 @@ export class Status extends Widget {
     onAwardsEarned({ awardsArray }) {
         if (!awardsArray?.length) return;
         this.addAlertsToQuery(awardsArray);
+        this.updateProgressionBar();
     }
     onStartSession({ }) {
         this.timeWatcher().start();
