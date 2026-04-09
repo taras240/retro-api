@@ -686,13 +686,15 @@ export class Status extends Widget {
                 totalRetropoints = getRetropointsCount(gameData);
                 retroRatio = (totalRetropoints / totalPoints).toFixed(2);
             }
-            this.section.querySelector(".rp__game-platform")?.setHTMLUnsafe(signedIcons.platform(ConsoleID));
+            const platformElement = this.section.querySelector(".rp__game-platform");
+            const iconsContainerElement = this.section.querySelector(".rp__game-icons");
 
-            this.section.querySelector(".rp__game-icons")?.setHTMLUnsafe(`
+            if (platformElement) platformElement.innerHTML = signedIcons.platform(ConsoleID);
+            if (iconsContainerElement) iconsContainerElement.innerHTML = `
                     ${signedIcons.cheevos(NumAchievements)}
                     ${signedIcons.points(totalPoints)}
                     ${signedIcons.retroRatio(retroRatio)}
-                `)
+                `;
         }
         switch (this.uiProps.gameInfoType) {
             case GAME_INFO_TYPES.progressbar:
