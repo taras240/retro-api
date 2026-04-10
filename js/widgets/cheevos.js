@@ -509,8 +509,12 @@ export class AchievementsBlock extends Widget {
             const cheevoID = cheevo.ID;
             const cheevoElement = this.container.querySelector(`.achiv-block[data-achiv-id="${cheevoID}"]`);
             if (!cheevoElement) continue; // guard against missing nodes
-            const cheevoIsHidden = cheevo?.offsetParent === null;
-            if (!this.uiProps.showMario || cheevoIsHidden || !this.VISIBLE) {
+            const cheevoIsHidden = (cheevoElement) => cheevoElement?.offsetParent === null;
+            if (cheevoIsHidden(cheevoElement)) {
+                cheevoElement.classList.remove("removed");
+                this.fitCheevoSize();
+            }
+            if (!this.uiProps.showMario || cheevoIsHidden(cheevoElement) || !this.VISIBLE) {
                 unlockChevo(cheevoElement, cheevo);
             }
             else {
