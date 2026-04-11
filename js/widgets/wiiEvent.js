@@ -101,8 +101,9 @@ export class WiiEvent extends Widget {
             }
             const container = fromHtml(`<ul class="flex-main-list"></ul>`);
             eventGamesArray
-                .sort((g1, g2) => g1.Title.localeCompare(g2.Title))
-                .sort((g1, g2) => g2.bonusMult - g1.bonusMult)
+                .sort((g1, g2) => new Date(g2.MostRecentAwardedDate) - new Date(g1.MostRecentAwardedDate))
+                // .sort((g1, g2) => g1.Title.localeCompare(g2.Title))
+                // .sort((g1, g2) => g2.bonusMult - g1.bonusMult)
                 .forEach(game => {
                     const gameElement = GameElement(game);
                     container.append(gameElement);
