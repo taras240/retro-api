@@ -539,7 +539,7 @@ export class AchievementsBlock extends Widget {
         this.startAutoScroll();
     }
     // Розбирає отримані досягнення гри та відображає їх на сторінці
-    parseGameAchievements(gameData) {
+    async parseGameAchievements(gameData) {
         const clearContainer = () => {
             this.container.innerHTML = "";
         }
@@ -556,11 +556,17 @@ export class AchievementsBlock extends Widget {
             }
 
         }
+        await this.doLoadAnimation(true);
         // Очистити вміст розділу досягнень
         clearContainer();
 
         // Відсортувати досягнення та відобразити їх
         fillCheevosContainer(gameData);
+        if (this.uiProps.showLoadAnimation) {
+            this.container.querySelectorAll(".achiv-block").forEach(cheevo =>
+                cheevo.classList.add("opacity-0")
+            )
+        }
         this.groupCheevos();
         // Підгонка розміру досягнень
         this.fitCheevoSize();
@@ -668,7 +674,6 @@ export class AchievementsBlock extends Widget {
             achivWidth = (roundedSize - achivWidth < achivWidth) ? ~~roundedSize : achivWidth;
         }
 
-
         this.section.style.setProperty("--achiv-height", achivWidth + "px");
     }
     autoscroll;
@@ -767,29 +772,64 @@ export class AchievementsBlock extends Widget {
         cheevos.forEach((cheevo) => cheevo.classList.toggle("hidden-set", isHidden(cheevo)))
         this.groupCheevos();
     }
-    doLoadAnimation() {
-        const list = this.container;
-        const cheevos = list.querySelectorAll(".achiv-block");
-        function showAnimation() {
-            const startPosition = list.scrollHeight;
-            list.style.setProperty("--top-position", -startPosition + 'px');
-            let index = 0;
-            [...cheevos].reverse().forEach(async (cheevo) => {
-                const animDelayMs = 100 * index + 200;
-                !cheevo.classList.contains("removed") && index++;
-                const animDuration = animDelayMs + 1000;
-                cheevo.style.setProperty("--load-delay", animDelayMs + "ms");
-                cheevo.classList.add("start-load-anim");
-                await delay(50);
-                cheevo.classList.add("show-load-anim");
-                await delay(animDuration + 500);
-                cheevo.classList.remove("show-load-anim", "start-load-anim");
+    async doLoadAnimation(isUnload = false) {
+        if (!this.uiProps.showLoadAnimation) return;
+        const { container } = this;
+        const cheevos = container.querySelectorAll(".achiv-block");
 
-            })
+        const getRandomOffscreenTransform = (cheevo) => {
+            const cW = container.offsetWidth;
+            const cH = container.offsetHeight;
+            const eW = cheevo.offsetWidth;
+            const eH = cheevo.offsetHeight;
+
+            // Незалежно рандомимо кожну вісь: -1 (вліво/вгору), 0 (без зсуву), 1 (вправо/вниз)
+            // Але забороняємо 0,0 — хоча б одна вісь має бути ненульовою
+            let sideX, sideY;
+            do {
+                sideX = Math.floor(Math.random() * 3) - 1; // -1, 0, 1
+                sideY = Math.floor(Math.random() * 2) - 1; // -1, 0
+            } while (sideX === 0 && sideY === 0);
+
+            let tx = 0, ty = 0;
+
+            if (sideX === -1) {
+                tx = -(cheevo.offsetLeft + eW + 20);
+            } else if (sideX === 1) {
+                tx = cW - cheevo.offsetLeft + 20;
+            } else {
+                // sideX === 0: рандомна позиція по X в межах контейнера
+                tx = (Math.random() * (cW - eW)) - cheevo.offsetLeft;
+            }
+
+            if (sideY === -1) {
+                ty = -(cheevo.offsetTop + eH + 20);
+            } else if (sideY === 1) {
+                ty = cH - cheevo.offsetTop + 20;
+            } else {
+                // sideY === 0: рандомна позиція по Y в межах контейнера
+                ty = (Math.random() * (cH - eH)) - cheevo.offsetTop;
+            }
+
+            return { tx, ty };
         }
-        const delay = (time) => new Promise(res => setTimeout(res, time));
 
-        setTimeout(() => showAnimation(), 0);
+        function showAnimation() {
+            [...cheevos].forEach((cheevo) => {
+
+                const { tx, ty } = getRandomOffscreenTransform(cheevo);
+
+                cheevo.style.setProperty("--translate-x", `${tx}px`);
+                cheevo.style.setProperty("--translate-y", `${ty}px`);
+                isUnload ? cheevo.classList.add("show-unload-anim") : cheevo.classList.add("show-load-anim");
+                setTimeout(() =>
+                    cheevo?.classList.remove("show-load-anim", "opacity-0"),
+                    2e3
+                )
+            });
+        }
+        showAnimation(isUnload);
+        await delay(600);
     }
     generateNewWidget({ }) {
         const newWidget = document.createElement("section");

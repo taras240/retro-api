@@ -508,18 +508,40 @@
 /** LOADING ANIMATION */
 
 .achivs .achiv-block.start-load-anim {
-  transform: translateY(var(--top-position));
+  /* transform: translateY(var(--top-position)); */
+}
+
+.achivs .achiv-block.opacity-0 {
+  opacity: 0;
 }
 
 .achivs .achiv-block.show-load-anim {
-  transform: translateY(var(--top-position));
-  animation: load-cheevos-anim 500ms ease-in-out forwards;
+  --translate-x: 0;
+  --translate-y: 0;
+  transform: translate(var(--translate-x), var(--translate-y));
+  animation: load-cheevos-anim 500ms ease-out forwards;
+  animation-delay: var(--load-delay);
+}
+
+.achivs .achiv-block.show-unload-anim {
+  --translate-x: 0;
+  --translate-y: 0;
+  transform: translate(0, 0);
+  animation: unload-cheevos-anim 500ms ease-in forwards;
   animation-delay: var(--load-delay);
 }
 
 @keyframes load-cheevos-anim {
   to {
-    transform: translateY(0);
+    transform: translate(0px, 0px);
+    opacity: 1;
+  }
+}
+
+@keyframes unload-cheevos-anim {
+  to {
+    transform: translate(var(--translate-x), var(--translate-y));
+    opacity: 0;
   }
 }
 
