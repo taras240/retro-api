@@ -13,8 +13,8 @@ export const completionMsg = (gameData, progressType, isHardMode = true) => {
     const { unlocked, total, unlockedRate } = getStats(gameData, isHardMode, progressType);
     const { gameMasteredMsg, gameCompletedMsg, unlockProgressMsg } = ui.lang;
     const progressTypeName = ui.lang?.[`${progressType}Progress`] ?? progressType;
-
-    if (gameData.award === GAME_AWARD_TYPES.MASTERED) return gameMasteredMsg;
+    const isMainSet = !Object.values(gameData.subsetsData ?? {}).length;
+    if (isMainSet && gameData.award === GAME_AWARD_TYPES.MASTERED) return gameMasteredMsg;
 
     if (!isHardMode && gameData.award === GAME_AWARD_TYPES.COMPLETED) return gameCompletedMsg;
 
