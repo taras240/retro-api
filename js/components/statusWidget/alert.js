@@ -57,7 +57,11 @@ const cheevoAlertElement = (cheevo) => {
     const cheevoAlert = document.createElement("div");
     cheevoAlert.classList.add("rp__alert-content");
     cheevoAlert.style.setProperty("--bg-src", `url(${cheevoImageUrl(cheevo)})`);
-    cheevoAlert.innerHTML = alertInnerHtml(cheevo);
+    cheevoAlert.innerHTML = alertInnerHtml({
+        Title: `${Title} ${icons.points}${Points}`,
+        Description,
+        Points
+    });
     return cheevoAlert;
 }
 
@@ -123,6 +127,7 @@ export const showAlert = (alert, alertContainer) => {
         case ALERT_TYPES.CHEEVO:
             alertContainer.appendChild(cheevoAlertElement(alert.value));
             alertContainer.classList.add("show-alert");
+            fitFontSize(alertContainer);
             break;
         case ALERT_TYPES.AWARD:
             alertContainer.appendChild(awardAlertElement(alert.value, alert.award));
@@ -142,3 +147,23 @@ export const hideAlert = async (alertContainer, animDurationMs) => {
     await delay(animDurationMs ?? 1000);
     alertContainer.innerHTML = "";
 }
+const fitFontSize = (alertContainer) => {
+    const MAX_SIZE = 1.8;
+    const MIN_SIZE = 0.8;
+    const isOverflow = (container) => {
+        const isOverflow = container.scrollHeight - container.clientHeight > 0;
+        return isOverflow;
+    };
+    const setSize = (container, size) => {
+        container.style.setProperty("--font-size", `${curSize}rem`);
+    }
+    let curSize = MAX_SIZE;
+    const textToResize = alertContainer.querySelector(".rp-alert__description");
+    if (textToResize) {
+        setSize(textToResize, curSize);
+        while (isOverflow(textToResize) && curSize > MIN_SIZE) {
+            curSize -= 0.02;
+            setSize(textToResize, curSize);
+        }
+    }
+};

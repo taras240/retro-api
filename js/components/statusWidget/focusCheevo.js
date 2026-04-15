@@ -1,0 +1,10 @@
+export function focusCheevoHtml() {
+    return `
+        <div class="rp__focus-cheevo">
+            <div class="rp__focus-preview">
+                <img class="rp__focus-image" src="https://media.retroachievements.org/Badge/384447.png">
+            </div>
+            <p class="rp__focus-description">Beat SMB1 and reach 4-3 in SMB2J under 13:00.00</p>
+        </div>
+    `
+}
