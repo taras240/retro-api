@@ -285,5 +285,6 @@
     "togglePins": "Show/Hide Pins",
     "addPin": "Add/Remove Pin",
     "uiLayouts": "Widgets Layouts",
-    "showSavedAlerts": "Saved Alerts"
+    "showSavedAlerts": "Saved Alerts",
+    "cheevosMargin": "Cheevos Margin"
 }
