@@ -61,7 +61,7 @@
     box-shadow: 2px 2px 3px 0 black;
 }
 
-@container (max-width: 349px) {
+@container (max-width: 299px) {
     .rp__preview-container {
         display: none !important;
     }
@@ -71,6 +71,11 @@
     }
 }
 
+@container (max-width: 349px) {
+    .rp__last-cheevos {
+        display: none !important;
+    }
+}
 
 .section.status__section {
     position: absolute;
