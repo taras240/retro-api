@@ -134,29 +134,63 @@ export class Status extends Widget {
             },
             {
                 label: ui.lang.progressbar,
-                elements: Object.values(PROGRESS_TYPES).map(type =>
-                ({
-                    type: inputTypes.RADIO,
-                    name: "progressbar-type",
-                    id: `progressbar-type-${type}`,
-                    label: ui.lang?.[type] ?? type,
-                    checked: this.uiProps.progressType == type,
-                    onChange: () => this.uiProps.progressType = type,
-                })
-                )
+                elements: [
+                    //  [...Object.values(PROGRESS_TYPES).map(type =>
+                    // ({
+                    //     type: inputTypes.RADIO,
+                    //     name: "progressbar-type",
+                    //     id: `progressbar-type-${type}`,
+                    //     label: ui.lang?.[type] ?? type,
+                    //     checked: this.uiProps.progressType == type,
+                    //     onChange: () => this.uiProps.progressType = type,
+                    // })
+                    // ),
+                    ...Object.values(statusStyles).map(theme =>
+                    ({
+                        type: inputTypes.RADIO,
+                        name: "status-theme",
+                        id: `status-theme-${theme}`,
+                        label: ui.lang?.[theme] ?? theme,
+                        checked: this.uiProps.statusTheme == theme,
+                        onChange: () => this.uiProps.statusTheme = theme,
+                    })
+                    ),
+                    {
+                        type: inputTypes.CHECKBOX,
+                        name: "progressbar-sessions",
+                        id: `progressbar-sessions`,
+                        label: ui.lang.progressBySession,
+                        checked: this.uiProps.progressBySession == true,
+                        onChange: (event) => this.uiProps.progressBySession = event.currentTarget.checked,
+                        hint: ui.lang.progressBySessionHint,
+                    }
+                ]
             },
             {
                 label: ui.lang.style,
-                elements: Object.values(statusStyles).map(theme =>
-                ({
-                    type: inputTypes.RADIO,
-                    name: "status-theme",
-                    id: `status-theme-${theme}`,
-                    label: ui.lang?.[theme] ?? theme,
-                    checked: this.uiProps.statusTheme == theme,
-                    onChange: () => this.uiProps.statusTheme = theme,
-                })
-                )
+                elements: [
+                    {
+                        type: inputTypes.CHECKBOX,
+                        id: "game-bg",
+                        label: ui.lang.gameBg,
+                        checked: this.uiProps.showGameBg,
+                        onChange: (event) => this.uiProps.showGameBg = event.currentTarget.checked,
+                    },
+                    {
+                        type: inputTypes.CHECKBOX,
+                        id: "show-target-preview",
+                        label: ui.lang.focusCheevoPreview,
+                        checked: this.uiProps.showTargetPreview,
+                        onChange: (event) => this.uiProps.showTargetPreview = event.currentTarget.checked,
+                    },
+                    {
+                        type: inputTypes.CHECKBOX,
+                        id: "blink-on-update",
+                        label: ui.lang.blinkOnUpdate,
+                        checked: this.uiProps.blinkOnUpdate,
+                        onChange: (event) => this.uiProps.blinkOnUpdate = event.currentTarget.checked,
+                    },
+                ]
             },
 
             {
@@ -252,27 +286,7 @@ export class Status extends Widget {
                     },
                 ]
             },
-            {
-                type: inputTypes.CHECKBOX,
-                id: "game-bg",
-                label: ui.lang.gameBg,
-                checked: this.uiProps.showGameBg,
-                onChange: (event) => this.uiProps.showGameBg = event.currentTarget.checked,
-            },
-            {
-                type: inputTypes.CHECKBOX,
-                id: "show-target-preview",
-                label: ui.lang.focusCheevoPreview,
-                checked: this.uiProps.showTargetPreview,
-                onChange: (event) => this.uiProps.showTargetPreview = event.currentTarget.checked,
-            },
-            {
-                type: inputTypes.CHECKBOX,
-                id: "blink-on-update",
-                label: ui.lang.blinkOnUpdate,
-                checked: this.uiProps.blinkOnUpdate,
-                onChange: (event) => this.uiProps.blinkOnUpdate = event.currentTarget.checked,
-            },
+
 
         ];
     }
@@ -316,6 +330,7 @@ export class Status extends Widget {
         scrollTitle: true,
         scrollSpeed: 20,
         scrollPauseDuration: 15,
+        progressBySession: true,
     }
     uiDefaultValuesLegacy = {
         showRichPresence: false,
@@ -611,6 +626,7 @@ export class Status extends Widget {
 
         this.section.dataset.theme = this.uiProps.statusTheme ?? statusStyles.DEFAULT;
         this.section.classList.toggle("game-bg", this.uiProps.showGameBg);
+        this.section.classList.toggle("progress-by-session", this.uiProps.progressBySession);
         addScrollableFlags();
     }
     doUpdateAnimation() {

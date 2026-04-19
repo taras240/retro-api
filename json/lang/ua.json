@@ -291,5 +291,7 @@
     "paste": "Вставити",
     "deleteAll": "Видалити все",
     "noteGameTabHint": "Нотатки для поточної гри",
-    "noteMainTabHint": "Нотатки для всіх ігор"
+    "noteMainTabHint": "Нотатки для всіх ігор",
+    "progressBySession": "Досягнення за сесію",
+    "progressBySessionHint": "Показує, скільки досягнень ви отримуєте в кожній сесії"
 }

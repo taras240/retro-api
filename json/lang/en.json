@@ -115,7 +115,7 @@
     "fsAlerts": "Fullscreen Alerts",
     "stickyWindows": "Sticky Windows",
     "showTimeBar": "Timebar",
-    "focusCheevoPreview": "Preview Focus Cheevo",
+    "focusCheevoPreview": "Focus Cheevo Preview",
     "progressionStyleTypes": "Progression Style",
     "dots": "Dots",
     "rects": "Rectangles",
@@ -292,5 +292,7 @@
     "paste": "Paste",
     "deleteAll": "Delete All",
     "noteGameTabHint": "Notes for Current game",
-    "noteMainTabHint": "Notes for All games"
+    "noteMainTabHint": "Notes for All games",
+    "progressBySession": "Unlocks per session",
+    "progressBySessionHint": "Shows how many unlocks you get in each session"
 }

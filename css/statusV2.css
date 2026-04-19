@@ -698,17 +698,22 @@
     transition-delay: 2s;
 }
 
+.progress-by-session .rp__progressbar-sessions {
+    display: flex;
+}
+
 .rp__progressbar-sessions {
+    display: flex;
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background: transparent;
-    display: flex;
     flex-direction: row;
     border-radius: var(--progress-value-border-radius);
     overflow: hidden;
+    display: none;
 }
 
 .rp__progressbar-sessions.completed .rp__progressbar-session:last-child {
