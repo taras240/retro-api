@@ -4,6 +4,7 @@ import { Widget } from "./widget.js";
 import { moveEvent } from "../functions/movingWidget.js";
 import { resizeEvent } from "../functions/resizingWidget.js";
 import { fromHtml } from "../functions/html.js";
+import { buttonsHtml } from "../components/htmlElements.js";
 export class Note extends Widget {
     widgetIcon = {
         description: "notes widget",
@@ -19,6 +20,7 @@ export class Note extends Widget {
                 label: ui.lang.mainNote,
                 checked: this.uiProps.currentTab === 'main',
                 onChange: () => this.uiProps.currentTab = 'main',
+                hint: ui.lang.noteMainTabHint,
             },
             {
                 type: "radio",
@@ -27,6 +29,7 @@ export class Note extends Widget {
                 label: ui.lang.gameNote,
                 checked: this.uiProps.currentTab === 'game',
                 onChange: () => this.uiProps.currentTab = 'game',
+                hint: ui.lang.noteGameTabHint,
             },
         ]
     }
@@ -52,6 +55,7 @@ export class Note extends Widget {
     uiValueSaver = {
         gameNotes(note) {
             const gameID = watcher.GAME_DATA?.ID ?? 0;
+            config.gamesDB[gameID] ??= {};
             config.gamesDB[gameID].notes = note;
             config.writeConfiguration();
         }
@@ -59,6 +63,7 @@ export class Note extends Widget {
 
     constructor() {
         super();
+        this.generateWidget();
         this.addWidgetIcon();
         this.initializeElements();
         this.generateTabs();
@@ -66,6 +71,32 @@ export class Note extends Widget {
         this.setValues();
         this.applyPosition();
 
+    }
+    generateWidget() {
+        const controlsHtml = `
+                <div class="note__controls">
+                    <button id="note_copy" data-title="${ui.lang.copy}" class="note__control-button copy-icon"></button>
+                    <button id="note_paste" data-title="${ui.lang.paste}" class="note__control-button paste-icon"></button>
+                    <button id="note_clear" data-title="${ui.lang.deleteAll}" class="note__control-button clear-icon"></button>
+                </div>
+        `;
+        const widget = fromHtml(`
+            <section id="note_section" class="note_section section">
+                <div class="header-container note-header">
+                    <div class="header-icon note-icon"></div>
+                    <h2 class="widget-header-text note-header-text">
+                        <div class="note__tabs-container"></div>
+                    </h2>
+                    ${buttonsHtml.close()}
+                </div>
+                <div class="note-container content-container">
+                    ${controlsHtml}
+                    <textarea id="note_textarea" class="note-textaria scrollable" name="note_textaria" cols="auto" rows="auto" placeholder="${ui.lang.emptyNotesMsg}"></textarea>
+                </div>
+                <div class="resizer"></div>
+            </section>
+        `);
+        ui.app.append(widget);
     }
     initializeElements() {
         this.section = document.querySelector("#note_section");
@@ -75,9 +106,9 @@ export class Note extends Widget {
         this.textarea = this.section.querySelector(".note-textaria");
     }
     generateTabs() {
-        const tabElement = ({ onChange, label, name, id, checked }) => {
+        const tabElement = ({ onChange, label, name, id, checked, hint }) => {
             const element = fromHtml(`
-                    <div class="checkbox-input_container">
+                    <div class="checkbox-input_container" data-title="${hint}">
                         <input type="radio" id="${id}" ${checked ? "checked" : ""} name="${name}">
                         <label class="radio-tab" for="${id}">${label}</label>
                     </div>
@@ -92,7 +123,23 @@ export class Note extends Widget {
     addEvents() {
         super.addEvents();
         this.delayedSave = {};
-        this.textarea.addEventListener("input", (event) => this.textInputHandler(event))
+        this.textarea.addEventListener("input", (event) => this.textInputHandler(event));
+        this.section.querySelector(".note__controls").addEventListener("click", event => {
+            switch (event.target.id) {
+                case "note_copy":
+                    this.copyNoteText();
+                    break;
+                case "note_paste":
+                    this.pasteTextToNote();
+                    break;
+                case "note_clear":
+                    this.clearTextNote();
+                    break;
+
+                default:
+                    break;
+            }
+        })
     }
     setElementsValues() { }
     onGameChange({ gameData }) {

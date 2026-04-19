@@ -10,7 +10,7 @@ const sections = {
   // awards: "./elements/awards.elem",
   // status: "./elements/status.elem",
   // games: "./elements/games.elem",
-  note: "./elements/note.elem",
+  // note: "./elements/note.elem",
   // user: "./elements/userInfo.elem",
   // notification: "./elements/notification.elem",
   // stats: "./elements/stats.elem",

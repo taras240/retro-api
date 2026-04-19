@@ -431,16 +431,16 @@ export class AchievementsBlock extends Widget {
     get CLONE_NUMBER() {
         return this._cloneNumber;
     }
-    set CLONE_NUMBER(widgetCount) {
-        this._cloneNumber = widgetCount - 1;
+    set CLONE_NUMBER(widgetID) {
+        this._cloneNumber = widgetID - 1;
         this.widgetIcon = {
             ...this.widgetIcon,
         };
     }
 
-    constructor(widgetCount = 1) {
+    constructor(widgetID = 1) {
         super();
-        this.CLONE_NUMBER = widgetCount;
+        this.CLONE_NUMBER = widgetID;
         this.addWidgetIcon();
         this.initializeElements();
         this.addEvents();

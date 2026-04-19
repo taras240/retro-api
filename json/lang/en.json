@@ -286,5 +286,11 @@
     "addPin": "Add/Remove Pin",
     "uiLayouts": "Widgets Layouts",
     "showSavedAlerts": "Saved Alerts",
-    "cheevosMargin": "Cheevos Margin"
+    "cheevosMargin": "Cheevos Margin",
+    "emptyNotesMsg": "Your notes will be here",
+    "copy": "Copy",
+    "paste": "Paste",
+    "deleteAll": "Delete All",
+    "noteGameTabHint": "Notes for Current game",
+    "noteMainTabHint": "Notes for All games"
 }

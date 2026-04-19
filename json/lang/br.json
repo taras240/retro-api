@@ -281,5 +281,12 @@
     "togglePins": "Mostrar/Ocultar Pins",
     "addPin": "Adicionar/Remover Pin",
     "uiLayouts": "Layouts de Widgets",
-    "showSavedAlerts": "Alertas salvos"
+    "showSavedAlerts": "Alertas salvos",
+    "cheevosMargin": "Espaçamento entre conquistas",
+    "emptyNotesMsg": "Suas notas aparecerão aqui",
+    "copy": "Copiar",
+    "paste": "Colar",
+    "deleteAll": "Excluir tudo",
+    "noteGameTabHint": "Notas do jogo atual",
+    "noteMainTabHint": "Notas de todos os jogos"
 }
