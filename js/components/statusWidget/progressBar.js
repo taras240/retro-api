@@ -14,11 +14,14 @@ export const completionMsg = (gameData, progressType, isHardMode = true) => {
     const { gameMasteredMsg, gameCompletedMsg, unlockProgressMsg } = ui.lang;
     const progressTypeName = ui.lang?.[`${progressType}Progress`] ?? progressType;
     const isMainSet = !Object.values(gameData.subsetsData ?? {}).length;
-    if (isMainSet && gameData.award === GAME_AWARD_TYPES.MASTERED) return gameMasteredMsg;
+    if (isMainSet && gameData.award === GAME_AWARD_TYPES.MASTERED) {
+        return `${badgeElements.gold(`${unlocked}/${total}`)} ${gameMasteredMsg}`;
+    }
+    if (!isHardMode && isMainSet && gameData.award === GAME_AWARD_TYPES.COMPLETED) {
+        return `${badgeElements.gold(`${unlocked}/${total}`)} ${gameCompletedMsg}`;
+    }
 
-    if (!isHardMode && gameData.award === GAME_AWARD_TYPES.COMPLETED) return gameCompletedMsg;
-
-    else return `${badgeElements.gold(`${unlocked}/${total}`)} ${formatText(unlockProgressMsg, { rate: unlockedRate, progressTypeName })}`;
+    return `${badgeElements.gold(`${unlocked}/${total}`)} ${formatText(unlockProgressMsg, { rate: unlockedRate, progressTypeName })}`;
 }
 const sessionsProgressHtml = (gameData, isHardMode, progressType) => {
     if (gameData.visibleSubsets?.length) return "";
