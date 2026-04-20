@@ -37,6 +37,7 @@ import { getCheevosCount, getPointsCount, getRetropointsCount } from "../functio
 import { GAME_AWARD_TYPES } from "../enums/gameAwards.js";
 import { parseTimeParts } from "../functions/time.js";
 import { createAutoScroll } from "../functions/autosScroll.js";
+import { getRandomID } from "../functions/randomID.js";
 
 export class Status extends Widget {
 
@@ -868,7 +869,7 @@ export class Status extends Widget {
     }
     autoscrollIntervals = {};
     _getScrollId(element) {
-        element.dataset.autoscrollId ??= Math.random().toString(36).slice(2, 9);
+        element.dataset.autoscrollId ??= getRandomID();
         return element.dataset.autoscrollId;
     }
     startAutoScrollElement(element) {

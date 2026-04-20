@@ -10,6 +10,7 @@ import { ANIMATIONS } from "../enums/bgAnimations.js";
 import { fromHtml } from "../functions/html.js";
 import { WATCHER_MODES } from "../enums/watcherModes.js";
 import { uiLayouts } from "../enums/uiLayouts.js";
+import { getRandomID } from "../functions/randomID.js";
 export class Settings extends Widget {
     widgetIcon = {
         iconClass: "settings-icon",
@@ -618,14 +619,21 @@ export class Settings extends Widget {
                 if (setting.elements) {
                     const settingItemsLine = document.createElement("li");
                     settingItemsLine.classList.add("settings_setting-line");
+                    const id = getRandomID();
                     const settingLabel = fromHtml(`
-                            <h3 class="settings_setting-header">
+                            <label class="settings_setting-header" for="${id}">
                                 ${setting?.label}
-                            </h3>
-                        `)
-                    settingItemsLine.append(settingLabel);
+                            </label>
+                        `);
+                    const expandCheckbox = fromHtml(`
+                            <input type="checkbox" id="${id}" checked>`);
+                    const content = fromHtml(`
+                        <div class="settings__content"></div>
+                        `);
+                    settingItemsLine.append(expandCheckbox, settingLabel, content);
+
                     setting.elements.forEach(settingItem => {
-                        settingItemsLine.append(inputElement(settingItem));
+                        content.append(inputElement(settingItem));
                     });
                     container.appendChild(settingItemsLine);
                 }

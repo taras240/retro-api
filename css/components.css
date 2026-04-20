@@ -523,7 +523,7 @@ input:checked+.checkbox-input::before {
 } */
 
 .text-input {
-    padding: 2px 15px;
+    padding: 2px 0.5rem;
     border-radius: var(--border-radius);
     background-color: var(--secondary-color);
     font-size: inherit;
@@ -533,6 +533,10 @@ input:checked+.checkbox-input::before {
     border: 1px solid var(--selection-color);
     text-align: center;
     transition: 0.2s;
+}
+
+.text-input[type="number"] {
+    max-width: 3rem;
 }
 
 .header-container .text-input {

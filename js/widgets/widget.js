@@ -10,6 +10,7 @@ import { buttonsHtml } from "../components/htmlElements.js";
 import { resizerHtml } from "../components/resizer.js";
 import { divHtml } from "../components/divContainer.js";
 import { fromHtml } from "../functions/html.js";
+import { getRandomID } from "../functions/randomID.js";
 
 export class Widget {
     widgetIcon = {
@@ -154,7 +155,7 @@ export class Widget {
     addWidgetIcon() {
         const isChecked = config.ui?.[this.section?.id]?.hidden === false ?? !this.VISIBLE;
         const { onChangeEvent, description, iconClass, badgeLabel } = this.widgetIcon;
-        const iconID = Math.random().toString(36).slice(2, 9);
+        const iconID = getRandomID();
         const widgetsContainer = document.querySelector(".buttons-block__shortcuts");
         const widgetIcon = fromHtml(`
                 <div class="setting-radio-group">
