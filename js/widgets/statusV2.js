@@ -6,7 +6,7 @@ import { signedIcons } from "../components/icons.js"
 import { generateBadges } from "../components/badges.js";
 import { APIEvents, config, configData, ui, watcher } from "../script.js";
 import { Widget } from "./widget.js";
-import { filterBy, sortBy } from "../functions/sortFilter.js";
+import { filterBy, sortBy, sortMethods } from "../functions/sortFilter.js";
 import { showComments } from "../components/comments.js";
 import { moveEvent } from "../functions/movingWidget.js";
 import { resizeEvent } from "../functions/resizingWidget.js";
@@ -42,7 +42,6 @@ import { getRandomID } from "../functions/randomID.js";
 export class Status extends Widget {
 
     ACHIV_DURATION = 15000;
-    IS_HARD_MODE = true;
 
     widgetIcon = {
         description: "status widget",
@@ -287,7 +286,14 @@ export class Status extends Widget {
                     },
                 ]
             },
-
+            {
+                type: inputTypes.CHECKBOX,
+                name: "rp-hardmode",
+                id: `rp-hardmode`,
+                label: ui.lang.hardcoreMode,
+                checked: this.uiProps.isHardMode,
+                onChange: (event) => this.uiProps.isHardMode = event.currentTarget.checked,
+            }
 
         ];
     }
@@ -332,6 +338,7 @@ export class Status extends Widget {
         scrollSpeed: 20,
         scrollPauseDuration: 15,
         progressBySession: true,
+        isHardMode: true,
     }
     uiDefaultValuesLegacy = {
         showRichPresence: false,
@@ -379,6 +386,11 @@ export class Status extends Widget {
         },
         scrollPauseDuration(value) {
             value = value < 0 ? 0 : value;
+        },
+        isHardMode() {
+            this.updateProgressionBar();
+            this.updateFocusPreview();
+            this.updateProgressBar();
         }
     };
 
@@ -564,11 +576,19 @@ export class Status extends Widget {
         if (isNewGame && isWatching) {
             this.addAlertsToQuery([{ type: ALERT_TYPES.GAME, value: gameData }]);
         }
+        this.updateHardMode();
         this.fillGameData();
         this.doUpdateAnimation();
         this.updateTicker();
         this.startElementsAutoscroll();
 
+    }
+    updateHardMode(cheevos) {
+        cheevos ??= Object.values(watcher.CHEEVOS);
+        const lastEarned = cheevos?.sort((a, b) => sortBy.latest(a, b))[0] ?? {};
+        const isHardMode = lastEarned.isEarnedHardcore || !lastEarned.isEarned;
+        if (this.uiProps.isHardMode === isHardMode) return;
+        this.uiProps.isHardMode = isHardMode;
     }
     onCheevoUnlocks({ cheevos }) {
         if (!cheevos?.length) return;
@@ -580,7 +600,7 @@ export class Status extends Widget {
                 }));
             this.addAlertsToQuery(cheevoAlerts);
         }
-        this.IS_HARD_MODE = cheevos[0].isEarnedHardcore;
+        this.uiProps.isHardMode = cheevos[0].isEarnedHardcore;
 
         this.updateProgressionBar();
         this.updateFocusPreview();
@@ -648,7 +668,7 @@ export class Status extends Widget {
         this.uiProps.showTicker && this.ticker.startScrolling();
     }
     updateFocusPreview() {
-        const isHardMode = this.IS_HARD_MODE;
+        const isHardMode = this.uiProps.isHardMode;
         const focusCheevo = Object.values(watcher.CHEEVOS)
             .filter(c => filterBy.progression(c))
             .sort((a, b) => sortBy.default(a, b))
@@ -672,7 +692,7 @@ export class Status extends Widget {
         this.section
             .querySelectorAll(".rp__progression-container")
             ?.forEach(container => {
-                updateProgressionBar(container, watcher?.GAME_DATA, this.IS_HARD_MODE);
+                updateProgressionBar(container, watcher?.GAME_DATA, this.uiProps.isHardMode);
 
                 scrollElementIntoView({
                     container,
@@ -690,7 +710,7 @@ export class Status extends Widget {
             container => updateProgressBarData(
                 container,
                 watcher?.GAME_DATA,
-                this.IS_HARD_MODE,
+                this.uiProps.isHardMode,
             ));
     }
     updateGameInfo() {
