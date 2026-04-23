@@ -38,6 +38,7 @@ import { GAME_AWARD_TYPES } from "../enums/gameAwards.js";
 import { parseTimeParts } from "../functions/time.js";
 import { createAutoScroll } from "../functions/autosScroll.js";
 import { getRandomID } from "../functions/randomID.js";
+import { focusCheevoHtml } from "../components/statusWidget/focusCheevo.js";
 
 export class Status extends Widget {
 
@@ -495,6 +496,7 @@ export class Status extends Widget {
             <div class="rp-content__container">
                 ${gameInfoHtml()}
                 ${richPresenceHtml()}
+                <!--${focusCheevoHtml()}-->
                 ${progressionBarHtml()}
                 ${progressBarHtml(PROGRESS_TYPES.cheevos)}
                 ${progressBarHtml(PROGRESS_TYPES.points)}

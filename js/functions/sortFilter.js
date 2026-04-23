@@ -61,18 +61,15 @@ function stringToDate(string) {
 
 export const sortBy = {
     latestHardcore: (a, b, reverse = 1, strictMode = false) => {
-        if (!a.DateEarnedHardcore && !b.DateEarnedHardcore) {
-            return sortBy.latest(a, b);
+        const dateA = a.DateEarnedHardcore
+            ? stringToDate(a.DateEarnedHardcore) : 0;
+        const dateB = b.DateEarnedHardcore
+            ? stringToDate(b.DateEarnedHardcore) : 0;
+
+        if (strictMode && (dateA * dateB === 0) && (dateA + dateB !== 0)) {
+            return dateB ? 1 : -1;
         }
-        else {
-            const dateA = a.DateEarnedHardcore ?
-                stringToDate(a.DateEarnedHardcore)
-                : -Infinity;
-            const dateB = b.DateEarnedHardcore ?
-                stringToDate(b.DateEarnedHardcore) :
-                -Infinity;
-            return dateB - dateA; // Повертає різницю дат
-        }
+        return (dateB - dateA) * reverse; // Повертає різницю дат
     },
     latest: (a, b, reverse = 1, strictMode = false) => {
         const dateA = a.DateEarnedHardcore

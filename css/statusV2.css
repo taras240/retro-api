@@ -1179,13 +1179,26 @@
     aspect-ratio: 1;
     overflow: hidden;
     flex: 0 0 auto;
+    display: none;
 }
 
 .rp__focus-image {
     height: 100%;
+}
 
+.rp__focus-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
 }
 
 .rp__focus-description {
     font-size: 1.1rem;
+}
+
+.rp__focus-title {
+    font-size: 1rem;
+    font-weight: bold;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
