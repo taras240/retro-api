@@ -36,6 +36,7 @@
   width: 100%;
   flex: 1;
   align-content: start;
+  gap: var(--cheevos-margin);
 }
 
 
@@ -58,7 +59,7 @@
   cursor: default;
   z-index: 1;
   margin: 1px;
-  margin: var(--cheevos-margin);
+  margin: 0;
 }
 
 .achivs[data-overlay="border"] .achiv-block {
