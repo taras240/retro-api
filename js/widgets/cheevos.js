@@ -649,50 +649,45 @@ export class AchievementsBlock extends Widget {
     }
 
     fitCheevoSize(isLoadDynamic = false) {
+        const maxSize = +this.uiProps.ACHIV_MAX_SIZE;
+        const minSize = +this.uiProps.ACHIV_MIN_SIZE;
+        const normalizeCheevoSize = (size) => {
+            return Math.max(
+                minSize,
+                Math.min(size, maxSize))
+        }
         // Отримання посилання на блок досягнень та його дочірні елементи
         const { section, container, sectionID } = this;
 
-        let windowHeight, windowWidth;
         container.style.flex = "1";
-
-        if (isLoadDynamic || !config.getUIProperty({ sectionID, property: "height" })) {
-            windowHeight = container.clientHeight;
-            windowWidth = container.clientWidth;
-        } else {
-            windowHeight = parseInt(config.ui[this.SECTION_NAME].height) - section.querySelector(".header-container").clientHeight;
-            windowWidth = parseInt(config.ui[this.SECTION_NAME].width);
-        }
+        const windowHeight = container.clientHeight;
+        const windowWidth = container.clientWidth;
         container.style.flex = "";
-        const achivs = container.querySelectorAll(".achiv-block:not(.removed, .hidden-group, .hidden-set)");
-        const achivsCount = achivs.length;
+
+        const cheevoElements = container.querySelectorAll(".achiv-block:not(.removed, .hidden-group, .hidden-set)");
+        const cheevosCount = cheevoElements.length;
         // Перевірка, чи є елементи в блоці досягнень
-        if (achivsCount === 0) return;
+        if (cheevosCount === 0) return;
         // Початкова ширина досягнення для розрахунку
         let achivWidth = Math.floor(
-            Math.sqrt((windowWidth * windowHeight) / achivsCount)
+            Math.sqrt((windowWidth * windowHeight) / cheevosCount)
         );
         do {
             achivWidth--;
             this.section.style.setProperty("--achiv-height", achivWidth + "px");
             section.offsetHeight;
         }
-        while (container.scrollHeight > container.offsetHeight && achivWidth > this.uiProps.ACHIV_MIN_SIZE)
+        while (container.scrollHeight > container.offsetHeight && achivWidth > minSize)
 
-        achivWidth =
-            achivWidth < this.uiProps.ACHIV_MIN_SIZE
-                ? this.uiProps.ACHIV_MIN_SIZE
-                : achivWidth > this.uiProps.ACHIV_MAX_SIZE
-                    ? this.uiProps.ACHIV_MAX_SIZE
-                    : achivWidth;
-        // console.log(container.scrollHeight, container.offsetHeight);
+        achivWidth = normalizeCheevoSize(achivWidth);
         if (container.scrollHeight > container.offsetHeight + 2) {
-            const margin = this.uiProps.cheevosMargin;
-            const cheevosInRowCount = ~~(container.offsetWidth / (+achivWidth + 1));
-            const roundedSize = container.offsetWidth / cheevosInRowCount - (cheevosInRowCount - 1) * margin;
-            // console.log(cheevosInRowCount, roundedSize, achivWidth);
-            achivWidth = (roundedSize - achivWidth < achivWidth) ? ~~roundedSize : achivWidth;
+            const medianSize = Math.floor((maxSize + minSize) / 2)
+            const margin = +this.uiProps.cheevosMargin;
+            const containerWidth = container.offsetWidth
+            const cheevosInRowCount = Math.floor((containerWidth + margin) / (medianSize + margin));
+            const roundedSize = Math.round((containerWidth + margin * (1 - cheevosInRowCount)) / cheevosInRowCount);
+            achivWidth = normalizeCheevoSize(roundedSize);
         }
-
         this.section.style.setProperty("--achiv-height", achivWidth + "px");
     }
     autoscroll;
