@@ -681,12 +681,11 @@ export class AchievementsBlock extends Widget {
 
         achivWidth = normalizeCheevoSize(achivWidth);
         if (container.scrollHeight > container.offsetHeight + 2) {
-            const medianSize = Math.floor((maxSize + minSize) / 2)
             const margin = +this.uiProps.cheevosMargin;
-            const containerWidth = container.offsetWidth
-            const cheevosInRowCount = Math.floor((containerWidth + margin) / (medianSize + margin));
+            const containerWidth = container.offsetWidth;
+            const cheevosInRowCount = Math.floor((containerWidth + margin) / (achivWidth + margin));
             const roundedSize = Math.round((containerWidth + margin * (1 - cheevosInRowCount)) / cheevosInRowCount);
-            achivWidth = normalizeCheevoSize(roundedSize);
+            achivWidth = roundedSize - 1;
         }
         this.section.style.setProperty("--achiv-height", achivWidth + "px");
     }
