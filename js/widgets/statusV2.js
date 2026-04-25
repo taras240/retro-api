@@ -191,6 +191,13 @@ export class Status extends Widget {
                         checked: this.uiProps.blinkOnUpdate,
                         onChange: (event) => this.uiProps.blinkOnUpdate = event.currentTarget.checked,
                     },
+                    {
+                        type: inputTypes.CHECKBOX,
+                        id: "rp__status-badge",
+                        label: ui.lang.showStatus,
+                        checked: this.uiProps.showStatus,
+                        onChange: (event) => this.uiProps.showStatus = event.currentTarget.checked,
+                    },
                 ]
             },
 
@@ -340,6 +347,7 @@ export class Status extends Widget {
         scrollPauseDuration: 15,
         progressBySession: true,
         isHardMode: true,
+        showStatus: true,
     }
     uiDefaultValuesLegacy = {
         showRichPresence: false,
@@ -651,6 +659,9 @@ export class Status extends Widget {
         this.section.dataset.theme = this.uiProps.statusTheme ?? statusStyles.DEFAULT;
         this.section.classList.toggle("game-bg", this.uiProps.showGameBg);
         this.section.classList.toggle("progress-by-session", this.uiProps.progressBySession);
+        this.section.classList.toggle("hide-status", !this.uiProps.showStatus);
+
+
         addScrollableFlags();
     }
     doUpdateAnimation() {

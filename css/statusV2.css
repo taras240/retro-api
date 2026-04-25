@@ -61,6 +61,11 @@
     box-shadow: 2px 2px 3px 0 black;
 }
 
+.hide-status.status__section.offline::after,
+.hide-status.rp__section.offline::after {
+    display: none;
+}
+
 @container (max-width: 299px) {
     .rp__preview-container {
         display: none !important;
@@ -239,6 +244,11 @@
 
 .rp__indicator.offline {
     --color: goldenrod;
+    opacity: 1;
+}
+
+.hide-status .rp__indicator.offline {
+    --color: transparent;
     opacity: 1;
 }
 

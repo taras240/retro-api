@@ -33,6 +33,7 @@ import { inputTypes } from "./components/inputElements.js";
 import { initBgAnimation } from "./functions/bgAnimations.js";
 import { WiiEvent } from "./widgets/wiiEvent.js";
 import { delay } from "./functions/delay.js";
+import { Completion } from "./widgets/completion.js";
 
 
 
@@ -98,6 +99,7 @@ export class UI {
     this.games = new Games();
     this.settings = new Settings();
     new Links();
+    // new Completion();
 
     this.buttons = new SidePanel();
 
