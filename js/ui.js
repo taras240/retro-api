@@ -1,4 +1,3 @@
-import { loadSections } from "./htmlBuilder.js";
 
 import { config, ui, watcher, configData } from "./script.js";
 
@@ -45,7 +44,7 @@ export class UI {
   STICK_MARGIN = 1;
   STICK_TOLERANCE = 7;
   hltb = {};
-  // isTest = true;
+  isTest = true;
   constructor() {
     this.toggleLoading(false);
     this.initUI();
@@ -66,7 +65,6 @@ export class UI {
 
   async initUI() {
     await this.loadLang();
-    await loadSections();
 
     // Ініціалізація елементів
     this.initializeElements();
