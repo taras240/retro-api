@@ -46,7 +46,7 @@ export function LoginWindowElement(config) {
                     <div class="login-form__container">
                         <div class="login__header-container">
                             <div class="ra-img__container">
-                                <img src="../assets/img/ra.png" alt="" srcset="" class="ra-img">
+                                <img src="./assets/img/ra.png" alt="" srcset="" class="ra-img">
                             </div>
                             <h1 class="login__header">Retrocheevos</h1>
                             <p class="login__description">Unofficial retroachivements.org tracker</p>
