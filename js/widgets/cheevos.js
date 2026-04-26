@@ -581,11 +581,11 @@ export class AchievementsBlock extends Widget {
 
         // Відсортувати досягнення та відобразити їх
         fillCheevosContainer(gameData);
-        if (this.uiProps.showLoadAnimation) {
-            this.container.querySelectorAll(".achiv-block").forEach(cheevo =>
-                cheevo.classList.add("opacity-0")
-            )
-        }
+        // if (this.uiProps.showLoadAnimation) {
+        // this.container.querySelectorAll(".achiv-block").forEach(cheevo =>
+        //     cheevo.classList.add("opacity-0")
+        // )
+        // }
         this.groupCheevos();
         // Підгонка розміру досягнень
         this.fitCheevoSize();

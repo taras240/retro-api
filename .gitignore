@@ -20,3 +20,4 @@ user
 js/functions/api/genreParser.js
 js/functions/api/levelParser.js
 test
+package-lock.json

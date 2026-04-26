@@ -543,7 +543,6 @@
 @keyframes unload-cheevos-anim {
   to {
     transform: translate(var(--translate-x), var(--translate-y));
-    opacity: 0;
   }
 }
 
