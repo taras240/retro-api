@@ -48,7 +48,6 @@ export class Config {
   }
   set userImageSrc(value) {
     this._cfg.identification.userImageSrc = value;
-    this.ui.buttons && (ui.buttons.userImage.src = value);
     this.writeConfiguration();
   }
 
@@ -130,8 +129,6 @@ export class Config {
     },
     bgVisibility(value) {
       ui.toggleBgAnimation(value)
-      // const bgElement = document.querySelector("#background-animation");
-      // bgElement && (bgElement.style.display = value ? "block" : "none");
     },
     bgAnimType(value) {
       ui.toggleBgAnimation(false);

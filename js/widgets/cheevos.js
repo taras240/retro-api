@@ -563,17 +563,10 @@ export class AchievementsBlock extends Widget {
             this.container.innerHTML = "";
         }
         const fillCheevosContainer = (gameData) => {
-            Object.values(gameData.Achievements).forEach((achievement) => {
+            Object.values(gameData.AllAchievements).forEach((achievement) => {
                 const achivElement = this.generateAchievement(achievement);
                 this.container.appendChild(achivElement);
             });
-            if (gameData.visibleSubsets?.length) {
-                Object.values(gameData.subsetsData)?.forEach(subset => {
-                    fillCheevosContainer(subset);
-                })
-
-            }
-
         }
         await this.doLoadAnimation(true);
         // Очистити вміст розділу досягнень

@@ -4,7 +4,7 @@ const sections = {
   // target: "./elements/target.elem",
   // progression: "./elements/progression.elem",
   // login: "./elements/login.elem",
-  panel: "./elements/side-panel.elem",
+  // panel: "./elements/side-panel.elem",
   // settings: "./elements/settings.elem",
   // gamePopup: "./elements/gamePopup.elem",
   // awards: "./elements/awards.elem",

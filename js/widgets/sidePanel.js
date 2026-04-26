@@ -2,11 +2,13 @@ import { UI } from "../ui.js";
 import { generateBadges, badgeElements } from "../components/badges.js";
 
 import { config, ui } from "../script.js";
+import { fromHtml } from "../functions/html.js";
 export class SidePanel {
     get VISIBLE() {
         return !this.section.classList.contains("hidden");
     }
     constructor() {
+        this.generatePanel();
         this.initializeElements();
         this.addEvents();
         this.setValues();
@@ -32,7 +34,7 @@ export class SidePanel {
     addEvents() {
         // Отримуємо посилання на панель
         this.sidePanel = document.querySelector("#side_panel");
-        setTimeout(() => ui.buttons.section.classList.remove("expanded"), 2000);
+        setTimeout(() => this.section.classList.remove("expanded"), 2000);
         // Додаємо подію для відслідковування руху миші touchmove 
         document.addEventListener("touchstart", (e) => this.touchVisibilityHandler(e));
         this.settings.addEventListener("click", (e) => {
@@ -63,15 +65,45 @@ export class SidePanel {
             this.section.classList.add("expanded");
             this.section.addEventListener("blur", (e) => {
                 setTimeout(
-                    () => ui.buttons.section.classList.remove("expanded"),
+                    () => this.section.classList.remove("expanded"),
                     0
                 );
             });
         }
     }
     generatePanel() {
-        const sidePanel = document.createElement("section");
-        sidePanel.id = "side_panel";
-        sidePanel.classList.add("buttons-block", "expanded");
+        const logginButton = fromHtml(`
+                <div class="setting-radio-group">
+                    <button class="side-panel_login login-icon" onclick="window.location.href = './login'"
+                        data-title="login page">
+                        <img id="side-panel-user-image" src="" onerror="this.src='./assets/img/account.svg';" alt="">
+                    </button>
+                </div>
+            `);
+        const widgetsContainer = fromHtml(`
+                <div class="buttons-block__shortcuts"></div>
+            `);
+        const tools = fromHtml(`
+                <div class="buttons-block_tools">
+                    <div class="setting-radio-group ">
+                        <a class="side-panel_input side-panel_link" data-title="go to discord channel"
+                            href="https://discord.gg/apzc6kCAbH" target="_blank">
+                            <i class="side-panel__icon discord-icon"></i>
+                        </a>
+                    </div>
+                    <div class="setting-radio-group ">
+                        <input type="checkbox" name="open-settings-button" id="open-settings-button">
+                        </input>
+                        <label class="side-panel_input " data-title="settings" for="open-settings-button">
+                            <i class="side-panel__icon settings-icon"></i>
+                        </label>
+                    </div>
+                </div>
+            `);
+        const sidePanel = fromHtml(`
+            <section id="side_panel" class="buttons-block expanded"></section>
+            `);
+        sidePanel.append(logginButton, widgetsContainer, tools);
+        ui.app.append(sidePanel);
     }
 }

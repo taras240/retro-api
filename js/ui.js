@@ -82,6 +82,7 @@ export class UI {
   }
   initializeElements() {
     this.app = document.querySelector(".wrapper");
+    this.buttons = new SidePanel();
     // this.statusPanel = new StatusPanel();
     new WiiEvent();
     this.statusPanel = new Status("statusPanel", true);
@@ -101,7 +102,6 @@ export class UI {
     new Links();
     // new Completion();
 
-    this.buttons = new SidePanel();
 
   }
 

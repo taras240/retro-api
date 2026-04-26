@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta property="og:title" content="Retrocheevos - Retro Achievements Tracker & Progress Stats">
+    <meta property="og:title" content="Retrocheevos - Retro Achievements Tracker">
     <meta property="og:description"
         content="Track retro game achievements, view detailed stats, and monitor your progress across classic games. Built for true achievement hunters." />
     <meta property="og:image" content="https://retrocheevos.vercel.app/preview.png">
@@ -13,10 +13,10 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="description"
         content="Track retro game achievements, view detailed stats, and monitor your progress across classic games. Built for true achievement hunters.">
-    <link rel="icon" href="./favicon.ico">
-    <title>Retrocheevos - Retro Achievements Tracker & Progress Stats</title>
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
+    <title>Retrocheevos - Retro Achievements Tracker</title>
     <link rel="stylesheet" href="./dist/style.css" />
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="./manifest.json">
     <link rel="canonical" href="https://retrocheevos.vercel.app/">
     <meta name="theme-color" content="#2196f3">
 </head>
@@ -24,39 +24,7 @@
 <body data-color-preset="default">
     <div class="loading-section" id="loading-section">
     </div>
-    <div class="background" id="background-animation">
-        <div id='background-star'></div>
-        <div id='background-star2'></div>
-        <div id='background-star3'></div>
-    </div>
     <div class="wrapper">
-        <section id="side_panel" class="buttons-block expanded">
-
-            <div class="setting-radio-group">
-                <button class="side-panel_login login-icon" onclick="window.location.href = './login'"
-                    data-title="login page">
-                    <img id="side-panel-user-image" src="" onerror="this.src='./assets/img/account.svg';" alt="">
-                </button>
-            </div>
-            <div class="buttons-block__shortcuts">
-            </div>
-            <div class="buttons-block_tools">
-                <div class="setting-radio-group ">
-                    <a class="side-panel_input side-panel_link" data-title="go to discord channel"
-                        href="https://discord.gg/apzc6kCAbH" target="_blank">
-                        <i class="side-panel__icon discord-icon"></i>
-                    </a>
-                </div>
-                <div class="setting-radio-group ">
-                    <input type="checkbox" name="open-settings-button" id="open-settings-button">
-                    </input>
-                    <label class="side-panel_input " data-title="settings" for="open-settings-button">
-                        <i class="side-panel__icon settings-icon"></i>
-                    </label>
-                </div>
-            </div>
-        </section>
-
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <script src="./dist/bundle.min.js"></script>
