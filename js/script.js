@@ -22,11 +22,6 @@ else {
   window.watcher = watcher;
   // userAuthData = new UserAuthData();
 }
-if (!config.identConfirmed) {
-  console.log('redirect to login')
-  const urlParams = new URLSearchParams(location.search);
-  window.location.href = `./login?${urlParams.toString()}`;
-}
 
 export { config, ui, apiWorker, watcher, APIEvents, userAuthData }
 export const { configData } = config

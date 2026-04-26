@@ -73,13 +73,12 @@ export class SidePanel {
     }
     generatePanel() {
         const logginButton = fromHtml(`
-                <div class="setting-radio-group">
-                    <button class="side-panel_login login-icon" onclick="window.location.href = './login'"
-                        data-title="login page">
+                    <button class="side-panel_login login-icon"
+                        data-title="login window">
                         <img id="side-panel-user-image" src="" onerror="this.src='./assets/img/account.svg';" alt="">
                     </button>
-                </div>
             `);
+        logginButton.addEventListener("click", () => ui.showLogin())
         const widgetsContainer = fromHtml(`
                 <div class="buttons-block__shortcuts"></div>
             `);

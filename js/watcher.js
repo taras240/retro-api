@@ -234,7 +234,6 @@ export class Watcher {
 
                 const hasSubsets = Object.values(subsets).length > 1;
                 if (hasSubsets && configData.ignoreSubsets) {
-                    console.log(subsets.Main);
                     return subsets.Main ?? profileGameID;
                 }
                 else if (hasSubsets && configData.preventSubsetBug) {

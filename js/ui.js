@@ -33,7 +33,7 @@ import { initBgAnimation } from "./functions/bgAnimations.js";
 import { WiiEvent } from "./widgets/wiiEvent.js";
 import { delay } from "./functions/delay.js";
 import { Completion } from "./widgets/completion.js";
-
+import { LoginWindowElement } from "./widgets/login.js";
 
 
 export class UI {
@@ -44,7 +44,7 @@ export class UI {
   STICK_MARGIN = 1;
   STICK_TOLERANCE = 7;
   hltb = {};
-  isTest = true;
+  // isTest = true;
   constructor() {
     this.toggleLoading(false);
     this.initUI();
@@ -75,6 +75,9 @@ export class UI {
 
     if (config.identConfirmed) {
       watcher.autostart();
+    }
+    else {
+      this.showLogin();
     }
 
   }
@@ -397,6 +400,10 @@ export class UI {
     }
   }
 
+  showLogin() {
+    const loginScreen = LoginWindowElement(config);
+    this.app.append(loginScreen);
+  }
 }
 
 
