@@ -55,12 +55,12 @@ export class Watcher {
         cheevosSoftcore: 0,
     }
     userData = {
-        userName: "",
-        rank: 0,
-        percentile: 0,
-        points: 0,
-        retropoints: 0,
-        softpoints: 0,
+        // userName: "",
+        // rank: 0,
+        // percentile: 0,
+        // points: 0,
+        // retropoints: 0,
+        // softpoints: 0,
     }
     constructor() {
         this.isActive = false;
