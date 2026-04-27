@@ -15,7 +15,7 @@ import { APIEvents, apiWorker, config, configData, ui, watcher } from "./script.
 export class Watcher {
     IS_HARD_MODE = true;
     isWatching = false;
-    RECENT_ACHIVES_RANGE_MINUTES = 30;//Math.max(config.updateDelay * 5 / 60, 5);
+    RECENT_ACHIVES_RANGE_MINUTES = 8 * 60;//Math.max(config.updateDelay * 5 / 60, 5);
     CHECK_FOR_ONLINE_DELAY_MS = 2 * 60 * 1000; // If user offline and wathing is ON, it check for online with delay
     CHECK_FOR_ONLINE_AFTER_SILENCE_MS = 3 * 60 * 1000; // If there is no activity for this time, it will be check for online
     watcherInterval;
