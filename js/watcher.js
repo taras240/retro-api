@@ -384,8 +384,8 @@ export class Watcher {
                 if (cheevo) {
                     const isHardcoreMismatch =
                         lastCheevo.HardcoreMode === 1 && !cheevo.isEarnedHardcore;
-                    const isSoftCoreMismatch = !cheevo.isEarned;
-                    if (isSoftCoreMismatch || isHardcoreMismatch) {
+                    const isSoftcoreMismatch = !cheevo.isEarned;
+                    if (isSoftcoreMismatch || isHardcoreMismatch) {
                         earnedAchievements.push(lastCheevo);
                     }
                 }

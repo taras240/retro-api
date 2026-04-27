@@ -269,7 +269,6 @@ export class UserStatistic extends Widget {
             return acc;
         }, {});
         this.uiProps.displayOrder = displayOrder;
-        // console.log(displayOrder)
     }
     applyDisplayOrder() {
         applySort({
@@ -279,7 +278,6 @@ export class UserStatistic extends Widget {
             reverse: 1,
             animationDuration: 0
         });
-        // console.log("sort")
     }
     async updateCompletionStats() {
         const { completionChart, showUnlocksHardcore, showUnlocksSoftcore } = this.uiProps;
@@ -323,13 +321,13 @@ export class UserStatistic extends Widget {
             };
         };
         if (!this.initialData) {
-            if (!userData.rank) return;
+            if (!Object.hasOwn(userData, "rank")) return;
             this.initialData = userData;
             this.userData = userData;
             setTimeout(() => this.updateCompletionStats(), 4e3);
         }
         const setValue = (element, property) => {
-            if (!this.userData[property] || !userData[property]) return;
+            if (!Object.hasOwn(this.userData, property) || !Object.hasOwn(userData, property)) return;
             let delta = 0;
             let sessionDelta = 0;
             let value = 0;

@@ -1,6 +1,7 @@
 export function normalizeUserData({ userSummary, raProfileInfo, isInit }) {
     let userData = {};
     if (userSummary) {
+        userSummary.Rank ??= 0;
         userData = isInit ? {
             ...userData,
             rank: userSummary.Rank,
@@ -10,7 +11,7 @@ export function normalizeUserData({ userSummary, raProfileInfo, isInit }) {
             points: userSummary.TotalPoints,
             retropoints: userSummary.TotalTruePoints,
             softpoints: userSummary.TotalSoftcorePoints,
-            trueRatio: userSummary.TotalTruePoints / userSummary.TotalPoints,
+            trueRatio: userSummary.TotalTruePoints / (userSummary.TotalPoints || 1),
         } :
             {
                 ...userData,
@@ -26,7 +27,7 @@ export function normalizeUserData({ userSummary, raProfileInfo, isInit }) {
             retropoints: raProfileInfo.TotalTruePoints,
             softpoints: raProfileInfo.TotalSoftcorePoints,
             richPresence: raProfileInfo.RichPresenceMsg,
-            trueRatio: raProfileInfo.TotalTruePoints / raProfileInfo.TotalPoints,
+            trueRatio: raProfileInfo.TotalTruePoints / (raProfileInfo.TotalPoints || 1),
         }
     }
     return userData;
