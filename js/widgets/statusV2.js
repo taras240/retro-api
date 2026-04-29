@@ -41,9 +41,6 @@ import { getRandomID } from "../functions/randomID.js";
 import { focusCheevoHtml } from "../components/statusWidget/focusCheevo.js";
 
 export class Status extends Widget {
-
-    ACHIV_DURATION = 15000;
-
     widgetIcon = {
         description: "status widget",
         iconClass: "status-icon",
@@ -198,6 +195,15 @@ export class Status extends Widget {
                         checked: this.uiProps.showStatus,
                         onChange: (event) => this.uiProps.showStatus = event.currentTarget.checked,
                     },
+                    {
+                        prefix: ui.lang.alertDuration,
+                        postfix: ui.lang.sec,
+                        type: inputTypes.NUM_INPUT,
+                        id: "rp__alert-duration",
+                        label: ui.lang.alertDuration,
+                        value: this.uiProps.alertDuration,
+                        onInput: (event) => this.uiProps.alertDuration = +event.currentTarget.value,
+                    },
                 ]
             },
 
@@ -348,6 +354,7 @@ export class Status extends Widget {
         progressBySession: true,
         isHardMode: true,
         showStatus: true,
+        alertDuration: 15,
     }
     uiDefaultValuesLegacy = {
         showRichPresence: false,
@@ -855,7 +862,7 @@ export class Status extends Widget {
             }
             await delay(1000); //*waiting for previous animation ending
             onAlertStart();
-            await delay(this.ACHIV_DURATION); //*waiting alert duration
+            await delay(this.uiProps.alertDuration * 1000); //*waiting alert duration
             await onAlertFinish();
         }
     }

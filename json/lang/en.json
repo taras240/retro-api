@@ -295,5 +295,6 @@
     "noteMainTabHint": "Notes for All games",
     "progressBySession": "Unlocks per session",
     "progressBySessionHint": "Shows how many unlocks you get in each session",
-    "showStatus": "Status Badge"
+    "showStatus": "Status Badge",
+    "alertDuration": "Alert Duration"
 }

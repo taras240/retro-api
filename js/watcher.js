@@ -218,7 +218,9 @@ export class Watcher {
             this.zeroCheckTime = now;
         }
         const isGameChanged = (raProfileInfo, isStart = false) => {
-            let gameChanged = (raProfileInfo.LastGameID !== this.GAME_DATA?.ID);
+            const lastID = config.gamesDB[raProfileInfo.LastGameID]?.setID || raProfileInfo.LastGameID;
+
+            let gameChanged = (lastID !== this.GAME_DATA?.ID);
             const ignoreSubsets = configData.preventSubsetBug || configData.ignoreSubsets;
             if (!isStart && gameChanged && ignoreSubsets) {
                 const subsets = this.GAME_DATA?.availableSubsets ?? {};
@@ -326,7 +328,8 @@ export class Watcher {
         };
 
         try {
-            const gameData = await apiWorker.getGameInfoAndProgress({ gameID: gameID, withTimesData: true });
+            const setID = config.gamesDB[gameID]?.setID || gameID;
+            const gameData = await apiWorker.getGameInfoAndProgress({ gameID: setID, withTimesData: true });
             this.GAME_DATA = gameData;
             this.onAPIRequest();
         } catch (error) {
