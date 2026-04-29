@@ -295,7 +295,6 @@ export class Watcher {
             this.isLogOK = false;
         }
         const fileHandle = await config.getFileHandle("rarch");
-        // console.log(fileHandle);
         if (!fileHandle) {
             onErr("Select log file");
             return;
@@ -304,7 +303,6 @@ export class Watcher {
         try {
             parsedData = await readLog(fileHandle);
             this.isLogOK = true;
-            // console.log(parsedData);
         }
         catch {
             console.warn("log file error");
@@ -313,7 +311,6 @@ export class Watcher {
         }
         const { unlockedCheevos, currentGame } = parsedData;
         unlockedCheevos?.length > 0 && this.updateCheevos(true, unlockedCheevos);
-        // console.log("parsed:", parsedData)
     }
     async updateGameData(gameID) {
         const getLastGameID = async () => {
@@ -339,7 +336,6 @@ export class Watcher {
     }
 
     async updateCheevos(isLog = false, cheevos, deltaPoints) {
-        // console.log(cheevos)
         const checkForNewCheevos = (lastEarnedAchieves) => {
             const updateAchievements = (earnedAchievements) => {
                 earnedAchievements?.forEach((lastCheevo) => {
@@ -527,7 +523,6 @@ export class Watcher {
         const playTime = this.playTime.totalGameTime;
         if (playTime > 5) {
             config.gamesDB[this.GAME_DATA.ID] ??= {};
-            console.log(config.gamesDB[this.GAME_DATA.ID])
             this.GAME_DATA.TimePlayed = playTime;
             config.gamesDB[this.GAME_DATA.ID].TimePlayed = playTime;
             config.writeConfiguration();

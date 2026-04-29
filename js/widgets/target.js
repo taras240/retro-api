@@ -1089,7 +1089,7 @@ export class Target extends Widget {
     toggleCheevoPin(cheevoElement) {
         const gameID = watcher.GAME_DATA?.ID;
         let pinnedIDs = config.gamesDB[gameID]?.pinned ?? [];
-        const cheevoID = +cheevoElement.dataset?.achivId ?? -1;
+        const cheevoID = Number(cheevoElement.dataset?.achivId ?? -1);
         const isPinned = pinnedIDs.includes(cheevoID);
         if (isPinned) {
             pinnedIDs = pinnedIDs.filter(id => id !== cheevoID);

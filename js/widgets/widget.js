@@ -62,7 +62,8 @@ export class Widget {
     uiValueLoader = {}
     uiValueSaver = {}
     get VISIBLE() {
-        return !this.uiProps.hidden ?? false;
+        const hidden = this.uiProps?.hidden;
+        return hidden == null ? false : !hidden;
     }
     set VISIBLE(value) {
         this.switchVisibility();
@@ -204,7 +205,9 @@ export class Widget {
     applyPosition() {
         const { x, y, width, height, hidden } = this.uiProps;
         const setSidePanelIconValues = () => {
-            this.widgetIcon?.element && (this.widgetIcon.element.checked = hidden === false ?? !this.VISIBLE);
+            if (this.widgetIcon?.element) {
+                this.widgetIcon.element.checked = this.VISIBLE;
+            }
         }
         const hideWidget = () => {
             this.section.classList.add("hidden", "disposed");
