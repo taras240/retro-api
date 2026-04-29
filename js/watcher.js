@@ -526,8 +526,9 @@ export class Watcher {
     savePlayTime() {
         const playTime = this.playTime.totalGameTime;
         if (playTime > 5) {
+            config.gamesDB[this.GAME_DATA.ID] ??= {};
+            console.log(config.gamesDB[this.GAME_DATA.ID])
             this.GAME_DATA.TimePlayed = playTime;
-            config.gamesDB[this.GAME_DATA.ID] || (config.gamesDB[this.GAME_DATA.ID] = {});
             config.gamesDB[this.GAME_DATA.ID].TimePlayed = playTime;
             config.writeConfiguration();
         }
