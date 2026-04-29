@@ -515,6 +515,7 @@ export class Settings extends Widget {
     }
     get contextMenuItems() {
         return [
+            this.contextSwitchSetsMenu(),
             this.contextSetsMenu(),
             {
                 label: ui.lang.selectColors,
@@ -586,6 +587,26 @@ export class Settings extends Widget {
                 label: subsetName,
                 checked,
                 onChange: (event) => watcher.setSubset(subsetID),
+            }
+        }),
+    } : "";
+    contextSwitchSetsMenu = () => Object.values(watcher.GAME_DATA?.availableSubsets ?? {})?.length > 1 ? {
+        label: ui.lang.switchSubset,
+        elements: Object.entries(watcher.GAME_DATA?.availableSubsets).map(([subsetName, subsetID]) => {
+            const gameID = configData.gameID;
+            subsetID = parseInt(subsetID);
+            const isCurrentSet = subsetID === watcher.GAME_DATA.ID;
+
+            return {
+                type: inputTypes.RADIO,
+                name: "subset-switch",
+                id: `subset-switch-${subsetName}`,
+                label: subsetName,
+                checked: isCurrentSet,
+                onChange: () => {
+                    config.gamesDB[gameID].setID = subsetID;
+                    watcher.updateGameData(gameID)
+                },
             }
         }),
     } : "";

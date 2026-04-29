@@ -296,5 +296,6 @@
     "progressBySession": "Unlocks per session",
     "progressBySessionHint": "Shows how many unlocks you get in each session",
     "showStatus": "Status Badge",
-    "alertDuration": "Alert Duration"
+    "alertDuration": "Alert Duration",
+    "switchSubset": "Switch Subset"
 }
