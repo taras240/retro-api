@@ -264,6 +264,14 @@ export class Target extends Widget {
                 onChange: () => this.uiProps.sortName = sortName,
             })),
             {
+                type: inputTypes.RADIO,
+                name: `${this.sectionID}-sort`,
+                id: `${this.sectionID}-sort-custom-order`,
+                label: ui.lang.customOrder,
+                checked: this.uiProps.sortName === "customOrder",
+                onChange: () => this.uiProps.sortName = "customOrder",
+            },
+            {
                 type: inputTypes.CHECKBOX,
                 id: "reverse-sort",
                 label: ui.lang.reverse,
@@ -669,11 +677,23 @@ export class Target extends Widget {
                     onDragEnd && onDragEnd(cheevoID);
                 },
                 onUpdate: () => {
-                    if (pull) return; //main container doesn't save order
-                    const pinnedIDs = [...container.querySelectorAll(".target-achiv")]?.map(elem => +elem.dataset.achivId);
-                    this.savePinnedData(pinnedIDs);
-                    this.fillPinnedItems(pinnedIDs);
-                    this.markPinned();
+                    if (pull) {
+                        const gameID = watcher.GAME_DATA.ID;
+                        const cachedGameData = config.gamesDB[gameID] ?? {};
+                        cachedGameData.customOrder ??= {};
+                        container.querySelectorAll("li.target-achiv").forEach((cheevo, index) => {
+                            cachedGameData.customOrder[cheevo.dataset.achivId] = index;
+                            cheevo.dataset.customOrder = index;
+                        })
+                        config.writeConfiguration(500);
+                    } //main container doesn't save order
+                    else {
+
+                        const pinnedIDs = [...container.querySelectorAll(".target-achiv")]?.map(elem => +elem.dataset.achivId);
+                        this.savePinnedData(pinnedIDs);
+                        this.fillPinnedItems(pinnedIDs);
+                        this.markPinned();
+                    }
                 },
                 onStart: (evt) => {
                 },
@@ -850,6 +870,7 @@ export class Target extends Widget {
             targetElement.dataset.TrueRatio = achievement.TrueRatio;
             targetElement.dataset.difficulty = achievement.difficulty;
             targetElement.dataset.DisplayOrder = achievement.DisplayOrder;
+            targetElement.dataset.customOrder = achievement.customOrder;
             targetElement.dataset.genres = achievement.genres?.join(",");
             targetElement.dataset.group = achievement.group;
             targetElement.dataset.setID = achievement.gameID;

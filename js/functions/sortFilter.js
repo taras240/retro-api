@@ -101,6 +101,10 @@ export const sortBy = {
         (a.DisplayOrder - b.DisplayOrder) * reverse :
         sortBy.id(a, b, reverse)
     ,
+    customOrder: (a, b) => {
+
+        return a.customOrder - b.customOrder;
+    },
     progression: (a, b) => {
         if (a.DisplayOrder === b.DisplayOrder) return sortBy.unlockRate(a, b);
         const order = ({ DisplayOrder, Type }) => Type === CHEEVO_TYPES.PROGRESSION ? DisplayOrder : DisplayOrder * 1e3;

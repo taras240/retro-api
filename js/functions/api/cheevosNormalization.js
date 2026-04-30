@@ -4,9 +4,9 @@ import { generateCheevosDisplayOrder } from "./displayOrder.js";
 import { parseCheevosGenres } from "./genreParser.js";
 import { parseCheevoLevels } from "./levelParser.js";
 
-const normalizeAchievement = (achievement, gameData, cheevosDB) => {
+const normalizeAchievement = (achievement, gameData, savedGameData) => {
     const gameID = gameData.ID;
-    const { BadgeName, DateEarned, DateEarnedHardcore, NumAwardedHardcore, NumAwarded, TrueRatio, ID, Points } = achievement;
+    const { BadgeName, DateEarned, DateEarnedHardcore, NumAwardedHardcore, NumAwarded, TrueRatio, ID, Points, DisplayOrder } = achievement;
     const { NumDistinctPlayers } = gameData;
 
     const trend = 100 * NumAwardedHardcore / NumDistinctPlayers;
@@ -17,7 +17,7 @@ const normalizeAchievement = (achievement, gameData, cheevosDB) => {
     const rateEarned = ~~(100 * NumAwarded / NumDistinctPlayers) + "%";
 
     const retroRatio = (TrueRatio / Math.max(1, Points)).toFixed(2);
-
+    const cheevosCustomOrder = savedGameData.customOrder ?? {};
     gameData.Achievements[ID] = {
         ...achievement,
         gameID,
@@ -30,6 +30,7 @@ const normalizeAchievement = (achievement, gameData, cheevosDB) => {
         trend,
         retroRatio,
         difficulty: getCheevoDifficulty(trend, TrueRatio, NumAwardedHardcore),
+        customOrder: cheevosCustomOrder[ID] ?? DisplayOrder
         // ...cheevosDB[ID], // Load edited props
     }
 }
@@ -61,15 +62,14 @@ const parseCheevoGroups = (gameData) => {
     }
     gameData.groups = [...groupsArray];
 }
-export const normalizeCheevos = (gameData, cheevosDB = {}) => {
+export const normalizeCheevos = (gameData, savedGameData = {}) => {
     parseCheevosGenres(gameData);
     parseCheevoLevels(gameData);
     parseCheevoGroups(gameData)
     generateCheevosDisplayOrder(gameData);
-
     Object.values(gameData.Achievements)
         .map(cheevo =>
-            normalizeAchievement(cheevo, gameData, cheevosDB));
+            normalizeAchievement(cheevo, gameData, savedGameData));
 }
 export const getNormalizedAotW = ({ AotwData, userName }) => {
     console.log(AotwData);

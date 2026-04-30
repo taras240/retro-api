@@ -301,5 +301,6 @@
     "getAPIKey": "Get API key",
     "gotoRASettings": "go to retroachievements.org settings",
     "raUserName": "RA Username",
-    "raAPIKey": "RA API key"
+    "raAPIKey": "RA API key",
+    "customOrder": "Custom Order"
 }

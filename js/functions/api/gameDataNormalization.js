@@ -167,7 +167,8 @@ const addSavedData = (gameData, savedData = {}) => {
 }
 export const normalizeGameData = (gameData, gamesDB = {}, cheevosDB = {}) => {
     if (!gameData) return;
-    normalizeCheevos(gameData, cheevosDB);
+    const savedGameData = gamesDB[gameData.ID] ?? {};
+    normalizeCheevos(gameData, savedGameData);
 
     cheevosArray = Object.values(gameData?.Achievements ?? []);
 
@@ -176,7 +177,7 @@ export const normalizeGameData = (gameData, gamesDB = {}, cheevosDB = {}) => {
     addPointsData(gameData);
     addCompletionData(gameData);
     addSessions(gameData);
-    addSavedData(gameData, gamesDB[gameData.ID]);
+    addSavedData(gameData, savedGameData);
     gameData.UserTotalPlaytime && (gameData.TimePlayed = gameData.UserTotalPlaytime);
 }
 export const mergeWithTimesData = (gameData, timesData) => {
