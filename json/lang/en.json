@@ -297,5 +297,9 @@
     "progressBySessionHint": "Shows how many unlocks you get in each session",
     "showStatus": "Status Badge",
     "alertDuration": "Alert Duration",
-    "switchSubset": "Switch Subset"
+    "switchSubset": "Switch Subset",
+    "getAPIKey": "Get API key",
+    "gotoRASettings": "go to retroachievements.org settings",
+    "raUserName": "RA Username",
+    "raAPIKey": "RA API key"
 }

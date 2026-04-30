@@ -1,4 +1,5 @@
 import { fromHtml } from "../functions/html.js";
+import { ui } from "../script.js";
 
 export function LoginWindowElement(config) {
     const verifyUserIdent = ({ userName, apiKey }) => {
@@ -52,15 +53,14 @@ export function LoginWindowElement(config) {
                             <p class="login__description">Unofficial retroachivements.org tracker</p>
                         </div>
                         <div class="login__input-container">
-
                             <input type="text" name="" id="login__ra-username" class="login__input login__text-input">
-                            <label for="login__ra-username" class="login__input-label">RA Username:</label>
+                            <label for="login__ra-username" class="login__input-label">${ui.lang.raUserName}</label>
                         </div>
                         <div class="login__input-container">
                             <input type="password" id="login__ra-api" class="login__input login__text-input">
-                            <label for="login__ra-api" class="login__input-label">RA API key:</label>
-                            <a class="login__get-api" title="go to retroachievements settings"
-                                href="https://retroachievements.org/controlpanel.php" target="_blank">Get API key</a>
+                            <label for="login__ra-api" class="login__input-label">${ui.lang.raAPIKey}</label>
+                            <a class="login__get-api" data-title="${ui.lang.gotoRASettings}"
+                                href="https://retroachievements.org/controlpanel.php" target="_blank">${ui.lang.getAPIKey}</a>
                         </div>
                         <button class="login__input login__button-input" id="submit-login">Submit</button>
                     </div>

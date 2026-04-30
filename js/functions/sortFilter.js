@@ -185,7 +185,7 @@ export const cheevosSortNames = Object.freeze({
     UNLOCK_DATE: "latest",
     UNLOCK_DATE_RA: "raLatest",
     TRUE_RATIO: "trueRatio",
-    DIFFICULTY: "difficulty",
+    // DIFFICULTY: "difficulty",
     UNLOCK_RATE: "unlockRate",
     POINTS: "points",
     TRUE_POINTS: "truepoints",
