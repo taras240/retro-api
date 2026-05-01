@@ -1,5 +1,4 @@
 import { RPLevelNames } from "../enums/levelNames.js";
-import { watcher } from "../script.js";
 import { replaceNumberWords } from "./numbersParser.js";
 
 const parseNumber = (levelString) => {
@@ -10,6 +9,8 @@ const parseNumber = (levelString) => {
 };
 const findPreferredLevel = (matchesArray) => {
     if (!matchesArray || !matchesArray.length) return;
+    const onLevelMatch = matchesArray.find(match => /\b(?:on|in)\b/i.test(match))
+    if (onLevelMatch) return onLevelMatch;
     return matchesArray?.find(l => /-/.test(l)) ?? matchesArray[0];
 };
 
@@ -18,8 +19,10 @@ export const parseCurrentGameLevel = (richPresence, gameData) => {
     const levelNamesString = RPLevelNames.join("|");
 
     const checkLevel = (inputStr, zoneNames) => {
-        const regexLevel = new RegExp(`(${levelNamesString})([\\s-:]*)(\\d+[-\\d]*\\w{0,1})`, 'gi');
-
+        const regexLevel = new RegExp(
+            `\\b(?:on|in)?\\s*(?:the\\s+)?(${levelNamesString})\\s*[-:]?\\s*(\\d+(?:-\\d+)?\\w?)`,
+            'gi'
+        );
         const levelMatches = inputStr.match(regexLevel);
         let level = findPreferredLevel(levelMatches);
 
