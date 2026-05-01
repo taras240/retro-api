@@ -1,7 +1,7 @@
 import { UI } from "../ui.js";
 import { genreIcons, icons, signedIcons } from "../components/icons.js"
 import { generateBadges, badgeElements, goldBadge } from "../components/badges.js";
-import { apiWorker, config, ui, watcher } from "../script.js";
+import { apiWorker, config, ui, UIEvents, watcher } from "../script.js";
 import { Widget } from "./widget.js";
 import { applyFilter, applySort, cheevosFiterNames, cheevosSortNames, filterBy, filterMethods, sortBy, sortMethods } from "../functions/sortFilter.js";
 import { showComments } from "../components/comments.js";
@@ -18,6 +18,7 @@ import { divHtml } from "../components/divContainer.js";
 import { fromHtml } from "../functions/html.js";
 import { parseCurrentGameLevel } from "../functions/parseRP.js";
 import { createAutoScroll } from "../functions/autosScroll.js";
+import { UI_EVENTS_LIST } from "../enums/UIEvents.js";
 
 export class Target extends Widget {
     sectionCode = "-target";
@@ -263,14 +264,6 @@ export class Target extends Widget {
                 checked: this.uiProps.sortName === sortName,
                 onChange: () => this.uiProps.sortName = sortName,
             })),
-            {
-                type: inputTypes.RADIO,
-                name: `${this.sectionID}-sort`,
-                id: `${this.sectionID}-sort-custom-order`,
-                label: ui.lang.customOrder,
-                checked: this.uiProps.sortName === "customOrder",
-                onChange: () => this.uiProps.sortName = "customOrder",
-            },
             {
                 type: inputTypes.CHECKBOX,
                 id: "reverse-sort",
@@ -678,14 +671,21 @@ export class Target extends Widget {
                 },
                 onUpdate: () => {
                     if (pull) {
-                        const gameID = watcher.GAME_DATA.ID;
-                        const cachedGameData = config.gamesDB[gameID] ?? {};
-                        cachedGameData.customOrder ??= {};
-                        container.querySelectorAll("li.target-achiv").forEach((cheevo, index) => {
-                            cachedGameData.customOrder[cheevo.dataset.achivId] = index;
-                            cheevo.dataset.customOrder = index;
-                        })
-                        config.writeConfiguration(500);
+                        if (this.uiProps.sortName === cheevosSortNames.CUSTOM_ORDER) {
+                            const gameID = watcher.GAME_DATA.ID;
+                            const cachedGameData = config.gamesDB[gameID] ?? {};
+                            cachedGameData.customOrder ??= {};
+                            container.querySelectorAll("li.target-achiv").forEach((cheevo, index) => {
+                                const cheevoID = cheevo.dataset.achivId;
+                                cachedGameData.customOrder[cheevoID] = index;
+                                watcher.CHEEVOS[cheevoID].customOrder = index;
+                            })
+                            config.writeConfiguration(500);
+                            UIEvents.dispatchEvent(new CustomEvent(UI_EVENTS_LIST.customOrderChanged, {}));
+                        }
+                        else {
+                            this.applySort({ animation: 0 });
+                        }
                     } //main container doesn't save order
                     else {
 
@@ -697,7 +697,7 @@ export class Target extends Widget {
                 },
                 onStart: (evt) => {
                 },
-                onEnd: () => ui.addEvents(),
+                // onEnd: () => ui.addEvents(),
             });
 
         }
@@ -774,6 +774,17 @@ export class Target extends Widget {
         this.applyPosition();
         this.setElementsValues();
         this.startAutoScroll();
+    }
+    onCustomOrderChanged() {
+        if (this.uiProps.sortName === cheevosSortNames.CUSTOM_ORDER) {
+            const cheevos = watcher.CHEEVOS;
+            const gameID = watcher.GAME_DATA.ID;
+            this.container.querySelectorAll("li.target-achiv").forEach((cheevo, index) => {
+                const cheevoID = cheevo.dataset.achivId;
+                cheevo.dataset.customOrder = cheevos[cheevoID].customOrder;
+            })
+            this.applySort();
+        }
     }
     onGameChange({ isNewGame }) {
         // if (true || isNewGame) {

@@ -1,5 +1,5 @@
 import { UI } from "../ui.js";
-import { config, ui, watcher } from "../script.js";
+import { config, ui, UIEvents, watcher } from "../script.js";
 import { Widget } from "./widget.js";
 import { applyFilter, applySort, cheevosFiterNames, cheevosSortNames, filterBy, filterMethods, sortBy, sortMethods } from "../functions/sortFilter.js";
 import { delay } from "../functions/delay.js";
@@ -13,6 +13,7 @@ import { marioAction } from "../functions/animations/smbAnimOld.js";
 import { smb3UnlockAnimation } from "../functions/animations/smbAnimations.js";
 import { parseCurrentGameLevel } from "../functions/parseRP.js";
 import { createAutoScroll } from "../functions/autosScroll.js";
+import { UI_EVENTS_LIST } from "../enums/UIEvents.js";
 export class AchievementsBlock extends Widget {
     widgetIcon = {
         description: "cheevos widget",
@@ -472,7 +473,26 @@ export class AchievementsBlock extends Widget {
             },
             animation: 100,
             chosenClass: "dragged",
-            onEnd: () => ui.addEvents(),
+            onUpdate: () => {
+
+                if (this.uiProps.sortName === cheevosSortNames.CUSTOM_ORDER) {
+                    const gameID = watcher.GAME_DATA.ID;
+                    const cachedGameData = config.gamesDB[gameID] ?? {};
+                    cachedGameData.customOrder ??= {};
+                    this.container.querySelectorAll("li.achiv-block").forEach((cheevo, index) => {
+                        const cheevoID = cheevo.dataset.achivId;
+                        cachedGameData.customOrder[cheevoID] = index;
+                        watcher.CHEEVOS[cheevoID].customOrder = index;
+                    })
+                    config.writeConfiguration(500);
+                    UIEvents.dispatchEvent(new CustomEvent(UI_EVENTS_LIST.customOrderChanged, {}));
+                }
+                else {
+                    this.applySorting({ animation: 0 });
+                }
+
+
+            },
         });
     }
     setElementsValues() {
@@ -557,6 +577,17 @@ export class AchievementsBlock extends Widget {
         await delay(2000);
         this.startAutoScroll();
     }
+    onCustomOrderChanged() {
+        if (this.uiProps.sortName === cheevosSortNames.CUSTOM_ORDER) {
+            const cheevos = watcher.CHEEVOS;
+            const gameID = watcher.GAME_DATA.ID;
+            this.container.querySelectorAll("li.achiv-block").forEach((cheevo, index) => {
+                const cheevoID = cheevo.dataset.achivId;
+                cheevo.dataset.customOrder = cheevos[cheevoID].customOrder;
+            })
+            this.applySorting();
+        }
+    }
     // Розбирає отримані досягнення гри та відображає їх на сторінці
     async parseGameAchievements(gameData) {
         const clearContainer = () => {
@@ -611,6 +642,7 @@ export class AchievementsBlock extends Widget {
             achievement.TrueRatio > 150 && (achivElement.dataset.rarity = "rare");
             achievement.TrueRatio > 300 && (achivElement.dataset.rarity = "mythycal");
             achivElement.dataset.DisplayOrder = achievement.DisplayOrder;
+            achivElement.dataset.customOrder = achievement.customOrder;
             achivElement.dataset.Type = achievement.Type;
             achivElement.dataset.difficulty = achievement.difficulty;
             achivElement.dataset.group = achievement.group;

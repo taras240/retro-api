@@ -167,12 +167,12 @@ export class UI {
       this.showContextmenu({ event: e, menuItems: this.settings.contextMenuItems })
     });
     this.app.addEventListener('mousedown', (event) => {
-      this.app.removeEventListener('mousemove', mouseMoveEvent);
+      // this.app.removeEventListener('mousemove', mouseMoveEvent);
       document.querySelectorAll(".popup, .dialog-window")?.forEach(p => p.remove())
     })
     this.app.addEventListener('mouseup', (event) => {
 
-      this.app.addEventListener('mousemove', mouseMoveEvent)
+      // this.app.addEventListener('mousemove', mouseMoveEvent)
     })
   }
   toggleBgAnimation(value) {

@@ -2,7 +2,7 @@ import { Config } from "./config.js";
 import { UI } from "./ui.js";
 import { APIWorker } from "./apiWorker.js"
 import { Watcher } from "./watcher.js";
-let config, ui, apiWorker, watcher, APIEvents, userAuthData;
+let config, ui, apiWorker, watcher, APIEvents, UIEvents, userAuthData;
 
 const userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
@@ -11,6 +11,7 @@ if (/android/i.test(userAgent) || (/iPhone/.test(userAgent) && !window.MSStream)
 }
 else {
   APIEvents = new EventTarget();
+  UIEvents = new EventTarget();
   config = new Config();
   ui = new UI();
   apiWorker = new APIWorker();
@@ -23,5 +24,5 @@ else {
   // userAuthData = new UserAuthData();
 }
 
-export { config, ui, apiWorker, watcher, APIEvents, userAuthData }
+export { config, ui, apiWorker, watcher, APIEvents, UIEvents, userAuthData }
 export const { configData } = config

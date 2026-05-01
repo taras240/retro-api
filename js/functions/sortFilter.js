@@ -195,6 +195,7 @@ export const cheevosSortNames = Object.freeze({
     TRUE_POINTS: "truepoints",
     DEFAULT: "default",
     LEVEL: "level",
+    CUSTOM_ORDER: "customOrder",
     // DISABLE: "disable",
 });
 

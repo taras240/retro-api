@@ -1,7 +1,7 @@
 import { UI } from "../ui.js";
 import { generateBadges, badgeElements, goldBadge } from "../components/badges.js";
 
-import { config, ui, APIEvents } from "../script.js";
+import { config, ui, APIEvents, UIEvents } from "../script.js";
 import { moveEvent } from "../functions/movingWidget.js";
 import { resizeEvent } from "../functions/resizingWidget.js";
 import { moveDirections, sumDirections } from "../enums/moveDirections.js";
@@ -11,6 +11,7 @@ import { resizerHtml } from "../components/resizer.js";
 import { divHtml } from "../components/divContainer.js";
 import { fromHtml } from "../functions/html.js";
 import { getRandomID } from "../functions/randomID.js";
+import { UI_EVENTS_LIST } from "../enums/UIEvents.js";
 
 export class Widget {
     widgetIcon = {
@@ -72,6 +73,7 @@ export class Widget {
 
     constructor() {
         this.addAPIEvents();
+        this.addUIEvents();
     }
     addEvents() {
         this.section.addEventListener('mousedown', (event) => {
@@ -145,6 +147,20 @@ export class Widget {
             });
         }
     }
+    addUIEvents() {
+        const events = {
+            [UI_EVENTS_LIST.customOrderChanged]: (e) => this.onCustomOrderChanged(),
+        };
+        for (const [name, handler] of Object.entries(events)) {
+            UIEvents.addEventListener(name, (e) => {
+                try {
+                    handler(e);
+                } catch (err) {
+                    console.error(`Widget ${this.sectionID} ${name} error:`, err);
+                }
+            });
+        }
+    }
     setElementsValues() { }
     onGameChange({ gameData, inNewGame, isWatching }) { }
     onCheevoUnlocks({ cheevos }) { }
@@ -153,6 +169,9 @@ export class Widget {
     onStatsUpdate({ userData }) { }
     onStopSession() { }
     onAPIRequest() { }
+    onCustomOrderChanged() {
+
+    }
     addWidgetIcon() {
         const isChecked = config.ui?.[this.section?.id]?.hidden === false ?? !this.VISIBLE;
         const { onChangeEvent, description, iconClass, badgeLabel } = this.widgetIcon;
