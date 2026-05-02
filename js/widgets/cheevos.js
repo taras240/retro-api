@@ -14,6 +14,7 @@ import { smb3UnlockAnimation } from "../functions/animations/smbAnimations.js";
 import { parseCurrentGameLevel } from "../functions/parseRP.js";
 import { createAutoScroll } from "../functions/autosScroll.js";
 import { UI_EVENTS_LIST } from "../enums/UIEvents.js";
+import { saveOrder } from "../functions/customOrder.js";
 export class AchievementsBlock extends Widget {
     widgetIcon = {
         description: "cheevos widget",
@@ -474,17 +475,10 @@ export class AchievementsBlock extends Widget {
             animation: 100,
             chosenClass: "dragged",
             onUpdate: () => {
-
                 if (this.uiProps.sortName === cheevosSortNames.CUSTOM_ORDER) {
-                    const gameID = watcher.GAME_DATA.ID;
-                    const cachedGameData = config.gamesDB[gameID] ?? {};
-                    cachedGameData.customOrder ??= {};
-                    this.container.querySelectorAll("li.achiv-block").forEach((cheevo, index) => {
-                        const cheevoID = cheevo.dataset.achivId;
-                        cachedGameData.customOrder[cheevoID] = index;
-                        watcher.CHEEVOS[cheevoID].customOrder = index;
-                    })
-                    config.writeConfiguration(500);
+                    const items = this.container.querySelectorAll("li.achiv-block");
+                    const gameData = watcher.GAME_DATA;
+                    saveOrder({ gameData, items, config });
                     UIEvents.dispatchEvent(new CustomEvent(UI_EVENTS_LIST.customOrderChanged, {}));
                 }
                 else {

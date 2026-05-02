@@ -19,6 +19,7 @@ import { fromHtml } from "../functions/html.js";
 import { parseCurrentGameLevel } from "../functions/parseRP.js";
 import { createAutoScroll } from "../functions/autosScroll.js";
 import { UI_EVENTS_LIST } from "../enums/UIEvents.js";
+import { saveOrder } from "../functions/customOrder.js";
 
 export class Target extends Widget {
     sectionCode = "-target";
@@ -672,15 +673,9 @@ export class Target extends Widget {
                 onUpdate: () => {
                     if (pull) {
                         if (this.uiProps.sortName === cheevosSortNames.CUSTOM_ORDER) {
-                            const gameID = watcher.GAME_DATA.ID;
-                            const cachedGameData = config.gamesDB[gameID] ?? {};
-                            cachedGameData.customOrder ??= {};
-                            container.querySelectorAll("li.target-achiv").forEach((cheevo, index) => {
-                                const cheevoID = cheevo.dataset.achivId;
-                                cachedGameData.customOrder[cheevoID] = index;
-                                watcher.CHEEVOS[cheevoID].customOrder = index;
-                            })
-                            config.writeConfiguration(500);
+                            const items = this.container.querySelectorAll("li.target-achiv");
+                            const gameData = watcher.GAME_DATA;
+                            saveOrder({ gameData, items, config });
                             UIEvents.dispatchEvent(new CustomEvent(UI_EVENTS_LIST.customOrderChanged, {}));
                         }
                         else {
