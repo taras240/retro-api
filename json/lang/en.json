@@ -304,5 +304,6 @@
     "raAPIKey": "RA API key",
     "customOrder": "Custom Order",
     "showFocusCheevo": "Focus Cheevo",
-    "focusCheevoHint": "First locked achievement in custom sorting order"
+    "focusCheevoHint": "First locked achievement in custom sorting order",
+    "played": "Played"
 }

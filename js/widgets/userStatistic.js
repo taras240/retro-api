@@ -8,6 +8,7 @@ import { inputTypes } from "../components/inputElements.js";
 import { buttonsHtml } from "../components/htmlElements.js";
 import { normalizeUserData } from "../functions/api/userDataNormalization.js";
 import { applySort, sortBy, sortMethods } from "../functions/sortFilter.js";
+import { GAME_AWARD_TYPES } from "../enums/gameAwards.js";
 
 export class UserStatistic extends Widget {
     widgetIcon = {
@@ -75,7 +76,6 @@ export class UserStatistic extends Widget {
                         checked: this.uiProps.showUnlocksSoftcore,
                         onChange: (event) => this.uiProps.showUnlocksSoftcore = event.currentTarget.checked,
                     },
-
                     {
                         type: inputTypes.CHECKBOX,
                         name: "show-true-ratio",
@@ -84,6 +84,47 @@ export class UserStatistic extends Widget {
                         checked: this.uiProps.showTrueRatio,
                         onChange: (event) => this.uiProps.showTrueRatio = event.currentTarget.checked,
                     },
+                    {
+                        type: inputTypes.CHECKBOX,
+                        name: "show-played",
+                        id: "show-played",
+                        label: ui.lang.played,
+                        checked: this.uiProps.showTotalGames,
+                        onChange: (event) => this.uiProps.showTotalGames = event.currentTarget.checked,
+                    },
+                    {
+                        type: inputTypes.CHECKBOX,
+                        name: "show-mastered",
+                        id: "show-mastered",
+                        label: ui.lang.mastered,
+                        checked: this.uiProps.showMastered,
+                        onChange: (event) => this.uiProps.showMastered = event.currentTarget.checked,
+                    },
+                    {
+                        type: inputTypes.CHECKBOX,
+                        name: "show-completed",
+                        id: "show-completed",
+                        label: ui.lang.completed,
+                        checked: this.uiProps.showCompleted,
+                        onChange: (event) => this.uiProps.showCompleted = event.currentTarget.checked,
+                    },
+                    {
+                        type: inputTypes.CHECKBOX,
+                        name: "show-beaten",
+                        id: "show-beaten",
+                        label: ui.lang.beaten,
+                        checked: this.uiProps.showBeaten,
+                        onChange: (event) => this.uiProps.showBeaten = event.currentTarget.checked,
+                    },
+                    {
+                        type: inputTypes.CHECKBOX,
+                        name: "show-beaten-softcore",
+                        id: "show-beaten-softcore",
+                        label: ui.lang.beatenSoftcore,
+                        checked: this.uiProps.showBeatenSoftcore,
+                        onChange: (event) => this.uiProps.showBeatenSoftcore = event.currentTarget.checked,
+                    },
+
                     {
                         type: inputTypes.CHECKBOX,
                         name: "show-completion-chart",
@@ -159,20 +200,62 @@ export class UserStatistic extends Widget {
         showBG: true,
         showUnlocksSoftcore: false,
         showUnlocksHardcore: false,
+        showMastered: false,
+        showCompleted: false,
+        showBeatenSoftcore: false,
+        showBeaten: false,
+        showTotalGames: false,
+
     }
     uiSetCallbacks = {
-        completionChart() {
+        completionChart(isShow) {
             this.setElementsValues();
-            this.updateCompletionStats();
+            if (isShow) {
+                this.updateCompletionStats();
+            }
         },
-        showUnlocksSoftcore() {
+        showUnlocksSoftcore(isShow) {
             this.setElementsValues();
-            this.updateCompletionStats();
+            if (isShow) {
+                this.updateCompletionStats();
+            }
         },
-        showUnlocksHardcore() {
+        showUnlocksHardcore(isShow) {
             this.setElementsValues();
-            this.updateCompletionStats();
-        }
+            if (isShow) {
+                this.updateCompletionStats();
+            }
+        },
+        showMastered(isShow) {
+            this.setElementsValues();
+            if (isShow) {
+                this.updateCompletionStats();
+            }
+        },
+        showCompleted(isShow) {
+            this.setElementsValues();
+            if (isShow) {
+                this.updateCompletionStats();
+            }
+        },
+        showBeaten(isShow) {
+            this.setElementsValues();
+            if (isShow) {
+                this.updateCompletionStats();
+            }
+        },
+        showBeatenSoftcore(isShow) {
+            this.setElementsValues();
+            if (isShow) {
+                this.updateCompletionStats();
+            }
+        },
+        showTotalGames(isShow) {
+            this.setElementsValues();
+            if (isShow) {
+                this.updateCompletionStats();
+            }
+        },
     }
     initialUserSummary;
     userSummary;
@@ -223,29 +306,40 @@ export class UserStatistic extends Widget {
         this.softpointsElement = this.section.querySelector('#stats_softpoints');
         this.trueRatioElement = this.section.querySelector('#stats_true-ratio');
         this.completionElement = this.section.querySelector(".stats__chart-container");
-
-        this.masteredCountElement = this.section.querySelector('#stats_mastered-count');
-        this.beatenCountElement = this.section.querySelector('#stats_beaten-count');
-        this.playedCountElement = this.section.querySelector('#stats_played-count');
+        this.masteredElement = this.section.querySelector('#stats_mastered');
+        this.beatenElement = this.section.querySelector('#stats_beaten');
+        this.beatenSoftElement = this.section.querySelector('#stats_beaten-softcore');
+        this.completedElement = this.section.querySelector('#stats_completed');
+        this.playedElement = this.section.querySelector('#stats_played');
 
         this.resizer = this.section.querySelector(".resizer");
     }
 
     setElementsValues() {
-        this.pointsElement.closest("li").classList.toggle("hidden", !this.uiProps.showHP);
-        this.retropointsElement.closest("li").classList.toggle("hidden", !this.uiProps.showRP);
-        this.softpointsElement.closest("li").classList.toggle("hidden", !this.uiProps.showSP);
-        this.rankElement.closest("li").classList.toggle("hidden", !this.uiProps.showRank);
-        this.rankRateElement.closest("li").classList.toggle("hidden", !this.uiProps.showPercentile);
-        this.trueRatioElement.closest("li").classList.toggle("hidden", !this.uiProps.showTrueRatio);
-        this.completionElement.classList.toggle("hidden", !this.uiProps.completionChart);
         this.section.classList.toggle("compact-header", !this.uiProps.showHeader);
         this.section.classList.toggle("hide-bg", !this.uiProps.showBG);
         this.container.classList.toggle("show-session-progress", this.uiProps.showSessionProgress);
-        this.container.classList.toggle("list-mode", this.uiProps.listMode)
+        this.container.classList.toggle("list-mode", this.uiProps.listMode);
 
-        this.softcoreUnlocksElement.closest("li").classList.toggle("hidden", !this.uiProps.showUnlocksSoftcore);
-        this.hardcoreUnlocksElement.closest("li").classList.toggle("hidden", !this.uiProps.showUnlocksHardcore);
+        [
+            [this.pointsElement, this.uiProps.showHP],
+            [this.retropointsElement, this.uiProps.showRP],
+            [this.softpointsElement, this.uiProps.showSP],
+            [this.rankElement, this.uiProps.showRank],
+            [this.rankRateElement, this.uiProps.showPercentile],
+            [this.trueRatioElement, this.uiProps.showTrueRatio],
+            [this.softcoreUnlocksElement, this.uiProps.showUnlocksSoftcore],
+            [this.hardcoreUnlocksElement, this.uiProps.showUnlocksHardcore],
+            [this.masteredElement, this.uiProps.showMastered],
+            [this.completedElement, this.uiProps.showCompleted],
+            [this.beatenElement, this.uiProps.showBeaten],
+            [this.beatenSoftElement, this.uiProps.showBeatenSoftcore],
+            [this.playedElement, this.uiProps.showTotalGames],
+        ].forEach(([element, visible]) => {
+            element?.closest("li")?.classList.toggle("hidden", !visible);
+        });
+
+        this.completionElement.classList.toggle("hidden", !this.uiProps.completionChart);
     }
     addEvents() {
         super.addEvents();
@@ -279,9 +373,21 @@ export class UserStatistic extends Widget {
             animationDuration: 0
         });
     }
+    hasCompletionPropery() {
+        const {
+            completionChart,
+            showUnlocksHardcore,
+            showUnlocksSoftcore,
+            showMastered,
+            showCompleted,
+            showBeatenSoftcore,
+            showBeaten,
+            showTotalGames
+        } = this.uiProps;
+        return completionChart || showUnlocksHardcore || showUnlocksSoftcore || showMastered || showCompleted || showBeaten || showBeatenSoftcore || showTotalGames;
+    }
     async updateCompletionStats() {
-        const { completionChart, showUnlocksHardcore, showUnlocksSoftcore } = this.uiProps;
-        if (!(completionChart || showUnlocksHardcore || showUnlocksSoftcore)) return;
+        if (!this.hasCompletionPropery()) return;
         const completionData = await apiWorker.completionProgress();
         this.updateChart(completionData);
         const getCheevosCount = (completionData) => {
@@ -294,10 +400,29 @@ export class UserStatistic extends Widget {
             }, { softcoreUnlocks: 0, hardcoreUnlocks: 0 });
             return unlocksData;
         }
+        const getAwardsCount = (completionData) => {
+            const AWARD_KINDS = [
+                'mastered',
+                'completed',
+                'beaten-hardcore',
+                'beaten-softcore',
+            ];
+            const gamesArray = completionData?.Results ?? [];
+            const awardsData = AWARD_KINDS.reduce((acc, kind) => {
+                const count = gamesArray.filter(g => g.HighestAwardKind === kind).length;
+                acc[kind] = count;
+                return acc;
+            }, {});
+            awardsData.played = gamesArray.length;
+            return awardsData;
+
+        }
         const unlocksData = getCheevosCount(completionData);
-        Object.assign(this.initialData, unlocksData);
-        Object.assign(this.userData, unlocksData);
-        this.updateStats({ userData: unlocksData });
+        const awardsData = getAwardsCount(completionData);
+        const completionStats = { ...unlocksData, ...awardsData };
+        Object.assign(this.initialData, completionStats);
+        Object.assign(this.userData, completionStats);
+        this.updateStats({ userData: completionStats });
     }
     async onStatsUpdate({ userData }) {
         this.updateStats({ userData });
@@ -311,6 +436,38 @@ export class UserStatistic extends Widget {
             return acc;
         }, { softcoreUnlocks, hardcoreUnlocks });
         this.updateStats({ userData: unlocksData });
+    }
+    onGameChange({ gameData, isWatching }) {
+        if (!this.userData?.played || !isWatching) return;
+        const isFirstPlayed = gameData.TimePlayed < 30;
+        if (isFirstPlayed) {
+            const completionData = {
+                played: this.userData.played + 1
+            }
+            this.updateStats({ userData: completionData });
+        }
+    }
+    onAwardsEarned({ awardsData }) {
+        if (!awardsData?.length || !Object.hasOwn(this.userData, "mastered")) return;
+        const completionData = { ...this.userData };
+
+        awardsData.forEach(({ award }) => {
+            switch (award) {
+                case GAME_AWARD_TYPES.MASTERED:
+                    completionData.mastered++;
+                    break;
+                case GAME_AWARD_TYPES.COMPLETED:
+                    completionData.completed++;
+                    break;
+                case GAME_AWARD_TYPES.BEATEN:
+                    completionData["beaten-hardcore"]++;
+                    break;
+                case GAME_AWARD_TYPES.BEATEN_SOFTCORE:
+                    completionData["beaten-softcore"]++;
+                    break;
+            }
+        })
+        this.updateStats({ userData: completionData });
     }
     async updateStats({ userData }) {
         if (!userData) {
@@ -379,6 +536,12 @@ export class UserStatistic extends Widget {
         setValue(this.softpointsElement, "softpoints");
         setValue(this.retropointsElement, "retropoints");
         setValue(this.trueRatioElement, "trueRatio");
+        setValue(this.masteredElement, "mastered");
+        setValue(this.completedElement, "completed");
+        setValue(this.beatenElement, "beaten-hardcore");
+        setValue(this.beatenSoftElement, "beaten-softcore");
+        setValue(this.playedElement, "played");
+
         this.userData = { ...this.userData, ...userData };
     }
     async updateChart(completionData = {}) {
@@ -420,7 +583,12 @@ export class UserStatistic extends Widget {
         points: { label: ui.lang.points, id: "stats_points", },
         retropoints: { label: ui.lang.retropoints, id: "stats_retropoints", },
         trueRatio: { label: ui.lang.trueRatio, id: "stats_true-ratio", },
-        softpoints: { label: ui.lang.softpoints, id: "stats_softpoints", }
+        softpoints: { label: ui.lang.softpoints, id: "stats_softpoints", },
+        mastered: { label: ui.lang.mastered, id: "stats_mastered" },
+        completed: { label: ui.lang.completed, id: "stats_completed" },
+        beaten: { label: ui.lang.beaten, id: "stats_beaten" },
+        beatenSoftcore: { label: ui.lang.beatenSoftcore, id: "stats_beaten-softcore" },
+        played: { label: ui.lang.played, id: "stats_played" },
     }
     generateStatsElements() {
         const order = this.uiProps.displayOrder ?? {};

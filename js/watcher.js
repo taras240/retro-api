@@ -136,7 +136,7 @@ export class Watcher {
     }
     onStatsUpdate() {
         APIEvents.dispatchEvent(new CustomEvent("statsUpdate", {
-            detail: { userData: this.userData }
+            detail: { userData: { ...this.userData } }
         }));
     }
     onAPIRequest() {
