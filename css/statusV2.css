@@ -1176,11 +1176,19 @@
     text-overflow: unset !important;
 }
 
+.section.show-focus-cheevo .rp__focus-cheevo,
+.rp__game-info-content .rp__focus-cheevo {
+    display: flex;
+}
+
 .rp__focus-cheevo {
     display: flex;
     flex-direction: row;
     gap: 0.5rem;
     height: min-content;
+    width: 100%;
+    overflow: hidden;
+    display: none;
 }
 
 .rp__focus-preview {
@@ -1200,15 +1208,22 @@
     display: flex;
     flex-direction: column;
     justify-content: start;
+    flex: 1;
+    overflow: hidden;
 }
 
 .rp__focus-description {
     font-size: 1.1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .rp__focus-title {
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: bold;
     white-space: nowrap;
+    white-space: nowrap;
+    overflow: hidden;
     text-overflow: ellipsis;
 }

@@ -48,6 +48,10 @@
     --badge-bg-color: lime;
 }
 
+.badge_dark-green {
+    --badge-bg-color: #16a34a;
+}
+
 .badge_gold {
     --badge-bg-color: goldenrod;
     --font-color: var(--badge-font-color);

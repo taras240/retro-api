@@ -18,6 +18,7 @@ export const badgeElements = {
     selection: (text, onClick) => badgeTemplate({ text, classes: ["badge_selection"], event: `onclick="${onClick}"`, }),
     black: (text) => badgeTemplate({ text, classes: ["badge_black"] }),
     gold: (text) => badgeTemplate({ text, classes: ["badge_gold"] }),
+    green: (text) => badgeTemplate({ text, classes: ["badge_dark-green"] }),
     gameTitle: (text) => badgeTemplate({ text, classes: [text.toLowerCase().replace(/[\s\'\"\`]/g, "-")] }),
     gameGenre: (text) => badgeTemplate({ text, classes: ["game-title_genre"] }),
     cheevoLevel: (level, isTarget) => `<div 

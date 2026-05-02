@@ -3,7 +3,7 @@ import { ALERT_TYPES } from "../enums/alerts.js";
 
 import { signedIcons } from "../components/icons.js"
 
-import { generateBadges } from "../components/badges.js";
+import { badgeElements, generateBadges } from "../components/badges.js";
 import { APIEvents, config, configData, ui, watcher } from "../script.js";
 import { Widget } from "./widget.js";
 import { filterBy, sortBy, sortMethods } from "../functions/sortFilter.js";
@@ -73,11 +73,13 @@ export class Status extends Widget {
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        id: "show-ticker",
-                        label: ui.lang.ticker,
-                        checked: this.uiProps.showTicker,
-                        onChange: (event) => this.uiProps.showTicker = event.currentTarget.checked,
+                        id: "show-focus",
+                        label: ui.lang.showFocusCheevo,
+                        hint: ui.lang.focusCheevoHint,
+                        checked: this.uiProps.showFocusCheevo,
+                        onChange: (event) => this.uiProps.showFocusCheevo = event.currentTarget.checked,
                     },
+
                     {
                         type: inputTypes.CHECKBOX,
                         id: "show-progression",
@@ -105,6 +107,12 @@ export class Status extends Widget {
                         label: `${ui.lang.retropoints} ${ui.lang.progressbar} `,
                         checked: this.uiProps.showRetropointsProgress,
                         onChange: (event) => this.uiProps.showRetropointsProgress = event.currentTarget.checked,
+                    }, {
+                        type: inputTypes.CHECKBOX,
+                        id: "show-ticker",
+                        label: ui.lang.ticker,
+                        checked: this.uiProps.showTicker,
+                        onChange: (event) => this.uiProps.showTicker = event.currentTarget.checked,
                     },
                 ],
             } : "",
@@ -175,13 +183,13 @@ export class Status extends Widget {
                         checked: this.uiProps.showGameBg,
                         onChange: (event) => this.uiProps.showGameBg = event.currentTarget.checked,
                     },
-                    {
-                        type: inputTypes.CHECKBOX,
-                        id: "show-target-preview",
-                        label: ui.lang.focusCheevoPreview,
-                        checked: this.uiProps.showTargetPreview,
-                        onChange: (event) => this.uiProps.showTargetPreview = event.currentTarget.checked,
-                    },
+                    // {
+                    //     type: inputTypes.CHECKBOX,
+                    //     id: "show-target-preview",
+                    //     label: ui.lang.focusCheevoPreview,
+                    //     checked: this.uiProps.showTargetPreview,
+                    //     onChange: (event) => this.uiProps.showTargetPreview = event.currentTarget.checked,
+                    // },
                     {
                         type: inputTypes.CHECKBOX,
                         id: "blink-on-update",
@@ -376,6 +384,7 @@ export class Status extends Widget {
         isHardMode: true,
         showStatus: true,
         alertDuration: 15,
+        showFocusCheevo: false,
     }
     uiDefaultValuesLegacy = {
         showRichPresence: false,
@@ -387,6 +396,7 @@ export class Status extends Widget {
         gameInfoType: GAME_INFO_TYPES.progression,
         showTargetPreview: false,
         showGameBg: false,
+        showFocusCheevo: false,
     }
     uiSetCallbacks = {
         time() {
@@ -428,6 +438,7 @@ export class Status extends Widget {
             this.updateProgressionBar();
             this.updateFocusPreview();
             this.updateProgressBar();
+            this.updateFocusCheevo();
         }
     };
 
@@ -532,7 +543,7 @@ export class Status extends Widget {
             <div class="rp-content__container">
                 ${gameInfoHtml()}
                 ${richPresenceHtml()}
-                <!--${focusCheevoHtml()}-->
+                ${focusCheevoHtml()}
                 ${progressionBarHtml()}
                 ${progressBarHtml(PROGRESS_TYPES.cheevos)}
                 ${progressBarHtml(PROGRESS_TYPES.points)}
@@ -619,7 +630,33 @@ export class Status extends Widget {
         this.doUpdateAnimation();
         this.updateTicker();
         this.startElementsAutoscroll();
+        this.updateFocusCheevo();
 
+    }
+    onCustomOrderChanged() {
+        this.updateFocusCheevo();
+    }
+    getFocusCheevo() {
+        const cheevos = Object.values(watcher.CHEEVOS);
+        const focusCheevo = cheevos.filter(c => this.uiProps.isHardMode ? !c.isEarnedHardcore : !c.isEarned).sort((a, b) => sortBy.customOrder(a, b))[0];
+        return focusCheevo;
+    }
+    updateFocusCheevo() {
+        const titleElements = this.section.querySelectorAll('.rp__focus-title');
+        const descriptionElements = this.section.querySelectorAll('.rp__focus-description');
+
+        const focusCheevo = this.getFocusCheevo();
+
+        if (focusCheevo) {
+            titleElements.forEach(el => el.innerHTML = `
+                ${badgeElements.gold("focus")} ${focusCheevo.Title}
+            `)
+            descriptionElements.forEach(el => el.innerText = focusCheevo.Description)
+        }
+        else {
+            titleElements.innerHTML = ``;
+            descriptionElements.innerText = `Unlocked all achievements`;
+        }
     }
     updateHardMode(cheevos) {
         cheevos ??= Object.values(watcher.CHEEVOS);
@@ -642,6 +679,7 @@ export class Status extends Widget {
 
         this.updateProgressionBar();
         this.updateFocusPreview();
+        this.updateFocusCheevo();
         this.updateProgressBar();
         this.updateTicker();
         this.doUpdateAnimation();
@@ -688,7 +726,7 @@ export class Status extends Widget {
         this.section.classList.toggle("game-bg", this.uiProps.showGameBg);
         this.section.classList.toggle("progress-by-session", this.uiProps.progressBySession);
         this.section.classList.toggle("hide-status", !this.uiProps.showStatus);
-
+        this.section.classList.toggle("show-focus-cheevo", this.uiProps.showFocusCheevo);
 
         addScrollableFlags();
     }
@@ -709,6 +747,7 @@ export class Status extends Widget {
         this.uiProps.showTicker && this.ticker.startScrolling();
     }
     updateFocusPreview() {
+        return;
         const isHardMode = this.uiProps.isHardMode;
         const focusCheevo = Object.values(watcher.CHEEVOS)
             .filter(c => filterBy.progression(c))
@@ -802,6 +841,10 @@ export class Status extends Widget {
             case GAME_INFO_TYPES.richPresence:
                 gameInfoContent.innerHTML = richInfoHtml();
                 updateIcons();
+                break;
+            case GAME_INFO_TYPES.focusCheevo:
+                gameInfoContent.innerHTML = focusCheevoHtml();
+                this.updateFocusCheevo();
                 break;
             default:
                 gameInfoContent.innerHTML = progressionBarHtml();

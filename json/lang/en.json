@@ -302,5 +302,7 @@
     "gotoRASettings": "go to retroachievements.org settings",
     "raUserName": "RA Username",
     "raAPIKey": "RA API key",
-    "customOrder": "Custom Order"
+    "customOrder": "Custom Order",
+    "showFocusCheevo": "Focus Cheevo",
+    "focusCheevoHint": "First locked achievement in custom sorting order"
 }
