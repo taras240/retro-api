@@ -483,8 +483,9 @@ export class Target extends Widget {
         this.uiProps.hiddenSets = hiddenIDArray;
 
     }
-    constructor() {
+    constructor(id) {
         super();
+        this.ID = id || "";
         this.generateWidget();
         this.addWidgetIcon();
         this.initializeElements();
@@ -493,7 +494,6 @@ export class Target extends Widget {
         this.showAotwEvent()
     }
     initializeElements() {
-        this.section = document.querySelector("#target_section");
         this.sectionID = this.section.id;
         this.header = this.section.querySelector(".header-container");
         this.container = this.section.querySelector(".target-container");
@@ -503,7 +503,7 @@ export class Target extends Widget {
         // this.moveToTopCheckbox = document.querySelector("#target-move-to-top");
     }
     generateWidget() {
-        const widgetID = "target_section";
+        const widgetID = "target_section" + this.ID;
         const headerElementsHtml = `
         ${buttonsHtml.togglePins()}
             ${buttonsHtml.filter(widgetID)}
@@ -526,6 +526,7 @@ export class Target extends Widget {
 
         const widget = this.generateWidgetElement(widgetData);
         ui.app.appendChild(widget);
+        this.section = widget;
     }
     toggleExternalWindow() {
         const debounce = (fn, delay = 250) => {
@@ -636,6 +637,10 @@ export class Target extends Widget {
             else if (event.target.matches(".delete-from-target")) {
                 const cheevo = event.target.closest(".target-achiv");
                 this.deleteFromTarget(cheevo);
+            }
+            else if (event.target.matches(".target-genre-badge")) {
+                const genre = event.target.dataset.genre;
+                this.filterByGenre(genre)
             }
         });
         this.pinnedContainer.addEventListener("click", (event) => {
@@ -894,10 +899,16 @@ export class Target extends Widget {
         const setElementHtml = () => {
             const subLevel = achievement.level?.toString()?.split(".")[1];
             const level = achievement.zone ? subLevel ? `${achievement.zone} [${subLevel}]` : achievement.zone : achievement.level?.toString()?.replace(".", "-");
+
+            const levelBadgeHtml = level ? badgeElements.cheevoLevel(level, true) : "";
+
+            const genresBadgesHtml = achievement.genres?.map(genre => badgeElements.buttonGenreBadge(genre)).join("");
+
+            const genresIcons = achievement.genres?.map(genre => genreIcons[genre]).join("")
+
             targetElement.innerHTML = `
             <div class="target__cheevo-bg"></div>
             <div class="target__buttons-container">
-                
                 ${buttonsHtml.comments()}
                 ${buttonsHtml.pin()}
             </div>
@@ -917,10 +928,10 @@ export class Target extends Widget {
             </div>
             <div class="target__cheevo-details">
                 <h3 class="target__cheevo-header">
-                    ${level ? badgeElements.cheevoLevel(level, true) : ""}
-                    ${achievement.genres.length > 0 ? achievement.genres?.map(genre => badgeElements.buttonGenreBadge(genre, `ui.target.filterByGenre('${genre}')`)).join("") : ""
-                }<a target="_blanc" data-title="${ui.lang.goToRAHint}" href="${cheevoUrl(achievement)}">
-                        ${achievement.Title} ${achievement.genres?.map(genre => genreIcons[genre]).join("")}
+                    ${levelBadgeHtml}
+                    ${genresBadgesHtml}
+                    <a target="_blanc" data-title="${ui.lang.goToRAHint}" href="${cheevoUrl(achievement)}">
+                        ${achievement.Title} ${genresIcons}
                     </a>
                 </h3>
                 <p class="list-item__text">${achievement.Description}</p>
@@ -1135,24 +1146,11 @@ export class Target extends Widget {
 
     }
     fillItems() {
-        const addHeaderBadges = (genres = []) => {
-            const badgesContainer = document.createElement("div");
-            badgesContainer.classList.add("target__badges-container")
-            const badgesHtml = genres
-                .map(genre =>
-                    badgeElements.selection(genre, `ui.target.filterByGenre('${genre}')`))
-                .join("");
-            badgesContainer.innerHTML = badgesHtml;
-            this.section.insertBefore(badgesContainer, this.container);
-
-        }
-
         this.isDynamicAdding = true;
         this.clearAllAchivements();
         Object.keys(watcher.CHEEVOS).forEach(id => {
             this.pushCheevo(id)
         });
-        // addHeaderBadges(watcher.GAME_DATA.cheevoGenres);
         this.applyFilter();
         this.applySort();
         this.setMGameSelection();

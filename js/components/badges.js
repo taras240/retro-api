@@ -39,11 +39,10 @@ export const badgeElements = {
         const badge = badgeElements.gold(`HLTB: ${time} `);
         return badge;
     },
-    buttonGenreBadge: (text, onClick) => badgeTemplate({
+    buttonGenreBadge: (text) => badgeTemplate({
         text: text,
         classes: ["target-genre-badge", "badge-bold", "badge_gold", "badge-button"],
         // hint: text.toUpperCase(),
-        event: `onclick="${onClick}"`,
         dataProp: `data-genre="${text}"`
     })
 }

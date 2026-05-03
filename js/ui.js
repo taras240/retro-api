@@ -91,6 +91,7 @@ export class UI {
     new AchievementsBlock(1);
     new AchievementsBlock(2);
     this.target = new Target();
+    new Target(2);
     this.gameCard = new GameCard();
     this.stats = new UserStatistic();
     this.gameList = new GameList();
