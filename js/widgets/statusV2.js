@@ -290,6 +290,13 @@ export class Status extends Widget {
                         onChange: (event) => this.uiProps.scrollRP = event.currentTarget.checked,
                     },
                     {
+                        type: inputTypes.CHECKBOX,
+                        id: "rp-scroll-focus",
+                        label: ui.lang.focusCheevo,
+                        checked: this.uiProps.scrollFocusDescription,
+                        onChange: (event) => this.uiProps.scrollFocusDescription = event.currentTarget.checked,
+                    },
+                    {
                         prefix: ui.lang.scrollSpeed,
                         postfix: "px/s",
                         type: inputTypes.NUM_INPUT,
@@ -385,6 +392,7 @@ export class Status extends Widget {
         showStatus: true,
         alertDuration: 15,
         showFocusCheevo: false,
+        scrollFocusDescription: false,
     }
     uiDefaultValuesLegacy = {
         showRichPresence: false,
@@ -423,6 +431,10 @@ export class Status extends Widget {
             this.startElementsAutoscroll(0);
         },
         scrollRP() {
+            this.setElementsValues();
+            this.startElementsAutoscroll(0);
+        },
+        scrollFocusDescription() {
             this.setElementsValues();
             this.startElementsAutoscroll(0);
         },
@@ -712,6 +724,7 @@ export class Status extends Widget {
         const addScrollableFlags = () => {
             this.section.querySelectorAll(".rp__rich-presence").forEach(rp => rp.classList.toggle("autoscroll", this.uiProps.scrollRP));
             this.section.querySelector(".rp__game-title").classList.toggle("autoscroll", this.uiProps.scrollTitle);
+            this.section.querySelectorAll(".rp__focus-description").forEach(descr => descr.classList.toggle("autoscroll", this.uiProps.scrollFocusDescription));
         }
         this.section.classList.toggle("hide-game-info", !this.uiProps.showGameInfo)
         this.section.classList.toggle("show-ticker", this.uiProps.showTicker);

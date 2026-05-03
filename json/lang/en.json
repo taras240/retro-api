@@ -305,5 +305,6 @@
     "customOrder": "Custom Order",
     "showFocusCheevo": "Focus Cheevo",
     "focusCheevoHint": "First locked achievement in custom sorting order",
-    "played": "Played"
+    "played": "Played",
+    "focusCheevo": "Focus Cheevo"
 }
