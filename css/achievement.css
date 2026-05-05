@@ -73,8 +73,8 @@
   right: 0;
   max-width: 25%;
   max-height: 25%;
-  width: 0.75rem;
-  height: 0.75rem;
+  width: 0.75em;
+  height: 0.75em;
   /* border-radius: 50%; */
   background-color: greenyellow;
   border: 1px solid black;
@@ -154,8 +154,8 @@
   --font-size: calc(var(--achiv-height)/7);
   display: block;
   position: absolute;
-  bottom: 0rem;
-  left: 0rem;
+  bottom: 0;
+  left: 0;
   background-color: var(--main-color);
   width: 100%;
   height: 30%;
@@ -165,7 +165,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0.2rem;
+  gap: 0.2em;
 }
 
 .achiv-block.earned .prev-lock-overlay {
@@ -259,7 +259,7 @@
 
 .achiv-title {
   font-weight: 600;
-  line-height: 2rem;
+  line-height: 2em;
 }
 
 
@@ -309,7 +309,7 @@
   font-size: calc(var(--achiv-height) / 3);
   background-color: black;
   border-radius: 5px;
-  padding: 0 0.25rem 0.25rem 0;
+  padding: 0 0.25em 0.25em 0;
   color: goldenrod;
 
   font-weight: 600;
@@ -558,7 +558,7 @@
 
 .cheevos__group-header {
   position: relative;
-  padding: 0.5rem;
+  padding: 0.5em;
   text-align: center;
 }
 
@@ -595,10 +595,10 @@
 
 .cheevos__group-header h3 {
   display: inline;
-  font-size: 1.1rem;
+  font-size: 1.1em;
   color: var(--accent-color);
   /* background-color: var(--main-color); */
-  padding: 1rem;
+  padding: 1em;
 }
 
 .cheevos__group-container {

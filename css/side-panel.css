@@ -1,6 +1,6 @@
 .buttons-block {
     --side-panel-width: 100px;
-    --button-height: 2rem;
+    --button-height: 2em;
     --font-color: white;
     position: fixed;
     top: 0;
@@ -36,7 +36,7 @@
 }
 
 .buttons-block__shortcuts {
-    padding: 1rem 0;
+    padding: 1em 0;
     height: 100%;
     align-self: baseline;
     flex: 1;
@@ -44,7 +44,7 @@
     flex-direction: column;
     justify-content: flex-start;
     align-content: space-between;
-    row-gap: 1.5rem;
+    row-gap: 1.5em;
     width: 100%;
     overflow: hidden;
     overflow-y: scroll;
@@ -52,10 +52,10 @@
 
 .buttons-block_tools {
     position: relative;
-    padding: 1rem 0;
+    padding: 1em 0;
     display: flex;
     flex-direction: column;
-    gap: 1.0rem;
+    gap: 1.0em;
     justify-content: space-evenly;
 }
 
@@ -72,7 +72,7 @@
 
 .buttons-block_container .setting-radio-group {
 
-    width: calc(var(--button-height) + 1rem);
+    width: calc(var(--button-height) + 1em);
     height: fit-content;
     display: grid;
     place-items: center;

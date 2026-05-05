@@ -141,6 +141,7 @@ export class Config {
       UI.updateColors();
     },
     fontSize(size) {
+      document.documentElement.style.setProperty("--font-size", `${size}px`);
       document.documentElement.style.setProperty('font-size', `${size}px`);
     },
     fontFamilyName(fontName) {

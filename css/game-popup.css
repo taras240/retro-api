@@ -13,7 +13,7 @@
 }
 
 .game-info__container {
-    padding: 1rem;
+    padding: 1em;
     background-color: var(--main-color);
     border-radius: 5px;
     z-index: 2;
@@ -21,8 +21,8 @@
 
 .game-info__images-container {
     display: flex;
-    gap: 1rem;
-    height: 15rem;
+    gap: 1em;
+    height: 15em;
     width: 100%;
     overflow-x: scroll;
     overflow-y: hidden;
@@ -53,17 +53,17 @@
 }
 
 .game-info__descriptions-container {
-    margin-top: 1rem;
+    margin-top: 1em;
     display: flex;
     flex-direction: column;
-    gap: .5rem;
+    gap: .5em;
 }
 
 .game-description__property {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 1.1rem;
+    font-size: 1.1em;
 }
 
 .rawg-data-list {

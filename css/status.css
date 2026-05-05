@@ -3,7 +3,7 @@
   top: calc(100vh - 100px);
   left: 30%;
   height: 70px;
-  height: 6rem !important;
+  height: 6em !important;
   min-width: 300px;
   min-height: 75px;
   max-height: 150px;
@@ -238,7 +238,7 @@ card-3d::before {
   align-items: start;
   justify-content: space-evenly;
   height: 100%;
-  padding-left: 0.25rem;
+  padding-left: 0.25em;
 
   flex-shrink: 1;
   flex-grow: 1;
@@ -327,7 +327,7 @@ card-3d::before {
   font-size: inherit;
   display: grid;
   grid-template-columns: repeat(2, auto);
-  column-gap: 0.5rem;
+  column-gap: 0.5em;
 }
 
 .signed-icon.auto-font-size,
@@ -371,7 +371,7 @@ card-3d::before {
   align-items: center;
   gap: 20px;
   justify-content: start;
-  padding: 0 1rem;
+  padding: 0 1em;
   transform: rotateX(180deg);
   background-color: var(--secondary-color);
   border-radius: var(--border-radius);
@@ -696,7 +696,7 @@ card-3d::before {
   justify-content: space-evenly;
   flex: 1;
   font-size: inherit;
-  row-gap: .25rem;
+  row-gap: .25em;
   overflow: visible;
   padding: 0 5px;
 }

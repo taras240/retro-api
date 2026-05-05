@@ -23,12 +23,12 @@
 }
 
 .target_section.fixed-size .target-container {
-  --cheevo-fixed-height: 7.5rem;
+  --cheevo-fixed-height: 7.5em;
   max-height: calc(var(--max-count)*calc(var(--cheevo-fixed-height) + 1px) + 3px);
 }
 
 .target_section.fixed-size .list-item__text {
-  font-size: 1rem;
+  font-size: 1em;
   color: var(--font-color);
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -57,7 +57,7 @@
   gap: 1px;
   /* padding: 0.; */
   height: fit-content;
-  max-height: calc(3 * 6.5rem);
+  max-height: calc(3 * 6.5em);
   overflow: scroll;
   /* border: 1px solid var(--accent-color); */
   border-bottom: 2px solid var(--accent-color);
@@ -93,14 +93,14 @@
   color: var(--font-color);
   background: var(--secondary-color);
   display: flex;
-  flex-basis: 30rem;
+  flex-basis: 30em;
   transition: 0.1s;
 }
 
 
 
 /* .target-achiv.border {
-  padding: 0.5rem 1rem;
+  padding: 0.5em 1em;
   gap: 15px;
 } */
 
@@ -173,8 +173,8 @@
 .prev {
   /* top: -3px; */
   --image-offset: 0px;
-  height: 5rem;
-  width: 5rem;
+  height: 5em;
+  width: 5em;
   /* overflow: hidden; */
 }
 
@@ -219,17 +219,17 @@
 .section.show-overlay .prev-lock-overlay {
   display: flex;
   position: absolute;
-  bottom: 0rem;
-  left: 0rem;
+  bottom: 0;
+  left: 0;
   background-color: var(--main-color);
   width: 100%;
   height: 30%;
   border-radius: 2px;
-  font-size: 0.8rem;
+  font-size: 0.8em;
   font-weight: bold;
   justify-content: center;
   align-items: center;
-  gap: 0.2rem;
+  gap: 0.2em;
 }
 
 .target-achiv.earned .prev-lock-overlay {
@@ -238,7 +238,7 @@
 
 .target-achiv .prev-lock-overlay::before {
   content: "";
-  height: 0.8rem;
+  height: 1em;
   aspect-ratio: 1;
   mask-image: url(../assets/img/lock.svg);
   mask-repeat: no-repeat;
@@ -288,7 +288,7 @@
 }
 
 .target-achiv.border .prev-img {
-  padding: 0.25rem;
+  padding: 0.25em;
 }
 
 .target-achiv.earned .prev-img {
@@ -346,7 +346,7 @@
 }
 
 .target-achiv.show-hard-anim {
-  transform: translate(-0.25rem, -0.25rem);
+  transform: translate(-0.25em, -0.25em);
   z-index: 2;
   box-shadow: 0 0 3px 0 black;
   transition: transform 200ms;
@@ -358,12 +358,12 @@
 
 @keyframes target-hardcore-animation {
   0% {
-    width: 10rem;
-    right: -10rem;
+    width: 10em;
+    right: -10em;
   }
 
   100% {
-    width: 4rem;
+    width: 4em;
     right: 0;
     opacity: 1;
   }
@@ -377,11 +377,11 @@
   justify-content: space-between;
   z-index: 1;
   align-content: stretch;
-  font-size: 1.05rem;
+  font-size: 1.05em;
 }
 
 .target__cheevo-header {
-  font-size: 1.1rem;
+  font-size: 1.1em;
   white-space: nowrap;
   text-wrap: nowrap;
   width: 100%;
@@ -389,11 +389,11 @@
 }
 
 .target__cheevo-header>* {
-  margin-right: 0.25rem;
+  margin-right: 0.25em;
 }
 
 .list-item__text {
-  font-size: 1rem;
+  font-size: 1em;
   color: var(--font-color);
   /* display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -403,18 +403,18 @@
 
 .target__buttons-container {
   position: absolute;
-  height: calc(100% - 0.5rem);
+  height: calc(100% - 0.5em);
   opacity: 0;
   background-color: var(--main-color);
-  top: 0.25rem;
-  right: 0.25rem;
-  padding: 0.25rem;
+  top: 0.25em;
+  right: 0.25em;
+  padding: 0.25em;
   border-radius: 3px;
   z-index: 2;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-  gap: 0.25rem;
+  gap: 0.25em;
 }
 
 .target-achiv:hover .target__buttons-container {
@@ -436,7 +436,7 @@
 
 .condition {
   aspect-ratio: 1;
-  height: 1.1rem;
+  height: 1.1em;
   background-color: var(--font-color);
 }
 
@@ -458,14 +458,14 @@
 
 .text-input.target__search-bar {
   background-color: var(--main-color);
-  max-width: 6rem;
-  padding-right: 0.5rem;
+  max-width: 6em;
+  padding-right: 0.5em;
   border-radius: 4px;
 }
 
 .text-input.target__search-bar:focus {
   background-color: var(--main-color);
-  max-width: 10rem;
+  max-width: 10em;
   opacity: 1;
 }
 
@@ -499,7 +499,7 @@
   height: fit-content;
   display: flex;
   align-items: stretch;
-  padding: 0.5rem 1rem;
+  padding: 0.5em 1em;
 }
 
 .target_section:not(.show-events) .target__aotw-container {
@@ -520,14 +520,14 @@
 
 
 .target__aotw-container .target__cheevo-details {
-  padding: 0.25rem;
+  padding: 0.25em;
   height: 100%;
 }
 
 .target__hide-aotw {
   position: absolute;
-  top: .25rem;
-  right: .25rem;
+  top: .25em;
+  right: .25em;
   z-index: 2;
   mask-image: url(../assets/img/close.svg);
 }
@@ -536,7 +536,7 @@
   align-self: center;
   flex-shrink: 0;
   height: 100%;
-  min-height: 6rem;
+  min-height: 6em;
   aspect-ratio: 1;
   width: auto;
 }
@@ -564,11 +564,11 @@
 
 .comments-list {
   position: relative;
-  padding: 1rem 0;
+  padding: 1em 0;
   flex: 1;
   width: 100%;
   display: flex;
-  gap: 1rem;
+  gap: 1em;
   flex-direction: column;
   /* height: 100%; */
   overflow-y: auto;
@@ -576,7 +576,7 @@
 
 
 .comment {
-  padding: 0 1rem;
+  padding: 0 1em;
   /* display: flex;
   flex-direction: column;
   align-items: end; */
@@ -585,17 +585,17 @@
 .comment__header {
   position: relative;
   display: flex;
-  gap: 1rem;
-  font-size: 1rem;
+  gap: 1em;
+  font-size: 1em;
   background-color: var(--accent-color);
   /* background-color: black; */
   /* border: 1px solid black; */
   /* color: white; */
-  padding: 0.1rem 0.5rem;
+  padding: 0.1em 0.5em;
   border-radius: 2px 2px 2px 0;
   width: fit-content;
-  bottom: 0rem;
-  left: 0rem;
+  bottom: 0em;
+  left: 0em;
 
 }
 
@@ -608,7 +608,7 @@
   background: linear-gradient(to top left, var(--main-color), var(--secondary-color));
   background: var(--secondary-color);
   /* border: 1px solid black; */
-  padding: 0.5rem;
+  padding: 0.5em;
   border-radius: 0 2px 2px 2px;
   user-select: text;
   cursor: text;
@@ -616,10 +616,10 @@
 
 .comment__copy-button {
   position: absolute;
-  height: 1.1rem;
-  top: -0.25rem;
-  right: -0.25rem;
-  padding: 0 0.25rem;
+  height: 1.1em;
+  top: -0.25em;
+  right: -0.25em;
+  padding: 0 0.25em;
   background-color: var(--font-color);
   opacity: 0.5;
   cursor: pointer;
@@ -628,11 +628,11 @@
 
 .comment__note-button {
   position: absolute;
-  height: 1.1rem;
+  height: 1.1em;
   transform: translateY(100%);
-  top: -0.25rem;
-  right: -0.25rem;
-  padding: 0 0.25rem;
+  top: -0.25em;
+  right: -0.25em;
+  padding: 0 0.25em;
   background-color: var(--font-color);
   opacity: 0.5;
   cursor: pointer;
@@ -708,7 +708,7 @@
 }
 
 .lines::before {
-  width: 6rem;
+  width: 6em;
   height: 500px;
   top: 60%;
   left: 75%;
@@ -717,7 +717,7 @@
 
 .lines::after {
   height: 500px;
-  width: 4rem;
+  width: 4em;
   top: 0%;
   left: 35%;
   transform: rotateZ(35deg) translate(-0%, -50%);
@@ -787,7 +787,7 @@
   flex-direction: row;
   flex-wrap: nowrap;
   overflow-x: scroll;
-  gap: 1rem;
+  gap: 1em;
   align-items: center;
-  padding: 0.25rem 0.5rem 0;
+  padding: 0.25em 0.5em 0;
 }

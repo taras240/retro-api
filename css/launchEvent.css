@@ -9,18 +9,18 @@
 .launch__rules-list {
     display: flex;
     justify-content: space-evenly;
-    padding: 0.5rem;
+    padding: 0.5em;
     background: var(--selection-color);
-    column-gap: 0.5rem;
+    column-gap: 0.5em;
 }
 
 .launch__summary-line {
-    padding: 0.5rem 1rem;
+    padding: 0.5em 1em;
     background: var(--selection-color);
-    font-size: 1.2rem;
+    font-size: 1.2em;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.5em;
 }
 
 .wii-event-container {
@@ -40,7 +40,7 @@
 
 .event__game-item.main-column-item.right-bg-icon:after {
     content: attr(data-points);
-    font-size: 2rem;
+    font-size: 2em;
     /* font-weight: bold; */
     color: var(--ra-progress-color);
     font-weight: bold;
@@ -64,7 +64,7 @@
 }
 
 .event__accent-text {
-    font-size: 1.5rem;
+    font-size: 1.5em;
     font-weight: bold;
     color: var(--ra-progress-color);
 }

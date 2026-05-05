@@ -42,14 +42,14 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    row-gap: 2rem;
+    row-gap: 2em;
     /* background: rgba(204, 0, 255, 0.13); */
 
 }
 
 .fs-alert__header {
     color: var(--font-color);
-    font-size: 3rem;
+    font-size: 3em;
     text-align: center;
     text-transform: uppercase;
 }
@@ -70,7 +70,7 @@
 
 .fs-alert__image-container {
     position: relative;
-    margin: 3rem 0;
+    margin: 3em 0;
 }
 
 .fs-alert__image-container::after {
@@ -147,12 +147,12 @@
 
 .fs-alert__title {
     color: var(--font-color);
-    font-size: 2rem;
+    font-size: 2em;
     font-weight: bold;
 }
 
 .fs-alert__description {
     color: var(--font-color);
-    font-size: 2rem;
+    font-size: 2em;
     font-weight: normal;
 }

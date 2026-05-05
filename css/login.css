@@ -15,7 +15,7 @@
     max-height: 800px;
     width: 60vw;
     height: 90vh;
-    border-radius: 1rem;
+    border-radius: 1em;
     transform: translate(-50%, -50%);
     top: 50%;
     left: 50%;
@@ -81,11 +81,11 @@
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.7);
-    border-radius: 1rem;
+    border-radius: 1em;
     border: 1px solid rgb(29, 29, 29);
     display: flex;
     justify-content: center;
-    padding: 1rem;
+    padding: 1em;
 }
 
 
@@ -111,14 +111,14 @@
 .ra-img__container:after {
     content: 'TRACKER';
     font-weight: bold;
-    font-size: 1.3rem;
+    font-size: 1.3em;
     /* color: white; */
     position: absolute;
     bottom: 0;
     left: 50%;
     transform: translate(20%, 0%);
     border: 1px solid var(--yellow-color);
-    padding: .2rem 1rem;
+    padding: .2em 1em;
     background-color: rgba(0, 0, 0, 1);
     border-radius: 5px;
 
@@ -141,9 +141,9 @@
 .login__input-label {
     position: absolute;
     top: 0;
-    left: 2rem;
+    left: 2em;
     transform: translateY(-50%);
-    padding: 0 1rem;
+    padding: 0 1em;
     border-radius: 50px;
 
     background-color: #32363f;
@@ -157,12 +157,12 @@
 }
 
 .login__input {
-    padding: 0.75rem;
-    border-radius: 50rem;
+    padding: 0.75em;
+    border-radius: 50em;
     background-color: rgba(0, 0, 0, 0.50);
     color: var(--font-color);
     text-align: center;
-    font-size: 1.5rem;
+    font-size: 1.5em;
 
     border: 1px solid #32363f;
     transition: .2s;
@@ -175,9 +175,9 @@
 
 .login__get-api {
     color: var(--font-color);
-    margin-right: 2rem;
+    margin-right: 2em;
     text-decoration: none;
-    padding: 0 0.2rem;
+    padding: 0 0.2em;
     background-color: transparent;
     border-radius: 5px;
     align-self: flex-end;
@@ -217,11 +217,11 @@
 }
 
 .login__header {
-    font-size: 3rem;
+    font-size: 3em;
     text-align: center;
 }
 
 .login__description {
-    font-size: 1.3rem;
+    font-size: 1.3em;
     text-align: center;
 }

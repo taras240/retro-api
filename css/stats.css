@@ -5,8 +5,8 @@
     top: 100px;
     width: 250px;
     height: auto !important;
-    min-width: 11rem;
-    min-height: 5rem;
+    min-width: 11em;
+    min-height: 5em;
     /* cursor: grab; */
 }
 
@@ -22,9 +22,9 @@
     flex-wrap: wrap;
     /* flex: 1; */
     overflow-y: scroll;
-    gap: 0.5rem;
+    gap: 0.5em;
     background-color: transparent;
-    padding: 0.5rem;
+    padding: 0.5em;
 }
 
 .stats-container.list-mode {
@@ -33,8 +33,8 @@
 }
 
 .stats__stat-container {
-    flex-basis: 8rem;
-    height: 6.5rem;
+    flex-basis: 8em;
+    height: 6.5em;
     overflow: hidden;
     flex-grow: 1;
     position: relative;
@@ -43,7 +43,7 @@
     align-items: center;
     justify-content: space-evenly;
     gap: 0;
-    padding: 0.25rem;
+    padding: 0.25em;
     border-radius: var(--border-radius);
     background-color: var(--secondary-color);
 }
@@ -53,7 +53,7 @@
     height: auto;
     flex-direction: row;
     justify-content: space-between;
-    padding: 0.2rem 1rem;
+    padding: 0.2em 1em;
     border-radius: 2px;
 }
 
@@ -75,13 +75,13 @@
 } */
 
 .stats__title {
-    font-size: 1.1rem;
+    font-size: 1.1em;
     font-weight: normal;
     text-wrap: nowrap;
 }
 
 .stats__value {
-    font-size: 2rem;
+    font-size: 2em;
     font-weight: bold;
     text-wrap: nowrap;
     display: flex;
@@ -90,7 +90,7 @@
 }
 
 .stats-container.list-mode .stats__value {
-    font-size: 1.5rem;
+    font-size: 1.5em;
     flex-direction: row;
 }
 
@@ -100,7 +100,7 @@
     right: 5px;
     top: -3px;
     color: greenyellow;
-    font-size: 0.8rem;
+    font-size: 0.8em;
     font-weight: bold;
     opacity: 0;
     transition: 1s;
@@ -124,8 +124,8 @@
 
 .session-progress {
     color: greenyellow;
-    font-size: 1.3rem;
-    line-height: 1.3rem;
+    font-size: 1.3em;
+    line-height: 1.3em;
     font-weight: bold;
 }
 
@@ -147,7 +147,7 @@
     display: flex;
     flex-direction: column;
     gap: 0;
-    padding: 0.5rem 0.25rem;
+    padding: 0.5em 0.25em;
 }
 
 .stats-container.list-mode .stats__chart-container {
@@ -166,13 +166,13 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    padding: 0.25rem;
+    padding: 0.25em;
     overflow: hidden;
 }
 
 .round-stat__container .circle {
     position: relative;
-    height: 7rem;
+    height: 7em;
     aspect-ratio: 1;
     overflow: hidden;
     border-radius: 50%;
@@ -194,7 +194,7 @@
 .round-stat__legend {
     top: 50%;
     left: 50%;
-    font-size: 1rem;
+    font-size: 1em;
     z-index: 2;
     border-radius: 5px;
 }
@@ -203,7 +203,7 @@
     position: relative;
     text-transform: capitalize;
     text-wrap: nowrap;
-    padding: 0 0.5rem 0 1.25rem;
+    padding: 0 0.5em 0 1.25em;
     width: fit-content;
 }
 
@@ -214,11 +214,11 @@
 .legend__award::before {
     content: '';
     position: absolute;
-    left: .25rem;
+    left: .25em;
     top: 50%;
     transform: translateY(-50%);
-    width: 0.75rem;
-    height: 0.75rem;
+    width: 0.75em;
+    height: 0.75em;
     border-radius: 50%;
 }
 

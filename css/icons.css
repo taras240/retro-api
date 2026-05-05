@@ -3,7 +3,7 @@
     --badge-font-color: black;
     --badge-bg-color: lime;
     display: inline;
-    padding: 0 0.25rem;
+    padding: 0 0.25em;
     border-radius: 3px;
     background-color: var(--badge-bg-color);
     text-transform: uppercase;
@@ -37,7 +37,7 @@
     align-items: center;
     width: fit-content;
     line-height: 1;
-    padding: 0.15rem 0.25rem;
+    padding: 0.15em 0.25em;
 }
 
 .badge.badge-bold {
@@ -63,7 +63,7 @@
     border: 1px solid var(--accent-color);
     /* test */
     font-weight: normal;
-    font-size: 1rem;
+    font-size: 1em;
     border: 1px solid gray;
     background: var(--badge-bg-color);
     color: var(--font-color);
@@ -76,17 +76,17 @@
     border: none;
     /* test */
     font-weight: normal;
-    font-size: 1rem;
+    font-size: 1em;
     background: var(--badge-bg-color);
     color: var(--badge-font-color);
-    padding: 0 0.5rem;
+    padding: 0 0.5em;
 }
 
 .badge_black {
     font-weight: normal;
     --badge-bg-color: black;
     --badge-font-color: white;
-    padding: 1px 0.25rem;
+    padding: 1px 0.25em;
 }
 
 .badge_cheevo-genre {
@@ -185,14 +185,14 @@
 
 .cheevo-genre__icon {
     font-size: inherit;
-    margin-left: 0.15rem;
+    margin-left: 0.15em;
     text-align: center;
 }
 
 .signed-icon {
     display: flex;
     align-items: center;
-    column-gap: 0.25rem;
+    column-gap: 0.25em;
     font-size: inherit;
     flex-wrap: nowrap;
     text-overflow: ellipsis;
@@ -223,7 +223,7 @@
 .game-description_link {
     padding: 0;
     background-color: transparent;
-    font-size: 1.2rem;
+    font-size: 1.2em;
     display: grid;
     place-items: center;
     border-radius: 2px;
@@ -243,7 +243,7 @@
 
 
 .games__icon-button {
-    font-size: 1.4rem;
+    font-size: 1.4em;
     width: 20px;
     aspect-ratio: 1;
     align-self: center;
@@ -318,7 +318,7 @@
 .map-icon {
     height: 1.2em;
     background-color: black;
-    margin-bottom: -0.2rem;
+    margin-bottom: -0.2em;
     mask-image: url(../assets/img/flag.svg);
     mask-position: bottom;
 }
@@ -390,7 +390,7 @@
 }
 
 .award-type__icon {
-    height: 1.2rem;
+    height: 1.2em;
 }
 
 .award_icon {
@@ -480,7 +480,7 @@
 }
 
 .header-icon {
-    width: 1.3rem;
+    width: 1.3em;
     aspect-ratio: 1;
     background-color: var(--font-color);
     mask-size: contain;
@@ -575,7 +575,7 @@
     background-color: #000;
     box-shadow: 0 0 3px 1px #000;
     color: #ff00ff;
-    padding: 0 0.5rem;
+    padding: 0 0.5em;
     /* animation: hell-anim 6s infinite */
 }
 
@@ -648,11 +648,11 @@
 .version-badge::before {
     position: absolute;
     bottom: 0;
-    right: 0.25rem;
+    right: 0.25em;
     font-size: 0.85em;
     color: white;
     background-color: black;
-    padding: 0 0.5rem;
+    padding: 0 0.5em;
     border-radius: 0.25em;
 
 }
