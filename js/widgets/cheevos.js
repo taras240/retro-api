@@ -473,6 +473,7 @@ export class AchievementsBlock extends Widget {
                 name: "cheevos", pull: "clone", push: "false",
             },
             animation: 100,
+            forceFallback: ui.isCEF,
             chosenClass: "dragged",
             onUpdate: () => {
                 if (this.uiProps.sortName === cheevosSortNames.CUSTOM_ORDER) {

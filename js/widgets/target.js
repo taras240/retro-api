@@ -668,6 +668,7 @@ export class Target extends Widget {
                     name: "cheevos", pull, put: true, push: "false"
                 },
                 animation: 100,
+                forceFallback: ui.isCEF,
                 chosenClass: "dragged",
                 onAdd: function (evt) {
                     const element = evt.item;

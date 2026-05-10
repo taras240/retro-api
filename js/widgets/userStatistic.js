@@ -348,10 +348,12 @@ export class UserStatistic extends Widget {
         //     moveEvent(this.section, event);
         // })
         new Sortable(this.container, {
+
             group: {
                 name: "stats", pull: false, push: false,
             },
             animation: 100,
+            forceFallback: ui.isCEF,
             chosenClass: "dragged",
             onEnd: () => this.saveDisplayOrder(),
         });
