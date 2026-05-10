@@ -1,13 +1,19 @@
+.constructor {
+    position: fixed;
+    z-index: 10;
+}
+
 .constructor-element {
     left: 50px;
     position: fixed;
     display: block;
-    z-index: 10;
     overflow: hidden;
     white-space: wrap;
     overflow-wrap: break-word;
     width: fit-content;
     text-align: center;
+    color: var(--color);
+    background: var(--bg-color);
 }
 
 .constructor_widget {
@@ -65,4 +71,22 @@
 
 .constructor__add-button:active {
     transform: scale(0.95);
+}
+
+.progressbar-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: var(--bg-color);
+}
+
+.progressbar-value {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: var(--progress-rate);
+    background: var(--color);
 }

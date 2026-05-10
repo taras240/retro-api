@@ -106,7 +106,11 @@ export class Constructor extends Widget {
         super.applyPosition();
     }
     showElements() {
-        ui.app.querySelectorAll(".constructor-element").forEach(el => el.remove());
+        if (!this.elContainer) {
+            this.elContainer = fromHtml(`<div class="constructor"></div>`);
+            ui.app.append(this.elContainer);
+        }
+        this.elContainer.innerHTML = "";
         // const gameData = watcher.GAME_DATA ?? {};
         const focusCheevo = Object.values(watcher.CHEEVOS)?.sort((a, b) => sortBy.customOrder(a, b)).filter(c => !c.isEarned)?.[0] ?? {};
         const lastUnlocked = Object.values(watcher.CHEEVOS)?.sort((a, b) => sortBy.latest(a, b)).filter(c => c.isEarned)?.[0] ?? {};
@@ -149,11 +153,17 @@ export class Constructor extends Widget {
             sessionPoints: sessionData.points,
             sessionSoftpoints: sessionData.softpoints,
             sessionRetropoints: sessionData.retropoints,
+        }
+        this.fnKeys = {
+            progressbar: (value, total) => `
+                <div class="progressbar-value" style="--progress-rate:${100 * value / total}%"></div>
+            `,
 
         }
 
-        this.uiProps.elements.forEach(({ id, x, y, value, fontColor, bgColor, fontSize, isBold, width, height }, index) => {
+        this.uiProps.elements.forEach(({ id, x, y, value, fontColor, bgColor, fontSize, isBold, width, height, zIndex }, index) => {
             if (!value) return;
+            const formattedText = formatText(value.replace(/\s/g, "&nbsp;"), this.keys, this.fnKeys);
             const element = fromHtml(`
                 <div 
                     class="constructor-element" 
@@ -161,18 +171,18 @@ export class Constructor extends Widget {
                     style=" 
                             left:${x || 0};
                             top:${y || 0};
-                            color:${fontColor || "white"};
-                            background:${bgColor || "transparent"};
+                            --color:${fontColor || "white"};
+                            --bg-color:${bgColor || "transparent"};
                             font-size: ${fontSize || 16}px;
                             font-weight:${isBold ? "bold" : "normal"};
                             width:${width ? width + "px" : "fit-content"};
                             height:${height ? height + "px" : "auto"};
-                            
+                            z-index:${zIndex ? zIndex : 0}
                         ">
-                    ${formatText(value.replace(/\s/g, "&nbsp;"), this.keys)}
+                    ${formattedText}
                 </div>
             `);
-            ui.app.append(element);
+            this.elContainer.append(element);
             element.addEventListener("mousedown", event => {
                 const savePosition = () => {
                     this.uiProps.elements[index] = Object.assign(this.uiProps.elements[index], {
@@ -259,6 +269,13 @@ export class Constructor extends Widget {
                         checked: props.isBold,
                         onChange: (event) => props.isBold = event.currentTarget.checked,
                         // hint: ui.lang.ignoreSubsetsHint,
+                    },
+                    {
+                        type: inputTypes.NUM_INPUT,
+                        label: ui.lang.zIndex,
+                        value: props.zIndex ?? 0,
+                        title: ui.lang.zIndex,
+                        onChange: (event) => props.zIndex = event.currentTarget.value,
                     },
                 ]
             },

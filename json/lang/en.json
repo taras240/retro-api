@@ -316,5 +316,6 @@
     "elName": "Element Name",
     "elValue": "Element Value",
     "delete": "Delete",
-    "constructorKeysHint": "All keys should be enclosed in double curly braces - {{key}}"
+    "constructorKeysHint": "All keys should be enclosed in double curly braces - {{key}}",
+    "zIndex": "zIndex"
 }
