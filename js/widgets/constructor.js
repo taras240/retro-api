@@ -108,8 +108,8 @@ export class Constructor extends Widget {
     showElements() {
         ui.app.querySelectorAll(".constructor-element").forEach(el => el.remove());
         // const gameData = watcher.GAME_DATA ?? {};
-        const focusCheevo = Object.values(watcher.CHEEVOS).sort((a, b) => sortBy.customOrder(a, b))?.[0] ?? {};
-        const lastUnlocked = Object.values(watcher.CHEEVOS).sort((a, b) => sortBy.latest(a, b))?.[0] ?? {};
+        const focusCheevo = Object.values(watcher.CHEEVOS)?.sort((a, b) => sortBy.customOrder(a, b)).filter(c => !c.isEarned)?.[0] ?? {};
+        const lastUnlocked = Object.values(watcher.CHEEVOS)?.sort((a, b) => sortBy.latest(a, b)).filter(c => c.isEarned)?.[0] ?? {};
         const { userData, GAME_DATA: gameData, sessionData } = watcher;
         const {
         } = watcher.userData;
