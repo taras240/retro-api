@@ -107,17 +107,22 @@ export class Constructor extends Widget {
     }
     showElements() {
         ui.app.querySelectorAll(".constructor-element").forEach(el => el.remove());
-        const gameData = watcher.GAME_DATA ?? {};
+        // const gameData = watcher.GAME_DATA ?? {};
         const focusCheevo = Object.values(watcher.CHEEVOS).sort((a, b) => sortBy.customOrder(a, b))?.[0] ?? {};
+        const lastUnlocked = Object.values(watcher.CHEEVOS).sort((a, b) => sortBy.latest(a, b))?.[0] ?? {};
+        const { userData, GAME_DATA: gameData, sessionData } = watcher;
+        const {
+        } = watcher.userData;
+        if (!gameData) return;
         this.keys = {
             gameTitle: gameData.Title,
             consoleName: gameData.ConsoleName,
             totalCheevos: gameData.NumAchievements,
-            beatenRate: gameData.beatenRate,
             totalPoints: gameData.totalPoints,
             totalRetropoints: gameData.totalRetropoints,
             retroRatio: gameData.retroRatio,
             masteryRate: gameData.masteryRate,
+            beatenRate: gameData.beatenRate,
             unlockedCheevos: gameData.unlockData?.hardcore?.count ?? 0,
             unlockedCheevosTotal: gameData.unlockData?.softcore?.count ?? 0,
             unlockedPoints: gameData.unlockData?.hardcore?.points ?? 0,
@@ -129,6 +134,22 @@ export class Constructor extends Widget {
             playersCount: gameData.totalRealPlayers,
             focusCheevoTitle: focusCheevo.Title,
             focusCheevoDescription: focusCheevo.Description,
+            lastUnlockedTitle: lastUnlocked.Title,
+            lastUnlockedDescription: lastUnlocked.Description,
+            userRATop: userData.percentile,
+            userRank: userData.rank,
+            userPoints: userData.points,
+            userRetropoints: userData.retropoints,
+            userSoftpoints: userData.softpoints,
+            userName: userData.userName,
+            userTrueRatio: userData.trueRatio,
+            richPresence: userData.richPresence,
+            sessionUnlocks: sessionData.cheevos,
+            sessionUnlocksSoftcore: sessionData.cheevosSoftcore,
+            sessionPoints: sessionData.points,
+            sessionSoftpoints: sessionData.softpoints,
+            sessionRetropoints: sessionData.retropoints,
+
         }
 
         this.uiProps.elements.forEach(({ id, x, y, value, fontColor, bgColor, fontSize, isBold, width, height }, index) => {
