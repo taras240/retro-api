@@ -40,13 +40,13 @@ const radioButton = (props) => {
     return checkbox({ ...props, isRadio: true });
 }
 
-const textInput = ({ prefix, title, id, value, label, isNumber, isSearch, placeholder }) => {
+const textInput = ({ prefix, title, id, value, label, isNumber, isSearch, placeholder, classList = [] }) => {
     return `
     <div>
         <input ${[
             `type="${isNumber ? "number" : isSearch ? "search" : "text"}"`,
             (title || prefix) && `data-title="${title || prefix}"`,
-            'class="text-input"',
+            `class="text-input ${classList.join(" ")}"`,
             id && `id="${id}"`,
             value !== undefined && `value="${value}"`,
             label && `placeholder="${label}"`,
@@ -113,8 +113,12 @@ const inputElement = (props) => {
     const { hint } = props;
     const inputElement = fromHtml(inputHtml(props));
     hint && (inputElement.dataset.title = hint);
-    addEvents(inputElement, props)
+    addEvents(inputElement, props);
+
     return inputElement;
+}
+const plainText = ({ value }) => {
+    return `<p class="plain-text">${value}</p>`
 }
 const addEvents = (element, props) => {
     const onColorChange = (event) => {
@@ -168,7 +172,7 @@ const addEvents = (element, props) => {
             button?.addEventListener('click', onClick);
         }
     }
-
+    element.addEventListener("click", event => event.stopPropagation())
 }
 const inputHtml = (inputData) => {
     switch (inputData.type) {
@@ -192,6 +196,8 @@ const inputHtml = (inputData) => {
             return group(inputData)
         case inputTypes.COLOR:
             return colorInput(inputData);
+        case inputTypes.TEXT:
+            return plainText(inputData);
         default:
             return `[${inputData.type} N/A]`;
     }
@@ -206,7 +212,8 @@ const inputTypes = Object.freeze({
     SELECTOR: "selector",
     BUTTON: "button",
     GROUP: "group",
-    COLOR: "color"
+    COLOR: "color",
+    TEXT: "plain-text",
 })
 export { inputTypes, inputHtml as input, inputElement, addEvents }
 // export { checkbox, statebox, radioButton, numberInput, textInput, searchInput, selectorInput, button, }

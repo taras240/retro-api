@@ -34,6 +34,7 @@ import { WiiEvent } from "./widgets/wiiEvent.js";
 import { delay } from "./functions/delay.js";
 import { Completion } from "./widgets/completion.js";
 import { LoginWindowElement } from "./widgets/login.js";
+import { Constructor } from "./widgets/constructor.js";
 
 
 export class UI {
@@ -102,6 +103,7 @@ export class UI {
     this.games = new Games();
     this.settings = new Settings();
     new Links();
+    new Constructor();
     // new Completion();
 
 

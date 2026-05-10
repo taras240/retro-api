@@ -68,7 +68,7 @@ export class Widget {
     }
     set VISIBLE(value) {
         this.switchVisibility();
-        this.widgetIcon.element && (this.widgetIcon.element.checked = value);
+        this.widgetIcon.element && (this.widgetIcon.element.checked = this.VISIBLE);
     }
 
     constructor() {

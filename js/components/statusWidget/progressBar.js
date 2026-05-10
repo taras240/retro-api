@@ -1,7 +1,7 @@
 import { GAME_AWARD_TYPES } from "../../enums/gameAwards.js";
 import { progressStyle, PROGRESS_TYPES } from "../../enums/progressBar.js";
 import { getCheevosCount, getPointsCount, getRetropointsCount } from "../../functions/gameProperties.js";
-import { formatText } from "../../functions/local.js";
+import { formatText } from "../../functions/formatText.js";
 import { filterBy, sortBy } from "../../functions/sortFilter.js";
 import { ui } from "../../script.js";
 import { badgeElements } from "../badges.js";

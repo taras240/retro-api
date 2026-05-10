@@ -306,5 +306,15 @@
     "showFocusCheevo": "Focus Cheevo",
     "focusCheevoHint": "First locked achievement in custom sorting order",
     "played": "Played",
-    "focusCheevo": "Focus Cheevo"
+    "focusCheevo": "Focus Cheevo",
+    "constructorWidget": "Constructor",
+    "width": "Width",
+    "height": "Height",
+    "fontColor": "Font Color",
+    "bgColor": "Bg.Color",
+    "bold": "Bold",
+    "elName": "Element Name",
+    "elValue": "Element Value",
+    "delete": "Delete",
+    "constructorKeysHint": "All keys should be enclosed in double curly braces - {{key}}"
 }

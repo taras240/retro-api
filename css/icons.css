@@ -569,6 +569,10 @@
     mask-image: url(../assets/img/wii.svg);
 }
 
+.constructor-icon {
+    mask-image: url(../assets/img/handyman.svg);
+}
+
 /** Difficult badges */
 .difficult-badge__11 {
     position: relative;

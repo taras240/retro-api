@@ -1,6 +1,6 @@
 import { config, ui } from "../script.js";
 
-function setPosition(event, offsetX, offsetY, section) {
+export function setPosition(event, offsetX, offsetY, section) {
     event.preventDefault();
     const XPos = event.clientX - offsetX;
     const YPos = event.clientY - offsetY;
@@ -104,7 +104,7 @@ export function stickMovingSection({ x, y, stickySection }) {
     newYPos = Math.abs(newYPos) < TOLERANCE ? 0 : newYPos;
     return { newXPos, newYPos };
 }
-function moveEvent(section, event) {
+function moveEvent(section, event, savePosition) {
     const onMouseMoveEvent = (event) => {
         setPosition(event, offsetX, offsetY, section);
     }
@@ -123,7 +123,7 @@ function moveEvent(section, event) {
         app.addEventListener("mousemove", onMouseMoveEvent);
         app.addEventListener("mouseup", onMouseUpEvent);
     }
-    const savePosition = () => {
+    savePosition ??= () => {
         config.setNewPosition({
             id: section.id,
             xPos: section.style.left,

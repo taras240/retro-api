@@ -535,6 +535,10 @@ input:checked+.checkbox-input::before {
     transition: 0.2s;
 }
 
+.wide-input.text-input {
+    width: 100%;
+}
+
 .text-input[type="number"] {
     max-width: 3em;
 }
@@ -566,6 +570,10 @@ input:checked+.checkbox-input::before {
 .color-input {
     position: absolute;
     visibility: hidden;
+}
+
+.plain-text {
+    user-select: text;
 }
 
 .color-input__container .color-input__preview {
