@@ -7,7 +7,7 @@
             <p class="badge difficult-badge__${i}" >
                 ${e} ${we[i]}
                     </p >
-            `,hltbBadge:(i,e="")=>N.gold(`HLTB: ${i} `),buttonGenreBadge:i=>ge({text:i,classes:["target-genre-badge","badge-bold","badge_gold","badge-button"],dataProp:`data-genre="${i}"`}),customBadge:i=>ge({text:i,classes:["badge_custom-color"]})},ge=({text:i,classes:e=[],hint:t,event:s,dataProp:o})=>{let n=["badge",...e].join(" "),r=t?`data-title="${t}"`:"";return`<i class="${n}" ${r} ${s||""} ${o||""}>${i.trim()}</i>`};function Yt(i,e=!1){let t=(l,c,h=!0)=>{let p=Array.isArray(c)?[...new Set(c)].join('<span class="popup__value-divider"> | </span>'):c;return h?`
+            `,hltbBadge:(i,e="")=>N.gold(`HLTB: ${i} `),buttonGenreBadge:i=>ge({text:i,classes:["target-genre-badge","badge-bold","badge_gold","badge-button"],dataProp:`data-genre="${i}"`}),customBadge:i=>ge({text:i,classes:["badge_custom-color"]})},ge=({text:i,classes:e=[],hint:t,event:s,dataProp:o})=>{let n=["badge",...e].join(" "),r=t?`data-title="${t}"`:"";return`<i class="${n}" ${r} ${s||""} ${o||""}>${i.toString().trim()}</i>`};function Yt(i,e=!1){let t=(l,c,h=!0)=>{let p=Array.isArray(c)?[...new Set(c)].join('<span class="popup__value-divider"> | </span>'):c;return h?`
         <p><span class="popup__prop-title">${l}: </span>${p}</p>
     `:""},s=(l,c)=>{if(!l&&c.length===0)return"";let h=[l&&`LVL: ${l}`,...c];return`
             <div class="cheevo-popup__icons">${ce(h,"selection")}</div>
