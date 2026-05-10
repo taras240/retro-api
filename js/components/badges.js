@@ -50,7 +50,7 @@ export const badgeElements = {
 export const badgeTemplate = ({ text, classes = [], hint, event, dataProp }) => {
     const classNames = ["badge", ...classes].join(" ");
     const dataTitle = hint ? `data-title="${hint}"` : "";
-    return `<i class="${classNames}" ${dataTitle} ${event || ""} ${dataProp || ""}>${text.trim()}</i>`;
+    return `<i class="${classNames}" ${dataTitle} ${event || ""} ${dataProp || ""}>${text.toString().trim()}</i>`;
 }
 export const goldBadge = (text) => {
     return badgeElements.gold(text);
