@@ -69,6 +69,11 @@
     color: var(--font-color);
 }
 
+.badge_custom-color {
+    --badge-bg-color: var(--bg-color);
+    --badge-font-color: var(--color);
+}
+
 .badge_selection {
     --badge-bg-color: var(--selection-color);
     --badge-font-color: var(--font-color);

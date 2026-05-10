@@ -16,6 +16,10 @@
     background: var(--bg-color);
 }
 
+.constructor-element:has(> *) {
+    background: transparent;
+}
+
 .constructor_widget {
     /* top: 300px;
     left: 40%; */

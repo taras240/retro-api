@@ -1,3 +1,4 @@
+import { badgeElements } from "../components/badges.js";
 import { divHtml } from "../components/divContainer.js";
 import { buttonsHtml } from "../components/htmlElements.js";
 import { inputElement, inputTypes } from "../components/inputElements.js";
@@ -156,10 +157,17 @@ export class Constructor extends Widget {
         }
         this.fnKeys = {
             progressbar: (value, total) => `
-                <div class="progressbar-value" style="--progress-rate:${100 * value / total}%"></div>
+                <div class="progressbar-container">
+                    <div class="progressbar-value" style="--progress-rate:${100 * value / total}%"></div>
+                </div>
             `,
-
+            badge: (value) => badgeElements.customBadge(value)
         }
+        this.fnDescriptions = [
+            "badge(value)",
+            "progressbar(value,total)",
+        ]
+
 
         this.uiProps.elements.forEach(({ id, x, y, value, fontColor, bgColor, fontSize, isBold, width, height, zIndex }, index) => {
             if (!value) return;
@@ -227,6 +235,15 @@ export class Constructor extends Widget {
                 ]
             },
             {
+                label: "Possible Functions",
+                elements: [
+                    {
+                        type: inputTypes.TEXT,
+                        value: this.fnDescriptions.join(" | "),
+                    },
+                ]
+            },
+            {
                 label: ui.lang.style,
                 elements: [
                     {
@@ -252,7 +269,7 @@ export class Constructor extends Widget {
                     },
                     {
                         type: inputTypes.COLOR,
-                        label: ui.lang.fontColor,
+                        label: ui.lang.color,
                         value: props.fontColor || "white",
                         onChange: (event) => props.fontColor = event.currentTarget.value,
                     },

@@ -310,7 +310,7 @@
     "constructorWidget": "Constructor",
     "width": "Width",
     "height": "Height",
-    "fontColor": "Font Color",
+    "color": "Color",
     "bgColor": "Bg.Color",
     "bold": "Bold",
     "elName": "Element Name",

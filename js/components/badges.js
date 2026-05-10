@@ -44,9 +44,10 @@ export const badgeElements = {
         classes: ["target-genre-badge", "badge-bold", "badge_gold", "badge-button"],
         // hint: text.toUpperCase(),
         dataProp: `data-genre="${text}"`
-    })
+    }),
+    customBadge: (text) => badgeTemplate({ text, classes: ["badge_custom-color"] })
 }
-const badgeTemplate = ({ text, classes = [], hint, event, dataProp }) => {
+export const badgeTemplate = ({ text, classes = [], hint, event, dataProp }) => {
     const classNames = ["badge", ...classes].join(" ");
     const dataTitle = hint ? `data-title="${hint}"` : "";
     return `<i class="${classNames}" ${dataTitle} ${event || ""} ${dataProp || ""}>${text.trim()}</i>`;
