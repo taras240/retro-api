@@ -101,6 +101,7 @@ export class Config {
     watcherMode: WATCHER_MODES.auto,
     preventSubsetBug: true,
     ignoreSubsets: true,
+    ignoreOnlineStatus: false,
 
   }
   configValuePreprocessors = {

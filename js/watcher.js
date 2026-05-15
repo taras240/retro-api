@@ -44,8 +44,14 @@ export class Watcher {
         this.onGameChange(gameObject, isNewGame)
     }
     get isOnline() {
-        const status = this.online.getStatus();
-        return status === ONLINE_STATUS.online;
+        if (configData.ignoreOnlineStatus) {
+            return ONLINE_STATUS.online;
+
+        }
+        else {
+            const status = this.online.getStatus();
+            return status === ONLINE_STATUS.online;
+        }
     }
     sessionData = {
         points: 0,

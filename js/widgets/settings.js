@@ -304,6 +304,15 @@ export class Settings extends Widget {
                         onChange: (event) => configData.updateDelaySec = event.currentTarget.value,
                     },
 
+                    {
+                        type: inputTypes.CHECKBOX,
+                        label: ui.lang.ignoreOnlineStatus,
+                        id: "settings_ignore-online",
+                        checked: configData.ignoreOnlineStatus,
+                        onChange: (event) => configData.ignoreOnlineStatus = event.currentTarget.checked,
+                        hint: ui.lang.ignoreOnlineStatusHint,
+                    },
+
                 ]
             },
             {

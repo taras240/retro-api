@@ -317,5 +317,7 @@
     "elValue": "Element Value",
     "delete": "Delete",
     "constructorKeysHint": "All keys should be enclosed in double curly braces - {{key}}",
-    "zIndex": "zIndex"
+    "zIndex": "zIndex",
+    "ignoreOnlineStatus": "Ignore Offline",
+    "ignoreOnlineStatusHint": "Always show as online even if you're offline on RetroAchievements.org."
 }
