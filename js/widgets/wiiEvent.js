@@ -132,7 +132,8 @@ export class WiiEvent extends Widget {
             34587: 3,
             34758: 3,
             34708: 3,
-            34618: 2,
+            34618: 3,
+
             34632: 2,
             187: 2,
             34619: 2,
@@ -148,6 +149,12 @@ export class WiiEvent extends Widget {
             34696: 2,
             35257: 2,
             171: 2,
+            34604: 2,
+            34600: 2,
+            35935: 2,
+            11088: 2,
+            34664: 2,
+            248: 2,
         }
         const completionProgress = (await apiWorker.completionProgress())?.Results ?? [];
         const eventGamesArray = completionProgress.map(game => {
