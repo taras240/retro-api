@@ -59,23 +59,36 @@ export class Constructor extends Widget {
     onStopSession() {
         this.showElements();
     }
+    deleteItem(index) {
+        this.uiProps.elements.splice([index], 1);
+        this.uiProps.elements = this.uiProps.elements;
+        this.showElements();
+        this.fillConfigItems();
+    }
     fillConfigItems() {
         this.container.innerHTML = "";
         this.uiProps.elements.forEach((props, index) => {
             props.index = index;
             const item = fromHtml(`
                     <div class="constructor__item">
-                        <h2 class="constructor-item__header">${props.name || "Name"}</h2>
-                        <p class="constructor-item__description">${props.value || "???"}</p>
+                        <h2 class="constructor-item__header">${props.name || "Click to edit"}</h2>
+                        <p class="constructor-item__description">${props.value || "?"}</p>
+                        <div class="constructor-item__controls-container"></div>
                     </div>
                 `);
+            const deleteButton = fromHtml(buttonsHtml.delete());
+            item.querySelector(".constructor-item__controls-container").append(deleteButton);
             this.container.append(item);
             item.addEventListener("click", event => {
                 this.editElement(props, item);
+            });
+            deleteButton.addEventListener("click", event => {
+                event.stopPropagation();
+                this.deleteItem(index);
             })
         })
         const addItem = fromHtml(`
-                        <button class="constructor__add-button">[+]</button>
+                        <button class="constructor__add-button">${ui.lang.addElement}</button>
                 `);
         addItem.addEventListener("click", event => {
             this.uiProps.elements = [
@@ -169,7 +182,7 @@ export class Constructor extends Widget {
         ]
 
 
-        this.uiProps.elements.forEach(({ id, x, y, value, fontColor, bgColor, fontSize, isBold, width, height, zIndex }, index) => {
+        this.uiProps.elements.forEach(({ id, x, y, value, fontColor, bgColor, fontSize, isBold, width, height, zIndex, isVisible = true }, index) => {
             if (!value) return;
             const formattedText = formatText(value.replace(/\s/g, "&nbsp;"), this.keys, this.fnKeys);
             const element = fromHtml(`
@@ -185,7 +198,8 @@ export class Constructor extends Widget {
                             font-weight:${isBold ? "bold" : "normal"};
                             width:${width ? width + "px" : "fit-content"};
                             height:${height ? height + "px" : "auto"};
-                            z-index:${zIndex ? zIndex : 0}
+                            z-index:${zIndex ? zIndex : 0};
+                            display:${isVisible ? "inline-block" : "none"}
                         ">
                     ${formattedText}
                 </div>
@@ -223,7 +237,7 @@ export class Constructor extends Widget {
                 onChange: (event) => props.value = event.currentTarget.value,
             },
             {
-                label: "Possible Keys",
+                label: ui.lang.possibleValues,
                 elements: [{
                     type: inputTypes.TEXT,
                     value: ui.lang.constructorKeysHint,
@@ -235,7 +249,7 @@ export class Constructor extends Widget {
                 ]
             },
             {
-                label: "Possible Functions",
+                label: ui.lang.possibleElements,
                 elements: [
                     {
                         type: inputTypes.TEXT,
@@ -294,6 +308,14 @@ export class Constructor extends Widget {
                         title: ui.lang.zIndex,
                         onChange: (event) => props.zIndex = event.currentTarget.value,
                     },
+                    {
+                        type: inputTypes.CHECKBOX,
+                        label: ui.lang.isVisible,
+                        id: "constr-is-visible",
+                        checked: props.isVisible ?? true,
+                        onChange: (event) => props.isVisible = event.currentTarget.checked,
+                        // hint: ui.lang.ignoreSubsetsHint,
+                    },
                 ]
             },
             {
@@ -303,10 +325,7 @@ export class Constructor extends Widget {
                         type: inputTypes.BUTTON,
                         label: ui.lang.delete,
                         onClick: (event) => {
-                            this.uiProps.elements.splice([props.index], 1);
-                            this.uiProps.elements = this.uiProps.elements;
-                            this.showElements();
-                            this.fillConfigItems();
+                            this.deleteItem(index);
                             event.target.closest(".section")?.remove();
                         },
                     },

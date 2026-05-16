@@ -20,7 +20,7 @@ export const buttonsHtml = {
     pin: () => `<button class="header-button header-icon bookmark-icon pin-cheevo" data-title="${ui.lang.addPin}"></button>`,
     togglePins: () => `<button class="header-button header-icon pins-icon toggle-pins" data-title="${ui.lang.togglePins}"></button>`,
     close: (onClick) => `<button class="header-icon header-button close-icon" onclick="${onClick}" data-title="${ui.lang.close}"></button>`,
-
+    delete: () => `<button class="header-icon header-button delete-icon" data-title="${ui.lang.delete}"></button>`,
     sort: (sectionID, onClick) => `<button class="header-button header-icon sort-icon" id="${sectionID}-sort-button" data-title="${ui.lang.sort}"></button>`,
 
     filter: (sectionID, onClick) => `<button class="header-button header-icon filter-icon" id="${sectionID}-filter-button" data-title="${ui.lang.filter}"></button>`,

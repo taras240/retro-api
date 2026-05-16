@@ -260,7 +260,7 @@
 }
 
 .delete-icon {
-    mask-image: url(../assets/img/delete.svg);
+    mask-image: url(../assets/img/close.svg);
 }
 
 .pins-icon {

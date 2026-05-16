@@ -36,15 +36,23 @@
 }
 
 .constructor__item {
+    position: relative;
     background-color: var(--secondary-color);
     padding: 0.5em;
     border-radius: 3px;
     border: 1px solid transparent;
+    cursor: pointer;
 }
 
 .constructor__item:hover {
     background-color: var(--selection-color);
     border-color: var(--accent-color);
+}
+
+.constructor-item__controls-container {
+    position: absolute;
+    right: 0.25em;
+    top: 0.25em;
 }
 
 .constructor-item__header {
@@ -60,16 +68,20 @@
     background: var(--secondary-color);
     width: 100%;
     text-align: center;
-    color: limegreen;
     font-weight: bold;
-    font-size: 2em;
+    font-size: 1.2em;
     border-radius: 3px;
     border: 1px solid transparent;
     transition: transform 150ms;
+    padding: 0.25em;
+    margin-top: 0.25em;
+    color: var(--accent-color);
+    background: var(--secondary-color);
 }
 
 .constructor__add-button:hover {
-    background-color: var(--selection-color);
+    background: var(--accent-color);
+    color: var(--secondary-color);
     border-color: var(--accent-color);
 }
 
