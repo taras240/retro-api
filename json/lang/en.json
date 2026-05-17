@@ -323,5 +323,7 @@
     "addElement": "Add new element",
     "possibleElements": "Possible Elements",
     "possibleValues": "Possible Values",
-    "isVisible": "Visible"
+    "isVisible": "Visible",
+    "dsHardOnly": "Hardcore only",
+    "dsHardOnlyHint": "Send alerts only for Hardcore unlocks or awards"
 }

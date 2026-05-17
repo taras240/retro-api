@@ -409,7 +409,8 @@ export class Settings extends Widget {
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        label: "Hardcore Only",
+                        label: ui.lang.dsHardOnly,
+                        hint: ui.lang.dsHardOnlyHint,
                         id: "settings_discord-hard-award",
                         checked: configData.hardOnlyDiscordAlert,
                         onChange: (event) => configData.hardOnlyDiscordAlert = event.currentTarget.checked,
