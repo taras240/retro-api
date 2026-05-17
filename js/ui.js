@@ -35,6 +35,7 @@ import { delay } from "./functions/delay.js";
 import { Completion } from "./widgets/completion.js";
 import { LoginWindowElement } from "./widgets/login.js";
 import { Constructor } from "./widgets/constructor.js";
+import { GAME_AWARD_TYPES } from "./enums/gameAwards.js";
 
 
 export class UI {
@@ -199,11 +200,15 @@ export class UI {
   updateWidgets({ earnedAchievementsIDs = [], isLog = false }) { }
   showAwardsAlerts(awardsArray = []) {
     pushFSAlerts(awardsArray);
-    awardsArray.forEach(award => {
-      configData.discordNewAward && sendDiscordAlert(award);
-      // { message: alert.award, type: ALERT_TYPES.award, id: watcher.GAME_DATA?.ID }
-    });
-
+    const hardcoreAwards = [GAME_AWARD_TYPES.BEATEN, GAME_AWARD_TYPES.MASTERED];
+    if (configData.discordNewAward) {
+      awardsArray.forEach(awardObject => {
+        if (configData.hardOnlyDiscordAlert && !hardcoreAwards.includes(awardObject.award)) {
+          return;
+        }
+        sendDiscordAlert(awardObject);
+      });
+    }
 
     //! awardsArray.length && setTimeout(() => ui.stats.updateChart(), 4000);
   }
