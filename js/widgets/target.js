@@ -83,6 +83,14 @@ export class Target extends Widget {
                     //     checked: this.SHOW_PREV_BORDER,
                     //     event: `onchange="ui.target.SHOW_PREV_BORDER = this.checked"`,
                     // },
+
+                    {
+                        type: inputTypes.STEPPER,
+                        label: ui.lang.fontSize,
+                        initValue: this.uiProps.fontScale,
+                        step: 0.05,
+                        onChange: (value) => this.uiProps.fontScale = value,
+                    },
                 ]
             },
             {
@@ -388,6 +396,7 @@ export class Target extends Widget {
         hiddenSets: [],
         scrollSpeed: 20,
         scrollPauseDuration: 15,
+        fontScale: 1.0,
     }
     uiSetCallbacks = {
         autoscroll(value) {
@@ -758,6 +767,7 @@ export class Target extends Widget {
         }
     }
     setElementsValues() {
+        this.section.style.setProperty("--font-size", `${this.uiProps.fontScale}em`);
         this.section.classList.toggle("show-events", this.uiProps.showEvents);
         this.section.classList.toggle("compact-header", !this.uiProps.showHeader);
         this.section.classList.toggle("hide-bg", this.uiProps.hideBg);

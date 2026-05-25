@@ -17,6 +17,7 @@ export class Constructor extends Widget {
         // iconID: "widget-id",
         iconClass: "constructor-icon",
         onChangeEvent: () => this.VISIBLE = !this.VISIBLE,
+        description: ui.lang.constructorWidget,
 
     };
     // get VISIBLE() {
@@ -28,8 +29,8 @@ export class Constructor extends Widget {
     //     else this.close();
     // }
     uiDefaultValues = {
-        x: '600px',
-        y: '400px',
+        x: '0px',
+        y: '0px',
         hidden: true,
         elements: []
     }

@@ -122,6 +122,18 @@ const contextInputs = {
             >
                 ${label ?? "NOLABEL"}
             </button>`,
+    [inputTypes.STEPPER]: ({ initValue, step, label }) => `
+    <div 
+        class="stepper stepper__container" 
+        data-value="${initValue}" 
+        data-step="${step}">
+            <button class="stepper__button stepper__decrease">-</button>
+            <label class="stepper__label">
+                ${label}: <span class="stepper__label-value">${initValue}</span>
+            </label>
+            <button class="stepper__button stepper__encrease">+</button>
+    </div>
+`
 }
 
 export { generateContextMenu }

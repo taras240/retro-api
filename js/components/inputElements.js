@@ -35,7 +35,18 @@ const statebox = ({ state, type, property, value, id, label, sectionCode }) => `
             <label class="statebox__label statebox-input" for="statebox-${id}${sectionCode}">${label}</label>
         </div>
 `;
-
+const stepper = ({ initValue, step, label }) => `
+    <div 
+        class="stepper stepper__container" 
+        data-value="${initValue}" 
+        data-step="${step}">
+            <button class="stepper__button stepper__decrease">-</button>
+            <label class="stepper__label">
+                ${label}: <span class="stepper__label-value">${initValue}</span>
+            </label>
+            <button class="stepper__button stepper__encrease">+</button>
+    </div>
+`;
 const radioButton = (props) => {
     return checkbox({ ...props, isRadio: true });
 }
@@ -147,6 +158,29 @@ const addEvents = (element, props) => {
 
 
     }
+    if (type === inputTypes.STEPPER) {
+        const updateValue = (value) => {
+            value = Math.round(value * 100) / 100;
+            container.dataset.value = value;
+            labelValueElement.innerText = value;
+            onChange(value);
+        }
+        const encreaseButton = element.querySelector(".stepper__encrease");
+        const decreaseButton = element.querySelector(".stepper__decrease");
+        const labelValueElement = element.querySelector(".stepper__label-value");
+        const container = element.querySelector(".stepper") || element;
+        const step = +container.dataset.step;
+        let curValue = +container.dataset.value;
+
+        encreaseButton.addEventListener("click", () => {
+            curValue += step;
+            updateValue(curValue);
+        })
+        decreaseButton.addEventListener("click", () => {
+            curValue -= step;
+            updateValue(curValue);
+        })
+    }
     else {
         const input = element?.querySelector("input");
         if (onChange) {
@@ -172,7 +206,7 @@ const addEvents = (element, props) => {
             button?.addEventListener('click', onClick);
         }
     }
-    element.addEventListener("click", event => event.stopPropagation())
+    element?.addEventListener("click", event => event.stopPropagation())
 }
 const inputHtml = (inputData) => {
     switch (inputData.type) {
@@ -198,6 +232,8 @@ const inputHtml = (inputData) => {
             return colorInput(inputData);
         case inputTypes.TEXT:
             return plainText(inputData);
+        case inputTypes.STEPPER:
+            return stepper(inputData);
         default:
             return `[${inputData.type} N/A]`;
     }
@@ -214,6 +250,7 @@ const inputTypes = Object.freeze({
     GROUP: "group",
     COLOR: "color",
     TEXT: "plain-text",
+    STEPPER: "stepper",
 })
 export { inputTypes, inputHtml as input, inputElement, addEvents }
 // export { checkbox, statebox, radioButton, numberInput, textInput, searchInput, selectorInput, button, }

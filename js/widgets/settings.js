@@ -176,17 +176,13 @@ export class Settings extends Widget {
                     //     value: "",
                     //     onChange: "ui.settings.FONT_FAMILY = this.value; this.value = '';",
                     // },
+                    ,
                     {
-                        type: inputTypes.BUTTON,
-                        label: "-",
-                        id: "settings_font-size-decrease",
-                        onClick: () => configData.fontSize = parseFloat(configData.fontSize) - 0.5,
-                    },
-                    {
-                        type: inputTypes.BUTTON,
-                        label: "+",
-                        id: "settings_font-size-increase",
-                        onClick: () => configData.fontSize = parseFloat(configData.fontSize) + 0.5,
+                        type: inputTypes.STEPPER,
+                        label: ui.lang.fontSize,
+                        initValue: configData.fontSize,
+                        step: 0.5,
+                        onChange: (value) => configData.fontSize = value,
                     },
                 ]
             },

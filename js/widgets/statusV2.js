@@ -213,6 +213,14 @@ export class Status extends Widget {
                         value: this.uiProps.alertDuration,
                         onInput: (event) => this.uiProps.alertDuration = +event.currentTarget.value,
                     },
+                    {
+                        type: inputTypes.STEPPER,
+                        label: ui.lang.fontSize,
+                        initValue: this.uiProps.fontScale,
+                        step: 0.05,
+                        onChange: (value) => this.uiProps.fontScale = value,
+                    },
+
                 ]
             },
 
@@ -393,6 +401,7 @@ export class Status extends Widget {
         alertDuration: 15,
         showFocusCheevo: false,
         scrollFocusDescription: false,
+        fontScale: 1.0,
     }
     uiDefaultValuesLegacy = {
         showRichPresence: false,
@@ -726,6 +735,7 @@ export class Status extends Widget {
             this.section.querySelector(".rp__game-title").classList.toggle("autoscroll", this.uiProps.scrollTitle);
             this.section.querySelectorAll(".rp__focus-description").forEach(descr => descr.classList.toggle("autoscroll", this.uiProps.scrollFocusDescription));
         }
+        this.section.style.setProperty("--font-size", `${this.uiProps.fontScale}em`);
         this.section.classList.toggle("hide-game-info", !this.uiProps.showGameInfo)
         this.section.classList.toggle("show-ticker", this.uiProps.showTicker);
         this.section.classList.toggle("show-progression", this.uiProps.showProgression);
