@@ -3,7 +3,7 @@ import { ui } from "../script.js";
 
 export function LoginWindowElement(config) {
     const verifyUserIdent = ({ userName, apiKey }) => {
-        let url = `https://retroachievements.org/API/API_GetUserProfile.php?u=${userName}&y=${userName}&y=${apiKey}`;
+        let url = `https://retroachievements.org/API/API_GetUserProfile.php?u=${userName}&y=${apiKey}`;
         return fetch(url).then((resp) => resp.json());
     }
     const submitLogin = () => {
