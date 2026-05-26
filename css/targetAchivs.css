@@ -521,7 +521,7 @@
 
 .target__aotw-container .target__cheevo-details {
   padding: 0.25em;
-  height: 100%;
+  justify-content: space-evenly;
 }
 
 .target__hide-aotw {
