@@ -22,7 +22,7 @@ import { UserStatistic } from "./widgets/userStatistic.js";
 import { Notifications } from "./widgets/notifications.js";
 import { Games } from "./widgets/games.js";
 import { Status } from "./widgets/statusV2.js";
-import { GameList } from "./widgets/gamesList.js";
+// import { GameList } from "./widgets/gamesList.js";
 import { Links } from "./widgets/links.js";
 import { ALERT_TYPES } from "./enums/alerts.js";
 import { langPackUrl, local } from "./enums/locals.js";
@@ -96,7 +96,7 @@ export class UI {
     new Target(2);
     this.gameCard = new GameCard();
     this.stats = new UserStatistic();
-    this.gameList = new GameList();
+    // this.gameList = new GameList();
     this.progression = new Progression();
     this.note = new Note();
     this.awards = new Awards();

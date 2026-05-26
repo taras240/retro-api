@@ -325,5 +325,6 @@
     "possibleValues": "Possible Values",
     "isVisible": "Visible",
     "dsHardOnly": "Hardcore only",
-    "dsHardOnlyHint": "Send alerts only for Hardcore unlocks or awards"
+    "dsHardOnlyHint": "Send alerts only for Hardcore unlocks or awards",
+    "noFocusMsg": "No achievements to unlock"
 }

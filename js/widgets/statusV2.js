@@ -671,12 +671,12 @@ export class Status extends Widget {
         if (focusCheevo) {
             titleElements.forEach(el => el.innerHTML = `
                 ${badgeElements.gold("focus")} ${focusCheevo.Title}
-            `)
-            descriptionElements.forEach(el => el.innerText = focusCheevo.Description)
+            `);
+            descriptionElements.forEach(el => el.innerText = focusCheevo.Description);
         }
         else {
-            titleElements.innerHTML = ``;
-            descriptionElements.innerText = `Unlocked all achievements`;
+            titleElements.innerHTML = badgeElements.gold("focus");
+            descriptionElements.innerText = ui.lang.noFocusMsg;
         }
     }
     updateHardMode(cheevos) {

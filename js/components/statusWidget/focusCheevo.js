@@ -7,8 +7,8 @@ export function focusCheevoHtml() {
                 <img class="rp__focus-image" src="">
             </div>
             <div class="rp__focus-info">
-                <h3 class="rp__focus-title">Title</h3>
-                <p class="rp__focus-description">Description</p>
+                <h3 class="rp__focus-title"></h3>
+                <p class="rp__focus-description"></p>
             </div>
         </div>
     `
