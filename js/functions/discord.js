@@ -2,6 +2,7 @@ import { ALERT_TYPES } from "../enums/alerts.js";
 import { GAME_AWARD_TYPES } from "../enums/gameAwards.js";
 import { apiWorker, config, configData, watcher } from "../script.js";
 import { delay } from "./delay.js";
+import { formatText } from "./formatText.js";
 import { cheevoUrl, gameImageUrl, gameUrl } from "./raLinks.js";
 import { formatTime } from "./time.js";
 
@@ -22,17 +23,13 @@ export async function sendDiscordAlert({ message = "", type, value, award, id })
     const targetUser = configData.targetUser || config.USER_NAME;
     const gameMessage = (gameData) => {
         const author = {
-            name: `${targetUser} has launched the game`,
+            name: formatText(ui.lang.userLauchedGame, {
+                user: targetUser
+            }),
             url: getAuthorUrl(targetUser),
         };
         const header = gameData.Title;
-        const description = `
-          Platform: ${gameData.ConsoleName}
-          Released: ${gameData.Released}
-          Progress: ${getProgressBar(gameData.NumAwardedToUser, gameData.NumAchievements)}
-          Points: ${gameData.unlockData.hardcore.points} / ${gameData.unlockData.softcore.points} / ${gameData.totalPoints}
-          Retropoints:  ${gameData.unlockData.hardcore.retropoints} / ${gameData.totalRetropoints}
-        `;
+        const description = gameStatsLines(gameData);
         const message = {
             author,
             header,
@@ -46,38 +43,27 @@ export async function sendDiscordAlert({ message = "", type, value, award, id })
     }
     const awardMessage = (gameData, award) => {
         const author = {
-            name: `${targetUser} has ${award.toUpperCase()} the game`,
+            name: formatText(ui.lang.userEarnedAward, {
+                user: targetUser,
+                award: award.toUpperCase(),
+            }),
             url: getAuthorUrl(targetUser),
         };
         const header = gameData.Title;
-        let description;
-        if (award === GAME_AWARD_TYPES.MASTERED) {
-            description = `
-                Award earned in: ${formatTime(gameData.TimePlayed)}
-                Platform: ${gameData.ConsoleName}
-                Released: ${gameData.Released}
-                Achievements: ${gameData.NumAchievements}
-                Points: ${gameData.totalPoints}
-                Retropoints: ${gameData.totalRetropoints}
-            `;
+        const description = `
+                ${formatText(ui.lang.awardEarnedInTime, {
+            time: formatTime(gameData.TimePlayed)
         }
-        else {
-            description = `
-                Award earned in: ${formatTime(gameData.TimePlayed)}
-                Platform: ${gameData.ConsoleName}
-                Released: ${gameData.Released}
-                Achievements: ${gameData?.unlockData?.hardcore.count} / ${gameData?.unlockData?.softcore.count} / ${gameData.NumAchievements}
-                Points: ${gameData.unlockData.hardcore.points} / ${gameData.unlockData.softcore.points} / ${gameData.totalPoints}
-                Retropoints: ${gameData.unlockData.hardcore.retropoints} / ${gameData.totalRetropoints}
+        )}
+                ${gameStatsLines(gameData)}
             `;
-        }
-
+        const isHardcoreAward = [GAME_AWARD_TYPES.BEATEN, GAME_AWARD_TYPES.MASTERED].includes(award);
         const message = {
             author,
             header,
             description,
-            color: (award == 'beaten' || award == 'mastered') ? goldColorCode : silverColorCode,
-            colour: (award == 'beaten' || award == 'mastered') ? "gold" : "silver",
+            color: isHardcoreAward ? goldColorCode : silverColorCode,
+            colour: isHardcoreAward ? "gold" : "silver",
             url: gameUrl(gameData.ID),
             image: gameImageUrl(gameData.ImageIcon),
         }
@@ -85,17 +71,16 @@ export async function sendDiscordAlert({ message = "", type, value, award, id })
     }
     const cheevoMessage = (gameData, cheevo) => {
         const author = {
-            name: `${targetUser} unlocked cheevo${cheevo.isEarnedHardcore
-                ? '' : " (casual mode)"}`,
+            name: formatText(ui.lang.userUnlockedCheevo, { user: targetUser }),
             url: getAuthorUrl(targetUser),
         };
         const header = cheevo.Title;
         const description = `
-        Game: [${gameData.Title}](${gameUrl(gameData.ID)})
-        Unlocked in: ${formatTime(gameData.TimePlayed)}
-        Description: ${cheevo.Description}
-        Points: ${cheevo.Points}
-        Retropoints:  ${cheevo.TrueRatio}
+            ${ui.lang.game}: [${gameData.Title}](${gameUrl(gameData.ID)})
+            ${formatText(ui.lang.unlockedInTime, { time: formatTime(gameData.TimePlayed) })}
+            ${ui.lang.description}: ${cheevo.Description}
+            ${ui.lang.points}: ${cheevo.Points}
+            ${ui.lang.retropoints}:  ${cheevo.TrueRatio}
         `;
         message = {
             author,
@@ -188,3 +173,13 @@ export function sendJsonToDiscord({ jsonData, fileName, message }) {
         .catch(err => console.error("Помилка при відправці:", err));
 
 }
+const gameStatsLines = (gameData) => {
+    const formatStatsLine = (stats = []) => [...new Set(stats.filter(v => v))].join("/");
+
+    return `
+        ${ui.lang.platform}: ${gameData.ConsoleName}
+        ${ui.lang.released}: ${gameData.Released}
+        ${ui.lang.cheevos}: ${formatStatsLine([gameData?.unlockData?.hardcore.count, gameData?.unlockData?.softcore.count, gameData.NumAchievements])}
+        ${ui.lang.points}: ${formatStatsLine([gameData.unlockData.hardcore.points, gameData.unlockData.softcore.points, gameData.totalPoints])}
+        ${ui.lang.retropoints}: ${formatStatsLine([gameData.unlockData.hardcore.retropoints, gameData.totalRetropoints])}
+`};

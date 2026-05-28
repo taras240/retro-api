@@ -181,7 +181,6 @@
     "title": "Заголовок",
     "cheevoTitleHint": "назва досягнення",
     "gameTitleHint": " назва гри",
-    "description": "опис",
     "cheevoDescrHint": " опис досягнення",
     "editGenreHint": "жанри досягнення. якщо декілька — розділіть через ','",
     "levelName": "Назва рівня",
@@ -324,5 +323,12 @@
     "isVisible": "Видимий",
     "dsHardOnly": "Лише Hardcore",
     "dsHardOnlyHint": "Надсилати сповіщення лише для Hardcore-розблокувань або нагород",
-    "noFocusMsg": "Немає досягнень для розблокування"
+    "noFocusMsg": "Немає досягнень для розблокування",
+    "game": "Game",
+    "description": "Деталі",
+    "unlockedInTime": "Розблоковано за: {{time}}",
+    "awardEarnedInTime": "Нагороду здобуто за: {{time}}",
+    "userUnlockedCheevo": "{{user}} розблокував досягнення",
+    "userEarnedAward": "{{user}} здобув нагороду: {{award}}",
+    "userLauchedGame": "{{user}} запустив гру"
 }

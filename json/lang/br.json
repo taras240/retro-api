@@ -186,7 +186,6 @@
     "title": "Título",
     "cheevoTitleHint": "título da conquista",
     "gameTitleHint": "título do jogo",
-    "description": "descrição",
     "cheevoDescrHint": "descrição da conquista",
     "editGenreHint": "gêneros da conquista. se houver mais de um, separe por ','",
     "levelName": "Nome da Fase",
@@ -322,5 +321,12 @@
     "isVisible": "Visível",
     "dsHardOnly": "Somente Hardcore",
     "dsHardOnlyHint": "Enviar alertas apenas para desbloqueios ou prêmios Hardcore",
-    "noFocusMsg": "Nenhuma conquista para desbloquear"
+    "noFocusMsg": "Nenhuma conquista para desbloquear",
+    "game": "Game",
+    "description": "Descrição",
+    "unlockedInTime": "Desbloqueado em: {{time}}",
+    "awardEarnedInTime": "Prêmio conquistado em: {{time}}",
+    "userUnlockedCheevo": "{{user}} desbloqueou uma conquista",
+    "userEarnedAward": "{{user}} ganhou o prêmio: {{award}}",
+    "userLauchedGame": "{{user}} iniciou o jogo"
 }

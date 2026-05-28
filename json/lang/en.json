@@ -192,7 +192,6 @@
     "title": "Title",
     "cheevoTitleHint": "cheevo title",
     "gameTitleHint": " game title",
-    "description": "description",
     "cheevoDescrHint": " cheevo description",
     "editGenreHint": "cheevo genres. if more then one - separate with ','",
     "levelName": "Level Name",
@@ -326,5 +325,12 @@
     "isVisible": "Visible",
     "dsHardOnly": "Hardcore only",
     "dsHardOnlyHint": "Send alerts only for Hardcore unlocks or awards",
-    "noFocusMsg": "No achievements to unlock"
+    "noFocusMsg": "No achievements to unlock",
+    "game": "Game",
+    "description": "Description",
+    "unlockedInTime": "Unlocked in: {{time}}",
+    "awardEarnedInTime": "Award earned in: {{time}}",
+    "userUnlockedCheevo": "{{user}} unlocked cheevo",
+    "userEarnedAward": "{{user}} has {{award}} the game",
+    "userLauchedGame": "{{user}} has launched the game"
 }
