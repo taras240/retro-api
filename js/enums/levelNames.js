@@ -4,7 +4,7 @@ export const allLevelNames = [
     'Dimension', 'Region', 'Scene', 'Screen', 'Round\\b', 'Course', 'Board', "Quest"
 ];
 
-export const RPLevelNames = [...allLevelNames, ...allLevelNames.map(l => l.toLowerCase()), '🚩', '\\bin\\b'];
+export const RPLevelNames = [...allLevelNames, ...allLevelNames.map(l => l.toLowerCase()), '🚩'];
 
 export const zoneNames = [
     'Zone', 'Stage', 'Area', 'Mission', 'Chapter', 'Section', 'World', 'Scene'
