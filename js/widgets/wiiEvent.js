@@ -114,53 +114,16 @@ export class WiiEvent extends Widget {
             "beaten-hardcore": 1,
             "mastered": 2,
         }
-        const eventGames = {
-            38: 3,
-            144: 3,
-            208: 3,
-            34694: 3,
-            195: 3,
-            204: 3,
-            100: 3,
-            27: 3,
-            34566: 3,
-            34679: 3,
-            34693: 3,
-            35266: 3,
-            34569: 3,
-            34610: 3,
-            34587: 3,
-            34758: 3,
-            34708: 3,
-            34618: 3,
-
-            34632: 2,
-            187: 2,
-            34619: 2,
-            58: 2,
-            35669: 2,
-            43: 2,
-            115: 2,
-            35082: 2,
-            34689: 2,
-            34706: 2,
-            34606: 2,
-            34597: 2,
-            34696: 2,
-            35257: 2,
-            171: 2,
-            34604: 2,
-            34600: 2,
-            35935: 2,
-            11088: 2,
-            34664: 2,
-            248: 2,
+        const bountyGames = {
+            double: [34632, 187, 34619, 58, 35669, 43, 115, 35082, 34689, 34706, 34606, 34597, 34696, 35257, 171, 34604, 34600, 35935, 11088, 34664, 248, 89, 7775, 189, 190, 34714, 34903],
+            triple: [38, 144, 208, 34694, 195, 204, 100, 27, 34566, 34679, 34693, 35266, 34569, 34610, 34587, 34758, 34708, 34618, 34685, 34836]
         }
         const completionProgress = (await apiWorker.completionProgress())?.Results ?? [];
         const eventGamesArray = completionProgress.map(game => {
+
             if (game.ConsoleID !== 19) return;
             // const isSubset = /subset/gi.test(game.Title);
-            game.bonusMult = eventGames[game.GameID] ?? 1;
+            game.bonusMult = bountyGames.triple.includes(game.GameID) ? 3 : bountyGames.double.includes(game.GameID) ? 2 : 1;
             game.maxEventPoints = 2 * game.bonusMult;
             game.eventPoints = game.bonusMult * (awardMultiplier[game.HighestAwardKind] ?? 0)
             return game;
