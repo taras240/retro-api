@@ -884,7 +884,7 @@ export class Target extends Widget {
             targetElement.classList.toggle("show-genre", this.uiProps.showGenre);
             targetElement.classList.toggle("earned", achievement.isEarned);
             targetElement.classList.toggle("hardcore", achievement.isEarnedHardcore);
-            targetElement.classList.toggle("rare", achievement.difficulty > 7);
+            targetElement.classList.toggle("rare", achievement.trend <= 3);
         }
         const setDataToElement = () => {
             targetElement.dataset.Type = achievement.Type;

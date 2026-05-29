@@ -627,7 +627,7 @@ export class AchievementsBlock extends Widget {
             achivElement.classList.toggle("overlay", widget.uiProps.showPrevOverlay);
             achivElement.classList.toggle("earned", achievement.isEarned);
             achivElement.classList.toggle("hardcore", achievement.isEarnedHardcore);
-            achivElement.classList.toggle("rare", achievement.difficulty > 7);
+            achivElement.classList.toggle("rare", achievement.trend <= 3);
         }
         function setData() {
             achivElement.dataset.achivId = achievement.ID;
