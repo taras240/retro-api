@@ -12,7 +12,7 @@ const limeColorCode = 65280;
 const botImageLink = 'https://taras240.github.io/retro-api/assets/img/overlay_sets/mario_q/q.png';
 const footerLink = 'retrocheevos.vercel.app';
 const getAuthorUrl = (targetUser) => `https://retroachievements.org/user/${targetUser?.trim()}`
-function getProgressBar(current, total, size = 12) {
+const getProgressBar = (current, total, size = 12) => {
     const percent = total === 0 ? 0 : current / total;
     const filled = Math.round(size * percent);
     const empty = size - filled;
@@ -28,16 +28,19 @@ export async function sendDiscordAlert({ message = "", type, value, award, id })
             }),
             url: getAuthorUrl(targetUser),
         };
-        const header = gameData.Title;
-        const description = gameStatsLines(gameData);
-        const message = {
+        const title = gameData.Title;
+        const description = gameStatsLines(gameData).replace(/\n[ \t]*/g, '\n');
+
+        message = {
             author,
-            header,
+            title,
+            url: gameUrl(gameData.ID),
             description,
             color: limeColorCode,
             colour: "lime",
-            url: gameUrl(gameData.ID),
-            image: gameImageUrl(gameData.ImageIcon),
+            thumbnail: {
+                url: gameImageUrl(gameData.ImageIcon),
+            }
         }
         return message;
     }
@@ -49,23 +52,24 @@ export async function sendDiscordAlert({ message = "", type, value, award, id })
             }),
             url: getAuthorUrl(targetUser),
         };
-        const header = gameData.Title;
+        const title = gameData.Title;
         const description = `
                 ${formatText(ui.lang.awardEarnedInTime, {
             time: formatTime(gameData.TimePlayed)
-        }
-        )}
+        })}
                 ${gameStatsLines(gameData)}
-            `;
+            `.replace(/\n[ \t]*/g, '\n');
         const isHardcoreAward = [GAME_AWARD_TYPES.BEATEN, GAME_AWARD_TYPES.MASTERED].includes(award);
-        const message = {
+        message = {
             author,
-            header,
+            title,
+            url: gameUrl(gameData.ID),
             description,
             color: isHardcoreAward ? goldColorCode : silverColorCode,
             colour: isHardcoreAward ? "gold" : "silver",
-            url: gameUrl(gameData.ID),
-            image: gameImageUrl(gameData.ImageIcon),
+            thumbnail: {
+                url: gameImageUrl(gameData.ImageIcon),
+            }
         }
         return message;
     }
@@ -74,21 +78,24 @@ export async function sendDiscordAlert({ message = "", type, value, award, id })
             name: formatText(ui.lang.userUnlockedCheevo, { user: targetUser }),
             url: getAuthorUrl(targetUser),
         };
-        const header = cheevo.Title;
+        const title = cheevo.Title;
         const description = `
             ${ui.lang.game}: [${gameData.Title}](${gameUrl(gameData.ID)})
             ${formatText(ui.lang.unlockedInTime, { time: formatTime(gameData.TimePlayed) })}
             ${ui.lang.description}: ${cheevo.Description}
             ${ui.lang.points}: ${cheevo.Points}
             ${ui.lang.retropoints}:  ${cheevo.TrueRatio}
-        `;
+        `.replace(/\n[ \t]*/g, '\n');
         message = {
             author,
-            header,
+            title,
+            url: cheevoUrl(cheevo),
             description,
             color: cheevo.isEarnedHardcore ? goldColorCode : silverColorCode,
-            url: cheevoUrl(cheevo),
-            image: cheevo.prevSrc,
+            colour: cheevo.isEarnedHardcore ? "gold" : "silver",
+            thumbnail: {
+                url: cheevo.prevSrc
+            }
         }
         return message;
     }
@@ -96,20 +103,20 @@ export async function sendDiscordAlert({ message = "", type, value, award, id })
     if (!webhook) {
         return;
     }
-    let messageElements = {};
+    let messageText = {};
     const gameData = watcher.GAME_DATA;
 
     switch (type) {
         case ALERT_TYPES.GAME:
-            messageElements = gameMessage(gameData);
+            messageText = gameMessage(gameData);
             break;
         case ALERT_TYPES.AWARD:
             await delay(2000);
-            messageElements = awardMessage(value, award);
+            messageText = awardMessage(value, award);
             break;
         case ALERT_TYPES.CHEEVO:
             const cheevo = value;
-            messageElements = cheevoMessage(gameData, cheevo);
+            messageText = cheevoMessage(gameData, cheevo);
             break;
     }
     const embedMessage = {
@@ -117,16 +124,7 @@ export async function sendDiscordAlert({ message = "", type, value, award, id })
         avatar_url: botImageLink,
         embeds: [
             {
-                author: messageElements.author,
-
-                thumbnail: {
-                    url: messageElements.image
-                },
-                title: messageElements.header,
-                url: messageElements.url,
-                color: messageElements.color,
-                colour: messageElements.colour,
-                description: messageElements.description.replace(/\n[ \t]*/g, '\n'),
+                ...messageText,
                 footer: {
                     text: footerLink,
                 },
