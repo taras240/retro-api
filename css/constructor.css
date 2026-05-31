@@ -1,3 +1,6 @@
+@import url(./constructor/text.css);
+@import url(./constructor/progressbar-1.css);
+
 .constructor {
     position: fixed;
     z-index: 10;
@@ -14,6 +17,7 @@
     text-align: center;
     color: var(--color);
     background: var(--bg-color);
+    cursor: grab;
 }
 
 .constructor-element:has(> *) {

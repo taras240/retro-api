@@ -3,10 +3,13 @@ import { divHtml } from "../components/divContainer.js";
 import { buttonsHtml } from "../components/htmlElements.js";
 import { inputElement, inputTypes } from "../components/inputElements.js";
 import { resizerHtml } from "../components/resizer.js";
+import { moveDirections } from "../enums/moveDirections.js";
 import { formatText } from "../functions/formatText.js";
 import { fromHtml } from "../functions/html.js";
 import { moveEvent, setPosition } from "../functions/movingWidget.js";
+import { gameImageUrl } from "../functions/raLinks.js";
 import { getRandomID } from "../functions/randomID.js";
+import { resizeEvent } from "../functions/resizingWidget.js";
 import { sortBy } from "../functions/sortFilter.js";
 import { ui, watcher } from "../script.js";
 import { Widget } from "./widget.js";
@@ -72,8 +75,8 @@ export class Constructor extends Widget {
             props.index = index;
             const item = fromHtml(`
                     <div class="constructor__item">
-                        <h2 class="constructor-item__header">${props.name || "Click to edit"}</h2>
-                        <p class="constructor-item__description">${props.value || "?"}</p>
+                        <h2 class="constructor-item__header">${props.name || props.type}</h2>
+                        <p class="constructor-item__description">${props.value || ""}</p>
                         <div class="constructor-item__controls-container"></div>
                     </div>
                 `);
@@ -170,22 +173,173 @@ export class Constructor extends Widget {
             sessionRetropoints: sessionData.retropoints,
         }
         this.fnKeys = {
-            progressbar: (value, total) => `
-                <div class="progressbar-container">
-                    <div class="progressbar-value" style="--progress-rate:${100 * value / total}%"></div>
-                </div>
-            `,
-            badge: (value) => badgeElements.customBadge(value)
+            text: ({ value }) => {
+                const formattedText = formatText(value?.replace(/\s/g, "&nbsp;") ?? "text", this.keys);
+                const textElement = fromHtml(`<p class="cnst__text">${formattedText}</p>`);
+                return textElement;
+            },
+            gameProgressbar: ({ isSoftcore, progressType }) => {
+                const baseClass = "progressbar-1";
+                const { ImageIcon, Title } = watcher.GAME_DATA;
+                const { unlockedCheevos, unlockedCheevosTotal, totalCheevos, totalPoints, unlockedPointsTotal, unlockedPoints } = this.keys;
+                const previewSrc = gameImageUrl(ImageIcon);
+                let unlockedRate, unlockedMsg, unlocked;
+                switch (progressType) {
+                    case "points":
+                        unlocked = isSoftcore ? unlockedPointsTotal : unlockedPoints;
+                        unlockedRate = Math.round(100 * unlocked / totalPoints);
+                        unlockedMsg = `Earned ${unlocked} of ${totalPoints} points`;
+                        break;
+                    default:
+                        unlocked = isSoftcore ? unlockedCheevosTotal : unlockedCheevos;
+                        unlockedRate = Math.round(100 * unlocked / totalCheevos);
+                        unlockedMsg = `Unlocked ${unlocked} of ${totalCheevos} achievements`;
+                        break;
+                }
+                return fromHtml(`
+                    <div class="${baseClass}__container" style="--progress-rate:${unlockedRate}%">
+                        <div class="${baseClass}__preview-container">
+                            <img class="${baseClass}__preview" src="${previewSrc}"/>
+                        </div>
+                        <div class="${baseClass}__data-container">
+                            <div class="${baseClass}__title-container">
+                                <h2 class="${baseClass}__title">${Title}</h2>
+                                <p class="${baseClass}__award-status">${unlockedRate}%</p>
+                            </div>
+                            <div class="${baseClass}__progressbar-container">
+                                <div class="${baseClass}__progressbar-value"></div>
+                            </div>
+                            <p class="${baseClass}__progress">${unlockedMsg}</p>
+                        </div>
+                    </div>
+                `);
+            }
         }
-        this.fnDescriptions = [
-            "badge(value)",
-            "progressbar(value,total)",
-        ]
+        this.fnProps = {
+            text: (props) => [
+                {
+                    type: inputTypes.SEARCH_INPUT,
+                    label: ui.lang.elValue,
+                    value: props.value ?? "",
+                    title: ui.lang.elValue,
+                    classList: ["wide-input"],
+                    onChange: (event) => props.value = event.currentTarget.value,
+                },
+                {
+                    label: ui.lang.possibleValues,
+                    elements: [{
+                        type: inputTypes.TEXT,
+                        value: ui.lang.constructorKeysHint,
+                    },
+                    {
+                        type: inputTypes.TEXT,
+                        value: Object.keys(this.keys).join(" | "),
+                    },
+                    ]
+                },
+                {
+                    label: ui.lang.style,
+                    elements: [
+                        {
+                            type: inputTypes.NUM_INPUT,
+                            label: ui.lang.fontSize,
+                            value: props.fontSize,
+                            title: ui.lang.fontSize,
+                            onChange: (event) => props.fontSize = event.currentTarget.value,
+                        },
+                        {
+                            type: inputTypes.COLOR,
+                            label: ui.lang.color,
+                            value: props.fontColor,
+                            onChange: (event) => props.fontColor = event.currentTarget.value,
+                        },
+                        {
+                            type: inputTypes.COLOR,
+                            label: ui.lang.bgColor,
+                            value: props.bgColor,
+                            onChange: (event) => props.bgColor = event.currentTarget.value,
+                        },
+                        {
+                            type: inputTypes.CHECKBOX,
+                            label: ui.lang.bold,
+                            id: "constr-is-bold",
+                            checked: props.isBold,
+                            onChange: (event) => props.isBold = event.currentTarget.checked,
+                            // hint: ui.lang.ignoreSubsetsHint,
+                        },
+                        {
+                            type: inputTypes.NUM_INPUT,
+                            label: ui.lang.zIndex,
+                            value: props.zIndex ?? 0,
+                            title: ui.lang.zIndex,
+                            onChange: (event) => props.zIndex = event.currentTarget.value,
+                        },
+                        {
+                            type: inputTypes.CHECKBOX,
+                            label: ui.lang.isVisible,
+                            id: "constr-is-visible",
+                            checked: props.isVisible ?? true,
+                            onChange: (event) => props.isVisible = event.currentTarget.checked,
+                            // hint: ui.lang.ignoreSubsetsHint,
+                        },
+                    ]
+                }
+            ],
+            gameProgressbar: (props) => [
+                {
+                    label: ui.lang.props,
+                    elements: [
+                        {
+                            type: inputTypes.RADIO,
+                            label: ui.lang.points,
+                            name: "constr-progress-type",
+                            checked: props.progressType === "points",
+                            onChange: () => props.progressType = "points",
+                        },
+                        {
+                            type: inputTypes.RADIO,
+                            label: ui.lang.cheevos,
+                            name: "constr-progress-type",
+                            checked: !props.progressType || props.progressType === "cheevos",
+                            onChange: () => props.progressType = "cheevos",
+                        },
+                        {
+                            type: inputTypes.CHECKBOX,
+                            label: ui.lang.hardcoreMode,
+                            id: "constr-is-soft",
+                            checked: !props.isSoftcore,
+                            onChange: (event) => props.isSoftcore = !event.currentTarget.checked,
+                            // hint: ui.lang.ignoreSubsetsHint,
+                        },
+                        {
+                            type: inputTypes.CHECKBOX,
+                            label: ui.lang.isVisible,
+                            id: "constr-is-visible",
+                            checked: props.isVisible ?? true,
+                            onChange: (event) => props.isVisible = event.currentTarget.checked,
+                            // hint: ui.lang.ignoreSubsetsHint,
+                        },
+                        // {
+                        //     type: inputTypes.NUM_INPUT,
+                        //     label: 'unlocked',
+                        //     value: "unlockedCheevos",
+                        //     onChange: (event) => console.log(event.target.value),
+                        // },
+                        // {
+                        //     type: inputTypes.NUM_INPUT,
+                        //     label: "total count",
+                        //     value: "totalCheevos",
+                        //     onChange: (event) => console.log(event.target.value),
+                        // },
+                    ]
+                }
+            ],
+        }
 
 
-        this.uiProps.elements.forEach(({ id, x, y, value, fontColor, bgColor, fontSize, isBold, width, height, zIndex, isVisible = true }, index) => {
-            if (!value) return;
-            const formattedText = formatText(value.replace(/\s/g, "&nbsp;"), this.keys, this.fnKeys);
+        this.uiProps.elements.forEach((props, index) => {
+            const { type, id, x, y, value, fontColor, bgColor, fontSize, isBold, width, height, zIndex, isVisible = true } = props;
+            // if (!value) return;
             const element = fromHtml(`
                 <div 
                     class="constructor-element" 
@@ -193,8 +347,8 @@ export class Constructor extends Widget {
                     style=" 
                             left:${x || 0};
                             top:${y || 0};
-                            --color:${fontColor || "white"};
-                            --bg-color:${bgColor || "transparent"};
+                            ${fontColor ? `--font-color:${fontColor}` : ""};
+                            ${bgColor ? `--main-color:${bgColor}` : ""};
                             font-size: ${fontSize || 16}px;
                             font-weight:${isBold ? "bold" : "normal"};
                             width:${width ? width + "px" : "fit-content"};
@@ -202,11 +356,21 @@ export class Constructor extends Widget {
                             z-index:${zIndex ? zIndex : 0};
                             display:${isVisible ? "inline-block" : "none"}
                         ">
-                    ${formattedText}
+                    <div class="resizer"></div>
                 </div>
             `);
+
+            const innerElement = this.fnKeys[type](props);
+            element.prepend(innerElement);
             this.elContainer.append(element);
             element.addEventListener("mousedown", event => {
+                const saveSize = () => {
+                    this.uiProps.elements[index] = Object.assign(this.uiProps.elements[index], {
+                        width: element.offsetWidth,
+                        height: element.offsetHeight,
+                    });
+                    this.uiProps.elements = this.uiProps.elements;
+                }
                 const savePosition = () => {
                     this.uiProps.elements[index] = Object.assign(this.uiProps.elements[index], {
                         x: element.style.left,
@@ -214,12 +378,43 @@ export class Constructor extends Widget {
                     });
                     this.uiProps.elements = this.uiProps.elements;
                 }
-                moveEvent(element, event, savePosition);
+                if (event.target.matches(".resizer")) {
+                    resizeEvent({
+                        event: event,
+                        section: element,
+                        resizeDirection: moveDirections.bottomRight,
+                        saveSize
+                    })
+                }
+                else {
+                    moveEvent(element, event, savePosition);
+                }
             })
         })
     }
     editElement(itemProps = {}, item = {}) {
         const props = { ...itemProps };
+        const getElementProps = (type) => {
+            return this.fnProps[type](props);
+        }
+        const saveData = () => {
+            Object.assign(itemProps, props);
+            this.uiProps.elements[props.index] = itemProps;
+            this.uiProps.elements = this.uiProps.elements;
+            this.showElements();
+            this.fillConfigItems();
+            console.log(props);
+        }
+        const saveSelectedElement = (key, value) => {
+            props.value = value;
+            props.type = key;
+            saveData();
+            openElementProps(key)
+        }
+        const openElementProps = (key) => {
+            if (!this.fnProps[key]) return;
+            this.editElement(itemProps, item);
+        }
         const editorItems = [
             {
                 type: inputTypes.SEARCH_INPUT,
@@ -230,116 +425,26 @@ export class Constructor extends Widget {
                 onChange: (event) => props.name = event.currentTarget.value,
             },
             {
-                type: inputTypes.SEARCH_INPUT,
-                label: ui.lang.elValue,
-                value: props.value ?? "",
-                title: ui.lang.elValue,
-                classList: ["wide-input"],
-                onChange: (event) => props.value = event.currentTarget.value,
-            },
-            {
-                label: ui.lang.possibleValues,
-                elements: [{
-                    type: inputTypes.TEXT,
-                    value: ui.lang.constructorKeysHint,
-                },
-                {
-                    type: inputTypes.TEXT,
-                    value: Object.keys(this.keys).join(" | "),
-                },
-                ]
-            },
-            {
                 label: ui.lang.possibleElements,
                 elements: [
-                    {
-                        type: inputTypes.TEXT,
-                        value: this.fnDescriptions.join(" | "),
-                    },
+                    ...Object.keys(this.fnKeys).map(key => ({
+                        type: inputTypes.RADIO,
+                        name: "constr__element-select",
+                        label: key,
+                        checked: props.type === key,
+                        onChange: () => saveSelectedElement(key, props.value),
+                    }))
                 ]
             },
-            {
-                label: ui.lang.style,
-                elements: [
-                    {
-                        type: inputTypes.NUM_INPUT,
-                        label: ui.lang.width,
-                        value: props.width,
-                        title: ui.lang.width,
-                        onChange: (event) => props.width = event.currentTarget.value,
-                    },
-                    {
-                        type: inputTypes.NUM_INPUT,
-                        label: ui.lang.height,
-                        value: props.height,
-                        title: ui.lang.height,
-                        onChange: (event) => props.height = event.currentTarget.value,
-                    },
-                    {
-                        type: inputTypes.NUM_INPUT,
-                        label: ui.lang.fontSize,
-                        value: props.fontSize,
-                        title: ui.lang.fontSize,
-                        onChange: (event) => props.fontSize = event.currentTarget.value,
-                    },
-                    {
-                        type: inputTypes.COLOR,
-                        label: ui.lang.color,
-                        value: props.fontColor || "white",
-                        onChange: (event) => props.fontColor = event.currentTarget.value,
-                    },
-                    {
-                        type: inputTypes.COLOR,
-                        label: ui.lang.bgColor,
-                        value: props.bgColor || "transparent",
-                        onChange: (event) => props.bgColor = event.currentTarget.value,
-                    },
-                    {
-                        type: inputTypes.CHECKBOX,
-                        label: ui.lang.bold,
-                        id: "constr-is-bold",
-                        checked: props.isBold,
-                        onChange: (event) => props.isBold = event.currentTarget.checked,
-                        // hint: ui.lang.ignoreSubsetsHint,
-                    },
-                    {
-                        type: inputTypes.NUM_INPUT,
-                        label: ui.lang.zIndex,
-                        value: props.zIndex ?? 0,
-                        title: ui.lang.zIndex,
-                        onChange: (event) => props.zIndex = event.currentTarget.value,
-                    },
-                    {
-                        type: inputTypes.CHECKBOX,
-                        label: ui.lang.isVisible,
-                        id: "constr-is-visible",
-                        checked: props.isVisible ?? true,
-                        onChange: (event) => props.isVisible = event.currentTarget.checked,
-                        // hint: ui.lang.ignoreSubsetsHint,
-                    },
-                ]
-            },
+            ...getElementProps(itemProps.type),
+
             {
                 label: "",
                 elements: [
                     {
                         type: inputTypes.BUTTON,
-                        label: ui.lang.delete,
-                        onClick: (event) => {
-                            this.deleteItem(index);
-                            event.target.closest(".section")?.remove();
-                        },
-                    },
-                    {
-                        type: inputTypes.BUTTON,
                         label: ui.lang.saveData,
-                        onClick: () => {
-                            Object.assign(itemProps, props);
-                            this.uiProps.elements[props.index] = itemProps;
-                            this.uiProps.elements = this.uiProps.elements;
-                            this.showElements();
-                            this.fillConfigItems();
-                        },
+                        onClick: () => saveData(),
                     },
 
                 ]
@@ -351,6 +456,7 @@ export class Constructor extends Widget {
 
         ui.settings.openSettings(editorItems)
     }
+
     open() {
         this.openConfig();
     }

@@ -3,7 +3,7 @@ import { config, ui } from "../script.js";
 import { stickMovingSection } from "./movingWidget.js";
 
 // Resizing func for widgets
-function resizeEvent({ event, section, callback, resizeDirection = moveDirections.bottomRight }) {
+function resizeEvent({ event, section, callback, saveSize, resizeDirection = moveDirections.bottomRight }) {
     const { app } = ui;
     const minWidth = parseInt(window.getComputedStyle(section).minWidth ?? 10);
     let resizeValues = {
@@ -45,7 +45,7 @@ function resizeEvent({ event, section, callback, resizeDirection = moveDirection
         // Remove event 'mousemove' if stop resizing and save new sizes
         app.addEventListener("mouseup", onMouseUpEvent);
     }
-    const saveSize = () => {
+    saveSize ??= () => {
         config.setNewPosition({
             id: section.id,
             width: section.clientWidth,

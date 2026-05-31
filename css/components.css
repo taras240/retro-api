@@ -355,18 +355,18 @@
     z-index: 2;
 }
 
-.section:hover .resizer {
+:is(.section, .constructor-element):hover .resizer {
     width: 15px;
     border: 2px solid var(--accent-color);
     border-top: none;
     border-left: none;
 }
 
-.section:hover .resizer:hover {
+:is(.section, .constructor-element):hover .resizer:hover {
     width: 25px;
 }
 
-.section:hover .resizer:active {
+:is(.section, .constructor-element):hover .resizer:active {
     width: 25px;
     border-color: var(--accent-color);
 }

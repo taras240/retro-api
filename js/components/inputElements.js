@@ -1,9 +1,11 @@
 import { fromHtml } from "../functions/html.js";
+import { getRandomID } from "../functions/randomID.js";
 import { updateStateBox } from "../functions/stateBoxClick.js";
 import { ui } from "../script.js";
 
 
 const checkbox = ({ event, onChange, id, checked, label, name, isRadio }) => {
+    id ??= getRandomID();
     return `
         <div class="${isRadio ? "radio" : "checkbox"}-input_container">
             <input ${[

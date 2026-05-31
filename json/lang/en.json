@@ -332,5 +332,6 @@
     "awardEarnedInTime": "Award earned in: {{time}}",
     "userUnlockedCheevo": "{{user}} unlocked cheevo",
     "userEarnedAward": "{{user}} has {{award}} the game",
-    "userLauchedGame": "{{user}} has launched the game"
+    "userLauchedGame": "{{user}} has launched the game",
+    "props": "Properties"
 }
