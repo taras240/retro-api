@@ -1,5 +1,6 @@
 @import url(./constructor/text.css);
 @import url(./constructor/progressbar-1.css);
+@import url(./constructor/progresbar-smpl.css);
 
 .constructor {
     position: fixed;

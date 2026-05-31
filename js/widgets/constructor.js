@@ -213,6 +213,32 @@ export class Constructor extends Widget {
                         </div>
                     </div>
                 `);
+            },
+            simpleProgressbar: ({ isSoftcore, progressType }) => {
+                const baseClass = "progressbar-smpl";
+                const { unlockedCheevos, unlockedCheevosTotal, totalCheevos, totalPoints, unlockedPointsTotal, unlockedPoints } = this.keys;
+                let unlockedRate, unlockedMsg, unlocked;
+                switch (progressType) {
+                    case "points":
+                        unlocked = isSoftcore ? unlockedPointsTotal : unlockedPoints;
+                        unlockedRate = Math.round(100 * unlocked / totalPoints);
+                        break;
+                    default:
+                        unlocked = isSoftcore ? unlockedCheevosTotal : unlockedCheevos;
+                        unlockedRate = Math.round(100 * unlocked / totalCheevos);
+                        break;
+                }
+                return fromHtml(`
+                    <div class="${baseClass}__container" style="--progress-rate:${unlockedRate}%">
+                            <div class="${baseClass}__progressbar-container">
+                                <div class="${baseClass}__progressbar-percentage">${unlockedRate}%</div>
+                                <div class="${baseClass}__progressbar-value">
+                                    <div class="${baseClass}__progressbar-percentage">${unlockedRate}%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `);
             }
         }
         this.fnProps = {
@@ -290,6 +316,13 @@ export class Constructor extends Widget {
                     label: ui.lang.props,
                     elements: [
                         {
+                            type: inputTypes.NUM_INPUT,
+                            label: ui.lang.fontSize,
+                            value: props.fontSize,
+                            title: ui.lang.fontSize,
+                            onChange: (event) => props.fontSize = event.currentTarget.value,
+                        },
+                        {
                             type: inputTypes.RADIO,
                             label: ui.lang.points,
                             name: "constr-progress-type",
@@ -331,6 +364,49 @@ export class Constructor extends Widget {
                         //     value: "totalCheevos",
                         //     onChange: (event) => console.log(event.target.value),
                         // },
+                    ]
+                }
+            ],
+            simpleProgressbar: (props) => [
+                {
+                    label: ui.lang.props,
+                    elements: [
+                        {
+                            type: inputTypes.NUM_INPUT,
+                            label: ui.lang.fontSize,
+                            value: props.fontSize,
+                            title: ui.lang.fontSize,
+                            onChange: (event) => props.fontSize = event.currentTarget.value,
+                        },
+                        {
+                            type: inputTypes.RADIO,
+                            label: ui.lang.points,
+                            name: "constr-progress-type",
+                            checked: props.progressType === "points",
+                            onChange: () => props.progressType = "points",
+                        },
+                        {
+                            type: inputTypes.RADIO,
+                            label: ui.lang.cheevos,
+                            name: "constr-progress-type",
+                            checked: !props.progressType || props.progressType === "cheevos",
+                            onChange: () => props.progressType = "cheevos",
+                        },
+                        {
+                            type: inputTypes.CHECKBOX,
+                            label: ui.lang.hardcoreMode,
+                            id: "constr-is-soft",
+                            checked: !props.isSoftcore,
+                            onChange: (event) => props.isSoftcore = !event.currentTarget.checked,
+                            // hint: ui.lang.ignoreSubsetsHint,
+                        },
+                        {
+                            type: inputTypes.CHECKBOX,
+                            label: ui.lang.isVisible,
+                            id: "constr-is-visible",
+                            checked: props.isVisible ?? true,
+                            onChange: (event) => props.isVisible = event.currentTarget.checked,
+                        },
                     ]
                 }
             ],
