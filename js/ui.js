@@ -104,7 +104,7 @@ export class UI {
     this.games = new Games();
     this.settings = new Settings();
     new Links();
-    new Constructor();
+    this.constr = new Constructor();
     // new Completion();
 
 

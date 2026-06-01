@@ -41,32 +41,54 @@ export class Constructor extends Widget {
     constructor() {
         super();
         this.addWidgetIcon();
-        this.showElements();
+        this.showWidgets();
         this.open();
     }
+    updateWidgets() {
+        this.widgets.forEach(widget => {
+            try {
+                widget.update();
+            }
+            catch (e) {
+                console.warn(e)
+            }
+        }
+        )
+    }
+    removeWidgets() {
+        this.widgets.forEach(widget => {
+            try {
+                widget.remove();
+            }
+            catch (e) {
 
+                console.warn(e)
+            }
+        });
+        this.widgets = [];
+    }
     onGameChange({ gameData }) {
-        this.showElements();
+        this.showWidgets();
     }
     onCheevoUnlocks() {
-        this.showElements();
+        this.updateWidgets();
     }
     onAwardsEarned({ awardsArray }) {
-        this.showElements();
+        this.updateWidgets();
     }
     onStartSession({ gameData }) {
-        this.showElements();
+        this.updateWidgets();
     }
     onStatsUpdate({ userData }) {
-        this.showElements();
+        this.updateWidgets();
     }
     onStopSession() {
-        this.showElements();
+        this.updateWidgets();
     }
     deleteItem(index) {
         this.uiProps.elements.splice([index], 1);
         this.uiProps.elements = this.uiProps.elements;
-        this.showElements();
+        this.showWidgets();
         this.fillConfigItems();
     }
     fillConfigItems() {
@@ -102,7 +124,7 @@ export class Constructor extends Widget {
                 }
             ];
             this.fillConfigItems();
-            this.showElements();
+            this.showWidgets();
         })
         this.container.append(addItem);
 
@@ -123,13 +145,13 @@ export class Constructor extends Widget {
         super.addEvents();
         super.applyPosition();
     }
-    showElements() {
+    widgets = [];
+    showWidgets() {
         if (!this.elContainer) {
             this.elContainer = fromHtml(`<div class="constructor"></div>`);
             ui.app.append(this.elContainer);
         }
-        this.elContainer.innerHTML = "";
-        // const gameData = watcher.GAME_DATA ?? {};
+        this.removeWidgets();
         const focusCheevo = Object.values(watcher.CHEEVOS)?.sort((a, b) => sortBy.customOrder(a, b)).filter(c => !c.isEarned)?.[0] ?? {};
         const lastUnlocked = Object.values(watcher.CHEEVOS)?.sort((a, b) => sortBy.latest(a, b)).filter(c => c.isEarned)?.[0] ?? {};
         const { userData, GAME_DATA: gameData, sessionData } = watcher;
@@ -173,30 +195,43 @@ export class Constructor extends Widget {
             sessionRetropoints: sessionData.retropoints,
         }
         this.fnKeys = {
-            text: ({ value }) => {
-                const formattedText = formatText(value?.replace(/\s/g, "&nbsp;") ?? "text", this.keys);
-                const textElement = fromHtml(`<p class="cnst__text">${formattedText}</p>`);
-                return textElement;
+            text: (props) => {
+                const { value } = props;
+                const formattedText = () => formatText(value?.replace(/\s/g, "&nbsp;") ?? "text", this.keys);
+                const InnerElement = () => fromHtml(`<p class="cnst__text">${formattedText()}</p>`);
+                const element = generateWidget({ ...props, element: InnerElement() });
+                const update = () => {
+                    element.querySelector(".cnst__text").innerHTML = formattedText();
+                }
+                const remove = () => {
+                    element?.remove();
+                }
+                return { element, update, remove };
             },
-            gameProgressbar: ({ isSoftcore, progressType }) => {
+            gameProgressbar: (props) => {
+                const { isSoftcore, progressType } = props
                 const baseClass = "progressbar-1";
                 const { ImageIcon, Title } = watcher.GAME_DATA;
                 const { unlockedCheevos, unlockedCheevosTotal, totalCheevos, totalPoints, unlockedPointsTotal, unlockedPoints } = this.keys;
                 const previewSrc = gameImageUrl(ImageIcon);
-                let unlockedRate, unlockedMsg, unlocked;
-                switch (progressType) {
-                    case "points":
-                        unlocked = isSoftcore ? unlockedPointsTotal : unlockedPoints;
-                        unlockedRate = Math.round(100 * unlocked / totalPoints);
-                        unlockedMsg = `Earned ${unlocked} of ${totalPoints} points`;
-                        break;
-                    default:
-                        unlocked = isSoftcore ? unlockedCheevosTotal : unlockedCheevos;
-                        unlockedRate = Math.round(100 * unlocked / totalCheevos);
-                        unlockedMsg = `Unlocked ${unlocked} of ${totalCheevos} achievements`;
-                        break;
+                const getProps = () => {
+                    let unlockedRate, unlockedMsg, unlocked;
+                    switch (progressType) {
+                        case "points":
+                            unlocked = isSoftcore ? unlockedPointsTotal : unlockedPoints;
+                            unlockedRate = Math.round(100 * unlocked / totalPoints);
+                            unlockedMsg = `Earned ${unlocked} of ${totalPoints} points`;
+                            break;
+                        default:
+                            unlocked = isSoftcore ? unlockedCheevosTotal : unlockedCheevos;
+                            unlockedRate = Math.round(100 * unlocked / totalCheevos);
+                            unlockedMsg = `Unlocked ${unlocked} of ${totalCheevos} achievements`;
+                            break;
+                    }
+                    return { unlockedRate, unlockedMsg };
                 }
-                return fromHtml(`
+                const { unlockedRate, unlockedMsg } = getProps();
+                const InnerElement = () => fromHtml(`
                     <div class="${baseClass}__container" style="--progress-rate:${unlockedRate}%">
                         <div class="${baseClass}__preview-container">
                             <img class="${baseClass}__preview" src="${previewSrc}"/>
@@ -213,22 +248,38 @@ export class Constructor extends Widget {
                         </div>
                     </div>
                 `);
+                const element = generateWidget({ ...props, element: InnerElement() });
+                const update = () => {
+                    const { unlockedRate, unlockedMsg } = getProps();
+                    element.querySelector(`.${baseClass}__container`)?.style.setProperty("--progress-rate", `${unlockedRate}%`);
+                    element.querySelector(`.${baseClass}__award-status`).innerText = `${unlockedRate}%`;
+                    element.querySelector(`.${baseClass}__progress`).innerText = unlockedMsg;
+                }
+                const remove = () => {
+                    element?.remove();
+                }
+                return { element, update, remove }
             },
-            simpleProgressbar: ({ isSoftcore, progressType }) => {
+            simpleProgressbar: (props) => {
+                const { isSoftcore, progressType } = props;
                 const baseClass = "progressbar-smpl";
                 const { unlockedCheevos, unlockedCheevosTotal, totalCheevos, totalPoints, unlockedPointsTotal, unlockedPoints } = this.keys;
-                let unlockedRate, unlockedMsg, unlocked;
-                switch (progressType) {
-                    case "points":
-                        unlocked = isSoftcore ? unlockedPointsTotal : unlockedPoints;
-                        unlockedRate = Math.round(100 * unlocked / totalPoints);
-                        break;
-                    default:
-                        unlocked = isSoftcore ? unlockedCheevosTotal : unlockedCheevos;
-                        unlockedRate = Math.round(100 * unlocked / totalCheevos);
-                        break;
+                const getProps = () => {
+                    let unlockedRate, unlocked;
+                    switch (progressType) {
+                        case "points":
+                            unlocked = isSoftcore ? unlockedPointsTotal : unlockedPoints;
+                            unlockedRate = Math.round(100 * unlocked / totalPoints);
+                            break;
+                        default:
+                            unlocked = isSoftcore ? unlockedCheevosTotal : unlockedCheevos;
+                            unlockedRate = Math.round(100 * unlocked / totalCheevos);
+                            break;
+                    }
+                    return { unlockedRate };
                 }
-                return fromHtml(`
+                const { unlockedRate } = getProps();
+                const InnerElement = () => fromHtml(`
                     <div class="${baseClass}__container" style="--progress-rate:${unlockedRate}%">
                             <div class="${baseClass}__progressbar-container">
                                 <div class="${baseClass}__progressbar-percentage">${unlockedRate}%</div>
@@ -239,6 +290,16 @@ export class Constructor extends Widget {
                         </div>
                     </div>
                 `);
+                const element = generateWidget({ ...props, element: InnerElement() });
+                const update = () => {
+                    const { unlockedRate } = getProps();
+                    element.querySelector(`.${baseClass}__container`)?.style.setProperty("--progress-rate", `${unlockedRate}%`);
+                    element.querySelectorAll(`.${baseClass}__progressbar-percentage`).forEach(el => el.innerText = `${unlockedRate}%`);
+                }
+                const remove = () => {
+                    element?.remove();
+                }
+                return { element, update, remove }
             }
         }
         this.fnProps = {
@@ -411,12 +472,9 @@ export class Constructor extends Widget {
                 }
             ],
         }
-
-
-        this.uiProps.elements.forEach((props, index) => {
-            const { type, id, x, y, value, fontColor, bgColor, fontSize, isBold, width, height, zIndex, isVisible = true } = props;
-            // if (!value) return;
-            const element = fromHtml(`
+        const generateWidget = (props) => {
+            const { type, id, x, y, value, fontColor, bgColor, fontSize, isBold, width, height, zIndex, isVisible = true, element } = props;
+            const widget = fromHtml(`
                 <div 
                     class="constructor-element" 
                     id="${id || getRandomID()}" 
@@ -435,35 +493,42 @@ export class Constructor extends Widget {
                     <div class="resizer"></div>
                 </div>
             `);
+            widget.prepend(element);
+            return widget;
+        }
 
-            const innerElement = this.fnKeys[type](props);
-            element.prepend(innerElement);
-            this.elContainer.append(element);
-            element.addEventListener("mousedown", event => {
+        this.uiProps.elements.forEach((props, index) => {
+            const { type } = props;
+            const widget = this.fnKeys[type](props);
+            this.widgets.push(widget);
+            const widgetElement = widget?.element;
+            console.log(this.widgets);
+            this.elContainer.append(widgetElement);
+            widgetElement.addEventListener("mousedown", event => {
                 const saveSize = () => {
                     this.uiProps.elements[index] = Object.assign(this.uiProps.elements[index], {
-                        width: element.offsetWidth,
-                        height: element.offsetHeight,
+                        width: widgetElement.offsetWidth,
+                        height: widgetElement.offsetHeight,
                     });
                     this.uiProps.elements = this.uiProps.elements;
                 }
                 const savePosition = () => {
                     this.uiProps.elements[index] = Object.assign(this.uiProps.elements[index], {
-                        x: element.style.left,
-                        y: element.style.top,
+                        x: widgetElement.style.left,
+                        y: widgetElement.style.top,
                     });
                     this.uiProps.elements = this.uiProps.elements;
                 }
                 if (event.target.matches(".resizer")) {
                     resizeEvent({
                         event: event,
-                        section: element,
+                        section: widgetElement,
                         resizeDirection: moveDirections.bottomRight,
                         saveSize
                     })
                 }
                 else {
-                    moveEvent(element, event, savePosition);
+                    moveEvent(widgetElement, event, savePosition);
                 }
             })
         })
@@ -477,7 +542,7 @@ export class Constructor extends Widget {
             Object.assign(itemProps, props);
             this.uiProps.elements[props.index] = itemProps;
             this.uiProps.elements = this.uiProps.elements;
-            this.showElements();
+            this.showWidgets();
             this.fillConfigItems();
             console.log(props);
         }
