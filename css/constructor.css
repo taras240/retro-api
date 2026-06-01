@@ -1,6 +1,7 @@
 @import url(./constructor/text.css);
 @import url(./constructor/progressbar-1.css);
 @import url(./constructor/progresbar-smpl.css);
+@import url(./constructor/steam-progress.css);
 
 .constructor {
     position: fixed;
