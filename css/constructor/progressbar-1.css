@@ -1,0 +1,80 @@
+.progressbar-1__container {
+    --progress-rate: 25%;
+    width: 100%;
+    height: fit-content;
+    background: var(--main-color);
+    padding: 1em;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    gap: 1em;
+    color: var(--font-color);
+    border-radius: 1em;
+}
+
+.progressbar-1__preview-container {
+    width: 6em;
+    height: 6em;
+    flex-shrink: 0;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 0 10px black;
+}
+
+.progressbar-1__preview {
+    width: 100%;
+    height: 100%;
+    image-rendering: pixelated;
+}
+
+.progressbar-1__data-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    gap: 0.5em;
+    flex: 1;
+    align-self: stretch;
+    overflow: hidden;
+}
+
+.progressbar-1__title-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.25em;
+    font-size: 1.2em;
+}
+
+.progressbar-1__title {
+    font-weight: bold;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.progressbar-1__award-status {
+    opacity: 0.5;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.progressbar-1__progressbar-container {
+    width: 100%;
+    height: 0.5em;
+    border-radius: 3px;
+    overflow: hidden;
+    background: var(--selection-color);
+}
+
+.progressbar-1__progressbar-value {
+    height: 100%;
+    width: var(--progress-rate);
+    background: var(--accent-color);
+}
+
+.progressbar-1__progress {
+    text-align: start;
+    opacity: 0.5;
+}

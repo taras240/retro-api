@@ -1,0 +1,187 @@
+.steam-progress__container {
+    width: 100%;
+}
+
+.steam-progress__game-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75em;
+    padding: 0.75em 0.75em 0;
+    width: 100%;
+    height: fit-content;
+    background: var(--main-color);
+}
+
+.steam-progress__game-preview-container {
+    width: 5em;
+    aspect-ratio: 1;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.steam-progress__game-preview {
+    width: 100%;
+    height: 100%;
+}
+
+.steam-progress__game-data-container {
+    overflow: hidden;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.steam-progress__title {
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: start;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.steam-progress__platform {
+    font-size: 1.0em;
+    font-weight: normal;
+    text-align: start;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    opacity: 0.5;
+}
+
+.steam-progress__time-played {
+    text-align: start;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.steam-progress__time {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+/* .steam-progress */
+.steam-progress__progress-container {
+    padding: 0.75em;
+    width: 100%;
+    height: fit-content;
+    background: var(--main-color);
+}
+
+.steam-progress__progress {
+    color: var(--font-color);
+    margin-bottom: 0.5em;
+    text-align: start;
+}
+
+.steam-progress__progress-rate {
+    color: var(--font-color);
+    opacity: 0.5;
+}
+
+.steam-progress__progressbar-container {
+    --border-radius: 2px;
+    height: 0.5em;
+    width: 100%;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    background: black;
+    margin-bottom: 0.25em;
+}
+
+.steam-progress__progressbar-value {
+    height: 100%;
+    width: var(--progress-rate);
+
+    border-radius: var(--border-radius);
+    background: var(--accent-color);
+}
+
+.steam-progress__cheevos-container {
+    width: 100%;
+    background: var(--secondary-color);
+    padding: 1em 0.75em;
+    border: 1px solid var(--main-color);
+}
+
+
+*+.steam-progress__hor-divider {
+    height: 1px;
+    width: 100%;
+    background: var(--font-color);
+    margin-top: 0.75em;
+    opacity: 0.1;
+}
+
+.steam-progress__locked-header {
+    font-size: 0.9em;
+    opacity: 0.5;
+    text-align: start;
+    margin: 0.5em 0 0.5em;
+}
+
+.steam-progress__last-container {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5em;
+    align-items: center;
+    margin-bottom: 0.5em;
+    flex: 1;
+    overflow: hidden;
+}
+
+.steam-progress__preview-container {
+    width: 3em;
+    aspect-ratio: 1;
+    flex-shrink: 0;
+    background: var(--main-color);
+    display: grid;
+    place-items: center;
+}
+
+.steam-progress__preview {
+    width: 100%;
+    height: 100%;
+    image-rendering: pixelated;
+    filter: grayscale(1) blur(0.75px);
+
+}
+
+.steam-progress__preview.earned {
+    filter: grayscale(0);
+}
+
+.steam-progress__cheevo-data {
+    flex: 1;
+    overflow: hidden;
+}
+
+.steam-progress__cheevo-title {
+    font-size: 1em;
+    font-weight: normal;
+    text-align: start;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.steam-progress__cheevo-description {
+    font-size: 0.9em;
+    font-weight: normal;
+    text-align: start;
+    opacity: 0.5;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.steam-progress__unlocks-badges {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 0.5em;
+}

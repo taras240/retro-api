@@ -1,0 +1,6 @@
+.cnst__text {
+    width: 100%;
+    height: 100%;
+    color: var(--font-color);
+    background: var(--main-color);
+}
