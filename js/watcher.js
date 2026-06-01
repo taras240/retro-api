@@ -503,6 +503,7 @@ export class Watcher {
 
         this.watcherInterval = setInterval(() => {
             increasePlayTime();
+            this.GAME_DATA.TimePlayed++;
             this.playTime.gameTime % 60 === 0 && this.savePlayTime();
         }, 1000)
     }
