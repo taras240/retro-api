@@ -20,6 +20,7 @@ import { parseCurrentGameLevel } from "../functions/parseRP.js";
 import { createAutoScroll } from "../functions/autosScroll.js";
 import { UI_EVENTS_LIST } from "../enums/UIEvents.js";
 import { saveOrder } from "../functions/customOrder.js";
+import { CHEEVO_TYPES } from "../enums/cheevoTypes.js";
 
 export class Target extends Widget {
     sectionCode = "-target";
@@ -916,7 +917,6 @@ export class Target extends Widget {
             const genresBadgesHtml = achievement.genres?.map(genre => badgeElements.buttonGenreBadge(genre)).join("");
 
             const genresIcons = achievement.genres?.map(genre => genreIcons[genre]).join("")
-
             targetElement.innerHTML = `
             <div class="target__cheevo-bg"></div>
             <div class="target__buttons-container">
@@ -948,9 +948,11 @@ export class Target extends Widget {
                 <p class="list-item__text">${achievement.Description}</p>
                 <div class="icons-row-list">
                     ${icons.cheevoType(achievement.Type)}
+                    ${achievement.progressionFocusTime ? badgeElements.gold(Math.round(achievement.progressionFocusTime / 60) + "mins") : ""}
+
                     ${signedIcons.points(achievement.Points)}
                     ${signedIcons.retropoints(achievement.TrueRatio)}
-                    ${signedIcons.time(secondsToBadgeString(achievement.timeToUnlock))}
+                    ${achievement.timeToUnlock ? signedIcons.time(secondsToBadgeString(achievement.timeToUnlock)) : ""}
                     ${signedIcons.rarity(achievement.rateEarnedHardcore)}
                     ${signedIcons.retroRatio(achievement.retroRatio)}
                     ${badgeElements.difficultBadge(achievement.difficulty)}

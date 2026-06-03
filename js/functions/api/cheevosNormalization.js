@@ -67,9 +67,9 @@ const addFocusTime = (gameData) => {
     const cheevos = Object.values(gameData?.Achievements ?? {}).sort((a, b) => sortBy.timeToUnlock(a, b, 1, true));
     const progressionCheevos = cheevos.filter(c => filterBy.progression(c));
     progressionCheevos.forEach((cheevo, index) => {
-        let focusTime = 1;
+        let focusTime = 0;
         if (index === 0 || !cheevo.timeToUnlock) {
-            focusTime = cheevo.timeToUnlock ?? 1;
+            focusTime = cheevo.timeToUnlock ?? 0;
         }
         else {
             const prevCheevo = progressionCheevos[index - 1];
@@ -78,9 +78,9 @@ const addFocusTime = (gameData) => {
         cheevo.progressionFocusTime = focusTime;
     });
     cheevos.forEach((cheevo, index) => {
-        let focusTime = 1;
+        let focusTime = 0;
         if (index === 0 || !cheevo.timeToUnlock) {
-            focusTime = cheevo.timeToUnlock;
+            focusTime = cheevo.timeToUnlock ?? 0;
         }
         else {
             const prevCheevo = cheevos[index - 1];
