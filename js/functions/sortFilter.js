@@ -126,13 +126,15 @@ export const sortBy = {
         return (a.level - b.level) * reverse;
     },
     timeToUnlock: (a, b, reverse, strictMode = false) => {
-        if (strictMode && (!a.timeToUnlock || !b.timeToUnlock) && !(!a.timeToUnlock && !b.timeToUnlock)) {
-            return b.timeToUnlock ? 1 : -1;
+        const aTime = a.timeToUnlockSoftcore || a.timeToUnlock;
+        const bTime = b.timeToUnlockSoftcore || b.timeToUnlock;
+        if (strictMode && (!aTime || !bTime) && !(!aTime && !bTime)) {
+            return bTime ? 1 : -1;
         }
-        if (!a.timeToUnlock && !b.timeToUnlock) return strictMode ? 0 : sortBy.difficulty(a, b, reverse);
-        if (!a.timeToUnlock) return 1 * reverse;
-        if (!b.timeToUnlock) return -1 * reverse;
-        return (a.timeToUnlock - b.timeToUnlock) * reverse;
+        if (!aTime && !bTime) return strictMode ? 0 : sortBy.difficulty(a, b, reverse);
+        if (!aTime) return 1 * reverse;
+        if (!bTime) return -1 * reverse;
+        return (aTime - bTime) * reverse;
     },
     difficulty: (a, b, reverse) => {
         let difRes = a.difficulty - b.difficulty;
