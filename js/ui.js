@@ -36,6 +36,7 @@ import { Completion } from "./widgets/completion.js";
 import { LoginWindowElement } from "./widgets/login.js";
 import { Constructor } from "./widgets/constructor.js";
 import { GAME_AWARD_TYPES } from "./enums/gameAwards.js";
+import { Heatmap } from "./widgets/heatmap.js";
 
 
 export class UI {
@@ -46,7 +47,7 @@ export class UI {
   STICK_MARGIN = 1;
   STICK_TOLERANCE = 7;
   hltb = {};
-  // isTest = true;
+  isTest = true;
   constructor() {
     this.toggleLoading(false);
     this.initUI();
@@ -107,7 +108,7 @@ export class UI {
     this.constr = new Constructor();
     // new Completion();
 
-
+    // const heatmap = new Heatmap();
   }
 
   addEvents() {
