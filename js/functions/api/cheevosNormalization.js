@@ -1,4 +1,5 @@
 import { cheevoImageUrl } from "../raLinks.js";
+import { filterBy, sortBy } from "../sortFilter.js";
 import { getCheevoDifficulty } from "./cheevoDifficulty.js";
 import { generateCheevosDisplayOrder } from "./displayOrder.js";
 import { parseCheevosGenres } from "./genreParser.js";
@@ -62,15 +63,43 @@ const parseCheevoGroups = (gameData) => {
     }
     gameData.groups = [...groupsArray];
 }
+const addFocusTime = (gameData) => {
+    const cheevos = Object.values(gameData?.Achievements ?? {}).sort((a, b) => sortBy.timeToUnlock(a, b, 1, true));
+    const progressionCheevos = cheevos.filter(c => filterBy.progression(c));
+    progressionCheevos.forEach((cheevo, index) => {
+        let focusTime = 1;
+        if (index === 0 || !cheevo.timeToUnlock) {
+            focusTime = cheevo.timeToUnlock ?? 1;
+        }
+        else {
+            const prevCheevo = progressionCheevos[index - 1];
+            focusTime = cheevo.timeToUnlock - prevCheevo.timeToUnlock;
+        }
+        cheevo.progressionFocusTime = focusTime;
+    });
+    cheevos.forEach((cheevo, index) => {
+        let focusTime = 1;
+        if (index === 0 || !cheevo.timeToUnlock) {
+            focusTime = cheevo.timeToUnlock;
+        }
+        else {
+            const prevCheevo = cheevos[index - 1];
+            focusTime = cheevo.timeToUnlock - prevCheevo.timeToUnlock;
+        }
+        cheevo.focusTime = focusTime;
+    })
+}
 export const normalizeCheevos = (gameData, savedGameData = {}) => {
     parseCheevosGenres(gameData);
     parseCheevoLevels(gameData);
     parseCheevoGroups(gameData)
     generateCheevosDisplayOrder(gameData);
+    addFocusTime(gameData);
     Object.values(gameData.Achievements)
         .map(cheevo =>
             normalizeAchievement(cheevo, gameData, savedGameData));
 }
+
 export const getNormalizedAotW = ({ AotwData, userName }) => {
     console.log(AotwData);
     // debugger;

@@ -32,7 +32,7 @@ export const updateProgressionBar = (container, gameData, isHardMode = true) => 
                     .filter(Boolean)
                     .join(" ");
 
-                return `<div class="${classes}" data-achiv-id="${cheevo.ID}"></div>`;
+                return `<div class="${classes}" data-achiv-id="${cheevo.ID}" style="--focus-time:${cheevo.progressionFocusTime}"></div>`;
             })
             .join("");
     }
@@ -44,7 +44,7 @@ export const updateProgressionBar = (container, gameData, isHardMode = true) => 
         const winCheevos = sortedCheevos.filter(c => c.Type === CHEEVO_TYPES.WIN);
         return [...progresionCheevos, ...winCheevos];
     }
-    const cheevos = reorderCheevos(Object.values(gameData.AllAchievements))
+    const cheevos = reorderCheevos(Object.values(gameData.AllAchievements));
     const winCount = Object.values(gameData.AllAchievements).filter(c => c.Type == CHEEVO_TYPES.WIN).length;
 
     const focusCheevo = cheevos.find(a => !isEarned(a));
