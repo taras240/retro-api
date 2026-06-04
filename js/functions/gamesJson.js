@@ -4,7 +4,6 @@ const gamesJsonUrl = `./json/games/all_min.json`;
 const unpackMinJson = (gamesMinJson) => {
     const gamesJson = gamesMinJson.map(game => {
         let fullObject = {};
-        if (game[0] === 253) console.log(game);
         game.forEach((value, key) => {
             fullObject = {
                 ...fullObject,

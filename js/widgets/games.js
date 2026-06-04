@@ -19,6 +19,7 @@ import { gamesFromJson } from "../functions/gamesJson.js";
 import { fromHtml } from "../functions/html.js";
 import { GameListElement } from "../components/gamesWidget/gameItem.js";
 import { GameCardElement } from "../components/gamesWidget/gameCard.js";
+import { PlaylistsContainer } from "../components/gamesWidget/playlists.js";
 
 export class Games extends Widget {
     widgetIcon = {
@@ -303,6 +304,18 @@ export class Games extends Widget {
         this.sort_name = value;
         this.updateGamesList();
     }
+    get PLAYLIST_FILTER() {
+        return this.currentPlaylist;
+    }
+    set PLAYLIST_FILTER(playlistName) {
+        if (this.playlists[playlistName]) {
+            this.currentPlaylist = playlistName;
+        }
+        else {
+            this.currentPlaylist = null;
+        }
+        this.updateGamesList();
+    }
     awardCheckboxChangeEvent(checkbox, awardType) {
         let awards = this.AWARD_FILTER;
         checkbox.checked ?
@@ -331,6 +344,7 @@ export class Games extends Widget {
             (genres = genres.filter(code => code != genreCode));
         this.GENRE_FILTER = genres;
     }
+
     titleFilter = '';
     applyFilter() {
 
@@ -346,6 +360,14 @@ export class Games extends Widget {
                 `${game.Title} ${game.badges?.join(' ')} ${RA_PLATFORM_CODES[game.ConsoleID]?.Name ?? "-"}`.match(titleRegex)) :
             this.GAMES;
         // this.COOP_FILTER && (this.games = this.games?.filter(game => game.Coop == "true"));
+        //*Playlist Filter
+        if (this.PLAYLIST_FILTER && this.playlists[this.PLAYLIST_FILTER]?.games) {
+            this.games = this.games
+                .filter(game =>
+                    this.playlists[this.PLAYLIST_FILTER]?.games?.includes(game.ID)
+                )
+        }
+
         //* Filter by Platform
         this.PLATFORMS_FILTER.length > 0 && (this.games = this.games?.filter(game => {
             let isPlatformMatch = false;
@@ -425,16 +447,37 @@ export class Games extends Widget {
         'beaten-softcore': 'beaten softcore',
         started: 'started',
     }
-
+    playlists = {
+        "All Games": {
+            title: "All Games",
+            locked: true,
+            editable: false,
+            games: null,
+            displayOrder: 0
+        },
+        WantToPlay: {
+            title: "WantToPlay",
+            locked: true,
+            editable: false,
+            games: [],
+            displayOrder: 1,
+        },
+        AlmostMastered: {
+            title: "AlmostMastered",
+            locked: true,
+            editable: false,
+            games: [],
+            displayOrder: 2,
+        }
+    }
     games = {}
     gamesInfo = {};
     constructor() {
         super();
         this.generateWidget();
         this.addWidgetIcon();
-        this._favs = config.ui.favouritesGames ?? [];
         this.initializeElements();
-        this.container.appendChild(this.sideMenuElement());
+
         this.setValues();
         this.addEvents();
 
@@ -445,12 +488,22 @@ export class Games extends Widget {
         );
 
     }
+    openPlaylist(playlistName) {
+        if (!this.playlists[playlistName]) playlistName = null;
+        this.PLAYLIST_FILTER = playlistName;
+        const playlists = this.container.querySelectorAll("#games_playlists .games__playlist-item");
+        playlists.forEach(p => p.classList.toggle("active", p.dataset.playlistName === playlistName));
+    }
     generateWidget() {
         const controlsElement = document.createElement("div");
         controlsElement.classList.add("games__main-controls");
         const gameList = fromHtml(`
-            <ul id="games-list" class="platform-list scrollable" data-current-games-array-position="0"/>
-        `)
+            <ul id="games-list" class="games-list scrollable" data-current-games-array-position="0"/>
+        `);
+        const playlistsContainer = PlaylistsContainer({
+            playlists: this.playlists,
+            onClick: (playlistName) => this.openPlaylist(playlistName)
+        });
         const widgetID = "games_section";
         const headerElementsHtml = `
             ${buttonsHtml.reload()}
@@ -467,7 +520,7 @@ export class Games extends Widget {
 
         const widget = this.generateWidgetElement(widgetData);
         const contentContainer = widget.querySelector(".games_container");
-        contentContainer.append(gameList);
+        contentContainer.append(playlistsContainer, gameList, this.sideMenuElement());
         widget.insertBefore(controlsElement, contentContainer);
         ui.app.appendChild(widget);
     }
@@ -547,7 +600,21 @@ export class Games extends Widget {
     }
     async loadWantToPlay() {
         const gamesList = await apiWorker.getWantToPlayGames({});
-        this._favs = Array.from(new Set([...gamesList]));//...this._favs,
+        this._favs = Array.from(new Set([...gamesList]));
+
+    }
+    updatePlaylists() {
+        this.playlists.WantToPlay.games = this._favs;
+        const getAlmostMastered = () => {
+            return [...this.GAMES].filter(g =>
+                g.NumAwardedHardcore &&
+                g.NumAchievements - g.NumAwardedHardcore <= 3 &&
+                g.NumAchievements !== g.NumAwardedHardcore)
+                .map(g => g.ID)
+        }
+        const almostMastered = getAlmostMastered();
+        this.playlists.AlmostMastered.games = getAlmostMastered();
+        // console.log(this.playlists.AlmostMastered.games)
     }
     updateGamesList() {
         this.applyFilter();
@@ -559,6 +626,7 @@ export class Games extends Widget {
         await this.loadWantToPlay();
         await this.getAllGames();
         await this.updateGamesList();
+        this.updatePlaylists();
         // this.loadGameInfo();
     }
     async loadGameInfo() {

@@ -21,7 +21,9 @@ section.section.games_setion:hover {
   overflow: hidden;
   height: 100%;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: stretch;
+  align-items: start;
 }
 
 .games__main-controls {
@@ -92,7 +94,7 @@ section.section.games_setion:hover {
   transform: scaleY(-1);
 }
 
-.platform-list {
+.games-list {
   position: relative;
   width: 100%;
   display: flex;
@@ -106,6 +108,38 @@ section.section.games_setion:hover {
   transition: 0.2s;
   gap: 3px;
   /* background: linear-gradient(to left, var(--main-color), var(--secondary-color)); */
+}
+
+.games__playlists {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 300px;
+  height: 100%;
+  padding: 0.5em;
+}
+
+.games__playlist-item {
+  padding: 1em 0.5em;
+  background: var(--secondary-color);
+  border-radius: 3px;
+  border: 1px solid var(--secondary-color);
+  transition: 200ms;
+  cursor: pointer;
+}
+
+.games__playlist-item.active {
+  background: var(--accent-color);
+}
+
+.games__playlist-item:hover {
+  border-color: var(--accent-color);
+  background: var(--selection-color);
+}
+
+.games__playlist-item.active:hover {
+  background: var(--accent-color);
+  color: var(--secondary-color);
 }
 
 .games__load-button {
@@ -167,35 +201,20 @@ section.section.games_setion:hover {
   transform: scaleY(-1);
 }
 
-.platform-list::-webkit-scrollbar {
-  width: auto;
-  height: auto;
-}
-
-.platform-list::-webkit-scrollbar-track {
-  background: var(--secondary-color);
-
-}
-
-.platform-list::-webkit-scrollbar-thumb {
-  background: var(--accent-color);
-  border-radius: 3px;
-}
-
-.platform-list::-webkit-scrollbar-thumb:hover {}
-
 .platform_game-item {
   position: relative;
   width: 100%;
   padding: 0.5em;
   display: grid;
   grid-template-columns: 3em 1fr;
+  gap: 0 0.5em;
+  flex-shrink: 0;
+  background-color: var(--secondary-color);
   border: 1px solid transparent;
   border-radius: 3px;
-  transition: 50ms;
-  background-color: var(--secondary-color);
-  gap: 0 0.5em;
+  overflow: hidden;
   z-index: 0;
+  transition: 50ms;
 }
 
 .platform_game-item:nth-child(even) {}
@@ -215,6 +234,7 @@ section.section.games_setion:hover {
   background: transparent;
   z-index: -1;
   opacity: 0.5;
+
 }
 
 .game-item__progressbar-value {
