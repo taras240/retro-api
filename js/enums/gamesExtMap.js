@@ -12,3 +12,20 @@ export const gamesExtMap = {
     g: "Genres",
     h: "HLTB"
 };
+export const gameKeysMap = [
+    "ID",
+    "Title",
+    "badges",
+    "ConsoleID",
+    "ImageIcon",
+    "NumAchievements",
+    "Points",
+    "retropoints",
+    "relisedAt",
+    "HLTB",
+    "timeToMaster",
+    "playersHardcore",
+    "timesBeaten",
+    "timesMastered",
+    "playersTotal"
+]

@@ -333,5 +333,6 @@
     "userUnlockedCheevo": "{{user}} unlocked cheevo",
     "userEarnedAward": "{{user}} has {{award}} the game",
     "userLauchedGame": "{{user}} has launched the game",
-    "props": "Properties"
+    "props": "Properties",
+    "gamesLibrary": "RA Games Library"
 }

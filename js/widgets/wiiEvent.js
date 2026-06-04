@@ -1,6 +1,5 @@
 import { badgeElements } from "../components/badges.js";
 import { buttonsHtml } from "../components/htmlElements.js";
-import { gamesFromJson } from "../functions/gamesJson.js";
 import { fromHtml } from "../functions/html.js";
 import { gameImageUrl, gameUrl } from "../functions/raLinks.js";
 import { apiWorker, ui } from "../script.js";

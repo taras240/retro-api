@@ -101,9 +101,10 @@ section.section.games_setion:hover {
   flex-direction: column;
   overflow-x: hidden;
   overflow-y: scroll;
-  padding-bottom: 2em;
+  padding: 0.5em;
   height: 100%;
   transition: 0.2s;
+  gap: 3px;
   /* background: linear-gradient(to left, var(--main-color), var(--secondary-color)); */
 }
 
@@ -185,31 +186,46 @@ section.section.games_setion:hover {
 
 .platform_game-item {
   position: relative;
-  height: 5em;
   width: 100%;
-  padding: 0.5em 1em;
+  padding: 0.5em;
   display: grid;
-  grid-template-columns: 4em 1fr;
-  column-gap: 0.5em;
-  border-bottom: 1px solid var(--secondary-color);
+  grid-template-columns: 3em 1fr;
   border: 1px solid transparent;
+  border-radius: 3px;
   transition: 50ms;
-  /* overflow: hidden; */
+  background-color: var(--secondary-color);
+  gap: 0 0.5em;
+  z-index: 0;
 }
 
-.platform_game-item:nth-child(even) {
-  background-color: var(--secondary-color);
-}
+.platform_game-item:nth-child(even) {}
 
 .platform_game-item:hover {
   border-color: var(--accent-color);
   background-color: var(--selection-color);
 }
 
+.game-item__progressbar-container {
+  --progress-rate: 0%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  z-index: -1;
+  opacity: 0.5;
+}
+
+.game-item__progressbar-value {
+  height: 100%;
+  width: var(--progress-rate);
+  background: var(--accent-color);
+}
 
 .game-preview_image {
   grid-row: 1/3;
-  height: 4em;
+  height: 3em;
   aspect-ratio: 1;
   border-radius: 5px;
 }
@@ -234,7 +250,7 @@ section.section.games_setion:hover {
 .game-description_button {
   position: relative;
   background-color: transparent;
-  font-size: 1.1em;
+  font-size: 1.0em;
   border-radius: 2px;
   width: 100%;
   height: 100%;

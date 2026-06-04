@@ -17,10 +17,12 @@ import { getGenres } from "../functions/genreIDtoGenre.js";
 import { buttonsHtml } from "../components/htmlElements.js";
 import { gamesFromJson } from "../functions/gamesJson.js";
 import { fromHtml } from "../functions/html.js";
+import { GameListElement } from "../components/gamesWidget/gameItem.js";
+import { GameCardElement } from "../components/gamesWidget/gameCard.js";
 
 export class Games extends Widget {
     widgetIcon = {
-        description: "games widget",
+        description: ui.lang.gamesLibrary,
         iconClass: "games-icon",
     };
     contextMenuItems(gameID) {
@@ -185,34 +187,6 @@ export class Games extends Widget {
     get COOP_FILTER() {
         return this.coopOnly ?? false;
     }
-    awardCheckboxChangeEvent(checkbox, awardType) {
-        let awards = this.AWARD_FILTER;
-        checkbox.checked ?
-            awards.push(awardType) :
-            (awards = awards.filter(code => code != awardType));
-        this.AWARD_FILTER = awards;
-    }
-    releaseCheckboxChangeEvent(checkbox, releaseType) {
-        let release = this.RELEASE_FILTER;
-        checkbox.checked ?
-            release.push(releaseType) :
-            (release = release.filter(code => code != releaseType));
-        this.RELEASE_FILTER = release;
-    }
-    platformCheckboxChangeEvent(checkbox, platformCode) {
-        let platforms = this.PLATFORMS_FILTER;
-        checkbox.checked ?
-            platforms.push(platformCode + '') :
-            (platforms = platforms.filter(code => code != platformCode));
-        this.PLATFORMS_FILTER = platforms;
-    }
-    genreCheckboxChangeEvent(checkbox, genreCode) {
-        let genres = this.GENRE_FILTER;
-        checkbox.checked ?
-            genres.push(genreCode) :
-            (genres = genres.filter(code => code != genreCode));
-        this.GENRE_FILTER = genres;
-    }
     set YEARS_FILTER(value) {
         this.yearsFilter = value;
         this.updateGamesList();
@@ -329,9 +303,38 @@ export class Games extends Widget {
         this.sort_name = value;
         this.updateGamesList();
     }
+    awardCheckboxChangeEvent(checkbox, awardType) {
+        let awards = this.AWARD_FILTER;
+        checkbox.checked ?
+            awards.push(awardType) :
+            (awards = awards.filter(code => code != awardType));
+        this.AWARD_FILTER = awards;
+    }
+    releaseCheckboxChangeEvent(checkbox, releaseType) {
+        let release = this.RELEASE_FILTER;
+        checkbox.checked ?
+            release.push(releaseType) :
+            (release = release.filter(code => code != releaseType));
+        this.RELEASE_FILTER = release;
+    }
+    platformCheckboxChangeEvent(checkbox, platformCode) {
+        let platforms = this.PLATFORMS_FILTER;
+        checkbox.checked ?
+            platforms.push(platformCode + '') :
+            (platforms = platforms.filter(code => code != platformCode));
+        this.PLATFORMS_FILTER = platforms;
+    }
+    genreCheckboxChangeEvent(checkbox, genreCode) {
+        let genres = this.GENRE_FILTER;
+        checkbox.checked ?
+            genres.push(genreCode) :
+            (genres = genres.filter(code => code != genreCode));
+        this.GENRE_FILTER = genres;
+    }
     titleFilter = '';
     applyFilter() {
 
+        // if (!this.games?.length) return;
         //*Filter by Search request   
         const searchRequest = this.titleFilter
             .split(/\s/)
@@ -342,8 +345,7 @@ export class Games extends Widget {
             this.GAMES.filter(game =>
                 `${game.Title} ${game.badges?.join(' ')} ${RA_PLATFORM_CODES[game.ConsoleID]?.Name ?? "-"}`.match(titleRegex)) :
             this.GAMES;
-        this.COOP_FILTER && (this.games = this.games?.filter(game => game.Coop == "true"));
-
+        // this.COOP_FILTER && (this.games = this.games?.filter(game => game.Coop == "true"));
         //* Filter by Platform
         this.PLATFORMS_FILTER.length > 0 && (this.games = this.games?.filter(game => {
             let isPlatformMatch = false;
@@ -393,6 +395,7 @@ export class Games extends Widget {
             const hltb = Math.min(...(hltbValues.length ? hltbValues : [0]));
             return hltb <= this.HLTB_FILTER.to && hltb >= this.HLTB_FILTER.from
         })
+
         //* Filter by CHEEVOS Count
         this.games = this.games.filter(game => {
             // !isFinite(game.NumAchievements) && console.log(game.NumAchievements);
@@ -401,22 +404,26 @@ export class Games extends Widget {
         })
         //* Filter by YEAR 
         this.games = this.games.filter(game => {
-            const gameYear = +(game.Date?.split("-")?.[0] ?? 0);
+            const date = new Date(game.relisedAt);
+            const gameYear = Number.parseInt(date.getFullYear());
+
             return gameYear <= this.YEARS_FILTER.to && gameYear >= this.YEARS_FILTER.from
         })
+        return;
     }
     applySort() {
+        // if (!this.games?.length) return;
         this.games = this.games.sort((a, b) => this.REVERSE_SORT * this.SORT_METHOD(a, b));
     }
     platformCodes = {
 
     }
     awardTypes = {
-        'mastered': 'mastered',
+        mastered: 'mastered',
         'beaten-hardcore': 'beaten',
-        'completed': 'completed',
+        completed: 'completed',
         'beaten-softcore': 'beaten softcore',
-        'started': 'started',
+        started: 'started',
     }
 
     games = {}
@@ -441,9 +448,9 @@ export class Games extends Widget {
     generateWidget() {
         const controlsElement = document.createElement("div");
         controlsElement.classList.add("games__main-controls");
-        const containerHtml = `
-            <ul class="platform-list" id="games-list" data--console-id="all" data-current-games-array-position="0"></ul>
-        `
+        const gameList = fromHtml(`
+            <ul id="games-list" class="platform-list scrollable" data-current-games-array-position="0"/>
+        `)
         const widgetID = "games_section";
         const headerElementsHtml = `
             ${buttonsHtml.reload()}
@@ -453,19 +460,20 @@ export class Games extends Widget {
         const widgetData = {
             classes: ["games_setion", "section"],
             id: widgetID,
-            title: `RA Games Library`,
+            title: ui.lang.gamesLibrary,
             headerElementsHtml: headerElementsHtml,
             contentClasses: ["games_container", "content-container"],
         };
 
         const widget = this.generateWidgetElement(widgetData);
         const contentContainer = widget.querySelector(".games_container");
-        contentContainer.innerHTML = containerHtml;
+        contentContainer.append(gameList);
         widget.insertBefore(controlsElement, contentContainer);
         ui.app.appendChild(widget);
     }
     initializeElements() {
         this.section = document.querySelector("#games_section");
+        this.sectionID = this.section.id;
         this.header = this.section.querySelector(".header-container");
         this.container = this.section.querySelector(".games_container");
         this.searchbar = this.section.querySelector("#games__searchbar");
@@ -545,16 +553,13 @@ export class Games extends Widget {
         this.applyFilter();
         this.applySort();
         this.gamesList.innerHTML = "";
-        lazyLoad({ list: this.gamesList, items: this.games, callback: this.gameElement })
+        lazyLoad({ list: this.gamesList, items: this.games, callback: GameListElement })
     }
-    loadGames() {
-        this.loadWantToPlay().then(
-            this.getAllGames()
-                .then(() => {
-                    this.updateGamesList();
-                })
-        )
-        this.loadGameInfo();
+    async loadGames() {
+        await this.loadWantToPlay();
+        await this.getAllGames();
+        await this.updateGamesList();
+        // this.loadGameInfo();
     }
     async loadGameInfo() {
         const infoResponce = await fetch(`./json/games/all_info.json`);
@@ -586,35 +591,6 @@ export class Games extends Widget {
         } catch (error) {
             return [];
         }
-    }
-    gameElement(gameData) {
-        const bool = (value) => value === "true";
-        const gameElement = document.createElement("li");
-
-        gameElement.classList.add("platform_game-item", "games__game-item");
-        gameElement.dataset.id = gameData.ID;
-        // const iconCode = game.ImageIcon.match(/\d+/g);
-        gameElement.innerHTML = `
-            <img class="game-preview_image" src="${gameImageUrl(gameData.ImageIcon)}" alt="game preview">
-            <h3 class="game-description_title">
-            <button data-title="${ui.lang.showGameInfoHint}" data-id="${gameData.ID}" class="game-description_button">
-                    ${gameData.Title} 
-                    ${gameData.Award ? badgeElements.infoBadge(gameData.Award) : ""}
-                    ${gameData.badges?.length ? generateBadges(gameData.badges, "infoBadge") : ""} 
-                    ${bool(gameData.Coop) ? badgeElements.infoBadge('coop') : ""} 
-                    ${gameData.Genres ? generateBadges(getGenres(gameData.Genres), "infoBadge") : ""}
-            </button>
-            </h3>
-            <div class="game-description__info icons-row-list"> 
-                ${signedIcons.platform(gameData.ConsoleID)}
-                ${signedIcons.date(gameData.Date || "n/a")}
-                ${signedIcons.rating(gameData.Rating || "n/a")}
-                ${signedIcons.cheevos((gameData.NumAwardedHardcore ? gameData.NumAwardedHardcore + '\/' : "") + gameData.NumAchievements)}
-                ${signedIcons.points(gameData.Points)}
-                ${signedIcons.time(gameData.timeToBeat)}
-            </div>
-        `;
-        return gameElement;
     }
     addToFavourite(event, gameID) {
         const isFavourite = this.FAVOURITES.includes(gameID);
@@ -698,46 +674,10 @@ export class Games extends Widget {
         return list;
     }
     async showGameInfoPopup(gameID = 1) {
-        const properyLine = ({ label, value }) => `
-            <div class="game-description__property">
-                ${label}: <span>${value}</span>
-            </div>
-        `;
-        const gamePreviewImage = (linkEndpoint) => `<img src="${gameImageUrl(linkEndpoint)}" alt="game preview" class="game__image">`
-        document.querySelectorAll(".game-popup__section").forEach(popup => popup.remove());
-        const gamePopupElement = document.createElement("div");
-
-        const game = await apiWorker.getGameInfoAndProgress({ gameID: gameID });
-
-        gamePopupElement.innerHTML = `
-            <section class="section game-popup__section">
-                <div class="game-popup__header-container header-container">
-                    <h2 class="widget-header-text"><a href="${gameUrl(game.ID)}" target="_blank">${game.Title} ${generateBadges(game.badges)}</a></h2>
-                    ${buttonsHtml.close("this.closest('section').remove();")}
-                </div>
-                <div class="game-info__container">
-                    <div class="game-info__images-container scrollable">
-                        ${gamePreviewImage(game.ImageBoxArt)}
-                        ${gamePreviewImage(game.ImageIngame)}
-                        ${gamePreviewImage(game.ImageTitle)}
-                    </div>
-                    <div class="game-info__descriptions-container">
-                        ${properyLine({ label: ui.lang.platform, value: game?.ConsoleName })}
-                        ${properyLine({ label: ui.lang.developer, value: game?.Developer })}
-                        ${properyLine({ label: ui.lang.genre, value: game?.Genre })}
-                        ${properyLine({ label: ui.lang.publisher, value: game?.Publisher })}
-                        ${properyLine({ label: ui.lang.released, value: game?.Released })}
-                        ${properyLine({ label: ui.lang.cheevosCount, value: `${game?.NumAwardedToUserHardcore} / ${game?.NumAwardedToUser} / ${game?.NumAchievements}` })}
-                        ${properyLine({ label: ui.lang.retropoints, value: `${game?.unlockData.hardcore.retropoints} / ${game?.totalRetropoints}` })}
-                        ${properyLine({ label: ui.lang.points, value: `${game?.unlockData.hardcore.points} / ${game?.unlockData.softcore.points} / ${game?.totalPoints}` })}
-                        ${properyLine({ label: ui.lang.retroRatio, value: game?.retroRatio })}
-                        ${properyLine({ label: ui.lang.players, value: `${game?.masteredCount} / ${game?.beatenCount} / ${game?.players_total}` })}
-                        ${properyLine({ label: ui.lang.completion, value: `${game?.masteryRate}% / ${game?.beatenRate}%` })}
-                    </div>
-                    <div class="game-info__cheevos-container"></div>
-                </div>
-            </section>
-        `;
+        document.querySelectorAll(".game-popup__section").forEach(popup =>
+            popup.remove());
+        const gameData = await apiWorker.getGameInfoAndProgress({ gameID });
+        const gamePopupElement = GameCardElement(gameData);
         ui.app.appendChild(gamePopupElement);
     }
     toggleFullscreen() {
@@ -771,7 +711,6 @@ export class Games extends Widget {
                     elements: [
                         {
                             type: inputTypes.NUM_INPUT,
-                            id: "side-list-released-from",
                             label: ui.lang.from,
                             onChange: (event) => this.YEARS_FILTER = {
                                 ...this.YEARS_FILTER,
@@ -780,7 +719,6 @@ export class Games extends Widget {
                         },
                         {
                             type: inputTypes.NUM_INPUT,
-                            id: "side-list-released-to",
                             label: ui.lang.to,
                             onChange: (event) => this.YEARS_FILTER = {
                                 ...this.YEARS_FILTER,
@@ -794,7 +732,6 @@ export class Games extends Widget {
                     elements: [
                         {
                             type: inputTypes.NUM_INPUT,
-                            id: "side-list-cheevos-from",
                             label: ui.lang.from,
                             onChange: (event) => this.CHEEVOS_COUNT_FILTER = {
                                 ...this.CHEEVOS_COUNT_FILTER,
@@ -803,7 +740,6 @@ export class Games extends Widget {
                         },
                         {
                             type: inputTypes.NUM_INPUT,
-                            id: "side-list-cheevos-to",
                             label: ui.lang.to,
                             onChange: (event) => this.CHEEVOS_COUNT_FILTER = {
                                 ...this.CHEEVOS_COUNT_FILTER,
@@ -817,7 +753,6 @@ export class Games extends Widget {
                     elements: [
                         {
                             type: inputTypes.NUM_INPUT,
-                            id: "side-list-ppc-from",
                             label: ui.lang.from,
                             onChange: (event) => this.POINTS_PER_CHEEVO_FILTER = {
                                 ...this.POINTS_PER_CHEEVO_FILTER,
@@ -826,7 +761,6 @@ export class Games extends Widget {
                         },
                         {
                             type: inputTypes.NUM_INPUT,
-                            id: "side-list-ppc-to",
                             label: ui.lang.to,
                             onChange: (event) => this.POINTS_PER_CHEEVO_FILTER = {
                                 ...this.POINTS_PER_CHEEVO_FILTER,
@@ -840,7 +774,6 @@ export class Games extends Widget {
                     elements: [
                         {
                             type: inputTypes.NUM_INPUT,
-                            id: "side-list-hltb-from",
                             label: ui.lang.from,
                             onChange: (event) => this.HLTB_FILTER = {
                                 ...this.HLTB_FILTER,
@@ -849,7 +782,6 @@ export class Games extends Widget {
                         },
                         {
                             type: inputTypes.NUM_INPUT,
-                            id: "side-list-hltb-to",
                             label: ui.lang.to,
                             onChange: (event) => this.HLTB_FILTER = {
                                 ...this.HLTB_FILTER,
@@ -874,14 +806,12 @@ export class Games extends Widget {
                             label: "WTPlay",
                             checked: this.FAVOURITES_FILTER,
                             onChange: (event) => this.FAVOURITES_FILTER = event.currentTarget.checked,
-                            id: `filter-by-wtp`,
                         },
                         {
                             type: inputTypes.CHECKBOX,
                             label: "Coop",
                             checked: this.COOP_FILTER,
                             onChange: (event) => this.COOP_FILTER = event.currentTarget.checked,
-                            id: `filter-by-coop`,
                         }
                     ]
                 },
@@ -925,7 +855,7 @@ export class Games extends Widget {
             </div>
         `);
         const sideMenuContainer = fromHtml(`
-            <div class="side-menu__content scrollable"></div>`);
+            <div class="side-menu__content scrollable"/>`);
         menu.forEach(item => {
             const menu = generateMenuItem(item)
             sideMenuContainer.append(menu);

@@ -1,17 +1,18 @@
-import { gamesExtMap } from "../enums/gamesExtMap.js";
+import { gameKeysMap, gamesExtMap } from "../enums/gamesExtMap.js";
 
-const gamesJsonUrl = `./json/games/all_ext_min.json`;
+const gamesJsonUrl = `./json/games/all_min.json`;
 const unpackMinJson = (gamesMinJson) => {
     const gamesJson = gamesMinJson.map(game => {
         let fullObject = {};
-        Object.keys(game).forEach(key => {
+        if (game[0] === 253) console.log(game);
+        game.forEach((value, key) => {
             fullObject = {
                 ...fullObject,
-                [gamesExtMap[key]]: game[key]
+                [gameKeysMap[key]]: value
             }
         });
         if (fullObject.HLTB) {
-            const timeToBeatMins = Math.min(...Object.values(fullObject.HLTB));
+            const timeToBeatMins = Math.round(fullObject.HLTB / 60);
             const hrs = timeToBeatMins >= 60 ?
                 `${~~(timeToBeatMins / 60)}hr${timeToBeatMins > 119 ? "s" : ""}` :
                 "";
@@ -20,6 +21,7 @@ const unpackMinJson = (gamesMinJson) => {
             const timeToBeat = `${hrs} ${mins}`;
             fullObject.timeToBeat = timeToBeat;
         }
+        fullObject.Date = fullObject.relisedAt ? new Date(fullObject.relisedAt).toLocaleDateString() : "";
         fullObject.ImageIcon = `/Images/${fullObject.ImageIcon}.png`;
         !fullObject.badges && (fullObject.badges = []);
         !fullObject.Genres && (fullObject.Genres = []);
