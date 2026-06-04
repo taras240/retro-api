@@ -69,22 +69,22 @@ const addFocusTime = (gameData) => {
     progressionCheevos.forEach((cheevo, index) => {
         let focusTime = 0;
         if (index === 0 || !cheevo.timeToUnlock) {
-            focusTime = cheevo.timeToUnlockSoftcore ?? 0;
+            focusTime = cheevo.timeToUnlock ?? 0;
         }
         else {
             const prevCheevo = progressionCheevos[index - 1];
-            focusTime = cheevo.timeToUnlockSoftcore - prevCheevo.timeToUnlockSoftcore;
+            focusTime = cheevo.timeToUnlock - prevCheevo.timeToUnlock;
         }
         cheevo.progressionFocusTime = focusTime;
     });
     cheevos.forEach((cheevo, index) => {
         let focusTime = 0;
         if (index === 0 || !cheevo.timeToUnlock) {
-            focusTime = cheevo.timeToUnlockSoftcore ?? 0;
+            focusTime = cheevo.timeToUnlock ?? 0;
         }
         else {
             const prevCheevo = cheevos[index - 1];
-            focusTime = cheevo.timeToUnlockSoftcore - prevCheevo.timeToUnlockSoftcore;
+            focusTime = cheevo.timeToUnlock - prevCheevo.timeToUnlock;
         }
         cheevo.focusTime = focusTime;
     })
