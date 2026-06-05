@@ -57,54 +57,58 @@ export class Games extends Widget {
                         name: "games__sort-type",
                         id: `games__sort-type-${sortMethods.date}`,
                         label: ui.lang.releaseDate,
-                        checked: this.SORT_NAME === sortMethods.gameRelease,
-                        onChange: () => this.SORT_NAME = sortMethods.gameRelease,
+                        checked: this.uiProps.sortName === sortMethods.gameRelease,
+                        onChange: () => this.uiProps.sortName = sortMethods.gameRelease,
+                    },
+                    {
+                        type: inputTypes.RADIO,
+                        name: "games__sort-type",
+                        id: `games__sort-type-${sortMethods.datePlayed}`,
+                        label: ui.lang.playedDate,
+                        checked: this.uiProps.sortName === sortMethods.datePlayed,
+                        onChange: () => this.uiProps.sortName = sortMethods.datePlayed,
                     },
                     {
                         type: inputTypes.RADIO,
                         name: "games__sort-type",
                         id: `games__sort-type-${sortMethods.achievementsCount}`,
                         label: ui.lang.cheevos,
-                        checked: this.SORT_NAME === sortMethods.achievementsCount,
-                        onChange: () => this.SORT_NAME = sortMethods.achievementsCount,
+                        checked: this.uiProps.sortName === sortMethods.achievementsCount,
+                        onChange: () => this.uiProps.sortName = sortMethods.achievementsCount,
                     },
                     {
                         type: inputTypes.RADIO,
                         name: "games__sort-type",
                         id: `games__sort-type-${sortMethods.title}`,
                         label: ui.lang.title,
-                        checked: this.SORT_NAME === sortMethods.title,
-                        onChange: () => this.SORT_NAME = sortMethods.title,
+                        checked: this.uiProps.sortName === sortMethods.title,
+                        onChange: () => this.uiProps.sortName = sortMethods.title,
                     },
                     {
                         type: inputTypes.RADIO,
                         name: "games__sort-type",
                         id: `games__sort-type-${sortMethods.points}`,
                         label: ui.lang.points,
-                        checked: this.SORT_NAME === sortMethods.points,
-                        onChange: () => this.SORT_NAME = sortMethods.points,
+                        checked: this.uiProps.sortName === sortMethods.points,
+                        onChange: () => this.uiProps.sortName = sortMethods.points,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        name: "games__sort-type-order",
-                        id: `games__sort-type-order`,
                         label: ui.lang.reverse,
-                        checked: this.REVERSE_SORT === -1,
-                        onChange: (event) => this.REVERSE_SORT = event.currentTarget.checked,
+                        checked: this.uiProps.reverseSort === -1,
+                        onChange: (event) => this.uiProps.reverseSort = event.currentTarget.checked,
                     }]
             }),
         },
         {
             type: inputTypes.CHECKBOX,
             label: ui.lang.filter,
-            id: "games__filter-list-checkbox",
             checked: false,
             onChange: (event) => this.showFilters(event.currentTarget.checked),
         },
         {
             type: inputTypes.SEARCH_INPUT,
             label: ui.lang.search,
-            id: "games__search-text-input",
             value: "",
             onInput: (event) => this.searchInputEvent(event),
             title: ui.lang.searchGameInputHint
@@ -175,17 +179,17 @@ export class Games extends Widget {
                 type: inputTypes.RADIO,
                 label: ui.lang.released,
                 name: 'games__sort-by',
-                checked: this.SORT_NAME === sortMethods.date,
+                checked: this.uiProps.sortName === sortMethods.date,
                 id: `games__sort-by-date`,
-                onChange: () => this.SORT_NAME = sortMethods.date,
+                onChange: () => this.uiProps.sortName = sortMethods.date,
             },
             {
                 type: inputTypes.RADIO,
                 label: ui.lang.points,
                 name: 'games__sort-by',
-                checked: this.SORT_NAME === sortMethods.points,
+                checked: this.uiProps.sortName === sortMethods.points,
                 id: `games__sort-by-points`,
-                onChange: () => this.SORT_NAME = sortMethods.points,
+                onChange: () => this.uiProps.sortName = sortMethods.points,
             }
         ]
 
@@ -300,26 +304,8 @@ export class Games extends Widget {
         this.typesFilter = typesFilters;
         this.applyFilter();
     }
-    set REVERSE_SORT(value) {
-        this.reverse_sort = value ? -1 : 1;
-        this.updateGamesList();
-    }
-    get REVERSE_SORT() {
-        return this.reverse_sort ?? 1;
-    }
-    get SORT_METHOD() {
-        // return sortBy.date; //!  <----------------------------------------
-        return sortBy[this.SORT_NAME];
-    }
-    get SORT_NAME() {
-        // return sortMethods.title;
-        return this.sort_name ?? sortMethods.gameRelease;
-    }
-    set SORT_NAME(value) {
 
-        this.sort_name = value;
-        this.updateGamesList();
-    }
+
     get PLAYLIST_FILTER() {
         return this.currentPlaylist;
     }
@@ -450,7 +436,7 @@ export class Games extends Widget {
     }
     applySort() {
         // if (!this.games?.length) return;
-        this.games = this.games.sort((a, b) => sortBy[this.SORT_NAME](a, b, this.REVERSE_SORT));
+        this.games = this.games.sort((a, b) => sortBy[this.uiProps.sortName](a, b, this.uiProps.reverseSort));
     }
     platformCodes = {
 
@@ -477,12 +463,19 @@ export class Games extends Widget {
             games: [],
             displayOrder: 1,
         },
+        WithProgress: {
+            title: "WithProgress",
+            locked: true,
+            editable: false,
+            games: [],
+            displayOrder: 2,
+        },
         AlmostMastered: {
             title: "AlmostMastered",
             locked: true,
             editable: false,
             games: [],
-            displayOrder: 2,
+            displayOrder: 3,
         },
         'Add New': {
             title: "Add New",
@@ -498,11 +491,24 @@ export class Games extends Widget {
 
 
     uiDefaultValues = {
+        sortName: sortMethods.gameRelease,
+        reverseSort: false,
         userPlaylists: {},
+    }
+    uiValuePreprocessors = {
+        reverseSort(value) {
+            return value ? -1 : 1;
+        },
     }
     uiSetCallbacks = {
         userPlaylists(value) {
             this.showPlaylists()
+        },
+        sortName() {
+            this.updateGamesList();
+        },
+        reverseSort() {
+            this.updateGamesList();
         }
     }
     showPlaylists() {
@@ -758,10 +764,17 @@ export class Games extends Widget {
                 g.NumAwardedHardcore &&
                 g.NumAchievements - g.NumAwardedHardcore <= 3 &&
                 g.NumAchievements !== g.NumAwardedHardcore)
-                .map(g => g.ID)
+                .map(g => g.ID);
+        }
+        const getRecentlyPlayed = () => {
+            return [...this.GAMES].filter(g =>
+                g.wasPlayed).map(g => g.ID);
         }
         const almostMastered = getAlmostMastered();
-        this.playlists.AlmostMastered.games = getAlmostMastered();
+        const recenrlyPlayed = getRecentlyPlayed();
+
+        this.playlists.WithProgress.games = recenrlyPlayed;
+        this.playlists.AlmostMastered.games = almostMastered;
     }
     updateGamesList() {
         this.applyFilter();
@@ -792,6 +805,8 @@ export class Games extends Widget {
                     lastGame.NumAwardedHardcore && (gameToModify.NumAwardedHardcore = lastGame.NumAwardedHardcore);
                     lastGame.HighestAwardKind ? (gameToModify.Award = lastGame.HighestAwardKind) : (gameToModify.Award = 'started');
                     lastGame.MostRecentAwardedDate && (gameToModify.MostRecentAwardedDate = lastGame.MostRecentAwardedDate);
+                    gameToModify.datePlayed = lastGame.MostRecentAwardedDate;
+                    gameToModify.wasPlayed = true;
                 }
                 else {
                     gameToModify = lastGame;

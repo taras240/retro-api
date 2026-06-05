@@ -334,5 +334,6 @@
     "userEarnedAward": "{{user}} has {{award}} the game",
     "userLauchedGame": "{{user}} has launched the game",
     "props": "Properties",
-    "gamesLibrary": "RA Games Library"
+    "gamesLibrary": "RA Games Library",
+    "playedDate": "Date Played"
 }

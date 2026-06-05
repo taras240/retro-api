@@ -157,7 +157,7 @@ export const sortBy = {
         return 0;
 
     },
-    award: (b, a) => {
+    award: (b, a, reverse = 1, strictMode = true) => {
         const awardTypes = {
             'mastered': 5,
             'completed': 4,
@@ -170,18 +170,23 @@ export const sortBy = {
 
         const awardADate = new Date(a.MostRecentAwardedDate);
         const awardBDate = new Date(b.MostRecentAwardedDate);
-
-        return awardA - awardB != 0 ? awardA - awardB : awardADate - awardBDate;
+        const delta = awardA - awardB != 0 ? awardA - awardB : awardADate - awardBDate;
+        return delta * reverse;
     },
-    date: (a, b) => {
+
+    date: (a, b, reverse = 1, strictMode = true) => {
         const dateA = a.Date
             ? stringToDate(a.Date)
             : -Infinity;
         const dateB = b.Date
             ? stringToDate(b.Date)
             : -Infinity;
-        return dateA - dateB; // Повертає різницю дат
+        if (strictMode && !(a.Date && b.Date)) {
+            return a.Date ? -1 : 1;
+        }
+        return (dateA - dateB) * reverse; // Повертає різницю дат
     },
+    datePlayed: (a, b, reverse = 1, strictMode = true) => sortBy.date({ Date: a.datePlayed }, { Date: b.datePlayed }, -1 * reverse, strictMode),
     gameRelease: (a, b, reverse = 1) => {
         return (a.relisedAt - b.relisedAt) * reverse;
     }
@@ -219,7 +224,8 @@ export const sortMethods = {
     date: "date",
     level: 'level',
     difficulty: 'difficulty',
-    gameRelease: 'gameRelease'
+    gameRelease: 'gameRelease',
+    datePlayed: "datePlayed"
 };
 
 export function applyFilter({
