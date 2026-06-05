@@ -10,7 +10,12 @@ const editPropsButtons = (isGame, ID, onClick) => `
 `
 export const buttonsHtml = {
     comments: (onClick, classes = []) => `<button class="comments-button header-button header-icon chat-icon ${classes.join(" ")}" data-title="${ui.lang.showCommentsHint}" onclick="${onClick}"></button>`,
-
+    editButton: ({ onClick, ID }) => `<button 
+        class="header-button header-icon edit-icon"
+        data-title="${ui.lang.edit}" 
+        ${`data-id="${ID}"`} 
+        ${onClick ? `onclick="${onClick}"` : ""}>
+    </button>`,
     editGameProps: (onClick) => editPropsButtons(true),
     editCheevoProps: (cheevoID, onClick) => editPropsButtons(false, cheevoID, onClick),
 

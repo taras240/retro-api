@@ -142,17 +142,17 @@ export const sortBy = {
 
     rating: (a, b) => b.Rating - a.Rating,
 
-    achievementsCount: (a, b) => parseInt(a.NumAchievements) - parseInt(b.NumAchievements),
+    achievementsCount: (a, b, reverse = 1) => (parseInt(a.NumAchievements) - parseInt(b.NumAchievements)) * reverse,
 
-    title: (a, b) => {
+    title: (a, b, reverse = 1) => {
         let nameA = a.Title.toUpperCase();
         let nameB = b.Title.toUpperCase();
 
         if (nameA < nameB) {
-            return -1;
+            return -1 * reverse;
         }
         if (nameA > nameB) {
-            return 1;
+            return 1 * reverse;
         }
         return 0;
 
@@ -182,6 +182,9 @@ export const sortBy = {
             : -Infinity;
         return dateA - dateB; // Повертає різницю дат
     },
+    gameRelease: (a, b, reverse = 1) => {
+        return (a.relisedAt - b.relisedAt) * reverse;
+    }
 }
 
 export const cheevosSortNames = Object.freeze({
@@ -215,7 +218,8 @@ export const sortMethods = {
     rating: "rating",
     date: "date",
     level: 'level',
-    difficulty: 'difficulty'
+    difficulty: 'difficulty',
+    gameRelease: 'gameRelease'
 };
 
 export function applyFilter({

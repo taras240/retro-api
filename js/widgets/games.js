@@ -26,6 +26,7 @@ export class Games extends Widget {
         description: ui.lang.gamesLibrary,
         iconClass: "games-icon",
     };
+
     contextMenuItems(gameID) {
         return [
             {
@@ -56,8 +57,24 @@ export class Games extends Widget {
                         name: "games__sort-type",
                         id: `games__sort-type-${sortMethods.date}`,
                         label: ui.lang.releaseDate,
-                        checked: this.SORT_NAME === sortMethods.date,
-                        onChange: () => this.SORT_NAME = sortMethods.date,
+                        checked: this.SORT_NAME === sortMethods.gameRelease,
+                        onChange: () => this.SORT_NAME = sortMethods.gameRelease,
+                    },
+                    {
+                        type: inputTypes.RADIO,
+                        name: "games__sort-type",
+                        id: `games__sort-type-${sortMethods.achievementsCount}`,
+                        label: ui.lang.cheevos,
+                        checked: this.SORT_NAME === sortMethods.achievementsCount,
+                        onChange: () => this.SORT_NAME = sortMethods.achievementsCount,
+                    },
+                    {
+                        type: inputTypes.RADIO,
+                        name: "games__sort-type",
+                        id: `games__sort-type-${sortMethods.title}`,
+                        label: ui.lang.title,
+                        checked: this.SORT_NAME === sortMethods.title,
+                        onChange: () => this.SORT_NAME = sortMethods.title,
                     },
                     {
                         type: inputTypes.RADIO,
@@ -72,7 +89,7 @@ export class Games extends Widget {
                         name: "games__sort-type-order",
                         id: `games__sort-type-order`,
                         label: ui.lang.reverse,
-                        checked: this.REVERSE_SORT,
+                        checked: this.REVERSE_SORT === -1,
                         onChange: (event) => this.REVERSE_SORT = event.currentTarget.checked,
                     }]
             }),
@@ -142,6 +159,7 @@ export class Games extends Widget {
         }))
     }
     get genresFilterItems() {
+        return [];
         return Object.keys(GAME_GENRE_CODES).map((genreID) => ({
             type: inputTypes.CHECKBOX,
             label: GAME_GENRE_CODES[genreID],
@@ -287,7 +305,7 @@ export class Games extends Widget {
         this.updateGamesList();
     }
     get REVERSE_SORT() {
-        return this.reverse_sort ?? -1;
+        return this.reverse_sort ?? 1;
     }
     get SORT_METHOD() {
         // return sortBy.date; //!  <----------------------------------------
@@ -295,12 +313,10 @@ export class Games extends Widget {
     }
     get SORT_NAME() {
         // return sortMethods.title;
-        return this.sort_name ?? sortMethods.date;
+        return this.sort_name ?? sortMethods.gameRelease;
     }
     set SORT_NAME(value) {
-        if (value === this.SORT_NAME) {
-            this.REVERSE_SORT = -1 * this.REVERSE_SORT
-        }
+
         this.sort_name = value;
         this.updateGamesList();
     }
@@ -413,8 +429,7 @@ export class Games extends Widget {
         })
         //* HLTB Filter
         this.games = this.games.filter(game => {
-            const hltbValues = Object.values(game.HLTB || {});
-            const hltb = Math.min(...(hltbValues.length ? hltbValues : [0]));
+            const hltb = (game.timeToBeat || 0) / 60;
             return hltb <= this.HLTB_FILTER.to && hltb >= this.HLTB_FILTER.from
         })
 
@@ -435,7 +450,7 @@ export class Games extends Widget {
     }
     applySort() {
         // if (!this.games?.length) return;
-        this.games = this.games.sort((a, b) => this.REVERSE_SORT * this.SORT_METHOD(a, b));
+        this.games = this.games.sort((a, b) => sortBy[this.SORT_NAME](a, b, this.REVERSE_SORT));
     }
     platformCodes = {
 
@@ -447,7 +462,7 @@ export class Games extends Widget {
         'beaten-softcore': 'beaten softcore',
         started: 'started',
     }
-    playlists = {
+    defaultPlaylists = {
         "All Games": {
             title: "All Games",
             locked: true,
@@ -468,10 +483,43 @@ export class Games extends Widget {
             editable: false,
             games: [],
             displayOrder: 2,
+        },
+        'Add New': {
+            title: "Add New",
+            locked: true,
+            editable: false,
+            games: [],
+            displayOrder: Infinity,
+            onClick: () => this.createPlaylist(),
         }
     }
     games = {}
     gamesInfo = {};
+
+
+    uiDefaultValues = {
+        userPlaylists: {},
+    }
+    uiSetCallbacks = {
+        userPlaylists(value) {
+            this.showPlaylists()
+        }
+    }
+    showPlaylists() {
+
+        this.section.querySelector("#games_playlists")
+            ?.replaceChildren(...PlaylistsContainer({
+                playlists: this.playlists,
+                onClick: t => this.openPlaylist(t),
+                onEdit: p => this.editPlaylist(p),
+            }).childNodes);
+    }
+    get playlists() {
+        return {
+            ...this.defaultPlaylists,
+            ...this.uiProps.userPlaylists,
+        }
+    }
     constructor() {
         super();
         this.generateWidget();
@@ -482,15 +530,79 @@ export class Games extends Widget {
         this.addEvents();
 
         this.applyPosition();
-
+        this.showPlaylists();
         this.section.querySelector(".games__main-controls").append(
             ...this.headerControls.map(control => inputElement(control))
         );
 
     }
-    openPlaylist(playlistName) {
+    createPlaylist() {
+        const genTitle = () => {
+            let title = "New Playlist";
+            let index = 1;
+            while (Object.hasOwn(this.playlists, title)) {
+                title = title.replace(/\[\d+\]/, "");
+                title += `[${++index}]`;
+            }
+            return title;
+        }
+        const title = genTitle();
+        const playlistObject = {
+            title,
+            displayOrder: Object.keys(this.playlists).length - 1,
+            games: [],
+            editable: true,
+            locked: false,
+        }
+        this.playlists[title] = playlistObject;
+        this.uiProps.userPlaylists = {
+            ...this.uiProps.userPlaylists,
+            [title]: playlistObject,
+        }
+
+    }
+    editPlaylist(props) {
+        const { title, newTitle, isRemoved } = props;
+        if (newTitle) {
+            if (!this.playlists[newTitle]) {
+                const edited = {
+                    ...this.uiProps.userPlaylists[title],
+                    title: newTitle,
+                };
+                delete this.uiProps.userPlaylists[title];
+                this.uiProps.userPlaylists[newTitle] = edited;
+            };
+        }
+        else if (isRemoved) {
+            delete this.uiProps.userPlaylists[title];
+        }
+        this.uiProps.userPlaylists = this.uiProps.userPlaylists;
+    }
+    addGameToPlaylist(gameID, playlistName) {
+        gameID = Number(gameID);
+        const playlist = this.uiProps.userPlaylists[playlistName];
+        if (playlist && playlist.editable) {
+            playlist.games.push(gameID);
+            playlist.games = [...new Set(playlist.games)];
+            this.saveConfig();
+        }
+    }
+    removeGameFromPlaylist(gameID, playlistName, gameItem) {
+        gameID = Number(gameID);
+        const playlist = this.uiProps.userPlaylists[playlistName];
+        if (playlist && playlist.editable) {
+            playlist.games = playlist.games.filter(g => g !== gameID);
+            this.saveConfig();
+            gameItem?.remove();
+        }
+    }
+    async openPlaylist(playlistName) {
+        if (!Object.keys(this.GAMES ?? {}).length) {
+            await this.loadGames();
+        }
         if (!this.playlists[playlistName]) playlistName = null;
         this.PLAYLIST_FILTER = playlistName;
+        this.gamesList.classList.toggle("editable", this.playlists[playlistName].editable);
         const playlists = this.container.querySelectorAll("#games_playlists .games__playlist-item");
         playlists.forEach(p => p.classList.toggle("active", p.dataset.playlistName === playlistName));
     }
@@ -500,10 +612,7 @@ export class Games extends Widget {
         const gameList = fromHtml(`
             <ul id="games-list" class="games-list scrollable" data-current-games-array-position="0"/>
         `);
-        const playlistsContainer = PlaylistsContainer({
-            playlists: this.playlists,
-            onClick: (playlistName) => this.openPlaylist(playlistName)
-        });
+        const playlistsContainer = PlaylistsContainer({});
         const widgetID = "games_section";
         const headerElementsHtml = `
             ${buttonsHtml.reload()}
@@ -549,10 +658,48 @@ export class Games extends Widget {
     }
     addEvents() {
         super.addEvents();
+
+        const gamesList = this.container.querySelector("#games-list");
+        const playlistsContainer = this.container.querySelector("#games_playlists");
+
+        gamesList.addEventListener('dragstart', e => {
+            const game = e.target.closest('.games__game-item');
+            if (!game) return;
+            e.dataTransfer.setData('gameID', game.dataset.id);
+        });
+        playlistsContainer.addEventListener('dragleave', e => {
+            const playlist = e.target.closest('.games__playlist-item');
+            if (!playlist) return;
+            playlist.classList.remove('drag-over');
+        });
+        playlistsContainer.addEventListener('dragover', e => {
+            const playlist = e.target.closest('.games__playlist-item');
+            if (!playlist) return;
+            e.preventDefault(); // дозволяє drop
+            playlist.classList.add('drag-over');
+        });
+        playlistsContainer.addEventListener('drop', e => {
+            const playlist = e.target.closest('.games__playlist-item');
+            if (!playlist) return;
+            playlist.classList.remove('drag-over');
+            e.preventDefault();
+
+            const gameID = e.dataTransfer.getData('gameID');
+            const playlistName = playlist.dataset.playlistName;
+
+            this.addGameToPlaylist(gameID, playlistName);
+        });
         this.container.addEventListener("click", event => {
-            if (event.target.closest("button")?.classList.contains("game-description_button")) {
-                const el = event.target.closest("button");
-                this.showGameInfoPopup(el.dataset.id);
+            const gameItem = event.target.closest(".games__game-item");
+            if (gameItem) {
+                if (event.target.closest("button.delete-icon")) {
+                    this.removeGameFromPlaylist(gameItem.dataset.id, this.currentPlaylist, gameItem);
+                }
+                else if (event.target.closest("button.game-description_button")) {
+                    const el = event.target.closest("button");
+                    this.showGameInfoPopup(el.dataset.id);
+                }
+
             }
         })
         this.section.addEventListener("contextmenu", event => {
@@ -604,6 +751,7 @@ export class Games extends Widget {
 
     }
     updatePlaylists() {
+
         this.playlists.WantToPlay.games = this._favs;
         const getAlmostMastered = () => {
             return [...this.GAMES].filter(g =>
@@ -614,13 +762,12 @@ export class Games extends Widget {
         }
         const almostMastered = getAlmostMastered();
         this.playlists.AlmostMastered.games = getAlmostMastered();
-        // console.log(this.playlists.AlmostMastered.games)
     }
     updateGamesList() {
         this.applyFilter();
         this.applySort();
         this.gamesList.innerHTML = "";
-        lazyLoad({ list: this.gamesList, items: this.games, callback: GameListElement })
+        lazyLoad({ list: this.gamesList, items: this.games, elementGenerator: GameListElement })
     }
     async loadGames() {
         await this.loadWantToPlay();
@@ -932,7 +1079,7 @@ export class Games extends Widget {
         return sideMenu;
     }
 }
-function lazyLoad({ list, items, callback }) {
+function lazyLoad({ list, items, elementGenerator }) {
     const trigger = document.createElement("div");
     trigger.classList.add("lazy-load_trigger")
     list.appendChild(trigger);
@@ -942,7 +1089,7 @@ function lazyLoad({ list, items, callback }) {
     const initialLoadCount = 20;
     const loadItems = (count) => {
         for (let i = 0; i < count && itemIndex < items.length; i++) {
-            list.appendChild(callback(items[itemIndex++]));
+            list.appendChild(elementGenerator(items[itemIndex++]));
         }
     };
     loadItems(initialLoadCount);

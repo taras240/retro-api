@@ -52,6 +52,9 @@ export class Widget {
             return true;
         }
     });
+    saveConfig() {
+        this.uiProps.abc = null;
+    }
     uiDefaultValues = {
         // showBadges: true,
     }

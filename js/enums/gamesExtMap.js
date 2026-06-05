@@ -22,7 +22,7 @@ export const gameKeysMap = [
     "Points",
     "retropoints",
     "relisedAt",
-    "HLTB",
+    "timeToBeat",
     "timeToMaster",
     "playersHardcore",
     "timesBeaten",

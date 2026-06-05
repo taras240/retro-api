@@ -117,15 +117,37 @@ section.section.games_setion:hover {
   width: 300px;
   height: 100%;
   padding: 0.5em;
+  overflow-y: auto;
 }
 
 .games__playlist-item {
+  position: relative;
   padding: 1em 0.5em;
   background: var(--secondary-color);
   border-radius: 3px;
   border: 1px solid var(--secondary-color);
   transition: 200ms;
   cursor: pointer;
+}
+
+.list-item-controls {
+  position: absolute;
+  right: 0.25em;
+  top: 0.25em;
+  display: none;
+  background: var(--main-color);
+  border-radius: 3px;
+  padding: 3px;
+}
+
+:hover>.list-item-controls:has(*) {
+  display: flex;
+  flex-direction: row;
+  gap: 0.25em;
+}
+
+.games__playlist-item.drag-over {
+  border: 2px solid var(--accent-color);
 }
 
 .games__playlist-item.active {

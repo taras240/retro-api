@@ -2,11 +2,12 @@ import { fromHtml } from "../../functions/html.js";
 import { gameImageUrl } from "../../functions/raLinks.js";
 import { ui } from "../../script.js";
 import { badgeElements, generateBadges } from "../badges.js";
+import { buttonsHtml } from "../htmlElements.js";
 import { signedIcons } from "../icons.js";
 
-export function GameListElement(gameData) {
+export function GameListElement(gameData, onRemove) {
     const gameElement = fromHtml(`
-        <li class="platform_game-item games__game-item"/>
+        <li class="platform_game-item games__game-item" draggable="true"/>
     `);
 
     gameElement.dataset.id = gameData.ID;
@@ -29,11 +30,14 @@ export function GameListElement(gameData) {
             ${signedIcons.cheevos((gameData.NumAwardedHardcore ? gameData.NumAwardedHardcore + '\/' : "") + gameData.NumAchievements)}
             ${signedIcons.points(gameData.Points)}
             ${signedIcons.retropoints(gameData.retropoints || "n/a")}
-            ${signedIcons.time(gameData.timeToBeat)}
+            ${signedIcons.time(gameData.timeToBeatString)}
         </div>
     `);
 
-    gameElement.append(gamePreview, gameTitle, gameIcons);
+    const controlsContainer = fromHtml(`<div class="list-item-controls"/>`);
+    const removeButton = fromHtml(buttonsHtml.delete());
+    controlsContainer.append(removeButton);
+    gameElement.append(gamePreview, gameTitle, gameIcons, controlsContainer);
     if (gameData.NumAwardedHardcore) {
         const progressRate = 100 * (gameData.NumAwardedHardcore / gameData.NumAchievements);
         const gameProgress = fromHtml(`

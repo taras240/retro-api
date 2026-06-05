@@ -10,15 +10,15 @@ const unpackMinJson = (gamesMinJson) => {
                 [gameKeysMap[key]]: value
             }
         });
-        if (fullObject.HLTB) {
-            const timeToBeatMins = Math.round(fullObject.HLTB / 60);
+        if (fullObject.timeToBeat) {
+            const timeToBeatMins = Math.round(fullObject.timeToBeat / 60);
             const hrs = timeToBeatMins >= 60 ?
                 `${~~(timeToBeatMins / 60)}hr${timeToBeatMins > 119 ? "s" : ""}` :
                 "";
             const mins = timeToBeatMins % 60 > 0 ? `${timeToBeatMins % 60}mins` :
                 "";
-            const timeToBeat = `${hrs} ${mins}`;
-            fullObject.timeToBeat = timeToBeat;
+            const timeToBeatString = `${hrs} ${mins}`;
+            fullObject.timeToBeatString = timeToBeatString;
         }
         fullObject.Date = fullObject.relisedAt ? new Date(fullObject.relisedAt).toLocaleDateString() : "";
         fullObject.ImageIcon = `/Images/${fullObject.ImageIcon}.png`;
