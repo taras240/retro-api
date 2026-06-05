@@ -32,7 +32,7 @@ export const updateProgressionBar = (container, gameData, isHardMode = true) => 
                     .filter(Boolean)
                     .join(" ");
 
-                return `<div class="${classes}" data-achiv-id="${cheevo.ID}" style="--focus-time:${cheevo.progressionFocusTime ?? 1}"></div>`;
+                return `<div class="${classes}" data-achiv-id="${cheevo.ID}" style="--focus-time:${cheevo.progressionFocusTime || 1}"></div>`;
             })
             .join("");
     }
