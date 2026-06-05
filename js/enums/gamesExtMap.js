@@ -27,5 +27,6 @@ export const gameKeysMap = [
     "playersHardcore",
     "timesBeaten",
     "timesMastered",
-    "playersTotal"
+    "playersTotal",
+    "genres",
 ]

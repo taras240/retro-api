@@ -20,6 +20,7 @@ export function GameListElement(gameData, onRemove) {
                     ${gameData.Title} 
                     ${gameData.Award ? badgeElements.gold(gameData.Award) : ""}
                     ${gameData.badges?.length ? generateBadges(gameData.badges, "black") : ""} 
+                    ${gameData.genres?.length ? generateBadges(gameData.genres, "green") : ""} 
             </button>
         </h3>
     `)
