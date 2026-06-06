@@ -339,5 +339,7 @@
     "beatenRate": "Beaten Rate",
     "masteryRate": "Mastery Rate",
     "timeToBeat": "Time To Beat",
-    "timeToMaster": "Time To Master"
+    "timeToMaster": "Time To Master",
+    "showInTracker": "Show In Tracker",
+    "addToPlaylist": "Add To Playlist"
 }

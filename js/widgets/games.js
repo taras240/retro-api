@@ -26,23 +26,60 @@ export class Games extends Widget {
         description: ui.lang.gamesLibrary,
         iconClass: "games-icon",
     };
-
-    contextMenuItems(gameID) {
+    uiDefaultValues = {
+        sortName: gamesSortNames.gameRelease,
+        reverseSort: false,
+        userPlaylists: {},
+    }
+    uiValuePreprocessors = {
+        reverseSort(value) {
+            return value ? -1 : 1;
+        },
+    }
+    uiSetCallbacks = {
+        userPlaylists(value) {
+            this.showPlaylists()
+        },
+        sortName() {
+            this.updateGamesList();
+        },
+        reverseSort() {
+            this.updateGamesList();
+        }
+    }
+    gameContextMenuItems(gameID) {
         return [
             {
                 type: inputTypes.BUTTON,
                 id: "update-game",
-                label: "**Update game**",
-                event: `onclick=""`,
-                onClick: () => watcher.updateGameData(gameID),
+                label: ui.lang.showInTracker,
+                onClick: () => {
+                    watcher.stop();
+                    watcher.updateGameData(gameID);
+                },
             },
             {
-                type: inputTypes.CHECKBOX,
-                id: "add-to-favourites",
-                label: `fav`,
-                checked: this.FAVOURITES.includes(+gameID),
-                onClick: (event) => this.addToFavourite(event, gameID),
-            },
+                label: ui.lang.addToPlaylist,
+                elements: [
+                    ...Object.entries(this.uiProps.userPlaylists).map(([playlistName, playlistData]) => {
+                        return {
+                            type: inputTypes.CHECKBOX,
+                            name: "games-add-to-pl",
+                            id: `games-add-to-pl-${playlistName}`,
+                            label: playlistName,
+                            checked: playlistData.games.includes(+gameID),
+                            onChange: (e) => {
+                                if (e.currentTarget.checked) {
+                                    this.addGameToPlaylist(gameID, playlistName)
+                                }
+                                else {
+                                    this.removeGameFromPlaylist(gameID, playlistName)
+                                }
+                            }
+                        }
+                    })
+                ]
+            }
         ];
     }
     get headerControls() {
@@ -80,11 +117,17 @@ export class Games extends Widget {
             type: inputTypes.SEARCH_INPUT,
             label: ui.lang.search,
             value: "",
-            onInput: (event) => this.searchInputEvent(event),
-            title: ui.lang.searchGameInputHint
+            title: ui.lang.searchGameInputHint,
+            onInput: (event) => {
+                const searchbarValue = event.target.value;
+                this.titleFilter = searchbarValue;
+                event.target.classList.toggle("empty", searchbarValue == "");
+                this.updateGamesList();
+            },
         },
         ]
     }
+    titleFilter = '';
     get platformFilterItems() {
         const filters = Object.keys(platformsByManufacturer).reduce((items, brend) => {
             const groupItem = {
@@ -92,13 +135,21 @@ export class Games extends Widget {
                 type: inputTypes.GROUP,
             }
             const platformItems = Object.keys(platformsByManufacturer[brend]).reduce((items, platformName) => {
+                const platformCode = platformsByManufacturer[brend][platformName];
                 const filterItem = {
                     label: platformName,
                     type: inputTypes.CHECKBOX,
-                    name: 'filter-by-platform',
-                    checked: this.PLATFORMS_FILTER.includes(platformsByManufacturer[brend][platformName]),
-                    id: `filter-by-platform-${platformsByManufacturer[brend][platformName]}`,
-                    onChange: (event) => this.platformCheckboxChangeEvent(event.currentTarget, platformsByManufacturer[brend][platformName]),
+                    checked: this.platformFilter.includes(platformCode),
+                    onChange: (event) => {
+                        const isChecked = event.currentTarget.checked;
+                        let platforms = this.platformFilter;
+                        if (isChecked) {
+                            platforms.push(platformCode.toString());
+                        } else {
+                            platforms = platforms.filter(code => code != platformCode);
+                        }
+                        this.platformFilter = platforms;
+                    }
                 }
                 items.push(filterItem);
                 return items;
@@ -113,304 +164,259 @@ export class Games extends Widget {
         return Object.keys(this.awardTypes).map((awardType) => ({
             type: inputTypes.CHECKBOX,
             label: this.awardTypes[awardType],
-            name: 'filter-by-award',
-            value: 'award',
-            checked: this.AWARD_FILTER.includes(awardType),
-            id: `filter-by-award-${awardType}`,
-            onChange: (event) => this.awardCheckboxChangeEvent(event.currentTarget, awardType),
+            checked: this.awardFilter.includes(awardType),
+            onChange: (event) => {
+                const isChecked = event.currentTarget.checked;
+                let awards = this.awardFilter;
+                if (isChecked) {
+                    awards.push(awardType)
+                }
+                else {
+                    awards = awards.filter(code => code != awardType)
+                }
+                this.awardFilter = awards;
+            },
         })
         )
     }
     get releaseVersionFilterItems() {
-        return Object.keys(RELEASE_TYPES).map(releaseVersion => ({
+        return Object.values(RELEASE_TYPES).map(releaseType => ({
             type: inputTypes.CHECKBOX,
-            label: RELEASE_TYPES[releaseVersion],
-            name: 'filter-by-release',
-            value: 'release',
-            checked: this.RELEASE_FILTER.includes(RELEASE_TYPES[releaseVersion]),
-            id: `filter-by-release-${releaseVersion}`,
-            onChange: (event) => this.releaseCheckboxChangeEvent(event.currentTarget, RELEASE_TYPES[releaseVersion]),
+            label: releaseType,
+            checked: this.releaseFilter.includes(releaseType),
+            onChange: (event) => {
+                const isChecked = event.currentTarget.checked;
+                let release = this.releaseFilter;
+                if (isChecked) {
+                    release.push(releaseType);
+                } else {
+                    release = release.filter(code => code != releaseType);
+                }
+                this.releaseFilter = release;
+            }
         }))
     }
+    //! TODO
     get genresFilterItems() {
         return [];
         return Object.keys(GAME_GENRE_CODES).map((genreID) => ({
             type: inputTypes.CHECKBOX,
             label: GAME_GENRE_CODES[genreID],
-            name: 'filter-by-genre',
-            checked: this.GENRE_FILTER.includes(genreID),
-            id: `filter-by-genre-${genreID}`,
-            onChange: (event) => this.genreCheckboxChangeEvent(event.currentTarget, genreID),
+            checked: this.genreFilter.includes(genreID),
+            onChange: (event) => {
+                const isChecked = event.currentTarget.checked;
+                let genres = this.genreFilter;
+                if (checkbox.checked) {
+                    genres.push(genreID);
+                } else {
+                    genres = genres.filter(code => code != genreID);
+                }
+                this.genreFilter = genres;
+            }
         }))
     }
-    get sortItems() {
-        const items = [
-            {
-                type: inputTypes.RADIO,
-                label: ui.lang.released,
-                name: 'games__sort-by',
-                checked: this.uiProps.sortName === gamesSortNames.date,
-                id: `games__sort-by-date`,
-                onChange: () => this.uiProps.sortName = gamesSortNames.date,
-            },
-            {
-                type: inputTypes.RADIO,
-                label: ui.lang.points,
-                name: 'games__sort-by',
-                checked: this.uiProps.sortName === gamesSortNames.points,
-                id: `games__sort-by-points`,
-                onChange: () => this.uiProps.sortName = gamesSortNames.points,
-            }
-        ]
-
-        return items;
-    }
-    set FAVOURITES(value) {
-        this._favs = value;
-        config.ui.favouritesGames = value;
-        config.writeConfiguration();
-    }
-    get FAVOURITES() {
-        return this._favs ?? [];
-    }
-    set COOP_FILTER(value) {
-        this.coopOnly = value;
+    set releaseDateFilter(value) {
+        this.__releaseDateFilter = value;
         this.updateGamesList();
     }
-    get COOP_FILTER() {
-        return this.coopOnly ?? false;
+    get releaseDateFilter() {
+        return this.__releaseDateFilter ?? { from: -Infinity, to: Infinity };
     }
-    set YEARS_FILTER(value) {
-        this.yearsFilter = value;
+    set cheevosFilter(value) {
+        this.__cheevosFilter = value;
         this.updateGamesList();
     }
-    get YEARS_FILTER() {
-        return this.yearsFilter ?? { from: -Infinity, to: Infinity };
+    get cheevosFilter() {
+        return this.__cheevosFilter ?? { from: -Infinity, to: Infinity };
     }
-    set CHEEVOS_COUNT_FILTER(value) {
-        this.cheevosCountFilter = value;
+    set ppcFilter(value) {
+        this.__ppcFilter = value;
         this.updateGamesList();
     }
-    get CHEEVOS_COUNT_FILTER() {
-        return this.cheevosCountFilter ?? { from: -Infinity, to: Infinity };
+    get ppcFilter() {
+        return this.__ppcFilter ?? { from: -Infinity, to: Infinity };
     }
-    set POINTS_PER_CHEEVO_FILTER(value) {
-        this.ppcFilter = value;
+    set hltbFilter(value) {
+        this.__hltbFilter = value;
         this.updateGamesList();
     }
-    get POINTS_PER_CHEEVO_FILTER() {
-        return this.ppcFilter ?? { from: -Infinity, to: Infinity };
+    get hltbFilter() {
+        return this.__hltbFilter ?? { from: 0, to: Infinity };
     }
-    set HLTB_FILTER(value) {
-        this.hltbFilter = value;
-        this.updateGamesList();
-    }
-    get HLTB_FILTER() {
-        return this.hltbFilter ?? { from: 0, to: Infinity };
-    }
-    set PLATFORMS_FILTER(value) {
-
+    set platformFilter(value) {
         let platformCodes = value.filter(code => Object.keys(RA_PLATFORM_CODES).includes(code));
-        this.platformsFilter = platformCodes;
+        this.__platformsFilter = platformCodes;
         this.updateGamesList();
 
     }
-    get PLATFORMS_FILTER() {
-        return this.platformsFilter ?? [];
+    get platformFilter() {
+        return this.__platformsFilter ?? [];
     }
-    set GENRE_FILTER(value) {
+    set genreFilter(value) {
 
         let genreCodes = value.filter(code => Object.keys(GAME_GENRE_CODES).includes(code));
-        this.genreFilter = genreCodes;
+        this.__genreFilter = genreCodes;
         this.updateGamesList();
 
     }
-    get GENRE_FILTER() {
-        return this.genreFilter ?? [];
+    get genreFilter() {
+        return this.__genreFilter ?? [];
     }
-    set AWARD_FILTER(value) {
-        this.awardFilter = value;
+    set awardFilter(value) {
+        this.__awardFilter = value;
         this.updateGamesList();
 
     }
-    get AWARD_FILTER() {
-        return this.awardFilter ?? [];
+    get awardFilter() {
+        return this.__awardFilter ?? [];
     }
 
-    set RELEASE_FILTER(value) {
-        this.releaseFilter = value;
+    set releaseFilter(value) {
+        this.__releaseFilter = value;
         this.updateGamesList();
-        // this.platformFiltersList.querySelector("#game-filters_all").checked = this.PLATFORMS_FILTER.length === Object.keys(this.gameFilters).length;
-
     }
-    get RELEASE_FILTER() {
-        return this.releaseFilter ?? [RELEASE_TYPES.RETAIL];
+    get releaseFilter() {
+        return this.__releaseFilter ?? [];
     }
-    set FAVOURITES_FILTER(value) {
-        this.favouritesFilter = value;
+    set wantToPlayFilter(value) {
+        this.__wantToPlayFilter = value;
         this.updateGamesList();
-        // this.platformFiltersList.querySelector("#game-filters_all").checked = this.PLATFORMS_FILTER.length === Object.keys(this.gameFilters).length;
 
     }
-    get FAVOURITES_FILTER() {
-        return this.favouritesFilter;
-    }
-    get TYPES_FILTER() {
-        return this.typesFilter ?? ["original"];
-    }
-    set TYPES_FILTER(checkbox) {
-        const type = checkbox.dataset.type ?? "";
-        const typesFilters = this.TYPES_FILTER;
-        const checked = checkbox.checked;
-        if (checked) {
-            typesFilters.push(type);
-        }
-        else {
-            const index = typesFilters.indexOf(type);
-            if (index !== -1) {
-                typesFilters.splice(index, 1);
-            }
-        }
-        this.typesFilter = typesFilters;
-        this.applyFilter();
+    get wantToPlayFilter() {
+        return this.__wantToPlayFilter;
     }
 
-
-    get PLAYLIST_FILTER() {
-        return this.currentPlaylist;
+    get currentPlaylist() {
+        return this.__currentPlaylist;
     }
-    set PLAYLIST_FILTER(playlistName) {
+    set currentPlaylist(playlistName) {
         if (this.playlists[playlistName]) {
-            this.currentPlaylist = playlistName;
+            this.__currentPlaylist = playlistName;
         }
         else {
-            this.currentPlaylist = null;
+            this.__currentPlaylist = null;
         }
         this.updateGamesList();
     }
-    awardCheckboxChangeEvent(checkbox, awardType) {
-        let awards = this.AWARD_FILTER;
-        checkbox.checked ?
-            awards.push(awardType) :
-            (awards = awards.filter(code => code != awardType));
-        this.AWARD_FILTER = awards;
+    get playlists() {
+        return {
+            ...this.defaultPlaylists,
+            ...this.uiProps.userPlaylists,
+        }
     }
-    releaseCheckboxChangeEvent(checkbox, releaseType) {
-        let release = this.RELEASE_FILTER;
-        checkbox.checked ?
-            release.push(releaseType) :
-            (release = release.filter(code => code != releaseType));
-        this.RELEASE_FILTER = release;
-    }
-    platformCheckboxChangeEvent(checkbox, platformCode) {
-        let platforms = this.PLATFORMS_FILTER;
-        checkbox.checked ?
-            platforms.push(platformCode + '') :
-            (platforms = platforms.filter(code => code != platformCode));
-        this.PLATFORMS_FILTER = platforms;
-    }
-    genreCheckboxChangeEvent(checkbox, genreCode) {
-        let genres = this.GENRE_FILTER;
-        checkbox.checked ?
-            genres.push(genreCode) :
-            (genres = genres.filter(code => code != genreCode));
-        this.GENRE_FILTER = genres;
-    }
-
-    titleFilter = '';
     applyFilter() {
-
-        // if (!this.games?.length) return;
-        //*Filter by Search request   
-        const searchRequest = this.titleFilter
-            .split(/\s/)
-            .map(word => `(?=.*${word})`)
-            .join('');
-        const titleRegex = new RegExp(searchRequest, 'gi');
-        this.games = this.titleFilter ?
-            this.GAMES.filter(game =>
-                `${game.Title} ${game.badges?.join(' ')} ${RA_PLATFORM_CODES[game.ConsoleID]?.Name ?? "-"}`.match(titleRegex)) :
-            this.GAMES;
-        // this.COOP_FILTER && (this.games = this.games?.filter(game => game.Coop == "true"));
-        //*Playlist Filter
-        if (this.PLAYLIST_FILTER && this.playlists[this.PLAYLIST_FILTER]?.games) {
-            this.games = this.games
-                .filter(game =>
-                    this.playlists[this.PLAYLIST_FILTER]?.games?.includes(game.ID)
-                )
+        if (!this.GAMES?.length) {
+            this.games = [];
+            return;
         }
 
-        //* Filter by Platform
-        this.PLATFORMS_FILTER.length > 0 && (this.games = this.games?.filter(game => {
-            let isPlatformMatch = false;
-            for (let platformCode of this.PLATFORMS_FILTER) {
-                platformCode == game.ConsoleID && (isPlatformMatch = true);
-            }
-            return isPlatformMatch;
-        }))
+        let result = this.GAMES;
 
-        //* Filter by genre
-        this.GENRE_FILTER.length > 0 && (this.games = this.games?.filter(game => {
-            let isGenreMatch = false;
-            for (let genreCode of this.GENRE_FILTER) {
-                game?.Genres?.includes(+genreCode) && (isGenreMatch = true);
+        // Filter by Search request
+        if (this.titleFilter) {
+            const escapeRegExp = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const words = this.titleFilter.trim().split(/\s+/).filter(Boolean);
+            const searchRequest = words
+                .map(word => `(?=.*${escapeRegExp(word)})`)
+                .join('');
+            let titleRegex = null;
+            try {
+                titleRegex = new RegExp(searchRequest, 'gi');
+            } catch (e) {
+                titleRegex = null;
             }
-            return isGenreMatch;
-        }))
-        //*Filter by Favourites
-        this.FAVOURITES_FILTER && (this.games = this.games.filter(game => this.FAVOURITES.includes(game.ID)))
+            if (titleRegex) {
+                result = result.filter(game =>
+                    `${game.Title} ${game.badges?.join(' ')} ${RA_PLATFORM_CODES[game.ConsoleID]?.Name ?? '-'}`.match(titleRegex)
+                );
+            } else {
+                const lowerWords = words.map(w => w.toLowerCase());
+                result = result.filter(game => {
+                    const hay = `${game.Title} ${game.badges?.join(' ')} ${RA_PLATFORM_CODES[game.ConsoleID]?.Name ?? '-'}`.toLowerCase();
+                    return lowerWords.every(w => hay.includes(w));
+                });
+            }
+        }
 
-        //* Filter by Awards
-        this.AWARD_FILTER.length > 0 && (this.games = this.games.filter(game => {
-            let isAwarded = false;
-            for (let award of this.AWARD_FILTER) {
-                award == game.Award && (isAwarded = true);
-            }
-            return isAwarded;
-        }))
+        // Playlist Filter
+        if (this.currentPlaylist && this.playlists[this.currentPlaylist]?.games) {
+            const playlistGames = this.playlists[this.currentPlaylist].games;
+            result = result.filter(game => playlistGames.includes(game.ID));
+        }
 
-        //* Filter by RELEASE type
-        this.RELEASE_FILTER.length > 0 && (this.games = this.games.filter(game => {
-            for (let releaseVersion of this.RELEASE_FILTER) {
-                if (releaseVersion === RELEASE_TYPES.RETAIL) {
-                    return game.badges?.length === 0;
-                }
-                return game.badges?.includes(releaseVersion)
-            }
-        }))
-        //* Filter by POINTS per CHEEVO
-        this.games = this.games.filter(game => {
+        // Filter by Platform
+        if (this.platformFilter.length > 0) {
+            result = result.filter(game =>
+                this.platformFilter.some(code => code == game.ConsoleID)
+            );
+        }
+
+        // Filter by Genre
+        if (this.genreFilter.length > 0) {
+            result = result.filter(game =>
+                this.genreFilter.some(code => game.Genres?.includes(+code))
+            );
+        }
+
+        // Filter by WantToPlay
+        if (this.wantToPlayFilter) {
+            result = result.filter(game => this.wantToPlayList.includes(game.ID));
+        }
+        // Filter by Awards
+        if (this.awardFilter.length > 0) {
+            result = result.filter(game =>
+                this.awardFilter.some(award => award == game.Award)
+            );
+        }
+
+        // Filter by RELEASE type
+        if (this.releaseFilter.length > 0) {
+            result = result.filter(game =>
+                this.releaseFilter.some(version =>
+                    version === RELEASE_TYPES.RETAIL
+                        ? game.badges?.length === 0
+                        : game.badges?.includes(version)
+                )
+            );
+        }
+
+        // Filter by POINTS per CHEEVO
+        result = result.filter(game => {
             const ppc = game.Points / game.NumAchievements;
-            return ppc <= this.POINTS_PER_CHEEVO_FILTER.to && ppc >= this.POINTS_PER_CHEEVO_FILTER.from
-        })
-        //* HLTB Filter
-        this.games = this.games.filter(game => {
-            const hltb = (game.timeToBeat || 0) / 60;
-            return hltb <= this.HLTB_FILTER.to && hltb >= this.HLTB_FILTER.from
-        })
+            return ppc >= this.ppcFilter.from
+                && ppc <= this.ppcFilter.to;
+        });
 
-        //* Filter by CHEEVOS Count
-        this.games = this.games.filter(game => {
-            // !isFinite(game.NumAchievements) && console.log(game.NumAchievements);
-            const count = parseInt(game.NumAchievements) ?? 0;
-            return count <= this.CHEEVOS_COUNT_FILTER.to && count >= this.CHEEVOS_COUNT_FILTER.from
-        })
-        //* Filter by YEAR 
-        this.games = this.games.filter(game => {
-            const date = new Date(game.relisedAt);
-            const gameYear = Number.parseInt(date.getFullYear());
+        // HLTB Filter
+        result = result.filter(game => {
+            const hltb = (game.timeToBeat ?? 0) / 60;
+            return hltb >= this.hltbFilter.from
+                && hltb <= this.hltbFilter.to;
+        });
 
-            return gameYear <= this.YEARS_FILTER.to && gameYear >= this.YEARS_FILTER.from
-        })
-        return;
+        // Filter by CHEEVOS Count
+        result = result.filter(game => {
+            const count = parseInt(game.NumAchievements, 10) || 0;
+            return count >= this.cheevosFilter.from
+                && count <= this.cheevosFilter.to;
+        });
+
+        // Filter by YEAR
+        result = result.filter(game => {
+            if (!game.relisedAt) return true;
+            const year = new Date(game.relisedAt).getFullYear();
+            if (!Number.isFinite(year)) return true;
+            return year >= this.releaseDateFilter.from && year <= this.releaseDateFilter.to;
+        });
+
+        this.games = result;
     }
+
     applySort() {
-        // if (!this.games?.length) return;
         this.games = this.games.sort((a, b) => sortGamesBy[this.uiProps.sortName]?.(a, b, this.uiProps.reverseSort));
     }
-    platformCodes = {
 
-    }
     awardTypes = {
         mastered: 'mastered',
         'beaten-hardcore': 'beaten',
@@ -458,44 +464,9 @@ export class Games extends Widget {
     }
     games = {}
     gamesInfo = {};
+    platformCodes = {}
 
 
-    uiDefaultValues = {
-        sortName: gamesSortNames.gameRelease,
-        reverseSort: false,
-        userPlaylists: {},
-    }
-    uiValuePreprocessors = {
-        reverseSort(value) {
-            return value ? -1 : 1;
-        },
-    }
-    uiSetCallbacks = {
-        userPlaylists(value) {
-            this.showPlaylists()
-        },
-        sortName() {
-            this.updateGamesList();
-        },
-        reverseSort() {
-            this.updateGamesList();
-        }
-    }
-    showPlaylists() {
-
-        this.section.querySelector("#games_playlists")
-            ?.replaceChildren(...PlaylistsContainer({
-                playlists: this.playlists,
-                onClick: t => this.openPlaylist(t),
-                onEdit: p => this.editPlaylist(p),
-            }).childNodes);
-    }
-    get playlists() {
-        return {
-            ...this.defaultPlaylists,
-            ...this.uiProps.userPlaylists,
-        }
-    }
     constructor() {
         super();
         this.generateWidget();
@@ -511,76 +482,6 @@ export class Games extends Widget {
             ...this.headerControls.map(control => inputElement(control))
         );
 
-    }
-    createPlaylist() {
-        const genTitle = () => {
-            let title = "New Playlist";
-            let index = 1;
-            while (Object.hasOwn(this.playlists, title)) {
-                title = title.replace(/\[\d+\]/, "");
-                title += `[${++index}]`;
-            }
-            return title;
-        }
-        const title = genTitle();
-        const playlistObject = {
-            title,
-            displayOrder: Object.keys(this.playlists).length - 1,
-            games: [],
-            editable: true,
-            locked: false,
-        }
-        this.playlists[title] = playlistObject;
-        this.uiProps.userPlaylists = {
-            ...this.uiProps.userPlaylists,
-            [title]: playlistObject,
-        }
-
-    }
-    editPlaylist(props) {
-        const { title, newTitle, isRemoved } = props;
-        if (newTitle) {
-            if (!this.playlists[newTitle]) {
-                const edited = {
-                    ...this.uiProps.userPlaylists[title],
-                    title: newTitle,
-                };
-                delete this.uiProps.userPlaylists[title];
-                this.uiProps.userPlaylists[newTitle] = edited;
-            };
-        }
-        else if (isRemoved) {
-            delete this.uiProps.userPlaylists[title];
-        }
-        this.uiProps.userPlaylists = this.uiProps.userPlaylists;
-    }
-    addGameToPlaylist(gameID, playlistName) {
-        gameID = Number(gameID);
-        const playlist = this.uiProps.userPlaylists[playlistName];
-        if (playlist && playlist.editable) {
-            playlist.games.push(gameID);
-            playlist.games = [...new Set(playlist.games)];
-            this.saveConfig();
-        }
-    }
-    removeGameFromPlaylist(gameID, playlistName, gameItem) {
-        gameID = Number(gameID);
-        const playlist = this.uiProps.userPlaylists[playlistName];
-        if (playlist && playlist.editable) {
-            playlist.games = playlist.games.filter(g => g !== gameID);
-            this.saveConfig();
-            gameItem?.remove();
-        }
-    }
-    async openPlaylist(playlistName) {
-        if (!Object.keys(this.GAMES ?? {}).length) {
-            await this.loadGames();
-        }
-        if (!this.playlists[playlistName]) playlistName = null;
-        this.PLAYLIST_FILTER = playlistName;
-        this.gamesList.classList.toggle("editable", this.playlists[playlistName].editable);
-        const playlists = this.container.querySelectorAll("#games_playlists .games__playlist-item");
-        playlists.forEach(p => p.classList.toggle("active", p.dataset.playlistName === playlistName));
     }
     generateWidget() {
         const controlsElement = document.createElement("div");
@@ -625,12 +526,6 @@ export class Games extends Widget {
     }
     setValues() {
         this.header.classList.add("fixed");
-    }
-    searchInputEvent(event) {
-        const searchbarValue = event.target.value;
-        this.titleFilter = searchbarValue;
-        event.target.classList.toggle("empty", searchbarValue == "");
-        this.updateGamesList();
     }
     addEvents() {
         super.addEvents();
@@ -679,6 +574,8 @@ export class Games extends Widget {
             }
         })
         this.section.addEventListener("contextmenu", event => {
+            event.stopPropagation();
+            event.preventDefault()
             const gameItem = event.target.closest(".games__game-item");
             if (gameItem) {
                 event.preventDefault();
@@ -686,9 +583,10 @@ export class Games extends Widget {
                 const gameID = gameItem.dataset.id;
                 ui.showContextmenu({
                     event: event,
-                    menuItems: this.contextMenuItems(gameID),
+                    menuItems: this.gameContextMenuItems(gameID),
                 });
             }
+
 
         });
         this.section.querySelectorAll(".side-menu__item-container.submenu").forEach(subitem => {
@@ -723,28 +621,8 @@ export class Games extends Widget {
     }
     async loadWantToPlay() {
         const gamesList = await apiWorker.getWantToPlayGames({});
-        this._favs = Array.from(new Set([...gamesList]));
+        this.wantToPlayList = Array.from(new Set([...gamesList]));
 
-    }
-    updatePlaylists() {
-
-        this.playlists.WantToPlay.games = this._favs;
-        const getAlmostMastered = () => {
-            return [...this.GAMES].filter(g =>
-                g.NumAwardedHardcore &&
-                g.NumAchievements - g.NumAwardedHardcore <= 3 &&
-                g.NumAchievements !== g.NumAwardedHardcore)
-                .map(g => g.ID);
-        }
-        const getRecentlyPlayed = () => {
-            return [...this.GAMES].filter(g =>
-                g.wasPlayed).map(g => g.ID);
-        }
-        const almostMastered = getAlmostMastered();
-        const recenrlyPlayed = getRecentlyPlayed();
-
-        this.playlists.WithProgress.games = recenrlyPlayed;
-        this.playlists.AlmostMastered.games = almostMastered;
     }
     updateGamesList() {
         this.applyFilter();
@@ -757,11 +635,6 @@ export class Games extends Widget {
         await this.getAllGames();
         await this.updateGamesList();
         this.updatePlaylists();
-        // this.loadGameInfo();
-    }
-    async loadGameInfo() {
-        const infoResponce = await fetch(`./json/games/all_info.json`);
-        this.gamesInfo = await infoResponce.json();
     }
     async getAllGames() {
         this.GAMES = {};
@@ -792,86 +665,107 @@ export class Games extends Widget {
             return [];
         }
     }
-    addToFavourite(event, gameID) {
-        const isFavourite = this.FAVOURITES.includes(gameID);
-        if (isFavourite) {
-            this.FAVOURITES = this.FAVOURITES.filter(id => id != gameID);
+    updatePlaylists() {
+        this.playlists.WantToPlay.games = this.wantToPlayList;
+        const getAlmostMastered = () => {
+            return [...this.GAMES].filter(g =>
+                g.NumAwardedHardcore &&
+                g.NumAchievements - g.NumAwardedHardcore <= 3 &&
+                g.NumAchievements !== g.NumAwardedHardcore)
+                .map(g => g.ID);
         }
-        else {
-            this.FAVOURITES = [gameID, ...this.FAVOURITES];
+        const getRecentlyPlayed = () => {
+            return [...this.GAMES].filter(g =>
+                g.wasPlayed).map(g => g.ID);
         }
-        // event.target.closest('button').classList.toggle('checked', !isFavourite);
+        const almostMastered = getAlmostMastered();
+        const recenrlyPlayed = getRecentlyPlayed();
+
+        this.playlists.WithProgress.games = recenrlyPlayed;
+        this.playlists.AlmostMastered.games = almostMastered;
+    }
+    showPlaylists() {
+        this.section.querySelector("#games_playlists")
+            ?.replaceChildren(...PlaylistsContainer({
+                playlists: this.playlists,
+                onClick: t => this.openPlaylist(t),
+                onEdit: p => this.editPlaylist(p),
+            }).childNodes);
+    }
+    createPlaylist() {
+        const genTitle = () => {
+            let title = "New Playlist";
+            let index = 1;
+            while (Object.hasOwn(this.playlists, title)) {
+                title = title.replace(/\[\d+\]/, "");
+                title += `[${++index}]`;
+            }
+            return title;
+        }
+        const title = genTitle();
+        const playlistObject = {
+            title,
+            displayOrder: Object.keys(this.playlists).length - 1,
+            games: [],
+            editable: true,
+            locked: false,
+        }
+        this.playlists[title] = playlistObject;
+        this.uiProps.userPlaylists = {
+            ...this.uiProps.userPlaylists,
+            [title]: playlistObject,
+        }
+    }
+    editPlaylist(props) {
+        const { title, newTitle, isRemoved } = props;
+        if (newTitle) {
+            if (!this.playlists[newTitle]) {
+                const edited = {
+                    ...this.uiProps.userPlaylists[title],
+                    title: newTitle,
+                };
+                delete this.uiProps.userPlaylists[title];
+                this.uiProps.userPlaylists[newTitle] = edited;
+            };
+        }
+        else if (isRemoved) {
+            delete this.uiProps.userPlaylists[title];
+        }
+        this.uiProps.userPlaylists = this.uiProps.userPlaylists;
+    }
+    addGameToPlaylist(gameID, playlistName) {
+        gameID = Number(gameID);
+        const playlist = this.uiProps.userPlaylists[playlistName];
+        if (playlist && playlist.editable) {
+            playlist.games.push(gameID);
+            playlist.games = [...new Set(playlist.games)];
+            this.saveConfig();
+        }
+    }
+    removeGameFromPlaylist(gameID, playlistName, gameItem) {
+        gameID = Number(gameID);
+        const playlist = this.uiProps.userPlaylists[playlistName];
+        if (playlist && playlist.editable) {
+            playlist.games = playlist.games.filter(g => g !== gameID);
+            this.saveConfig();
+            if (playlistName === this.currentPlaylist) {
+                gameItem ??= this.gamesList.querySelector(`li.games__game-item[data-id="${gameID}"]`);
+                gameItem?.remove();
+            }
+        }
+    }
+    async openPlaylist(playlistName) {
+        if (!Object.keys(this.GAMES ?? {}).length) {
+            await this.loadGames();
+        }
+        if (!this.playlists[playlistName]) playlistName = null;
+        this.currentPlaylist = playlistName;
+        this.gamesList.classList.toggle("editable", this.playlists[playlistName].editable);
+        const playlists = this.container.querySelectorAll("#games_playlists .games__playlist-item");
+        playlists.forEach(p => p.classList.toggle("active", p.dataset.playlistName === playlistName));
     }
     showFilters(isVisible = true) {
         this.section.querySelector(".section__side-menu")?.classList.toggle("active", isVisible);
-    }
-    toggleFilterList(event, filterType) {
-        const hideFilters = () => {
-            this.section.querySelector('.games__filters-list')?.remove();
-            this.section.querySelectorAll('.games__filter-header .extended')
-                .forEach(el => el.classList.remove('extended'))
-        }
-        const filterButton = event.target.closest('button');
-
-        if (filterButton.classList.contains('extended')) {
-            hideFilters();
-        }
-        else {
-            hideFilters();
-            filterButton.classList.add('extended');
-            let list;
-            switch (filterType) {
-                case 'platform':
-                    list = this.generateCheckboxList(this.platformFilterItems);
-                    break;
-                case 'award':
-                    list = this.generateCheckboxList(this.awardsFilterItems);
-                    break;
-                case 'genre':
-                    list = this.generateCheckboxList(this.genresFilterItems);
-                    break;
-            }
-            this.section.append(list);
-            this.section.querySelector('.games__filter-container').appendChild(list);
-        }
-
-    }
-    toggleSortList(event) {
-        const hideFilters = () => {
-            this.section.querySelector('.games__filters-list')?.remove();
-            this.section.querySelectorAll('.games__filter-header .extended')
-                .forEach(el => el.classList.remove('extended'))
-        }
-
-        if (!event.target.classList.contains("extended")) {
-            event.target.classList.toggle("extended");
-            const list = this.generateCheckboxList(this.sortItems);
-            this.section.append(list);
-            this.section.querySelector('.games__filter-container').appendChild(list);
-        }
-        else {
-            hideFilters();
-        }
-
-    }
-    generateCheckboxList(itemsObj) {
-        const list = Object.values(itemsObj).reduce((list, item) => {
-            if (item.type == 'group') {
-                const groupHeader = document.createElement('li');
-                groupHeader.classList.add('filter-list__platform-header');
-                groupHeader.innerText = item.label + ': ';
-                list.appendChild(groupHeader);
-            }
-            else {
-                const filterItem = document.createElement("li");
-                filterItem.classList.add("checkbox-input_container");
-                filterItem.append(inputElement(item));
-                list.appendChild(filterItem);
-            }
-            return list;
-        }, document.createElement('ul'));
-        list.classList.add("games__filters-list");
-        return list;
     }
     async showGameInfoPopup(gameID = 1) {
         document.querySelectorAll(".game-popup__section").forEach(popup =>
@@ -912,16 +806,16 @@ export class Games extends Widget {
                         {
                             type: inputTypes.NUM_INPUT,
                             label: ui.lang.from,
-                            onChange: (event) => this.YEARS_FILTER = {
-                                ...this.YEARS_FILTER,
+                            onChange: (event) => this.releaseDateFilter = {
+                                ...this.releaseDateFilter,
                                 from: Number(event.currentTarget.value) || 0
                             },
                         },
                         {
                             type: inputTypes.NUM_INPUT,
                             label: ui.lang.to,
-                            onChange: (event) => this.YEARS_FILTER = {
-                                ...this.YEARS_FILTER,
+                            onChange: (event) => this.releaseDateFilter = {
+                                ...this.releaseDateFilter,
                                 to: Number(event.currentTarget.value) || Infinity
                             },
                         },
@@ -933,16 +827,16 @@ export class Games extends Widget {
                         {
                             type: inputTypes.NUM_INPUT,
                             label: ui.lang.from,
-                            onChange: (event) => this.CHEEVOS_COUNT_FILTER = {
-                                ...this.CHEEVOS_COUNT_FILTER,
+                            onChange: (event) => this.cheevosFilter = {
+                                ...this.cheevosFilter,
                                 from: Number(event.currentTarget.value) || 0
                             },
                         },
                         {
                             type: inputTypes.NUM_INPUT,
                             label: ui.lang.to,
-                            onChange: (event) => this.CHEEVOS_COUNT_FILTER = {
-                                ...this.CHEEVOS_COUNT_FILTER,
+                            onChange: (event) => this.cheevosFilter = {
+                                ...this.cheevosFilter,
                                 to: Number(event.currentTarget.value) || Infinity
                             },
                         },
@@ -954,16 +848,16 @@ export class Games extends Widget {
                         {
                             type: inputTypes.NUM_INPUT,
                             label: ui.lang.from,
-                            onChange: (event) => this.POINTS_PER_CHEEVO_FILTER = {
-                                ...this.POINTS_PER_CHEEVO_FILTER,
+                            onChange: (event) => this.ppcFilter = {
+                                ...this.ppcFilter,
                                 from: Number(event.currentTarget.value) || 0
                             },
                         },
                         {
                             type: inputTypes.NUM_INPUT,
                             label: ui.lang.to,
-                            onChange: (event) => this.POINTS_PER_CHEEVO_FILTER = {
-                                ...this.POINTS_PER_CHEEVO_FILTER,
+                            onChange: (event) => this.ppcFilter = {
+                                ...this.ppcFilter,
                                 to: Number(event.currentTarget.value) || Infinity
                             },
                         },
@@ -975,16 +869,16 @@ export class Games extends Widget {
                         {
                             type: inputTypes.NUM_INPUT,
                             label: ui.lang.from,
-                            onChange: (event) => this.HLTB_FILTER = {
-                                ...this.HLTB_FILTER,
+                            onChange: (event) => this.hltbFilter = {
+                                ...this.hltbFilter,
                                 from: Number(event.currentTarget.value) || 0
                             },
                         },
                         {
                             type: inputTypes.NUM_INPUT,
                             label: ui.lang.to,
-                            onChange: (event) => this.HLTB_FILTER = {
-                                ...this.HLTB_FILTER,
+                            onChange: (event) => this.hltbFilter = {
+                                ...this.hltbFilter,
                                 to: Number(event.currentTarget.value) || Infinity,
                             }
                         },
@@ -1004,15 +898,9 @@ export class Games extends Widget {
                         {
                             type: inputTypes.CHECKBOX,
                             label: "WTPlay",
-                            checked: this.FAVOURITES_FILTER,
-                            onChange: (event) => this.FAVOURITES_FILTER = event.currentTarget.checked,
+                            checked: this.wantToPlayFilter,
+                            onChange: (event) => this.wantToPlayFilter = event.currentTarget.checked,
                         },
-                        {
-                            type: inputTypes.CHECKBOX,
-                            label: "Coop",
-                            checked: this.COOP_FILTER,
-                            onChange: (event) => this.COOP_FILTER = event.currentTarget.checked,
-                        }
                     ]
                 },
             ]
