@@ -65,18 +65,6 @@ const parseCheevoGroups = (gameData) => {
 }
 const addFocusTime = (gameData) => {
     const cheevos = Object.values(gameData?.Achievements ?? {}).sort((a, b) => sortBy.timeToUnlock(a, b, 1, true));
-    const progressionCheevos = cheevos.filter(c => filterBy.progression(c));
-    progressionCheevos.forEach((cheevo, index) => {
-        let focusTime = 0;
-        if (index === 0 || !cheevo.timeToUnlock) {
-            focusTime = cheevo.timeToUnlock ?? 0;
-        }
-        else {
-            const prevCheevo = progressionCheevos[index - 1];
-            focusTime = cheevo.timeToUnlock - prevCheevo.timeToUnlock;
-        }
-        cheevo.progressionFocusTime = focusTime;
-    });
     cheevos.forEach((cheevo, index) => {
         let focusTime = 0;
         if (index === 0 || !cheevo.timeToUnlock) {
@@ -87,7 +75,28 @@ const addFocusTime = (gameData) => {
             focusTime = cheevo.timeToUnlock - prevCheevo.timeToUnlock;
         }
         cheevo.focusTime = focusTime;
-    })
+    });
+
+    const progressionCheevos = cheevos.filter(c => filterBy.progression(c));
+    const hasAllSoftcoreTimes = !progressionCheevos.some(c => !c.timeToUnlockSoftcore);
+    const hasAllHardcoreTimes = !progressionCheevos.some(c => !c.timeToUnlock);
+    const timePropery = hasAllHardcoreTimes ? "timeToUnlock" : hasAllSoftcoreTimes ? "timeToUnlockSoftcore" : null;
+    if (timePropery) {
+        progressionCheevos.sort((a, b) => a[timePropery] - b[timePropery]).forEach((cheevo, index) => {
+            let focusTime = 0;
+
+            if (index === 0 || !cheevo[timePropery]) {
+                focusTime = cheevo[timePropery] ?? 0;
+            }
+            else {
+                const prevCheevo = progressionCheevos[index - 1];
+                focusTime = cheevo[timePropery] - prevCheevo[timePropery];
+            }
+            cheevo.progressionFocusTime = focusTime;
+        });
+    }
+
+
 }
 export const normalizeCheevos = (gameData, savedGameData = {}) => {
     parseCheevosGenres(gameData);

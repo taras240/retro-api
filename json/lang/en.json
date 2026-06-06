@@ -341,5 +341,6 @@
     "timeToBeat": "Time To Beat",
     "timeToMaster": "Time To Master",
     "showInTracker": "Show In Tracker",
-    "addToPlaylist": "Add To Playlist"
+    "addToPlaylist": "Add To Playlist",
+    "progressionTimeDep": "Time-based progression"
 }

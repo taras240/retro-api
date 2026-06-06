@@ -59,21 +59,18 @@ export class Status extends Widget {
                 elements: [
                     {
                         type: inputTypes.CHECKBOX,
-                        id: "show-game-info",
                         label: ui.lang.infoPanel,
                         checked: this.uiProps.showGameInfo,
                         onChange: (event) => this.uiProps.showGameInfo = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        id: "show-rp",
                         label: ui.lang.richPresence,
                         checked: this.uiProps.showRichPresence,
                         onChange: (event) => this.uiProps.showRichPresence = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        id: "show-focus",
                         label: ui.lang.showFocusCheevo,
                         hint: ui.lang.focusCheevoHint,
                         checked: this.uiProps.showFocusCheevo,
@@ -82,34 +79,29 @@ export class Status extends Widget {
 
                     {
                         type: inputTypes.CHECKBOX,
-                        id: "show-progression",
                         label: ui.lang.progression,
                         checked: this.uiProps.showProgression,
                         onChange: (event) => this.uiProps.showProgression = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        id: "context-show-progressbar",
                         label: `${ui.lang.cheevos} ${ui.lang.progressbar}`,
                         checked: this.uiProps.showProgressbar,
                         onChange: (event) => this.uiProps.showProgressbar = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        id: "context-show-points-progress",
                         label: `${ui.lang.points} ${ui.lang.progressbar}`,
                         checked: this.uiProps.showPointsProgress,
                         onChange: (event) => this.uiProps.showPointsProgress = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        id: "context-show-retropoints-progress",
                         label: `${ui.lang.retropoints} ${ui.lang.progressbar} `,
                         checked: this.uiProps.showRetropointsProgress,
                         onChange: (event) => this.uiProps.showRetropointsProgress = event.currentTarget.checked,
                     }, {
                         type: inputTypes.CHECKBOX,
-                        id: "show-ticker",
                         label: ui.lang.ticker,
                         checked: this.uiProps.showTicker,
                         onChange: (event) => this.uiProps.showTicker = event.currentTarget.checked,
@@ -122,7 +114,6 @@ export class Status extends Widget {
                 ({
                     type: inputTypes.RADIO,
                     name: "info-type",
-                    id: `info-type-${type}`,
                     label: ui.lang?.[type] ?? type,
                     checked: this.uiProps.gameInfoType == type,
                     onChange: () => this.uiProps.gameInfoType = type,
@@ -130,8 +121,6 @@ export class Status extends Widget {
                 ),
                 {
                     type: inputTypes.CHECKBOX,
-                    name: "info-type-switch",
-                    id: `info-type-switch`,
                     label: ui.lang.switchProgressionIfBeaten,
                     hint: ui.lang.switchProgressionIfBeatenHint,
                     checked: this.uiProps.switchProgressionIfBeaten,
@@ -156,7 +145,6 @@ export class Status extends Widget {
                     ({
                         type: inputTypes.RADIO,
                         name: "status-theme",
-                        id: `status-theme-${theme}`,
                         label: ui.lang?.[theme] ?? theme,
                         checked: this.uiProps.statusTheme == theme,
                         onChange: () => this.uiProps.statusTheme = theme,
@@ -164,8 +152,6 @@ export class Status extends Widget {
                     ),
                     {
                         type: inputTypes.CHECKBOX,
-                        name: "progressbar-sessions",
-                        id: `progressbar-sessions`,
                         label: ui.lang.progressBySession,
                         checked: this.uiProps.progressBySession == true,
                         onChange: (event) => this.uiProps.progressBySession = event.currentTarget.checked,
@@ -178,7 +164,12 @@ export class Status extends Widget {
                 elements: [
                     {
                         type: inputTypes.CHECKBOX,
-                        id: "game-bg",
+                        label: ui.lang.progressionTimeDep,
+                        checked: this.uiProps.progressionTimeDep,
+                        onChange: (event) => this.uiProps.progressionTimeDep = event.currentTarget.checked,
+                    },
+                    {
+                        type: inputTypes.CHECKBOX,
                         label: ui.lang.gameBg,
                         checked: this.uiProps.showGameBg,
                         onChange: (event) => this.uiProps.showGameBg = event.currentTarget.checked,
@@ -192,14 +183,12 @@ export class Status extends Widget {
                     // },
                     {
                         type: inputTypes.CHECKBOX,
-                        id: "blink-on-update",
                         label: ui.lang.blinkOnUpdate,
                         checked: this.uiProps.blinkOnUpdate,
                         onChange: (event) => this.uiProps.blinkOnUpdate = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        id: "rp__status-badge",
                         label: ui.lang.showStatus,
                         checked: this.uiProps.showStatus,
                         onChange: (event) => this.uiProps.showStatus = event.currentTarget.checked,
@@ -208,7 +197,6 @@ export class Status extends Widget {
                         prefix: ui.lang.alertDuration,
                         postfix: ui.lang.sec,
                         type: inputTypes.NUM_INPUT,
-                        id: "rp__alert-duration",
                         label: ui.lang.alertDuration,
                         value: this.uiProps.alertDuration,
                         onInput: (event) => this.uiProps.alertDuration = +event.currentTarget.value,
@@ -230,7 +218,6 @@ export class Status extends Widget {
                     {
                         type: inputTypes.RADIO,
                         name: "context_game-time",
-                        id: "show-playTime",
                         label: ui.lang.gameTime,
                         checked: this.uiProps.time == "playTime",
                         onChange: () => this.uiProps.time = 'playTime',
@@ -238,7 +225,6 @@ export class Status extends Widget {
                     {
                         type: inputTypes.RADIO,
                         name: "context_game-time",
-                        id: "show-sessionTime",
                         label: ui.lang.sessionGameTime,
                         checked: this.uiProps.time == "sessionTime",
                         onChange: () => this.uiProps.time = 'sessionTime',
@@ -246,7 +232,6 @@ export class Status extends Widget {
                     {
                         type: inputTypes.RADIO,
                         name: "context_game-time",
-                        id: "show-totalTime",
                         label: ui.lang.sessionTime,
                         checked: this.uiProps.time == "totalSessionTime",
                         onChange: () => this.uiProps.time = 'totalSessionTime',
@@ -254,7 +239,6 @@ export class Status extends Widget {
                     {
                         type: inputTypes.RADIO,
                         name: "context_game-time",
-                        id: "show-timer",
                         label: ui.lang.timer,
                         checked: this.uiProps.time == "timer",
                         onChange: () => this.uiProps.time = 'timer',
@@ -263,7 +247,6 @@ export class Status extends Widget {
                         prefix: ui.lang.timer,
                         postfix: ui.lang.min,
                         type: inputTypes.NUM_INPUT,
-                        id: "stats-timer-duration",
                         label: ui.lang.timer,
                         value: ~~(parseFloat(this.uiProps.timerTime) / 60 * 100) / 100,
                         onInput: (event) => this.uiProps.timerTime = event.currentTarget.value,
@@ -272,7 +255,6 @@ export class Status extends Widget {
                     ({
                         type: inputTypes.RADIO,
                         name: "time-pos",
-                        id: `time-pos-${position}`,
                         label: ui.lang?.[position] ?? position,
                         checked: this.uiProps.timePosition == position,
                         onChange: () => this.uiProps.timePosition = position,
@@ -285,21 +267,18 @@ export class Status extends Widget {
                 elements: [
                     {
                         type: inputTypes.CHECKBOX,
-                        id: "rp-scroll-title",
                         label: ui.lang.title,
                         checked: this.uiProps.scrollTitle,
                         onChange: (event) => this.uiProps.scrollTitle = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        id: "rp-scroll-rp",
                         label: ui.lang.richPresence,
                         checked: this.uiProps.scrollRP,
                         onChange: (event) => this.uiProps.scrollRP = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        id: "rp-scroll-focus",
                         label: ui.lang.focusCheevo,
                         checked: this.uiProps.scrollFocusDescription,
                         onChange: (event) => this.uiProps.scrollFocusDescription = event.currentTarget.checked,
@@ -308,7 +287,6 @@ export class Status extends Widget {
                         prefix: ui.lang.scrollSpeed,
                         postfix: "px/s",
                         type: inputTypes.NUM_INPUT,
-                        id: "menu_scroll-speed",
                         hint: ui.lang.scrollSpeed,
                         value: this.uiProps.scrollSpeed,
                         onInput: (event) => this.uiProps.scrollSpeed = event.currentTarget.value,
@@ -317,7 +295,6 @@ export class Status extends Widget {
                         prefix: ui.lang.scrollPauseDuration,
                         postfix: "sec",
                         type: inputTypes.NUM_INPUT,
-                        id: "menu_scroll-pause-dur",
                         hint: ui.lang.scrollPauseDuration,
                         value: this.uiProps.scrollPauseDuration,
                         onInput: (event) => this.uiProps.scrollPauseDuration = event.currentTarget.value,
@@ -326,8 +303,6 @@ export class Status extends Widget {
             },
             {
                 type: inputTypes.CHECKBOX,
-                name: "rp-hardmode",
-                id: `rp-hardmode`,
                 label: ui.lang.hardcoreMode,
                 checked: this.uiProps.isHardMode,
                 onChange: (event) => this.uiProps.isHardMode = event.currentTarget.checked,
@@ -345,8 +320,6 @@ export class Status extends Widget {
             const checked = isCurrentSet || isVisible;
             return {
                 type: inputTypes.CHECKBOX,
-                name: "subset-select",
-                id: `subset-select-${subsetName}`,
                 label: subsetName,
                 checked,
                 onChange: () => watcher.setSubset(subsetID),
@@ -363,7 +336,6 @@ export class Status extends Widget {
             return {
                 type: inputTypes.RADIO,
                 name: "subset-switch",
-                id: `subset-switch-${subsetName}`,
                 label: subsetName,
                 checked: isCurrentSet,
                 onChange: () => {
@@ -402,6 +374,7 @@ export class Status extends Widget {
         showFocusCheevo: false,
         scrollFocusDescription: false,
         fontScale: 1.0,
+        progressionTimeDep: true,
     }
     uiDefaultValuesLegacy = {
         showRichPresence: false,
@@ -750,6 +723,7 @@ export class Status extends Widget {
         this.section.classList.toggle("progress-by-session", this.uiProps.progressBySession);
         this.section.classList.toggle("hide-status", !this.uiProps.showStatus);
         this.section.classList.toggle("show-focus-cheevo", this.uiProps.showFocusCheevo);
+        this.section.classList.toggle("progression-dep-on-time", this.uiProps.progressionTimeDep);
 
         addScrollableFlags();
     }

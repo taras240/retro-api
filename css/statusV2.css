@@ -516,6 +516,10 @@
     mask-image: var(--bg-opacity-mask);
     mask-repeat: repeat;
     transition: opacity 0.2s, flex-grow 0.2s;
+    flex-grow: 1;
+}
+
+.section.progression-dep-on-time .rp__progression-point {
     flex-grow: var(--focus-time);
 }
 

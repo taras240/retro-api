@@ -1,4 +1,5 @@
 import { fromHtml } from "../functions/html.js";
+import { getRandomID } from "../functions/randomID.js";
 import { ui } from "../script.js";
 import { addEvents, inputTypes } from "./inputElements.js";
 
@@ -51,20 +52,20 @@ const ContextInput = (props) => {
 
 }
 const contextInputs = {
-    [inputTypes.CHECKBOX]: ({ type, name, id, checked, event, label, onChange, sectionCode = "" }) => `
+    [inputTypes.CHECKBOX]: ({ type, name, id = getRandomID(), checked, event, label, onChange, sectionCode = "" }) => `
         <div class="context__input-container">
             <input 
                 type="${type}" 
-                name="context-${name || id}${sectionCode}" 
-                id="context-${id}${sectionCode}" 
+                name="context-${name || id}" 
+                id="context-${id}" 
                 ${event ?? ""}
                 ${checked ? "checked" : ""} 
                 ></input>
-            <label class="context-menu_${type}" for="context-${id}${sectionCode}">${label}</label>
+            <label class="context-menu_${type}" for="context-${id}">${label}</label>
         </div>
     ` ,
     radio: (props) => contextInputs.checkbox(props),
-    statebox: ({ state, type, value, id, event, label, property, sectionCode = "" }) => `
+    statebox: ({ state, type, value, id = getRandomID(), event, label, property, sectionCode = "" }) => `
         <div 
             class="context-menu_statebox context-statebox statebox" 
             data-state="${state ?? 0}" 
@@ -72,8 +73,8 @@ const contextInputs = {
             data-property="${property}">
             <input 
                 type="checkbox" 
-                name="context-${id}-checkbox"
-                id="context-${id}${sectionCode}"
+                name="context-${getRandomID()}"
+                id="context-${id}"
                 checked
                 ></input>
             <label class="statebox__label" for="context-${id}${sectionCode}">${label}</label>
@@ -83,7 +84,7 @@ const contextInputs = {
         ${prefix}
         <input 
             class="context-menu_${type}" 
-            id="context-${id}-${sectionCode}" 
+            id="${getRandomID()}" 
             type="number" 
             data-title="${hint || ""}" 
             value="${value ?? ""}" 
@@ -95,7 +96,7 @@ const contextInputs = {
         ${prefix}
         <input 
             class="context-menu_${type}" 
-            id="context-${id}-${sectionCode}" 
+            id="${getRandomID()}" 
             type="text" 
             data-title="${hint || ""}" 
             value="${value ?? ""}" 
@@ -107,7 +108,7 @@ const contextInputs = {
         ${prefix}
         <input 
             class="slider" 
-            id="context-${id}-${sectionCode}"
+            id="${getRandomID()}"
             type="range" 
             ${event ?? ""} 
             min="${minRange}" 
@@ -116,7 +117,7 @@ const contextInputs = {
     button: ({ type, id, sectionCode, event, label = "" }) => `
             <button 
                 class="context-menu_${type}" 
-                id="context-${id}-${sectionCode}" 
+                id="${getRandomID()}"
                 ${event ?? ""} 
                 type="button"
             >
