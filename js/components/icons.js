@@ -40,7 +40,23 @@ export const signedIcons = {
     award: (award) => `<p  class="signed-icon award-type" data-title="${award}">
     ${icons.award(award)}</p>`,
     empty: (icon) => signedIconTemplate({ icon }),
-    players: (label) => signedIconTemplate({ icon: icons.players, label })
+    players: (label) => {
+        if (typeof label === "number") {
+            label = formatViews(label);
+        }
+        return signedIconTemplate({ icon: icons.players, label })
+    }
+}
+function formatViews(n) {
+    const units = ['', 'K', 'M', 'B'];
+    let i = 0;
+
+    while (n >= 1000 && i < units.length - 1) {
+        n /= 1000;
+        i++;
+    }
+
+    return `${parseFloat(n.toFixed(1))}${units[i]}`;
 }
 const unicodeIcon = (symbol) => `<i>${symbol}</i>`
 export const icons = {

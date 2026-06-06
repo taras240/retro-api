@@ -59,6 +59,21 @@ function stringToDate(string) {
     return new Date(string);
 }
 
+export const cheevosSortNames = Object.freeze({
+    TIME_TO_UNLOCK: "timeToUnlock",
+    UNLOCK_DATE: "latest",
+    UNLOCK_DATE_RA: "raLatest",
+    TRUE_RATIO: "trueRatio",
+    // DIFFICULTY: "difficulty",
+    UNLOCK_RATE: "unlockRate",
+    POINTS: "points",
+    TRUE_POINTS: "truepoints",
+    DEFAULT: "default",
+    LEVEL: "level",
+    CUSTOM_ORDER: "customOrder",
+    // DISABLE: "disable",
+});
+
 export const sortBy = {
     latestHardcore: (a, b, reverse = 1, strictMode = false) => {
         const dateA = a.DateEarnedHardcore
@@ -90,7 +105,7 @@ export const sortBy = {
     earnedCount: (a, b, reverse = 1) => (b.NumAwardedHardcore - a.NumAwardedHardcore) * reverse,
     unlockRate: (a, b, reverse = 1) => sortBy.earnedCount(a, b, reverse),
     rarest: (a, b, reverse = 1) => sortBy.earnedCount(a, b, reverse),
-    points: (a, b, reverse = 1) => ((a.Points) - (b.Points)) * reverse,
+    points: (a, b, reverse = 1) => (a.Points - b.Points) * reverse,
     truepoints: (a, b, reverse = 1) => (a.TrueRatio - b.TrueRatio) * reverse,
     trueRatio: (a, b, reverse = 1) => {
         const ratioA = a.TrueRatio / a.Points;
@@ -139,11 +154,10 @@ export const sortBy = {
         difRes == 0 && (difRes = b.NumAwardedHardcore - a.NumAwardedHardcore);
         return difRes * reverse;
     },
+}
 
-    rating: (a, b) => b.Rating - a.Rating,
 
-    achievementsCount: (a, b, reverse = 1) => (parseInt(a.NumAchievements) - parseInt(b.NumAchievements)) * reverse,
-
+export const sortGamesBy = {
     title: (a, b, reverse = 1) => {
         let nameA = a.Title.toUpperCase();
         let nameB = b.Title.toUpperCase();
@@ -156,6 +170,30 @@ export const sortBy = {
         }
         return 0;
 
+    },
+    points: (a, b, reverse = 1, strictMode = true) => {
+        if (strictMode && !(a.Points && b.Points)) {
+            return a.Points ? -1 : 1;
+        }
+        return (a.Points - b.Points) * reverse;
+    },
+    cheevos: (a, b, reverse = 1) => (parseInt(a.NumAchievements) - parseInt(b.NumAchievements)) * reverse,
+    date: (a, b, reverse = 1, strictMode = true) => {
+        const dateA = a.Date
+            ? stringToDate(a.Date)
+            : -Infinity;
+        const dateB = b.Date
+            ? stringToDate(b.Date)
+            : -Infinity;
+        if (strictMode && !(a.Date && b.Date)) {
+            return a.Date ? -1 : 1;
+        }
+        return (dateA - dateB) * reverse; // Повертає різницю дат
+    },
+    rating: (a, b) => b.Rating - a.Rating,
+    playedDate: (a, b, reverse = 1, strictMode = true) => sortGamesBy.date({ Date: a.datePlayed }, { Date: b.datePlayed }, -1 * reverse, strictMode),
+    released: (a, b, reverse = 1) => {
+        return (a.relisedAt - b.relisedAt) * reverse;
     },
     award: (b, a, reverse = 1, strictMode = true) => {
         const awardTypes = {
@@ -173,59 +211,55 @@ export const sortBy = {
         const delta = awardA - awardB != 0 ? awardA - awardB : awardADate - awardBDate;
         return delta * reverse;
     },
-
-    date: (a, b, reverse = 1, strictMode = true) => {
-        const dateA = a.Date
-            ? stringToDate(a.Date)
-            : -Infinity;
-        const dateB = b.Date
-            ? stringToDate(b.Date)
-            : -Infinity;
-        if (strictMode && !(a.Date && b.Date)) {
-            return a.Date ? -1 : 1;
+    beatenRate: (a, b, reverse = 1, strictMode = true) => {
+        if (strictMode && !(a.beatenRate && b.beatenRate)) {
+            return a.beatenRate ? -1 : 1;
         }
-        return (dateA - dateB) * reverse; // Повертає різницю дат
+        return (a.beatenRate - b.beatenRate) * reverse;
     },
-    datePlayed: (a, b, reverse = 1, strictMode = true) => sortBy.date({ Date: a.datePlayed }, { Date: b.datePlayed }, -1 * reverse, strictMode),
-    gameRelease: (a, b, reverse = 1) => {
-        return (a.relisedAt - b.relisedAt) * reverse;
-    }
+    masteryRate: (a, b, reverse = 1, strictMode = true) => {
+        if (strictMode && !(a.masteryRate && b.masteryRate)) {
+            return a.masteryRate ? -1 : 1;
+        }
+        return (a.masteryRate - b.masteryRate) * reverse;
+    },
+    players: (a, b, reverse = 1, strictMode = true) => {
+        if (strictMode && !(a.playersTotal && b.playersTotal)) {
+            return a.playersTotal ? -1 : 1;
+        }
+        return (b.playersTotal - a.playersTotal) * reverse;
+    },
+    trueRatio: (a, b, reverse = 1, strictMode = 1) => {
+        if (strictMode && !(a.trueRatio && b.trueRatio)) {
+            return a.trueRatio ? -1 : 1;
+        }
+        return (a.trueRatio - b.trueRatio) * reverse;
+    },
+    timeToBeat: (a, b, reverse = 1, strictMode = 1) => {
+        if (strictMode && !(a.timeToBeat && b.timeToBeat)) {
+            return a.timeToBeat ? -1 : 1;
+        }
+        return (a.timeToBeat - b.timeToBeat) * reverse;
+    },
+    timeToMaster: (a, b, reverse = 1, strictMode = 1) => {
+        if (strictMode && !(a.timeToMaster && b.timeToMaster)) {
+            return a.timeToMaster ? -1 : 1;
+        }
+        return (a.timeToMaster - b.timeToMaster) * reverse;
+    },
 }
-
-export const cheevosSortNames = Object.freeze({
-    TIME_TO_UNLOCK: "timeToUnlock",
-    UNLOCK_DATE: "latest",
-    UNLOCK_DATE_RA: "raLatest",
-    TRUE_RATIO: "trueRatio",
-    // DIFFICULTY: "difficulty",
-    UNLOCK_RATE: "unlockRate",
-    POINTS: "points",
-    TRUE_POINTS: "truepoints",
-    DEFAULT: "default",
-    LEVEL: "level",
-    CUSTOM_ORDER: "customOrder",
-    // DISABLE: "disable",
-});
-
-export const sortMethods = {
-    latest: "latest",
-    raLatest: "raLatest",
-    trueRatio: "trueRatio",
-    earnedCount: "earnedCount",
-    points: "points",
-    truepoints: "truepoints",
-    disable: "disable",
-    id: "id",
-    default: "default",
-    achievementsCount: "achievementsCount",
+export const gamesSortNames = {
     title: "title",
-    award: "award",
-    rating: "rating",
-    date: "date",
-    level: 'level',
-    difficulty: 'difficulty',
-    gameRelease: 'gameRelease',
-    datePlayed: "datePlayed"
+    released: 'released',
+    playedDate: "playedDate",
+    players: "players",
+    cheevos: "cheevos",
+    points: "points",
+    trueRatio: 'trueRatio',
+    beatenRate: "beatenRate",
+    timeToBeat: "timeToBeat",
+    masteryRate: "masteryRate",
+    timeToMaster: "timeToMaster"
 };
 
 export function applyFilter({

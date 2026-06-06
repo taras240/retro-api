@@ -4,7 +4,7 @@ import { icons, signedIcons } from "../components/icons.js"
 import { config, ui, apiWorker, watcher } from "../script.js";
 import { Widget } from "./widget.js";
 import { generateBadges, badgeElements } from "../components/badges.js";
-import { sortBy, sortMethods } from "../functions/sortFilter.js";
+import { sortGamesBy, gamesSortNames } from "../functions/sortFilter.js";
 import { inputElement, inputTypes } from "../components/inputElements.js";
 import { GAME_GENRE_CODES } from "../enums/gameGenres.js";
 import { RA_PLATFORM_CODES } from "../enums/RAPlatforms.js";
@@ -52,46 +52,16 @@ export class Games extends Widget {
             id: "games__sort-selector",
             onClick: (event) => ui.showContextmenu({
                 event, menuItems: [
-                    {
-                        type: inputTypes.RADIO,
-                        name: "games__sort-type",
-                        id: `games__sort-type-${sortMethods.date}`,
-                        label: ui.lang.releaseDate,
-                        checked: this.uiProps.sortName === sortMethods.gameRelease,
-                        onChange: () => this.uiProps.sortName = sortMethods.gameRelease,
-                    },
-                    {
-                        type: inputTypes.RADIO,
-                        name: "games__sort-type",
-                        id: `games__sort-type-${sortMethods.datePlayed}`,
-                        label: ui.lang.playedDate,
-                        checked: this.uiProps.sortName === sortMethods.datePlayed,
-                        onChange: () => this.uiProps.sortName = sortMethods.datePlayed,
-                    },
-                    {
-                        type: inputTypes.RADIO,
-                        name: "games__sort-type",
-                        id: `games__sort-type-${sortMethods.achievementsCount}`,
-                        label: ui.lang.cheevos,
-                        checked: this.uiProps.sortName === sortMethods.achievementsCount,
-                        onChange: () => this.uiProps.sortName = sortMethods.achievementsCount,
-                    },
-                    {
-                        type: inputTypes.RADIO,
-                        name: "games__sort-type",
-                        id: `games__sort-type-${sortMethods.title}`,
-                        label: ui.lang.title,
-                        checked: this.uiProps.sortName === sortMethods.title,
-                        onChange: () => this.uiProps.sortName = sortMethods.title,
-                    },
-                    {
-                        type: inputTypes.RADIO,
-                        name: "games__sort-type",
-                        id: `games__sort-type-${sortMethods.points}`,
-                        label: ui.lang.points,
-                        checked: this.uiProps.sortName === sortMethods.points,
-                        onChange: () => this.uiProps.sortName = sortMethods.points,
-                    },
+                    ...Object.values(gamesSortNames).map(sortName => (
+                        {
+                            type: inputTypes.RADIO,
+                            name: "games-sort-method",
+                            id: `games-sort-method-${sortName}`,
+                            label: ui.lang[sortName] ?? sortName,
+                            checked: this.uiProps.sortName === sortName,
+                            onChange: () => this.uiProps.sortName = sortName,
+                        })
+                    ),
                     {
                         type: inputTypes.CHECKBOX,
                         label: ui.lang.reverse,
@@ -179,17 +149,17 @@ export class Games extends Widget {
                 type: inputTypes.RADIO,
                 label: ui.lang.released,
                 name: 'games__sort-by',
-                checked: this.uiProps.sortName === sortMethods.date,
+                checked: this.uiProps.sortName === gamesSortNames.date,
                 id: `games__sort-by-date`,
-                onChange: () => this.uiProps.sortName = sortMethods.date,
+                onChange: () => this.uiProps.sortName = gamesSortNames.date,
             },
             {
                 type: inputTypes.RADIO,
                 label: ui.lang.points,
                 name: 'games__sort-by',
-                checked: this.uiProps.sortName === sortMethods.points,
+                checked: this.uiProps.sortName === gamesSortNames.points,
                 id: `games__sort-by-points`,
-                onChange: () => this.uiProps.sortName = sortMethods.points,
+                onChange: () => this.uiProps.sortName = gamesSortNames.points,
             }
         ]
 
@@ -436,7 +406,7 @@ export class Games extends Widget {
     }
     applySort() {
         // if (!this.games?.length) return;
-        this.games = this.games.sort((a, b) => sortBy[this.uiProps.sortName](a, b, this.uiProps.reverseSort));
+        this.games = this.games.sort((a, b) => sortGamesBy[this.uiProps.sortName]?.(a, b, this.uiProps.reverseSort));
     }
     platformCodes = {
 
@@ -491,7 +461,7 @@ export class Games extends Widget {
 
 
     uiDefaultValues = {
-        sortName: sortMethods.gameRelease,
+        sortName: gamesSortNames.gameRelease,
         reverseSort: false,
         userPlaylists: {},
     }

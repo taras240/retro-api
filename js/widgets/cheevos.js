@@ -1,7 +1,7 @@
 import { UI } from "../ui.js";
 import { config, ui, UIEvents, watcher } from "../script.js";
 import { Widget } from "./widget.js";
-import { applyFilter, applySort, cheevosFiterNames, cheevosSortNames, filterBy, filterMethods, sortBy, sortMethods } from "../functions/sortFilter.js";
+import { applyFilter, applySort, cheevosFiterNames, cheevosSortNames, filterBy, filterMethods, sortBy } from "../functions/sortFilter.js";
 import { delay } from "../functions/delay.js";
 import CHEEVO_GROUPS from "../enums/cheevoGrouping.js";
 import { scrollElementIntoView } from "../functions/scrollingToElement.js";
@@ -312,7 +312,7 @@ export class AchievementsBlock extends Widget {
         showMario: true,
         showLoadAnimation: false,
         showGroupHeader: true,
-        sortName: sortMethods.latest,
+        sortName: cheevosSortNames.UNLOCK_DATE,
         reverseSort: 1, //-1 reverse, 1 normal
         strictSort: false,
         filterBy: filterMethods.all,

@@ -7,7 +7,7 @@ import { resizeEvent } from "../functions/resizingWidget.js";
 import { inputTypes } from "../components/inputElements.js";
 import { buttonsHtml } from "../components/htmlElements.js";
 import { normalizeUserData } from "../functions/api/userDataNormalization.js";
-import { applySort, sortBy, sortMethods } from "../functions/sortFilter.js";
+import { applySort, sortBy } from "../functions/sortFilter.js";
 import { GAME_AWARD_TYPES } from "../enums/gameAwards.js";
 
 export class UserStatistic extends Widget {

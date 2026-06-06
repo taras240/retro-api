@@ -335,5 +335,9 @@
     "userLauchedGame": "{{user}} has launched the game",
     "props": "Properties",
     "gamesLibrary": "RA Games Library",
-    "playedDate": "Date Played"
+    "playedDate": "Date Played",
+    "beatenRate": "Beaten Rate",
+    "masteryRate": "Mastery Rate",
+    "timeToBeat": "Time To Beat",
+    "timeToMaster": "Time To Master"
 }

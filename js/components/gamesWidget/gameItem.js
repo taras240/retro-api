@@ -28,9 +28,11 @@ export function GameListElement(gameData, onRemove) {
         <div class="game-description__info icons-row-list"> 
             ${signedIcons.platform(gameData.ConsoleID)}
             ${signedIcons.date(gameData.Date || "n/a")}
+            ${signedIcons.players(gameData.playersTotal)}
             ${signedIcons.cheevos((gameData.NumAwardedHardcore ? gameData.NumAwardedHardcore + '\/' : "") + gameData.NumAchievements)}
             ${signedIcons.points(gameData.Points)}
-            ${signedIcons.retropoints(gameData.retropoints || "n/a")}
+            ${signedIcons.retroRatio(gameData.trueRatio || "n/a")}
+            ${signedIcons.rarity(([gameData.beatenRate, gameData.masteryRate].filter(v => v).join("/")) + "%")}
             ${signedIcons.time(gameData.timeToBeatString)}
         </div>
     `);
