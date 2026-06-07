@@ -40,6 +40,7 @@ export class Constructor extends Widget {
         this.open();
     }
     updateWidgets() {
+        if (!watcher.GAME_DATA) return;
         this.updateKeys();
         this.widgets.forEach(widget => {
             try {

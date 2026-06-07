@@ -1,7 +1,5 @@
-json/games/script.js
-json/games/searchData.js
-json/games/mergeData.js
-json/games/platforms
+.env.local
+api/rawg
 worker.js
 downloader.js
 json/games/rawgParser.js
