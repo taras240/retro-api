@@ -196,7 +196,6 @@ export class Games extends Widget {
             }
         }))
     }
-    //! TODO
     get genresFilterItems() {
         return Object.keys(GAME_GENRE_CODES).map((genreID) => ({
             type: inputTypes.CHECKBOX,
@@ -221,6 +220,35 @@ export class Games extends Widget {
     get releaseDateFilter() {
         return this.__releaseDateFilter ?? { from: -Infinity, to: Infinity };
     }
+
+    set playersCountFilter(value) {
+        this.__playersCountFilter = value;
+        this.updateGamesList();
+    }
+    get playersCountFilter() {
+        return this.__playersCountFilter ?? { from: -Infinity, to: Infinity };
+    }
+    set beatenRateFilter(value) {
+        this.__beatenRateFilter = value;
+        this.updateGamesList();
+    }
+    get beatenRateFilter() {
+        return this.__beatenRateFilter ?? { from: -Infinity, to: Infinity };
+    }
+    set masteryRateFilter(value) {
+        this.__masteryRateFilter = value;
+        this.updateGamesList();
+    }
+    get masteryRateFilter() {
+        return this.__masteryRateFilter ?? { from: -Infinity, to: Infinity };
+    }
+    set trueRatioFilter(value) {
+        this.__trueRatioFilter = value;
+        this.updateGamesList();
+    }
+    get trueRatioFilter() {
+        return this.__trueRatioFilter ?? { from: -Infinity, to: Infinity };
+    }
     set cheevosFilter(value) {
         this.__cheevosFilter = value;
         this.updateGamesList();
@@ -241,6 +269,13 @@ export class Games extends Widget {
     }
     get hltbFilter() {
         return this.__hltbFilter ?? { from: 0, to: Infinity };
+    }
+    set hltmFilter(value) {
+        this.__hltmFilter = value;
+        this.updateGamesList();
+    }
+    get hltmFilter() {
+        return this.__hltmFilter ?? { from: 0, to: Infinity };
     }
     set platformFilter(value) {
         let platformCodes = value.filter(code => Object.keys(RA_PLATFORM_CODES).includes(code));
@@ -380,33 +415,12 @@ export class Games extends Widget {
             );
         }
 
-        // Filter by POINTS per CHEEVO
-        result = result.filter(game => {
-            const ppc = game.Points / game.NumAchievements;
-            return ppc >= this.ppcFilter.from
-                && ppc <= this.ppcFilter.to;
-        });
-
-        // HLTB Filter
-        result = result.filter(game => {
-            const hltb = (game.timeToBeat ?? 0) / 60;
-            return hltb >= this.hltbFilter.from
-                && hltb <= this.hltbFilter.to;
-        });
-
-        // Filter by CHEEVOS Count
-        result = result.filter(game => {
-            const count = parseInt(game.NumAchievements, 10) || 0;
-            return count >= this.cheevosFilter.from
-                && count <= this.cheevosFilter.to;
-        });
-
-        // Filter by YEAR
-        result = result.filter(game => {
-            if (!game.relisedAt) return true;
-            const year = new Date(game.relisedAt).getFullYear();
-            if (!Number.isFinite(year)) return true;
-            return year >= this.releaseDateFilter.from && year <= this.releaseDateFilter.to;
+        Object.entries(this.rangeFilters).forEach(([filterName, { getValue }]) => {
+            result = result.filter(game => {
+                const value = getValue(game);
+                return value >= this[filterName].from
+                    && value <= this[filterName].to;
+            })
         });
 
         this.games = result;
@@ -415,7 +429,44 @@ export class Games extends Widget {
     applySort() {
         this.games = this.games.sort((a, b) => sortGamesBy[this.uiProps.sortName]?.(a, b, this.uiProps.reverseSort));
     }
-
+    rangeFilters = {
+        releaseDateFilter: {
+            title: "releaseYear",
+            getValue: (game) => new Date(game.relisedAt).getFullYear(),
+        },
+        playersCountFilter: {
+            title: "players",
+            getValue: (game) => game.playersTotal,
+        },
+        hltbFilter: {
+            title: "timeToBeat",
+            getValue: (game) => (game.timeToBeat ?? Infinity) / 60,
+        },
+        hltmFilter: {
+            title: "timeToMaster",
+            getValue: (game) => (game.timeToMaster ?? Infinity) / 60,
+        },
+        beatenRateFilter: {
+            title: "beatenRate",
+            getValue: (game) => game.beatenRate,
+        },
+        masteryRateFilter: {
+            title: "masteryRate",
+            getValue: (game) => game.masteryRate,
+        },
+        trueRatioFilter: {
+            title: "trueRatio",
+            getValue: (game) => game.trueRatio,
+        },
+        cheevosFilter: {
+            title: "cheevosCount",
+            getValue: (game) => parseInt(game.NumAchievements) ?? 0,
+        },
+        ppcFilter: {
+            title: "pointsPerCheevo",
+            getValue: (game) => game.Points / game.NumAchievements,
+        },
+    }
     awardTypes = {
         mastered: 'mastered',
         'beaten-hardcore': 'beaten',
@@ -776,10 +827,12 @@ export class Games extends Widget {
     toggleFullscreen() {
         this.section.classList.toggle("fullscreen")
     }
+
     sideMenuElement(menu, title) {
         if (!menu) {
             title = ui.lang.filters;
             menu = [
+
                 {
                     title: ui.lang.platform,
                     type: "submenu",
@@ -799,90 +852,27 @@ export class Games extends Widget {
                         },
                     ]
                 },
-                {
-                    title: `${ui.lang.releaseYear}:`,
+                ...Object.entries(this.rangeFilters).map(([filterName, { title }]) => ({
+                    title: `${ui.lang[title] ?? title}:`,
                     elements: [
                         {
                             type: inputTypes.NUM_INPUT,
                             label: ui.lang.from,
-                            onChange: (event) => this.releaseDateFilter = {
-                                ...this.releaseDateFilter,
+                            onChange: (event) => this[filterName] = {
+                                ...this[filterName],
                                 from: Number(event.currentTarget.value) || 0
                             },
                         },
                         {
                             type: inputTypes.NUM_INPUT,
                             label: ui.lang.to,
-                            onChange: (event) => this.releaseDateFilter = {
-                                ...this.releaseDateFilter,
+                            onChange: (event) => this[filterName] = {
+                                ...this[filterName],
                                 to: Number(event.currentTarget.value) || Infinity
                             },
                         },
                     ]
-                },
-                {
-                    title: `${ui.lang.cheevosCount}:`,
-                    elements: [
-                        {
-                            type: inputTypes.NUM_INPUT,
-                            label: ui.lang.from,
-                            onChange: (event) => this.cheevosFilter = {
-                                ...this.cheevosFilter,
-                                from: Number(event.currentTarget.value) || 0
-                            },
-                        },
-                        {
-                            type: inputTypes.NUM_INPUT,
-                            label: ui.lang.to,
-                            onChange: (event) => this.cheevosFilter = {
-                                ...this.cheevosFilter,
-                                to: Number(event.currentTarget.value) || Infinity
-                            },
-                        },
-                    ]
-                },
-                {
-                    title: `${ui.lang.pointsPerCheevo}:`,
-                    elements: [
-                        {
-                            type: inputTypes.NUM_INPUT,
-                            label: ui.lang.from,
-                            onChange: (event) => this.ppcFilter = {
-                                ...this.ppcFilter,
-                                from: Number(event.currentTarget.value) || 0
-                            },
-                        },
-                        {
-                            type: inputTypes.NUM_INPUT,
-                            label: ui.lang.to,
-                            onChange: (event) => this.ppcFilter = {
-                                ...this.ppcFilter,
-                                to: Number(event.currentTarget.value) || Infinity
-                            },
-                        },
-                    ]
-                },
-                {
-                    title: `${ui.lang.hltb}:`,
-                    elements: [
-                        {
-                            type: inputTypes.NUM_INPUT,
-                            label: ui.lang.from,
-                            onChange: (event) => this.hltbFilter = {
-                                ...this.hltbFilter,
-                                from: Number(event.currentTarget.value) || 0
-                            },
-                        },
-                        {
-                            type: inputTypes.NUM_INPUT,
-                            label: ui.lang.to,
-                            onChange: (event) => this.hltbFilter = {
-                                ...this.hltbFilter,
-                                to: Number(event.currentTarget.value) || Infinity,
-                            }
-                        },
-                    ]
-                },
+                })),
                 {
                     title: `${ui.lang.highestAward}:`,
                     elements: this.awardsFilterItems

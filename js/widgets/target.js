@@ -948,8 +948,6 @@ export class Target extends Widget {
                 <p class="list-item__text">${achievement.Description}</p>
                 <div class="icons-row-list">
                     ${icons.cheevoType(achievement.Type)}
-                    ${achievement.progressionFocusTime ? badgeElements.gold(Math.round(achievement.progressionFocusTime / 60) + "mins") : ""}
-
                     ${signedIcons.points(achievement.Points)}
                     ${signedIcons.retropoints(achievement.TrueRatio)}
                     ${achievement.timeToUnlock ? signedIcons.time(secondsToBadgeString(achievement.timeToUnlock)) : ""}

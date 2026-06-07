@@ -30,11 +30,12 @@ export function cheevoPopupElement(cheevo, isFixed = false) {
     popup.classList.add("cheevo-popup", "popup", cheevo.isEarnedHardcore ? "hardcore" : cheevo.isEarned ? "softcore" : "f",);
     popup.classList.toggle("fixed", isFixed);
     popup.dataset.id = cheevo.ID;
+    const focusTime = cheevo.progressionFocusTime ? Math.round(cheevo.progressionFocusTime / 60) + "mins" : "";
     popup.innerHTML = `
         <div class="cheevo-popup__header">
             <h3 class="cheevo-popup__title">${cheevo.Title}</h3>
             <div class="cheevo-popup__description"> ${cheevo.Description} </div>
-            ${badges(level, cheevo.genres)}
+            ${badges(level, [focusTime, ...cheevo.genres])}
             <div class="points">
                 ${signedIcons.points(cheevo.Points)}
                 ${signedIcons.retropoints(cheevo.TrueRatio)}

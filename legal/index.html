@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Legal — RetroСheevos</title>
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #0f0f14;
+            --surface: #18181f;
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #e8e6f0;
+            --muted: #8b89a0;
+            --accent: #a78bfa;
+            --accent-dim: rgba(167, 139, 250, 0.12);
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: system-ui, serif;
+            font-size: 16px;
+            line-height: 1.75;
+            min-height: 100vh;
+        }
+
+        header {
+            border-bottom: 1px solid var(--border);
+            padding: 1.25rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: sticky;
+            top: 0;
+            background: rgba(15, 15, 20, 0.9);
+            backdrop-filter: blur(8px);
+            z-index: 10;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: var(--accent-dim);
+            border: 1px solid rgba(167, 139, 250, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-icon svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        header span {
+            font-size: 15px;
+            color: var(--text);
+            letter-spacing: -0.2px;
+        }
+
+        nav {
+            margin-left: auto;
+            display: flex;
+            gap: 4px;
+        }
+
+        nav a {
+            font-size: 13px;
+            color: var(--muted);
+            text-decoration: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            transition: background 0.15s, color 0.15s;
+        }
+
+        nav a:hover,
+        nav a.active {
+            background: var(--accent-dim);
+            color: var(--accent);
+        }
+
+        main {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 3.5rem 2rem 5rem;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .page-header {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .page-label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: normal;
+            letter-spacing: -0.8px;
+            color: var(--text);
+            line-height: 1.2;
+            margin-bottom: 10px;
+        }
+
+        .meta {
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .intro {
+            font-size: 17px;
+            color: var(--muted);
+            line-height: 1.7;
+            margin-top: 1.25rem;
+        }
+
+        section {
+            margin-bottom: 2.5rem;
+        }
+
+        h2 {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        p {
+            font-size: 15.5px;
+            color: #c4c2d4;
+            line-height: 1.8;
+            margin-bottom: 12px;
+        }
+
+        p:last-child {
+            margin-bottom: 0;
+        }
+
+        ul {
+            list-style: none;
+            margin: 10px 0;
+        }
+
+        ul li {
+            font-size: 15.5px;
+            color: #c4c2d4;
+            line-height: 1.8;
+            padding: 4px 0 4px 20px;
+            position: relative;
+        }
+
+        ul li::before {
+            content: '';
+            position: absolute;
+            left: 4px;
+            top: 14px;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--accent);
+            opacity: 0.5;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .highlight-box {
+            background: var(--accent-dim);
+            border: 1px solid rgba(167, 139, 250, 0.2);
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            margin: 12px 0;
+        }
+
+        .highlight-box p {
+            margin: 0;
+            font-size: 14.5px;
+            color: #c0b8e8;
+        }
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 2rem;
+            max-width: 720px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        footer p {
+            font-size: 12px;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        footer a {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        footer a:hover {
+            color: var(--accent);
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 1rem;
+            }
+
+            main {
+                padding: 2rem 1.25rem 4rem;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            nav a {
+                padding: 6px 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo-icon">
+            <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="1" y="7" width="16" height="9" rx="2" stroke="#a78bfa" stroke-width="1.4" />
+                <path d="M5 7V5.5a4 4 0 0 1 8 0V7" stroke="#a78bfa" stroke-width="1.4" stroke-linecap="round" />
+                <circle cx="9" cy="11.5" r="1.5" fill="#a78bfa" />
+            </svg>
+        </div>
+        <span>Retrocheevos</span>
+        <nav>
+            <a href="#" class="active" onclick="show('privacy', this)">Privacy Policy</a>
+            <a href="#" onclick="show('terms', this)">Terms of Service</a>
+        </nav>
+    </header>
+
+    <main>
+
+        <!-- PRIVACY POLICY -->
+        <div class="page active" id="privacy">
+            <div class="page-header">
+                <p class="page-label">Legal</p>
+                <h1>Privacy Policy</h1>
+                <p class="meta">Last updated: June 7, 2025</p>
+                <p class="intro">This policy explains what personal data Retrocheevos collects, how it is used, and your
+                    rights as a user.</p>
+            </div>
+
+            <section>
+                <h2>Information we collect</h2>
+                <p>When you sign in with Google, we receive the following data from your Google account:</p>
+                <ul>
+                    <li><strong>Display name</strong> — used to personalize your in-app experience</li>
+                    <li><strong>Email address</strong> — used to uniquely identify your account</li>
+                    <li><strong>Profile picture</strong> — displayed in the app interface</li>
+                </ul>
+                <p>We do not collect passwords, payment information, or any data beyond what is listed above.</p>
+            </section>
+
+            <section>
+                <h2>How we use your data</h2>
+                <p>Your data is used exclusively to operate the RetroСheevos application — to authenticate your account,
+                    save your achievement tracking progress, and display your profile. We do not use your data for
+                    advertising, marketing, or profiling purposes.</p>
+            </section>
+
+            <section>
+                <h2>Data storage</h2>
+                <p>Your data is stored securely using Google Firebase, a cloud platform operated by Google LLC. Firebase
+                    stores account information and achievement data on Google's servers in accordance with Google's
+                    security and privacy standards.</p>
+            </section>
+
+            <section>
+                <h2>Third-party sharing</h2>
+                <p>We do not sell, rent, trade, or share your personal information with third parties for any commercial
+                    purpose.</p>
+                <p>We use the following third-party services to operate the app:</p>
+                <ul>
+                    <li><strong>Google Firebase</strong> — authentication and data storage (<a
+                            href="https://policies.google.com/privacy" target="_blank">privacy policy</a>)</li>
+                    <li><strong>Google OAuth 2.0</strong> — sign-in authentication (<a
+                            href="https://policies.google.com/privacy" target="_blank">privacy policy</a>)</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>Data retention & deletion</h2>
+                <p>Your data is retained for as long as you maintain an active account. You may request full deletion of
+                    your account and all associated data at any time by contacting us. We will process deletion requests
+                    within 30 days.</p>
+            </section>
+
+            <section>
+                <h2>Children's privacy</h2>
+                <p>RetroСheevos is not directed at children under the age of 13. We do not knowingly collect personal
+                    information from children. If you believe a child has created an account, please contact us and we
+                    will delete the data promptly.</p>
+            </section>
+
+            <section>
+                <h2>Changes to this policy</h2>
+                <p>We may update this Privacy Policy periodically. When we do, the date at the top of this page will be
+                    revised. Continued use of the application after changes have been posted constitutes acceptance of
+                    the updated policy.</p>
+            </section>
+
+            <section>
+                <h2>Contact</h2>
+                <div class="highlight-box">
+                    <p>Questions about this Privacy Policy? Contact us at <a
+                            href="mailto:your@email.com">your@email.com</a></p>
+                </div>
+            </section>
+        </div>
+
+        <!-- TERMS OF SERVICE -->
+        <div class="page" id="terms">
+            <div class="page-header">
+                <p class="page-label">Legal</p>
+                <h1>Terms of Service</h1>
+                <p class="meta">Last updated: June 7, 2025</p>
+                <p class="intro">By using RetroСheevos, you agree to these Terms of Service. Please read them carefully
+                    before using the application.</p>
+            </div>
+
+            <section>
+                <h2>Acceptance of terms</h2>
+                <p>By accessing or using RetroСheevos ("the App"), you agree to be bound by these Terms of Service. If
+                    you do not agree to these terms, please do not use the App.</p>
+            </section>
+
+            <section>
+                <h2>Description of service</h2>
+                <p>RetroСheevos is an achievement tracking application that allows users to log, track, and manage their
+                    gaming achievements. The App is provided free of charge and is intended for personal, non-commercial
+                    use.</p>
+            </section>
+
+            <section>
+                <h2>User accounts</h2>
+                <p>To use RetroСheevos, you must sign in using a valid Google account. You are responsible for
+                    maintaining the confidentiality of your account and for all activities that occur under your
+                    account. You agree to notify us immediately of any unauthorized use of your account.</p>
+            </section>
+
+            <section>
+                <h2>Acceptable use</h2>
+                <p>You agree not to use the App in any way that:</p>
+                <ul>
+                    <li>Violates any applicable local, national, or international law or regulation</li>
+                    <li>Is unlawful, harmful, threatening, abusive, or otherwise objectionable</li>
+                    <li>Attempts to gain unauthorized access to any part of the App or its related systems</li>
+                    <li>Disrupts, overloads, or impairs the proper functioning of the App</li>
+                    <li>Attempts to reverse engineer, decompile, or extract source code from the App</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>Intellectual property</h2>
+                <p>All content, design, code, and materials in RetroСheevos are the property of the App's creators and
+                    are protected by applicable intellectual property laws. You may not reproduce, distribute, or create
+                    derivative works without explicit written permission.</p>
+                <p>Game titles, achievement names, and related trademarks referenced in the App are the property of
+                    their respective owners.</p>
+            </section>
+
+            <section>
+                <h2>User content</h2>
+                <p>You retain ownership of any content you submit or store in the App. By using the App, you grant us a
+                    limited license to store and process your content solely for the purpose of providing the service to
+                    you.</p>
+            </section>
+
+            <section>
+                <h2>Disclaimer of warranties</h2>
+                <p>RetroСheevos is provided "as is" and "as available" without warranties of any kind, either express or
+                    implied. We do not warrant that the App will be uninterrupted, error-free, or completely secure. Use
+                    of the App is at your own risk.</p>
+            </section>
+
+            <section>
+                <h2>Limitation of liability</h2>
+                <p>To the fullest extent permitted by law, RetroСheevos and its creators shall not be liable for any
+                    indirect, incidental, special, or consequential damages arising from your use of, or inability to
+                    use, the App or its content.</p>
+            </section>
+
+            <section>
+                <h2>Termination</h2>
+                <p>We reserve the right to suspend or terminate your access to the App at any time, without notice, if
+                    we believe you have violated these Terms of Service or if we discontinue the service.</p>
+            </section>
+
+            <section>
+                <h2>Changes to terms</h2>
+                <p>We may revise these Terms of Service at any time. Updated terms will be posted on this page with a
+                    revised date. Continued use of the App after changes are posted constitutes acceptance of the new
+                    terms.</p>
+            </section>
+
+            <section>
+                <h2>Contact</h2>
+                <div class="highlight-box">
+                    <p>Questions about these Terms of Service? Contact us at <a
+                            href="mailto:your@email.com">khomyn@outlook.com</a></p>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <footer>
+        <p>© 2025 RetroСheevos. All rights reserved.</p>
+        <p>
+            <a href="#" onclick="show('privacy', document.querySelector('nav a'))">Privacy Policy</a>
+            &nbsp;·&nbsp;
+            <a href="#" onclick="show('terms', document.querySelectorAll('nav a')[1])">Terms of Service</a>
+        </p>
+    </footer>
+
+    <script>
+        function show(id, link) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            if (link) link.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return false;
+        }
+    </script>
+
+</body>
+
+</html>

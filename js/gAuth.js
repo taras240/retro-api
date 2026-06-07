@@ -9,14 +9,23 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const firebaseConfig = {
+
     apiKey: "AIzaSyDQ49fg0lzzevgVOEgOxEI_4EOZkGf-1GU",
+
     authDomain: "retrocheevos-tracker.firebaseapp.com",
+
     projectId: "retrocheevos-tracker",
+
     storageBucket: "retrocheevos-tracker.firebasestorage.app",
+
     messagingSenderId: "129539517826",
-    appId: "1:129539517826:web:c8473ed416e1edb247f39b",
-    measurementId: "G-LRJ1LTVEBM"
+
+    appId: "1:129539517826:web:41828f8012aceb2f47f39b",
+
+    measurementId: "G-C4CGCGVBLD"
+
 };
+
 
 // Ініціалізація
 const app = initializeApp(firebaseConfig);
