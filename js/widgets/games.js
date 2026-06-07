@@ -198,7 +198,6 @@ export class Games extends Widget {
     }
     //! TODO
     get genresFilterItems() {
-        return [];
         return Object.keys(GAME_GENRE_CODES).map((genreID) => ({
             type: inputTypes.CHECKBOX,
             label: GAME_GENRE_CODES[genreID],
@@ -206,7 +205,7 @@ export class Games extends Widget {
             onChange: (event) => {
                 const isChecked = event.currentTarget.checked;
                 let genres = this.genreFilter;
-                if (checkbox.checked) {
+                if (isChecked) {
                     genres.push(genreID);
                 } else {
                     genres = genres.filter(code => code != genreID);
@@ -355,7 +354,7 @@ export class Games extends Widget {
         // Filter by Genre
         if (this.genreFilter.length > 0) {
             result = result.filter(game =>
-                this.genreFilter.some(code => game.Genres?.includes(+code))
+                this.genreFilter.some(code => game.genres?.includes(+code))
             );
         }
 

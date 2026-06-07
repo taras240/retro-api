@@ -1,3 +1,4 @@
+import { GAME_GENRE_CODES } from "../../enums/gameGenres.js";
 import { fromHtml } from "../../functions/html.js";
 import { gameImageUrl } from "../../functions/raLinks.js";
 import { ui } from "../../script.js";
@@ -14,13 +15,17 @@ export function GameListElement(gameData, onRemove) {
     const gamePreview = fromHtml(`
         <img class="game-preview_image" src="${gameImageUrl(gameData.ImageIcon)}">
     `);
+    const genreBadges = gameData.genres
+        ?.map(genreID => badgeElements.green(GAME_GENRE_CODES[genreID]))
+        .join(" ");
+
     const gameTitle = fromHtml(`
         <h3 class="game-description_title">
             <button class="game-description_button" data-title="${ui.lang.showGameInfoHint}" data-id="${gameData.ID}" >
                     ${gameData.Title} 
                     ${gameData.Award ? badgeElements.gold(gameData.Award) : ""}
                     ${gameData.badges?.length ? generateBadges(gameData.badges, "black") : ""} 
-                    ${gameData.genres?.length ? generateBadges(gameData.genres, "green") : ""} 
+                    ${genreBadges?.length ? genreBadges : ""} 
             </button>
         </h3>
     `)
