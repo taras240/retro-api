@@ -97,7 +97,7 @@
                     src="https://media.retroachievements.org/Badge/${e.BadgeName}.png" alt="">
             </div>
 
-            <div class="user-info__cheevo-description">
+            <div class="user-info__cheevo-descriptions">
                 <h2 class="user-info__cheevo-title">${e.Title}</h2>
                 <p class="user-info__cheevo-description">${e.Description}</p>
             <div class="user-info__cheevo-stats-container">
