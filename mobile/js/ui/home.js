@@ -1,6 +1,8 @@
 import { generateBadges } from "./components/badges.js";
 import { sortBy } from "../functions/sort.js";
 import { apiWorker } from "../main.js";
+import { svgIcons } from "./components/svgIcons.js";
+import { toLocalString } from "../functions/time.js";
 
 let USER_INFO;
 export class Home {
@@ -22,24 +24,42 @@ export class Home {
 
     }
     async loadUserInfo() {
-        const resp = await apiWorker.getUserSummary({ gamesCount: 5, achievesCount: 8 });
+        const userData = await apiWorker.getUserSummary({ gamesCount: 5, achievesCount: 8 });
+        // const userData = await fetch("/json/apiTemplates/API_GetUserSummary.json").then(resp => resp.json()).then(summary => {
+        //     summary.RecentlyPlayed = summary.RecentlyPlayed.map(game => {
+        //         game.LastPlayed = apiWorker.toLocalTimeString(game.LastPlayed);
+        //         summary.Awarded[game.GameID] && (game = { ...game, ...summary.Awarded[game.GameID] })
+        //         game = apiWorker.fixGameTitle(game);
+        //         return game;
+        //     });
+        //     summary.RecentAchievements = Object.values(summary.RecentAchievements)
+        //         .flatMap(RecentAchievements => Object.values(RecentAchievements)).map(achiv => {
+        //             achiv.DateEarned = apiWorker.toLocalTimeString(achiv.DateAwarded);
+        //             return achiv;
+        //         });
+        //     summary.isInGame = (new Date() - new Date(summary.RecentlyPlayed[0].LastPlayed)) < 5 * 60 * 1000;
+
+        //     return summary;
+        // });;
+        // const gameData = JSON.parse(resp);
+        console.log(userData);
         USER_INFO = {
-            userName: resp.User,
-            status: resp.Status.toLowerCase(),
-            richPresence: resp.RichPresenceMsg,
-            memberSince: resp.MemberSince,
-            userImageSrc: `https://media.retroachievements.org${resp.UserPic}`,
-            userRank: resp.Rank ? `Rank: ${resp.Rank} (Top ${~~(10000 * resp.Rank / resp.TotalRanked) / 100}%)` : "Rank is unavailable",
-            softpoints: resp.TotalSoftcorePoints,
-            retropoints: resp.TotalTruePoints,
-            hardpoints: resp.TotalPoints,
-            lastGames: resp.RecentlyPlayed,
-            lastAchievements: resp.RecentAchievements.map(a => {
+            userName: userData.User,
+            status: userData.Status?.toLowerCase(),
+            richPresence: userData.RichPresenceMsg,
+            memberSince: userData.MemberSince,
+            userImageSrc: `https://media.retroachievements.org${userData.UserPic}`,
+            userRank: userData.Rank ? `Rank: ${userData.Rank} (Top ${~~(10000 * userData.Rank / userData.TotalRanked) / 100}%)` : "Rank is unavailable",
+            softpoints: userData.TotalSoftcorePoints,
+            retropoints: userData.TotalTruePoints,
+            hardpoints: userData.TotalPoints,
+            lastGames: userData.RecentlyPlayed,
+            lastAchievements: Object.values(userData.RecentAchievements).map(a => {
                 a.DateEarnedHardcore = a.DateAwarded;
                 return a;
             })
                 .sort((a, b) => sortBy.date(a, b)),
-            isInGame: resp.isInGame,
+            isInGame: userData.isInGame,
         }
     }
 
@@ -51,18 +71,18 @@ export class Home {
       <div class="user-info__container">
       
         <ul class="user-info__last-games-list">
-          <h2 class="user-info__block-header">Recently played</h2>
-          ${USER_INFO.lastGames.reduce((elements, game) => {
-            const gameHtml = this.gameHtml(game);
-            elements += gameHtml;
-            return elements;
-        }, "")}
-        </ul>
-        <ul class="user-info__last-games-list">
         <h2 class="user-info__block-header">Last cheevos</h2>
           ${USER_INFO.lastAchievements.reduce((elements, achievement) => {
             const achievementHtml = this.achievementHtml(achievement);
             elements += achievementHtml;
+            return elements;
+        }, "")}
+        </ul>
+        <ul class="user-info__last-games-list">
+          <h2 class="user-info__block-header">Recently played</h2>
+          ${USER_INFO.lastGames.reduce((elements, game) => {
+            const gameHtml = this.gameHtml(game);
+            elements += gameHtml;
             return elements;
         }, "")}
         </ul>
@@ -134,7 +154,7 @@ export class Home {
 
               <div class="user-info__game-description" >
                   <h2 class="user-info__game-title">${game.FixedTitle} ${generateBadges(game.badges)}</h2>
-                  <div class="game-stats__text">${fixTimeString(game.LastPlayed)} | ${game.ConsoleName}</div>
+                  <div class="game-stats__text">${toLocalString(game.LastPlayed)} | ${game.ConsoleName}</div>
                   <div  class="game-stats__button"  onclick="ui.expandGameItem(${game.GameID},this); event.stopPropagation()">
                     <i class="game-stats__icon game-stats__expand-icon"></i>
                   </div>
@@ -171,27 +191,23 @@ export class Home {
         // }
 
         return `
-      <li class="achiv__achiv-container">
-        <div class="achiv__title-container achiv__title-container_small" 
+      <li class="user-info__cheevo-container">
+        <div class="user-info__cheevo-title-container" 
            onclick="ui.showAchivDetails(${achiv.ID}, ${achiv.GameID}); event.stopPropagation()">
-            <div class="achiv__preview-container">
-                <img class="user-info__achiv-preview ${achiv.HardcoreAchieved || (ui.isSoftmode && achiv.IsAwarded) ? "earned" : ""}"
+            <div class="user-info__cheevo-preview-container">
+                <img class="user-info__cheevo-preview ${achiv.HardcoreAchieved || (ui.isSoftmode && achiv.IsAwarded) ? "earned" : ""}"
                     src="https://media.retroachievements.org/Badge/${achiv.BadgeName}.png" alt="">
             </div>
 
-            <div class="achiv__achiv-description">
-                <h2 class="achiv__achiv-title">${achiv.Title}</h2>
-                <p class="achiv__achiv-text">${achiv.Description}</p>
-            <div class="user-info_game-stats-container">
-              <div class="game-stats">
-                  <i class="game-stats__icon game-stats__points-icon"></i>
-                  <div class="game-stats__text">${achiv.Points}</div>
-              </div>  
-              <div class="game-stats ">
-                  <div class="game-stats__text">${fixTimeString(achiv.DateEarned)}</div>
-              </div>  
+            <div class="user-info__cheevo-description">
+                <h2 class="user-info__cheevo-title">${achiv.Title}</h2>
+                <p class="user-info__cheevo-description">${achiv.Description}</p>
+            <div class="user-info__cheevo-stats-container">
+                <p class="user-info__cheevo-stats-text">
+                ${svgIcons.points} ${achiv.Points} Points</p>
+                <p class="game-stats__text cheevo-stats__unlocked">${getDeltaTime(achiv.DateEarned)}</p>
             </div>
-          </div>            
+          </div>
         </div>
         
       </li>
@@ -200,17 +216,31 @@ export class Home {
     }
 
 }
-const fixTimeString = (
-    (dateString) => {
-        const date = new Date(dateString);
-        const options = {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: false,
-        };
-        return date.toLocaleDateString("uk-UA", options);
-    }
-)
+
+
+const getDeltaTime = (dateString) => {
+    const date = new Date(dateString);
+    const time = date.getTime();
+    const now = Date.now();
+    const deltaMin = Math.round((now - date) / 6e4);
+
+
+    if (deltaMin < 2) return "just now";
+    if (deltaMin < 60) return deltaMin + " minutes ago";
+
+    const deltaH = Math.round(deltaMin / 60);
+
+    if (deltaH < 24) return deltaH + " hours ago";
+    else return date.toLocaleString();
+    const deltaDays = Math.round(deltaH / 24);
+    if (deltaDays < 2) return "yesterday";
+    if (deltaDays < 7) return deltaDays + " days ago";
+
+    const deltaWeeks = Math(deltaDays / 7);
+    if (deltaWeeks < 2) return "last week";
+
+    if (deltaWeeks < 5) return "few weeks ago";
+
+
+
+}

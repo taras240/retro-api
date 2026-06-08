@@ -9,6 +9,7 @@ import { Loader } from "./ui/components/loader.js";
 import { sortBy } from "./functions/sort.js";
 import { delay } from "./functions/delay.js";
 import { RAPlatforms } from "./enums/RAPlatforms.js";
+import { toLocalString } from "./functions/time.js";
 
 export let USER_INFO;
 export let GAMES_DATA = {};
@@ -328,8 +329,8 @@ export class UI {
         <div class="popup-info__property">Total players: <span>${achiv?.totalPlayers}</span></div>
         <div class="popup-info__property">Earned by: <span>${achiv?.NumAwarded}</span></div>
         <div class="popup-info__property">Earned harcore by: <span>${achiv?.NumAwardedHardcore}</span></div>
-        ${achiv?.isEarned ? `<div class="popup-info__property">Date earned : <span>${fixTimeString(achiv?.DateEarned)}</span></div>` : ''}
-        ${achiv?.isHardcoreEarned ? `<div class="popup-info__property">Date earned hardcore: <span>${fixTimeString(achiv?.DateEarnedHardcore)}</span></div>` : ''}
+        ${achiv?.isEarned ? `<div class="popup-info__property">Date earned : <span>${toLocalString(achiv?.DateEarned)}</span></div>` : ''}
+        ${achiv?.isHardcoreEarned ? `<div class="popup-info__property">Date earned hardcore: <span>${toLocalString(achiv?.DateEarnedHardcore)}</span></div>` : ''}
         <div class="popup-info__property">Date created : <span>${new Date(achiv?.DateCreated).toLocaleDateString()}</span></div>
         <div class="popup-info__property">Author : <span>${achiv?.Author}</span></div>
     </div>

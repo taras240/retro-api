@@ -116,7 +116,7 @@
     display: flex;
     flex-direction: column;
     align-items: start;
-    gap: 0.75rem;
+    gap: 0.25rem;
     width: 100%;
     overflow-y: scroll;
     padding: 0 1rem;
@@ -124,7 +124,8 @@
     min-width: 100vw;
 }
 
-.user-info__last-game-container {
+.user-info__last-game-container,
+.user-info__cheevo-container {
     width: 100%;
     background-color: var(--secondary-color);
     border-radius: 0.5rem;
@@ -133,70 +134,107 @@
     flex-shrink: 0;
 }
 
-.user-info__game-main-info {
+.user-info__game-main-info,
+.user-info__cheevo-title-container {
     width: 100%;
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
     gap: 1rem;
-    padding: .75rem;
-    height: 6.5rem;
+    padding: .5rem;
+    height: 5rem;
 }
 
-.user-info__game-preview-container {
+.user-info__game-preview-container,
+.user-info__cheevo-preview-container {
     height: 100%;
+    border-radius: 0.5rem;
+    border: 2px solid goldenrod;
+    overflow: clip;
 }
 
-.user-info__game-preview {
+.user-info__game-preview,
+.user-info__cheevo-preview {
     height: 100%;
     aspect-ratio: 1;
-    border-radius: 15%;
 }
 
-.user-info__game-description {
+.user-info__game-description,
+.user-info__cheevo-descriptions {
     position: relative;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: start;
-    height: 100%;
     width: 100%;
     overflow: hidden;
 }
 
-.user-info__game-title {
-    font-size: 1.2rem;
-    font-weight: 400;
+.user-info__cheevo-description {
+    overflow-x: scroll;
+    white-space: nowrap;
+    font-size: 1rem;
+    width: 100%;
+
+}
+
+.user-info__game-title,
+.user-info__cheevo-title {
+    font-size: 1rem;
+    font-weight: bold;
     max-width: 100%;
     overflow-x: scroll;
     text-wrap: nowrap;
+    overflow: visible;
 }
 
-.user-info_game-stats-container {
+.user-info__cheevo-stats-container {
     position: relative;
     width: 100%;
     display: flex;
+    flex-direction: row;
     align-items: center;
-    justify-content: start;
+    justify-content: space-between;
     overflow-x: scroll;
-    column-gap: 2rem;
-    flex-wrap: wrap;
+    column-gap: 0.5rem;
+    flex-wrap: nowrap;
 }
 
-.game-stats {
+.user-info__cheevo-stats {
     position: relative;
     display: flex;
+    flex-direction: row;
     gap: .1rem;
     align-items: center;
 }
 
-.game-stats.game-stats_flex-start {
-    justify-content: flex-start;
+.user-info__cheevo-stats-text {
+    font-size: 0.9rem;
+    color: #a33fff;
+}
+
+.game-stats__text.cheevo-stats__unlocked {
+    opacity: 0.5;
+    font-size: 0.9rem;
+
+}
+
+.user-info_game-stats-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+}
+
+.game-stats {
+    display: flex;
+    gap: 0.25rem;
+    align-items: center;
 }
 
 .game-stats__text {
     text-wrap: nowrap;
-    font-size: 1rem;
+    font-size: 0.9rem;
 }
 
 .game-stats__difficult-container {
@@ -208,7 +246,7 @@
 
 .game-stats__icon {
     display: inline-block;
-    height: 1.4rem;
+    height: 1.2rem;
     aspect-ratio: 1;
     background-color: var(--font-color);
     mask-size: contain;
