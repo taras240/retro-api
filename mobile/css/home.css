@@ -22,7 +22,7 @@
 
 .user-info__avatar-container {
     position: relative;
-    height: 7rem;
+    height: 6rem;
     aspect-ratio: 1;
     border-radius: 0.5rem;
     overflow: hidden;
@@ -31,8 +31,6 @@
 .user-info__avatar {
     height: 100%;
     aspect-ratio: 1;
-
-    border: 1px solid var(--secondary-color);
 }
 
 .user-info__user-name-container {
@@ -51,11 +49,11 @@
 
 .user-info__user-rank {
     justify-self: flex-start;
-    font-size: 1.2rem;
-    font-weight: 600;
+    font-size: 1rem;
+    font-weight: bold;
     background-color: var(--accent-color);
-    padding: 5px 10px;
-    border-radius: .5rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: .25rem;
     color: var(--main-color);
 }
 
@@ -63,7 +61,7 @@
     max-width: 100%;
     overflow-x: scroll;
     text-wrap: nowrap;
-    font-size: 1.1rem;
+    font-size: 1rem;
 }
 
 .user-info__points-container {
@@ -104,10 +102,26 @@
 }
 
 .user-info__block-header {
-    font-size: 1.3rem;
-    font-weight: 600;
-    text-align: center;
+    position: relative;
+    padding-bottom: 0.5rem;
     width: 100%;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.user-info__block-header h2 {
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-align: start;
+}
+
+.user-info__block-header p {
+    color: var(--accent-color);
+    font-size: 1rem;
+    font-weight: normal;
+    text-align: right;
 }
 
 .user-info__last-games-list {
@@ -120,7 +134,7 @@
     width: 100%;
     overflow-y: scroll;
     padding: 0 1rem;
-    padding-bottom: 6rem;
+    padding-bottom: 4rem;
     min-width: 100vw;
 }
 
@@ -196,6 +210,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    overflow-y: visible;
     overflow-x: scroll;
     column-gap: 0.5rem;
     flex-wrap: nowrap;
@@ -210,8 +225,9 @@
 }
 
 .user-info__cheevo-stats-text {
+    position: relative;
     font-size: 0.9rem;
-    color: #a33fff;
+    color: var(--accent-color);
 }
 
 .game-stats__text.cheevo-stats__unlocked {

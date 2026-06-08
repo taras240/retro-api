@@ -3,6 +3,7 @@ import { sortBy } from "../functions/sort.js";
 import { apiWorker } from "../main.js";
 import { svgIcons } from "./components/svgIcons.js";
 import { toLocalString } from "../functions/time.js";
+import { fromHtml } from "../../../js/functions/html.js"
 
 let USER_INFO;
 export class Home {
@@ -40,9 +41,7 @@ export class Home {
         //     summary.isInGame = (new Date() - new Date(summary.RecentlyPlayed[0].LastPlayed)) < 5 * 60 * 1000;
 
         //     return summary;
-        // });;
-        // const gameData = JSON.parse(resp);
-        console.log(userData);
+        // });
         USER_INFO = {
             userName: userData.User,
             status: userData.Status?.toLowerCase(),
@@ -64,33 +63,34 @@ export class Home {
     }
 
     HomeSection() {
-        const homeSection = document.createElement("section");
-        homeSection.classList.add("home__section", "section");
-        homeSection.innerHTML = `
-      ${this.headerHtml()}
-      <div class="user-info__container">
-      
-        <ul class="user-info__last-games-list">
-        <h2 class="user-info__block-header">Last cheevos</h2>
-          ${USER_INFO.lastAchievements.reduce((elements, achievement) => {
+        const homeSection = fromHtml(`
+            <section class="home__section section">
+                ${this.headerHtml()}
+                <div class="user-info__container">
+                    <ul class="user-info__last-games-list">
+                        <button  class="user-info__block-header">
+                            <h2>Last Unlocks</h2>
+                            <p style="display:none">See more</p>
+                        </button>
+                        ${USER_INFO.lastAchievements.reduce((elements, achievement) => {
             const achievementHtml = this.achievementHtml(achievement);
             elements += achievementHtml;
             return elements;
         }, "")}
-        </ul>
-        <ul class="user-info__last-games-list">
-          <h2 class="user-info__block-header">Recently played</h2>
-          ${USER_INFO.lastGames.reduce((elements, game) => {
+                        <button  class="user-info__block-header">
+                            <h2>Recently Played</h2>
+                            <p style="display:none">See more</p>
+                        </button>
+                        ${USER_INFO.lastGames.reduce((elements, game) => {
             const gameHtml = this.gameHtml(game);
             elements += gameHtml;
             return elements;
         }, "")}
-        </ul>
-        
-      </div>
-    `;
+                    </ul>
+                </div>
+            </section
+        `);
         return homeSection;
-
     }
 
     headerHtml() {
@@ -112,10 +112,10 @@ export class Home {
         ${USER_INFO.isInGame ? `
         <div class="user-info__rich-presence"> ${USER_INFO.richPresence}</div>
         `: ""}
-        ${this.pointsHtml()}
+        
         
       </div>
-    `;
+    `;//${this.pointsHtml()}
     }
     pointsHtml() {
         return `
@@ -203,7 +203,7 @@ export class Home {
                 <h2 class="user-info__cheevo-title">${achiv.Title}</h2>
                 <p class="user-info__cheevo-description">${achiv.Description}</p>
             <div class="user-info__cheevo-stats-container">
-                <p class="user-info__cheevo-stats-text">
+                <p class="user-info__cheevo-stats-text points">
                 ${svgIcons.points} ${achiv.Points} Points</p>
                 <p class="game-stats__text cheevo-stats__unlocked">${getDeltaTime(achiv.DateEarned)}</p>
             </div>
