@@ -263,6 +263,10 @@
     mask-image: url(../assets/img/close.svg);
 }
 
+.export-icon {
+    mask-image: url(../assets/img/download.svg);
+}
+
 .pins-icon {
     mask-image: url(../assets/img/bookmark.svg);
 
@@ -559,7 +563,7 @@
 }
 
 .edit-icon {
-    mask-image: url(../assets/img/edit.svg)
+    mask-image: url(../assets/img/edit-2.svg)
 }
 
 .discord-icon {

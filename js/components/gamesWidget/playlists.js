@@ -24,6 +24,14 @@ export function PlaylistItem({ playlistData, onClick, onEdit }) {
     `);
     if (editable) {
         const controlsContainer = playlistItem.querySelector(".list-item-controls");
+
+        const exportButton = fromHtml(buttonsHtml.exportButton({ ID: title }));
+        controlsContainer.append(exportButton);
+        exportButton.addEventListener("click", (e) => {
+            e.stopPropagation();
+            onEdit({ title, isExport: true });
+        })
+
         const editButton = fromHtml(buttonsHtml.editButton({ ID: title }));
         controlsContainer.append(editButton);
         editButton.addEventListener("click", (e) => {
@@ -43,15 +51,14 @@ export function PlaylistItem({ playlistData, onClick, onEdit }) {
             }
 
         })
+
         const removeButton = fromHtml(buttonsHtml.delete());
         controlsContainer.append(removeButton);
         removeButton.addEventListener("click", (e) => {
             e.stopPropagation();
-
             onEdit({ title, isRemoved: true });
-
-
         })
+
     }
 
     playlistItem.dataset.displayOrder = displayOrder;

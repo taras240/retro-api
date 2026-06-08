@@ -16,6 +16,7 @@ export const buttonsHtml = {
         ${`data-id="${ID}"`} 
         ${onClick ? `onclick="${onClick}"` : ""}>
     </button>`,
+    exportButton: ({ }) => `<button class="header-icon header-button export-icon" data-title="${ui.lang.export}"/>`,
     editGameProps: (onClick) => editPropsButtons(true),
     editCheevoProps: (cheevoID, onClick) => editPropsButtons(false, cheevoID, onClick),
 

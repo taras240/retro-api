@@ -342,5 +342,7 @@
     "timeToMaster": "Time To Master",
     "showInTracker": "Show In Tracker",
     "addToPlaylist": "Add To Playlist",
-    "progressionTimeDep": "Time-based progression"
+    "progressionTimeDep": "Time-based progression",
+    "export": "Export",
+    "edit": "Edit"
 }

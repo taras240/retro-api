@@ -20,6 +20,8 @@ import { fromHtml } from "../functions/html.js";
 import { GameListElement } from "../components/gamesWidget/gameItem.js";
 import { GameCardElement } from "../components/gamesWidget/gameCard.js";
 import { PlaylistsContainer } from "../components/gamesWidget/playlists.js";
+import { lazyLoad } from "../functions/lazyLoad.js";
+import { downloadJSON } from "../functions/exportData.js";
 
 export class Games extends Widget {
     widgetIcon = {
@@ -116,7 +118,6 @@ export class Games extends Widget {
         {
             type: inputTypes.SEARCH_INPUT,
             label: ui.lang.search,
-            value: "",
             title: ui.lang.searchGameInputHint,
             onInput: (event) => {
                 const searchbarValue = event.target.value;
@@ -218,7 +219,7 @@ export class Games extends Widget {
         this.updateGamesList();
     }
     get releaseDateFilter() {
-        return this.__releaseDateFilter ?? { from: -Infinity, to: Infinity };
+        return this.__releaseDateFilter ?? { from: 0, to: Infinity };
     }
 
     set playersCountFilter(value) {
@@ -226,42 +227,42 @@ export class Games extends Widget {
         this.updateGamesList();
     }
     get playersCountFilter() {
-        return this.__playersCountFilter ?? { from: -Infinity, to: Infinity };
+        return this.__playersCountFilter ?? { from: 0, to: Infinity };
     }
     set beatenRateFilter(value) {
         this.__beatenRateFilter = value;
         this.updateGamesList();
     }
     get beatenRateFilter() {
-        return this.__beatenRateFilter ?? { from: -Infinity, to: Infinity };
+        return this.__beatenRateFilter ?? { from: 0, to: Infinity };
     }
     set masteryRateFilter(value) {
         this.__masteryRateFilter = value;
         this.updateGamesList();
     }
     get masteryRateFilter() {
-        return this.__masteryRateFilter ?? { from: -Infinity, to: Infinity };
+        return this.__masteryRateFilter ?? { from: 0, to: Infinity };
     }
     set trueRatioFilter(value) {
         this.__trueRatioFilter = value;
         this.updateGamesList();
     }
     get trueRatioFilter() {
-        return this.__trueRatioFilter ?? { from: -Infinity, to: Infinity };
+        return this.__trueRatioFilter ?? { from: 0, to: Infinity };
     }
     set cheevosFilter(value) {
         this.__cheevosFilter = value;
         this.updateGamesList();
     }
     get cheevosFilter() {
-        return this.__cheevosFilter ?? { from: -Infinity, to: Infinity };
+        return this.__cheevosFilter ?? { from: 0, to: Infinity };
     }
     set ppcFilter(value) {
         this.__ppcFilter = value;
         this.updateGamesList();
     }
     get ppcFilter() {
-        return this.__ppcFilter ?? { from: -Infinity, to: Infinity };
+        return this.__ppcFilter ?? { from: 0, to: Infinity };
     }
     set hltbFilter(value) {
         this.__hltbFilter = value;
@@ -580,10 +581,10 @@ export class Games extends Widget {
     addEvents() {
         super.addEvents();
 
-        const gamesList = this.container.querySelector("#games-list");
+
         const playlistsContainer = this.container.querySelector("#games_playlists");
 
-        gamesList.addEventListener('dragstart', e => {
+        this.gamesList.addEventListener('dragstart', e => {
             const game = e.target.closest('.games__game-item');
             if (!game) return;
             e.dataTransfer.setData('gameID', game.dataset.id);
@@ -687,7 +688,6 @@ export class Games extends Widget {
         this.updatePlaylists();
     }
     async getAllGames() {
-        this.GAMES = {};
 
         try {
             const gamesJson = await gamesFromJson();
@@ -766,8 +766,9 @@ export class Games extends Widget {
             [title]: playlistObject,
         }
     }
-    editPlaylist(props) {
-        const { title, newTitle, isRemoved } = props;
+    async editPlaylist(props) {
+        const { title, newTitle, isRemoved, isExport } = props;
+        if (!this.GAMES) await this.loadGames();
         if (newTitle) {
             if (!this.playlists[newTitle]) {
                 const edited = {
@@ -780,6 +781,15 @@ export class Games extends Widget {
         }
         else if (isRemoved) {
             delete this.uiProps.userPlaylists[title];
+        }
+        else if (isExport) {
+            const gameIDArray = this.playlists[title].games;
+            const playlistGames = this.GAMES
+                ?.filter(game => gameIDArray.includes(game.ID))
+                .map(({ Title, ID, ConsoleID, Award }) =>
+                    ({ Title, ID, ConsoleName: RA_PLATFORM_CODES[ConsoleID].Name, Award }));
+
+            downloadJSON(playlistGames, `${title}_rcplaylist`);
         }
         this.uiProps.userPlaylists = this.uiProps.userPlaylists;
     }
@@ -805,7 +815,7 @@ export class Games extends Widget {
         }
     }
     async openPlaylist(playlistName) {
-        if (!Object.keys(this.GAMES ?? {}).length) {
+        if (!this.GAMES) {
             await this.loadGames();
         }
         if (!this.playlists[playlistName]) playlistName = null;
@@ -909,7 +919,7 @@ export class Games extends Widget {
                         </div>
                     `);
                 const menuContent = fromHtml(`
-                        <div class="side-menu__item-inputs ${submenuClass}"></div>
+                        <div class="side-menu__item-inputs ${submenuClass}"/>
                     `);
                 if (submenu) {
                     menuContent.append(this.sideMenuElement(submenu, title));
@@ -941,45 +951,4 @@ export class Games extends Widget {
         return sideMenu;
     }
 }
-function lazyLoad({ list, items, elementGenerator }) {
-    const trigger = document.createElement("div");
-    trigger.classList.add("lazy-load_trigger")
-    list.appendChild(trigger);
-
-    // Ініціалізація списку з початковими елементами
-    let itemIndex = 0;
-    const initialLoadCount = 20;
-    const loadItems = (count) => {
-        for (let i = 0; i < count && itemIndex < items.length; i++) {
-            list.appendChild(elementGenerator(items[itemIndex++]));
-        }
-    };
-    loadItems(initialLoadCount);
-
-    // Callback функція для Intersection Observer
-    const loadMoreItems = (entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                loadItems(initialLoadCount);
-                // Оновлюємо спостереження
-                observer.unobserve(trigger);
-                list.appendChild(trigger);
-                itemIndex < items.length && observer.observe(trigger);
-            }
-        });
-    };
-    // Налаштування Intersection Observer
-    const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 1.0
-    };
-    const observer = new IntersectionObserver(loadMoreItems, observerOptions);
-
-    // Початкове спостереження за тригером
-    observer.observe(trigger);
-}
-
-
-
 const googleQuerySite = 'site:www.romhacking.net OR site:wowroms.com/en/roms OR site:cdromance.org OR site:coolrom.com.au/roms OR site:planetemu.net OR site:emulatorgames.net OR site:romsfun.com/roms OR site:emu-land.net/en';
