@@ -512,6 +512,7 @@ export class Status extends Widget {
         const isLegacy = this.theme === Status.themes.legacy;
         const widgetID = isLegacy ? "update-section" : "rp__section";
         const headerElementsHtml = `
+            ${buttonsHtml.comments()}
             ${buttonsHtml.tweek()}
         `;
 

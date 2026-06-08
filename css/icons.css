@@ -507,7 +507,7 @@
 }
 
 .tweak-icon {
-    mask-image: url(../assets/img/tune.svg)
+    mask-image: url(../assets/img/settings-2.svg)
 }
 
 .close-icon {
@@ -551,7 +551,7 @@
 }
 
 .settings-icon {
-    mask-image: url(../assets/img/settings.svg)
+    mask-image: url(../assets/img/settings-2.svg)
 }
 
 .guide-icon {
@@ -559,7 +559,7 @@
 }
 
 .chat-icon {
-    mask-image: url(../assets/img/chat.svg)
+    mask-image: url(../assets/img/comments.svg)
 }
 
 .edit-icon {
