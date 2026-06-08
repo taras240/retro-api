@@ -20,6 +20,7 @@ export const platformsByManufacturer = {
         "Game Boy Advance": "5",
         "Virtual Boy": "28",
         "Nintendo DS": "18",
+        "Nintendo Wii": "19",
         "Nintendo DSi": "78",
         "Pokemon Mini": "24"
     },

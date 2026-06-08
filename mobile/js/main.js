@@ -1,12 +1,15 @@
-"use strict";
+import { APIWorker } from "./apiWorker.js";
+import { Config } from "./config.js";
+import { UI } from "./ui-mobile.js";
+import { generateContextMenu } from "./ui/components/contextMenu.js";
+
 const config = new Config();
 const apiWorker = new APIWorker();
 const ui = new UI();
-const GAMES_DATA = {};
-let USER_INFO;
-let AWARDS;
 
-function submitRAData() {
+window.ui = ui;
+window.generateContextMenu = generateContextMenu;
+window.submitRAData = () => {
   let userName = ui.content.querySelector("#login_user-name").value;
   let apiKey = ui.content.querySelector("#login__api-key").value;
 
@@ -41,3 +44,5 @@ function updateLogin({ userName, apiKey, userObj }) {
   submitButton.classList.remove("error");
   submitButton.classList.add("verified");
 }
+
+export { config, apiWorker, ui }

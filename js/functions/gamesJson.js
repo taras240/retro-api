@@ -31,8 +31,8 @@ const unpackMinJson = (gamesMinJson) => {
     })
     return gamesJson;
 }
-export const gamesFromJson = async () => {
-    const gamesResponse = await fetch(gamesJsonUrl);
+export const gamesFromJson = async (path = gamesJsonUrl) => {
+    const gamesResponse = await fetch(path);
     const gamesMinJson = await gamesResponse.json();
     const gamesJson = unpackMinJson(gamesMinJson);
     return gamesJson;

@@ -1,5 +1,6 @@
-"use strict";
-class APIWorker {
+import { config } from "./main.js";
+
+export class APIWorker {
   get _savedCompletionProgress() {
     return config._cfg?.apiWorker?.completionProgress ?? {}
   }

@@ -10,6 +10,7 @@
   },
   "scripts": {
     "js": "npx esbuild js/script.js --bundle --minify --outfile=dist/app.js",
+    "mobile-js": "npx esbuild mobile/js/main.js --bundle --minify --outfile=mobile/dist/app.js",
     "css": "postcss css/style.css -o dist/style.css"
   },
   "devDependencies": {
