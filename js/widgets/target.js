@@ -479,6 +479,13 @@ export class Target extends Widget {
             return value < 0 ? 0 : value;
         }
     };
+    get isDisplayOrderChanged() {
+        return this.__isDisplayOrderChanged;
+    }
+    set isDisplayOrderChanged(value) {
+        this.__isDisplayOrderChanged = value;
+        this.section.classList.toggle("has-unsaved-order", value);
+    }
     updateHiddenSets(setID) {
         let hiddenIDArray = this.uiProps.hiddenSets;
         if (!hiddenIDArray?.length) hiddenIDArray = [];
@@ -515,9 +522,10 @@ export class Target extends Widget {
     generateWidget() {
         const widgetID = "target_section" + this.ID;
         const headerElementsHtml = `
-        ${buttonsHtml.togglePins()}
+            ${buttonsHtml.togglePins()}
             ${buttonsHtml.filter(widgetID)}
             ${buttonsHtml.sort(widgetID)}
+            ${buttonsHtml.saveData({ className: "save-order-button", hint: ui.lang.saveAsCustomOrder, id: `${widgetID}-save-order` })}
             ${buttonsHtml.tweek()}
             <input type="search" name="" id="target__searchbar" class="text-input target__search-bar" placeholder="${ui.lang.search}">
             ${buttonsHtml.external(widgetID)}
@@ -615,9 +623,9 @@ export class Target extends Widget {
     }
     addEvents() {
         super.addEvents();
-        // this.section.addEventListener("drop", (event) => {
-        //   console.log(event);
-        // })
+        this.section.querySelector(`#${this.sectionID}-save-order`)?.addEventListener("click", event => {
+            this.saveAsCustomOrder();
+        });
         this.section.querySelector(`#${this.sectionID}-filter-button`)?.addEventListener("click", event => {
             ui.showContextmenu({ event, menuItems: this.contextFilterMenu().elements, sectionCode: this.SECTION_NAME })
         });
@@ -688,18 +696,9 @@ export class Target extends Widget {
                 },
                 onUpdate: () => {
                     if (pull) {
-                        if (this.uiProps.sortName === cheevosSortNames.CUSTOM_ORDER) {
-                            const items = this.container.querySelectorAll("li.target-achiv");
-                            const gameData = watcher.GAME_DATA;
-                            saveOrder({ gameData, items, config });
-                            UIEvents.dispatchEvent(new CustomEvent(UI_EVENTS_LIST.customOrderChanged, {}));
-                        }
-                        else {
-                            this.applySort({ animation: 0 });
-                        }
+                        this.isDisplayOrderChanged = true;
                     } //main container doesn't save order
                     else {
-
                         const pinnedIDs = [...container.querySelectorAll(".target-achiv")]?.map(elem => +elem.dataset.achivId);
                         this.savePinnedData(pinnedIDs);
                         this.fillPinnedItems(pinnedIDs);
@@ -787,6 +786,14 @@ export class Target extends Widget {
         this.setElementsValues();
         this.startAutoScroll();
     }
+    saveAsCustomOrder() {
+        const items = this.container.querySelectorAll("li.target-achiv");
+        const gameData = watcher.GAME_DATA;
+        saveOrder({ gameData, items, config });
+        this.isDisplayOrderChanged = false;
+        UIEvents.dispatchEvent(new CustomEvent(UI_EVENTS_LIST.customOrderChanged, {}));
+        this.onCustomOrderChanged({});
+    }
     onCustomOrderChanged() {
         if (this.uiProps.sortName === cheevosSortNames.CUSTOM_ORDER) {
             const cheevos = watcher.CHEEVOS;
@@ -803,6 +810,7 @@ export class Target extends Widget {
         //     this.filters = this.uiProps.filters
         // }
         this.genreFilter = "";
+        this.isDisplayOrderChanged = false;
         this.uiProps.autoFillTarget && this.fillItems();
         this.uiProps.autoClearTarget && this.clearEarned();
         this.fillPinnedItems();

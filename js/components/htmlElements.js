@@ -1,3 +1,4 @@
+import { getRandomID } from "../functions/randomID.js";
 import { ui } from "../script.js";
 
 const editPropsButtons = (isGame, ID, onClick) => `
@@ -17,6 +18,7 @@ export const buttonsHtml = {
         ${onClick ? `onclick="${onClick}"` : ""}>
     </button>`,
     exportButton: ({ }) => `<button class="header-icon header-button export-icon" data-title="${ui.lang.export}"/>`,
+    saveData: ({ hint, id, className }) => `<button id="${id || getRandomID()}" class="header-icon header-button save-icon ${className ?? ""}" data-title="${hint ?? ui.lang.saveData}"></button>`,
     editGameProps: (onClick) => editPropsButtons(true),
     editCheevoProps: (cheevoID, onClick) => editPropsButtons(false, cheevoID, onClick),
 

@@ -345,5 +345,6 @@
     "progressionTimeDep": "Time-based progression",
     "export": "Export",
     "edit": "Edit",
-    "playlist": "Playlist"
+    "playlist": "Playlist",
+    "saveAsCustomOrder": "Save as Custom Order"
 }

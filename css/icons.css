@@ -546,6 +546,11 @@
     mask-image: url(../assets/img/note.svg)
 }
 
+.save-icon {
+    mask-image: url(../assets/img/save.svg);
+    mask-size: 85%;
+}
+
 .notification-icon {
     mask-image: url(../assets/img/notifications.svg)
 }

@@ -47,6 +47,14 @@
   background: transparent;
 }
 
+.target_section .save-order-button {
+  display: none;
+}
+
+.target_section.has-unsaved-order .save-order-button {
+  display: block;
+}
+
 .target__pinned-list {
   flex-shrink: 0;
   --secondary-color: var(--main-color);
