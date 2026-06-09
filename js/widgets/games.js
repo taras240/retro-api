@@ -223,7 +223,7 @@ export class Games extends Widget {
         this.updateGamesList();
     }
     get releaseDateFilter() {
-        return this.__releaseDateFilter ?? { from: 0, to: Infinity };
+        return this.__releaseDateFilter ?? { from: -Infinity, to: Infinity };
     }
 
     set playersCountFilter(value) {
@@ -231,56 +231,56 @@ export class Games extends Widget {
         this.updateGamesList();
     }
     get playersCountFilter() {
-        return this.__playersCountFilter ?? { from: 0, to: Infinity };
+        return this.__playersCountFilter ?? { from: -Infinity, to: Infinity };
     }
     set beatenRateFilter(value) {
         this.__beatenRateFilter = value;
         this.updateGamesList();
     }
     get beatenRateFilter() {
-        return this.__beatenRateFilter ?? { from: 0, to: Infinity };
+        return this.__beatenRateFilter ?? { from: -Infinity, to: Infinity };
     }
     set masteryRateFilter(value) {
         this.__masteryRateFilter = value;
         this.updateGamesList();
     }
     get masteryRateFilter() {
-        return this.__masteryRateFilter ?? { from: 0, to: Infinity };
+        return this.__masteryRateFilter ?? { from: -Infinity, to: Infinity };
     }
     set trueRatioFilter(value) {
         this.__trueRatioFilter = value;
         this.updateGamesList();
     }
     get trueRatioFilter() {
-        return this.__trueRatioFilter ?? { from: 0, to: Infinity };
+        return this.__trueRatioFilter ?? { from: -Infinity, to: Infinity };
     }
     set cheevosFilter(value) {
         this.__cheevosFilter = value;
         this.updateGamesList();
     }
     get cheevosFilter() {
-        return this.__cheevosFilter ?? { from: 0, to: Infinity };
+        return this.__cheevosFilter ?? { from: -Infinity, to: Infinity };
     }
     set ppcFilter(value) {
         this.__ppcFilter = value;
         this.updateGamesList();
     }
     get ppcFilter() {
-        return this.__ppcFilter ?? { from: 0, to: Infinity };
+        return this.__ppcFilter ?? { from: -Infinity, to: Infinity };
     }
     set hltbFilter(value) {
         this.__hltbFilter = value;
         this.updateGamesList();
     }
     get hltbFilter() {
-        return this.__hltbFilter ?? { from: 0, to: Infinity };
+        return this.__hltbFilter ?? { from: -Infinity, to: Infinity };
     }
     set hltmFilter(value) {
         this.__hltmFilter = value;
         this.updateGamesList();
     }
     get hltmFilter() {
-        return this.__hltmFilter ?? { from: 0, to: Infinity };
+        return this.__hltmFilter ?? { from: -Infinity, to: Infinity };
     }
     set platformFilter(value) {
         let platformCodes = value.filter(code => Object.keys(RA_PLATFORM_CODES).includes(code));
