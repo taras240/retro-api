@@ -524,6 +524,9 @@ export class Settings extends Widget {
             this.contextSwitchSetsMenu(),
             this.contextSetsMenu(),
             {
+                type: inputTypes.DIVIDER,
+            },
+            {
                 label: ui.lang.selectColors,
                 elements: [
                     ...Object.keys(colorPresets).map(presetName => ({

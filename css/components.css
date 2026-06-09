@@ -898,6 +898,19 @@ input:checked+.checkbox-input::before {
     position: absolute;
 }
 
+.context__divider {
+    width: 90%;
+    height: 1px;
+    background: var(--font-color);
+    opacity: 0.2;
+    margin: 0.25em auto;
+    pointer-events: none;
+}
+
+.context__divider:where(:first-child, :last-child) {
+    display: none;
+}
+
 .to-top .context-submenu {
     transform: translateY(calc(-100% + var(--submenu-margin)));
 }

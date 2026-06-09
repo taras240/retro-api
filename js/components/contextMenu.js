@@ -40,10 +40,13 @@ const generateContextMenu = ({ menuItems, sectionCode = "", isSubmenu = false })
     return contextElement;
 }
 const ContextInput = (props) => {
-    const { onChange, onClick, onInput, hint } = props;
+    const { onChange, onClick, onInput, hint, type } = props;
+    if (type === inputTypes.DIVIDER) {
+        return fromHtml(contextInputs[type](props))
+    }
     const input = fromHtml(`
         <li class="context-menu_item">
-            ${contextInputs[props.type](props)}
+            ${contextInputs[type](props)}
         </li>
         `);
     hint && (input.dataset.title = hint);
@@ -134,7 +137,10 @@ const contextInputs = {
             </label>
             <button class="stepper__button stepper__encrease">+</button>
     </div>
-`
+`,
+    [inputTypes.DIVIDER]: () => `
+    <div class="context__divider"/>
+`,
 }
 
 export { generateContextMenu }

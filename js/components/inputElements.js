@@ -104,6 +104,7 @@ const group = ({ label }) => {
        <div class="group-header">${label}</div>
     `
 }
+const divider = () => ``;
 const colorInput = ({ value, id, label, onChange }) => {
 
 
@@ -236,6 +237,8 @@ const inputHtml = (inputData) => {
             return plainText(inputData);
         case inputTypes.STEPPER:
             return stepper(inputData);
+        case inputTypes.DIVIDER:
+            return divider();
         default:
             return `[${inputData.type} N/A]`;
     }
@@ -253,6 +256,7 @@ const inputTypes = Object.freeze({
     COLOR: "color",
     TEXT: "plain-text",
     STEPPER: "stepper",
+    DIVIDER: "divider",
 })
 export { inputTypes, inputHtml as input, inputElement, addEvents }
 // export { checkbox, statebox, radioButton, numberInput, textInput, searchInput, selectorInput, button, }

@@ -81,9 +81,36 @@ export class Games extends Widget {
                         }
                     })
                 ]
-            }
+            },
+            {
+                type: inputTypes.DIVIDER,
+            },
+            {
+                label: ui.lang.sort,
+                elements: this.sortGamesMenu(),
+            },
+
         ];
     }
+    sortGamesMenu = () => [
+        ...Object.values(gamesSortNames).map(sortName => (
+            {
+                type: inputTypes.RADIO,
+                name: "games-sort-method",
+                id: `games-sort-method-${sortName}`,
+                label: ui.lang[sortName] ?? sortName,
+                checked: this.uiProps.sortName === sortName,
+                onChange: () => this.uiProps.sortName = sortName,
+            })
+        ),
+        {
+            type: inputTypes.CHECKBOX,
+            label: ui.lang.reverse,
+            checked: this.uiProps.reverseSort === -1,
+            onChange: (event) => this.uiProps.reverseSort = event.currentTarget.checked,
+        }
+    ];
+
     get headerControls() {
         return [{
             type: inputTypes.SELECTOR,
@@ -91,22 +118,8 @@ export class Games extends Widget {
             id: "games__sort-selector",
             onClick: (event) => ui.showContextmenu({
                 event, menuItems: [
-                    ...Object.values(gamesSortNames).map(sortName => (
-                        {
-                            type: inputTypes.RADIO,
-                            name: "games-sort-method",
-                            id: `games-sort-method-${sortName}`,
-                            label: ui.lang[sortName] ?? sortName,
-                            checked: this.uiProps.sortName === sortName,
-                            onChange: () => this.uiProps.sortName = sortName,
-                        })
-                    ),
-                    {
-                        type: inputTypes.CHECKBOX,
-                        label: ui.lang.reverse,
-                        checked: this.uiProps.reverseSort === -1,
-                        onChange: (event) => this.uiProps.reverseSort = event.currentTarget.checked,
-                    }]
+                    ...this.sortGamesMenu(),
+                ]
             }),
         },
         {
