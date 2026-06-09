@@ -138,6 +138,7 @@ export class Games extends Widget {
             const platformItems = Object.keys(platformsByManufacturer[brend]).reduce((items, platformName) => {
                 const platformCode = platformsByManufacturer[brend][platformName];
                 const filterItem = {
+                    id: `games-filter-platform-${platformCode}`,
                     label: platformName,
                     type: inputTypes.CHECKBOX,
                     checked: this.platformFilter.includes(platformCode),
@@ -163,6 +164,7 @@ export class Games extends Widget {
     }
     get awardsFilterItems() {
         return Object.keys(this.awardTypes).map((awardType) => ({
+            id: `games-filter-award-${awardType}`,
             type: inputTypes.CHECKBOX,
             label: this.awardTypes[awardType],
             checked: this.awardFilter.includes(awardType),
@@ -182,6 +184,7 @@ export class Games extends Widget {
     }
     get releaseVersionFilterItems() {
         return Object.values(RELEASE_TYPES).map(releaseType => ({
+            id: `games-filter-release-${releaseType}`,
             type: inputTypes.CHECKBOX,
             label: releaseType,
             checked: this.releaseFilter.includes(releaseType),
@@ -199,6 +202,7 @@ export class Games extends Widget {
     }
     get genresFilterItems() {
         return Object.keys(GAME_GENRE_CODES).map((genreID) => ({
+            id: `games-filter-genre-${genreID}`,
             type: inputTypes.CHECKBOX,
             label: GAME_GENRE_CODES[genreID],
             checked: this.genreFilter.includes(genreID),
@@ -313,14 +317,7 @@ export class Games extends Widget {
     get releaseFilter() {
         return this.__releaseFilter ?? [];
     }
-    set wantToPlayFilter(value) {
-        this.__wantToPlayFilter = value;
-        this.updateGamesList();
 
-    }
-    get wantToPlayFilter() {
-        return this.__wantToPlayFilter;
-    }
 
     get currentPlaylist() {
         return this.__currentPlaylist;
@@ -333,6 +330,7 @@ export class Games extends Widget {
             this.__currentPlaylist = null;
         }
         this.updateGamesList();
+        this.syncPlaylistUI();
     }
     get playlists() {
         return {
@@ -394,10 +392,7 @@ export class Games extends Widget {
             );
         }
 
-        // Filter by WantToPlay
-        if (this.wantToPlayFilter) {
-            result = result.filter(game => this.wantToPlayList.includes(game.ID));
-        }
+
         // Filter by Awards
         if (this.awardFilter.length > 0) {
             result = result.filter(game =>
@@ -532,7 +527,7 @@ export class Games extends Widget {
         this.section.querySelector(".games__main-controls").append(
             ...this.headerControls.map(control => inputElement(control))
         );
-
+        this.searchbar = this.section.querySelector("#games__searchbar");
     }
     generateWidget() {
         const controlsElement = document.createElement("div");
@@ -540,6 +535,12 @@ export class Games extends Widget {
         const gameList = fromHtml(`
             <ul id="games-list" class="games-list scrollable" data-current-games-array-position="0"/>
         `);
+        const activeFiltersRow = fromHtml(`
+            <div class="games__active-filters-row hidden"></div>
+        `);
+        const gameListWrapper = document.createElement("div");
+        gameListWrapper.classList.add("games__listing-wrapper");
+        gameListWrapper.append(activeFiltersRow, gameList);
         const playlistsContainer = PlaylistsContainer({});
         const widgetID = "games_section";
         const headerElementsHtml = `
@@ -557,7 +558,7 @@ export class Games extends Widget {
 
         const widget = this.generateWidgetElement(widgetData);
         const contentContainer = widget.querySelector(".games_container");
-        contentContainer.append(playlistsContainer, gameList, this.sideMenuElement());
+        contentContainer.append(playlistsContainer, gameListWrapper, this.sideMenuElement());
         widget.insertBefore(controlsElement, contentContainer);
         ui.app.appendChild(widget);
     }
@@ -568,6 +569,7 @@ export class Games extends Widget {
         this.container = this.section.querySelector(".games_container");
         this.searchbar = this.section.querySelector("#games__searchbar");
         this.platformFiltersList = this.section.querySelector("#games_filter-platform-list");
+        this.activeFiltersRow = this.section.querySelector(".games__active-filters-row");
         this.gamesList = this.section.querySelector("#games-list");
         const showGamesButton = fromHtml(`
             <button class="games__load-button"></button>
@@ -678,8 +680,184 @@ export class Games extends Widget {
     updateGamesList() {
         this.applyFilter();
         this.applySort();
+        this.renderActiveFilters();
+        this.syncFilterPanelState();
         this.gamesList.innerHTML = "";
         lazyLoad({ list: this.gamesList, items: this.games, elementGenerator: GameListElement })
+    }
+
+    getActiveFilters() {
+        const filters = [];
+
+        if (this.titleFilter?.trim()) {
+            filters.push({
+                type: 'search',
+                label: `${ui.lang.search}: ${this.titleFilter}`,
+                remove: () => {
+                    this.titleFilter = '';
+                    if (this.searchbar) {
+                        this.searchbar.value = '';
+                        this.searchbar.classList.add('empty');
+                    }
+                    this.updateGamesList();
+                },
+            });
+        }
+
+        if (this.currentPlaylist) {
+            filters.push({
+                type: 'playlist',
+                label: `${ui.lang.playlist}: ${this.playlists[this.currentPlaylist]?.title ?? this.currentPlaylist}`,
+                remove: () => {
+                    this.currentPlaylist = null;
+                },
+            });
+        }
+
+        this.platformFilter.forEach(code => {
+            filters.push({
+                type: 'platform',
+                value: code,
+                label: RA_PLATFORM_CODES[code]?.Name ?? code,
+                remove: () => {
+                    this.platformFilter = this.platformFilter.filter(item => item != code);
+                },
+            });
+        });
+
+        this.genreFilter.forEach(code => {
+            filters.push({
+                type: 'genre',
+                value: code,
+                label: GAME_GENRE_CODES[code] ?? code,
+                remove: () => {
+                    this.genreFilter = this.genreFilter.filter(item => item != code);
+                },
+            });
+        });
+
+        this.awardFilter.forEach(code => {
+            filters.push({
+                type: 'award',
+                value: code,
+                label: this.awardTypes[code] ?? code,
+                remove: () => {
+                    this.awardFilter = this.awardFilter.filter(item => item != code);
+                },
+            });
+        });
+
+        this.releaseFilter.forEach(code => {
+            filters.push({
+                type: 'release',
+                value: code,
+                label: code,
+                remove: () => {
+                    this.releaseFilter = this.releaseFilter.filter(item => item != code);
+                },
+            });
+        });
+
+        Object.entries(this.rangeFilters).forEach(([filterName, { title }]) => {
+            const filterValue = this[filterName];
+            if (!filterValue) return;
+            const from = filterValue.from ?? 0;
+            const to = filterValue.to ?? Infinity;
+            if (from > 0 || to < Infinity) {
+                let label = `${ui.lang[title] ?? title}: `;
+                if (from > 0 && to < Infinity) {
+                    label += `${from}-${to}`;
+                } else if (from > 0) {
+                    label += `${ui.lang.from ?? 'from'} ${from}`;
+                } else {
+                    label += `${ui.lang.to ?? 'to'} ${to}`;
+                }
+                filters.push({
+                    type: 'range',
+                    value: filterName,
+                    label,
+                    remove: () => {
+                        this[filterName] = { from: 0, to: Infinity };
+                    },
+                });
+            }
+        });
+
+        return filters;
+    }
+
+    renderActiveFilters() {
+        if (!this.activeFiltersRow) return;
+
+        const filters = this.getActiveFilters();
+        this.activeFiltersRow.innerHTML = '';
+        if (!filters.length) {
+            this.activeFiltersRow.classList.add('hidden');
+            return;
+        }
+
+        this.activeFiltersRow.classList.remove('hidden');
+        filters.forEach(filter => {
+            const filterButton = fromHtml(`
+                <button type="button" class="games__active-filter badge badge-button badge_transparent">
+                    <span>${filter.label}</span>
+                    <span aria-hidden="true">×</span>
+                </button>
+            `);
+            filterButton.addEventListener('click', filter.remove);
+            this.activeFiltersRow.append(filterButton);
+        });
+    }
+
+    syncPlaylistUI() {
+        if (!this.container) return;
+        const playlists = this.container.querySelectorAll("#games_playlists .games__playlist-item");
+        playlists.forEach(p => p.classList.toggle("active", p.dataset.playlistName === this.currentPlaylist));
+        if (this.gamesList) {
+            this.gamesList.classList.toggle("editable", !!this.currentPlaylist && this.playlists[this.currentPlaylist]?.editable);
+        }
+    }
+
+    syncFilterPanelState() {
+        if (!this.section) return;
+
+        const setInputChecked = (id, checked) => {
+            const input = this.section.querySelector(`#${CSS.escape(id)}`);
+            if (input) {
+                input.checked = checked;
+            }
+        };
+
+        if (this.searchbar) {
+            this.searchbar.value = this.titleFilter ?? '';
+            this.searchbar.classList.toggle('empty', !this.titleFilter?.trim());
+        }
+
+        Object.values(platformsByManufacturer).flatMap(brand => Object.values(brand)).forEach(platformCode => {
+            setInputChecked(`games-filter-platform-${platformCode}`, this.platformFilter.includes(platformCode));
+        });
+
+        Object.keys(GAME_GENRE_CODES).forEach(genreID => {
+            setInputChecked(`games-filter-genre-${genreID}`, this.genreFilter.includes(genreID));
+        });
+
+        Object.keys(this.awardTypes).forEach(awardType => {
+            setInputChecked(`games-filter-award-${awardType}`, this.awardFilter.includes(awardType));
+        });
+
+        Object.values(RELEASE_TYPES).forEach(releaseType => {
+            setInputChecked(`games-filter-release-${releaseType}`, this.releaseFilter.includes(releaseType));
+        });
+
+        Object.keys(this.rangeFilters).forEach(filterName => {
+            const value = this[filterName];
+            const fromInput = this.section.querySelector(`#games-filter-${filterName}-from`);
+            const toInput = this.section.querySelector(`#games-filter-${filterName}-to`);
+            if (fromInput) fromInput.value = value?.from ?? 0;
+            if (toInput) toInput.value = value?.to === Infinity ? '' : value?.to ?? '';
+        });
+
+        this.syncPlaylistUI();
     }
     async loadGames() {
         await this.loadWantToPlay();
@@ -820,9 +998,8 @@ export class Games extends Widget {
         }
         if (!this.playlists[playlistName]) playlistName = null;
         this.currentPlaylist = playlistName;
-        this.gamesList.classList.toggle("editable", this.playlists[playlistName].editable);
-        const playlists = this.container.querySelectorAll("#games_playlists .games__playlist-item");
-        playlists.forEach(p => p.classList.toggle("active", p.dataset.playlistName === playlistName));
+        this.syncPlaylistUI();
+
     }
     showFilters(isVisible = true) {
         this.section.querySelector(".section__side-menu")?.classList.toggle("active", isVisible);
@@ -866,6 +1043,7 @@ export class Games extends Widget {
                     title: `${ui.lang[title] ?? title}:`,
                     elements: [
                         {
+                            id: `games-filter-${filterName}-from`,
                             type: inputTypes.NUM_INPUT,
                             label: ui.lang.from,
                             onChange: (event) => this[filterName] = {
@@ -874,6 +1052,7 @@ export class Games extends Widget {
                             },
                         },
                         {
+                            id: `games-filter-${filterName}-to`,
                             type: inputTypes.NUM_INPUT,
                             label: ui.lang.to,
                             onChange: (event) => this[filterName] = {
@@ -890,17 +1069,6 @@ export class Games extends Widget {
                 {
                     title: `${ui.lang.releaseVersion}:`,
                     elements: this.releaseVersionFilterItems
-                },
-                {
-                    title: `${ui.lang.other}:`,
-                    elements: [
-                        {
-                            type: inputTypes.CHECKBOX,
-                            label: "WTPlay",
-                            checked: this.wantToPlayFilter,
-                            onChange: (event) => this.wantToPlayFilter = event.currentTarget.checked,
-                        },
-                    ]
                 },
             ]
         }

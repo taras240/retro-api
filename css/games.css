@@ -94,6 +94,23 @@ section.section.games_setion:hover {
   transform: scaleY(-1);
 }
 
+.games__listing-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  height: 100%;
+  overflow: hidden;
+  padding: 0.5em;
+}
+
+.games__active-filters-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.25em;
+  font-size: 0.9em;
+}
+
 .games-list {
   position: relative;
   width: 100%;
@@ -103,11 +120,9 @@ section.section.games_setion:hover {
   flex-direction: column;
   overflow-x: hidden;
   overflow-y: scroll;
-  padding: 0.5em;
-  height: 100%;
   transition: 0.2s;
-  gap: 3px;
-  /* background: linear-gradient(to left, var(--main-color), var(--secondary-color)); */
+  gap: 2px;
+  padding-bottom: 1em;
 }
 
 .games__playlists {
