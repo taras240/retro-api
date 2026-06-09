@@ -795,15 +795,16 @@ export class Target extends Widget {
         this.onCustomOrderChanged({});
     }
     onCustomOrderChanged() {
+        const cheevos = watcher.CHEEVOS;
+        const gameID = watcher.GAME_DATA.ID;
+        this.container.querySelectorAll("li.target-achiv").forEach((cheevo, index) => {
+            const cheevoID = cheevo.dataset.achivId;
+            cheevo.dataset.customOrder = cheevos[cheevoID].customOrder;
+        })
         if (this.uiProps.sortName === cheevosSortNames.CUSTOM_ORDER) {
-            const cheevos = watcher.CHEEVOS;
-            const gameID = watcher.GAME_DATA.ID;
-            this.container.querySelectorAll("li.target-achiv").forEach((cheevo, index) => {
-                const cheevoID = cheevo.dataset.achivId;
-                cheevo.dataset.customOrder = cheevos[cheevoID].customOrder;
-            })
-            this.applySort();
+            this.applySorting();
         }
+
     }
     onGameChange({ isNewGame }) {
         // if (true || isNewGame) {

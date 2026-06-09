@@ -573,13 +573,13 @@ export class AchievementsBlock extends Widget {
         this.startAutoScroll();
     }
     onCustomOrderChanged() {
+        const cheevos = watcher.CHEEVOS;
+        const gameID = watcher.GAME_DATA.ID;
+        this.container.querySelectorAll("li.achiv-block").forEach((cheevo, index) => {
+            const cheevoID = cheevo.dataset.achivId;
+            cheevo.dataset.customOrder = cheevos[cheevoID].customOrder;
+        })
         if (this.uiProps.sortName === cheevosSortNames.CUSTOM_ORDER) {
-            const cheevos = watcher.CHEEVOS;
-            const gameID = watcher.GAME_DATA.ID;
-            this.container.querySelectorAll("li.achiv-block").forEach((cheevo, index) => {
-                const cheevoID = cheevo.dataset.achivId;
-                cheevo.dataset.customOrder = cheevos[cheevoID].customOrder;
-            })
             this.applySorting();
         }
     }
