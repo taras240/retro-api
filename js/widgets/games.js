@@ -911,7 +911,7 @@ export class Games extends Widget {
         const getAlmostMastered = () => {
             return [...this.GAMES].filter(g =>
                 g.NumAwardedHardcore &&
-                g.NumAchievements - g.NumAwardedHardcore <= 3 &&
+                g.NumAwardedHardcore / g.NumAchievements >= 0.9 &&
                 g.NumAchievements !== g.NumAwardedHardcore)
                 .map(g => g.ID);
         }
