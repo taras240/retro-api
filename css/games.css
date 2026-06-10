@@ -101,6 +101,7 @@ section.section.games_setion:hover {
   height: 100%;
   overflow: hidden;
   padding: 0.5em;
+  flex: 1;
 }
 
 .games__active-filters-row {

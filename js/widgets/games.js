@@ -22,6 +22,7 @@ import { GameCardElement } from "../components/gamesWidget/gameCard.js";
 import { PlaylistsContainer } from "../components/gamesWidget/playlists.js";
 import { lazyLoad } from "../functions/lazyLoad.js";
 import { downloadJSON } from "../functions/exportData.js";
+import { highestAwardMap } from "../enums/gameAwards.js";
 
 export class Games extends Widget {
     widgetIcon = {
@@ -176,10 +177,10 @@ export class Games extends Widget {
         return filters;
     }
     get awardsFilterItems() {
-        return Object.keys(this.awardTypes).map((awardType) => ({
+        return Object.keys(highestAwardMap).map((awardType) => ({
             id: `games-filter-award-${awardType}`,
             type: inputTypes.CHECKBOX,
-            label: this.awardTypes[awardType],
+            label: ui.lang[highestAwardMap[awardType]] ?? awardType,
             checked: this.awardFilter.includes(awardType),
             onChange: (event) => {
                 const isChecked = event.currentTarget.checked;
@@ -476,13 +477,6 @@ export class Games extends Widget {
             getValue: (game) => game.Points / game.NumAchievements,
         },
     }
-    awardTypes = {
-        mastered: 'mastered',
-        'beaten-hardcore': 'beaten',
-        completed: 'completed',
-        'beaten-softcore': 'beaten softcore',
-        started: 'started',
-    }
     defaultPlaylists = {
         "All Games": {
             title: "All Games",
@@ -584,11 +578,7 @@ export class Games extends Widget {
         this.platformFiltersList = this.section.querySelector("#games_filter-platform-list");
         this.activeFiltersRow = this.section.querySelector(".games__active-filters-row");
         this.gamesList = this.section.querySelector("#games-list");
-        const showGamesButton = fromHtml(`
-            <button class="games__load-button"></button>
-        `);
-        showGamesButton.addEventListener("click", () => this.loadGames())
-        this.gamesList.append(showGamesButton);
+
     }
     setValues() {
         this.header.classList.add("fixed");
@@ -753,7 +743,7 @@ export class Games extends Widget {
             filters.push({
                 type: 'award',
                 value: code,
-                label: this.awardTypes[code] ?? code,
+                label: ui.lang[highestAwardMap[code]] ?? code,
                 remove: () => {
                     this.awardFilter = this.awardFilter.filter(item => item != code);
                 },
@@ -854,7 +844,7 @@ export class Games extends Widget {
             setInputChecked(`games-filter-genre-${genreID}`, this.genreFilter.includes(genreID));
         });
 
-        Object.keys(this.awardTypes).forEach(awardType => {
+        Object.keys(highestAwardMap).forEach(awardType => {
             setInputChecked(`games-filter-award-${awardType}`, this.awardFilter.includes(awardType));
         });
 

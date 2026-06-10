@@ -274,7 +274,7 @@
     "completed": "Completed",
     "beaten": "Beaten",
     "beatenSoftcore": "Beaten (Casual)",
-    "inProgress": "In progress",
+    "inProgress": "Unfinished",
     "makeSubsetsList": "Update subsets list",
     "makeSubsetsListHint": "If subsets data is outdated, you can fetch it manually. This will take about a minute.",
     "scrollSpeed": "Scroll Speed",

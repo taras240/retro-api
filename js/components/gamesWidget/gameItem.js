@@ -1,3 +1,4 @@
+import { highestAwardMap } from "../../enums/gameAwards.js";
 import { GAME_GENRE_CODES } from "../../enums/gameGenres.js";
 import { fromHtml } from "../../functions/html.js";
 import { gameImageUrl } from "../../functions/raLinks.js";
@@ -23,7 +24,7 @@ export function GameListElement(gameData, onRemove) {
         <h3 class="game-description_title">
             <button class="game-description_button" data-title="${ui.lang.showGameInfoHint}" data-id="${gameData.ID}" >
                     ${gameData.Title} 
-                    ${gameData.Award ? badgeElements.gold(gameData.Award) : ""}
+                    ${gameData.Award ? badgeElements.gold(ui.lang[highestAwardMap[gameData.Award]]) : ""}
                     ${gameData.badges?.length ? generateBadges(gameData.badges, "black") : ""} 
                     ${genreBadges?.length ? genreBadges : ""} 
             </button>
