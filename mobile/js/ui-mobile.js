@@ -1,5 +1,5 @@
 import { apiWorker, config, ui } from "./main.js";
-import { Home } from "./ui/home.js";
+import { Home } from "./ui/home/home.js";
 import { Awards } from "./ui/awards.js";
 import { Game } from "./ui/game.js";
 import { Library } from "./ui/library.js";
@@ -10,6 +10,7 @@ import { sortBy } from "./functions/sort.js";
 import { delay } from "./functions/delay.js";
 import { RAPlatforms } from "./enums/RAPlatforms.js";
 import { toLocalString } from "./functions/time.js";
+import { fromHtml } from "../../js/functions/html.js";
 
 export let USER_INFO;
 export let GAMES_DATA = {};
@@ -342,13 +343,14 @@ export class UI {
 
     const getRecentGame = (gameID) => {
       this.showLoader();
-      const achivsContainer = document.createElement("div");
-      achivsContainer.classList.add("user-info__game-achivs-container");
+      const achivsContainer = fromHtml(`
+        <div class="user-info__game-achivs-container">
+            <ul class ="user-info__game-achivs-list"/>
+        </div>
+      `);
 
-      const achivsList = document.createElement("ul");
-      achivsList.classList.add("user-info__game-achivs-list");
+      const achivsList = achivsContainer.querySelector("ul");
 
-      achivsContainer.appendChild(achivsList);
       targetGameElement.appendChild(achivsContainer);
       if (GAMES_DATA[gameID]) {
         Object.values(GAMES_DATA[gameID].Achievements)
