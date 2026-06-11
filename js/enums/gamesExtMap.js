@@ -29,4 +29,5 @@ export const gameKeysMap = [
     "timesMastered",
     "playersTotal",
     "genres",
+    "series"
 ]

@@ -567,6 +567,10 @@
     mask-image: url(../assets/img/comments.svg)
 }
 
+.link-icon {
+    mask-image: url(../assets/img/series.svg)
+}
+
 .edit-icon {
     mask-image: url(../assets/img/edit-2.svg)
 }

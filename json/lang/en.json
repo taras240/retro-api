@@ -346,5 +346,7 @@
     "export": "Export",
     "edit": "Edit",
     "playlist": "Playlist",
-    "saveAsCustomOrder": "Save as Custom Order"
+    "saveAsCustomOrder": "Save as Custom Order",
+    "showSeries": "Show Game Series",
+    "series": "Series"
 }

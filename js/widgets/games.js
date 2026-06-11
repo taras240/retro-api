@@ -332,7 +332,13 @@ export class Games extends Widget {
         return this.__releaseFilter ?? [];
     }
 
-
+    set seriesFilter(value) {
+        this.__seriesFilter = value;
+        this.updateGamesList();
+    }
+    get seriesFilter() {
+        return this.__seriesFilter ?? [];
+    }
     get currentPlaylist() {
         return this.__currentPlaylist;
     }
@@ -385,7 +391,11 @@ export class Games extends Widget {
                 });
             }
         }
-
+        if (this.seriesFilter.length) {
+            result = result.filter(game =>
+                this.seriesFilter.some(code => game.series?.includes(+code))
+            );
+        }
         // Playlist Filter
         if (this.currentPlaylist && this.playlists[this.currentPlaylist]?.games) {
             const playlistGames = this.playlists[this.currentPlaylist].games;
@@ -622,6 +632,10 @@ export class Games extends Widget {
                 if (event.target.closest("button.delete-icon")) {
                     this.removeGameFromPlaylist(gameItem.dataset.id, this.currentPlaylist, gameItem);
                 }
+                if (event.target.closest("button.show-series-button")) {
+                    const seriesID = gameItem.dataset.series?.split(",").map(Number);
+                    this.seriesFilter = seriesID;
+                }
                 else if (event.target.closest("button.game-description_button")) {
                     const el = event.target.closest("button");
                     this.showGameInfoPopup(el.dataset.id);
@@ -706,13 +720,21 @@ export class Games extends Widget {
                 },
             });
         }
-
         if (this.currentPlaylist) {
             filters.push({
                 type: 'playlist',
                 label: `${ui.lang.playlist}: ${this.playlists[this.currentPlaylist]?.title ?? this.currentPlaylist}`,
                 remove: () => {
                     this.currentPlaylist = null;
+                },
+            });
+        }
+        if (this.seriesFilter.length) {
+            filters.push({
+                type: 'series',
+                label: `${ui.lang.series}: ${this.seriesFilter.join(", ")}`,
+                remove: () => {
+                    this.seriesFilter = [];
                 },
             });
         }

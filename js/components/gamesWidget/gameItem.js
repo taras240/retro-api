@@ -26,7 +26,7 @@ export function GameListElement(gameData, onRemove) {
                     ${gameData.Title} 
                     ${gameData.Award ? badgeElements.gold(ui.lang[highestAwardMap[gameData.Award]]) : ""}
                     ${gameData.badges?.length ? generateBadges(gameData.badges, "black") : ""} 
-                    ${genreBadges?.length ? genreBadges : ""} 
+                    ${genreBadges?.length ? genreBadges : ""}
             </button>
         </h3>
     `)
@@ -55,6 +55,11 @@ export function GameListElement(gameData, onRemove) {
         </div>
     `);
         gameElement.append(gameProgress);
+    }
+    if (gameData.series?.length) {
+        gameElement.dataset.series = gameData.series.join(",");
+        const seriesButton = fromHtml(buttonsHtml.link({ classes: ["show-series-button"], hint: ui.lang.showSeries }));
+        controlsContainer.prepend(seriesButton)
     }
     return gameElement;
 }
