@@ -7,7 +7,7 @@ import { badgeElements, generateBadges } from "../badges.js";
 import { buttonsHtml } from "../htmlElements.js";
 import { signedIcons } from "../icons.js";
 
-export function GameListElement(gameData, onRemove) {
+export function GameListElement(gameData) {
     const gameElement = fromHtml(`
         <li class="platform_game-item games__game-item" draggable="true"/>
     `);
@@ -22,7 +22,7 @@ export function GameListElement(gameData, onRemove) {
 
     const gameTitle = fromHtml(`
         <h3 class="game-description_title">
-            <button class="game-description_button" data-title="${ui.lang.showGameInfoHint}" data-id="${gameData.ID}" >
+            <button class="game-description_button" data-id="${gameData.ID}" >
                     ${gameData.Title} 
                     ${gameData.Award ? badgeElements.gold(ui.lang[highestAwardMap[gameData.Award]]) : ""}
                     ${gameData.badges?.length ? generateBadges(gameData.badges, "black") : ""} 
@@ -58,7 +58,9 @@ export function GameListElement(gameData, onRemove) {
     }
     if (gameData.series?.length) {
         gameElement.dataset.series = gameData.series.join(",");
-        const seriesButton = fromHtml(buttonsHtml.link({ classes: ["show-series-button"], hint: ui.lang.showSeries }));
+        const seriesButton = fromHtml(`
+            <button class="show-series-button" data-title="${ui.lang.showSeries}">${ui.lang.series}</button>
+        `)
         controlsContainer.prepend(seriesButton)
     }
     return gameElement;
