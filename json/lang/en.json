@@ -349,5 +349,6 @@
     "saveAsCustomOrder": "Save as Custom Order",
     "showSeries": "Show Game Series",
     "series": "Series",
-    "update": "Update"
+    "update": "Update",
+    "showSeparator": "Group digits"
 }

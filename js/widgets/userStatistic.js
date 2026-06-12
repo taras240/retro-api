@@ -149,6 +149,12 @@ export class UserStatistic extends Widget {
                 label: ui.lang.showSessionProgress,
                 checked: this.uiProps.showSessionProgress,
                 onChange: (event) => this.uiProps.showSessionProgress = event.currentTarget.checked,
+            },
+            {
+                type: inputTypes.CHECKBOX,
+                label: ui.lang.showSeparator,
+                checked: this.uiProps.showSeparator,
+                onChange: (event) => this.uiProps.showSeparator = event.currentTarget.checked,
             }
 
 
@@ -174,9 +180,12 @@ export class UserStatistic extends Widget {
         showBeatenSoftcore: false,
         showBeaten: false,
         showTotalGames: false,
-
+        showSeparator: true,
     }
     uiSetCallbacks = {
+        showSeparator() {
+            this.updateStats({ userData: this.userData });
+        },
         completionChart(isShow) {
             this.setElementsValues();
             if (isShow) {
@@ -457,7 +466,9 @@ export class UserStatistic extends Widget {
         }
         const setValue = (element, property) => {
             if (!Object.hasOwn(this.userData, property) || !Object.hasOwn(userData, property)) return;
-            const animationProps = {};
+            const animationProps = {
+                separator: this.uiProps.showSeparator ? "," : "",
+            };
             let delta = 0;
             let sessionDelta = 0;
             let value = 0;
