@@ -512,6 +512,7 @@ export class Status extends Widget {
         const isLegacy = this.theme === Status.themes.legacy;
         const widgetID = isLegacy ? "update-section" : "rp__section";
         const headerElementsHtml = `
+            ${buttonsHtml.reload({ hint: ui.lang.update })}
             ${buttonsHtml.comments()}
             ${buttonsHtml.tweek()}
         `;
@@ -586,6 +587,10 @@ export class Status extends Widget {
                         moveDirections.bottomRight :
                         hoveredEdge,
                 })
+            }
+            else if (event.target.matches(".update-icon")) {
+                event.stopPropagation();
+                watcher.checkApiUpdates(false, true);
             }
             else if (event.target.matches(".comments-button")) {
                 event.stopPropagation();

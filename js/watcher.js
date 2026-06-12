@@ -205,7 +205,7 @@ export class Watcher {
         }
     }
     apiTrackerInterval;
-    async checkApiUpdates(isStart = false) {
+    async checkApiUpdates(isStart = false, isForced = false) {
         const now = new Date();
         const isPointsChanged = (raProfileInfo) => {
             const isHarcoreMissmatch = raProfileInfo.TotalPoints !== this.userData.points
@@ -262,7 +262,7 @@ export class Watcher {
             await this.updateGameData(newGameID);
             isStart && this.onStartSession()
         }
-        if (!isStart && (configData.pauseIfOffline && this.onlineCheckTimeOut)) return;
+        if (!isStart && !isForced && (configData.pauseIfOffline && this.onlineCheckTimeOut)) return;
 
         const raProfileInfo = await apiWorker.getProfileInfo({});
         this.onAPIRequest();

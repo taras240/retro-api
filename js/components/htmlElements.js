@@ -36,7 +36,7 @@ export const buttonsHtml = {
 
     external: (sectionID, onclick) => `<button class="header-button header-icon external-icon" id="${sectionID}-external_window-button" data-title="Open in external window"></button>`,
 
-    reload: (onClick) => `<button class="header-button header-icon update-icon" data-title="${ui.lang.forceReloadHint}" onclick="${onClick}"></button>`,
+    reload: ({ hint } = {}) => `<button class="header-button header-icon update-icon" data-title="${hint ?? ui.lang.forceReloadHint}"></button>`,
     fulscreen: (onClick) => `
         <button class="header-button header-icon fullscreen-button fullscreen-icon" data-title="${ui.lang.fullscreen}" onclick="${onClick}"></button>
     `

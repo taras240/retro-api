@@ -158,7 +158,7 @@
     "fsAlertDurationInputHint": "alert duration in seconds",
     "DSAlertMinPointsInputHint": "Min points for Alert",
     "DSAlertMinTruePointsInputHint": "Min retropoints for Alert",
-    "forceReloadHint": "force reload",
+    "forceReloadHint": "Force Reload",
     "totalAwardsHint": "total awards",
     "beatenSoftHint": "beaten softcore",
     "beatenHint": "beaten",
@@ -348,5 +348,6 @@
     "playlist": "Playlist",
     "saveAsCustomOrder": "Save as Custom Order",
     "showSeries": "Show Game Series",
-    "series": "Series"
+    "series": "Series",
+    "update": "Update"
 }
