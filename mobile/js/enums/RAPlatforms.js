@@ -16,6 +16,7 @@ export const RAPlatforms = {
     "15": "Game Gear",
     "17": "Atari Jaguar",
     "18": "Nintendo DS",
+    "19": "Nintendo Wii",
     "21": "PlayStation 2",
     "23": "Magnavox Odyssey 2",
     "24": "Pokemon Mini",

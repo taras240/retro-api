@@ -2,7 +2,7 @@ import { apiWorker, config, ui } from "./main.js";
 import { Home } from "./ui/home/home.js";
 import { Awards } from "./ui/awards.js";
 import { Game } from "./ui/game.js";
-import { Library } from "./ui/library.js";
+import { Library } from "./ui/library/library.js";
 import { Favourites } from "./ui/favourites.js";
 import { Login } from "./ui/login.js";
 import { Loader } from "./ui/components/loader.js";

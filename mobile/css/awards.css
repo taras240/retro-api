@@ -24,7 +24,6 @@
     background-color: var(--secondary-color);
     overflow: hidden;
     box-shadow: var(--item-shadow);
-
     flex-shrink: 0;
 }
 

@@ -1,11 +1,13 @@
-import { generateBadges } from "./components/badges.js";
-import { sortBy } from "../functions/sort.js";
-import { config } from "../main.js";
-import { delay } from "../functions/delay.js";
-import { lazyLoad } from "../functions/lazyLoad.js";
-import { RAPlatforms } from "../enums/RAPlatforms.js";
-import { gamesFromJson } from "../../../js/functions/gamesJson.js";
-import { gameImageUrl, gameImageUrlByID } from "../../../js/functions/raLinks.js";
+import { generateBadges } from "../components/badges.js";
+import { sortBy } from "../../functions/sort.js";
+import { config } from "../../main.js";
+import { delay } from "../../functions/delay.js";
+import { lazyLoad } from "../../functions/lazyLoad.js";
+import { RAPlatforms } from "../../enums/RAPlatforms.js";
+import { gamesFromJson } from "../../../../js/functions/gamesJson.js";
+import { gameImageUrl, gameImageUrlByID } from "../../../../js/functions/raLinks.js";
+import { LibraryHeader } from "./header.js";
+import { GameElement } from "./gameItem.js";
 
 export class Library {
 
@@ -21,7 +23,7 @@ export class Library {
                     checked: this.platformFilterCode === 'all',
                     name: "filter-by-platform"
                 },
-                ...Object.getOwnPropertyNames(RAPlatforms).reduce((elems, platformCode) => {
+                ...Object.keys(RAPlatforms).reduce((elems, platformCode) => {
                     if (this.GAMES.some(game => game.ConsoleID == platformCode)) {
                         const filterObj = {
                             label: `${RAPlatforms[platformCode]}`,
@@ -142,20 +144,20 @@ export class Library {
         ui.content.innerHTML = '';
         ui.content.append(section);
         ui.removeLoader();
-        lazyLoad({ list: this.gameList, items: this.games, callback: this.getGameElement })
+        lazyLoad({ list: this.gameList, items: this.games, callback: GameElement })
     }
     updateGames() {
         this.applyFilter();
         this.applySort();
         this.gameList.innerHTML = '';
-        lazyLoad({ list: this.gameList, items: this.games, callback: this.getGameElement })
+        lazyLoad({ list: this.gameList, items: this.games, callback: GameElement })
 
     }
     LibrarySection() {
         this.librarySection = document.createElement("section");
         this.librarySection.classList.add("library__section", "section");
 
-        this.librarySection.appendChild(this.headerElement());
+        this.librarySection.appendChild(LibraryHeader(this));
 
         this.gameList = document.createElement("ul");
         this.gameList.classList.add("games-list");
@@ -165,64 +167,6 @@ export class Library {
         return this.librarySection;
     }
 
-    headerElement() {
-        const gamesHeader = document.createElement("div");
-        gamesHeader.classList.add("section__header-container");
-        gamesHeader.innerHTML = `
-        <div class="section__header-title">Library</div>
-        <div class="section__control-container">
-            <button class=" simple-button" onclick="generateContextMenu(ui.library.gamesSortContext(),event)">Sort</button>
-            <button class="games-platform-filter simple-button" 
-              onclick="generateContextMenu(ui.library.gamesPlatformContext(),event)">
-              ${this.platformFilter ?? "Platform"} (${this.games.length})
-            </button>
-            <div class="hidden-text-input__container">
-            <input class="hidden-text-input__input" type="search">
-            <button class="hidden-text-input__button icon-button simple-button search-icon show-searchbar__button"
-                onclick="ui.library.showHiddenInput(this)"></button>
-
-        </div>
-            </div>
-    `;
-        return gamesHeader;
-    }
-
-
-
-    getGameElement(game) {
-        const gameElement = document.createElement("li");
-        gameElement.classList.add("awards__game-item");
-        gameElement.dataset.id = game.id;
-        gameElement.innerHTML = `    
-            <li class="awards__game-item" data-id="${game.id}">
-                <div class="awards__game-container"  onclick="ui.showGameDetails(${game.id}); event.stopPropagation()">
-                    <div class="awards__game-preview-container" onclick="ui.goto.game(${game.id}); event.stopPropagation()">
-                        <img class="awards__game-preview" src="${gameImageUrl(game.ImageIcon)}" 
-                          onerror="console.log('Image error: ', game.ImageIcon);" alt=""
-                        >
-                    </div>
-                    <div class="awards__game-description" >
-                        <h2 class="awards__game-title">${game.Title} ${generateBadges(game.badges)}</h2>
-                        <div  class="game-stats__button"  onclick="ui.expandGameItem(${game.id},this); event.stopPropagation()">
-                          <i class="game-stats__icon game-stats__expand-icon"></i>
-                        </div>
-                        <div class="awards__game-stats__text">${RAPlatforms[game.ConsoleID]}</div>
-
-                        <div class="awards__game-stats-container" >                           
-                        <div class="game-stats ">
-                        <i class="game-stats__icon game-stats__achivs-icon"></i>
-                        <div class="game-stats__text">${game.NumAchievements}</div>
-                        </div>
-                        <div class="game-stats game-stats__points">
-                        <i class="game-stats__icon game-stats__points-icon"></i>
-                        <div class="game-stats__text">${game.Points}</div>
-                        </div>
-                        </div>
-                    </div>
-                </div>
-        `;
-        return gameElement;
-    }
     async loadGamesArray() {
         this.GAMES = {};
         // this.clearList();
@@ -231,7 +175,7 @@ export class Library {
     async getAllGames() {
         try {
 
-            this.GAMES = await gamesFromJson("../../json/games/all_min.json");
+            this.GAMES = await gamesFromJson("../../../json/games/all_min.json");
 
 
         } catch (error) {
