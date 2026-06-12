@@ -55,6 +55,7 @@
     justify-content: space-between;
     padding: 0.2em 1em;
     border-radius: 2px;
+    gap: 0.2em;
 }
 
 .stats__stat-container.hidden {
@@ -94,6 +95,10 @@
     flex-direction: row;
 }
 
+.stats-container.list-mode .stats__title {
+    flex: 1;
+}
+
 /* .stats__value::after {
     content: attr(data-delta);
     position: absolute;
@@ -124,20 +129,29 @@
 
 .session-progress {
     color: greenyellow;
-    font-size: 0.8em;
+    font-size: 1.2em;
     line-height: 1em;
     font-weight: bold;
 }
 
+
 .session-progress.negative {
     color: crimson;
+}
+
+.session-progress::before {
+    content: "▴";
+}
+
+.session-progress.negative::before {
+    content: "▾";
 }
 
 .session-progress {
     display: none;
 }
 
-.show-session-progress .session-progress {
+.show-session-progress .session-progress:not(.hidden, :empty) {
     display: inline-block;
 }
 

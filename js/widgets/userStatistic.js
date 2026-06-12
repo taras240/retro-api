@@ -9,6 +9,9 @@ import { buttonsHtml } from "../components/htmlElements.js";
 import { normalizeUserData } from "../functions/api/userDataNormalization.js";
 import { applySort, sortBy } from "../functions/sortFilter.js";
 import { GAME_AWARD_TYPES } from "../enums/gameAwards.js";
+import { animateValue } from "../functions/animations/valueAnimation.js";
+import { fromHtml } from "../functions/html.js";
+
 
 export class UserStatistic extends Widget {
     widgetIcon = {
@@ -22,104 +25,78 @@ export class UserStatistic extends Widget {
                 elements: [
                     {
                         type: inputTypes.CHECKBOX,
-                        name: "show-points",
-                        id: "show-points",
                         label: ui.lang.points,
                         checked: this.uiProps.showHP,
                         onChange: (event) => this.uiProps.showHP = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        name: "show-retropoints",
-                        id: "show-retropoints",
                         label: ui.lang.retropoints,
                         checked: this.uiProps.showRP,
                         onChange: (event) => this.uiProps.showRP = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        name: "show-softpoints",
-                        id: "show-softpoints",
                         label: ui.lang.softpoints,
                         checked: this.uiProps.showSP,
                         onChange: (event) => this.uiProps.showSP = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        name: "show-rank",
-                        id: "show-rank",
                         label: ui.lang.rank,
                         checked: this.uiProps.showRank,
                         onChange: (event) => this.uiProps.showRank = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        name: "show-percentile",
-                        id: "show-percentile",
                         label: ui.lang.percentile,
                         checked: this.uiProps.showPercentile,
                         onChange: (event) => this.uiProps.showPercentile = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        name: "show-unlocks-hardcore",
-                        id: "show-unlocks-hardcore",
                         label: ui.lang.unlocks,
                         checked: this.uiProps.showUnlocksHardcore,
                         onChange: (event) => this.uiProps.showUnlocksHardcore = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        name: "show-unlocks-softcore",
-                        id: "show-unlocks-softcore",
                         label: ui.lang.unlocksTotal,
                         checked: this.uiProps.showUnlocksSoftcore,
                         onChange: (event) => this.uiProps.showUnlocksSoftcore = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        name: "show-true-ratio",
-                        id: "show-true-ratio",
                         label: ui.lang.trueRatio,
                         checked: this.uiProps.showTrueRatio,
                         onChange: (event) => this.uiProps.showTrueRatio = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        name: "show-played",
-                        id: "show-played",
                         label: ui.lang.played,
                         checked: this.uiProps.showTotalGames,
                         onChange: (event) => this.uiProps.showTotalGames = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        name: "show-mastered",
-                        id: "show-mastered",
                         label: ui.lang.mastered,
                         checked: this.uiProps.showMastered,
                         onChange: (event) => this.uiProps.showMastered = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        name: "show-completed",
-                        id: "show-completed",
                         label: ui.lang.completed,
                         checked: this.uiProps.showCompleted,
                         onChange: (event) => this.uiProps.showCompleted = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        name: "show-beaten",
-                        id: "show-beaten",
                         label: ui.lang.beaten,
                         checked: this.uiProps.showBeaten,
                         onChange: (event) => this.uiProps.showBeaten = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        name: "show-beaten-softcore",
-                        id: "show-beaten-softcore",
                         label: ui.lang.beatenSoftcore,
                         checked: this.uiProps.showBeatenSoftcore,
                         onChange: (event) => this.uiProps.showBeatenSoftcore = event.currentTarget.checked,
@@ -127,8 +104,6 @@ export class UserStatistic extends Widget {
 
                     {
                         type: inputTypes.CHECKBOX,
-                        name: "show-completion-chart",
-                        id: "show-completion-chart",
                         label: ui.lang.completionChart,
                         checked: this.uiProps.completionChart,
                         onChange: (event) => this.uiProps.completionChart = event.currentTarget.checked,
@@ -140,16 +115,12 @@ export class UserStatistic extends Widget {
                 elements: [
                     {
                         type: inputTypes.CHECKBOX,
-                        name: "show-header",
-                        id: "show-header",
                         label: ui.lang.showHeader,
                         checked: this.uiProps.showHeader,
                         onChange: (event) => this.uiProps.showHeader = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        name: "show-bg",
-                        id: "show-bg",
                         label: ui.lang.showBackground,
                         checked: this.uiProps.showBG,
                         onChange: (event) => this.uiProps.showBG = event.currentTarget.checked,
@@ -175,8 +146,6 @@ export class UserStatistic extends Widget {
             },
             {
                 type: inputTypes.CHECKBOX,
-                name: "show-session-progress",
-                id: "show-session-progress",
                 label: ui.lang.showSessionProgress,
                 checked: this.uiProps.showSessionProgress,
                 onChange: (event) => this.uiProps.showSessionProgress = event.currentTarget.checked,
@@ -274,8 +243,7 @@ export class UserStatistic extends Widget {
     generateWidget() {
         const headerElementsHtml = `
             ${buttonsHtml.tweek()}
-            <button class=" header-button header-icon update-icon" id="" title="${ui.lang.forceReloadHint}"
-            onclick="ui.stats.updateStats({})"></button>
+            ${buttonsHtml.reload({ hint: ui.lang.update })}
         `;
 
         const widgetData = {
@@ -343,10 +311,12 @@ export class UserStatistic extends Widget {
     }
     addEvents() {
         super.addEvents();
-        // this.section.addEventListener("mousedown", event => {
-        //     if (event.button !== 0 || event.target.closest(".resizer, button")) return;
-        //     moveEvent(this.section, event);
-        // })
+        this.header.addEventListener("click", (event) => {
+            if (event.target.matches(".update-icon")) {
+                event.stopPropagation();
+                this.updateStats({});
+            }
+        })
         new Sortable(this.container, {
 
             group: {
@@ -487,6 +457,7 @@ export class UserStatistic extends Widget {
         }
         const setValue = (element, property) => {
             if (!Object.hasOwn(this.userData, property) || !Object.hasOwn(userData, property)) return;
+            const animationProps = {};
             let delta = 0;
             let sessionDelta = 0;
             let value = 0;
@@ -497,21 +468,25 @@ export class UserStatistic extends Widget {
                     oldValue = this.userData.percentile;
                     delta = +(value - oldValue).toFixed(2);
                     sessionDelta = -(value - this.initialData.percentile).toFixed(2);
-                    value += "%";
+                    animationProps.decimals = 2;
+                    animationProps.suffix = "%";
                     break;
                 case "trueRatio":
                     value = userData.trueRatio.toFixed(2);
                     oldValue = this.userData.trueRatio.toFixed(2);
                     delta = +(value - oldValue).toFixed(2);
                     sessionDelta = +(value - this.initialData.trueRatio).toFixed(2);
+                    animationProps.decimals = 2;
                     break;
                 case "rank":
-                    delta = userData.rank - this.userData.rank;
+                    oldValue = this.userData.rank;
+                    delta = userData.rank - oldValue;
                     sessionDelta = this.initialData.rank - userData.rank;
                     value = userData.rank;
                     break;
                 default:
-                    delta = userData[property] - this.userData[property];
+                    oldValue = this.userData[property]
+                    delta = userData[property] - oldValue;
                     sessionDelta = userData[property] - this.initialData[property];
                     value = userData[property];
             }
@@ -520,15 +495,12 @@ export class UserStatistic extends Widget {
 
             element.classList.toggle('negative', !isDeltaPositive);
             element.dataset.delta = `${isDeltaPositive ? "+" : ""}${delta}`;
-            const deltaText = !!sessionDelta ?
-                !isSessionNegativeDelta ?
-                    `▴${sessionDelta}` : `▾${-1 * sessionDelta}` : "";
-            element.innerHTML = value + ` <span class="session-progress ${isSessionNegativeDelta ? "negative" : ""}">${deltaText}</span>`;
-            const delay = 0;
-            element.classList.add("delta");
-            setTimeout(() => {
-                element.classList.remove("delta");
-            }, delay);
+
+            animateValue(element, value, 1000, animationProps);
+            const deltaElement = element.parentElement.querySelector(".session-progress");
+            animateValue(deltaElement, Math.abs(sessionDelta), 1000, animationProps);
+            deltaElement?.classList.toggle("negative", isSessionNegativeDelta);
+            deltaElement?.classList.toggle("hidden", sessionDelta == 0);
         }
         setValue(this.rankRateElement, "percentile");
         setValue(this.rankElement, "rank");
@@ -603,6 +575,7 @@ export class UserStatistic extends Widget {
                         data--display-order="${order[`${stat.id}-container`] ?? 0}">
                             <h2 class="stats__title">${stat.label}</h2>
                             <p id="${stat.id}" class="stats__value ${stat.class}"></p>
+                            <p class="session-progress"></p>
                     </li>
                 `;
                 html += elHtml;
