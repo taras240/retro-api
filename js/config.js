@@ -94,7 +94,7 @@ export class Config {
     discordStartSession: true,
     discordWebhook: "",
     parseLog: false,
-    showCheevoOnHover: false,
+    showCheevoOnHover: true,
     loadLastSubset: false,
     startOnLoad: true,
     pauseIfOffline: true,

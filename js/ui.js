@@ -138,7 +138,7 @@ export class UI {
       if (popup) {
         this.app.appendChild(popup);
         setPopupPosition(popup, event, !hint && cheevo);
-        setTimeout(() => popup.classList.add("visible"), 50);
+        setTimeout(() => popup.classList.add("visible"), isCheevoPopup ? 500 : 150);
 
 
       }
