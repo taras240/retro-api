@@ -4,7 +4,7 @@
             data-title="${ui.lang.level}" >
             ${V.flag}${o}
         </div>`,difficultBadge:(o,e="")=>o==""?"":`
-            <p class="badge difficult-badge__${o}" >
+            <p class="badge difficult-badge difficult-badge__${o}" >
                 ${e} ${Pe[o]}
                     </p >
             `,hltbBadge:(o,e="")=>G.gold(`HLTB: ${o} `),buttonGenreBadge:o=>fe({text:o,classes:["target-genre-badge","badge-bold","badge_gold","badge-button"],dataProp:`data-genre="${o}"`}),customBadge:o=>fe({text:o,classes:["badge_custom-color"]})},fe=({text:o,classes:e=[],hint:t,event:s,dataProp:i})=>{let n=["badge",...e].join(" "),r=t?`data-title="${t}"`:"";return`<i class="${n}" ${r} ${s||""} ${i||""}>${o.toString().trim()}</i>`};function Kt(o,e=!1){let t=(c,h,d=!0)=>{let m=Array.isArray(h)?[...new Set(h)].join('<span class="popup__value-divider"> | </span>'):h;return d?`

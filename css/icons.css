@@ -592,34 +592,41 @@
 }
 
 /** Difficult badges */
+.difficult-badge {
+    --bg-color: var(--selection-color);
+    --border-color: var(--accent-color);
+    --shadow-color: transparent;
+    --color: var(--font-color);
+    color: var(--color);
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 0 3px 1px var(--shadow-color);
+    font-size: 0.7em;
+    font-weight: normal;
+    text-transform: uppercase;
+}
+
 .difficult-badge__11 {
-    position: relative;
-    background-color: #000;
-    box-shadow: 0 0 3px 1px #000;
-    color: #ff00ff;
-    padding: 0 0.5em;
-    /* animation: hell-anim 6s infinite */
+    --bg-color: #00000090;
+    --border-color: #000;
+    --shadow-color: #00000090;
+    --color: #ff00ff;
+    font-weight: bold;
 }
-
-/* .difficult-badge__11::before {
-    content: "[";
-}
-
-.difficult-badge__11::after {
-    content: "]";
-} */
 
 .difficult-badge__hell,
 .difficult-badge__10 {
-    background-color: #ff00ff;
-    box-shadow: 0 0 3px 1px #ff00ff;
+    --bg-color: #ff00904f;
+    --border-color: #f9249c80;
+    --shadow-color: #f9249c50;
     /* animation: hell-anim 6s infinite */
+
 }
 
 .difficult-badge__9 {
-    background-color: #ff00ff;
-    box-shadow: 0 0 3px 1px #ff00ff;
-    /* animation: hell-anim 6s infinite */
+    --bg-color: #ff009030;
+    --border-color: #f9249c80;
+    --shadow-color: #f9249c30;
 }
 
 @keyframes hell-anim {
@@ -641,30 +648,35 @@
 
 .difficult-badge__insane,
 .difficult-badge__8 {
-    background-color: #f9249c;
-    box-shadow: 0 0 3px 1px #f9249c;
+    --bg-color: #ff009030;
+    --border-color: #f9249c70;
+    --shadow-color: #f9249c30;
 }
 
 .difficult-badge__expert,
 .difficult-badge__7 {
-    background-color: crimson;
+    --bg-color: #dc143c30;
+    --border-color: #dc143c70;
 }
 
 .difficult-badge__pro,
 .difficult-badge__6 {
-    background-color: orange;
+    --bg-color: #ffa50030;
+    --border-color: #ffa50070;
 }
 
 
 
 .difficult-badge__standard,
 .difficult-badge__5 {
-    background-color: greenyellow;
+    --bg-color: #adff2f30;
+    --border-color: #adff2f70;
 }
 
 .difficult-badge__easy,
 .difficult-badge__4 {
-    background-color: lime;
+    --bg-color: #00ff0030;
+    --border-color: #00ff0070;
 }
 
 .version-badge::before {

@@ -29,7 +29,7 @@ export const badgeElements = {
     difficultBadge: (difficulty, prefix = "") => {
         if (difficulty == "") return "";
         const badge = `
-            <p class="badge difficult-badge__${difficulty}" >
+            <p class="badge difficult-badge difficult-badge__${difficulty}" >
                 ${prefix} ${DIFFICULTY_NAMES[difficulty]}
                     </p >
             `;
