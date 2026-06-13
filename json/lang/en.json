@@ -350,5 +350,6 @@
     "showSeries": "Show Game Series",
     "series": "Series",
     "update": "Update",
-    "showSeparator": "Group digits"
+    "showSeparator": "Group digits",
+    "openComments": "Open Comments"
 }

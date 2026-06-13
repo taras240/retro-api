@@ -15,6 +15,7 @@ import { parseCurrentGameLevel } from "../functions/parseRP.js";
 import { createAutoScroll } from "../functions/autosScroll.js";
 import { UI_EVENTS_LIST } from "../enums/UIEvents.js";
 import { saveOrder } from "../functions/customOrder.js";
+import { showComments } from "../components/comments.js";
 export class AchievementsBlock extends Widget {
     widgetIcon = {
         description: "cheevos widget",
@@ -23,26 +24,27 @@ export class AchievementsBlock extends Widget {
     filters = {};
     get contextMenuItems() {
         return [
+            ...this.cheevoMenu(event),
+            {
+                type: inputTypes.DIVIDER,
+            },
             {
                 label: ui.lang.style,
                 elements: [
                     {
                         type: inputTypes.CHECKBOX,
-                        id: "show-load-anim",
                         label: ui.lang.showLoadAnimation,
                         checked: this.uiProps.showLoadAnimation,
                         onChange: (event) => this.uiProps.showLoadAnimation = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        id: "show-mario",
                         label: ui.lang.unlockAnimation,
                         checked: this.uiProps.showMario,
                         onChange: (event) => this.uiProps.showMario = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        id: "stretch-achieves",
                         label: ui.lang.stretch,
                         checked: this.uiProps.stretchAchievements,
                         onChange: (event) => this.uiProps.stretchAchievements = event.currentTarget.checked,
@@ -75,6 +77,12 @@ export class AchievementsBlock extends Widget {
                         value: this.uiProps.cheevosMargin,
                         onInput: (event) => this.uiProps.cheevosMargin = event.currentTarget.value,
                     },
+                    {
+                        type: inputTypes.CHECKBOX,
+                        label: ui.lang.showBorders,
+                        checked: this.uiProps.showBorders,
+                        onChange: (event) => this.uiProps.showBorders = event.currentTarget.checked,
+                    },
 
                 ]
             },
@@ -83,7 +91,6 @@ export class AchievementsBlock extends Widget {
                 elements: [
                     {
                         type: inputTypes.CHECKBOX,
-                        id: "autoscroll-achieves",
                         label: ui.lang.autoscroll,
                         checked: this.uiProps.autoscroll,
                         onChange: (event) => this.uiProps.autoscroll = event.currentTarget.checked,
@@ -114,14 +121,12 @@ export class AchievementsBlock extends Widget {
                     {
                         label: ui.lang.showHeader,
                         type: inputTypes.CHECKBOX,
-                        id: "hide-achivs-header",
                         checked: this.uiProps.showHeader,
                         onChange: (event) => this.uiProps.showHeader = event.currentTarget.checked,
                     },
                     {
                         label: ui.lang.showBackground,
                         type: inputTypes.CHECKBOX,
-                        id: "show-bg",
                         checked: this.uiProps.bgVisibility,
                         onChange: (event) => this.uiProps.bgVisibility = event.currentTarget.checked,
                     },]
@@ -131,7 +136,6 @@ export class AchievementsBlock extends Widget {
                 elements: [
                     {
                         type: inputTypes.CHECKBOX,
-                        id: "hide-unearned",
                         label: ui.lang.showOverlay,
                         checked: this.uiProps.showPrevOverlay,
                         onChange: (event) => this.uiProps.showPrevOverlay = event.currentTarget.checked,
@@ -146,6 +150,9 @@ export class AchievementsBlock extends Widget {
                     })),
                 ]
             },
+            {
+                type: inputTypes.DIVIDER,
+            },
             this.contextSortMenu(),
             this.contextFilterMenu(),
             this.contextMultiGameMenu(),
@@ -155,7 +162,6 @@ export class AchievementsBlock extends Widget {
                 elements: [
                     {
                         type: inputTypes.CHECKBOX,
-                        id: "grouping",
                         label: ui.lang.groupElements,
                         checked: this.uiProps.isGrouping,
                         onChange: (event) => this.uiProps.isGrouping = event.currentTarget.checked,
@@ -171,7 +177,6 @@ export class AchievementsBlock extends Widget {
                     })),
                     {
                         type: inputTypes.CHECKBOX,
-                        id: "grouping-title",
                         label: ui.lang.showCheevosGroupTitle,
                         checked: this.uiProps.showGroupHeader,
                         onChange: (event) => this.uiProps.showGroupHeader = event.currentTarget.checked,
@@ -180,16 +185,19 @@ export class AchievementsBlock extends Widget {
 
 
             },
-            {
-                type: inputTypes.CHECKBOX,
-                id: `${this.sectionID}-show-borders`,
-                label: ui.lang.showBorders,
-                checked: this.uiProps.showBorders,
-                onChange: (event) => this.uiProps.showBorders = event.currentTarget.checked,
-            },
-
-
         ];
+    }
+    cheevoMenu = (event) => {
+        const cheevoElement = event?.target.closest(".achiv-block");
+        if (!cheevoElement) return [];
+        const cheevoID = cheevoElement.dataset.achivId;
+        return [
+            {
+                label: ui.lang.openComments,
+                type: inputTypes.BUTTON,
+                onClick: () => showComments(cheevoID, 2),
+            }
+        ]
     }
     contextSortMenu = () => {
         return {
@@ -205,14 +213,12 @@ export class AchievementsBlock extends Widget {
                 })),
                 {
                     type: inputTypes.CHECKBOX,
-                    id: "reverse-sort",
                     label: ui.lang.reverse,
                     checked: this.uiProps.reverseSort == -1,
                     onChange: (event) => this.uiProps.reverseSort = event.currentTarget.checked,
                 },
                 {
                     type: inputTypes.CHECKBOX,
-                    id: "strict-sort",
                     label: ui.lang.strictMode,
                     checked: this.uiProps.strictSort,
                     onChange: (event) => this.uiProps.strictSort = event.currentTarget.checked,
@@ -236,7 +242,6 @@ export class AchievementsBlock extends Widget {
                 })),
                 {
                     type: inputTypes.CHECKBOX,
-                    id: "hide-filtered",
                     label: ui.lang.hideFiltered,
                     checked: this.uiProps.hideFiltered,
                     onChange: (event) => this.uiProps.hideFiltered = event.currentTarget.checked,
@@ -277,8 +282,6 @@ export class AchievementsBlock extends Widget {
 
                 return {
                     type: inputTypes.CHECKBOX,
-                    name: `${this.sectionID}-set`,
-                    id: `${this.sectionID}-set-${setID}`,
                     label: setName,
                     checked: !this.uiProps.hiddenSets.includes(setID),
                     onChange: () => this.updateHiddenSets(setID),
@@ -289,8 +292,6 @@ export class AchievementsBlock extends Widget {
                 const setName = Object.keys(sets).find(name => sets[name] === setID);
                 return {
                     type: inputTypes.CHECKBOX,
-                    name: `${this.sectionID}-set`,
-                    id: `${this.sectionID}-set-${setID}`,
                     label: setName,
                     checked: !this.uiProps.hiddenSets.includes(setID),
                     onChange: () => this.updateHiddenSets(setID),
@@ -304,7 +305,7 @@ export class AchievementsBlock extends Widget {
         // overlayType: overlayNames.BORDER,
         ACHIV_MIN_SIZE: 60,
         ACHIV_MAX_SIZE: 128,
-        stretchAchievements: false,
+        stretchAchievements: true,
         isGrouping: false,
         groupBy: CHEEVO_GROUPS.UNLOCK_STATUS,
         autoscroll: true,

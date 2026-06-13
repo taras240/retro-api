@@ -33,21 +33,22 @@ export class Target extends Widget {
 
     get contextMenuItems() {
         return [
-
+            ...this.cheevoMenu(event),
+            {
+                type: inputTypes.DIVIDER,
+            },
             {
                 label: ui.lang.style,
                 elements: [
                     {
                         label: ui.lang.showBackground,
                         type: inputTypes.CHECKBOX,
-                        id: "hide-target-bg",
                         checked: !this.uiProps.hideBg,
                         onChange: (event) => this.uiProps.hideBg = !event.currentTarget.checked,
                         // event: `onchange="ui.target.uiProps.hideBg = !this.checked;"`,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        id: "fixed-count-switcher",
                         label: ui.lang.fixedSize,
                         checked: this.uiProps.isFixedSize,
                         onChange: (event) => this.uiProps.isFixedSize = event.currentTarget.checked,
@@ -63,28 +64,10 @@ export class Target extends Widget {
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        id: "contrast-highlight-target",
                         label: ui.lang.contrastHighlight,
                         checked: this.uiProps.contrastHighlight,
                         onChange: (event) => this.uiProps.contrastHighlight = event.currentTarget.checked,
                     },
-                    // {
-                    //     type: inputTypes.CHECKBOX,
-                    //     name: "hide-unearned",
-                    //     id: "hide-unearned",
-                    //     label: ui.lang.showOverlay,
-                    //     checked: this.SHOW_PREV_OVERLAY,
-                    //     event: `onchange="ui.target.SHOW_PREV_OVERLAY = this.checked"`,
-                    // },
-                    // {
-                    //     type: inputTypes.CHECKBOX,
-                    //     name: "show-border",
-                    //     id: "show-border",
-                    //     label: ui.lang.showImageBorder,
-                    //     checked: this.SHOW_PREV_BORDER,
-                    //     event: `onchange="ui.target.SHOW_PREV_BORDER = this.checked"`,
-                    // },
-
                     {
                         type: inputTypes.STEPPER,
                         label: ui.lang.fontSize,
@@ -99,7 +82,6 @@ export class Target extends Widget {
                 elements: [
                     {
                         type: inputTypes.CHECKBOX,
-                        id: "autoscroll-target",
                         label: ui.lang.autoscroll,
                         checked: this.uiProps.autoscroll,
                         onChange: (event) => this.uiProps.autoscroll = event.currentTarget.checked
@@ -129,7 +111,6 @@ export class Target extends Widget {
                 elements: [
                     {
                         type: inputTypes.CHECKBOX,
-                        id: "show-overlay",
                         label: ui.lang.showOverlay,
                         checked: this.uiProps.showPrevOverlay,
                         onChange: (event) => this.uiProps.showPrevOverlay = event.currentTarget.checked,
@@ -149,27 +130,23 @@ export class Target extends Widget {
                     {
                         label: ui.lang.showHeader,
                         type: inputTypes.CHECKBOX,
-                        id: "hide-target-header",
                         checked: this.uiProps.showHeader,
                         onChange: (event) => this.uiProps.showHeader = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        id: "show-genre-badge",
                         label: ui.lang.showGenreBadges,
                         checked: this.uiProps.showGenre,
                         onChange: (event) => this.uiProps.showGenre = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        id: "show-level",
                         label: ui.lang.showLevel,
                         checked: this.uiProps.showLevel,
                         onChange: (event) => this.uiProps.showLevel = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        id: "show-events-checkbox",
                         label: ui.lang.showEvents,
                         checked: this.uiProps.showEvents,
                         onChange: (event) => this.uiProps.showEvents = event.currentTarget.checked,
@@ -183,25 +160,38 @@ export class Target extends Widget {
                     // },
                     {
                         type: inputTypes.CHECKBOX,
-                        id: "progression-bar",
                         label: ui.lang.showCheevoUnlockRateBar,
                         checked: this.uiProps.showCheevoUnlockRateBar,
                         onChange: (event) => this.uiProps.showCheevoUnlockRateBar = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        id: "show-pins",
                         label: ui.lang.showPins,
                         checked: this.uiProps.showPins,
                         onChange: (event) => this.uiProps.showPins = event.currentTarget.checked,
                     },
                 ]
             },
+            {
+                type: inputTypes.DIVIDER,
+            },
             this.contextSortMenu(),
             this.contextFilterMenu(),
             this.contextMultiGameMenu(),
             this.contextSetsMenu(),
         ];
+    }
+    cheevoMenu = (event) => {
+        const cheevoElement = event?.target.closest(".target-achiv");
+        if (!cheevoElement) return [];
+        const cheevoID = cheevoElement.dataset.achivId;
+        return [
+            {
+                label: ui.lang.openComments,
+                type: inputTypes.BUTTON,
+                onClick: () => showComments(cheevoID, 2),
+            }
+        ]
     }
     contextSortMenu = () => ({
         label: ui.lang.sort,

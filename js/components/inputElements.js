@@ -104,7 +104,6 @@ const group = ({ label }) => {
        <div class="group-header">${label}</div>
     `
 }
-const divider = () => ``;
 const colorInput = ({ value, id, label, onChange }) => {
 
 

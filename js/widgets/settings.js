@@ -668,7 +668,9 @@ export class Settings extends Widget {
                     container.appendChild(settingItemsLine);
                 }
                 else {
-                    container.append(inputElement(setting));
+                    if (setting && setting.type !== inputTypes.DIVIDER) {
+                        container.append(inputElement(setting));
+                    }
                 }
             })
 
