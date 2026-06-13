@@ -201,66 +201,6 @@ export class Target extends Widget {
             this.contextFilterMenu(),
             this.contextMultiGameMenu(),
             this.contextSetsMenu(),
-            {
-                label: ui.lang.level_test,
-                elements: [
-                    {
-                        type: inputTypes.CHECKBOX,
-                        id: "hide-passed-levels",
-                        label: ui.lang.hidePassedLevels,
-                        checked: this.uiProps.hidePassedLevels,
-                        onChange: (event) => this.uiProps.hidePassedLevels = event.currentTarget.checked,
-                    },
-                    {
-                        type: inputTypes.CHECKBOX,
-                        id: "highlight-passed",
-                        label: ui.lang.highLightPassedLevels,
-                        checked: this.uiProps.highlightPassedLevels,
-                        onChange: (event) => this.uiProps.highlightPassedLevels = event.currentTarget.checked,
-                    },
-
-                ],
-            },
-            {
-                label: ui.lang.data,
-                elements: [
-                    {
-                        type: inputTypes.BUTTON,
-                        id: "fill",
-                        label: ui.lang.fillAll,
-                        onClick: () => this.fillItems(),
-                    },
-                    {
-                        type: inputTypes.CHECKBOX,
-                        id: "autofill",
-                        label: ui.lang.autofill,
-                        checked: this.uiProps.autoFillTarget,
-                        onChange: (event) => this.uiProps.autoFillTarget = event.currentTarget.checked,
-                    },
-                    {
-                        type: inputTypes.BUTTON,
-                        id: "clear-all",
-                        label: ui.lang.clearAll,
-                        onClick: () => this.clearAllAchivements(),
-                    },
-                    {
-                        type: inputTypes.CHECKBOX,
-                        id: "autoclear",
-                        label: ui.lang.autoclearEarned,
-                        checked: this.uiProps.autoClearTarget,
-                        onChange: (event) => this.uiProps.autoClearTarget = event.currentTarget.checked,
-                    },
-                    {
-                        prefix: ui.lang.clearDelay,
-                        postfix: "sec",
-                        type: inputTypes.NUM_INPUT,
-                        id: "autoclear-delay",
-                        label: ui.lang.clearDelay,
-                        value: this.uiProps.autoClearTargetTime,
-                        onChange: (event) => this.uiProps.autoClearTargetTime = event.currentTarget.value,
-                    },
-                ],
-            },
         ];
     }
     contextSortMenu = () => ({
@@ -374,15 +314,12 @@ export class Target extends Widget {
         showHeader: true,
         hideBg: false,
         showCheevoUnlockRateBar: false,
-        autoClearTarget: false,
-        autoFillTarget: true,
-        autoClearTargetTime: 5,
         autoscroll: false,
         showDifficult: true,
         showLevel: true,
         showGenre: true,
         hidePassedLevels: false,
-        highlightPassedLevels: true,
+        highlightPassedLevels: false,
         showEvents: false,
         reverseSort: 1,
         strictSort: false,
@@ -458,9 +395,6 @@ export class Target extends Widget {
         },
         fixedSizeCount(value) {
             return (value < 1) ? 1 : ~~value
-        },
-        autoClearTargetTime(value) {
-            return value < 0 ? 0 : +value;
         },
         reverseSort(value) {
             return value ? -1 : 1;
@@ -771,8 +705,6 @@ export class Target extends Widget {
         this.section.classList.toggle("show-events", this.uiProps.showEvents);
         this.section.classList.toggle("compact-header", !this.uiProps.showHeader);
         this.section.classList.toggle("hide-bg", this.uiProps.hideBg);
-        this.section.classList.toggle("hide-passed", this.uiProps.hidePassedLevels);
-        this.section.classList.toggle("highlight-passed", this.uiProps.highlightPassedLevels);
         this.section.classList.toggle("fixed-size", this.uiProps.isFixedSize);
         this.section.classList.toggle("show-progression-bar", this.uiProps.showCheevoUnlockRateBar);
         this.section.classList.toggle("show-overlay", this.uiProps.showPrevOverlay);
@@ -812,8 +744,7 @@ export class Target extends Widget {
         // }
         this.genreFilter = "";
         this.isDisplayOrderChanged = false;
-        this.uiProps.autoFillTarget && this.fillItems();
-        this.uiProps.autoClearTarget && this.clearEarned();
+        this.fillItems();
         this.fillPinnedItems();
         this.markPinned();
     }
@@ -861,7 +792,6 @@ export class Target extends Widget {
         this.applyFilter();
         this.applySort();
         this.genreFilter && this.filterByGenre(this.genreFilter, true);
-        this.delayedRemove();
     }
     autoscroll;
     startAutoScroll() {
@@ -988,9 +918,6 @@ export class Target extends Widget {
             this.applyFilter();
             this.applySort();
         }
-        // if adding earned element
-        this.delayedRemove();
-
     }
     markPinned() {
         const gameID = watcher.GAME_DATA?.ID;
@@ -1121,13 +1048,6 @@ export class Target extends Widget {
     }
     clearAllAchivements() {
         this.container.innerHTML = "";
-    }
-    delayedRemove() {
-        if (this.uiProps.autoClearTarget) {
-            this.container.querySelectorAll(".earned").forEach((element) => {
-                setTimeout(() => element.remove(), this.uiProps.autoClearTargetTime * 1000);
-            });
-        }
     }
     pushToPins(cheevoID) {
         if (!watcher.CHEEVOS[cheevoID]) return;
