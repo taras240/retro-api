@@ -338,9 +338,9 @@
 .map-icon {
     height: 1.2em;
     background: var(--font-color);
-    margin-bottom: -0.2em;
+    margin-right: 0.2em;
     mask-image: url(../assets/img/flag.svg);
-    mask-position: bottom;
+    mask-position: center 2px;
 }
 
 .progression {
