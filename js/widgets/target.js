@@ -839,7 +839,7 @@ export class Target extends Widget {
         // ${buttonsHtml.editCheevoProps(achievement.ID)}
         const setElementHtml = () => {
             const subLevel = achievement.level?.toString()?.split(".")[1];
-            const level = achievement.zone ? subLevel ? `${achievement.zone} [${subLevel}]` : achievement.zone : achievement.level?.toString()?.replace(".", "-");
+            const level = achievement.zone ? subLevel ? `${achievement.zone} - ${subLevel}` : achievement.zone : achievement.level?.toString()?.replace(".", "-");
 
             const levelBadgeHtml = level ? badgeElements.cheevoLevel(level, true) : "";
 
