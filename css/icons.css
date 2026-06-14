@@ -27,7 +27,7 @@
 }
 
 .badge_transparent.badge-button:hover {
-    background-color: var(--font-color);
+    background-color: var(--accent-color);
     color: var(--main-color);
 }
 
