@@ -1,6 +1,5 @@
 /* *-----------------BADGES----------- */
 .badge {
-    --badge-font-color: black;
     --badge-bg-color: lime;
     display: inline;
     padding: 0 0.25em;
@@ -9,7 +8,7 @@
     text-transform: uppercase;
     font-size: 0.8em;
     font-weight: 700;
-    color: var(--badge-font-color);
+    color: var(--font-color);
     overflow: hidden;
     text-overflow: ellipsis;
     text-wrap: nowrap;
@@ -23,12 +22,12 @@
 }
 
 .badge-button:hover {
-    background-color: var(--badge-font-color);
+    background-color: var(--font-color);
     color: var(--badge-bg-color);
 }
 
 .badge_transparent.badge-button:hover {
-    background-color: var(--badge-font-color);
+    background-color: var(--font-color);
     color: var(--main-color);
 }
 
@@ -48,18 +47,32 @@
     --badge-bg-color: lime;
 }
 
+.badge-green {
+    --badge-bg-color: #03c60320;
+}
+
 .badge_dark-green {
     --badge-bg-color: #16a34a;
+    --font-color: black;
 }
 
 .badge_gold {
     --badge-bg-color: goldenrod;
-    --font-color: var(--badge-font-color);
+    --font-color: black;
+}
+
+.badge-gold {
+    --badge-bg-color: #ffd52f3a;
+}
+
+.badge-button.badge-gold:hover {
+    background-color: var(--font-color);
+    color: black;
 }
 
 .badge_transparent {
     --badge-bg-color: #4d4d4d5e;
-    --badge-font-color: var(--accent-color);
+    --font-color: var(--font-color);
     border: 1px solid var(--accent-color);
     /* test */
     font-weight: normal;
@@ -71,26 +84,25 @@
 
 .badge_custom-color {
     --badge-bg-color: var(--bg-color);
-    --badge-font-color: var(--color);
+    --font-color: var(--color);
 }
 
 .badge_selection {
     --badge-bg-color: var(--selection-color);
-    --badge-font-color: var(--font-color);
     display: inline-block !important;
     border: none;
     /* test */
     font-weight: normal;
     font-size: 1em;
     background: var(--badge-bg-color);
-    color: var(--badge-font-color);
+    color: var(--font-color);
     padding: 0 0.5em;
 }
 
 .badge_black {
     font-weight: normal;
     --badge-bg-color: black;
-    --badge-font-color: white;
+    --font-color: white;
     padding: 1px 0.25em;
 }
 
@@ -100,7 +112,7 @@
 
 .highlight-badge {
     --badge-bg-color: greenyellow;
-    --badge-font-color: black;
+    --font-color: black;
     font-size: inherit;
     font-weight: inherit;
     text-transform: none;
@@ -115,7 +127,7 @@
 .game-title_genre,
 .badge_grey {
     --badge-bg-color: darkslategray;
-    --badge-font-color: white;
+    --font-color: white;
 }
 
 .game-title_hack {
@@ -171,7 +183,6 @@
     height: 1em;
     aspect-ratio: 1;
     background-color: var(--font-color);
-    /* background-color: var(--badge-font-color); */
     mask-size: contain;
     mask-position: center;
     mask-repeat: no-repeat;
@@ -326,7 +337,7 @@
 
 .map-icon {
     height: 1.2em;
-    background-color: black;
+    background: var(--font-color);
     margin-bottom: -0.2em;
     mask-image: url(../assets/img/flag.svg);
     mask-position: bottom;

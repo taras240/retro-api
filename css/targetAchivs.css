@@ -23,7 +23,7 @@
 }
 
 .target_section.fixed-size .target-container {
-  --cheevo-fixed-height: 7.5em;
+  --cheevo-fixed-height: 7em;
   max-height: calc(var(--max-count)*calc(var(--cheevo-fixed-height) + 1px) + 3px);
 }
 
@@ -385,7 +385,8 @@
   justify-content: space-between;
   z-index: 1;
   align-content: stretch;
-  font-size: 1.05em;
+  font-size: 1em;
+  gap: 0.25em;
 }
 
 .target__cheevo-header {
@@ -394,6 +395,7 @@
   text-wrap: nowrap;
   width: 100%;
   overflow-x: scroll;
+  flex-shrink: 0;
 }
 
 .target__cheevo-header>* {
@@ -401,8 +403,9 @@
 }
 
 .list-item__text {
-  font-size: 1em;
+  font-size: 0.95em;
   color: var(--font-color);
+  opacity: 0.7;
   /* display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
@@ -490,7 +493,7 @@
 .show-genre .target-genre-badge,
 .show-level .target-level-badge {
   display: inline;
-
+  padding: 0 0.25em;
 }
 
 .target-achiv:not(.show-difficult) .icons-row-list .difficult-icon {
@@ -499,6 +502,7 @@
 
 .target__cheevo-details .icons-row-list {
   flex-wrap: nowrap;
+  font-size: 0.95em;
 }
 
 .target__aotw-container {

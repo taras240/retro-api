@@ -868,18 +868,16 @@ export class Target extends Widget {
             </div>
             <div class="target__cheevo-details">
                 <h3 class="target__cheevo-header">
-                    ${levelBadgeHtml}
-                    ${genresBadgesHtml}
                     <a target="_blanc" data-title="${ui.lang.goToRAHint}" href="${cheevoUrl(achievement)}">
-                        ${achievement.Title} ${genresIcons}
-                    </a>
+                        ${achievement.Title}
+                    </a>${levelBadgeHtml}${genresBadgesHtml}
                 </h3>
                 <p class="list-item__text">${achievement.Description}</p>
                 <div class="icons-row-list">
                     ${icons.cheevoType(achievement.Type)}
                     ${signedIcons.points(achievement.Points)}
                     ${signedIcons.retropoints(achievement.TrueRatio)}
-                    ${achievement.timeToUnlock ? signedIcons.time(secondsToBadgeString(achievement.timeToUnlock)) : ""}
+                    ${achievement.timeToUnlock ? signedIcons.time(secondsToBadgeString(achievement.timeToUnlock, true)) : ""}
                     ${signedIcons.rarity(achievement.rateEarnedHardcore)}
                     ${signedIcons.retroRatio(achievement.retroRatio)}
                     ${badgeElements.difficultBadge(achievement.difficulty)}

@@ -22,7 +22,7 @@ export const badgeElements = {
     gameTitle: (text) => badgeTemplate({ text, classes: [text.toLowerCase().replace(/[\s\'\"\`]/g, "-")] }),
     gameGenre: (text) => badgeTemplate({ text, classes: ["game-title_genre"] }),
     cheevoLevel: (level, isTarget) => `<div 
-            class="${isTarget ? "target-level-badge" : ""} badge badge_gold" 
+            class="${isTarget ? "target-level-badge" : ""} badge badge-green" 
             data-title="${ui.lang.level}" >
             ${icons.flag}${level}
         </div>`,
@@ -41,7 +41,7 @@ export const badgeElements = {
     },
     buttonGenreBadge: (text) => badgeTemplate({
         text: text,
-        classes: ["target-genre-badge", "badge-bold", "badge_gold", "badge-button"],
+        classes: ["target-genre-badge", "badge-bold", "badge-gold", "badge-button"],
         // hint: text.toUpperCase(),
         dataProp: `data-genre="${text}"`
     }),
