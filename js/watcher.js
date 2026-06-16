@@ -1,9 +1,11 @@
+import { raapi } from "./api/index.js";
 import { dialogWindow } from "./components/dialogWindow.js";
 import { ALERT_TYPES } from "./enums/alerts.js";
 import { CHEEVO_TYPES } from "./enums/cheevoTypes.js";
 import { GAME_AWARD_TYPES } from "./enums/gameAwards.js";
 import { ONLINE_STATUS } from "./enums/onlineStatus.js";
 import { WATCHER_MODES } from "./enums/watcherModes.js";
+import { getSubsets } from "./functions/api/subsets.js";
 import { normalizeUserData } from "./functions/api/userDataNormalization.js";
 import { delay } from "./functions/delay.js";
 import { sendDiscordAlert } from "./functions/discord.js";
@@ -11,7 +13,7 @@ import { readLog } from "./functions/logParser.js";
 import { parseTimeParts } from "./functions/time.js";
 import { getAwardAlerts } from "./functions/watcher/awardsAlerts.js";
 import { onlineChecker } from "./functions/watcher/onlineStatus.js";
-import { APIEvents, apiWorker, config, configData, ui, watcher } from "./script.js";
+import { APIEvents, config, configData, ui, watcher } from "./script.js";
 export class Watcher {
     IS_HARD_MODE = true;
     isWatching = false;
@@ -71,7 +73,7 @@ export class Watcher {
     constructor() {
         this.isActive = false;
         this.online = onlineChecker({
-            getLastPlayedFunc: async () => (await apiWorker.getRecentlyPlayedGames({ count: 1 }))[0],
+            getLastPlayedFunc: async () => (await raapi.getRecentlyPlayedGames({ count: 1 }))[0],
             currentStatus: ONLINE_STATUS.offline,
         });
     }
@@ -145,9 +147,7 @@ export class Watcher {
             detail: { userData: { ...this.userData } }
         }));
     }
-    onAPIRequest() {
-        APIEvents.dispatchEvent(new CustomEvent("APIRequest"));
-    }
+    onAPIRequest() { }
     updateSessionData(cheevos = []) {
         cheevos?.forEach(cheevo => {
             if (cheevo?.isEarnedHardcore) {
@@ -167,8 +167,7 @@ export class Watcher {
             this.userInfoTimeout && clearTimeout(this.userInfoTimeout);
 
             this.userInfoTimeout = setTimeout(async () => {
-                this.onAPIRequest();
-                const userSummary = await apiWorker.getUserSummary({ gamesCount: 0, achievesCount: 0 });
+                const userSummary = await raapi.getUserSummary({ games: 0, cheevos: 0 });
                 this.updateUserData({ userSummary, isInit });
             }, delay);
             return;
@@ -194,7 +193,6 @@ export class Watcher {
         // }
 
         const status = await this.online.check();
-        this.onAPIRequest();
         console.log(`Online status: ${status}, Last seen online: ${this.online.getLastSeen()}`);
         if (status === ONLINE_STATUS.online) {
             doOnline();
@@ -238,7 +236,7 @@ export class Watcher {
         const onGameChanged = async (raProfileInfo) => {
             const getGameID = async (raProfileInfo) => {
                 const profileGameID = raProfileInfo.LastGameID;
-                const subsets = await apiWorker.getSubsets(profileGameID);
+                const subsets = await getSubsets(profileGameID);
 
                 const hasSubsets = Object.values(subsets).length > 1;
                 if (hasSubsets && configData.ignoreSubsets) {
@@ -246,7 +244,7 @@ export class Watcher {
                 }
                 else if (hasSubsets && configData.preventSubsetBug) {
                     await delay(250);
-                    const completionData = await apiWorker.getUserCompletionProgress({ count: 1, offset: 0 });
+                    const completionData = await raapi.getUserCompletionProgress({ count: 1, offset: 0 });
                     const completionGameID = completionData?.Results?.[0]?.GameID ?? profileGameID;
                     await delay(250);
                     return Object.values(subsets).includes(completionGameID) ? completionGameID : profileGameID;
@@ -264,8 +262,7 @@ export class Watcher {
         }
         if (!isStart && !isForced && (configData.pauseIfOffline && this.onlineCheckTimeOut)) return;
 
-        const raProfileInfo = await apiWorker.getProfileInfo({});
-        this.onAPIRequest();
+        const raProfileInfo = await raapi.getUserProfile({});
 
         if (isGameChanged(raProfileInfo, isStart)) {
             await onGameChanged(raProfileInfo);
@@ -283,7 +280,6 @@ export class Watcher {
         this.updateUserData({ raProfileInfo });
         if (!this.isOnline && configData.pauseIfOffline) {
             await this.checkForOnline();
-            this.onAPIRequest();
         }
         else if (!configData.pauseIfOffline) {
             // this.online.setOnline();
@@ -320,9 +316,8 @@ export class Watcher {
     }
     async updateGameData(gameID) {
         const getLastGameID = async () => {
-            const gameID = Object.values(await apiWorker.getRecentlyPlayedGames({ count: 1 }))[0]?.ID;
+            const gameID = Object.values(await raapi.getRecentlyPlayedGames({ count: 1 }))[0]?.ID;
             configData.gameID = gameID;
-            this.onAPIRequest();
             return gameID;
         }
 
@@ -332,9 +327,8 @@ export class Watcher {
 
         try {
             const setID = config.gamesDB[gameID]?.setID || gameID;
-            const gameData = await apiWorker.getGameInfoAndProgress({ gameID: setID, withTimesData: true });
+            const gameData = await raapi.getGameInfoAndUserProgress({ gameID: setID, withTimesData: true });
             this.GAME_DATA = gameData;
-            this.onAPIRequest();
         } catch (error) {
             this.stop();
             console.error(error);
@@ -408,10 +402,10 @@ export class Watcher {
         try {
             // Get recent achievements
             if (!isLog) {
-                cheevos = await apiWorker.getRecentAchieves({
+                cheevos = await raapi.getUserRecentAchievements({
+                    username: configData.targetUser,
                     minutes: this.RECENT_ACHIVES_RANGE_MINUTES,
                 });
-                this.onAPIRequest();
             }
 
             const cheevosArray = checkForNewCheevos(cheevos);
@@ -444,7 +438,6 @@ export class Watcher {
     setSubset(subsetID) {
         const gameID = this.GAME_DATA.ID;
         if (subsetID && subsetID === gameID) return;
-
         let visibleSubsets = config.gameConfig(gameID).visibleSubsets || [];
         if (visibleSubsets.includes(subsetID)) {
             visibleSubsets = visibleSubsets.filter(ID => ID !== subsetID);
@@ -454,8 +447,6 @@ export class Watcher {
         config.saveGameConfig(gameID, { visibleSubsets });
         config.writeConfiguration();
         this.updateGameData();
-
-
     }
     async autostart() {
         switch (configData.watcherMode) {

@@ -1,5 +1,5 @@
 import { UI } from "../ui.js";
-import { config, ui, apiWorker, watcher } from "../script.js";
+import { config, ui, watcher } from "../script.js";
 import { generateBadges, badgeElements } from "../components/badges.js";
 
 import { Widget } from "./widget.js";

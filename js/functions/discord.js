@@ -1,6 +1,6 @@
 import { ALERT_TYPES } from "../enums/alerts.js";
 import { GAME_AWARD_TYPES } from "../enums/gameAwards.js";
-import { apiWorker, config, configData, watcher } from "../script.js";
+import { config, configData, watcher } from "../script.js";
 import { delay } from "./delay.js";
 import { formatText } from "./formatText.js";
 import { cheevoUrl, gameImageUrl, gameUrl } from "./raLinks.js";

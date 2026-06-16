@@ -109,21 +109,25 @@ export const normalizeCheevos = (gameData, savedGameData = {}) => {
             normalizeAchievement(cheevo, gameData, savedGameData));
 }
 
-export const getNormalizedAotW = ({ AotwData, userName }) => {
-    console.log(AotwData);
+export const getNormalizedAotW = ({ aotwData, username }) => {
     // debugger;
-    const userEarned = AotwData.Unlocks
-        .find(user => user.User.toLowerCase() === userName?.toLowerCase()?.trim())
+    const userEarned = aotwData.Unlocks
+        .find(user => user.User.toLowerCase() === username?.toLowerCase()?.trim());
+    const startDate = new Date(aotwData.StartAt);
+    const endDate = new Date(startDate);
+    endDate.setDate(endDate.getDate() + 7);
+    const endTime = endDate.getTime();
     return {
-        ...AotwData.Achievement,
-        ConsoleName: AotwData.Console.Title,
-        ForumTopic: AotwData.ForumTopic.ID,
-        GameID: AotwData.Game.ID,
-        GameTitle: AotwData.Game.Title,
-        StartAt: AotwData.StartAt,
-        TotalPlayers: AotwData.TotalPlayers,
-        UnlocksHardcoreCount: AotwData.UnlocksHardcoreCount,
+        ...aotwData.Achievement,
+        ConsoleName: aotwData.Console.Title,
+        ForumTopic: aotwData.ForumTopic.ID,
+        GameID: aotwData.Game.ID,
+        GameTitle: aotwData.Game.Title,
+        StartAt: aotwData.StartAt,
+        TotalPlayers: aotwData.TotalPlayers,
+        UnlocksHardcoreCount: aotwData.UnlocksHardcoreCount,
         isEarned: !!userEarned,
-        isEarnedHardcore: !!userEarned && !!userEarned.HardcoreMode
+        isEarnedHardcore: !!userEarned && !!userEarned.HardcoreMode,
+        endTime
     }
 }

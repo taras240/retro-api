@@ -1,7 +1,7 @@
 import { UI } from "../ui.js";
 import { genreIcons, icons, signedIcons } from "../components/icons.js"
 import { generateBadges, badgeElements, goldBadge } from "../components/badges.js";
-import { apiWorker, config, ui, UIEvents, watcher } from "../script.js";
+import { config, ui, UIEvents, watcher } from "../script.js";
 import { Widget } from "./widget.js";
 import { applyFilter, applySort, cheevosFiterNames, cheevosSortNames, filterBy, filterMethods, sortBy } from "../functions/sortFilter.js";
 import { showComments } from "../components/comments.js";
@@ -21,6 +21,8 @@ import { createAutoScroll } from "../functions/autosScroll.js";
 import { UI_EVENTS_LIST } from "../enums/UIEvents.js";
 import { saveOrder } from "../functions/customOrder.js";
 import { CHEEVO_TYPES } from "../enums/cheevoTypes.js";
+import { contextSetsMenu } from "../functions/settings/subsetSettings.js";
+import { raapi } from "../api/index.js";
 
 export class Target extends Widget {
     sectionCode = "-target";
@@ -178,7 +180,10 @@ export class Target extends Widget {
             this.contextSortMenu(),
             this.contextFilterMenu(),
             this.contextMultiGameMenu(),
-            this.contextSetsMenu(),
+            contextSetsMenu({
+                isChecked: (setID) => !this.uiProps.hiddenSets.includes(setID),
+                onChange: (setID) => this.updateHiddenSets(setID),
+            }),
         ];
     }
     cheevoMenu = (event) => {
@@ -264,7 +269,7 @@ export class Target extends Widget {
             })) ?? []
         ]
     } : "";
-    contextSetsMenu = () => watcher.GAME_DATA?.visibleSubsets?.length ? {
+    contextSetsMenu_ = () => watcher.GAME_DATA?.visibleSubsets?.length ? {
         label: ui.lang.subsets,
         elements: [
             (() => {
@@ -1090,7 +1095,7 @@ export class Target extends Widget {
     }
 
     async showAotwEvent() {
-        const cheevo = await apiWorker.aotw();
+        const cheevo = await raapi.getAotW({});
 
         if (!cheevo || cheevo.wasShown) return;
         const rarity = 100 * cheevo.UnlocksHardcoreCount / cheevo.TotalPlayers;
@@ -1141,11 +1146,11 @@ export class Target extends Widget {
     }
     async hideAotw() {
         this.section.querySelector(`.target__aotw-container`)?.remove();
-        const aotw = await apiWorker.aotw();
-        apiWorker.cache.push({
+        const aotwData = await raapi.getAotW({});
+        config.cache.push({
             dataType: CACHE_TYPES.AOTW,
             data: {
-                ...aotw,
+                ...aotwData,
                 wasShown: true
             }
         })

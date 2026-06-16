@@ -1,8 +1,9 @@
+import { raapi } from "../api/index.js";
 import { badgeElements } from "../components/badges.js";
 import { buttonsHtml } from "../components/htmlElements.js";
 import { fromHtml } from "../functions/html.js";
 import { gameImageUrl, gameUrl } from "../functions/raLinks.js";
-import { apiWorker, ui } from "../script.js";
+import { ui } from "../script.js";
 import { UI } from "../ui.js";
 import { Widget } from "./widget.js";
 
@@ -115,9 +116,9 @@ export class WiiEvent extends Widget {
         }
         const bountyGames = {
             double: [34632, 187, 34619, 58, 35669, 43, 115, 35082, 34689, 34706, 34606, 34597, 34696, 35257, 171, 34604, 34600, 35935, 11088, 34664, 248, 89, 7775, 189, 190, 34714, 34903],
-            triple: [38, 144, 208, 34694, 195, 204, 100, 27, 34566, 34679, 34693, 35266, 34569, 34610, 34587, 34758, 34708, 34618, 34685, 34836]
+            triple: [38, 144, 208, 34694, 195, 204, 100, 27, 34566, 34679, 34693, 35266, 34569, 34610, 34587, 34758, 34708, 34618, 34685, 34836, 186]
         }
-        const completionProgress = (await apiWorker.completionProgress())?.Results ?? [];
+        const completionProgress = (await raapi.getUserCompletionProgress())?.Results ?? [];
         const eventGamesArray = completionProgress.map(game => {
 
             if (game.ConsoleID !== 19) return;

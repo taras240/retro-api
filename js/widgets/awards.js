@@ -1,9 +1,10 @@
 import { UI } from "../ui.js";
-import { config, ui, apiWorker } from "../script.js";
+import { config, ui } from "../script.js";
 import { Widget } from "./widget.js";
 import { gameImageUrl } from "../functions/raLinks.js";
 import { buttonsHtml } from "../components/htmlElements.js";
 import { GAME_AWARD_TYPES } from "../enums/gameAwards.js";
+import { raapi } from "../api/index.js";
 
 export class Awards extends Widget {
     widgetIcon = {
@@ -20,9 +21,7 @@ export class Awards extends Widget {
         this.applyPosition();
     }
     generateWidget() {
-        const headerElementsHtml = `
-            ${buttonsHtml.reload("ui.awards.updateAwards()")}
-        `;
+        const headerElementsHtml = buttonsHtml.reload();
 
         const widgetData = {
             classes: ["awards_section", "section"],
@@ -41,9 +40,15 @@ export class Awards extends Widget {
     }
     addEvents() {
         super.addEvents();
+        this.section.addEventListener("click", (event) => {
+            if (event.target.closest(".update-icon")) {
+                event.stopPropagation();
+                this.updateAwards();
+            }
+        })
     }
     async updateAwards() {
-        const response = await apiWorker.getUserAwards({});
+        const response = await raapi.getUserAwards({});
         this.parseAwards(response);
     }
     parseAwards(userAwards) {

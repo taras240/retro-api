@@ -1,5 +1,6 @@
+import { raapi } from "../api/index.js";
 import { RA_PLATFORM_CODES } from "../enums/RAPlatforms.js";
-import { apiWorker, config } from "../script.js";
+import { config } from "../script.js";
 import { sendJsonToDiscord } from "./discord.js";
 import { formatTime } from "./time.js";
 
@@ -47,7 +48,7 @@ async function copyToClipboard(text) {
 }
 // exportDataAsCSV
 async function exportCompletionDataToXlsx() {
-    const completion = await apiWorker.completionProgress();
+    const completion = await raapi.getUserCompletionProgress();
     const completionResults = completion?.Results.map(game => ({
         Title: game.Title,
         ID: game.GameID,
@@ -89,12 +90,10 @@ async function exportCompletionDataToXlsx() {
     downloadCSV(csvContent, "completion");
 }
 async function exportWantToPlayToCSV() {
-    const wantList = await apiWorker.getWantToPlayGamesList({ count: 500 });
+    const wantList = await raapi.getWantToPlayGamesList({ count: 500 });
     const wantListResults = wantList?.map(game => ({
-        Title: game.Title,
-        ID: game.ID,
+        ...game,
         ConsoleName: RA_PLATFORM_CODES[game.ConsoleID]?.Name ?? "-",
-        AchievementsPublished: game.AchievementsPublished,
     }));
     const headers = [
         ...Object.keys(wantListResults[0])

@@ -16,6 +16,7 @@ import { createAutoScroll } from "../functions/autosScroll.js";
 import { UI_EVENTS_LIST } from "../enums/UIEvents.js";
 import { saveOrder } from "../functions/customOrder.js";
 import { showComments } from "../components/comments.js";
+import { contextSetsMenu } from "../functions/settings/subsetSettings.js";
 export class AchievementsBlock extends Widget {
     widgetIcon = {
         description: "cheevos widget",
@@ -156,7 +157,10 @@ export class AchievementsBlock extends Widget {
             this.contextSortMenu(),
             this.contextFilterMenu(),
             this.contextMultiGameMenu(),
-            this.contextSetsMenu(),
+            contextSetsMenu({
+                isChecked: (setID) => !this.uiProps.hiddenSets.includes(setID),
+                onChange: (setID) => this.updateHiddenSets(setID),
+            }),
             {
                 label: ui.lang.groupBy,
                 elements: [
@@ -268,36 +272,6 @@ export class AchievementsBlock extends Widget {
                 checked: this.uiProps.mGameSelection === mGameName,
                 onChange: () => this.uiProps.mGameSelection = mGameName,
             }))
-        ]
-    } : "";
-    contextSetsMenu = () => watcher.GAME_DATA?.visibleSubsets?.length ? {
-        label: ui.lang.subsets,
-        elements: [
-            (() => {
-                const setID = watcher.GAME_DATA.ID;
-                let setName = "Main";
-                Object.entries(watcher.GAME_DATA.availableSubsets).forEach(([name, id]) => {
-                    if (id == setID) setName = name;
-                })
-
-                return {
-                    type: inputTypes.CHECKBOX,
-                    label: setName,
-                    checked: !this.uiProps.hiddenSets.includes(setID),
-                    onChange: () => this.updateHiddenSets(setID),
-                }
-            })(),
-            ...watcher.GAME_DATA.visibleSubsets.map(setID => {
-                const sets = watcher.GAME_DATA.availableSubsets;
-                const setName = Object.keys(sets).find(name => sets[name] === setID);
-                return {
-                    type: inputTypes.CHECKBOX,
-                    label: setName,
-                    checked: !this.uiProps.hiddenSets.includes(setID),
-                    onChange: () => this.updateHiddenSets(setID),
-                }
-
-            })
         ]
     } : "";
     uiDefaultValues = {
@@ -778,7 +752,6 @@ export class AchievementsBlock extends Widget {
         // this.fitCheevoSize()
     }
     setFilter({ filterName, state }) {
-        // console.log(filterName, state, event)
         state === 0 ?
             delete this.filters[filterName] :
             this.filters[filterName] = { filterName, state };

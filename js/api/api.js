@@ -1,9 +1,20 @@
 import { APIEvents } from "../script.js";
 
-const worker = new Worker(
-    new URL('./api.worker.js', import.meta.url),
-    { type: 'module' }
-);
+function getWorkerUrl() {
+    if (typeof import.meta?.url === "string") {
+        return new URL("./api.worker.js", import.meta.url);
+    }
+
+    const currentScript = document.currentScript;
+    if (currentScript?.src) {
+        return new URL("./api.worker.js", currentScript.src);
+    }
+
+    return new URL("/js/api/api.worker.js", window.location.origin);
+}
+const worker = new Worker(getWorkerUrl(), {
+    type: 'module',
+});
 const pending = new Map();
 
 worker.onmessage = ({ data }) => {

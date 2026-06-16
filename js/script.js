@@ -1,8 +1,8 @@
 import { Config } from "./config.js";
 import { UI } from "./ui.js";
-import { APIWorker } from "./apiWorker.js"
 import { Watcher } from "./watcher.js";
-let config, ui, apiWorker, watcher, APIEvents, UIEvents, userAuthData;
+import { initSubsets } from "./functions/api/subsets.js";
+let config, ui, watcher, APIEvents, UIEvents, userAuthData;
 
 const userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
@@ -14,15 +14,13 @@ else {
   UIEvents = new EventTarget();
   config = new Config();
   ui = new UI();
-  apiWorker = new APIWorker();
   watcher = new Watcher();
   window.ui = ui;
   window.config = config;
   window.configData = config.configData;
-  window.apiWorker = apiWorker;
   window.watcher = watcher;
   // userAuthData = new UserAuthData();
 }
 
-export { config, ui, apiWorker, watcher, APIEvents, UIEvents, userAuthData }
+export { config, ui, watcher, APIEvents, UIEvents, userAuthData }
 export const { configData } = config

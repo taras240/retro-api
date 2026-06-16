@@ -39,6 +39,7 @@ import { parseTimeParts } from "../functions/time.js";
 import { createAutoScroll } from "../functions/autosScroll.js";
 import { getRandomID } from "../functions/randomID.js";
 import { focusCheevoHtml } from "../components/statusWidget/focusCheevo.js";
+import { contextSetsMenu, contextSwitchSetsMenu } from "../functions/settings/subsetSettings.js";
 
 export class Status extends Widget {
     widgetIcon = {
@@ -51,8 +52,8 @@ export class Status extends Widget {
     }
     get contextMenuItems() {
         return [
-            this.contextSwitchSetsMenu(),
-            this.contextSetsMenu(),
+            contextSwitchSetsMenu(),
+            contextSetsMenu(),
 
             this.theme !== Status.themes.legacy ? {
                 label: ui.lang.elements,
@@ -310,41 +311,7 @@ export class Status extends Widget {
 
         ];
     }
-    contextSetsMenu = () => Object.values(watcher.GAME_DATA?.availableSubsets ?? {})?.length > 1 ? {
-        label: ui.lang.subsets,
-        elements: Object.entries(watcher.GAME_DATA?.availableSubsets).map(([subsetName, subsetID]) => {
-            subsetID = parseInt(subsetID);
-            const isCurrentSet = subsetID === watcher.GAME_DATA.ID;
-            if (isCurrentSet || !subsetID) return "";
-            const isVisible = config.gameConfig().visibleSubsets?.includes(subsetID);
-            const checked = isCurrentSet || isVisible;
-            return {
-                type: inputTypes.CHECKBOX,
-                label: subsetName,
-                checked,
-                onChange: () => watcher.setSubset(subsetID),
-            }
-        }),
-    } : "";
-    contextSwitchSetsMenu = () => Object.values(watcher.GAME_DATA?.availableSubsets ?? {})?.length > 1 ? {
-        label: ui.lang.switchSubset,
-        elements: Object.entries(watcher.GAME_DATA?.availableSubsets).map(([subsetName, subsetID]) => {
-            const gameID = configData.gameID;
-            subsetID = parseInt(subsetID);
-            const isCurrentSet = subsetID === watcher.GAME_DATA.ID;
 
-            return {
-                type: inputTypes.RADIO,
-                name: "subset-switch",
-                label: subsetName,
-                checked: isCurrentSet,
-                onChange: () => {
-                    config.gamesDB[gameID].setID = subsetID;
-                    watcher.updateGameData(gameID)
-                },
-            }
-        }),
-    } : "";
     uiDefaultValues = {
         time: "playTime",
         timerTime: 30,

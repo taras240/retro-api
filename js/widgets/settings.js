@@ -1,5 +1,5 @@
 import { UI } from "../ui.js";
-import { apiWorker, config, configData, ui, watcher } from "../script.js";
+import { config, configData, ui, watcher } from "../script.js";
 import { inputTypes, input, inputElement } from "../components/inputElements.js";
 import { Widget } from "./widget.js";
 import { obsPresets } from "../enums/obsPresets.js";
@@ -11,6 +11,8 @@ import { fromHtml } from "../functions/html.js";
 import { WATCHER_MODES } from "../enums/watcherModes.js";
 import { uiLayouts } from "../enums/uiLayouts.js";
 import { getRandomID } from "../functions/randomID.js";
+import { raapi } from "../api/index.js";
+import { contextSetsMenu, contextSwitchSetsMenu } from "../functions/settings/subsetSettings.js";
 export class Settings extends Widget {
     widgetIcon = {
         iconClass: "settings-icon",
@@ -482,7 +484,7 @@ export class Settings extends Widget {
                         hint: ui.lang.clearCacheHint,
                         type: inputTypes.BUTTON,
                         id: "context_clear-cache",
-                        onClick: () => apiWorker.cache.clear(),
+                        onClick: () => config.cache.clear(),
                     },
                     {
                         label: ui.lang.resetSettings,
@@ -521,8 +523,8 @@ export class Settings extends Widget {
     }
     get contextMenuItems() {
         return [
-            this.contextSwitchSetsMenu(),
-            this.contextSetsMenu(),
+            contextSwitchSetsMenu(),
+            contextSetsMenu(),
             {
                 type: inputTypes.DIVIDER,
             },
@@ -581,44 +583,7 @@ export class Settings extends Widget {
             },
         ]
     }
-    contextSetsMenu = () => Object.values(watcher.GAME_DATA?.availableSubsets ?? {})?.length > 1 ? {
-        label: ui.lang.subsets,
-        elements: Object.entries(watcher.GAME_DATA?.availableSubsets).map(([subsetName, subsetID]) => {
-            subsetID = parseInt(subsetID);
-            const isCurrentSet = subsetID === watcher.GAME_DATA.ID;
-            if (isCurrentSet || !subsetID) return "";
-            const isVisible = config.gameConfig().visibleSubsets?.includes(subsetID);
-            const checked = isCurrentSet || isVisible;
-            return {
-                type: inputTypes.CHECKBOX,
-                name: "subset-select",
-                id: `subset-select-${subsetName}`,
-                label: subsetName,
-                checked,
-                onChange: (event) => watcher.setSubset(subsetID),
-            }
-        }),
-    } : "";
-    contextSwitchSetsMenu = () => Object.values(watcher.GAME_DATA?.availableSubsets ?? {})?.length > 1 ? {
-        label: ui.lang.switchSubset,
-        elements: Object.entries(watcher.GAME_DATA?.availableSubsets).map(([subsetName, subsetID]) => {
-            const gameID = configData.gameID;
-            subsetID = parseInt(subsetID);
-            const isCurrentSet = subsetID === watcher.GAME_DATA.ID;
 
-            return {
-                type: inputTypes.RADIO,
-                name: "subset-switch",
-                id: `subset-switch-${subsetName}`,
-                label: subsetName,
-                checked: isCurrentSet,
-                onChange: () => {
-                    config.gamesDB[gameID].setID = subsetID;
-                    watcher.updateGameData(gameID)
-                },
-            }
-        }),
-    } : "";
     constructor() {
         super();
         this.setValues();
@@ -701,7 +666,7 @@ export class Settings extends Widget {
 
 
     getLastGameID() {
-        apiWorker.getProfileInfo({}).then((resp) => {
+        raapi.getUserProfile({}).then((resp) => {
             document.getElementById("settings_game-id-input").value = resp.LastGameID;
             configData.gameID = resp.LastGameID;
             watcher.updateGameData();
@@ -712,7 +677,7 @@ export class Settings extends Widget {
         ui.toggleLoading(true);
         try {
             watcher.stop();
-            await apiWorker.getSubsetsList({
+            await raapi.getSubsetsList({
                 onProgressChange: (props) => ui.toggleLoading(true, progressMessage(props))
             });
         }

@@ -2,14 +2,18 @@ import { colorPresets } from "./enums/colorPresets.js";
 import { fonts } from "./enums/fontsPreset.js";
 import { uiLayouts } from "./enums/uiLayouts.js";
 import { WATCHER_MODES } from "./enums/watcherModes.js";
+import { cacheWorker } from "./functions/api/cacheWorker.js";
+// import { cacheWorker } from "./functions/api/cacheWorker.js";
 import { loadHandle, openDB, saveHandle } from "./functions/DB.js";
 import { delay } from "./functions/delay.js";
 import { ui, watcher } from "./script.js";
 import { UI } from "./ui.js";
 
 let CONFIG_FILE_NAME = "retroApiConfig";
+const CACHE_FILE_NAME = "raApiCache";
 const CONFIG_VERSION = 3.13;
 export class Config {
+  cache = cacheWorker(CACHE_FILE_NAME);
   //! ----------[ Login information ]------------------
   get version() {
     return this._cfg.version ?? "0";
@@ -107,8 +111,6 @@ export class Config {
   configValuePreprocessors = {
     updateDelaySec: (value) => parseInt(value) < 5 ? 5 : parseInt(value),
     customColors: ({ colorProperty, color }) => {
-      // color = color.toUpperCase();
-      // console.log("colors", color);
       const colors = {
         ...configData.customColors,
         ...{ [colorProperty]: color }
@@ -251,7 +253,6 @@ export class Config {
   };
 
   setNewPosition({ id, xPos, yPos, width, height, hidden }) {
-    // console.log(id, hidden);
     if (!this.ui.hasOwnProperty(id)) {
       this.ui[id] = {
         id: id,

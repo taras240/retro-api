@@ -1,5 +1,4 @@
 import { delay } from "../functions/delay.js";
-import { apiWorker, config, watcher } from "../script.js";
 import { PopupWindow } from "../widgets/popupWindow.js";
 import { input } from "./inputElements.js";
 

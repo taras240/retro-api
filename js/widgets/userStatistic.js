@@ -1,6 +1,6 @@
 import { UI } from "../ui.js";
 import { generateBadges, badgeElements, goldBadge } from "../components/badges.js";
-import { config, ui, apiWorker } from "../script.js";
+import { config, ui } from "../script.js";
 import { Widget } from "./widget.js";
 import { moveEvent } from "../functions/movingWidget.js";
 import { resizeEvent } from "../functions/resizingWidget.js";
@@ -11,6 +11,7 @@ import { applySort, sortBy } from "../functions/sortFilter.js";
 import { GAME_AWARD_TYPES } from "../enums/gameAwards.js";
 import { animateValue } from "../functions/animations/valueAnimation.js";
 import { fromHtml } from "../functions/html.js";
+import { raapi } from "../api/index.js";
 
 
 export class UserStatistic extends Widget {
@@ -369,7 +370,7 @@ export class UserStatistic extends Widget {
     }
     async updateCompletionStats() {
         if (!this.hasCompletionPropery()) return;
-        const completionData = await apiWorker.completionProgress();
+        const completionData = await raapi.getUserCompletionProgress();
         this.updateChart(completionData);
         const getCheevosCount = (completionData) => {
             const gamesArray = completionData?.Results ?? [];
@@ -452,7 +453,7 @@ export class UserStatistic extends Widget {
     }
     async updateStats({ userData }) {
         if (!userData) {
-            const userSummary = await apiWorker.getUserSummary({ gamesCount: "0", achievesCount: 0 });
+            const userSummary = await raapi.getUserSummary({ gamesCount: "0", achievesCount: 0 });
             userData = {
                 ...this.userData,
                 ...normalizeUserData({ userSummary })

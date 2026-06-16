@@ -1,6 +1,6 @@
 import { UI } from "../ui.js";
 import { icons, signedIcons } from "../components/icons.js"
-import { apiWorker, config, ui, watcher } from "../script.js";
+import { config, ui, watcher } from "../script.js";
 import { Widget } from "./widget.js";
 import { generateBadges, badgeElements } from "../components/badges.js";
 import { buttonsHtml } from "../components/htmlElements.js";

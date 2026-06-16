@@ -1,10 +1,11 @@
 import { UI } from "../ui.js";
-import { config, ui, apiWorker, watcher } from "../script.js";
+import { config, ui, watcher } from "../script.js";
 import { Widget } from "./widget.js";
 import { sortBy } from "../functions/sortFilter.js";
 import { generateBadges } from "../components/badges.js";
 import { gameImageUrl, gameImageUrlByID, gameUrl } from "../functions/raLinks.js";
 import { gamesFromJson } from "../functions/gamesJson.js";
+import { raapi } from "../api/index.js";
 
 
 export class GameList extends Widget {
@@ -64,7 +65,7 @@ export class GameList extends Widget {
         const gameID = this.gameSetID = watcher.GAME_DATA?.ID;
         const gamesSet = await loadGamesSet(gameID);
         if (!gamesSet) return;
-        const gamesAwards = (await apiWorker.completionProgress())?.Results;
+        const gamesAwards = (await raapi.getUserCompletionProgress())?.Results;
         const header = this.section.querySelector(".widget-header-text");
         const setList = this.section.querySelector(".widget-content__container");
 

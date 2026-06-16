@@ -1,8 +1,8 @@
-import { apiWorker } from "../script.js";
+import { raapi } from "../api/index.js";
 import { PopupWindow } from "../widgets/popupWindow.js";
 
 async function showComments(id, type = 2) {
-    const comments = await apiWorker?.getComments({ id: id, type: type }) || [];
+    const comments = await raapi.getComments({ id, type });
     let commentsHtml = "";
     if (comments.length > 0) {
         commentsHtml = `
@@ -14,9 +14,9 @@ async function showComments(id, type = 2) {
                             <div class="comment__date">${commentTime(comment)}</div>
                         </div>
                         <div class="comment__comment">
-                          <button data-title="copy to clipboard" class="icon-button description-icon copy-icon comment__copy-button"></button>
-                          <button data-title="copy to note" class="icon-button description-icon note-icon comment__note-button"></button>
-                          ${commentInnerText(comment)}
+                            <button data-title="copy to clipboard" class="icon-button description-icon copy-icon comment__copy-button"></button>
+                            <button data-title="copy to note" class="icon-button description-icon note-icon comment__note-button"></button>
+                            ${commentInnerText(comment)}
                         </div>
                     </li>
                 `).join("\n")}

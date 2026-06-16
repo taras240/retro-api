@@ -1,7 +1,7 @@
 import { UI } from "../ui.js";
 import { icons, signedIcons } from "../components/icons.js"
 
-import { config, ui, apiWorker, watcher } from "../script.js";
+import { config, ui, watcher } from "../script.js";
 import { Widget } from "./widget.js";
 import { generateBadges, badgeElements } from "../components/badges.js";
 import { sortGamesBy, gamesSortNames } from "../functions/sortFilter.js";
@@ -23,6 +23,7 @@ import { PlaylistsContainer } from "../components/gamesWidget/playlists.js";
 import { lazyLoad } from "../functions/lazyLoad.js";
 import { downloadJSON } from "../functions/exportData.js";
 import { highestAwardMap } from "../enums/gameAwards.js";
+import { raapi } from "../api/index.js";
 
 export class Games extends Widget {
     widgetIcon = {
@@ -690,8 +691,8 @@ export class Games extends Widget {
         })
     }
     async loadWantToPlay() {
-        const gamesList = await apiWorker.getWantToPlayGames({});
-        this.wantToPlayList = Array.from(new Set([...gamesList]));
+        const gamesList = await raapi.getWantToPlayGamesList({});
+        this.wantToPlayList = Array.from(new Set([...gamesList.map(g => g.ID)]));
 
     }
     updateGamesList() {
@@ -891,32 +892,27 @@ export class Games extends Widget {
         this.updatePlaylists();
     }
     async getAllGames() {
-
-        try {
-            const gamesJson = await gamesFromJson();
-            const lastPlayedGames = await apiWorker.completionProgress();
-            for (let lastGame of lastPlayedGames.Results) {
-                let gameToModify = gamesJson.find(game => lastGame.ID === game.ID);
-                if (gameToModify) {
-                    lastGame.NumAwardedHardcore && (gameToModify.NumAwardedHardcore = lastGame.NumAwardedHardcore);
-                    lastGame.HighestAwardKind ? (gameToModify.Award = lastGame.HighestAwardKind) : (gameToModify.Award = 'started');
-                    lastGame.MostRecentAwardedDate && (gameToModify.MostRecentAwardedDate = lastGame.MostRecentAwardedDate);
-                    gameToModify.datePlayed = lastGame.MostRecentAwardedDate;
-                    gameToModify.wasPlayed = true;
-                }
-                else {
-                    gameToModify = lastGame;
-                    gameToModify.ImageIcon = gameToModify.ImageIcon.match(/\d+/gi)[0];
-                    lastGame.NumAwardedHardcore && (gameToModify.NumAwardedHardcore = lastGame.NumAwardedHardcore);
-                    lastGame.HighestAwardKind ? (gameToModify.Award = lastGame.HighestAwardKind) : (gameToModify.Award = 'started');
-                    gameToModify.Points = '';
-                    gamesJson.push(gameToModify);
-                }
+        const gamesJson = await gamesFromJson();
+        const lastPlayedGames = await raapi.getUserCompletionProgress({});
+        for (let lastGame of lastPlayedGames.Results) {
+            let gameToModify = gamesJson.find(game => lastGame.ID === game.ID);
+            if (gameToModify) {
+                lastGame.NumAwardedHardcore && (gameToModify.NumAwardedHardcore = lastGame.NumAwardedHardcore);
+                lastGame.HighestAwardKind ? (gameToModify.Award = lastGame.HighestAwardKind) : (gameToModify.Award = 'started');
+                lastGame.MostRecentAwardedDate && (gameToModify.MostRecentAwardedDate = lastGame.MostRecentAwardedDate);
+                gameToModify.datePlayed = lastGame.MostRecentAwardedDate;
+                gameToModify.wasPlayed = true;
             }
-            this.GAMES = gamesJson;
-        } catch (error) {
-            return [];
+            else {
+                gameToModify = lastGame;
+                gameToModify.ImageIcon = gameToModify.ImageIcon.match(/\d+/gi)[0];
+                lastGame.NumAwardedHardcore && (gameToModify.NumAwardedHardcore = lastGame.NumAwardedHardcore);
+                lastGame.HighestAwardKind ? (gameToModify.Award = lastGame.HighestAwardKind) : (gameToModify.Award = 'started');
+                gameToModify.Points = '';
+                gamesJson.push(gameToModify);
+            }
         }
+        this.GAMES = gamesJson;
     }
     updatePlaylists() {
         this.playlists.WantToPlay.games = this.wantToPlayList;
@@ -1032,7 +1028,7 @@ export class Games extends Widget {
     async showGameInfoPopup(gameID = 1) {
         document.querySelectorAll(".game-popup__section").forEach(popup =>
             popup.remove());
-        const gameData = await apiWorker.getGameInfoAndProgress({ gameID });
+        const gameData = await raapi.getGameInfoAndProgress({ gameID });
         const gamePopupElement = GameCardElement(gameData);
         ui.app.appendChild(gamePopupElement);
     }

@@ -3,6 +3,7 @@ export const raEdpoints = Object.freeze({
     gameInfoAndProgress: "API_GetGameInfoAndUserProgress.php",
     gameTimesInfo: "API_GetGameProgression.php",
     recentAchieves: "API_GetUserRecentAchievements.php",
+    userRecentAchievements: "API_GetUserRecentAchievements.php",
     gameInfo: "API_GetGame.php",
     extendedGameInfo: "API_GetGameExtended.php",
     recentlyPlayedGames: "API_GetUserRecentlyPlayedGames.php",

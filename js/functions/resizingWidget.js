@@ -74,7 +74,6 @@ function setSize(event, resizeValues, section, direction = moveDirections.bottom
     // debugger;
     let width = startWidth;
     let height = startHeight;
-    // console.log(resizeValues)
 
     if (direction.includes(moveDirections.top)) {
         newWindowTop -= heightChange;
