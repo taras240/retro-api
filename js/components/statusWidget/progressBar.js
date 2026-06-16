@@ -155,16 +155,16 @@ export const updateProgressBarData = (container, gameData, isHardMode, progressT
     progressType = container.dataset.type ?? PROGRESS_TYPES.cheevos;
     const { unlocked, total, unlockedRate } = getStats(gameData, isHardMode, progressType);
 
-    const lastCheevos = Object.values(gameData?.AllAchievements ?? {})
-        .filter(a => filterBy.earned(a))
-        .sort((a, b) => sortBy.latest(a, b, 1, true))
-        .slice(0, 6)
-        .reverse();
     const message = completionMsg(gameData, progressType, isHardMode)
 
     progressMsgElement.innerHTML = message;
 
-    lastCheevosElement.innerHTML = lastCheevos.map(cheevo => recentCheevoHtml(cheevo)).join("");
+    // const lastCheevos = Object.values(gameData?.AllAchievements ?? {})
+    //     .filter(a => filterBy.earned(a))
+    //     .sort((a, b) => sortBy.latest(a, b, 1, true))
+    //     .slice(0, 6)
+    //     .reverse();
+    // lastCheevosElement.innerHTML = lastCheevos.map(cheevo => recentCheevoHtml(cheevo)).join("");
     progressBarElement.style.setProperty("--unlockRate", `${100 * unlocked / total}%`);
 
     progressSessionsElement.innerHTML = sessionsProgressHtml(gameData, isHardMode, progressType);

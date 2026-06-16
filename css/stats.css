@@ -128,8 +128,8 @@
 } */
 
 .session-progress {
-    color: greenyellow;
-    font-size: 1.2em;
+    color: var(--ra-progress-color);
+    font-size: 1.4em;
     line-height: 1em;
     font-weight: bold;
 }
