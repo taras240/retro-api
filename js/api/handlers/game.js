@@ -1,7 +1,6 @@
 import { raEdpoints } from "../../enums/RAEndpoints.js";
 import { request } from "../http.js";
 import { mergeWithTimesData, normalizeGameData } from "../../functions/api/gameDataNormalization.js";
-import { delay } from "../../functions/delay.js";
 import { getNormalizedTimes } from "../../functions/api/gameTimesData.js";
 
 /* params
@@ -35,7 +34,6 @@ async function addSubsetsData({ parentGameData, config, subsets, username, apiKe
     if (!parentGameData.visibleSubsets?.length) return parentGameData;
 
     for (let subsetID of parentGameData.visibleSubsets) {
-        await delay(500);
         const subsetData = await getGameInfoAndUserProgress({
             username,
             apiKey,

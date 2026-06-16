@@ -73,8 +73,6 @@ export const raapi = {
         let timesData;
         if (withTimesData) {
             timesData = await raapi.getGameTimesInfo({ gameID });
-
-            await delay(600);
         }
         return await call("getGameInfoAndUserProgress", {
             apiKey: config.API_KEY,
@@ -158,7 +156,6 @@ export const raapi = {
         const gamesList = [];
         for (const platform of consoles) {
             onProgressChange?.(platform);
-            await delay(500);
             const games = await raapi.getConsoleGameList(platform);
             const consoleSubsets = groupSubsets(games);
             gamesList.push(...consoleSubsets);

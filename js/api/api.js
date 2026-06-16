@@ -1,51 +1,39 @@
 import { APIEvents } from "../script.js";
+import { getRecentlyPlayedGames } from './handlers/user/recentlyPlayedGames.js';
+import { getUserProfile } from './handlers/user/userProfile.js';
+import { getUserSummary } from './handlers/user/userSummary.js';
+import { getWantToPlayGamesList } from './handlers/user/wantToPlay.js';
+import { getUserCompletionProgress } from './handlers/user/completion.js';
+import { getUserAwards } from './handlers/user/awards.js';
+import { getAotW } from './handlers/events/aotw.js';
+import * as comments from './handlers/comments.js';
+import * as game from './handlers/game.js';
+import * as achievement from './handlers/achievement.js';
+import { getConsolesList } from './handlers/systems/consolesList.js';
+import { getConsoleGameList } from './handlers/systems/consoleGameList.js';
 
-function getWorkerUrl() {
-    if (typeof import.meta?.url === "string") {
-        return new URL("./api.worker.js", import.meta.url);
-    }
-
-    const currentScript = document.currentScript;
-    if (currentScript?.src) {
-        return new URL("./api.worker.js", currentScript.src);
-    }
-
-    return new URL("/js/api/api.worker.js", window.location.origin);
-}
-const worker = new Worker(getWorkerUrl(), {
-    type: 'module',
-});
-const pending = new Map();
-
-worker.onmessage = ({ data }) => {
-    const { id, result, error } = data;
-
-    const request = pending.get(id);
-
-    if (!request) {
-        return;
-    }
-
-    pending.delete(id);
-
-    if (error) {
-        request.reject(error);
-    } else {
-        request.resolve(result);
-    }
+const handlers = {
+    getRecentlyPlayedGames,
+    getUserProfile,
+    getUserSummary,
+    getWantToPlayGamesList,
+    getAotW,
+    getUserCompletionProgress,
+    getUserAwards,
+    getConsolesList,
+    getConsoleGameList,
+    ...comments,
+    ...game,
+    ...achievement,
 };
 
-export function call(method, ...params) {
+export async function call(method, ...params) {
     APIEvents.dispatchEvent(new CustomEvent("APIRequest"));
-    return new Promise((resolve, reject) => {
-        const id = crypto.randomUUID();
 
-        pending.set(id, { resolve, reject });
-
-        worker.postMessage({
-            id,
-            method,
-            params,
-        });
-    });
+    try {
+        const result = await handlers[method](...(params || []));
+        return result;
+    } catch (error) {
+        console.error(error.message);
+    }
 }

@@ -9,7 +9,7 @@
     "xlsx": "^0.18.5"
   },
   "scripts": {
-    "js": "npx esbuild js/script.js --bundle --minify --outfile=dist/app.js && npx esbuild js/api/api.worker.js --bundle --minify --outfile=dist/api.worker.js",
+    "js": "npx esbuild js/script.js --bundle --minify --outfile=dist/app.js",
     "mobile-js": "npx esbuild mobile/js/main.js --bundle --minify --outfile=mobile/dist/app.js",
     "css": "postcss css/style.css -o dist/style.css",
     "mobile-css": "postcss mobile/css/style.css -o mobile/dist/style.css"
