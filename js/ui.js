@@ -137,10 +137,8 @@ export class UI {
           cheevoPopupElement(cheevo) : undefined;
       if (popup) {
         this.app.appendChild(popup);
-        setPopupPosition(popup, event, !hint && cheevo);
+        setPopupPosition(popup, event, isCheevoPopup);
         setTimeout(() => popup.classList.add("visible"), isCheevoPopup ? 500 : 150);
-
-
       }
       checkSideBar(event)
     }
