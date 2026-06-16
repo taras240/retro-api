@@ -1,3 +1,5 @@
+import { ui } from "../script.js";
+
 // Cache for storing request results with timestamps
 const requestCache = new Map();
 // Map for storing in-flight requests (promises)
@@ -81,7 +83,11 @@ export async function request(endpoint, params) {
     }
 
     const BASE_URL = `https://retroachievements.org/API/`;
-    const url = new URL(BASE_URL + endpoint);
+    const TEST_BASE_URL = `/json/apiTemplates/`
+    let url = new URL(BASE_URL + endpoint);
+    if (ui.isTest) {
+        return await fetch(TEST_BASE_URL + endpoint.replace(/\.php.*/, ".json")).then(r => r.json());
+    }
     for (const [pkey, value] of Object.entries(params || {})) {
         if (value !== undefined && value !== null) {
             url.searchParams.set(pkey, value);
