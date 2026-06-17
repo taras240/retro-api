@@ -205,9 +205,8 @@ export class Config {
     this.gamesDB[gameID] = gameConfig;
   }
   get cheevosDB() {
-    const gameData = this.gamesDB[this.configData.gameID];
-    return gameData?.cheevos ?? {}
-    return cheevosDB;
+    const gameData = this.gamesDB[this.configData.gameID] ?? {};
+    return gameData?.cheevos ?? {};
   }
   set cheevosDB(cheevo) {
     const gameData = this.gamesDB[this.configData?.gameID ?? 0];
