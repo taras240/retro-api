@@ -194,8 +194,9 @@ export const mergeWithTimesData = (gameData, timesData) => {
         }
         gameData = {
             ...gameData,
-            timeToBeat: timesData.MedianTimeToBeatHardcore,
-            timeToMaster: timesData.MedianTimeToMaster,
+            timeToBeat: timesData.MedianTimeToBeatHardcore || timesData.MedianTimeToBeat,
+            timeToBeatSoftcore: timesData.MedianTimeToBeat,
+            timeToMaster: timesData.MedianTimeToMaster || timesData.MedianTimeToComplete,
         }
         Object.values(gameData.Achievements)
             .map(cheevo =>

@@ -1,14 +1,19 @@
 import { CHEEVO_TYPES } from "../../enums/cheevoTypes.js";
+import { GAME_AWARD_TYPES } from "../../enums/gameAwards.js";
 import { filterBy, sortBy } from "../../functions/sortFilter.js";
+import { secondsToBadgeString } from "../../functions/time.js";
 import { ui } from "../../script.js";
 import { badgeElements } from "../badges.js";
 
 const mainClass = "rp__progression";
-
+let updateInterval, updateTimeout;
 export const updateProgressionBar = (container, gameData, isHardMode = true) => {
+    updateInterval && clearInterval(updateInterval);
+    updateTimeout && clearTimeout(updateTimeout);
     const mainSetID = gameData.availableSubsets?.Main;
     const isEarned = (cheevo) => cheevo.isEarnedHardcore ||
         (cheevo.isEarned && !isHardMode);
+
     const progressionMessage = (focusCheevo, focusIndex, cheevos, winCount) => {
         let message;
         if (focusIndex >= 0) {
@@ -44,6 +49,34 @@ export const updateProgressionBar = (container, gameData, isHardMode = true) => 
         const winCheevos = sortedCheevos.filter(c => c.Type === CHEEVO_TYPES.WIN);
         return [...progresionCheevos, ...winCheevos];
     }
+    const calcEtaTime = (cheevos) => {
+        const isBeaten = isHardMode ? gameData.progressionAward === GAME_AWARD_TYPES.BEATEN : gameData.progressionAward === GAME_AWARD_TYPES.BEATEN_SOFTCORE;
+        if (isBeaten || !cheevos?.length) return 0;
+        const timeToBeat = isHardMode ? gameData.timeToBeat || gameData.timeToBeatSoftcore : gameData.timeToBeatSoftcore;
+        if (!timeToBeat) return null;
+        const timeElapsed = gameData.TimePlayed || 0;
+        const lastUnlocked = [...cheevos].reverse().find(c => isHardMode ? c.isEarnedHardcore : c.isEarned);
+        if (!lastUnlocked) return timeToBeat;
+        const lastTTU = isHardMode ? lastUnlocked.timeToUnlock || lastUnlocked.timeToUnlockSoftcore : lastUnlocked.timeToUnlockSoftcore;
+        if (!lastTTU) return null;
+        const focusTTU = isHardMode ? focusCheevo?.timeToUnlock || focusCheevo?.timeToUnlockSoftcore : focusCheevo?.timeToUnlockSoftcore;
+
+        const lastRTTU = lastUnlocked.unlockTime || timeElapsed;
+
+        const focusMult = focusTTU ? timeElapsed / focusTTU : 0;
+        const lastMult = lastRTTU ? lastRTTU / lastTTU : 1;
+        const mult = Math.max(lastMult, focusMult);
+        const realTTB = timeToBeat * mult;
+        const eta = realTTB - timeElapsed;
+        return eta < 0 ? 5 * 60 : eta;
+    }
+    const etaMessage = (cheevos) => {
+        const etaTime = calcEtaTime(cheevos);
+        if (!etaTime) return null;
+        const beatenRate = Math.round(gameData.TimePlayed / (etaTime + gameData.TimePlayed) * 100);
+
+        return `Beat Progress ${beatenRate}% • ~${secondsToBadgeString(etaTime)} left`
+    }
     const cheevos = reorderCheevos(Object.values(gameData.AllAchievements));
     const winCount = Object.values(gameData.AllAchievements).filter(c => c.Type == CHEEVO_TYPES.WIN).length;
 
@@ -58,6 +91,27 @@ export const updateProgressionBar = (container, gameData, isHardMode = true) => 
             ${progressionPoints(focusCheevo, cheevos)}
         </div>
     `;
+    const updateProgressionText = () => {
+        updateTimeout && clearTimeout(updateTimeout);
+        const textContainer = container.querySelector(`.${mainClass}-target`);
+        if (textContainer) {
+            textContainer.innerHTML = message;
+            textContainer.dataset.title = etaMessage(cheevos);
+        }
+        updateTimeout = setTimeout(() => {
+            if (!textContainer) return;
+            textContainer.innerHTML = etaMessage(cheevos) || message;
+            textContainer.dataset.title = focusCheevo?.Description ?? "";
+        }, 5 * 60 * 1000);
+    };
+    try {
+
+        updateProgressionText();
+        updateInterval = setInterval(() => updateProgressionText, 6 * 60 * 1000);
+    }
+    catch (err) {
+        console.warn(err);
+    }
 }
 
 export const progressionBarHtml = (theme) => {
