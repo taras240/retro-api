@@ -55,7 +55,7 @@ export const updateProgressionBar = (container, gameData, isHardMode = true) => 
         if (!etaTime) return null;
         const beatenRate = Math.round(gameData.TimePlayed / (etaTime + gameData.TimePlayed) * 100);
 
-        return `Beat Progress ${beatenRate}% • ~${secondsToBadgeString(etaTime)} left`
+        return `Story Progress: ${beatenRate}% • Est. ${secondsToBadgeString(etaTime)} left`;
     }
     const cheevos = reorderCheevos(Object.values(gameData.AllAchievements));
     const winCount = Object.values(gameData.AllAchievements).filter(c => c.Type == CHEEVO_TYPES.WIN).length;
