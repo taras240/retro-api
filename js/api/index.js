@@ -78,7 +78,7 @@ export const raapi = {
             apiKey: config.API_KEY,
             username: getUsername(username),
             gameID,
-            config: { gamesDB: config.gamesDB, cheevosDB: config.cheevosDB },
+            config: { gamesDB: config.gamesDB },
             subsets,
             timesData,
         })
