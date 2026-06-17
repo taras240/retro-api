@@ -340,7 +340,7 @@ export class Watcher {
         const checkForNewCheevos = (lastEarnedAchieves) => {
             const updateAchievements = (earnedAchievements) => {
                 earnedAchievements?.forEach((lastCheevo) => {
-                    const { HardcoreMode, Date } = lastCheevo;
+                    const { HardcoreMode } = lastCheevo;
                     const cheevo = this.CHEEVOS[lastCheevo.AchievementID];
                     const isHard = HardcoreMode === 1;
                     this.IS_HARD_MODE = isHard;
@@ -354,7 +354,7 @@ export class Watcher {
                     gameData ??= {};
                     if (isHard) {
                         cheevo.isEarnedHardcore = true;
-                        cheevo.DateEarnedHardcore = Date;
+                        cheevo.DateEarnedHardcore = lastCheevo.Date;
 
                         gameData.unlockData.hardcore.count++;
                         gameData.unlockData.hardcore.points += cheevo.Points;
@@ -371,11 +371,11 @@ export class Watcher {
                     }
 
                     cheevo.isEarned = true;
-                    cheevo.DateEarned ??= Date;
+                    cheevo.DateEarned ??= lastCheevo.Date;
                     gameData.Achievements[lastCheevo.AchievementID] = cheevo;
                     this.CHEEVOS[lastCheevo.AchievementID] = cheevo;
 
-                    const parsedDate = new Date(cheevo.Date);
+                    const parsedDate = new Date(lastCheevo.Date);
                     const lagTime = Number.isFinite(parsedDate.getTime())
                         ? Math.round((new Date() - parsedDate) / 1e3)
                         : 0;
