@@ -375,9 +375,12 @@ export class Watcher {
                     gameData.Achievements[lastCheevo.AchievementID] = cheevo;
                     this.CHEEVOS[lastCheevo.AchievementID] = cheevo;
 
-                    const lagTime = ~~((new Date() - new Date(cheevo.Date)) / 1e3);
+                    const parsedDate = new Date(cheevo.Date);
+                    const lagTime = Number.isFinite(parsedDate.getTime())
+                        ? Math.round((new Date() - parsedDate) / 1e3)
+                        : 0;
                     cheevo.unlockTime = this.GAME_DATA.TimePlayed - lagTime;
-                    config.cheevosDB = { ID: lastCheevo.AchievementID, unlockTime };
+                    config.cheevosDB = { ID: lastCheevo.AchievementID, unlockTime: cheevo.unlockTime };
                 });
 
 
@@ -499,7 +502,7 @@ export class Watcher {
 
         this.watcherInterval = setInterval(() => {
             increasePlayTime();
-            this.GAME_DATA.TimePlayed++;
+            this.GAME_DATA && this.GAME_DATA.TimePlayed++;
             this.playTime.gameTime % 60 === 0 && this.savePlayTime();
         }, 1000)
     }
