@@ -1,5 +1,6 @@
 import { CHEEVO_TYPES } from "../../enums/cheevoTypes.js";
 import { GAME_AWARD_TYPES } from "../../enums/gameAwards.js";
+import { calcEtaTimeToBeat } from "../../functions/estimatedTime.js";
 import { filterBy, sortBy } from "../../functions/sortFilter.js";
 import { secondsToBadgeString } from "../../functions/time.js";
 import { ui } from "../../script.js";
@@ -49,29 +50,8 @@ export const updateProgressionBar = (container, gameData, isHardMode = true) => 
         const winCheevos = sortedCheevos.filter(c => c.Type === CHEEVO_TYPES.WIN);
         return [...progresionCheevos, ...winCheevos];
     }
-    const calcEtaTime = (cheevos) => {
-        const isBeaten = isHardMode ? gameData.progressionAward === GAME_AWARD_TYPES.BEATEN : gameData.progressionAward === GAME_AWARD_TYPES.BEATEN_SOFTCORE;
-        if (isBeaten || !cheevos?.length) return 0;
-        const timeToBeat = isHardMode ? gameData.timeToBeat || gameData.timeToBeatSoftcore : gameData.timeToBeatSoftcore;
-        if (!timeToBeat) return null;
-        const timeElapsed = gameData.TimePlayed || 0;
-        const lastUnlocked = [...cheevos].reverse().find(c => isHardMode ? c.isEarnedHardcore : c.isEarned);
-        if (!lastUnlocked) return timeToBeat;
-        const lastTTU = isHardMode ? lastUnlocked.timeToUnlock || lastUnlocked.timeToUnlockSoftcore : lastUnlocked.timeToUnlockSoftcore;
-        if (!lastTTU) return null;
-        const focusTTU = isHardMode ? focusCheevo?.timeToUnlock || focusCheevo?.timeToUnlockSoftcore : focusCheevo?.timeToUnlockSoftcore;
-
-        const lastRTTU = lastUnlocked.unlockTime || timeElapsed;
-
-        const focusMult = focusTTU ? timeElapsed / focusTTU : 0;
-        const lastMult = lastRTTU ? lastRTTU / lastTTU : 1;
-        const mult = Math.max(lastMult, focusMult);
-        const realTTB = timeToBeat * mult;
-        const eta = realTTB - timeElapsed;
-        return eta < 0 ? 5 * 60 : eta;
-    }
     const etaMessage = (cheevos) => {
-        const etaTime = calcEtaTime(cheevos);
+        const etaTime = calcEtaTimeToBeat(gameData, isHardMode);
         if (!etaTime) return null;
         const beatenRate = Math.round(gameData.TimePlayed / (etaTime + gameData.TimePlayed) * 100);
 

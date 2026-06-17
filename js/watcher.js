@@ -375,11 +375,7 @@ export class Watcher {
                     gameData.Achievements[lastCheevo.AchievementID] = cheevo;
                     this.CHEEVOS[lastCheevo.AchievementID] = cheevo;
 
-                    const parsedDate = new Date(lastCheevo.Date);
-                    const lagTime = Number.isFinite(parsedDate.getTime())
-                        ? Math.round((new Date() - parsedDate) / 1e3)
-                        : 0;
-                    cheevo.unlockTime = this.GAME_DATA.TimePlayed - lagTime;
+                    cheevo.unlockTime = this.GAME_DATA.TimePlayed;
                     config.cheevosDB = { ID: lastCheevo.AchievementID, unlockTime: cheevo.unlockTime };
                 });
 
