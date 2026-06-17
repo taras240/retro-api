@@ -1,3 +1,4 @@
+import { cheevoImageUrl } from "../functions/raLinks.js";
 import { badgeElements, goldBadge } from "./badges.js";
 import { icons, signedIcons } from "./icons.js";
 
@@ -22,7 +23,7 @@ export const cheevoElementFull = (cheevo, isTarget = false) => {
             <div class="prev">
                 <img
                 class="prev-img"
-                src="${cheevo.prevSrc}"
+                src="${cheevoImageUrl(cheevo)}"
                 alt="${cheevo.Title}"
                 />
             </div>

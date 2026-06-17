@@ -15,7 +15,6 @@ export const getNormalizedTimes = (gameTimesData) => {
         MedianTimeToMaster,
         MedianTimeToComplete,
         Achievements,
-        date: Date.now(),
     }
 
     return timesData;

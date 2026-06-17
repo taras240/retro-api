@@ -11,7 +11,7 @@ import { UI } from "./ui.js";
 
 let CONFIG_FILE_NAME = "retroApiConfig";
 const CACHE_FILE_NAME = "raApiCache";
-const CONFIG_VERSION = 3.13;
+const CONFIG_VERSION = 3.14;
 export class Config {
   cache = cacheWorker(CACHE_FILE_NAME);
   //! ----------[ Login information ]------------------
@@ -196,6 +196,7 @@ export class Config {
   gameConfig(gameID) {
     gameID ??= watcher.GAME_DATA.ParentID || watcher.GAME_DATA.ID;
     const gameConfig = this.gamesDB?.[gameID] || {};
+    this.writeConfiguration();
     return gameConfig;
   }
   saveGameConfig(gameID, dataObject) {
@@ -204,8 +205,16 @@ export class Config {
     this.gamesDB[gameID] = gameConfig;
   }
   get cheevosDB() {
-    this._cfg.cheevosDB || (this._cfg.cheevosDB = {})
-    return this._cfg.cheevosDB;
+    const gameData = this.gamesDB[this.configData.gameID];
+    return gameData.cheevos ?? {}
+    return cheevosDB;
+  }
+  set cheevosDB(cheevo) {
+    const gameData = this.gamesDB[this.configData.gameID];
+    gameData.cheevos ??= {};
+    gameData.cheevos[cheevo.ID] ??= {};
+    Object.assign(gameData.cheevos[cheevo.ID], cheevo);
+    this.writeConfiguration();
   }
   async getFileHandle(emuName = "log") {
     const fileHandle = await loadHandle(emuName)
@@ -216,9 +225,11 @@ export class Config {
     CONFIG_FILE_NAME += this.urlConfig.id ?? "";
     this.readConfiguration();
     this.fixConfig();
+    console.warn(`Config size: ~${JSON.stringify(this._cfg).length * 2 / 1e6}Mb`);
+
   }
   fixConfig = () => {
-    // if (this.version === CONFIG_VERSION) return;
+    if (this.version === CONFIG_VERSION) return;
     try {
       const autoPause = this._cfg?.settings?.pauseIfOffline ?? true;
       const autoStart = this._cfg?.settings?.startOnLoad ?? true;
@@ -236,7 +247,7 @@ export class Config {
 
       delete this._cfg.apiWorker;
       delete this._cfg.aotw;
-
+      delete this._cfg.cheevosDB;
       this.version = CONFIG_VERSION;
       this.writeConfiguration();
     }

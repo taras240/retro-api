@@ -7,7 +7,7 @@ import { applyFilter, applySort, cheevosFiterNames, cheevosSortNames, filterBy, 
 import { showComments } from "../components/comments.js";
 import { cheevoPropsPopup } from "../components/cheevoPropsPopup.js";
 import { delay } from "../functions/delay.js";
-import { cheevoUrl, gameImageUrl, gameUrl } from "../functions/raLinks.js";
+import { cheevoImageUrl, cheevoUrl, gameImageUrl, gameUrl } from "../functions/raLinks.js";
 import { scrollElementIntoView } from "../functions/scrollingToElement.js";
 import { inputTypes } from "../components/inputElements.js";
 import { imageFilters } from "../enums/imageFilters.js";
@@ -861,7 +861,7 @@ export class Target extends Widget {
                 <div class="prev-bg"></div>
                 <img
                     class="prev-img"
-                    src="${achievement.prevSrc}"
+                    src="${cheevoImageUrl(achievement)}"
                     alt="${achievement.Title}"
                 />
                 <div class="prev-lock-overlay"></div>

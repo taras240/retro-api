@@ -1,6 +1,7 @@
 import { raapi } from "./api/index.js";
 import { dialogWindow } from "./components/dialogWindow.js";
 import { ALERT_TYPES } from "./enums/alerts.js";
+import { CACHE_TYPES } from "./enums/cacheDataTypes.js";
 import { CHEEVO_TYPES } from "./enums/cheevoTypes.js";
 import { GAME_AWARD_TYPES } from "./enums/gameAwards.js";
 import { ONLINE_STATUS } from "./enums/onlineStatus.js";
@@ -373,6 +374,10 @@ export class Watcher {
                     cheevo.DateEarned ??= Date;
                     gameData.Achievements[lastCheevo.AchievementID] = cheevo;
                     this.CHEEVOS[lastCheevo.AchievementID] = cheevo;
+
+                    const lagTime = ~~((new Date() - new Date(cheevo.Date)) / 1e3);
+                    cheevo.unlockTime = this.GAME_DATA.TimePlayed - lagTime;
+                    config.cheevosDB = { ID: lastCheevo.AchievementID, unlockTime };
                 });
 
 

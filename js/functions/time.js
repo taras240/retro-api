@@ -41,7 +41,7 @@ export function secondsToBadgeString(seconds, isShort = false) {
         return hours ? `${hours}h` : minutes ?
             `${minutes}min` : `${seconds}s`
     }
-    return hours ? `${hours}h${minutes}m` : minutes ?
+    return hours ? `${hours}h ${minutes}m` : minutes ?
         `${minutes}min${minutes > 1 ? "s" : ""}` : `${remainingSeconds}secs`
 }
 export function formatDateTime(UTCTime, props) {

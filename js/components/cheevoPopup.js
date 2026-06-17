@@ -30,7 +30,7 @@ export function cheevoPopupElement(cheevo, isFixed = false) {
     popup.classList.add("cheevo-popup", "popup", cheevo.isEarnedHardcore ? "hardcore" : cheevo.isEarned ? "softcore" : "f",);
     popup.classList.toggle("fixed", isFixed);
     popup.dataset.id = cheevo.ID;
-    const focusTime = cheevo.progressionFocusTime ? Math.round(cheevo.progressionFocusTime / 60) + "mins" : "";
+    const focusTime = cheevo.progressionFocusTime ? secondsToBadgeString(cheevo.progressionFocusTime) : "";
     popup.innerHTML = `
         <div class="cheevo-popup__header">
             <h3 class="cheevo-popup__title">${cheevo.Title}</h3>
@@ -48,6 +48,7 @@ export function cheevoPopupElement(cheevo, isFixed = false) {
         <div class="cheevo-popup__props">
             ${propElem(ui.lang.unlockDate, formatDateTime(cheevo.DateEarnedHardcore), !!cheevo.DateEarnedHardcore)}
             ${propElem(ui.lang.unlockDate + ui.lang.casual_, formatDateTime(cheevo.DateEarned), !!cheevo.DateEarned && (cheevo.DateEarnedHardcore != cheevo.DateEarned))}
+            ${propElem(ui.lang.unlockTime, secondsToBadgeString(cheevo.unlockTime), !!cheevo.unlockTime)}
             ${propElem(ui.lang.playersTotal, [cheevo.totalPlayers])}
             ${propElem(ui.lang.unlockedBy, [cheevo.NumAwardedHardcore, cheevo.NumAwarded])}
             ${propElem(ui.lang.unlockRate, [cheevo.rateEarnedHardcore, cheevo.rateEarned])}

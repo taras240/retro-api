@@ -17,6 +17,7 @@ import { UI_EVENTS_LIST } from "../enums/UIEvents.js";
 import { saveOrder } from "../functions/customOrder.js";
 import { showComments } from "../components/comments.js";
 import { contextSetsMenu } from "../functions/settings/subsetSettings.js";
+import { cheevoImageUrl } from "../functions/raLinks.js";
 export class AchievementsBlock extends Widget {
     widgetIcon = {
         description: "cheevos widget",
@@ -628,7 +629,7 @@ export class AchievementsBlock extends Widget {
         function setHtmlCode() {
             achivElement.innerHTML = `
                 <div class="preview-container">
-                    <img class="achiv-preview" src="${achievement.prevSrc}"  alt="${achievement.Title} icon"/>
+                    <img class="achiv-preview" src="${cheevoImageUrl(achievement)}"  alt="${achievement.Title} icon"/>
                     <div class="prev-lock-overlay"></div>
                     <div class="box-inner-shadow"></div>
                 </div>

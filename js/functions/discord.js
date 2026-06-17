@@ -3,7 +3,7 @@ import { GAME_AWARD_TYPES } from "../enums/gameAwards.js";
 import { config, configData, watcher } from "../script.js";
 import { delay } from "./delay.js";
 import { formatText } from "./formatText.js";
-import { cheevoUrl, gameImageUrl, gameUrl } from "./raLinks.js";
+import { cheevoImageUrl, cheevoUrl, gameImageUrl, gameUrl } from "./raLinks.js";
 import { formatTime } from "./time.js";
 
 const goldColorCode = 16766720;
@@ -94,7 +94,7 @@ export async function sendDiscordAlert({ message = "", type, value, award, id })
             color: cheevo.isEarnedHardcore ? goldColorCode : silverColorCode,
             colour: cheevo.isEarnedHardcore ? "gold" : "silver",
             thumbnail: {
-                url: cheevo.prevSrc
+                url: cheevoImageUrl(cheevo)
             }
         }
         return message;

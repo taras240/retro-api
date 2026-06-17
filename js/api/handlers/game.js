@@ -19,7 +19,7 @@ export async function getGameInfoAndUserProgress({ username, apiKey, gameID, tim
         gameData = mergeWithTimesData(gameData, timesData);
     }
     // Normalize game data 
-    normalizeGameData(gameData, config?.gamesDB, config?.cheevosDB);
+    normalizeGameData(gameData, config?.gamesDB);
     if (!isSubset) {
         gameData.availableSubsets = subsets;
         await addSubsetsData({ parentGameData: gameData, config, subsets, username, apiKey, });
