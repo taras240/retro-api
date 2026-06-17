@@ -107,7 +107,7 @@ export const updateProgressionBar = (container, gameData, isHardMode = true) => 
     try {
 
         updateProgressionText();
-        updateInterval = setInterval(() => updateProgressionText, 6 * 60 * 1000);
+        updateInterval = setInterval(() => updateProgressionText(), 6 * 60 * 1000);
     }
     catch (err) {
         console.warn(err);

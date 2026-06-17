@@ -723,7 +723,7 @@
         <div class="${it}-points">
             ${r(m,d)}
         </div>
-    `;let b=()=>{Ct&&clearTimeout(Ct);let v=s.querySelector(`.${it}-target`);v&&(v.innerHTML=f,v.dataset.title=h(d)),Ct=setTimeout(()=>{v&&(v.innerHTML=h(d)||f,v.dataset.title=m?.Description??"")},300*1e3)};try{b(),xs=setInterval(()=>b,360*1e3)}catch(v){console.warn(v)}},Yt=s=>`
+    `;let b=()=>{Ct&&clearTimeout(Ct);let v=s.querySelector(`.${it}-target`);v&&(v.innerHTML=f,v.dataset.title=h(d)),Ct=setTimeout(()=>{v&&(v.innerHTML=h(d)||f,v.dataset.title=m?.Description??"")},300*1e3)};try{b(),xs=setInterval(()=>b(),360*1e3)}catch(v){console.warn(v)}},Yt=s=>`
         <div class="${it}-container">
             <h3 class="${it}-target"></h3>
             <div class="${it}-points"></div>
