@@ -1028,7 +1028,7 @@ export class Games extends Widget {
     async showGameInfoPopup(gameID = 1) {
         document.querySelectorAll(".game-popup__section").forEach(popup =>
             popup.remove());
-        const gameData = await raapi.getGameInfoAndProgress({ gameID });
+        const gameData = await raapi.getGameInfoAndUserProgress({ gameID });
         const gamePopupElement = GameCardElement(gameData);
         ui.app.appendChild(gamePopupElement);
     }
