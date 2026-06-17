@@ -209,7 +209,11 @@ export class Config {
     return gameData?.cheevos ?? {};
   }
   set cheevosDB(cheevo) {
-    const gameData = this.gamesDB[this.configData?.gameID ?? 0];
+    let gameData = this.gamesDB[this.configData?.gameID ?? 0];
+    if (!gameData) {
+      this.gamesDB[this.configData?.gameID ?? 0] = {};
+      gameData = {}
+    }
     gameData.cheevos ??= {};
     gameData.cheevos[cheevo.ID] ??= {};
     Object.assign(gameData.cheevos[cheevo.ID], cheevo);
