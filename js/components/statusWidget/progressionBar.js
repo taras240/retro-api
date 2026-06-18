@@ -51,7 +51,13 @@ export const updateProgressionBar = (container, gameData, isHardMode = true) => 
         return [...progresionCheevos, ...winCheevos];
     }
     const etaMessage = (cheevos) => {
-        const etaTime = calcEtaTimeToBeat(gameData, isHardMode);
+        let etaTime;
+        try {
+            etaTime = calcEtaTimeToBeat(gameData, isHardMode);
+        }
+        catch (e) {
+            console.error(`Est. time calculation Error:`, e);
+        }
         if (!etaTime) return null;
         const beatenRate = Math.round(gameData.TimePlayed / (etaTime + gameData.TimePlayed) * 100);
 
