@@ -24,13 +24,14 @@ export const raapi = {
             apiKey: config.API_KEY
         });
     },
-    getWantToPlayGamesList({ username, count = 50, offset = 0 }) {
-        return call('getWantToPlayGamesList', {
+    async getWantToPlayGamesList({ username, count = 50, offset = 0 }) {
+        const wtpList = await call('getWantToPlayGamesList', {
             apiKey: config.API_KEY,
-            username: getUsername(username),
+            username: config.USER_NAME,// getUsername(username),
             count,
             offset,
         });
+        return wtpList || [];
     },
 
     getRecentlyPlayedGames({ username, count = 50 }) {
