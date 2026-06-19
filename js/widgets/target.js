@@ -23,6 +23,7 @@ import { saveOrder } from "../functions/customOrder.js";
 import { CHEEVO_TYPES } from "../enums/cheevoTypes.js";
 import { contextSetsMenu } from "../functions/settings/subsetSettings.js";
 import { raapi } from "../api/index.js";
+import { CheevoElement } from "../components/cheevosList/cheevoItem.js";
 
 export class Target extends Widget {
     sectionCode = "-target";
@@ -808,92 +809,7 @@ export class Target extends Widget {
     }
     getCheevoElement(cheevoID) {
         const achievement = watcher.CHEEVOS[cheevoID];
-        const targetElement = document.createElement("li");
-
-        const setClassesToElement = () => {
-            targetElement.classList.add("target-achiv", "main-column-item", "right-bg-icon");
-            targetElement.classList.add("border");
-            targetElement.classList.add("overlay");
-            targetElement.classList.add("show-difficult");//this.uiProps.showDifficult
-            targetElement.classList.toggle("show-level", this.uiProps.showLevel);
-            targetElement.classList.toggle("show-genre", this.uiProps.showGenre);
-            targetElement.classList.toggle("earned", achievement.isEarned);
-            targetElement.classList.toggle("hardcore", achievement.isEarnedHardcore);
-            targetElement.classList.toggle("rare", achievement.trend <= 3);
-        }
-        const setDataToElement = () => {
-            targetElement.dataset.Type = achievement.Type;
-            targetElement.dataset.Points = achievement.Points;
-            targetElement.dataset.TrueRatio = achievement.TrueRatio;
-            targetElement.dataset.difficulty = achievement.difficulty;
-            targetElement.dataset.DisplayOrder = achievement.DisplayOrder;
-            targetElement.dataset.customOrder = achievement.customOrder;
-            targetElement.dataset.genres = achievement.genres?.join(",");
-            targetElement.dataset.group = achievement.group;
-            targetElement.dataset.setID = achievement.gameID;
-            achievement.DateEarnedHardcore && (targetElement.dataset.DateEarnedHardcore = achievement.DateEarnedHardcore);
-            achievement.DateEarned && (targetElement.dataset.DateEarned = achievement.DateEarned);
-
-            targetElement.dataset.NumAwardedHardcore = achievement.NumAwardedHardcore;
-            targetElement.dataset.achivId = cheevoID;
-            achievement.level && (targetElement.dataset.level = achievement.level);
-
-            targetElement.style.setProperty("--progression", 100 * achievement.NumAwardedHardcore / achievement.totalPlayers + "%")
-            targetElement.dataset.timeToUnlock = achievement.timeToUnlock;
-        }
-        // ${buttonsHtml.editCheevoProps(achievement.ID)}
-        const setElementHtml = () => {
-            const subLevel = achievement.level?.toString()?.split(".")[1];
-            const level = achievement.zone ? subLevel ? `${achievement.zone} - ${subLevel}` : achievement.zone : achievement.level?.toString()?.replace(".", "-");
-
-            const levelBadgeHtml = level ? badgeElements.cheevoLevel(level, true) : "";
-
-            const genresBadgesHtml = achievement.genres?.map(genre => badgeElements.buttonGenreBadge(genre)).join("");
-
-            const genresIcons = achievement.genres?.map(genre => genreIcons[genre]).join("")
-            targetElement.innerHTML = `
-            <div class="target__cheevo-bg"></div>
-            <div class="target__buttons-container">
-                ${buttonsHtml.comments()}
-                ${buttonsHtml.pin()}
-            </div>
-            <div class="prev">
-                <div class="prev-bg"></div>
-                <img
-                    class="prev-img"
-                    src="${cheevoImageUrl(achievement)}"
-                    alt="${achievement.Title}"
-                />
-                <div class="prev-lock-overlay"></div>
-                <div class="box-inner-shadow"></div>
-                <div class="target__cheevo-progression-container">
-                    <div class="target__cheevo-progression">
-                </div>
-            </div>
-            </div>
-            <div class="target__cheevo-details">
-                <h3 class="target__cheevo-header">
-                    <a target="_blanc" data-title="${ui.lang.goToRAHint}" href="${cheevoUrl(achievement)}">
-                        ${achievement.Title}
-                    </a>${levelBadgeHtml}${genresBadgesHtml}
-                </h3>
-                <p class="list-item__text">${achievement.Description}</p>
-                <div class="icons-row-list">
-                    ${icons.cheevoType(achievement.Type)}
-                    ${signedIcons.points(achievement.Points)}
-                    ${signedIcons.retropoints(achievement.TrueRatio)}
-                    ${achievement.timeToUnlock ? signedIcons.time(secondsToBadgeString(achievement.timeToUnlock, true)) : ""}
-                    ${signedIcons.rarity(achievement.rateEarnedHardcore)}
-                    ${signedIcons.retroRatio(achievement.retroRatio)}
-                    ${badgeElements.difficultBadge(achievement.difficulty)}
-                </div>
-            </div>
-            `;
-        }
-
-        setClassesToElement();
-        setDataToElement();
-        setElementHtml();
+        const targetElement = CheevoElement(achievement, this.uiProps);
         return targetElement;
     }
     pushCheevo(cheevoID) {
