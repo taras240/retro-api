@@ -1,6 +1,7 @@
 import { CHEEVO_TYPES } from "../../enums/cheevoTypes.js";
 import { GAME_AWARD_TYPES } from "../../enums/gameAwards.js";
 import { calcEtaTimeToBeat } from "../../functions/estimatedTime.js";
+import { formatText } from "../../functions/formatText.js";
 import { filterBy, sortBy } from "../../functions/sortFilter.js";
 import { secondsToBadgeString } from "../../functions/time.js";
 import { ui } from "../../script.js";
@@ -51,17 +52,11 @@ export const updateProgressionBar = (container, gameData, isHardMode = true) => 
         return [...progresionCheevos, ...winCheevos];
     }
     const etaMessage = (cheevos) => {
-        let etaTime;
-        try {
-            etaTime = calcEtaTimeToBeat(gameData, isHardMode);
-        }
-        catch (e) {
-            console.error(`Est. time calculation Error:`, e);
-        }
+        let etaTime = gameData.eta;
         if (!etaTime) return null;
-        const beatenRate = Math.round(gameData.TimePlayed / (etaTime + gameData.TimePlayed) * 100);
-
-        return `Story Progress: ${beatenRate}% • Est. ${secondsToBadgeString(etaTime)} left`;
+        const beatenRate = Math.round(gameData.TimePlayed / (etaTime + gameData.TimePlayed) * 100) + "%";
+        const time = secondsToBadgeString(etaTime);
+        return formatText(ui.lang.estTimeMsg, { beatenRate, time });
     }
     const cheevos = reorderCheevos(Object.values(gameData.AllAchievements));
     const winCount = Object.values(gameData.AllAchievements).filter(c => c.Type == CHEEVO_TYPES.WIN).length;

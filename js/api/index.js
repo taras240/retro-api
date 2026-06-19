@@ -3,6 +3,7 @@ import { cachedCompletionProgress } from "../functions/api/completionProgress.js
 import { groupSubsets } from "../functions/api/groupSubsets.js";
 import { getSubsets } from "../functions/api/subsets.js";
 import { delay } from "../functions/delay.js";
+import { calcEtaTimeToBeat } from "../functions/estimatedTime.js";
 import { config, configData } from "../script.js";
 import { call } from "./api.js";
 
@@ -75,14 +76,17 @@ export const raapi = {
         if (withTimesData) {
             timesData = await raapi.getGameTimesInfo({ gameID });
         }
-        return await call("getGameInfoAndUserProgress", {
+        const gameData = await call("getGameInfoAndUserProgress", {
             apiKey: config.API_KEY,
             username: getUsername(username),
             gameID,
             config: { gamesDB: config.gamesDB },
             subsets,
             timesData,
-        })
+        });
+        const estimatedTimeToBeat = calcEtaTimeToBeat(gameData);
+        gameData.eta = estimatedTimeToBeat;
+        return gameData;
     },
     async getGameTimesInfo({ gameID, preferHardcore = false }) {
         const cachedData = config.cache.getData({ dataType: CACHE_TYPES.GAME_TIMES, ID: gameID });

@@ -237,6 +237,14 @@ export class Status extends Widget {
                         checked: this.uiProps.time == "totalSessionTime",
                         onChange: () => this.uiProps.time = 'totalSessionTime',
                     },
+
+                    {
+                        type: inputTypes.RADIO,
+                        name: "context_game-time",
+                        label: ui.lang.estimated,
+                        checked: this.uiProps.time == "estimated",
+                        onChange: () => this.uiProps.time = 'estimated',
+                    },
                     {
                         type: inputTypes.RADIO,
                         name: "context_game-time",
@@ -643,8 +651,9 @@ export class Status extends Widget {
             this.addAlertsToQuery(cheevoAlerts);
         }
         this.uiProps.isHardMode = cheevos[0].isEarnedHardcore;
-
-        this.updateProgressionBar();
+        if (cheevos.some(c => filterBy.progression(c))) {
+            this.updateProgressionBar();
+        }
         this.updateFocusPreview();
         this.updateFocusCheevo();
         this.updateProgressBar();
@@ -830,10 +839,11 @@ export class Status extends Widget {
         const { hours, minutes, seconds, isNegative } = timeParts;
 
         const { hoursElement, minutesElement, secondsElement, markElement } = this.gameElements.timeElements;
-        hoursElement.classList.toggle("hidden", hours == 0);
-        secondsElement.classList.toggle("hidden", hours > 0);
-
-        markElement.innerText = isNegative ? "-" : "";
+        const isEstimated = this.uiProps.time === "estimated";
+        hoursElement.classList.toggle("hidden", hours == 0 && !isEstimated);
+        secondsElement.classList.toggle("hidden", hours > 0 || isEstimated);
+        const mark = isNegative ? "-" : isEstimated ? "↓" : ""
+        markElement.innerText = mark;
         hoursElement.innerText = hours;
         minutesElement.innerText = minutes;
         secondsElement.innerText = seconds;

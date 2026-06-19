@@ -10,6 +10,7 @@ import { getSubsets } from "./functions/api/subsets.js";
 import { normalizeUserData } from "./functions/api/userDataNormalization.js";
 import { delay } from "./functions/delay.js";
 import { sendDiscordAlert } from "./functions/discord.js";
+import { calcEtaTimeToBeat } from "./functions/estimatedTime.js";
 import { readLog } from "./functions/logParser.js";
 import { parseTimeParts } from "./functions/time.js";
 import { getAwardAlerts } from "./functions/watcher/awardsAlerts.js";
@@ -121,6 +122,7 @@ export class Watcher {
         APIEvents.dispatchEvent(new CustomEvent("cheevoUnlocks", {
             detail: { cheevos }
         }));
+        this.updateEtaTTB();
         try {
             ui.showCheevoAlerts(cheevos);
         }
@@ -497,10 +499,18 @@ export class Watcher {
 
 
         this.watcherInterval = setInterval(() => {
+            if (!this.GAME_DATA) return;
             increasePlayTime();
-            this.GAME_DATA && this.GAME_DATA.TimePlayed++;
-            this.playTime.gameTime % 60 === 0 && this.savePlayTime();
+            this.GAME_DATA.TimePlayed++;
+            this.updateEtaTTB();
+            if (this.playTime.gameTime % 60 === 0) {
+                this.savePlayTime();
+            }
         }, 1000)
+    }
+    updateEtaTTB() {
+        const eta = calcEtaTimeToBeat(this.GAME_DATA);
+        this.GAME_DATA.eta = eta;
     }
     stop() {
         this.onStopSession();
@@ -545,6 +555,9 @@ export class Watcher {
                 break;
             case ("timer"):
                 time = timerTime - gameTime;
+                break;
+            case ("estimated"):
+                time = this.GAME_DATA.eta;
                 break;
         }
 

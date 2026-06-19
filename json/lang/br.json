@@ -347,5 +347,8 @@
     "series": "Série",
     "update": "Atualizar",
     "showSeparator": "Agrupar dígitos",
-    "openComments": "Abrir Comentários"
+    "openComments": "Abrir Comentários",
+    "unlockTime": "Tempo de desbloqueio",
+    "estimated": "Tempo estimado",
+    "estTimeMsg": "Progresso da história: {{beatenRate}} • Restam aprox. {{time}}"
 }

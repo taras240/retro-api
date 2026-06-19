@@ -132,6 +132,6 @@ export const calcEtaTimeToBeat = (gameData, hardMode = true) => {
         }
 
     }
-    if (eta < 5 * 60) eta = Math.max(Number(timeToBeat * 0.05), 5 * 60)
+    if (eta < 5 * 60) eta = Math.max(Number(timeToBeat * 0.05), 5 * 60);
     return eta;
 }

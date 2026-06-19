@@ -349,5 +349,8 @@
     "series": "Серія ігор",
     "update": "Оновити",
     "showSeparator": "Групувати цифри",
-    "openComments": "Відкрити коментарі"
+    "openComments": "Відкрити коментарі",
+    "unlockTime": "Тривалість розблокування",
+    "estimated": "Час до проходження",
+    "estTimeMsg": "Прогрес проходження: {{beatenRate}} • Залишилось ≈{{time}}"
 }

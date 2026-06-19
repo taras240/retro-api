@@ -352,5 +352,7 @@
     "update": "Update",
     "showSeparator": "Group digits",
     "openComments": "Open Comments",
-    "unlockTime": "Unlock Time"
+    "unlockTime": "Unlock Time",
+    "estimated": "Est. Time Left",
+    "estTimeMsg": "Story Progress: {{beatenRate}} • Est. {{time}} left"
 }
