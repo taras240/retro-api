@@ -72,7 +72,7 @@ export class UI {
     this.initializeElements();
 
     this.addEvents();
-    UI.updateColors();
+    this.updateColors();
     configData.bgVisibility = configData.bgVisibility;
 
     if (config.identConfirmed) {
@@ -195,7 +195,6 @@ export class UI {
     loading.dataset.message = message ?? "Loading...";
 
   }
-  updateWidgets({ earnedAchievementsIDs = [], isLog = false }) { }
   showAwardsAlerts(awardsArray = []) {
     pushFSAlerts(awardsArray);
     const hardcoreAwards = [GAME_AWARD_TYPES.BEATEN, GAME_AWARD_TYPES.MASTERED];
@@ -278,7 +277,7 @@ export class UI {
     contextMenu.classList.remove("hidden");
   }
 
-  static updateColors(presetName) {
+  updateColors(presetName) {
     const getColors = (presetName) => {
       function hexToRgba(hex, alpha = 1) {
         hex = hex.replace(/^#/, '');

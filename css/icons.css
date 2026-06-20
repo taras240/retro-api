@@ -67,7 +67,7 @@
 
 .badge-button.badge-gold:hover {
     background-color: var(--font-color);
-    color: black;
+    color: var(--main-color);
 }
 
 .badge_transparent {

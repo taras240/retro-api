@@ -1,4 +1,3 @@
-import { UI } from "../ui.js";
 import { config, configData, ui, watcher } from "../script.js";
 import { inputTypes, input, inputElement } from "../components/inputElements.js";
 import { Widget } from "./widget.js";

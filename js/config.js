@@ -7,7 +7,6 @@ import { cacheWorker } from "./functions/api/cacheWorker.js";
 import { loadHandle, openDB, saveHandle } from "./functions/DB.js";
 import { delay } from "./functions/delay.js";
 import { ui, watcher } from "./script.js";
-import { UI } from "./ui.js";
 
 let CONFIG_FILE_NAME = "retroApiConfig";
 const CACHE_FILE_NAME = "raApiCache";
@@ -141,7 +140,7 @@ export class Config {
       this.configData.preset = "custom";
     },
     preset(value) {
-      UI.updateColors();
+      ui.updateColors();
     },
     fontSize(size) {
       document.documentElement.style.setProperty("--font-size", `${size}px`);

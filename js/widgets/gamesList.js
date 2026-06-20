@@ -1,4 +1,3 @@
-import { UI } from "../ui.js";
 import { config, ui, watcher } from "../script.js";
 import { Widget } from "./widget.js";
 import { sortBy } from "../functions/sortFilter.js";

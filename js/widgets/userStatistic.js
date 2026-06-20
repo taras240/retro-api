@@ -1,4 +1,3 @@
-import { UI } from "../ui.js";
 import { generateBadges, badgeElements, goldBadge } from "../components/badges.js";
 import { config, ui } from "../script.js";
 import { Widget } from "./widget.js";

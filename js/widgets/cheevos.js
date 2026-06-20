@@ -1,4 +1,3 @@
-import { UI } from "../ui.js";
 import { config, ui, UIEvents, watcher } from "../script.js";
 import { Widget } from "./widget.js";
 import { applyFilter, applySort, cheevosFiterNames, cheevosSortNames, filterBy, filterMethods, sortBy } from "../functions/sortFilter.js";

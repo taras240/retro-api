@@ -1,4 +1,4 @@
-import { UI, generateGenres } from "../ui.js";
+import { generateGenres } from "../ui.js";
 import { config, ui } from "../script.js";
 import { Widget } from "./widget.js";
 import { generateBadges } from "../components/badges.js";

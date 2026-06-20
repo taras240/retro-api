@@ -1,4 +1,3 @@
-import { UI } from "../ui.js";
 import { icons, signedIcons } from "../components/icons.js"
 
 import { config, ui, watcher } from "../script.js";

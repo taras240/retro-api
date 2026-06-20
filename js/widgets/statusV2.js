@@ -1,4 +1,3 @@
-import { UI } from "../ui.js";
 import { ALERT_TYPES } from "../enums/alerts.js";
 
 import { signedIcons } from "../components/icons.js"

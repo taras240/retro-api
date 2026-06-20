@@ -168,9 +168,12 @@
 }
 
 .target-achiv.hidden {
-  transition: 0.1s;
+  transition: 150ms;
   opacity: 0.2;
-  pointer-events: none;
+}
+
+.target-achiv.hidden:hover {
+  opacity: 0.9;
 }
 
 .target-achiv.hidden-group,
