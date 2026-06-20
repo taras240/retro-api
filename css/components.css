@@ -914,8 +914,18 @@ input:checked+.checkbox-input::before {
     display: none;
 }
 
-.to-top .context-submenu {
-    transform: translateY(calc(-100% + var(--submenu-margin)));
+.context-submenu.to-top {
+    transform: translateY(-100%);
+    top: 2.5rem;
+}
+
+.context-submenu.to-left {
+    transform: translateX(-100%);
+    left: 0;
+}
+
+.context-submenu.to-left.to-top {
+    transform: translate(-100%, -100%);
 }
 
 .context-menu.to-top {

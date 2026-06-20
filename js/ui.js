@@ -236,28 +236,46 @@ export class UI {
     pushFSAlerts(cheevoAlerts);
   }
   showContextmenu({ event, menuItems, sectionCode = "" }) {
-    const setContextPosition = () => {
-      this.contextMenu.style.left = event.x + "px";
-      this.contextMenu.style.top = event.y + "px";
-      (window.innerWidth - event.x < this.contextMenu.offsetWidth * 2) &&
-        (this.contextMenu.classList.add("to-left"));
-      (window.innerHeight - event.y < this.contextMenu.offsetHeight + 50)
-        && (this.contextMenu.classList.add("to-top"));
+    const setContextPosition = (contextMenu, isSubmenu) => {
+      if (!isSubmenu) {
+        contextMenu.style.left = event.x + "px";
+        contextMenu.style.top = event.y + "px";
+      }
+
+      const dimensions = contextMenu.getBoundingClientRect();
+      if (dimensions.right > window.innerWidth) {
+        contextMenu.classList.add("to-left");
+      }
+
+      if (dimensions.bottom > window.innerHeight) {
+        contextMenu.classList.add("to-top");
+      }
+      console.log(dimensions.right, dimensions.bottom);
+    }
+    const setSubmenuPositions = (contextMenu) => {
+      const submenus = contextMenu.querySelectorAll(".context-submenu")
+      submenus.forEach(submenu => {
+        submenu.style.visibility = "hidden";
+        submenu.style.display = "block";
+        setContextPosition(submenu, true);
+        submenu.style.visibility = "";
+        submenu.style.display = "";
+      })
     }
 
     event.preventDefault();
     event.stopPropagation();
     document.querySelector(".context-menu")?.remove();
-    // this.contextMenu ? this.contextMenu.remove() : "";
-    this.contextMenu = generateContextMenu({
-      menuItems: menuItems,
-      sectionCode: sectionCode,
+    const contextMenu = generateContextMenu({
+      menuItems,
+      sectionCode,
     });
-    this.app.appendChild(this.contextMenu);
 
-    setContextPosition();
+    this.app.appendChild(contextMenu);
 
-    this.contextMenu.classList.remove("hidden");
+    setContextPosition(contextMenu);
+    setSubmenuPositions(contextMenu);
+    contextMenu.classList.remove("hidden");
   }
 
   static updateColors(presetName) {
