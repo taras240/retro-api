@@ -62,12 +62,12 @@ function stringToDate(string) {
 export const cheevosSortNames = Object.freeze({
     TIME_TO_UNLOCK: "timeToUnlock",
     UNLOCK_DATE: "latest",
-    UNLOCK_DATE_RA: "raLatest",
     TRUE_RATIO: "trueRatio",
     // DIFFICULTY: "difficulty",
     UNLOCK_RATE: "unlockRate",
     POINTS: "points",
     TRUE_POINTS: "truepoints",
+    UNLOCK_DATE_RA: "raLatest",
     DEFAULT: "default",
     LEVEL: "level",
     CUSTOM_ORDER: "customOrder",
@@ -99,7 +99,16 @@ export const sortBy = {
         return (dateB - dateA) * reverse; // Повертає різницю дат
     },
     raLatest: (a, b, reverse = 1, strictMode) => {
-        return sortBy.latest(a, b, -1, true) * reverse
+        const dateA = a.DateEarnedHardcore
+            ? stringToDate(a.DateEarnedHardcore) : a.DateEarned ? stringToDate(a.DateEarned)
+                : 0;
+        const dateB = b.DateEarnedHardcore
+            ? stringToDate(b.DateEarnedHardcore) : b.DateEarned ? stringToDate(b.DateEarned)
+                : 0;
+        if (dateA * dateB === 0 && dateA - dateB !== 0) {
+            return dateB ? reverse : -1 * reverse;
+        }
+        return sortBy.default(a, b);
     },
 
     earnedCount: (a, b, reverse = 1) => (b.NumAwardedHardcore - a.NumAwardedHardcore) * reverse,
