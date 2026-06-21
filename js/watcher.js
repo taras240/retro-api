@@ -20,9 +20,11 @@ export class Watcher {
     IS_HARD_MODE = true;
     isWatching = false;
     RECENT_ACHIVES_RANGE_MINUTES = 8 * 60;//Math.max(config.updateDelay * 5 / 60, 5);
-    CHECK_FOR_ONLINE_DELAY_MS = 2 * 60 * 1000; // If user offline and wathing is ON, it check for online with delay
-    CHECK_FOR_ONLINE_AFTER_SILENCE_MS = 3 * 60 * 1000; // If there is no activity for this time, it will be check for online
+    CHECK_FOR_ONLINE_DELAY_MS = 1 * 60 * 1000; // If user offline and wathing is ON, it check for online with delay
+    CHECK_FOR_ONLINE_ERROR_DELAY_MS = 3 * 1000;
+    CHECK_FOR_ONLINE_AFTER_SILENCE_MS = 5 * 60 * 1000; // If there is no activity for this time, it will be check for online
     watcherInterval;
+    onlineCheckTimeOut = null;
     playTime = {
         totalGameTime: 0,
         gameTime: 0,
@@ -33,7 +35,7 @@ export class Watcher {
         hardcore: 0,
         softcore: 0,
     }
-    zeroCheckTime = new Date();
+    lastOnlineAt = new Date();
     get CHEEVOS() {
         return this.GAME_DATA?.AllAchievements ?? {};
     }
@@ -181,29 +183,34 @@ export class Watcher {
         this.onStatsUpdate();
     }
     async checkForOnline() {
-        const now = new Date();
-        const doOnline = () => {
-            this.zeroCheckTime = now;
-            this.checkApiUpdates();
-            this.onlineCheckTimeOut && clearTimeout(this.onlineCheckTimeOut);
-            this.onlineCheckTimeOut = null;
+        clearTimeout(this.onlineCheckTimeOut);
+        let status;
+        try {
+            status = await this.online.check();
+            console.log(status)
+        } catch (error) {
+            console.warn(error);
 
+            if (this.isWatching) {
+                this.onlineCheckTimeOut = setTimeout(
+                    () => this.checkForOnline(),
+                    this.CHECK_FOR_ONLINE_ERROR_DELAY_MS
+                );
+            }
+            return;
         }
-        // if (!configData.pauseIfOffline && !this.isOnline) {
-        //     this.online.setOnline();
-        //     doOnline();
-        //     return;
-        // }
-
-        const status = await this.online.check();
         console.log(`Online status: ${status}, Last seen online: ${this.online.getLastSeen()}`);
+
         if (status === ONLINE_STATUS.online) {
-            doOnline();
+            this.onlineCheckTimeOut = null;
+            this.lastOnlineAt = new Date();
+            this.checkApiUpdates();
+            return;
         }
-        else {
-            if (!this.isWatching) return;
-            this.onlineCheckTimeOut = setTimeout(() => this.checkForOnline(), this.CHECK_FOR_ONLINE_DELAY_MS);
-        }
+
+        this.onlineCheckTimeOut = this.isWatching
+            ? setTimeout(() => this.checkForOnline(), this.CHECK_FOR_ONLINE_DELAY_MS)
+            : null;
     }
     apiTrackerInterval;
     async checkApiUpdates(isStart = false, isForced = false) {
@@ -222,7 +229,7 @@ export class Watcher {
             this.updateUserData({ raProfileInfo });
             this.updateCheevos(false, [], deltaPoints);
             this.online.setOnline();
-            this.zeroCheckTime = now;
+            this.lastOnlineAt = now;
         }
         const isGameChanged = (raProfileInfo, isStart = false) => {
             const lastID = config.gamesDB[raProfileInfo.LastGameID]?.setID || raProfileInfo.LastGameID;
@@ -273,19 +280,16 @@ export class Watcher {
         if (isPointsChanged(raProfileInfo)) {
             onPointsChanged(raProfileInfo);
         }
-        else if (this.GAME_DATA.hasZeroPoints && now - this.zeroCheckTime > 60 * 1000) {
+        else if (this.GAME_DATA.hasZeroPoints && now - this.lastOnlineAt > 60 * 1000) {
             this.updateCheevos();
-            this.zeroCheckTime = now;
+            this.lastOnlineAt = now;
         }
 
         const richPresence = raProfileInfo.RichPresenceMsg;
         this.online.updateWithRPMessage({ richPresence })
         this.updateUserData({ raProfileInfo });
-        if (!this.isOnline && configData.pauseIfOffline) {
+        if (!this.isOnline && !this.onlineCheckTimeOut) {
             await this.checkForOnline();
-        }
-        else if (!configData.pauseIfOffline) {
-            // this.online.setOnline();
         }
 
     }
