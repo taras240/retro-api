@@ -11,8 +11,7 @@ export async function getUserRecentAchievements({ username, apiKey, minutes = 60
         u: username,
         m: minutes
     });
-
-    // Normalize recent achievements with formatted dates
+    //Add some missing fields
     return (data || []).map(cheevo => ({
         ...cheevo,
         isEarned: !!cheevo.Date,

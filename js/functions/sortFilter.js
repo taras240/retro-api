@@ -76,35 +76,24 @@ export const cheevosSortNames = Object.freeze({
 
 export const sortBy = {
     latestHardcore: (a, b, reverse = 1, strictMode = false) => {
-        const dateA = a.DateEarnedHardcore
-            ? stringToDate(a.DateEarnedHardcore) : 0;
-        const dateB = b.DateEarnedHardcore
-            ? stringToDate(b.DateEarnedHardcore) : 0;
-
-        if (strictMode && (dateA * dateB === 0) && (dateA + dateB !== 0)) {
-            return dateB ? 1 : -1;
-        }
-        return (dateB - dateA) * reverse; // Повертає різницю дат
+        return sortBy.latest(a, b, reverse, strictMode, true);
     },
-    latest: (a, b, reverse = 1, strictMode = false) => {
-        const dateA = a.DateEarnedHardcore
-            ? stringToDate(a.DateEarnedHardcore) : a.DateEarned ? stringToDate(a.DateEarned)
-                : 0;
-        const dateB = b.DateEarnedHardcore
-            ? stringToDate(b.DateEarnedHardcore) : b.DateEarned ? stringToDate(b.DateEarned)
-                : 0;
-        if (strictMode && (dateA * dateB === 0) && (dateA + dateB !== 0)) {
-            return dateB ? 1 : -1;
+    latest: (a, b, reverse = 1, strictMode = false, isHardcore = false) => {
+        const dateA = getDate(a);
+        const dateB = getDate(b);
+        // strictMode: ті, у кого немає дати, завжди в кінець
+        if (strictMode) {
+            const aMissing = !dateA;
+            const bMissing = !dateB;
+
+            if (aMissing && !bMissing) return 1;
+            if (!aMissing && bMissing) return -1;
         }
-        return (dateB - dateA) * reverse; // Повертає різницю дат
+        return (dateB - dateA) * reverse;
     },
     raLatest: (a, b, reverse = 1, strictMode) => {
-        const dateA = a.DateEarnedHardcore
-            ? stringToDate(a.DateEarnedHardcore) : a.DateEarned ? stringToDate(a.DateEarned)
-                : 0;
-        const dateB = b.DateEarnedHardcore
-            ? stringToDate(b.DateEarnedHardcore) : b.DateEarned ? stringToDate(b.DateEarned)
-                : 0;
+        const dateA = getDate(a);
+        const dateB = getDate(b);
         if (dateA * dateB === 0 && dateA - dateB !== 0) {
             return dateB ? reverse : -1 * reverse;
         }
@@ -164,7 +153,10 @@ export const sortBy = {
         return difRes * reverse;
     },
 }
-
+const getDate = (cheevo, isHardOnly = false) => {
+    const dateStr = cheevo.DateEarnedHardcore || (!isHardOnly && cheevo.DateEarned);
+    return dateStr ? stringToDate(dateStr) : 0;
+};
 
 export const sortGamesBy = {
     title: (a, b, reverse = 1) => {
