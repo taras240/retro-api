@@ -90,7 +90,7 @@ export class UI {
     new WiiEvent();
     this.statusPanel = new Status("statusPanel", true);
     this.status = new Status("status", false);
-    new AchievementsBlock(1);
+    this.cheevos = new AchievementsBlock(1);
     new AchievementsBlock(2);
     this.target = new Target();
     new Target(2);
@@ -249,7 +249,6 @@ export class UI {
       if (dimensions.bottom > window.innerHeight) {
         contextMenu.classList.add("to-top");
       }
-      console.log(dimensions.right, dimensions.bottom);
     }
     const setSubmenuPositions = (contextMenu) => {
       const submenus = contextMenu.querySelectorAll(".context-submenu")
