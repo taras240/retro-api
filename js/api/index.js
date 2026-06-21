@@ -90,7 +90,7 @@ export const raapi = {
     },
     async getGameTimesInfo({ gameID, preferHardcore = false }) {
         const cachedData = config.cache.getData({ dataType: CACHE_TYPES.GAME_TIMES, ID: gameID });
-        if (!cachedData?.date || Date.now() - cachedData.date > 3600e3 * 24 * 7) {
+        if (!cachedData?.cachedDate || (Date.now() - cachedData.cachedDate > 3600e3 * 24 * 7)) {
             const timesData = await call("getGameTimesInfo", {
                 apiKey: config.API_KEY,
                 gameID,
