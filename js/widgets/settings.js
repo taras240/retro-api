@@ -12,6 +12,7 @@ import { uiLayouts } from "../enums/uiLayouts.js";
 import { getRandomID } from "../functions/randomID.js";
 import { raapi } from "../api/index.js";
 import { contextSetsMenu, contextSwitchSetsMenu } from "../functions/settings/subsetSettings.js";
+import { gameLinksMenu } from "../functions/settings/gameLinks.js";
 export class Settings extends Widget {
     widgetIcon = {
         iconClass: "settings-icon",
@@ -527,6 +528,10 @@ export class Settings extends Widget {
             {
                 type: inputTypes.DIVIDER,
             },
+            ...gameLinksMenu(watcher.GAME_DATA),
+            {
+                type: inputTypes.DIVIDER,
+            },
             {
                 label: ui.lang.selectColors,
                 elements: [
@@ -627,13 +632,15 @@ export class Settings extends Widget {
                     settingItemsLine.append(expandCheckbox, settingLabel, content);
 
                     setting.elements.forEach(settingItem => {
-                        content.append(inputElement(settingItem));
+                        const element = inputElement(settingItem);
+                        element && content.append(element);
                     });
                     container.appendChild(settingItemsLine);
                 }
                 else {
                     if (setting && setting.type !== inputTypes.DIVIDER) {
-                        container.append(inputElement(setting));
+                        const element = inputElement(setting);
+                        element && container.append(element);
                     }
                 }
             })

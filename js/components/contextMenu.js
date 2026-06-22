@@ -141,6 +141,7 @@ const contextInputs = {
     [inputTypes.DIVIDER]: () => `
     <div class="context__divider"/>
 `,
+    [inputTypes.CONTEXT_BUTTON]: (props) => contextInputs.button({ ...props, type: inputTypes.BUTTON }),
 }
 
 export { generateContextMenu }

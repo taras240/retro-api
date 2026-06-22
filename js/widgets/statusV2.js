@@ -39,6 +39,7 @@ import { createAutoScroll } from "../functions/autosScroll.js";
 import { getRandomID } from "../functions/randomID.js";
 import { focusCheevoHtml } from "../components/statusWidget/focusCheevo.js";
 import { contextSetsMenu, contextSwitchSetsMenu } from "../functions/settings/subsetSettings.js";
+import { gameLinksMenu } from "../functions/settings/gameLinks.js";
 
 export class Status extends Widget {
     widgetIcon = {
@@ -53,7 +54,13 @@ export class Status extends Widget {
         return [
             contextSwitchSetsMenu(),
             contextSetsMenu(),
-
+            {
+                type: inputTypes.DIVIDER,
+            },
+            ...gameLinksMenu(watcher.GAME_DATA),
+            {
+                type: inputTypes.DIVIDER,
+            },
             this.theme !== Status.themes.legacy ? {
                 label: ui.lang.elements,
                 elements: [

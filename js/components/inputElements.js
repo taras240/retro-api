@@ -256,6 +256,7 @@ const inputTypes = Object.freeze({
     TEXT: "plain-text",
     STEPPER: "stepper",
     DIVIDER: "divider",
+    CONTEXT_BUTTON: "context_button"
 })
 export { inputTypes, inputHtml as input, inputElement, addEvents }
 // export { checkbox, statebox, radioButton, numberInput, textInput, searchInput, selectorInput, button, }

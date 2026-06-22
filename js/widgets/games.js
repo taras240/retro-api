@@ -23,6 +23,8 @@ import { lazyLoad } from "../functions/lazyLoad.js";
 import { downloadJSON } from "../functions/exportData.js";
 import { highestAwardMap } from "../enums/gameAwards.js";
 import { raapi } from "../api/index.js";
+import { openGameInRA, searchByTitle, searchFaqByGame } from "../functions/games/search.js";
+import { gameLinksMenu } from "../functions/settings/gameLinks.js";
 
 export class Games extends Widget {
     widgetIcon = {
@@ -51,6 +53,8 @@ export class Games extends Widget {
         }
     }
     gameContextMenuItems(gameID) {
+        gameID = parseInt(gameID);
+        const gameData = this.games.find(g => g.ID === gameID);
         return [
             {
                 type: inputTypes.BUTTON,
@@ -70,7 +74,7 @@ export class Games extends Widget {
                             name: "games-add-to-pl",
                             id: `games-add-to-pl-${playlistName}`,
                             label: playlistName,
-                            checked: playlistData.games.includes(+gameID),
+                            checked: playlistData.games.includes(gameID),
                             onChange: (e) => {
                                 if (e.currentTarget.checked) {
                                     this.addGameToPlaylist(gameID, playlistName)
@@ -83,6 +87,10 @@ export class Games extends Widget {
                     })
                 ]
             },
+            {
+                type: inputTypes.DIVIDER,
+            },
+            ...gameLinksMenu(gameData),
             {
                 type: inputTypes.DIVIDER,
             },
@@ -1139,4 +1147,4 @@ export class Games extends Widget {
         return sideMenu;
     }
 }
-const googleQuerySite = 'site:www.romhacking.net OR site:wowroms.com/en/roms OR site:cdromance.org OR site:coolrom.com.au/roms OR site:planetemu.net OR site:emulatorgames.net OR site:romsfun.com/roms OR site:emu-land.net/en';
+
