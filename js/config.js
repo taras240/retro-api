@@ -360,7 +360,21 @@ export class Config {
     location.reload();
   }
   async selectLogFile(emuName) {
+    if (ui.isTauriApp) {
+      // console.log(window.__TAURI__.dialog, window.__TAURI__);
+      // const { open } = window.__TAURI__.dialog;
 
+      // const path = await open({
+      //   multiple: false
+      // });
+
+
+      // window.__TAURI__.core.invoke("watch_file", {
+      //   path: file.path
+      // });
+
+
+    }
     async function readFile(fileHandle) {
       // Перевірка дозволу
       let perm = await fileHandle.queryPermission({ mode: "read" });

@@ -41,6 +41,7 @@ import { GAME_AWARD_TYPES } from "./enums/gameAwards.js";
 export class UI {
   VERSION = "0.83";
   isCEF = !('Notification' in window);
+  isTauriApp = !!window.__TAURI__;
   CURRENT_LEVEL;
   AUTOCLOSE_CONTEXTMENU = false;
   STICK_MARGIN = 1;

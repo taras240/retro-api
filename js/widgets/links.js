@@ -7,6 +7,10 @@ export class Links extends Widget {
     };
     links = [
         {
+            name: "Desktop APP",
+            url: "https://github.com/taras240/retro-api/releases"
+        },
+        {
             name: "RetroAchievements",
             url: "https://retroachievements.org",
             // iconUrl: "https://static.retroachievements.org/assets/images/ra-icon.webp"

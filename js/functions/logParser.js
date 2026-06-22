@@ -37,7 +37,14 @@ function parseCheevos(text) {
 }
 
 export async function readLog(fileHandle) {
-    const file = await fileHandle.getFile();
+    let file;
+    if (window.__TAURI__) {
+        console.log("fileHandle not supported");
+    }
+    else {
+
+    }
+    file = await fileHandle.getFile();
     if (file.size < lastSize) {
         lastSize = 0;
     }
