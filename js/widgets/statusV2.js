@@ -57,10 +57,6 @@ export class Status extends Widget {
             {
                 type: inputTypes.DIVIDER,
             },
-            ...gameLinksMenu(watcher.GAME_DATA),
-            {
-                type: inputTypes.DIVIDER,
-            },
             this.theme !== Status.themes.legacy ? {
                 label: ui.lang.elements,
                 elements: [
@@ -321,7 +317,11 @@ export class Status extends Widget {
                 label: ui.lang.hardcoreMode,
                 checked: this.uiProps.isHardMode,
                 onChange: (event) => this.uiProps.isHardMode = event.currentTarget.checked,
-            }
+            },
+            {
+                type: inputTypes.DIVIDER,
+            },
+            ...gameLinksMenu(watcher.GAME_DATA),
 
         ];
     }

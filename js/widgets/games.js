@@ -457,6 +457,14 @@ export class Games extends Widget {
     applySort() {
         this.games = this.games.sort((a, b) => sortGamesBy[this.uiProps.sortName]?.(a, b, this.uiProps.reverseSort));
     }
+    applyDisplayOrder() {
+        if (this.currentPlaylist && this.playlists[this.currentPlaylist].editable) {
+            this.playlists[this.currentPlaylist].games?.forEach((gameID, index) => {
+                const game = this.games.find(g => g.ID == gameID);
+                if (game) game.displayOrder = index;
+            })
+        }
+    }
     rangeFilters = {
         releaseDateFilter: {
             title: "releaseYear",
@@ -606,7 +614,16 @@ export class Games extends Widget {
 
 
         const playlistsContainer = this.container.querySelector("#games_playlists");
+        // new Sortable(playlistsContainer, {
 
+        //     group: {
+        //         name: "playlists", pull: false, push: false,
+        //     },
+        //     animation: 250,
+        //     forceFallback: ui.isCEF,
+        //     chosenClass: "dragged",
+        //     onEnd: () => this.saveDisplayOrder(),
+        // });
         this.gamesList.addEventListener('dragstart', e => {
             const game = e.target.closest('.games__game-item');
             if (!game) return;
@@ -704,6 +721,7 @@ export class Games extends Widget {
     }
     updateGamesList() {
         this.applyFilter();
+        this.applyDisplayOrder();
         this.applySort();
         this.renderActiveFilters();
         this.syncFilterPanelState();

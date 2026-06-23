@@ -1,6 +1,7 @@
 import { fromHtml } from "../../functions/html.js";
 import { buttonsHtml } from "../htmlElements.js";
 import { icons } from "../icons.js";
+import { inputElement, inputTypes } from "../inputElements.js";
 
 export function PlaylistsContainer({ playlists, onClick, onEdit }) {
     const container = fromHtml(`
@@ -34,21 +35,54 @@ export function PlaylistItem({ playlistData, onClick, onEdit }) {
 
         const editButton = fromHtml(buttonsHtml.editButton({ ID: title }));
         controlsContainer.append(editButton);
+
         editButton.addEventListener("click", (e) => {
             e.stopPropagation();
-            let titleElement = playlistItem.querySelector("h2");
-            let editableTitleElement = playlistItem.querySelector("input");
-            if (titleElement) {
-                editableTitleElement = fromHtml(`<input type="text" value="${title}"/>`);
-                titleElement.replaceWith(editableTitleElement);
-            }
-            else if (editableTitleElement) {
+            const saveEditedTitle = (editableTitleElement) => {
                 const newTitle = editableTitleElement.value;
-                titleElement = fromHtml(`<h2 class="playlist-title"></h2>`);
+                const titleElement = fromHtml(`<h2 class="playlist-title"></h2>`);
                 editableTitleElement.replaceWith(titleElement);
                 playlistItem.dataset.playlistName = newTitle;
                 onEdit({ title, newTitle });
+                controlsContainer.style.visibility = "";
+
             }
+            const cancelEditing = () => {
+                const titleElement = fromHtml(`<h2 class="playlist-title">${title}</h2>`);
+                editableTitleElement.replaceWith(titleElement);
+                controlsContainer.style.visibility = "";
+                onEdit({ title, title });
+            }
+            let titleElement = playlistItem.querySelector("h2");
+            let editableTitleElement = playlistItem.querySelector("input");
+            if (titleElement) {
+                controlsContainer.style.visibility = "hidden";
+                editableTitleElement = inputElement({
+                    type: inputTypes.SEARCH_INPUT,
+                    label: title ?? ui.lang.playlistTitle,
+                    value: title ?? "",
+                    title: ui.lang.playlistTitle,
+                    classList: ["wide-input"],
+
+                },).querySelector("input");
+                titleElement.replaceWith(editableTitleElement);
+                editableTitleElement.focus();
+                editableTitleElement.select();
+                editableTitleElement.addEventListener("keydown", event => {
+                    if (["Enter", "NumpadEnter"].includes(event.code)) {
+                        saveEditedTitle(editableTitleElement);
+                    }
+                    else if (event.code === "Escape") {
+                        cancelEditing();
+                    }
+                });
+                playlistItem.addEventListener("focusout", event => saveEditedTitle(editableTitleElement));
+                editableTitleElement.addEventListener("click", event => event.stopPropagation());
+
+            }
+            // else if (editableTitleElement) {
+            //     saveEditedTitle(editableTitleElement);
+            // }
 
         })
 

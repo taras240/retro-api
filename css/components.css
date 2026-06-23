@@ -564,7 +564,7 @@ input:checked+.checkbox-input::before {
     border-radius: var(--border-radius);
     background-color: var(--secondary-color);
     font-size: inherit;
-    color: inherit;
+    color: var(--font-color);
     min-width: 5em;
     max-width: 100%;
     border: 1px solid var(--selection-color);

@@ -248,6 +248,9 @@ export const sortGamesBy = {
         }
         return (a.timeToMaster - b.timeToMaster) * reverse;
     },
+    displayOrder: (a, b, reverse = 1, strictMode = 1) => {
+        return (a.displayOrder - b.displayOrder) * reverse;
+    },
 }
 export const gamesSortNames = {
     title: "title",
@@ -260,7 +263,8 @@ export const gamesSortNames = {
     beatenRate: "beatenRate",
     timeToBeat: "timeToBeat",
     masteryRate: "masteryRate",
-    timeToMaster: "timeToMaster"
+    timeToMaster: "timeToMaster",
+    displayOrder: "displayOrder"
 };
 
 export function applyFilter({

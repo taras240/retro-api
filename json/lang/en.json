@@ -357,5 +357,6 @@
     "estTimeMsg": "Story Progress: {{beatenRate}} • Est. {{time}} left",
     "searchRom": "Search ROM",
     "searchFaq": "Search FAQ",
-    "openInRA": "Open in RA"
+    "openInRA": "Open in RA",
+    "playlistTitle": "Playlist Title"
 }
