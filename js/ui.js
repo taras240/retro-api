@@ -47,7 +47,7 @@ export class UI {
   STICK_MARGIN = 1;
   STICK_TOLERANCE = 7;
   hltb = {};
-  isTest = true;
+  // isTest = true;
   constructor() {
     this.toggleLoading(false);
     this.initUI();
