@@ -83,6 +83,7 @@ export class Config {
   });
   configDefaultValues = {
     bgVisibility: false,
+    bgColor: window.__TAURI__ ? "transparent" : "black",
     bgAnimType: "",
     targetUser: "",
     gameID: 1,

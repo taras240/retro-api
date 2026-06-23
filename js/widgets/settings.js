@@ -107,6 +107,16 @@ export class Settings extends Widget {
                 elements: [
                     {
                         type: inputTypes.COLOR,
+                        id: "bg-color-input",
+                        label: "bg color",
+                        value: configData.bgColor,
+                        onChange: (event) => {
+                            configData.bgColor = event.currentTarget.value;
+                            ui.updateColors()
+                        },
+                    },
+                    {
+                        type: inputTypes.COLOR,
                         id: "main-color-input",
                         label: "main color",
                         value: configData.customColors.mainColor,
