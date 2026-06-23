@@ -17,6 +17,7 @@ import { saveOrder } from "../functions/customOrder.js";
 import { showComments } from "../components/comments.js";
 import { contextSetsMenu } from "../functions/settings/subsetSettings.js";
 import { cheevoImageUrl } from "../functions/raLinks.js";
+import { fromHtml } from "../functions/html.js";
 export class AchievementsBlock extends Widget {
     widgetIcon = {
         description: "cheevos widget",
@@ -276,6 +277,10 @@ export class AchievementsBlock extends Widget {
     } : "";
     uiDefaultValues = {
         showHeader: true,
+        x: "0px",
+        y: "0px",
+        width: "350px",
+        height: "600px",
         // overlayType: overlayNames.BORDER,
         ACHIV_MIN_SIZE: 60,
         ACHIV_MAX_SIZE: 128,
@@ -398,7 +403,7 @@ export class AchievementsBlock extends Widget {
 
     }
 
-    get SECTION_NAME() {
+    get SECTION_ID() {
         if (this.CLONE_NUMBER === 0) {
             return `achievements_section`;
         } else {
@@ -437,11 +442,11 @@ export class AchievementsBlock extends Widget {
     }
     addEvents() {
         super.addEvents();
-        this.section.querySelector(`#${this.SECTION_NAME}-filter-button`).addEventListener("click", event => {
-            ui.showContextmenu({ event, menuItems: this.contextFilterMenu().elements, sectionCode: this.SECTION_NAME })
+        this.section.querySelector(`#${this.SECTION_ID}-filter-button`).addEventListener("click", event => {
+            ui.showContextmenu({ event, menuItems: this.contextFilterMenu().elements, sectionCode: this.SECTION_ID })
         });
-        this.section.querySelector(`#${this.SECTION_NAME}-sort-button`).addEventListener("click", event => {
-            ui.showContextmenu({ event, menuItems: this.contextSortMenu().elements, sectionCode: this.SECTION_NAME })
+        this.section.querySelector(`#${this.SECTION_ID}-sort-button`).addEventListener("click", event => {
+            ui.showContextmenu({ event, menuItems: this.contextSortMenu().elements, sectionCode: this.SECTION_ID })
         });
         new Sortable(this.container, {
             group: {
@@ -477,14 +482,11 @@ export class AchievementsBlock extends Widget {
     setValues() {
         this.applyPosition();
         this.setElementsValues();
+        this.section.style.top = this.uiProps.y;
+        this.section.style.left = this.uiProps.x;
+        this.section.style.height = this.uiProps.height;
+        this.section.style.width = this.uiProps.width;
 
-        if (config.ui[this.SECTION_NAME]) {
-            this.section.style.top = config.ui[this.SECTION_NAME].y ?? "0px";
-            this.section.style.left = config.ui[this.SECTION_NAME].x ?? "0px";
-            this.section.style.height =
-                config.ui[this.SECTION_NAME].height ?? "600px";
-            this.section.style.width = config.ui[this.SECTION_NAME].width ?? "350px";
-        }
         if (this.uiProps.autoscroll) {
             this.startAutoScroll();
         }
@@ -755,7 +757,7 @@ export class AchievementsBlock extends Widget {
         state === 0 ?
             delete this.filters[filterName] :
             this.filters[filterName] = { filterName, state };
-        config.saveUIProperty({ sectionID: this.section.id, property: "filters", value: this.filters });
+        this.uiProps.filters = this.filters;
         this.applyFiltering();
     }
     setMGameSelection() {
@@ -839,25 +841,22 @@ export class AchievementsBlock extends Widget {
         await delay(600);
     }
     generateNewWidget({ }) {
-        const newWidget = document.createElement("section");
-        newWidget.id = `${this.SECTION_NAME}`;
-        newWidget.classList.add("achivs", "section");
-        newWidget.style.width = config.ui.achievements_section?.width ?? 350 + "px";
-        newWidget.style.height =
-            config.ui.achievements_section?.height ?? 650 + "px";
-        newWidget.innerHTML = `
-        <div class="header-container achievements-header_container">
-          <div class="header-icon achievements-icon">
-          </div>
-          <h2 class="widget-header-text achivs-header-text">${ui.lang.cheevosSectionName}</h2>
-            ${buttonsHtml.filter(this.SECTION_NAME)}
-            ${buttonsHtml.sort(this.SECTION_NAME)}
-            ${buttonsHtml.tweek()}
-            ${buttonsHtml.close()}
-        </div>
-        <ul class="achievements-container content-container"></ul>
-        ${resizerHtml()}
-      `;
+        const newWidget = fromHtml(`
+            <section id="${this.SECTION_ID}" class="section achivs">
+                <div class="header-container achievements-header_container">
+                    <div class="header-icon achievements-icon"></div>
+                    <h2 class="widget-header-text achivs-header-text">
+                        ${ui.lang.cheevosSectionName}
+                    </h2>
+                    ${buttonsHtml.filter(this.SECTION_ID)}
+                    ${buttonsHtml.sort(this.SECTION_ID)}
+                    ${buttonsHtml.tweek()}
+                    ${buttonsHtml.close()}
+                </div>
+                <ul class="achievements-container content-container"></ul>
+                ${resizerHtml()}
+            </section>
+        `);
         return newWidget;
     }
     groupCheevos() {
