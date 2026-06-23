@@ -17,6 +17,12 @@ export class Config {
   get version() {
     return this._cfg.version ?? "0";
   }
+  get configFileName() {
+    return CONFIG_FILE_NAME;
+  }
+  get raLogPath() {
+    return this._cfg.raLogPath;
+  }
   set version(value) {
     this._cfg.version = value;
     this.writeConfiguration();
@@ -360,21 +366,6 @@ export class Config {
     location.reload();
   }
   async selectLogFile(emuName) {
-    if (ui.isTauriApp) {
-      // console.log(window.__TAURI__.dialog, window.__TAURI__);
-      // const { open } = window.__TAURI__.dialog;
-
-      // const path = await open({
-      //   multiple: false
-      // });
-
-
-      // window.__TAURI__.core.invoke("watch_file", {
-      //   path: file.path
-      // });
-
-
-    }
     async function readFile(fileHandle) {
       // Перевірка дозволу
       let perm = await fileHandle.queryPermission({ mode: "read" });
@@ -386,11 +377,19 @@ export class Config {
       }
 
     }
-    let [fileHandle] = await window.showOpenFilePicker({
-      types: [{ description: "Log files", accept: { "text/plain": [".log"] } }]
-    });
-    await saveHandle(fileHandle, emuName);
-    await readFile(fileHandle);
+    if (window.__TAURI__) {
+      const path = await window.invokeRust("selectFile");
+      console.log(path);
+      this._cfg.raLogPath = path;
+      this.writeConfiguration();
+    }
+    else {
+      let [fileHandle] = await window.showOpenFilePicker({
+        types: [{ description: "Log files", accept: { "text/plain": [".log"] } }]
+      });
+      await saveHandle(fileHandle, emuName);
+      await readFile(fileHandle);
+    }
   }
 
 }

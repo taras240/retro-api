@@ -319,6 +319,7 @@ export class UI {
     style.setProperty("--accent-color", accentColor);
     style.setProperty("--font-color", fontColor);
     style.setProperty("--selection-color", selectionColor);
+    this.isTauriApp && style.setProperty("--page-bg", "transparent");
   }
 
 

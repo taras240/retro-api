@@ -1,6 +1,7 @@
 /**---------[ Section Style ]--------------*/
 
 .section {
+    max-width: 100%;
     --background-gradient: linear-gradient(to right,
             var(--main-color),
             var(--main-color));

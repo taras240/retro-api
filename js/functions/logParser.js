@@ -1,13 +1,7 @@
 let fileHandle;
 let lastSize = 0;
 let isHardmode = true;
-// async function openLogFile() {
-//     // Користувач вибирає файл
-//     [fileHandle] = await window.showOpenFilePicker({
-//         types: [{ description: "Log files", accept: { "text/plain": [".log"] } }]
-//     });
-//     readLog();
-// }
+
 function parseCheevos(text) {
     let cheevoIDArray = [];
     let currentGame;
@@ -36,22 +30,28 @@ function parseCheevos(text) {
     return { unlockedCheevos, currentGame }
 }
 
-export async function readLog(fileHandle) {
+export async function readLog({ fileHandle, path }) {
     let file;
+    let text;
     if (window.__TAURI__) {
-        console.log("fileHandle not supported");
+        file = await window.invokeRust("getFileData", path);
+        if (file.length < lastSize) {
+            lastSize = 0;
+        }
+        text = file.slice(lastSize, file.length);
+        lastSize = file.length;
     }
     else {
-
-    }
-    file = await fileHandle.getFile();
-    if (file.size < lastSize) {
-        lastSize = 0;
-    }
-    if (file.size > lastSize) {
+        file = await fileHandle.getFile();
+        if (file.size < lastSize) {
+            lastSize = 0;
+        }
         const slice = file.slice(lastSize, file.size);
-        const text = await slice.text();
+        text = await slice.text();
         lastSize = file.size;
+    }
+    if (text.length > 0) {
+        console.log(text);
         const unlockedCheevos = parseCheevos(text);
         return unlockedCheevos;
     }

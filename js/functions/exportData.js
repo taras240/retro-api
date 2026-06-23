@@ -16,15 +16,24 @@ function downloadCSV(csvContent, filename) {
     URL.revokeObjectURL(url);
 }
 export function downloadJSON(content, filename) {
-    const blob = new Blob([JSON.stringify(content, null, "\t")], { type: 'text/json;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${filename}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    if (window.__TAURI__) {
+        window.invokeRust(
+            "downloadJSON",
+            content,
+            filename,
+        );
+    }
+    else {
+        const blob = new Blob([JSON.stringify(content, null, "\t")], { type: 'text/json;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${filename}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
     return true;
 }
 async function copyToClipboard(text) {
@@ -120,7 +129,7 @@ export const exportToCSV = {
 // exportDataAsJSON
 
 export async function exportSettingsToJson({ direction }) {
-    const settingsString = localStorage.getItem("retroApiConfig");
+    const settingsString = localStorage.getItem(config.configFileName);
 
     const settings = JSON.parse(settingsString);
     settings.apiWorker && delete settings.apiWorker.completionProgress;

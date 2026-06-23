@@ -303,21 +303,40 @@ export class Watcher {
             clearInterval(this.logWatcherInterval);
             this.isLogOK = false;
         }
-        const fileHandle = await config.getFileHandle("rarch");
-        if (!fileHandle) {
-            onErr("Select log file");
-            return;
-        };
         let parsedData = {};
-        try {
-            parsedData = await readLog(fileHandle);
-            this.isLogOK = true;
+        if (window.__TAURI__) {
+            if (!config.raLogPath) {
+                onErr("Select log file");
+                return;
+            }
+            try {
+                parsedData = await readLog({ path: config.raLogPath });
+                this.isLogOK = true;
+            }
+            catch {
+                console.warn("log file error");
+                this.isLogOK = false;
+                // onErr("Something wrong with log file");
+            }
         }
-        catch {
-            console.warn("log file error");
-            this.isLogOK = false;
-            // onErr("Something wrong with log file");
+        else {
+            const fileHandle = await config.getFileHandle("rarch");
+            if (!fileHandle) {
+                onErr("Select log file");
+                return;
+            };
+            try {
+                parsedData = await readLog({ fileHandle });
+                this.isLogOK = true;
+            }
+            catch {
+                console.warn("log file error");
+                this.isLogOK = false;
+                // onErr("Something wrong with log file");
+            }
         }
+
+
         const { unlockedCheevos, currentGame } = parsedData;
         unlockedCheevos?.length > 0 && this.updateCheevos(true, unlockedCheevos);
     }

@@ -51,7 +51,7 @@ export function PlaylistItem({ playlistData, onClick, onEdit }) {
                 const titleElement = fromHtml(`<h2 class="playlist-title">${title}</h2>`);
                 editableTitleElement.replaceWith(titleElement);
                 controlsContainer.style.visibility = "";
-                onEdit({ title, title });
+                onEdit({ title, newTitle: title });
             }
             let titleElement = playlistItem.querySelector("h2");
             let editableTitleElement = playlistItem.querySelector("input");

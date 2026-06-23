@@ -20,6 +20,36 @@ else {
   window.configData = config.configData;
   window.watcher = watcher;
   // userAuthData = new UserAuthData();
+
+  if (window.__TAURI__) {
+    let requestId = 0;
+    window.invokeRust = (method, ...args) => {
+      return new Promise((resolve, reject) => {
+        const id = ++requestId;
+
+        function listener(event) {
+          if (event.data.id !== id) return;
+
+          window.removeEventListener("message", listener);
+
+          if (event.data.error)
+            reject(event.data.error);
+          else
+            resolve(event.data.result);
+        }
+
+        window.addEventListener("message", listener);
+
+        parent.postMessage({
+          id,
+          method,
+          args
+        }, "*");
+      });
+    }
+
+    //const id = await invokeRust("getInstanceId");
+  }
 }
 
 export { config, ui, watcher, APIEvents, UIEvents, userAuthData }
