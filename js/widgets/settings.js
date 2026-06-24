@@ -538,10 +538,6 @@ export class Settings extends Widget {
             {
                 type: inputTypes.DIVIDER,
             },
-            ...gameLinksMenu(watcher.GAME_DATA),
-            {
-                type: inputTypes.DIVIDER,
-            },
             {
                 label: ui.lang.selectColors,
                 elements: [
@@ -595,6 +591,11 @@ export class Settings extends Widget {
                         onChange: () => config.uiLayoutName = presetName,
                     }))]
             },
+            ,
+            {
+                type: inputTypes.DIVIDER,
+            },
+            ...gameLinksMenu(watcher.GAME_DATA),
         ]
     }
 

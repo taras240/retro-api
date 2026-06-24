@@ -3,7 +3,7 @@ import { icons, signedIcons } from "../components/icons.js"
 import { config, ui, watcher } from "../script.js";
 import { Widget } from "./widget.js";
 import { generateBadges, badgeElements } from "../components/badges.js";
-import { sortGamesBy, gamesSortNames } from "../functions/sortFilter.js";
+import { sortGamesBy, gamesSortNames, filterBy } from "../functions/sortFilter.js";
 import { inputElement, inputTypes } from "../components/inputElements.js";
 import { GAME_GENRE_CODES } from "../enums/gameGenres.js";
 import { RA_PLATFORM_CODES } from "../enums/RAPlatforms.js";
@@ -121,33 +121,42 @@ export class Games extends Widget {
     ];
 
     get headerControls() {
-        return [{
-            type: inputTypes.SELECTOR,
-            label: ui.lang.sort,
-            id: "games__sort-selector",
-            onClick: (event) => ui.showContextmenu({
-                event, menuItems: [
-                    ...this.sortGamesMenu(),
-                ]
-            }),
-        },
-        {
-            type: inputTypes.CHECKBOX,
-            label: ui.lang.filter,
-            checked: false,
-            onChange: (event) => this.showFilters(event.currentTarget.checked),
-        },
-        {
-            type: inputTypes.SEARCH_INPUT,
-            label: ui.lang.search,
-            title: ui.lang.searchGameInputHint,
-            onInput: (event) => {
-                const searchbarValue = event.target.value;
-                this.titleFilter = searchbarValue;
-                event.target.classList.toggle("empty", searchbarValue == "");
-                this.updateGamesList();
+        return [
+
+            {
+                type: inputTypes.CHECKBOX,
+                label: ui.lang.gameOfTheDay,
+                id: "gotd-checkbox",
+                checked: this.gameOfTheDayFilter,
+                onChange: (event) => this.gameOfTheDayFilter = event.currentTarget.checked,
             },
-        },
+            {
+                type: inputTypes.SELECTOR,
+                label: ui.lang.sort,
+                id: "games__sort-selector",
+                onClick: (event) => ui.showContextmenu({
+                    event, menuItems: [
+                        ...this.sortGamesMenu(),
+                    ]
+                }),
+            },
+            {
+                type: inputTypes.CHECKBOX,
+                label: ui.lang.filter,
+                checked: false,
+                onChange: (event) => this.showFilters(event.currentTarget.checked),
+            },
+            {
+                type: inputTypes.SEARCH_INPUT,
+                label: ui.lang.search,
+                title: ui.lang.searchGameInputHint,
+                onInput: (event) => {
+                    const searchbarValue = event.target.value;
+                    this.titleFilter = searchbarValue;
+                    event.target.classList.toggle("empty", searchbarValue == "");
+                    this.updateGamesList();
+                },
+            },
         ]
     }
     titleFilter = '';
@@ -347,6 +356,14 @@ export class Games extends Widget {
     get seriesFilter() {
         return this.__seriesFilter ?? [];
     }
+
+    set gameOfTheDayFilter(value) {
+        this.__gameOfTheDayFilter = value;
+        this.updateGamesList();
+    }
+    get gameOfTheDayFilter() {
+        return this.__gameOfTheDayFilter ?? false;
+    }
     get currentPlaylist() {
         return this.__currentPlaylist;
     }
@@ -373,7 +390,16 @@ export class Games extends Widget {
         }
 
         let result = this.GAMES;
-
+        if (this.gameOfTheDayFilter) {
+            const now = new Date();
+            result = result.filter(game => {
+                const relisedDate = new Date(game.relisedAt);
+                return (
+                    relisedDate.getMonth() === now.getMonth() &&
+                    relisedDate.getDate() === now.getDate()
+                );
+            })
+        }
         // Filter by Search request
         if (this.titleFilter) {
             const escapeRegExp = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -731,7 +757,15 @@ export class Games extends Widget {
 
     getActiveFilters() {
         const filters = [];
-
+        if (this.gameOfTheDayFilter) {
+            filters.push({
+                type: 'relisedToday',
+                label: ui.lang.gameOfTheDay,
+                remove: () => {
+                    this.gameOfTheDayFilter = false;
+                },
+            });
+        }
         if (this.titleFilter?.trim()) {
             filters.push({
                 type: 'search',
@@ -878,6 +912,8 @@ export class Games extends Widget {
                 input.checked = checked;
             }
         };
+
+        this.section.querySelector("#gotd-checkbox").checked = this.gameOfTheDayFilter;
 
         if (this.searchbar) {
             this.searchbar.value = this.titleFilter ?? '';
