@@ -30,7 +30,7 @@ export const alertHtml = ({ imageUrl, title, titleUrl, meta, icons = [], badge =
 
                 <div class="media-item__content">
                     <h3 class="media-item__title">
-                        ${badge ? badge : ""} 
+                        <!--${badge ? badge : ""}--> 
                     <a
                         class="media-item__link"
                         target="_blank"

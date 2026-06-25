@@ -406,12 +406,12 @@ export class Notifications extends Widget {
         if (minutes < 5) return "a few minutes ago";
         if (minutes < 50) {
             const roundedMins = Math.round(delta / (MIN * 5)) * 5;
-            return `about ${roundedMins} minutes ago`;
+            return `${roundedMins} minutes ago`;
         }
 
         const hours = Math.round(delta / HOUR);
-        if (hours === 1) return `about an hour ago`;
-        if (hours < 8) return `about ${hours} hours ago`;
+        if (hours === 1) return `an hour ago`;
+        if (hours < 8) return `${hours} hours ago`;
 
         if (hours < 18) {
             return new Date(date).toLocaleTimeString([], {
