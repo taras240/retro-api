@@ -1,4 +1,3 @@
-let fileHandle;
 let isLoaded = false;
 let lastSize = 0;
 let isHardmode = false;
@@ -19,7 +18,7 @@ function parseCheevos(text) {
         isLoaded = true;
         for (let i = lines.length - 1; i >= 0; i--) {
             const line = lines[i];
-            !line.includes("loaded")
+            if (!line.includes("loaded")) continue;
             const game = parseGameLoad(line);
             if (game) {
                 currentGame = game;
@@ -51,7 +50,7 @@ function parseCheevos(text) {
         HardcoreMode: isHardmode ? 1 : 0,
         Date: new Date().toISOString(),
     }));
-    console.log({ unlockedCheevos, currentGame })
+    console.log("Parsed data: ", { unlockedCheevos, currentGame })
     return { unlockedCheevos, currentGame }
 }
 
@@ -64,7 +63,7 @@ export async function readLog({ fileHandle, path }) {
             lastSize = 0;
         }
         text = file.slice(lastSize, file.length);
-        lastSize = file.length;
+
     }
     else {
         file = await fileHandle.getFile();
@@ -73,9 +72,9 @@ export async function readLog({ fileHandle, path }) {
         }
         const slice = file.slice(lastSize, file.size);
         text = await slice.text();
-        lastSize = file.size;
     }
-    if (text.length > 0) {
+    if (text.length > 0 && text.endsWith("\n")) {
+        lastSize = file?.size || file?.length || 0;
         const unlockedCheevos = parseCheevos(text);
         return unlockedCheevos;
     }
