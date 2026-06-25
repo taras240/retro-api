@@ -1,7 +1,7 @@
 let fileHandle;
 let isLoaded = false;
 let lastSize = 0;
-let isHardmode = true;
+let isHardmode = false;
 
 function parseCheevos(text) {
     const parseGameLoad = (line) => {
@@ -51,6 +51,7 @@ function parseCheevos(text) {
         HardcoreMode: isHardmode ? 1 : 0,
         Date: new Date().toISOString(),
     }));
+    console.log({ unlockedCheevos, currentGame })
     return { unlockedCheevos, currentGame }
 }
 
