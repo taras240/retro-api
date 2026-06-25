@@ -1,31 +1,55 @@
 let fileHandle;
+let isLoaded = false;
 let lastSize = 0;
 let isHardmode = true;
 
 function parseCheevos(text) {
+    const parseGameLoad = (line) => {
+        const gameMatch = line.match(/Game\s(\d+)\sloaded,\shardcore\s(enabled|disabled)/);
+        if (gameMatch) {
+            const gameID = +gameMatch[1];
+            const isHardmode = gameMatch[2] === "enabled";
+            return currentGame = { gameID, isHardmode };
+        }
+    }
     let cheevoIDArray = [];
     let currentGame;
-    text.split("\n").forEach(line => {
-        if (line.includes("Awarding achievement")) {
-            const cheevoIDMatch = line.match(/(?:Awarding\sachievement\s)(\d+)/);
-            if (cheevoIDMatch) {
-                const cheevoID = cheevoIDMatch[1];
-                cheevoIDArray.push(cheevoID);
+    const lines = text.split("\n");
+    if (!isLoaded) {
+        isLoaded = true;
+        for (let i = lines.length - 1; i >= 0; i--) {
+            const line = lines[i];
+            !line.includes("loaded")
+            const game = parseGameLoad(line);
+            if (game) {
+                currentGame = game;
+                isHardmode = game.isHardmode
+                break;
             }
         }
-        else if (line.includes("loaded")) {
-            const gameMatch = line.match(/(?:Game\s)(\d+)(?:\sloaded,\shardcore\s)(enabled|disabled)/);
-            if (gameMatch) {
-                const gameID = gameMatch[1];
-                isHardmode = gameMatch[2] === "enabled";
-                currentGame = { gameID, isHardmode };
+    }
+    else {
+        lines.forEach(line => {
+            if (line.includes("Awarding achievement")) {
+                const cheevoIDMatch = line.match(/(?:Awarding\sachievement\s)(\d+)/);
+                if (cheevoIDMatch) {
+                    const cheevoID = cheevoIDMatch[1];
+                    cheevoIDArray.push(cheevoID);
+                }
             }
-        }
-    });
+            else if (line.includes("loaded")) {
+                const game = parseGameLoad(line);
+                if (game) {
+                    currentGame = game;
+                    isHardmode = game.isHardmode;
+                }
+            }
+        });
+    }
     const unlockedCheevos = [...new Set(cheevoIDArray)].map(cheevoID => ({
         AchievementID: +cheevoID,
         HardcoreMode: isHardmode ? 1 : 0,
-        Date: new Date(),
+        Date: new Date().toISOString(),
     }));
     return { unlockedCheevos, currentGame }
 }
@@ -51,7 +75,6 @@ export async function readLog({ fileHandle, path }) {
         lastSize = file.size;
     }
     if (text.length > 0) {
-        console.log(text);
         const unlockedCheevos = parseCheevos(text);
         return unlockedCheevos;
     }
