@@ -8,7 +8,17 @@ function parseCheevos(text) {
         if (gameMatch) {
             const gameID = +gameMatch[1];
             const isHardmode = gameMatch[2] === "enabled";
-            return currentGame = { gameID, isHardmode };
+            return { gameID, isHardmode };
+        }
+    }
+    const parseHardMode = (line) => {
+        if (/\bHardcore\b/.test(line)) {
+            const hardocreModeMatch = line.match(/\bHardcore\s(enabled|disabled)\b/);
+            if (hardocreModeMatch?.[1]) {
+                const isHardmode = hardocreModeMatch[1] === "enabled";
+                return isHardmode;
+            }
+
         }
     }
     let cheevoIDArray = [];
@@ -18,12 +28,20 @@ function parseCheevos(text) {
         isLoaded = true;
         for (let i = lines.length - 1; i >= 0; i--) {
             const line = lines[i];
-            if (!line.includes("loaded")) continue;
-            const game = parseGameLoad(line);
-            if (game) {
-                currentGame = game;
-                isHardmode = game.isHardmode
-                break;
+            if (/\bloaded\b/.test(line)) {
+                const game = parseGameLoad(line);
+                if (game) {
+                    currentGame = game;
+                    isHardmode = game.isHardmode
+                    break;
+                }
+            }
+            if (/\bHardcore\b/.test(line)) {
+                const isHard = parseHardMode(line);
+                if (typeof isHard === "boolean") {
+                    isHardmode = isHard;
+                    break;
+                }
             }
         }
     }
@@ -36,11 +54,18 @@ function parseCheevos(text) {
                     cheevoIDArray.push(cheevoID);
                 }
             }
-            else if (line.includes("loaded")) {
+            else if (/\bloaded\b/.test(line)) {
                 const game = parseGameLoad(line);
                 if (game) {
                     currentGame = game;
                     isHardmode = game.isHardmode;
+                }
+            }
+            else if (/\bHardcore\b/.test(line)) {
+                const isHard = parseHardMode(line);
+                console.log(isHard);
+                if (typeof isHard === "boolean") {
+                    isHardmode = isHard;
                 }
             }
         });
