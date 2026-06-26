@@ -664,6 +664,10 @@ export class Target extends Widget {
     }
     searchInputEvent(event) {
         event.stopPropagation();
+        this.container.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
         const clearPrevQuery = () => {
             this.container.querySelectorAll('span.badge.highlight-badge').forEach(el =>
                 el.replaceWith(el.innerText)
