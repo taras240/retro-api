@@ -62,7 +62,10 @@ export function LoginWindowElement(config) {
                             <a class="login__get-api" data-title="${ui.lang.gotoRASettings}"
                                 href="https://retroachievements.org/controlpanel.php" target="_blank">${ui.lang.getAPIKey}</a>
                         </div>
-                        <button class="login__input login__button-input" id="submit-login">Submit</button>
+                        <div class="login__buttons-container">
+                            <button class="login__input login__button-input" id="submit-login">Submit</button>
+                            <button class="login__input login__button-input login__import-settings" id="login-import-settings">Import Settings</button>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -72,6 +75,9 @@ export function LoginWindowElement(config) {
     const userNameInput = loginWindow.querySelector("#login__ra-username");
     const apiKeyInput = loginWindow.querySelector("#login__ra-api");
     const submitButton = loginWindow.querySelector("#submit-login");
+    const importSettingsButton = loginWindow.querySelector("#login-import-settings");
+
+    importSettingsButton.addEventListener("click", () => ui.importSettingsFromJson());
 
     submitButton.addEventListener('click', () => submitLogin());
     userNameInput.value = config.USER_NAME ?? "";
