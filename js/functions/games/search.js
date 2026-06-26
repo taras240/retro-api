@@ -15,9 +15,9 @@ export function openGameInRA({ ID }) {
 }
 export function searchFaqByGame({ Title, ConsoleName, ConsoleID }) {
     if (!Title) return;
-    ConsoleName ??= ConsoleID ? RA_PLATFORM_CODES[ConsoleID]?.Name.split("/")[0] : ""
+    ConsoleName ??= ConsoleID ? RA_PLATFORM_CODES[ConsoleID] : "";
     const query = encodeURIComponent(
-        `"${Title}" "${ConsoleName}" (${faqSearchQuery})`
+        `"${Title}" "${ConsoleName.split("/")[0]}" (${faqSearchQuery})`
     );
     searchQuery(query);
 }
