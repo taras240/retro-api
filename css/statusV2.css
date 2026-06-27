@@ -46,15 +46,14 @@
 
 .status__section.offline::after,
 .rp__section.offline::after {
-    content: "offline";
-    border: 1px solid crimson;
+    content: "Not Playing";
+    border: 1px solid orange;
     border-radius: 3px;
-    color: crimson;
+    color: orange;
     font-weight: bold;
-    text-transform: uppercase;
     position: absolute;
-    top: 0.5em;
-    right: 0.5em;
+    top: 0.25em;
+    right: 0.25em;
     z-index: 5;
     background: black;
     padding: 0 0.25em;
@@ -247,10 +246,10 @@
     opacity: 1;
 }
 
-.hide-status .rp__indicator.offline {
+/* .hide-status .rp__indicator.offline {
     --color: transparent;
     opacity: 1;
-}
+} */
 
 .rp-content__container {
     position: relative;
