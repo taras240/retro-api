@@ -13,6 +13,7 @@ import { getRandomID } from "../functions/randomID.js";
 import { raapi } from "../api/index.js";
 import { contextSetsMenu, contextSwitchSetsMenu } from "../functions/settings/subsetSettings.js";
 import { gameLinksMenu } from "../functions/settings/gameLinks.js";
+import { exportToCSV } from "../functions/exportData.js";
 export class Settings extends Widget {
     widgetIcon = {
         iconClass: "settings-icon",
@@ -468,40 +469,34 @@ export class Settings extends Widget {
                     {
                         label: ui.lang.exportCompletion,
                         type: inputTypes.BUTTON,
-                        id: "context_export-completion",
-                        onClick: () => ui.exportCompletionDataToXlsx(),
+                        onClick: () => exportToCSV.completion(),
                     },
                     {
                         label: ui.lang.exportWantToPlay,
                         type: inputTypes.BUTTON,
-                        id: "context_export-wtp-list",
-                        onClick: () => ui.exportWantToPlayToCSV(),
+                        onClick: () => exportToCSV.wantToPlay(),
                     },
                     {
                         label: ui.lang.exportSettings,
                         type: inputTypes.BUTTON,
-                        id: "context_export-settings",
-                        onClick: () => ui.exportSettingsToJson(),
+                        onClick: () => config.exportSettings(),
                     },
                     {
                         label: ui.lang.importSettings,
                         type: inputTypes.BUTTON,
-                        id: "context_import-settings",
-                        onClick: () => ui.importSettingsFromJson(),
+                        onClick: () => config.importSettingsFromJson(),
                     },
                     {
                         label: ui.lang.clearCache,
                         hint: ui.lang.clearCacheHint,
                         type: inputTypes.BUTTON,
-                        id: "context_clear-cache",
                         onClick: () => config.cache.clear(),
                     },
                     {
                         label: ui.lang.resetSettings,
                         hint: ui.lang.resetSettingsHint,
                         type: inputTypes.BUTTON,
-                        id: "context_clear-settings",
-                        onClick: () => ui.resetSettings(),
+                        onClick: () => config.resetSettings(),
                     }]
 
             }

@@ -1,11 +1,13 @@
+import { dialogWindow } from "./components/dialogWindow.js";
+import { inputTypes } from "./components/inputElements.js";
 import { colorPresets } from "./enums/colorPresets.js";
 import { fonts } from "./enums/fontsPreset.js";
 import { uiLayouts } from "./enums/uiLayouts.js";
 import { WATCHER_MODES } from "./enums/watcherModes.js";
 import { cacheWorker } from "./functions/api/cacheWorker.js";
-// import { cacheWorker } from "./functions/api/cacheWorker.js";
 import { loadHandle, openDB, saveHandle } from "./functions/DB.js";
 import { delay } from "./functions/delay.js";
+import { exportSettingsToJson } from "./functions/exportData.js";
 import { ui, watcher } from "./script.js";
 
 let CONFIG_FILE_NAME = "retroApiConfig";
@@ -361,11 +363,7 @@ export class Config {
       writeCFG();
     }
   }
-  resetSettings() {
-    this.delayedWrite && clearTimeout(this.delayedWrite);
-    localStorage.removeItem(CONFIG_FILE_NAME);
-    location.reload();
-  }
+
   async selectLogFile(emuName) {
     async function readFile(fileHandle) {
       // Перевірка дозволу
@@ -392,5 +390,101 @@ export class Config {
       await readFile(fileHandle);
     }
   }
+  exportSettings = (props) => {
+    const { lang } = ui;
+    if (!props) {
+      const dialog = dialogWindow({
+        title: lang.exportSettings,
+        message: lang.exportSettingsMessage,
+        elements: [
+          {
+            type: inputTypes.BUTTON,
+            label: lang.download,
+            onClick: () => this.exportSettings({ direction: 'file' }),
+          },
+          {
+            type: inputTypes.BUTTON,
+            label: lang.copyToClipboard,
+            onClick: () => this.exportSettings({ direction: 'clipboard' }),
+          },
+          {
+            type: inputTypes.BUTTON,
+            label: lang.sendToDS,
+            onClick: () => this.exportSettings({ direction: 'discord' }),
+          },
+        ]
+      });
+      ui.app.appendChild(dialog);
+    }
+    else {
+      exportSettingsToJson(props);
+    }
+  }
+  resetSettings = () => {
+    const { lang } = ui;
+    const dialog = dialogWindow({
+      title: lang.resetSettings,
+      message: lang.resetSettingsHint,
+      elements: [
+        {
+          type: inputTypes.BUTTON,
+          label: lang.cancel,
+        },
+        {
+          type: inputTypes.BUTTON,
+          label: lang.resetSettings,
+          onClick: () => {
+            watcher.stop();
+            this.delayedWrite && clearTimeout(this.delayedWrite);
+            localStorage.removeItem(CONFIG_FILE_NAME);
+            location.reload();
+          },
+        },
+      ]
+    });
+    ui.app.appendChild(dialog);
+  }
+  importSettingsFromJson() {
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = '.json';
 
+    fileInput.addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+          try {
+            const settings = JSON.parse(e.target.result);
+            console.log('Imported Settings:', settings);
+            this.applySettings(settings);
+          } catch (error) {
+            console.error('Error parsing JSON:', error);
+          }
+        };
+
+        reader.onerror = () => {
+          console.error('Error reading file:', reader.error);
+        };
+
+        reader.readAsText(file);
+      } else {
+        console.log('No file selected');
+      }
+    });
+
+    fileInput.click();
+  }
+
+  applySettings(settings) {
+    if (settings.version >= 0.65) {
+      this._cfg = settings;
+      this.writeConfiguration();
+      setTimeout(() => location.reload(), 1000);
+    }
+    else {
+      console.log('Unsupported file');
+    }
+  }
 }

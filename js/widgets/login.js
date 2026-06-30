@@ -77,7 +77,7 @@ export function LoginWindowElement(config) {
     const submitButton = loginWindow.querySelector("#submit-login");
     const importSettingsButton = loginWindow.querySelector("#login-import-settings");
 
-    importSettingsButton.addEventListener("click", () => ui.importSettingsFromJson());
+    importSettingsButton.addEventListener("click", () => config.importSettingsFromJson());
 
     submitButton.addEventListener('click', () => submitLogin());
     userNameInput.value = config.USER_NAME ?? "";

@@ -1,15 +1,11 @@
 
 import { config, ui, watcher, configData } from "./script.js";
-
 import { cheevoPopupElement } from "./components/cheevoPopup.js";
 import { hintElement } from "./components/hint.js";
 import { generateContextMenu } from "./components/contextMenu.js";
 import { pushFSAlerts } from "./components/fsAlerts.js";
-
 import { sendDiscordAlert } from "./functions/discord.js";
-import { exportToCSV, exportSettingsToJson } from "./functions/exportData.js";
 import { setPopupPosition } from "./functions/popupPosition.js";
-
 import { AchievementsBlock } from "./widgets/cheevos.js";
 import { Target } from "./widgets/target.js";
 import { SidePanel } from "./widgets/sidePanel.js";
@@ -27,7 +23,6 @@ import { Links } from "./widgets/links.js";
 import { ALERT_TYPES } from "./enums/alerts.js";
 import { langPackUrl, local } from "./enums/locals.js";
 import { colorPresets } from "./enums/colorPresets.js";
-import { dialogWindow } from "./components/dialogWindow.js";
 import { inputTypes } from "./components/inputElements.js";
 import { initBgAnimation } from "./functions/bgAnimations.js";
 import { WiiEvent } from "./widgets/wiiEvent.js";
@@ -107,7 +102,6 @@ export class UI {
     new Links();
     this.constr = new Constructor();
     // new Completion();
-
 
   }
 
@@ -323,121 +317,8 @@ export class UI {
   }
 
 
-  exportCompletionDataToXlsx = () => exportToCSV.completion();
-  exportWantToPlayToCSV = () => exportToCSV.wantToPlay();
-  exportSettingsToJson = (props) => {
-    if (!props) {
-      const dialog = dialogWindow({
-        title: ui.lang.exportSettings,
-        message: ui.lang.exportSettingsMessage,
-        elements: [
-          {
-            type: inputTypes.BUTTON,
-            id: "dialog-download",
-            label: ui.lang.download,
-            onClick: () => ui.exportSettingsToJson({ direction: 'file' }),
-          },
-          {
-            type: inputTypes.BUTTON,
-            id: "dialog-copy",
-            label: ui.lang.copyToClipboard,
-            onClick: () => ui.exportSettingsToJson({ direction: 'clipboard' }),
-          },
-          {
-            type: inputTypes.BUTTON,
-            id: "dialog-discord",
-            label: ui.lang.sendToDS,
-            onClick: () => ui.exportSettingsToJson({ direction: 'discord' }),
-          },
-        ]
-      });
-      ui.app.appendChild(dialog);
-    }
-    else {
-      exportSettingsToJson(props);
-    }
-  }
-  resetSettings = () => {
-    const dialog = dialogWindow({
-      title: ui.lang.resetSettings,
-      message: ui.lang.resetSettingsHint,
-      elements: [
-        {
-          type: inputTypes.BUTTON,
-          id: "dialog-copy",
-          label: ui.lang.cancel,
-        },
-        {
-          type: inputTypes.BUTTON,
-          id: "dialog-download",
-          label: ui.lang.resetSettings,
-          onClick: () => {
-            watcher.stop();
-            config.resetSettings();
-          },
-        },
-      ]
-    });
-    ui.app.appendChild(dialog);
-  }
-  importSettingsFromJson() {
-    const fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.accept = '.json';
-
-    fileInput.addEventListener('change', function (event) {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-
-        reader.onload = function (e) {
-          try {
-            const settings = JSON.parse(e.target.result);
-            console.log('Imported Settings:', settings);
-            ui.applySettings(settings);
-          } catch (error) {
-            console.error('Error parsing JSON:', error);
-          }
-        };
-
-        reader.onerror = function () {
-          console.error('Error reading file:', reader.error);
-        };
-
-        reader.readAsText(file);
-      } else {
-        console.log('No file selected');
-      }
-    });
-
-    fileInput.click();
-  }
-
-  applySettings(settings) {
-    if (settings.version >= 0.65) {
-      config._cfg = settings;
-      config.writeConfiguration();
-      setTimeout(() => location.reload(), 1000);
-    }
-    else {
-      console.log('Unsupported file');
-    }
-  }
-
   showLogin() {
     const loginScreen = LoginWindowElement(config);
     this.app.append(loginScreen);
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
