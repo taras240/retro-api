@@ -274,22 +274,23 @@ export class Config {
     );
   };
 
-  setNewPosition({ id, xPos, yPos, width, height, hidden }) {
-    if (!this.ui.hasOwnProperty(id)) {
-      this.ui[id] = {
-        id: id,
-        x: xPos,
-        y: yPos,
-        width: width,
-        height: height,
-        hidden: hidden,
-      };
+  saveSectionState(section) {
+    const { id, clientWidth, clientHeight, style } = section;
+
+    if (!id) {
+      console.warn("Section has no id:", section);
+      return;
     }
-    xPos ? (this.ui[id].x = xPos) : "";
-    yPos ? (this.ui[id].y = yPos) : "";
-    width ? (this.ui[id].width = width + "px") : "";
-    height ? (this.ui[id].height = height + "px") : "";
-    hidden !== undefined ? (this.ui[id].hidden = hidden) : "";
+
+    this.ui[id] = {
+      ...this.ui[id],
+      id,
+      x: style.left,
+      y: style.top,
+      width: `${clientWidth}px`,
+      height: `${clientHeight}px`,
+    };
+
     this.writeConfiguration();
   }
   async readConfiguration() {
@@ -488,3 +489,7 @@ export class Config {
     }
   }
 }
+
+
+const toPx = value =>
+  typeof value === "number" ? `${value}px` : value;

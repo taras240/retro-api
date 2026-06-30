@@ -45,15 +45,7 @@ function resizeEvent({ event, section, callback, saveSize, resizeDirection = mov
         // Remove event 'mousemove' if stop resizing and save new sizes
         app.addEventListener("mouseup", onMouseUpEvent);
     }
-    saveSize ??= () => {
-        config.setNewPosition({
-            id: section.id,
-            width: section.clientWidth,
-            height: section.clientHeight,
-            xPos: section.style.left,
-            yPos: section.style.top,
-        });
-    }
+    saveSize ??= () => config.saveSectionState(section);
     addEvents();
 }
 function setSize(event, resizeValues, section, direction = moveDirections.bottomRight) {

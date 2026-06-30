@@ -123,13 +123,7 @@ function moveEvent(section, event, savePosition) {
         app.addEventListener("mousemove", onMouseMoveEvent);
         app.addEventListener("mouseup", onMouseUpEvent);
     }
-    savePosition ??= () => {
-        config.setNewPosition({
-            id: section.id,
-            xPos: section.style.left,
-            yPos: section.style.top,
-        });
-    }
+    savePosition ??= () => config.saveSectionState(section);
     const { app } = ui;
 
     const { left, top } = section.getBoundingClientRect();
