@@ -30,19 +30,30 @@ export function parseTimeParts(totalSeconds) {
 
     return { hours, minutes, seconds, isNegative };
 }
-export function secondsToBadgeString(seconds, isShort = false) {
+export function formatDuration(seconds, compact = false) {
     if (!seconds) return "-";
-    seconds = +seconds;
 
-    let hours = Math.floor(seconds / 3600);
-    let minutes = Math.floor((seconds % 3600) / 60);
-    let remainingSeconds = seconds % 60;
-    if (isShort) {
-        return hours ? `${hours}h` : minutes ?
-            `${minutes}min` : `${seconds}s`
+    seconds = Number(seconds);
+
+    if (compact) {
+        if (seconds >= 3600) {
+            return `${Math.round(seconds / 3600)}h`;
+        }
+
+        if (seconds >= 60) {
+            return `${Math.round(seconds / 60)}min`;
+        }
+
+        return `${Math.round(seconds)}s`;
     }
-    return hours ? `${hours}h ${minutes}m` : minutes ?
-        `${minutes}min${minutes > 1 ? "s" : ""}` : `${remainingSeconds}secs`
+
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor(seconds % 3600 / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+
+    if (hours) return `${hours}h ${minutes}m`;
+    if (minutes) return `${minutes} min${minutes > 1 ? "s" : ""}`;
+    return `${remainingSeconds} secs`;
 }
 export function formatDateTime(UTCTime, props) {
     const options = {

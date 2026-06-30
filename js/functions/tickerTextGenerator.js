@@ -1,6 +1,6 @@
 import { DIFFICULTY_NAMES } from "../enums/difficulty.js";
 import { config, configData } from "../script.js";
-import { secondsToBadgeString } from "./time.js";
+import { formatDuration } from "./time.js";
 
 export function generateMagicLineText(gameData, sessionData, userData) {
     const space = `&nbsp;&nbsp;&middot;&nbsp;&nbsp;`;
@@ -29,8 +29,8 @@ export function generateMagicLineText(gameData, sessionData, userData) {
         stats.beatenRate && `Beaten Rate: ${stats.beatenRate}% (${stats.beatenRateSoftcore}%)`,
         stats.masteryRate && `Mastery Rate: ${stats.masteryRate}% (${stats.completedRate}%)`,
         stats.retroRatio && `Retro Ratio: ${stats.retroRatio}`,
-        stats.timeToBeat && `Time to beat: ${secondsToBadgeString(stats.timeToBeat)}`,
-        stats.timeToMaster && `Time to master: ${secondsToBadgeString(stats.timeToMaster)}`,
+        stats.timeToBeat && `Time to beat: ${formatDuration(stats.timeToBeat)}`,
+        stats.timeToMaster && `Time to master: ${formatDuration(stats.timeToMaster)}`,
         stats.gameDifficulty && `Game Difficulty: ${DIFFICULTY_NAMES[stats.gameDifficulty]} (${DIFFICULTY_NAMES[stats.masteryDifficulty]})`
     ].filter(Boolean).join(",&nbsp;") + space : "Game ERROR";
 

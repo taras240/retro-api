@@ -10,7 +10,7 @@ import { cheevoImageUrl, cheevoUrl, gameImageUrl, gameUrl } from "../functions/r
 import { scrollElementIntoView } from "../functions/scrollingToElement.js";
 import { inputTypes } from "../components/inputElements.js";
 import { imageFilters } from "../enums/imageFilters.js";
-import { secondsToBadgeString } from "../functions/time.js";
+import { formatDuration } from "../functions/time.js";
 import { buttonsHtml } from "../components/htmlElements.js";
 import { CACHE_TYPES } from "../enums/cacheDataTypes.js";
 import { divHtml } from "../components/divContainer.js";

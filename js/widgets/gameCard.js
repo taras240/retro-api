@@ -5,7 +5,7 @@ import { signedIcons } from "../components/icons.js"
 
 import { showComments } from "../components/comments.js";
 import { moveEvent } from "../functions/movingWidget.js";
-import { formatDate, formatDateTime, secondsToBadgeString } from "../functions/time.js";
+import { formatDate, formatDateTime, formatDuration } from "../functions/time.js";
 import { DIFFICULTY_NAMES } from "../enums/difficulty.js";
 import { gameImageUrl, gameUrl } from "../functions/raLinks.js";
 import { inputTypes } from "../components/inputElements.js";
@@ -287,9 +287,9 @@ export class GameCard extends Widget {
             this.preview.alt = `${Title} boxart`;
             const hltb = `HLTB: 
                     ${timeToBeat ?
-                    secondsToBadgeString(timeToBeat) + " | " : ""} 
+                    formatDuration(timeToBeat) + " | " : ""} 
                     ${timeToMaster ?
-                    secondsToBadgeString(timeToMaster) : "-"}`;
+                    formatDuration(timeToMaster) : "-"}`;
 
             const badgesArray = [
                 ConsoleName,

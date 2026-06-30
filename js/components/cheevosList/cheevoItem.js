@@ -1,6 +1,6 @@
 ﻿import { fromHtml } from "../../functions/html.js";
 import { cheevoImageUrl, cheevoUrl } from "../../functions/raLinks.js";
-import { secondsToBadgeString } from "../../functions/time.js";
+import { formatDuration } from "../../functions/time.js";
 import { ui } from "../../script.js";
 import { badgeElements } from "../badges.js";
 import { buttonsHtml } from "../htmlElements.js";
@@ -24,7 +24,7 @@ const buildIconsRow = achievement => [
     icons.cheevoType(achievement.Type),
     signedIcons.points(achievement.Points),
     signedIcons.retropoints(achievement.TrueRatio),
-    achievement.timeToUnlock ? signedIcons.time(secondsToBadgeString(achievement.timeToUnlock, true)) : "",
+    achievement.timeToUnlock ? signedIcons.time(formatDuration(achievement.timeToUnlock, true)) : "",
     signedIcons.rarity(achievement.rateEarnedHardcore),
     signedIcons.retroRatio(achievement.retroRatio),
     badgeElements.difficultBadge(achievement.difficulty),

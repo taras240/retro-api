@@ -3,7 +3,7 @@ import { GAME_AWARD_TYPES } from "../../enums/gameAwards.js";
 import { calcEtaTimeToBeat } from "../../functions/estimatedTime.js";
 import { formatText } from "../../functions/formatText.js";
 import { filterBy, sortBy } from "../../functions/sortFilter.js";
-import { secondsToBadgeString } from "../../functions/time.js";
+import { formatDuration } from "../../functions/time.js";
 import { ui } from "../../script.js";
 import { badgeElements } from "../badges.js";
 
@@ -55,7 +55,7 @@ export const updateProgressionBar = (container, gameData, isHardMode = true) => 
         let etaTime = gameData.eta;
         if (!etaTime) return null;
         const beatenRate = Math.round(gameData.TimePlayed / (etaTime + gameData.TimePlayed) * 100) + "%";
-        const time = secondsToBadgeString(etaTime);
+        const time = formatDuration(etaTime);
         return formatText(ui.lang.estTimeMsg, { beatenRate, time });
     }
     const cheevos = reorderCheevos(Object.values(gameData.AllAchievements));

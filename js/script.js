@@ -19,7 +19,6 @@ else {
   window.config = config;
   window.configData = config.configData;
   window.watcher = watcher;
-  // userAuthData = new UserAuthData();
 
   if (window.__TAURI__) {
     let requestId = 0;
@@ -48,7 +47,6 @@ else {
       });
     }
 
-    //const id = await invokeRust("getInstanceId");
   }
 }
 
