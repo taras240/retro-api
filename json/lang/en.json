@@ -359,5 +359,7 @@
     "searchFaq": "Search FAQ",
     "openInRA": "Open in RA",
     "playlistTitle": "Playlist Title",
-    "gameOfTheDay": "On This Day"
+    "gameOfTheDay": "On This Day",
+    "quickSearchHint": "Click to search for '{{query}}'",
+    "targetSearchHint": "Type to search, or Ctrl+Click a word for a quick search"
 }

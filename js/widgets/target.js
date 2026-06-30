@@ -23,6 +23,7 @@ import { CHEEVO_TYPES } from "../enums/cheevoTypes.js";
 import { contextSetsMenu } from "../functions/settings/subsetSettings.js";
 import { raapi } from "../api/index.js";
 import { CheevoElement } from "../components/cheevosList/cheevoItem.js";
+import { formatText } from "../functions/formatText.js";
 
 export class Target extends Widget {
     sectionCode = "-target";
@@ -456,7 +457,7 @@ export class Target extends Widget {
             ${buttonsHtml.sort(widgetID)}
             ${buttonsHtml.saveData({ className: "save-order-button", hint: ui.lang.saveAsCustomOrder, id: `${widgetID}-save-order` })}
             ${buttonsHtml.tweek()}
-            <input type="search" name="" id="target__searchbar" class="text-input target__search-bar" placeholder="${ui.lang.search}">
+            <input type="search" name="" id="target__searchbar" class="text-input target__search-bar" data-title="${ui.lang.targetSearchHint}" placeholder="${ui.lang.search}">
             ${buttonsHtml.external(widgetID)}
         `;
         const contentHtml = `
@@ -601,7 +602,7 @@ export class Target extends Widget {
 
                 if (word !== currentWord && descrElement.textContent.includes(word)) {
                     currentWord = word;
-                    descrElement.dataset.title = `Click to search "${word}"`;
+                    descrElement.dataset.title = formatText(ui.lang.quickSearchHint, { query: word });
                     // highlightWord(word);
                 }
             }
@@ -622,7 +623,7 @@ export class Target extends Widget {
             this.uiProps.showPins = !this.uiProps.showPins;
         })
         this.container.addEventListener("click", (event) => {
-            if (ctrlPressed && event.target.closest(".list-item__text")) {
+            if (ctrlPressed && currentWord && event.target.closest(".list-item__text")) {
                 event.stopPropagation();
                 if (this.searchInput.value === currentWord) {
                     this.searchInput.value = "";
