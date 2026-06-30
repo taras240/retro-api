@@ -551,7 +551,61 @@ export class Target extends Widget {
                 </section>`;
     }
     addEvents() {
+        let ctrlPressed = false;
+        let currentWord = null;
+        const getWordFromPoint = (event) => {
+            let node, offset;
+            if (document.caretPositionFromPoint) {
+                const pos = document.caretPositionFromPoint(event.clientX, event.clientY);
+                node = pos.offsetNode;
+                offset = pos.offset;
+            } else if (document.caretRangeFromPoint) {
+                const range = document.caretRangeFromPoint(event.clientX, event.clientY);
+                node = range.startContainer;
+                offset = range.startOffset;
+            }
+
+            if (node?.nodeType === Node.TEXT_NODE) {
+                const text = node.textContent;
+
+                let start = offset;
+                while (start > 0 && /[^.,:\s]/.test(text[start - 1])) start--;
+
+                let end = offset;
+                while (end < text.length && /[^.,:\s]/.test(text[end])) end++;
+
+                return text.slice(start, end);
+            }
+        }
         super.addEvents();
+
+        window.addEventListener("keydown", (event) => {
+            if (event.key === "Control") {
+                ctrlPressed = true;
+            }
+        });
+
+        window.addEventListener("keyup", (event) => {
+            if (event.key === "Control") {
+                ctrlPressed = false;
+                currentWord = null;
+                this.container.querySelectorAll(".list-item__text")?.forEach(el => el.dataset.title = "");
+                // removeHighlight();
+            }
+        });
+
+        this.container.addEventListener("mousemove", (event) => {
+            if (ctrlPressed && event.target.closest(".list-item__text")) {
+                const descrElement = event.target.closest(".list-item__text");
+                const word = getWordFromPoint(event);
+
+                if (word !== currentWord && descrElement.textContent.includes(word)) {
+                    currentWord = word;
+                    descrElement.dataset.title = `Click to search "${word}"`;
+                    // highlightWord(word);
+                }
+            }
+        });
         this.section.querySelector(`#${this.sectionID}-save-order`)?.addEventListener("click", event => {
             this.saveAsCustomOrder();
         });
@@ -568,7 +622,18 @@ export class Target extends Widget {
             this.uiProps.showPins = !this.uiProps.showPins;
         })
         this.container.addEventListener("click", (event) => {
-            if (event.target.closest(".comments-button")) {
+            if (ctrlPressed && event.target.closest(".list-item__text")) {
+                event.stopPropagation();
+                if (this.searchInput.value === currentWord) {
+                    this.searchInput.value = "";
+                }
+                else {
+                    this.searchInput.value = currentWord;
+                }
+                this.searchInput.dispatchEvent(new Event("input"));
+                // console.log({ currentWord });
+            }
+            else if (event.target.closest(".comments-button")) {
                 const cheevoID = event.target.closest(".target-achiv")?.dataset.achivId;
                 cheevoID && showComments(cheevoID, 2);
             }
@@ -660,7 +725,7 @@ export class Target extends Widget {
             this.section.querySelector(".achiv-block")?.remove();
             dragToPinned(id);
         }, false)
-        this.searchInput?.addEventListener("input", (event) => this.searchInputEvent(event))
+        this.searchInput?.addEventListener("input", (event) => this.searchInputEvent(event));
     }
     searchInputEvent(event) {
         event.stopPropagation();
