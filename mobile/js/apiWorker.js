@@ -42,6 +42,7 @@ export class APIWorker {
     completionProgress: "API_GetUserCompletionProgress.php",
     gameList: "API_GetGameList.php",
     userSummary: "API_GetUserSummary.php",
+    wantToPlay: "API_GetUserWantToPlayList.php",
   };
 
   // Генерує URL для запиту до API
@@ -72,18 +73,7 @@ export class APIWorker {
 
   // Конструктор класу
   constructor() { }
-  getUserGameRank({ targetUser, gameID }) {
-    let url = this.getUrl({ endpoint: this.endpoints.userRankAndScore });
-    return fetch(url).then((resp) => resp.json());
-  }
-  // // Отримання інформації про профіль користувача
-  getProfileInfo({ targetUser }) {
-    let url = this.getUrl({
-      targetUser: targetUser,
-      endpoint: this.endpoints.userProfile,
-    });
-    return fetch(url).then((resp) => resp.json());
-  }
+
   //Отримати прогрес завершення користувача
   getUserCompelitionProgress({ targetUser, count, offset }) {
     let url = this.getUrl({
@@ -113,6 +103,7 @@ export class APIWorker {
     });
     return fetch(url).then((resp) => resp.json()).then(awardsObj => {
       awardsObj.VisibleUserAwards = awardsObj.VisibleUserAwards.map(game => {
+        if (!["Mastery/Completion", "Game Beaten"].includes(game.AwardType)) return null;
         game.award = game.AwardType == "Game Beaten" ?
           game.AwardDataExtra == "1" ? "beaten" : "beaten_softcore" :
           game.AwardDataExtra == "1" ? "mastered" : "completed";
@@ -122,7 +113,7 @@ export class APIWorker {
         game.timeString = this.toLocalTimeString(game.AwardedAt);
         game = this.fixGameTitle(game);
         return game;
-      })
+      }).filter(a => a);
       return awardsObj;
     });
   }
@@ -253,20 +244,6 @@ export class APIWorker {
       });
   }
 
-  // Отримання недавно отриманих досягнень користувача
-  getRecentAchieves({ targetUser, minutes }) {
-    let url = this.getUrl({
-      endpoint: this.endpoints.recentAchieves,
-      targetUser: targetUser,
-      minutes: minutes,
-    });
-    return fetch(url)
-      .then((resp) => resp.json())
-      .then(achivs => achivs.map(achiv => {
-        achiv.Date = this.toLocalTimeString(achiv.Date);
-        return achiv;
-      }));
-  }
 
   // Отримання інформації про гру
   getGameInfo({ gameID, extended }) {
@@ -277,22 +254,6 @@ export class APIWorker {
     return fetch(url).then((resp) => resp.json());
   }
 
-  getRecentlyPlayedGames({ targetUser, count }) {
-    let url = this.getUrl({
-      endpoint: this.endpoints.recentlyPlayedGames,
-      targetUser: targetUser,
-      count: count || 50,
-    });
-
-    return fetch(url).then((resp) => resp.json()).then(arr => arr.map((game, index) => {
-      game.ID = game.GameID;
-      game.Points = game.ScoreAchievedHardcore + "/" + game.PossibleScore;
-      game.NumAchievements = game.NumAchievedHardcore + "/" + game.AchievementsTotal;
-      game.NumLeaderboards = "";
-      game.DateEarnedHardcore = game.LastPlayed;
-      return this.fixGameTitle(game);
-    }));;
-  }
 
   getUserProfile({ userName }) {
     let url = this.getUrl({
@@ -409,7 +370,7 @@ export class APIWorker {
 
     const badges = ignoredWords.reduce((badges, word) => {
       const reg = new RegExp(word, "gi");
-      const matches = game.Title.match(reg);
+      const matches = game.Title?.match(reg);
       if (matches) {
         matches.forEach(match => {
           title = title.replace(match, "");
@@ -420,7 +381,7 @@ export class APIWorker {
       return badges;
     }, []);
     game.badges = badges;
-    game.FixedTitle = title.trim();
+    game.FixedTitle = title?.trim();
     return game;
   }
   toLocalTimeString(UTCTime) {
@@ -439,109 +400,20 @@ export class APIWorker {
     return date;
     return date.toLocaleDateString("uk-UA", options);
   }
+  async getWantToPlayGamesList({ apiKey, targetUser, count, offset }) {
+    let url = new URL(this.endpoints.wantToPlay, this.baseUrl);
 
-
-  async rawgSearchGame({ gameTitle, platformID }) {
-    gameTitle = gameTitle.split("|")[0];
-    const RAWGPlatform = RAtoRAWG[platformID];
-    if (!RAWGPlatform) {
-      return false;
-    }
-
-    const baseUrl = `https://api.rawg.io/api/`;
-    const endpoint = "games";
-    let url = new URL(endpoint, baseUrl);
-
+    // Параметри запиту
     let params = {
-      search: gameTitle,
-      platforms: RAWGPlatform,
-      key: "179353905bcb491d975b1fc03b3c8bd6",
+      y: apiKey || config.API_KEY,
+      u: targetUser || config.targetUser,
+      o: offset || 0,
     };
+    // Додавання параметрів до URL
     url.search = new URLSearchParams(params);
 
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        console.log(`HTTP error! status: ${response.status}`);
-        return false;
-      }
-      const data = await response.json();
-      const res = data.results ? data.results[0] : null;
+    const data = await fetch(url).then(resp => resp.json());
 
-      const testTitle = gameTitle.replace(/[^a-z0-9]/gi, " ").trim();
-      const testRes = res?.name.replace(/[^a-z0-9]/gi, " ").trim() ?? "";
-      if (!res || testTitle !== testRes) {
-        console.log(`Game not found for title: ${gameTitle} on platform: ${platformID}`);
-        return false;
-      }
-
-      const keys = [
-        "name", "playtime", "released", "background_image", "rating",
-        "ratings", "added", "metacritic", "score", "community_rating", "genres"
-      ];
-
-      return Object.fromEntries(
-        Object.entries(res).filter(([key]) => keys.includes(key))
-      );
-    } catch (err) {
-      console.log(`Fetch error: ${err.message}`);
-      return false;
-    }
+    return data.Results || [];
   }
-
 }
-const RAtoRAWG = {
-  "1": 167, // "Genesis/Mega Drive" -> "Genesis"
-  "2": 83, // "Nintendo 64" -> "Nintendo 64"
-  "3": 79, // "SNES/Super Famicom" -> "SNES"
-  "4": 26, // "Game Boy" -> "Game Boy"
-  "5": 24, // "GB Advance" -> "Game Boy Advance"
-  "6": 43, // "GB Color" -> "Game Boy Color"
-  "7": 49, // "NES/Famicom" -> "NES"
-  "8": null, // "PC Engine/TurboGrafx-16" -> Not found in RAWG
-  "9": 119, // "Sega CD" -> "SEGA CD"
-  "10": 117, // "32X" -> "SEGA 32X"
-  "11": 74, // "Master System" -> "SEGA Master System"
-  "12": 27, // "PlayStation" -> "PlayStation"
-  "13": 46, // "Atari Lynx" -> "Atari Lynx"
-  "14": null, // "Neo Geo Pocket" -> Not found in RAWG
-  "15": 77, // "Game Gear" -> "Game Gear"
-  "17": 112, // "Atari Jaguar" -> "Jaguar"
-  "18": 9, // "Nintendo DS" -> "Nintendo DS"
-  "21": 15, // "PlayStation 2" -> "PlayStation 2"
-  "23": null, // "Magnavox Odyssey 2" -> Not found in RAWG
-  "24": null, // "Pokemon Mini" -> Not found in RAWG
-  "25": 23, // "Atari 2600" -> "Atari 2600"
-  "27": 12, //*neogeo "Arcade" -> Not found in RAWG
-  "28": null, // "Virtual Boy" -> Not found in RAWG
-  "29": null, // "MSX" -> Not found in RAWG
-  "33": null, // "SG-1000" -> Not found in RAWG
-  "37": null, // "Amstrad CPC" -> Not found in RAWG
-  "38": 41, // "Apple II" -> "Apple II"
-  "39": 107, // "Saturn" -> "SEGA Saturn"
-  "40": 106, // "Dreamcast" -> "Dreamcast"
-  "41": 17, // "PlayStation Portable" -> "PSP"
-  "43": 111, // "3DO Interactive Multiplayer" -> "3DO"
-  "44": null, // "ColecoVision" -> Not found in RAWG
-  "45": null, // "Intellivision" -> Not found in RAWG
-  "46": null, // "Vectrex" -> Not found in RAWG
-  "47": null, // "PC-8000/8800" -> Not found in RAWG
-  "49": null, // "PC-FX" -> Not found in RAWG
-  "51": 28, // "Atari 7800" -> "Atari 7800"
-  "53": null, // "WonderSwan" -> Not found in RAWG
-  "56": null, // "Neo Geo CD" -> Not found in RAWG
-  "57": null, // "Fairchild Channel F" -> Not found in RAWG
-  "63": null, // "Watara Supervision" -> Not found in RAWG
-  "69": null, // "Mega Duck" -> Not found in RAWG
-  "71": null, // "Arduboy" -> Not found in RAWG
-  "72": null, // "WASM-4" -> Not found in RAWG
-  "73": null, // "Arcadia 2001" -> Not found in RAWG
-  "74": null, // "Interton VC 4000" -> Not found in RAWG
-  "75": null, // "Elektor TV Games Computer" -> Not found in RAWG
-  "76": null, // "PC Engine CD/TurboGrafx-CD" -> Not found in RAWG
-  "77": null, // "Atari Jaguar CD" -> Not found in RAWG
-  "78": 13, // "Nintendo DSi" -> "Nintendo DSi"
-  "80": null, // "Uzebox" -> Not found in RAWG
-  "101": null, // "Events" -> Not applicable
-  "102": null, // "Standalone" -> Not applicable
-};
