@@ -177,6 +177,9 @@ export const normalizeGameData = (gameData, gamesDB = {}) => {
     addCompletionData(gameData);
     addSessions(gameData);
     addSavedData(gameData, savedGameData);
+    if (/0{5}2\.png/.test(gameData.ImageBoxArt)) {
+        gameData.ImageBoxArt = gameData.ImageIngame;
+    }
     gameData.UserTotalPlaytime && (gameData.TimePlayed = gameData.UserTotalPlaytime);
 }
 export const mergeWithTimesData = (gameData, timesData) => {
