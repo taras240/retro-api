@@ -34,7 +34,7 @@ import { gameInfoIconsHtml, richInfoHtml } from "../components/statusWidget/game
 import { sweepEffect } from "../components/windowEffects.js";
 import { getCheevosCount, getPointsCount, getRetropointsCount } from "../functions/gameProperties.js";
 import { GAME_AWARD_TYPES } from "../enums/gameAwards.js";
-import { parseTimeParts } from "../functions/time.js";
+import { formatDuration, parseTimeParts } from "../functions/time.js";
 import { createAutoScroll } from "../functions/autosScroll.js";
 import { getRandomID } from "../functions/randomID.js";
 import { focusCheevoHtml } from "../components/statusWidget/focusCheevo.js";
@@ -468,6 +468,7 @@ export class Status extends Widget {
             gameIcons: widget.querySelector(".rp__game-icons"),
             time: widget.querySelector(".rp__game-time"),
             timeElements: {
+                timeContainer: widget.querySelector(".rp__game-time"),
                 hoursElement: widget.querySelector(".rp__time-hours"),
                 minutesElement: widget.querySelector(".rp__time-minutes"),
                 secondsElement: widget.querySelector(".rp__time-seconds"),
@@ -844,7 +845,7 @@ export class Status extends Widget {
 
         const { hours, minutes, seconds, isNegative } = timeParts;
 
-        const { hoursElement, minutesElement, secondsElement, markElement } = this.gameElements.timeElements;
+        const { timeContainer, hoursElement, minutesElement, secondsElement, markElement } = this.gameElements.timeElements;
         const isEstimated = this.uiProps.time === "estimated";
         hoursElement.classList.toggle("hidden", hours == 0 && !isEstimated);
         secondsElement.classList.toggle("hidden", hours > 0 || isEstimated);
@@ -853,7 +854,12 @@ export class Status extends Widget {
         hoursElement.innerText = hours;
         minutesElement.innerText = minutes;
         secondsElement.innerText = seconds;
-
+        timeContainer.dataset.title = `
+            ${ui.lang.gameTime}: ${formatDuration(watcher.getActiveTime("playTime"))}<br>
+            ${ui.lang.sessionGameTime}: ${formatDuration(watcher.getActiveTime("sessionTime"))}<br>
+            ${ui.lang.sessionTime}: ${formatDuration(watcher.getActiveTime("totalSessionTime"))}<br>
+            ${ui.lang.estimated}: ${formatDuration(watcher.getActiveTime("estimated"))}<br>
+        `;
     }
     fillGameData() {
         const fillGameInfoData = () => {

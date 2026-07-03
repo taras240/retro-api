@@ -32,7 +32,6 @@ export class Target extends Widget {
         iconClass: "target-icon",
     };
     filters = {};
-    externalWindow;
 
     get contextMenuItems() {
         return [
@@ -212,14 +211,12 @@ export class Target extends Widget {
             })),
             {
                 type: inputTypes.CHECKBOX,
-                id: "reverse-sort",
                 label: ui.lang.reverse,
                 checked: this.uiProps.reverseSort == -1,
                 onChange: (event) => this.uiProps.reverseSort = event.currentTarget.checked,
             },
             {
                 type: inputTypes.CHECKBOX,
-                id: "strict-sort",
                 label: ui.lang.strictMode,
                 checked: this.uiProps.strictSort,
                 onChange: (event) => this.uiProps.strictSort = event.currentTarget.checked,
@@ -241,7 +238,6 @@ export class Target extends Widget {
             })),
             {
                 type: inputTypes.CHECKBOX,
-                id: "hide-filtered",
                 label: ui.lang.hideFiltered,
                 checked: this.uiProps.hideFiltered,
                 onChange: (event) => this.uiProps.hideFiltered = event.currentTarget.checked,
@@ -282,7 +278,6 @@ export class Target extends Widget {
                 return {
                     type: inputTypes.CHECKBOX,
                     name: `${this.sectionID}-set`,
-                    id: `${this.sectionID}-set-${setID}`,
                     label: setName,
                     checked: !this.uiProps.hiddenSets.includes(setID),
                     onChange: () => this.updateHiddenSets(setID),
@@ -294,7 +289,6 @@ export class Target extends Widget {
                 return {
                     type: inputTypes.CHECKBOX,
                     name: `${this.sectionID}-set`,
-                    id: `${this.sectionID}-set-${setID}`,
                     label: setName,
                     checked: !this.uiProps.hiddenSets.includes(setID),
                     onChange: () => this.updateHiddenSets(setID),
@@ -458,7 +452,6 @@ export class Target extends Widget {
             ${buttonsHtml.saveData({ className: "save-order-button", hint: ui.lang.saveAsCustomOrder, id: `${widgetID}-save-order` })}
             ${buttonsHtml.tweek()}
             <input type="search" name="" id="target__searchbar" class="text-input target__search-bar" data-title="${ui.lang.targetSearchHint}" placeholder="${ui.lang.search}">
-            ${buttonsHtml.external(widgetID)}
         `;
         const contentHtml = `
             ${divHtml(["target__pinned-list"])}
@@ -475,81 +468,6 @@ export class Target extends Widget {
         const widget = this.generateWidgetElement(widgetData);
         ui.app.appendChild(widget);
         this.section = widget;
-    }
-    toggleExternalWindow() {
-        const debounce = (fn, delay = 250) => {
-            this.externalUpdateTimer && clearTimeout(this.externalUpdateTimer);
-            this.externalUpdateTimer = setTimeout(() => fn.apply(this), delay);
-        }
-        const addObserver = () => {
-            const observer = new MutationObserver(mutations => {
-                debounce(() => this.updateExternalWindow());
-            });
-
-            observer.observe(this.container, {
-                childList: true,      // слухати зміни у дочірніх елементах (додавання/видалення)
-                characterData: true,  // слухати зміну тексту
-                subtree: true,         // слухати ще й вкладені вузли
-                attributes: true
-            });
-            return observer;
-        }
-        if (this.externalWindow) {
-            this.externalWindow.close();
-            delete this.externalWindow;
-            this.containerObserver?.disconnect();
-            this.externalUpdateTimer && clearTimeout(externalUpdateTimer);
-        }
-        else {
-            this.externalUpdateTimer;
-            this.externalWindow = window.open(
-                "",
-                "Target",
-                `width=${this.section.offsetWidth},
-                height=${this.section.offsetHeight}`
-            );
-
-            this.externalWindow.document.write(`
-            <html>
-              <head>
-                <title>Target Window</title>
-              </head>
-              <body></body>
-            </html>
-            `);
-            this.externalWindow.document.close();
-
-            // Копіюємо стилі з основного вікна
-            [...document.querySelectorAll('link[rel="stylesheet"], style')].forEach(node => {
-                this.externalWindow.document.head.appendChild(node.cloneNode(true));
-            });
-
-            const targetBody = this.externalWindow.document.body;
-
-            const styles = getComputedStyle(document.body);
-
-            for (let i = 0; i < styles.length; i++) {
-                const prop = styles[i];
-                if (prop.startsWith("--")) {
-                    const value = styles.getPropertyValue(prop);
-                    targetBody.style.setProperty(prop, value);
-                }
-            }
-
-            targetBody.innerHTML = `
-                <section style='height: 100%; display: flex'>
-                    ${this.container.outerHTML}
-                </section>`;
-            this.containerObserver = addObserver();
-        }
-    }
-    updateExternalWindow() {
-        if (!this.externalWindow) return;
-        const targetBody = this.externalWindow.document.body;
-        targetBody.innerHTML = `
-                <section style='height: 100%; display: flex'>
-                    ${this.container.outerHTML}
-                </section>`;
     }
     addEvents() {
         let ctrlPressed = false;
@@ -570,10 +488,10 @@ export class Target extends Widget {
                 const text = node.textContent;
 
                 let start = offset;
-                while (start > 0 && /[^.,:\s]/.test(text[start - 1])) start--;
+                while (start > 0 && /[^.,:"'\s]/.test(text[start - 1])) start--;
 
                 let end = offset;
-                while (end < text.length && /[^.,:\s]/.test(text[end])) end++;
+                while (end < text.length && /[^.,:"'\s]/.test(text[end])) end++;
 
                 return text.slice(start, end);
             }
@@ -615,9 +533,6 @@ export class Target extends Widget {
         });
         this.section.querySelector(`#${this.sectionID}-sort-button`)?.addEventListener("click", event => {
             ui.showContextmenu({ event, menuItems: this.contextSortMenu().elements, sectionCode: this.SECTION_NAME })
-        });
-        this.section.querySelector(`#${this.sectionID}-external_window-button`).addEventListener("click", event => {
-            this.toggleExternalWindow();
         });
         this.header.querySelector(".toggle-pins")?.addEventListener("click", () => {
             this.uiProps.showPins = !this.uiProps.showPins;
@@ -882,8 +797,6 @@ export class Target extends Widget {
         return targetElement;
     }
     pushCheevo(cheevoID) {
-
-        // if achiv already exist in target - return
         if (this.isAchievementInTargetSection({ ID: cheevoID })) {
             return;
         }
@@ -1125,7 +1038,8 @@ export class Target extends Widget {
         aotwElement.append(
             hideAotwButton,
             aotwPreview,
-            aotwDetails);
+            aotwDetails
+        );
         this.section.querySelector(".target__aotw-container")?.remove();
         this.header.after(aotwElement);
     }

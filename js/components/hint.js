@@ -1,8 +1,10 @@
-export function hintElement(text) {
-  let popup = document.createElement("div");
-  popup.classList.add("popup", "hint", "hint-popup");
-  popup.innerHTML = `
-      <p>${text}</p>
-      `;
+import { fromHtml } from "../functions/html.js";
+
+export function hintElement(content) {
+  let popup = fromHtml(`
+    <div class="popup hint hint-popup">
+      ${content}
+    </div>
+  `);
   return popup;
 }
