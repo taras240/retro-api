@@ -31,6 +31,7 @@ import { Completion } from "./widgets/completion.js";
 import { LoginWindowElement } from "./widgets/login.js";
 import { Constructor } from "./widgets/constructor.js";
 import { GAME_AWARD_TYPES } from "./enums/gameAwards.js";
+import { blendColors, hexToRgba } from "./functions/ui/generateColors.js";
 
 
 export class UI {
@@ -273,19 +274,7 @@ export class UI {
 
   updateColors(presetName) {
     const getColors = (presetName) => {
-      function hexToRgba(hex, alpha = 1) {
-        hex = hex.replace(/^#/, '');
-        if (hex.length === 3) {
-          hex = hex.split('').map(char => char + char).join('');
-        }
 
-        const bigint = parseInt(hex, 16);
-        const r = (bigint >> 16) & 255;
-        const g = (bigint >> 8) & 255;
-        const b = bigint & 255;
-
-        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-      }
       // this.colorsPreset = presetName;
       let preset;
       if (presetName === "custom") {
@@ -294,9 +283,8 @@ export class UI {
       else {
         preset = colorPresets[presetName] || colorPresets.default;
       }
-      if (!preset.selectionColor) {
-        preset.selectionColor = hexToRgba(preset.accentColor, 0.1);
-      }
+      preset.selectionColor = hexToRgba(preset.accentColor, 0.1);
+      preset.secondaryFontColor = blendColors(preset.fontColor, preset.mainColor, 0.8);
       return preset;
     }
     const { style } = document.body;
@@ -305,13 +293,15 @@ export class UI {
       secondaryColor,
       accentColor,
       fontColor,
-      selectionColor,
+      secondaryFontColor,
+      selectionColor
     } = getColors(configData.preset);
 
     style.setProperty("--main-color", mainColor);
     style.setProperty("--secondary-color", secondaryColor);
     style.setProperty("--accent-color", accentColor);
     style.setProperty("--font-color", fontColor);
+    style.setProperty("--secondary-font-color", secondaryFontColor);
     style.setProperty("--selection-color", selectionColor);
     style.setProperty("--page-bg", configData.bgColor);
   }

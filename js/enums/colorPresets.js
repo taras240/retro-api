@@ -16,7 +16,6 @@ export const colorPresets = Object.freeze({
         secondaryColor: "#202329",
         accentColor: "#0a7ff5",
         fontColor: "#ffffff",
-        selectionColor: "rgba(10, 127, 245, 0.1)"
     },
     contrastGreen: {
         mainColor: "#000000",

@@ -185,7 +185,7 @@
     -webkit-line-clamp: 2;
     overflow: hidden;
     font-size: 0.96em;
-    opacity: 0.85;
+    color: var(--secondary-font-color);
 }
 
 .media-item__award {

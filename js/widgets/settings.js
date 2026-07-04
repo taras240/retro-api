@@ -137,13 +137,13 @@ export class Settings extends Widget {
                         value: configData.customColors.accentColor,
                         onChange: (event) => configData.customColors = { colorProperty: 'accentColor', color: event.currentTarget.value },
                     },
-                    {
-                        type: inputTypes.COLOR,
-                        id: "selection-color-input",
-                        label: "selection color",
-                        value: configData.customColors.selectionColor,
-                        onChange: (event) => configData.customColors = { colorProperty: 'selectionColor', color: event.currentTarget.value },
-                    },
+                    // {
+                    //     type: inputTypes.COLOR,
+                    //     id: "selection-color-input",
+                    //     label: "selection color",
+                    //     value: configData.customColors.selectionColor,
+                    //     onChange: (event) => configData.customColors = { colorProperty: 'selectionColor', color: event.currentTarget.value },
+                    // },
                     {
                         type: inputTypes.COLOR,
                         id: "font-color-input",

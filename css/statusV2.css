@@ -355,7 +355,7 @@
     max-width: 100%;
     overflow: hidden;
     text-wrap: nowrap;
-    opacity: 0.8;
+    color: var(--secondary-font-color);
     /* padding-bottom: 0.25em; */
     font-size: 1.1em;
 }
