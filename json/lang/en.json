@@ -361,5 +361,7 @@
     "playlistTitle": "Playlist Title",
     "gameOfTheDay": "On This Day",
     "quickSearchHint": "Click to search for '{{query}}'",
-    "targetSearchHint": "Type to search, or Ctrl+Click a word for a quick search"
+    "targetSearchHint": "Type to search, or Ctrl+Click a word for a quick search",
+    "releasedYear": "Release Year",
+    "unlocked": "unlocked"
 }

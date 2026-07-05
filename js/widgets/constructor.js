@@ -1,4 +1,5 @@
 import { badgeElements } from "../components/badges.js";
+import { gameCard, gameCardConfig } from "../components/constructor/gameCard.js";
 import { gameProgressbar, gameProgressbarConfig } from "../components/constructor/gameProgressbar.js";
 import { simpleProgressbar, simpleProgressbarConfig } from "../components/constructor/simpleProgressbar.js";
 import { steamProgress, steamProgressConfig } from "../components/constructor/steamProgress.js";
@@ -189,11 +190,13 @@ export class Constructor extends Widget {
         gameProgressbar: (props) => gameProgressbarConfig(props),
         simpleProgressbar: (props) => simpleProgressbarConfig(props),
         steamProgress: (props) => steamProgressConfig(props),
+        gameCard: (props) => gameCardConfig(props),
     }
     components = {
         text: (props) => text(props, this),
         gameProgressbar: (props) => gameProgressbar({ props, gameData: watcher.GAME_DATA, parent: this }),
         steamProgress: (props) => steamProgress({ props, gameData: watcher.GAME_DATA }),
+        gameCard: (props) => gameCard({ props, gameData: watcher.GAME_DATA, parent: this }),
         simpleProgressbar: (props) => simpleProgressbar({ props, parent: this })
     }
     showWidgets() {
