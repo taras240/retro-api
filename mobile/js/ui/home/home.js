@@ -1,6 +1,6 @@
 import { generateBadges } from "../components/badges.js";
 import { sortBy } from "../../functions/sort.js";
-import { apiWorker } from "../../main.js";
+import { apiWorker, ui } from "../../main.js";
 import { svgIcons } from "../components/svgIcons.js";
 import { toLocalString } from "../../functions/time.js";
 import { fromHtml } from "../../../../js/functions/html.js"
@@ -56,9 +56,9 @@ export class Home {
                 ${headerHtml(USER_INFO)}
                 <div class="user-info__container">
                     <ul class="user-info__last-games-list">
-                        <button  class="user-info__block-header">
+                        <button id="see-more-cheevos" class="user-info__block-header">
                             <h2>Last Unlocks</h2>
-                            <p style="display:none">See more</p>
+                            <p>See more</p>
                         </button>
                         ${recentCheevosListHtml(USER_INFO)}
                         <button  class="user-info__block-header">
@@ -70,6 +70,9 @@ export class Home {
                 </div>
             </section
         `);
+        homeSection.querySelector("#see-more-cheevos")?.addEventListener("click", (event) => {
+            ui.goto.unlocks();
+        })
         return homeSection;
     }
 

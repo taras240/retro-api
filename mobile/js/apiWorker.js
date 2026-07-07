@@ -1,3 +1,4 @@
+import { sortBy } from "./functions/sort.js";
 import { config } from "./main.js";
 
 export class APIWorker {
@@ -44,7 +45,56 @@ export class APIWorker {
     userSummary: "API_GetUserSummary.php",
     wantToPlay: "API_GetUserWantToPlayList.php",
   };
+  async getLastUnlocks({ apiKey, targetUser }) {
+    let url = new URL(this.endpoints.recentAchieves, this.baseUrl);
 
+    // Параметри запиту
+    let params = {
+      y: apiKey || config.API_KEY,
+      u: targetUser || config.targetUser,
+      m: 60 * 24 * 31,
+    };
+    // Додавання параметрів до URL
+    url.search = new URLSearchParams(params);
+
+    const data = await fetch(url).then(resp => resp.json());
+
+    const unlocks = data?.map(c => {
+      const cheevo = {
+        ...c,
+        ID: c.AchievementID,
+        DateEarned: c.Date,
+      }
+      return cheevo;
+    }).sort((a, b) => sortBy.date(a, b)) ?? [];
+    return unlocks;
+    return [{
+      "ID": 383065,
+      "GameID": 1891,
+      "GameTitle": "Puzznic",
+      "Title": "Enigma Explorer",
+      "Description": "Reach a score of 50,000 in Puzznic",
+      "Points": 2,
+      "Type": null,
+      "BadgeName": "432937",
+      "IsAwarded": "1",
+      "DateAwarded": "2026-06-05 17:13:14",
+      "HardcoreAchieved": 1
+    },
+    {
+      "ID": 383073,
+      "GameID": 1891,
+      "GameTitle": "Puzznic",
+      "Title": "Puzznic Level 1 - Riddle Ridge",
+      "Description": "In a single session, complete all of the Puzznic puzzles on level 1 [No continues]",
+      "Points": 3,
+      "Type": "progression",
+      "BadgeName": "432901",
+      "IsAwarded": "1",
+      "DateAwarded": "2026-06-05 17:11:57",
+      "HardcoreAchieved": 1
+    }];
+  }
   // Генерує URL для запиту до API
   getUrl({ endpoint, targetUser, gameID, minutes, apiKey, userName, achievesCount, count, offset }) {
     // Створення нового об'єкту URL з вказаною кінцевою точкою та базовим URL

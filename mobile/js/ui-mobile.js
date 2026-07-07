@@ -11,6 +11,7 @@ import { delay } from "./functions/delay.js";
 import { RAPlatforms } from "./enums/RAPlatforms.js";
 import { toLocalString } from "./functions/time.js";
 import { fromHtml } from "../../js/functions/html.js";
+import { Unlocks } from "./ui/unlocks.js";
 
 export let USER_INFO;
 export let GAMES_DATA = {};
@@ -100,6 +101,14 @@ export class UI {
         this.goto.login();
       }
     },
+    '/unlocks': async (args) => {
+      if (config.identConfirmed) {
+        this.unlocks = new Unlocks();
+      }
+      else {
+        this.goto.login();
+      }
+    },
     '/test': async () => {
       content.innerHTML = "";
       content.append(await Test());
@@ -130,7 +139,10 @@ export class UI {
     "login": () => {
       history.pushState(null, null, "#/login");
       this.updatePage();
-
+    },
+    "unlocks": () => {
+      history.pushState(null, null, "#/unlocks");
+      this.updatePage();
     }
   }
   constructor() {
