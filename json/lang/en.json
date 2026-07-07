@@ -363,5 +363,6 @@
     "quickSearchHint": "Click to search for '{{query}}'",
     "targetSearchHint": "Type to search, or Ctrl+Click a word for a quick search",
     "releasedYear": "Release Year",
-    "unlocked": "unlocked"
+    "unlocked": "unlocked",
+    "cropBorder": "Crop Border"
 }

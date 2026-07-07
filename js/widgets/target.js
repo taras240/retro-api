@@ -77,6 +77,15 @@ export class Target extends Widget {
                         step: 0.05,
                         onChange: (value) => this.uiProps.fontScale = value,
                     },
+                    {
+                        prefix: ui.lang.cropBorder,
+                        postfix: "px",
+                        type: inputTypes.NUM_INPUT,
+                        id: "crop-offset",
+                        label: ui.lang.cropBorder,
+                        value: this.uiProps.cropOffset,
+                        onInput: (event) => this.uiProps.cropOffset = event.currentTarget.value,
+                    },
                 ]
             },
             {
@@ -325,6 +334,7 @@ export class Target extends Widget {
         scrollSpeed: 20,
         scrollPauseDuration: 15,
         fontScale: 1.0,
+        cropOffset: 0,
     }
     uiSetCallbacks = {
         autoscroll(value) {
@@ -376,6 +386,9 @@ export class Target extends Widget {
             this.autoscroll?.stop();
             this.autoscroll = null;
             this.startAutoScroll();
+        },
+        cropOffset(value) {
+            this.section.style.setProperty("--crop-offset", `${value}px`);
         }
 
     };
@@ -401,7 +414,10 @@ export class Target extends Widget {
         },
         scrollPauseDuration(value) {
             return value < 0 ? 0 : value;
-        }
+        },
+        cropOffset(value) {
+            return (value && value > 0 && value <= 10) ? value : 0;
+        },
     };
     get isDisplayOrderChanged() {
         return this.__isDisplayOrderChanged;
@@ -692,6 +708,7 @@ export class Target extends Widget {
         this.section.dataset.previewFilter = this.uiProps.lockedPreviewFilter;
         this.section.classList.toggle("contrast-highlight", this.uiProps.contrastHighlight);
         this.section.classList.toggle("show-pins", this.uiProps.showPins);
+        this.section.style.setProperty("--crop-offset", `${this.uiProps.cropOffset}px`);
     }
     setValues() {
         this.applyPosition();

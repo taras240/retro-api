@@ -1,4 +1,5 @@
 .target_section {
+  --crop-offset: 0px;
   top: 10px;
   left: 31%;
   width: 400px;
@@ -272,14 +273,22 @@
 }
 
 .prev-img {
-  transform: translate(var(--image-offset), var(--image-offset));
-  height: calc(100% + calc(var(--image-offset) * -2));
+  position: relative;
+  height: 100%;
   aspect-ratio: 1;
   filter: opacity(.2);
   image-rendering: pixelated;
   /* border-radius: 4px; */
   overflow: hidden;
   transition: filter 0.2s;
+}
+
+.target_section .prev-img {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: calc(100% + var(--crop-offset)*2);
+  clip-path: inset(var(--crop-offset));
 }
 
 [data-preview-filter="blur"] .prev-img {
@@ -296,10 +305,6 @@
 
 [data-preview-filter="disabled"] .prev-img {
   filter: none;
-}
-
-.target-achiv.border .prev-img {
-  padding: 0.25em;
 }
 
 .target-achiv.earned .prev-img {

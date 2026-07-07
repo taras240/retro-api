@@ -85,6 +85,15 @@ export class AchievementsBlock extends Widget {
                         checked: this.uiProps.showBorders,
                         onChange: (event) => this.uiProps.showBorders = event.currentTarget.checked,
                     },
+                    {
+                        prefix: ui.lang.cropBorder,
+                        postfix: "px",
+                        type: inputTypes.NUM_INPUT,
+                        id: "crop-offset",
+                        label: ui.lang.cropBorder,
+                        value: this.uiProps.cropOffset,
+                        onInput: (event) => this.uiProps.cropOffset = event.currentTarget.value,
+                    },
 
                 ]
             },
@@ -305,6 +314,7 @@ export class AchievementsBlock extends Widget {
         scrollSpeed: 20,
         scrollPauseDuration: 15,
         cheevosMargin: 1,
+        cropOffset: 0,
     }
     uiSetCallbacks = {
         ACHIV_MIN_SIZE(value) {
@@ -365,6 +375,9 @@ export class AchievementsBlock extends Widget {
         cheevosMargin(value) {
             this.section.style.setProperty("--cheevos-margin", `${value}px`);
             this.fitCheevoSize();
+        },
+        cropOffset(value) {
+            this.section.style.setProperty("--crop-offset", `${value}px`);
         }
     };
     uiValuePreprocessors = {
@@ -385,6 +398,9 @@ export class AchievementsBlock extends Widget {
         },
         cheevosMargin(value) {
             return value >= 0 ? value : 0;
+        },
+        cropOffset(value) {
+            return (value && value > 0 && value <= 10) ? value : 0;
         }
     };
 
@@ -478,6 +494,7 @@ export class AchievementsBlock extends Widget {
         this.section.dataset.previewFilter = this.uiProps.lockedPreviewFilter;
         this.section.classList.toggle("borderless", !this.uiProps.showBorders);
         this.section.style.setProperty("--cheevos-margin", `${this.uiProps.cheevosMargin}px`);
+        this.section.style.setProperty("--crop-offset", `${this.uiProps.cropOffset}px`);
     }
     setValues() {
         this.applyPosition();
