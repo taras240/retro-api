@@ -561,7 +561,10 @@
   aspect-ratio: 1;
 }
 
-
+.target__aotw-container .list-item__text {
+  color: black;
+  font-size: 1em;
+}
 
 /* ------------- */
 .show-comments-button {
