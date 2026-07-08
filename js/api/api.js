@@ -1,4 +1,4 @@
-import { APIEvents } from "../script.js";
+import { APIEvents, ui, watcher } from "../script.js";
 import { getRecentlyPlayedGames } from './handlers/user/recentlyPlayedGames.js';
 import { getUserProfile } from './handlers/user/userProfile.js';
 import { getUserSummary } from './handlers/user/userSummary.js';
@@ -32,8 +32,10 @@ export async function call(method, ...params) {
 
     try {
         const result = await handlers[method](...(params || []));
+        ui.showAPIError(false);
         return result;
     } catch (error) {
+        ui.showAPIError(true, `RA API [${method}] ${error}`);
         console.error(error.message);
     }
 }

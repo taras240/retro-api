@@ -7,8 +7,12 @@ export class Links extends Widget {
     };
     links = [
         {
-            name: "Desktop APP",
+            name: "Windows APP",
             url: "https://github.com/taras240/retro-api/releases"
+        },
+        {
+            name: "ROM Patcher",
+            url: "https://www.marcrobledo.com/RomPatcher.js/",
         },
         {
             name: "RetroAchievements",
@@ -18,10 +22,6 @@ export class Links extends Widget {
         {
             name: "RA API docs",
             url: "https://api-docs.retroachievements.org",
-        },
-        {
-            name: "ROM Patcher",
-            url: "https://www.marcrobledo.com/RomPatcher.js/",
         },
         {
             name: "WoWRoMs",

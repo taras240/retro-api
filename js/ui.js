@@ -32,6 +32,7 @@ import { LoginWindowElement } from "./widgets/login.js";
 import { Constructor } from "./widgets/constructor.js";
 import { GAME_AWARD_TYPES } from "./enums/gameAwards.js";
 import { blendColors, hexToRgba } from "./functions/ui/generateColors.js";
+import { fromHtml } from "./functions/html.js";
 
 
 export class UI {
@@ -305,10 +306,39 @@ export class UI {
     style.setProperty("--selection-color", selectionColor);
     style.setProperty("--page-bg", configData.bgColor);
   }
-
+  hasApiError = false;
+  errorTimeout = null;
+  showAPIError(isError, message) {
+    if (!isError && !this.hasApiError) return;
+    if (isError && this.hasApiError) return;
+    if (isError && !this.hasApiError) {
+      this.hasApiError = true;
+      const errorElement = apiErrorElement(message);
+      errorElement.addEventListener("click", () => {
+        errorElement?.remove();
+        this.hasApiError = false;
+      });
+      setTimeout(() => {
+        errorElement?.remove();
+        this.hasApiError = false;
+      }, 60e3);
+      ui.app.append(errorElement);
+      return;
+    }
+    if (!isError && this.hasApiError) {
+      this.hasApiError = false;
+      // ui.app.querySelector("#api-error-message")?.remove();
+      return;
+    }
+  }
 
   showLogin() {
     const loginScreen = LoginWindowElement(config);
     this.app.append(loginScreen);
   }
 }
+const apiErrorElement = (message) => fromHtml(`
+    <div id="api-error-message" class="error-message">
+      ${message}
+    </div>
+`)

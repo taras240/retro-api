@@ -273,7 +273,6 @@ export class Watcher {
         if (!isStart && !isForced && (configData.pauseIfOffline && this.onlineCheckTimeOut)) return;
 
         const raProfileInfo = await raapi.getUserProfile({});
-
         if (isGameChanged(raProfileInfo, isStart)) {
             await onGameChanged(raProfileInfo);
         }

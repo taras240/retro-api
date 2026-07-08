@@ -14,7 +14,7 @@ export const raapi = {
     getUserProfile({ username }) {
         return call('getUserProfile', {
             username: getUsername(username),
-            apiKey: config.API_KEY
+            apiKey: config.API_KEY,
         });
     },
     getUserSummary({ username, games = 3, cheevos = 5 }) {
