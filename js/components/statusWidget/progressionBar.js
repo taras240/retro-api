@@ -2,6 +2,7 @@ import { CHEEVO_TYPES } from "../../enums/cheevoTypes.js";
 import { GAME_AWARD_TYPES } from "../../enums/gameAwards.js";
 import { calcEtaTimeToBeat } from "../../functions/estimatedTime.js";
 import { formatText } from "../../functions/formatText.js";
+import { scrollElementIntoView } from "../../functions/scrollingToElement.js";
 import { filterBy, sortBy } from "../../functions/sortFilter.js";
 import { formatDuration } from "../../functions/time.js";
 import { ui } from "../../script.js";
@@ -72,6 +73,12 @@ export const updateProgressionBar = (container, gameData, isHardMode = true) => 
             ${progressionPoints(focusCheevo, cheevos)}
         </div>
     `;
+    scrollElementIntoView({
+        container: container.querySelector(`.${mainClass}-points`),
+        element: container.querySelector(".focus"),
+        scrollByX: true,
+        scrollByY: false,
+    })
     const updateProgressionText = () => {
         updateTimeout && clearTimeout(updateTimeout);
         const textContainer = container.querySelector(`.${mainClass}-target`);

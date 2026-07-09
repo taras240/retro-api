@@ -476,11 +476,11 @@
     justify-content: start;
     gap: var(--progression-gap);
     align-items: center;
+    overflow: hidden;
     overflow-x: scroll;
     height: var(--progress-height);
     margin-bottom: 0.2em;
     border-radius: var(--progress-border-radius);
-    overflow: hidden;
     border: var(--progress-border-thickness) solid var(--progress-border-color);
     padding: var(--progress-container-padding);
 }
