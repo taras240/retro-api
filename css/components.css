@@ -20,8 +20,7 @@
     background: var(--main-color);
     z-index: 1;
     transition-property: opacity, box-shadow;
-    transition-duration: 200ms;
-    transition-timing-function: ease-in;
+    transition-duration: 150ms;
     font-size: var(--font-size);
 }
 
@@ -42,7 +41,8 @@
 .section:hover,
 .section.focus {
     z-index: 10;
-    box-shadow: 0 0 5px 0 black;
+    /* border: 1px solid var(--selection-color); */
+    box-shadow: 0 0 0 2px var(--selection-color);
 }
 
 .section.resized {}
