@@ -171,19 +171,21 @@ card-3d::before {
 
 .status__watch-button {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  height: 60%;
-  aspect-ratio: 1;
+  background: transparent;
+  border: 3px solid var(--main-color);
   border-radius: 50%;
-  overflow: hidden;
-  background-color: var(--secondary-color);
+  box-shadow: 0 0 1px 0 var(--main-color);
   display: grid;
   place-items: center;
-  box-shadow: 0 0 5px 1px var(--secondary-color);
+  height: 70%;
+  aspect-ratio: 1;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   opacity: 1;
-  transition: transform 200ms, opacity 200ms;
+  backdrop-filter: blur(5px);
+  transition: transform .2s, opacity .2s;
+  overflow: hidden;
   z-index: 10;
 }
 

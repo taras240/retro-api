@@ -1116,19 +1116,21 @@
 
 .status__watch-button {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    height: 60%;
-    aspect-ratio: 1;
+    background: var(--selection-color);
+    border: 3px solid var(--main-color);
     border-radius: 50%;
-    overflow: hidden;
-    background-color: var(--secondary-color);
+    box-shadow: 0 0 1px 0 var(--main-color);
     display: grid;
     place-items: center;
-    box-shadow: 0 0 5px 1px var(--secondary-color);
+    height: 70%;
+    aspect-ratio: 1;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     opacity: 1;
-    transition: transform 200ms, opacity 200ms;
+    backdrop-filter: blur(5px);
+    transition: background 150ms, opacity 150ms;
+    overflow: hidden;
     z-index: 10;
 }
 
@@ -1137,7 +1139,7 @@
 }
 
 .status__watch-button:hover {
-    transform: translate(-50%, -50%) scale(1.1);
+    background: var(--accent-color);
 }
 
 .status__watch-button.active {
@@ -1146,21 +1148,20 @@
 
 .status__watch-button:active {
     background-color: var(--accent-color);
-    transform: translate(-50%, -50%) scale(1.05);
+    transform: translate(-50%, -50%) scale(0.99);
 }
 
 .status__watch-button::after {
-    content: "";
-    position: absolute;
-    height: 80%;
     aspect-ratio: 1;
-    background-color: var(--font-color);
+    background-color: var(--main-color);
+    content: "";
+    height: 90%;
     mask-image: url(../assets/img/play.svg);
+    mask-position: center;
     mask-repeat: no-repeat;
     mask-size: contain;
-    mask-position: center;
-    opacity: 0.6;
-    transition: opacity 200ms;
+    position: absolute;
+    transition: opacity .2s;
 }
 
 .status__watch-button:hover::after {
