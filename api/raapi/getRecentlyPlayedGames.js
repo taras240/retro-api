@@ -23,8 +23,8 @@ export default async function handler(req, res) {
 
 
 async function getRecentlyPlayedGames({
+    username,
     apiKey,
-    username
 }) {
     let currentPage = 1;
     let totalPages = 1;

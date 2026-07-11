@@ -954,8 +954,9 @@ export class Games extends Widget {
     }
     async getAllGames() {
         const gamesJson = await gamesFromJson();
-        const lastPlayedGames = await raapi.getUserCompletionProgress({});
-        for (let lastGame of lastPlayedGames.Results) {
+        console.log(lastPlayedGames);
+        const userCompletion = await raapi.getUserCompletionProgress({});
+        for (let lastGame of userCompletion.Results) {
             let gameToModify = gamesJson.find(game => lastGame.ID === game.ID);
             if (gameToModify) {
                 lastGame.NumAwardedHardcore && (gameToModify.NumAwardedHardcore = lastGame.NumAwardedHardcore);

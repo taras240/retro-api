@@ -167,5 +167,32 @@ export const raapi = {
         }
         config.cache.push({ dataType: CACHE_TYPES.SUBSETS_LIST, data: gamesList });
         return gamesList;
+    },
+    async getUserPlayedGames({ username }) {
+        //{
+        //   id: 238,
+        //   lastPlayedAt: "2026-07-11T10:57:20.000000Z",
+        //   firstUnlockAt: "2026-07-11T09:50:53.000000Z",
+        //   lastUnlockAt: "2026-07-11T10:41:58.000000Z",
+        //   lastUnlockHardcoreAt: "2026-07-11T10:41:58.000000Z",
+        //   beatenAt: null,
+        //   beatenHardcoreAt: null,
+        //   playtimeTotalSeconds: 4088,
+        //   timeToBeatSeconds: null,
+        //   timeToBeatHardcoreSeconds: null,
+        // }
+        try {
+            const lastPlayed = await fetch(
+                `/api/raapi/getRecentlyPlayedGames?username=${getUsername(username)}`,
+                {
+                    headers: { 'x-api-key': config.API_KEY, }
+                }
+            ).then(r => r.json());
+            return lastPlayed;
+        }
+        catch (e) {
+            return null;
+        }
+
     }
 };
