@@ -36,6 +36,7 @@ export class Watcher {
         softcore: 0,
     }
     lastOnlineAt = new Date();
+    lastZeroCheck = new Date();
     get CHEEVOS() {
         return this.GAME_DATA?.AllAchievements ?? {};
     }
@@ -230,6 +231,7 @@ export class Watcher {
             this.updateCheevos(false, [], deltaPoints);
             this.online.setOnline();
             this.lastOnlineAt = now;
+            this.lastZeroCheck = new Date();
         }
         const isGameChanged = (raProfileInfo, isStart = false) => {
             const lastID = config.gamesDB[raProfileInfo.LastGameID]?.setID || raProfileInfo.LastGameID;
@@ -279,9 +281,9 @@ export class Watcher {
         if (isPointsChanged(raProfileInfo)) {
             onPointsChanged(raProfileInfo);
         }
-        else if (this.GAME_DATA.hasZeroPoints && now - this.lastOnlineAt > 60 * 1000) {
+        else if (this.GAME_DATA.hasZeroPoints && now - this.lastOnlineAt > 58 * 1000) {
             this.updateCheevos();
-            this.lastOnlineAt = now;
+            this.lastZeroCheck = new Date();
         }
 
         const richPresence = raProfileInfo.RichPresenceMsg;
@@ -425,7 +427,8 @@ export class Watcher {
 
         const checkForZeroPoints = () => {
             this.GAME_DATA.hasZeroPoints = Object.values(this.CHEEVOS).filter(
-                ({ Points, isEarnedHardcore }) => Points === 0 && !isEarnedHardcore)?.length > 0
+                ({ Points, isEarnedHardcore }) => Points === 0 && !isEarnedHardcore
+            )?.length > 0
         }
         try {
             // Get recent achievements
