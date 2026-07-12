@@ -190,7 +190,7 @@ function wavesAnimation(container) {
             ctx = canvas.getContext("2d");
             canvas.width = width;
             canvas.height = height;
-            canvas.style.background = "var(--accent-color)";
+            canvas.style.background = "var(--selection-color)";
         }
         initContainer();
 
