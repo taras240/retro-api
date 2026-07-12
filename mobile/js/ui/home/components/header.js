@@ -7,7 +7,6 @@ export function headerHtml(userInfo) {
             <div class="user-info__header">
                 <div class="user-info__avatar-container">
                     <img class="user-info__avatar" src="${userInfo.userImageSrc}" onclick="ui.goto.login()">
-                    ${retroRatio ? `<span class="game-header__retro-ratio  achiv-rarity__standard">${retroRatio}</span>` : ""}
                 </div>
                 <button class="button__switch-mode ${ui.isSoftmode ? "softmode" : ""}" onclick="ui.switchGameMode()">${ui.isSoftmode ? "SOFT" : "HARD"}</button>
                 <div class="user-info__user-name-container">

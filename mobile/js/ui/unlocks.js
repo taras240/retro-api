@@ -11,7 +11,6 @@ export class Unlocks {
         const section = fromHtml(`
             <div class="section unlocks__section">
                 <div class="section__header-title">Recent Unlocks</div>
-                <div class="section__control-container"></div>
                 <ul class="game-achivs__container list"></ul>
             </div>
         `);

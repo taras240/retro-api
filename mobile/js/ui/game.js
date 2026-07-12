@@ -1,8 +1,11 @@
 import { generateBadges } from "./components/badges.js"
 import { sortBy } from "../functions/sort.js"
-import { apiWorker, config } from "../main.js"
+import { apiWorker, config, ui } from "../main.js"
 import { GAMES_DATA } from "../ui-mobile.js"
 import { filterBy } from "../functions/filter.js"
+import { fromHtml } from "../../../js/functions/html.js"
+import { formatDuration } from "../../../js/functions/time.js"
+import { cheevoImageUrl, gameImageUrl } from "../../../js/functions/raLinks.js"
 
 export
     class Game {
@@ -193,12 +196,9 @@ export
         const section = document.createElement("div");
         section.classList.add("game__section", "section");
         section.innerHTML = `
-      ${this.SectionHeaderHtml()}
-
-      <ul class="game-achivs__container ${this.listType}">
-       
-      </ul>
-    `;
+            ${this.SectionHeaderHtml()}
+            <ul class="game-achivs__container ${this.listType}"></ul>
+        `;
         return section;
     }
     AchievementHtml(achiv) {
@@ -345,10 +345,10 @@ export
         if (GAMES_DATA[gameID]) {
             this.gameData = GAMES_DATA[this.gameID];
             this.achievements = Object.values(GAMES_DATA[this.gameID].Achievements);
-            const section = this.getSectionElement();
+            const section = this.generateGameSection(this.gameData);
             ui.content.innerHTML = "";
             ui.content.append(section);
-            this.updateCheevos();
+            this.updateGameSection(this.gameData);
             ui.removeLoader();
         }
         else {
@@ -357,4 +357,133 @@ export
             }).then(() => this.update())
         }
     }
+
+    updateGameSection(gameData) {
+        const updateGameBar = (gameData) => {
+            const { ImageIcon, Title, ConsoleName, Developer, UserTotalPlaytime, TotalPoints } = gameData;
+
+            document.querySelector(".game-image").src = gameImageUrl(ImageIcon);
+            document.querySelector(".game-title").innerHTML = Title;
+            document.querySelector(".game-meta>.platform").innerHTML = ConsoleName;
+            document.querySelector(".game-meta>.game-dev").innerHTML = Developer;
+            document.querySelector(".playtime").innerHTML = "Time played: " + formatDuration(UserTotalPlaytime, false);
+        }
+        const updateProgressBar = (gameData) => {
+            const { NumAchievements, NumAwardedToUserHardcore, points_total: TotalPoints } = gameData;
+            const PointsUnlocked = gameData.earnedStats?.hard?.points ?? 0;
+            const unlockRate = Math.floor(100 * NumAwardedToUserHardcore / NumAchievements);
+            document.querySelector(".progress-card").style.setProperty("--unlock-rate", `${unlockRate}%`);
+            document.querySelector(".progress-card .progress-count").innerHTML = `${NumAwardedToUserHardcore} / ${NumAchievements}`;
+            document.querySelector(".progress-footer .points").innerHTML = `${PointsUnlocked} / ${TotalPoints} points`;
+            document.querySelector(".progress-card .progress-footer>span").innerHTML = `${unlockRate}% completed`;
+
+
+        }
+        const updateAchievements = (gameData) => {
+            function AchievementElement(cheevo, gameData) {
+                const { Title, Description, Points, BadgeName, DateEarnedHardcore } = cheevo;
+                const element = fromHtml(`
+                    <div class="achievement ${DateEarnedHardcore ? 'unlocked' : 'locked'}">
+                        <div class="ach-icon">
+                            <img class="ach-img" src="${cheevoImageUrl({ BadgeName })}"/>
+                        </div>
+                        <div class="ach-info">
+                            <div class="ach-name">${Title}</div>
+                            <div class="ach-desc">${Description}</div>
+                        </div>
+                        <div class="ach-points">${Points}</div>
+                    </div>
+                `);
+                element.addEventListener("click", (event) => {
+                    event.stopPropagation();
+                    ui.showAchivDetails(cheevo.ID, gameData.ID);
+                    console.log(gameData);
+                })
+                return element;
+            }
+            const container = document.querySelector(".achievement-list");
+            container.innerHTML = "";
+            Object.values(gameData.Achievements).sort((a, b) => sortBy.date(a, b)).forEach(cheevo => {
+                const achievementElement = AchievementElement(cheevo, gameData);
+                container.append(achievementElement)
+            })
+        }
+
+        updateGameBar(gameData);
+        updateProgressBar(gameData);
+        updateAchievements(gameData);
+    }
+    generateGameSection(gameData) {
+        const currentGameElement = () => {
+            const element = fromHtml(`
+                <div class="current-game">
+                    <div class="game-icon">
+                        <img class="game-image" />
+                    </div>
+                    <div class="game-info">
+                        <div class="game-title"></div>
+                        <div class="game-meta">
+                            <span class="platform"></span>
+                            <span class="game-dev"></span>
+                        </div>
+                        <div class="playtime"></div>
+                    </div>
+                </div>
+            `);
+            element.addEventListener("click", (event) => {
+                event.stopPropagation();
+                ui.showGameDetails(gameData.ID);
+            })
+            return element;
+        }
+        const progressElement = () => fromHtml(`
+            <div class="progress-card">
+                <div class="progress-header">
+                    <span class="progress-label">Completion progress</span>
+                    <span class="progress-count"></span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-bar-fill"></div>
+                </div>
+                <div class="progress-footer">
+                    <span></span>
+                    <span class="points"></span>
+                </div>
+            </div>
+        `)
+        const achievementSectionElement = () => {
+            const element = fromHtml(`
+                <div class="achievements-section">
+                    <div class="section-title">Achievements</div>
+                    <div class="toolbar">
+                        <select>
+                            <option>Default</option>
+                            <option>Unlock Rate</option>
+                            <option>Points</option>
+                            <option>Unlocked First</option>
+                        </select>
+                        <div class="filter-group">
+                            <button class="active">All</button>
+                            <button>Unlocked</button>
+                            <button>Missable</button>
+                            <button>Progression</button>
+                        </div>
+                    </div>
+                    <div class="achievement-list"></div>
+                </div>
+            `);
+            return element;
+        }
+        const section = fromHtml(`
+            <div class="game-content content"></div>
+        `);
+
+        section.append(
+            currentGameElement(),
+            progressElement(),
+            achievementSectionElement(),
+        )
+        return section;
+    }
+
 }

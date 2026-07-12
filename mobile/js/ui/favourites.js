@@ -62,8 +62,7 @@ export class Favourites {
         gameElement.classList.add("awards__game-item");
         gameElement.dataset.id = game?.ID;
         // const imgName = game?.ImageIcon.slice(game?.ImageIcon.lastIndexOf("/") + 1, game?.ImageIcon.lastIndexOf(".") + 1) + "webp";
-        gameElement.innerHTML = `    
-            <li class="awards__game-item" data-id="${game?.ID}">
+        gameElement.innerHTML = `
                 <div class="awards__game-container"  onclick="ui.showGameDetails(${game?.ID}); event.stopPropagation()">
                     <div class="awards__game-preview-container" onclick="ui.goto.game(${game?.ID}); event.stopPropagation()">
                         <img class="awards__game-preview" src="${gameImageUrl(game?.ImageIcon)}" alt="">

@@ -1,9 +1,8 @@
 .library__game-item {
     width: 100%;
-    border-radius: 0.5rem;
-    background-color: var(--secondary-color);
+    border-radius: var(--border-radius);
+    background-color: var(--main-color);
     overflow: hidden;
-    box-shadow: var(--item-shadow);
     flex-shrink: 0;
 }
 

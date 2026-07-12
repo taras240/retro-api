@@ -1,3 +1,4 @@
+import { fromHtml } from "../../../../../js/functions/html.js";
 import { cheevoImageUrl } from "../../../../../js/functions/raLinks.js";
 import { ui } from "../../../main.js"
 import { svgIcons } from "../../components/svgIcons.js"
@@ -17,7 +18,7 @@ import { svgIcons } from "../../components/svgIcons.js"
     "HardcoreAchieved": 1
     }
   */
-export function recentCheevoHtml(cheevo) {
+export function recentCheevoHtml(cheevo, gameData = {}) {
     const {
         Title,
         Description,
@@ -28,8 +29,38 @@ export function recentCheevoHtml(cheevo) {
         DateEarned,
         BadgeName,
         Points,
+        DateEarnedHardcore
     } = cheevo;
-
+    const unlockClass = (HardcoreAchieved || DateEarned) ? 'unlocked' : 'locked';
+    const element = fromHtml(`
+                    <div class="achievement ${unlockClass}">
+                        <div class="ach-icon">
+                            <img class="ach-img" src="${cheevoImageUrl({ BadgeName })}"/>
+                        </div>
+                        <div class="ach-info">
+                            <div class="ach-name">${Title}</div>
+                            <div class="ach-desc">${Description}</div>
+                        </div>
+                        <div class="ach-points">${Points}</div>
+                    </div>
+                `);
+    // element.addEventListener("click", (event) => {
+    //     event.stopPropagation();
+    //     ui.showAchivDetails(cheevo.ID, gameData.ID);
+    //     console.log(gameData);
+    // })
+    return `
+                    <div class="achievement ${unlockClass}" onclick="ui.showAchivDetails(${ID}, ${GameID}); event.stopPropagation()">
+                        <div class="ach-icon">
+                            <img class="ach-img" src="${cheevoImageUrl({ BadgeName })}"/>
+                        </div>
+                        <div class="ach-info">
+                            <div class="ach-name">${Title}</div>
+                            <div class="ach-desc">${Description}</div>
+                        </div>
+                        <div class="ach-points">${Points}</div>
+                    </div>
+                `;
     return `
         <li class="user-info__cheevo-container">
             <div class="user-info__cheevo-title-container" 

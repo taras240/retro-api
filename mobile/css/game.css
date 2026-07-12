@@ -146,10 +146,11 @@
 .game-achivs__container {
     display: flex;
     flex-direction: column;
-    padding: 0 1rem;
-    gap: 0.75rem;
-    padding-bottom: 7rem;
+    padding: 1rem;
+    gap: 0.3rem;
     overflow: scroll;
+    background: var(--main-color);
+    border-radius: var(--border-radius);
 }
 
 .game-achivs__container.grid {
@@ -233,3 +234,362 @@
 
 /** -----------Library---------- */
 .search-icon.show-searchbar__button {}
+
+
+/* #app {
+    --font-color: #fff;
+    --bg-color: #cacaca1f;
+    --secondary-font-color: #ffffffbb;
+    --border-radius: 6px;
+    --accent-color: #2b88d8;
+    --selection-color: #2b87d834;
+    width: 100vw;
+    height: 100vh;
+    background: transparent;
+    border-radius: 8px;
+    overflow: hidden;
+} */
+#app {
+    height: 100vh;
+}
+
+.content {
+    --border-radius: 6px;
+    --accent-color: #2b88d8;
+    --selection-color: #2b87d834;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    overflow: hidden;
+    padding: 0.5rem !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    gap: 0.5rem;
+    align-items: stretch;
+}
+
+@media (prefers-color-scheme: light) {
+    #app {
+        background: white;
+        --font-color: #000;
+        --secondary-font-color: #000000bb;
+        --bg-color: #3232321f;
+        --main-color: #3232321f;
+        --secondary-color: #ffffffbb;
+    }
+
+}
+
+@media (prefers-color-scheme: dark) {
+    #app {
+        background: black;
+        --font-color: #fff;
+        --secondary-font-color: #ffffffbb;
+        --bg-color: #cacaca1f;
+        --main-color: #cacaca1f;
+        --secondary-color: #000000bb;
+
+    }
+
+
+}
+
+
+
+
+/* Поточна гра */
+.current-game {
+    display: flex;
+    gap: 1rem;
+    background: var(--bg-color);
+    /* border: 1px solid #3d3d3d; */
+    border-radius: var(--border-radius);
+    padding: 1rem;
+}
+
+.game-icon {
+    height: 4.5rem;
+    aspect-ratio: 1;
+    border-radius: var(--border-radius);
+    flex-shrink: 0;
+    /* delete */
+    background: linear-gradient(135deg, #2b88d8, #1a5a9e);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.game-image {
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+}
+
+.game-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.game-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--font-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.game-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    color: #a3a3a3;
+}
+
+.game-meta .platform {
+    background: black;
+    color: #fff;
+    padding: 1px 6px;
+    border-radius: 3px;
+    /* font-size: 10px; */
+}
+
+.game-dev {
+    color: var(--secondary-font-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.playtime {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--font-color);
+}
+
+/* Окрема картка прогресу */
+.progress-card {
+    --unlock-rate: 0;
+    background: var(--bg-color);
+    /* border: 1px solid #3d3d3d; */
+    border-radius: 6px;
+    padding: 1rem;
+}
+
+.progress-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.7rem;
+}
+
+.progress-label {
+    font-size: 0.9rem;
+    color: var(--font-color);
+}
+
+.progress-count {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--font-color);
+}
+
+.progress-bar {
+    height: 0.4rem;
+    background: var(--bg-color);
+    border-radius: 100px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    width: var(--unlock-rate);
+    background: var(--accent-color);
+    border-radius: 100px;
+}
+
+.progress-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 6px;
+    font-size: 0.85rem;
+    color: var(--secondary-font-color);
+}
+
+.progress-footer .points {
+    /* background: var(--font-color); */
+    /* padding: 1px 6px; */
+    border-radius: 3px;
+    color: var(--font-color);
+    /* color: gold; */
+    /* font-weight: 600; */
+}
+
+/* Панель сортування / фільтрації */
+.toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    overflow: scroll;
+}
+
+.toolbar select,
+.toolbar button {
+    font-family: inherit;
+    background: #323232;
+    border: 1px solid #3d3d3d;
+    color: #d6d6d6;
+    font-size: 11px;
+    border-radius: 4px;
+    padding: 5px 8px;
+    cursor: pointer;
+}
+
+.toolbar select {
+    width: 8rem;
+}
+
+.toolbar select:hover,
+.toolbar button:hover {
+    background: #3d3d3d;
+}
+
+.toolbar select:focus,
+.toolbar button:focus {
+    outline: 1px solid #2b88d8;
+}
+
+.toolbar .filter-group {
+    display: flex;
+    gap: 4px;
+    margin-left: auto;
+}
+
+.toolbar .filter-group button.active {
+    background: #2b88d8;
+    border-color: #2b88d8;
+    color: #fff;
+}
+
+
+.achievements-section {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-color);
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    overflow: hidden;
+}
+
+/* Список досягнень */
+.section-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--font-color);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-bottom: 0.5rem;
+}
+
+.achievement-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    overflow: scroll;
+}
+
+.achievement {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    border-radius: 6px;
+    background: var(--bg-color);
+    border: 1px solid var(--bg-color);
+    transition: 100ms;
+    width: 100%;
+}
+
+.achievement:hover {
+    background: var(--selection-color);
+    border-color: var(--accent-color);
+}
+
+.ach-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 5px;
+    flex-shrink: 0;
+}
+
+.ach-img {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: inherit;
+}
+
+.achievement.unlocked .ach-icon {
+    /* background: linear-gradient(135deg, #f7b733, #c9891a); */
+}
+
+.achievement.locked .ach-icon {
+    filter: grayscale(1);
+    opacity: 0.5;
+}
+
+.ach-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.ach-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--font-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.achievement.locked .ach-name {
+    color: var(--secondary-font-color);
+}
+
+.ach-desc {
+    font-size: 0.9rem;
+    color: var(--secondary-font-color);
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ach-points {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #f7b733;
+    font-weight: 600;
+    flex-shrink: 0;
+    background: black;
+    width: 2rem;
+    aspect-ratio: 1;
+    border-radius: 100px;
+    display: grid;
+    place-items: center;
+}
+
+.achievement.locked .ach-points {
+    color: #d6d6d6;
+}
