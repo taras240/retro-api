@@ -191,6 +191,18 @@ export const sortGamesBy = {
         }
         return (dateA - dateB) * reverse; // Повертає різницю дат
     },
+    modifiedDate: (a, b, reverse = 1, strictMode = true) => {
+        const dateA = a.updated
+            ? a.updated
+            : -Infinity;
+        const dateB = b.updated
+            ? b.updated
+            : -Infinity;
+        if (strictMode && !(a.updated && b.updated)) {
+            return a.updated ? -1 : 1;
+        }
+        return (dateA - dateB) * reverse; // Повертає різницю дат
+    },
     rating: (a, b) => b.Rating - a.Rating,
     playedDate: (a, b, reverse = 1, strictMode = true) => sortGamesBy.date({ Date: a.datePlayed }, { Date: b.datePlayed }, -1 * reverse, strictMode),
     released: (a, b, reverse = 1) => {
@@ -255,6 +267,7 @@ export const sortGamesBy = {
 export const gamesSortNames = {
     title: "title",
     released: 'released',
+    modifiedDate: 'modifiedDate',
     playedDate: "playedDate",
     players: "players",
     cheevos: "cheevos",

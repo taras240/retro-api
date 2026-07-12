@@ -352,5 +352,6 @@
     "openComments": "Відкрити коментарі",
     "unlockTime": "Тривалість розблокування",
     "estimated": "Час до проходження",
-    "estTimeMsg": "Прогрес проходження: {{beatenRate}} • Залишилось ≈{{time}}"
+    "estTimeMsg": "Прогрес проходження: {{beatenRate}} • Залишилось ≈{{time}}",
+    "modifiedDate": "Дата оновлення"
 }

@@ -364,5 +364,6 @@
     "targetSearchHint": "Type to search, or Ctrl+Click a word for a quick search",
     "releasedYear": "Release Year",
     "unlocked": "unlocked",
-    "cropBorder": "Crop Border"
+    "cropBorder": "Crop Border",
+    "modifiedDate": "Modified Update"
 }
