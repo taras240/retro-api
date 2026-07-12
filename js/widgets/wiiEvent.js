@@ -120,7 +120,7 @@ export class WiiEvent extends Widget {
         const completionProgress = (await raapi.getUserCompletionProgress())?.Results ?? [];
         const eventGamesArray = completionProgress.map(game => {
 
-            if (game.ConsoleID !== 19) return;
+            if (game.ConsoleID !== 19 || [34743].includes(game.GameID)) return;
             // const isSubset = /subset/gi.test(game.Title);
             game.bonusMult = bountyGames.triple.includes(game.GameID) ? 3 : bountyGames.double.includes(game.GameID) ? 2 : 1;
             game.maxEventPoints = 2 * game.bonusMult;
