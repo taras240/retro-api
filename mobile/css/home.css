@@ -8,7 +8,7 @@
     overflow-y: scroll;
     width: 100%;
     gap: 0.5rem;
-
+    border-radius: var(--border-radius);
 }
 
 .section__header-container.user-info__header-container {
@@ -103,18 +103,19 @@
 
 .user-info__block-header {
     position: relative;
-    padding-bottom: 0.5rem;
     width: 100%;
     background: transparent;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 0 0.25rem 0.5rem;
 }
 
 .user-info__block-header h2 {
-    font-size: 1.1rem;
-    font-weight: bold;
+    font-size: 1rem;
+    font-weight: 600;
     text-align: start;
+    text-transform: uppercase;
 }
 
 .user-info__block-header p {
@@ -181,7 +182,7 @@
 .user-info__game-title,
 .user-info__cheevo-title {
     font-size: 1rem;
-    font-weight: bold;
+    font-weight: 600;
     max-width: 100%;
     overflow-x: scroll;
     text-wrap: nowrap;
@@ -226,6 +227,8 @@
     flex-direction: row;
     align-items: center;
     gap: 1rem;
+    overflow: scroll;
+    white-space: nowrap;
 }
 
 .game-stats {

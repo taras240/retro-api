@@ -41,7 +41,8 @@ export function recentCheevoElement(cheevo, gameData) {
                         <div class="item-meta">
                             <div class="ach-name">${Title}</div>
                             <div class="ach-desc">${Description}</div>
-                            <p class="game-stats__text cheevo-stats__unlocked">${getDeltaTime(DateEarned)}</p>
+                            <div class="game-stats__text cheevo-stats__unlocked">${getDeltaTime(DateEarned)}</div>
+
                         </div>
                         <div class="ach-points">${Points}</div>
                     </div>
