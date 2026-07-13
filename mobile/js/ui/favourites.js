@@ -2,6 +2,7 @@ import { gameImageUrl } from "../../../js/functions/raLinks.js";
 import { delay } from "../functions/delay.js";
 import { lazyLoad } from "../functions/lazyLoad.js";
 import { apiWorker, ui } from "../main.js";
+import { GameElement } from "./library/gameItem.js";
 
 export class Favourites {
 
@@ -58,35 +59,42 @@ export class Favourites {
         return gamesHeader;
     }
     getGameElement(game) {
-        const gameElement = document.createElement("li");
-        gameElement.classList.add("awards__game-item");
-        gameElement.dataset.id = game?.ID;
-        // const imgName = game?.ImageIcon.slice(game?.ImageIcon.lastIndexOf("/") + 1, game?.ImageIcon.lastIndexOf(".") + 1) + "webp";
-        gameElement.innerHTML = `
-                <div class="awards__game-container"  onclick="ui.showGameDetails(${game?.ID}); event.stopPropagation()">
-                    <div class="awards__game-preview-container" onclick="ui.goto.game(${game?.ID}); event.stopPropagation()">
-                        <img class="awards__game-preview" src="${gameImageUrl(game?.ImageIcon)}" alt="">
-                    </div>
-                    <div class="awards__game-description" >
-                        <h2 class="awards__game-title">${game?.Title}</h2>
-                        <div  class="game-stats__button"  onclick="ui.expandGameItem(${game?.ID},this); event.stopPropagation()">
-                          <i class="game-stats__icon game-stats__expand-icon"></i>
-                        </div>
-                        <div class="awards__game-stats__text">${game?.ConsoleName}</div>
+        const gameData = {
+            ...game,
+            badges: [],
+            Points: game.PointsTotal,
+            NumAchievements: game.AchievementsPublished,
+        }
+        const gameElement = GameElement(gameData);
+        //  document.createElement("li");
+        // gameElement.classList.add("awards__game-item");
+        // gameElement.dataset.id = game?.ID;
+        // // const imgName = game?.ImageIcon.slice(game?.ImageIcon.lastIndexOf("/") + 1, game?.ImageIcon.lastIndexOf(".") + 1) + "webp";
+        // gameElement.innerHTML = `
+        //         <div class="awards__game-container"  onclick="ui.showGameDetails(${game?.ID}); event.stopPropagation()">
+        //             <div class="awards__game-preview-container" onclick="ui.goto.game(${game?.ID}); event.stopPropagation()">
+        //                 <img class="awards__game-preview" src="${gameImageUrl(game?.ImageIcon)}" alt="">
+        //             </div>
+        //             <div class="awards__game-description" >
+        //                 <h2 class="awards__game-title">${game?.Title}</h2>
+        //                 <div  class="game-stats__button"  onclick="ui.expandGameItem(${game?.ID},this); event.stopPropagation()">
+        //                   <i class="game-stats__icon game-stats__expand-icon"></i>
+        //                 </div>
+        //                 <div class="awards__game-stats__text">${game?.ConsoleName}</div>
 
-                        <div class="awards__game-stats-container" >                           
-                        <div class="game-stats ">
-                        <i class="game-stats__icon game-stats__achivs-icon"></i>
-                        <div class="game-stats__text">${game?.AchievementsPublished}</div>
-                        </div>
-                        <div class="game-stats game-stats__points">
-                        <i class="game-stats__icon game-stats__points-icon"></i>
-                        <div class="game-stats__text">${game?.PointsTotal}</div>
-                        </div>
-                        </div>
-                    </div>
-                </div>
-        `;
+        //                 <div class="awards__game-stats-container" >                           
+        //                 <div class="game-stats ">
+        //                 <i class="game-stats__icon game-stats__achivs-icon"></i>
+        //                 <div class="game-stats__text">${game?.AchievementsPublished}</div>
+        //                 </div>
+        //                 <div class="game-stats game-stats__points">
+        //                 <i class="game-stats__icon game-stats__points-icon"></i>
+        //                 <div class="game-stats__text">${game?.PointsTotal}</div>
+        //                 </div>
+        //                 </div>
+        //             </div>
+        //         </div>
+        // `;
         return gameElement;
     }
 }

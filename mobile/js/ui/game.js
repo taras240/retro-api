@@ -383,11 +383,11 @@ export
             function AchievementElement(cheevo, gameData) {
                 const { Title, Description, Points, BadgeName, DateEarnedHardcore } = cheevo;
                 const element = fromHtml(`
-                    <div class="achievement ${DateEarnedHardcore ? 'unlocked' : 'locked'}">
+                    <div class="list-item achievement ${DateEarnedHardcore ? 'unlocked' : 'locked'}">
                         <div class="ach-icon">
                             <img class="ach-img" src="${cheevoImageUrl({ BadgeName })}"/>
                         </div>
-                        <div class="ach-info">
+                        <div class="item-meta">
                             <div class="ach-name">${Title}</div>
                             <div class="ach-desc">${Description}</div>
                         </div>

@@ -134,14 +134,13 @@
     padding: 1rem;
 }
 
-.user-info__last-game-container,
-.user-info__cheevo-container {
+.list-game-item {
     width: 100%;
     overflow: hidden;
     flex-shrink: 0;
 }
 
-.user-info__last-game-container.expanded {
+.list-game-item.expanded {
     background: var(--main-color);
     border-radius: var(--border-radius);
 }
@@ -169,18 +168,6 @@
 .user-info__cheevo-preview {
     height: 100%;
     aspect-ratio: 1;
-}
-
-.user-info__game-description,
-.user-info__cheevo-descriptions {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: start;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
 }
 
 .user-info__cheevo-description {
@@ -264,17 +251,14 @@
 
 .game-stats__icon {
     display: inline-block;
-    height: 1.2rem;
+    height: 0.95rem;
     aspect-ratio: 1;
     background-color: var(--font-color);
     mask-size: contain;
     mask-repeat: no-repeat;
 }
 
-.achiv-rarity {
-    min-width: 1rem;
-    min-height: 1rem;
-}
+
 
 .game-stats__achivs-icon {
 
@@ -342,12 +326,19 @@
 }
 
 .achiv-rarity {
-    padding: 0 0.5rem;
-    border-radius: 0.5rem;
-    color: black;
-    text-transform: uppercase;
-    font-weight: 600;
-
+    --rarity-color: greenyellow;
+    position: absolute;
+    min-width: 0;
+    min-height: 0;
+    border: 2px solid transparent;
+    border-right-style: solid;
+    border-right-color: transparent;
+    width: 1rem;
+    height: 1rem;
+    border-left: 2px solid var(--rarity-color);
+    border-bottom: 2px solid var(--rarity-color);
+    bottom: 0;
+    left: 0;
 }
 
 .achiv-rarity__circle {
@@ -361,42 +352,28 @@
 }
 
 .achiv-rarity__hell {
-    background-color: #800080;
-    animation: hell-anim 6s infinite;
+    --rarity-color: #800080;
 }
 
-@keyframes hell-anim {
-    0% {
-        background-color: #800080;
-    }
-
-    50% {
-        background-color: crimson;
-    }
-
-    100% {
-        background-color: #800080;
-    }
-}
 
 .achiv-rarity__insane {
-    background-color: #800080;
+    --rarity-color: #800080;
 }
 
 .achiv-rarity__pro {
-    background-color: orange;
+    --rarity-color: orange;
 }
 
 .achiv-rarity__expert {
-    background-color: crimson;
+    --rarity-color: crimson;
 }
 
 .achiv-rarity__standard {
-    background-color: green;
+    --rarity-color: green;
 }
 
 .achiv-rarity__easy {
-    background-color: greenyellow;
+    --rarity-color: greenyellow;
 }
 
 .user-info__game-achivs-container {
@@ -437,6 +414,7 @@
 }
 
 .ach-badge-item {
+    position: relative;
     width: 4rem;
     aspect-ratio: 1;
     overflow: hidden;

@@ -18,7 +18,7 @@ import { svgIcons } from "../../components/svgIcons.js"
     "HardcoreAchieved": 1
     }
   */
-export function recentCheevoElement(cheevo, gameData = {}) {
+export function recentCheevoElement(cheevo, gameData) {
     const {
         Title,
         Description,
@@ -31,13 +31,14 @@ export function recentCheevoElement(cheevo, gameData = {}) {
         Points,
         DateEarnedHardcore
     } = cheevo;
+    gameData ??= { ID: GameID }
     const unlockClass = (HardcoreAchieved || DateEarned) ? 'unlocked' : 'locked';
     const element = fromHtml(`
-                    <div class="achievement ${unlockClass}">
+                    <div class="list-item achievement ${unlockClass}">
                         <div class="ach-icon">
                             <img class="ach-img" src="${cheevoImageUrl({ BadgeName })}"/>
                         </div>
-                        <div class="ach-info">
+                        <div class="item-meta">
                             <div class="ach-name">${Title}</div>
                             <div class="ach-desc">${Description}</div>
                             <p class="game-stats__text cheevo-stats__unlocked">${getDeltaTime(DateEarned)}</p>
@@ -47,29 +48,10 @@ export function recentCheevoElement(cheevo, gameData = {}) {
                 `);
     element.addEventListener("click", (event) => {
         event.stopPropagation();
-        ui.showAchivDetails(cheevo.ID, gameData.ID);
-        console.log(gameData);
+        ui.showAchivDetails(cheevo.ID, gameData?.ID);
+        console.log(cheevo);
     })
     return element;
-    return `
-        <li class="user-info__cheevo-container">
-            <div class="user-info__cheevo-title-container" 
-                onclick="ui.showAchivDetails(${ID}, ${GameID}); event.stopPropagation()">
-                <div class="user-info__cheevo-preview-container">
-                    <img class="user-info__cheevo-preview ${HardcoreAchieved || (ui.isSoftmode && IsAwarded) ? "earned" : ""}"
-                        src="${cheevoImageUrl({ BadgeName })}">
-                </div>
-                <div class="user-info__cheevo-descriptions">
-                    <h2 class="user-info__cheevo-title">${Title}</h2>
-                    <p class="user-info__cheevo-description">${Description}</p>
-                    <div class="user-info__cheevo-stats-container">
-                        <p class="user-info__cheevo-stats-text points">
-                        ${svgIcons.points} ${Points} Points</p>
-                        <p class="game-stats__text cheevo-stats__unlocked">${getDeltaTime(DateEarned)}</p>
-                    </div>
-                </div>
-            </div>
-        </li>`
 }
 
 export function recentCheevosElements({ lastAchievements }) {

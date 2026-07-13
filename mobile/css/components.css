@@ -7,6 +7,7 @@
 }
 
 .list-item {
+    position: relative;
     display: flex;
     gap: 0.75rem;
     padding: 0.5rem;
@@ -15,4 +16,13 @@
     border: 1px solid var(--bg-color);
     width: 100%;
     transition: 100ms;
+}
+
+.item-meta {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    flex: 1;
+    min-width: 0;
 }

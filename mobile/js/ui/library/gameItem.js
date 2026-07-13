@@ -15,8 +15,8 @@ export function GameElement(gameData) {
     } = gameData;
 
     const gameElement = fromHtml(`
-        <li class="library__game-item">
-            <div class="library__game-container"  onclick="ui.showGameDetails(${ID}); event.stopPropagation()">
+        <li class="list-game-item">
+            <div class="library__game-container list-item"  onclick="ui.showGameDetails(${ID}); event.stopPropagation()">
                 <div class="awards__game-preview-container" onclick="ui.goto.game(${ID}); event.stopPropagation()">
                     <img class="awards__game-preview" src="${gameImageUrl(ImageIcon)}">
                 </div>

@@ -302,7 +302,7 @@ export class UI {
       </div>
     `
   }
-  async showAchivDetails(achivID, gameID) {
+  async showAchivDetails(cheevoID, gameID) {
     this.removePopups();
     this.showLoader();
     if (GAMES_DATA[gameID]) {
@@ -310,16 +310,16 @@ export class UI {
       achivElement.addEventListener("touchend", e => e.stopPropagation());
 
       achivElement.classList.add("popup-info__container", "popup");
-      const achiv = GAMES_DATA[gameID].Achievements[achivID];
+      const achiv = GAMES_DATA[gameID].Achievements[cheevoID];
       const achivHtml = this.achivPopupHtml(achiv)
       achivElement.innerHTML = achivHtml;
       this.content.append(achivElement)
       this.removeLoader()
     }
     else {
-      const gameData = await apiWorker.getGameProgress({ gameID: gameID });
+      const gameData = await apiWorker.getGameProgress({ gameID });
       GAMES_DATA[gameID] = gameData;
-      this.showAchivDetails(achivID, gameID);
+      this.showAchivDetails(cheevoID, gameID);
     }
 
   }
@@ -423,7 +423,7 @@ export class UI {
             <li class="ach-badge-item ${achiv.isHardcoreEarned ? "hardcore" : ""} ${achiv.isEarned ? "unlocked" : ""}"  onclick="ui.showAchivDetails(${achiv.ID},${gameID}); event.stopPropagation();">                
                 <div class="ach-badge-preview">
                     <img class="ach-badge-image ${(achiv.isHardcoreEarned || ui.isSoftmode && achiv.isEarned) && "earned"}" src="${achiv.prevSrc}"/>
-                  <div class="game-stats__text achiv-rarity achiv-rarity__${achiv.difficulty} achiv-rarity__circle"></div>
+                  <div class="achiv-rarity achiv-rarity__${achiv.difficulty}"></div>
                 </div>
             </li>
         `;

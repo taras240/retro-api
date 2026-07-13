@@ -20,12 +20,12 @@ export function recentGameElement(gameData) {
         PossibleScore,
     } = gameData;
     const gameElement = fromHtml(`    
-        <li class="user-info__last-game-container" data-id="${ID}">
+        <li class="list-game-item" data-id="${ID}">
             <div class="list-item">
                 <div class="user-info__game-preview-container">
                     <img class="user-info__game-preview" src="${gameImageUrl(ImageIcon)}">
                 </div>
-                <div class="user-info__game-description" >
+                <div class="item-meta" >
                     <h2 class="user-info__game-title">${FixedTitle} ${generateBadges(badges)}</h2>
                     <div class="game-stats__text">${toLocalString(LastPlayed)} | ${ConsoleName}</div>
                     <div  class="game-stats__button">
