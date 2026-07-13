@@ -18,7 +18,7 @@ import { svgIcons } from "../../components/svgIcons.js"
     "HardcoreAchieved": 1
     }
   */
-export function recentCheevoHtml(cheevo, gameData = {}) {
+export function recentCheevoElement(cheevo, gameData = {}) {
     const {
         Title,
         Description,
@@ -40,27 +40,17 @@ export function recentCheevoHtml(cheevo, gameData = {}) {
                         <div class="ach-info">
                             <div class="ach-name">${Title}</div>
                             <div class="ach-desc">${Description}</div>
+                            <p class="game-stats__text cheevo-stats__unlocked">${getDeltaTime(DateEarned)}</p>
                         </div>
                         <div class="ach-points">${Points}</div>
                     </div>
                 `);
-    // element.addEventListener("click", (event) => {
-    //     event.stopPropagation();
-    //     ui.showAchivDetails(cheevo.ID, gameData.ID);
-    //     console.log(gameData);
-    // })
-    return `
-                    <div class="achievement ${unlockClass}" onclick="ui.showAchivDetails(${ID}, ${GameID}); event.stopPropagation()">
-                        <div class="ach-icon">
-                            <img class="ach-img" src="${cheevoImageUrl({ BadgeName })}"/>
-                        </div>
-                        <div class="ach-info">
-                            <div class="ach-name">${Title}</div>
-                            <div class="ach-desc">${Description}</div>
-                        </div>
-                        <div class="ach-points">${Points}</div>
-                    </div>
-                `;
+    element.addEventListener("click", (event) => {
+        event.stopPropagation();
+        ui.showAchivDetails(cheevo.ID, gameData.ID);
+        console.log(gameData);
+    })
+    return element;
     return `
         <li class="user-info__cheevo-container">
             <div class="user-info__cheevo-title-container" 
@@ -82,15 +72,12 @@ export function recentCheevoHtml(cheevo, gameData = {}) {
         </li>`
 }
 
-export function recentCheevosListHtml({ lastAchievements }) {
-    return lastAchievements.reduce((elements, achievement) => {
-        const achievementHtml = recentCheevoHtml(achievement);
-        elements += achievementHtml;
-        return elements;
-    }, "");
+export function recentCheevosElements({ lastAchievements }) {
+    return lastAchievements.map(cheevo => recentCheevoElement(cheevo));
 }
 const getDeltaTime = (dateString) => {
     const date = new Date(dateString);
+    return date.toLocaleString();
     const time = date.getTime();
     const now = Date.now();
     const deltaMin = Math.round((now - date) / 6e4);
@@ -99,7 +86,6 @@ const getDeltaTime = (dateString) => {
     if (deltaMin < 60) return deltaMin + " minutes ago";
     const deltaH = Math.round(deltaMin / 60);
     if (deltaH < 24) return deltaH + " hours ago";
-    else return date.toLocaleString();
 
     const deltaDays = Math.round(deltaH / 24);
     if (deltaDays < 2) return "yesterday";

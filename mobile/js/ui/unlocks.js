@@ -1,6 +1,6 @@
 import { fromHtml } from "../../../js/functions/html.js";
 import { apiWorker, config, ui } from "../main.js"
-import { recentCheevoHtml } from "./home/components/achievement.js";
+import { recentCheevoElement } from "./home/components/achievement.js";
 
 export class Unlocks {
 
@@ -20,7 +20,7 @@ export class Unlocks {
         ui.showLoader();
         const lastUnlocks = await apiWorker.getLastUnlocks({ count: 20 });
         const section = this.getSectionElement();
-        const unlocksList = lastUnlocks.map(c => fromHtml(recentCheevoHtml(c)));
+        const unlocksList = lastUnlocks.map(c => recentCheevoElement(c));
         section.querySelector("ul")?.append(...unlocksList);
         ui.content.innerHTML = "";
         ui.content.append(section);

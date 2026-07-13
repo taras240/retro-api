@@ -368,7 +368,7 @@ export class UI {
         Object.values(GAMES_DATA[gameID].Achievements)
           .sort((a, b) => sortBy.date(a, b))
           .forEach(achiv => {
-            achivsList.innerHTML += this.achivHtml(achiv, gameID);
+            achivsList.innerHTML += this.cheevoBadgeHtml(achiv, gameID);
           });
         this.removeLoader();
       }
@@ -380,7 +380,7 @@ export class UI {
             Object.values(gameObj.Achievements)
               .sort((a, b) => sortBy.date(a, b))
               .forEach(achiv => {
-                achivsList.innerHTML += this.achivHtml(achiv, gameID);
+                achivsList.innerHTML += this.cheevoBadgeHtml(achiv, gameID);
               })
           }).then(() => this.removeLoader())
       }
@@ -418,35 +418,13 @@ export class UI {
             </li>
         `;
   }
-  achivHtml(achiv, gameID) {
+  cheevoBadgeHtml(achiv, gameID) {
     return `    
-            <li class="user-info__achiv-container ${achiv.isHardcoreEarned ? "hardcore" : ""}"  onclick="ui.showAchivDetails(${achiv.ID},${gameID}); event.stopPropagation();">                
-                <div class="user-info__achiv-preview-container">
-                    <img class="user-info__achiv-preview ${(achiv.isHardcoreEarned || ui.isSoftmode && achiv.isEarned) && "earned"}" src="${achiv.prevSrc}" alt="">
-                <div class="game-stats__text achiv-rarity achiv-rarity__${achiv.difficulty} achiv-rarity__circle"> </div>
+            <li class="ach-badge-item ${achiv.isHardcoreEarned ? "hardcore" : ""} ${achiv.isEarned ? "unlocked" : ""}"  onclick="ui.showAchivDetails(${achiv.ID},${gameID}); event.stopPropagation();">                
+                <div class="ach-badge-preview">
+                    <img class="ach-badge-image ${(achiv.isHardcoreEarned || ui.isSoftmode && achiv.isEarned) && "earned"}" src="${achiv.prevSrc}"/>
+                  <div class="game-stats__text achiv-rarity achiv-rarity__${achiv.difficulty} achiv-rarity__circle"></div>
                 </div>
-                <div class="user-info__achiv-description">
-                    <h2 class="user-info__game-title">${achiv.Title}</h2>
-                    <div class="user-info_game-stats-container">
-                        
-                        <div class="game-stats ">
-                        <i class="game-stats__icon game-stats__points-icon"></i>
-                        <div class="game-stats__text">${achiv.Points}</div>
-                        </div>
-                        <div class="game-stats game-stats__points">
-                        <i class="game-stats__icon game-stats__retropoints-icon"></i>
-                        <div class="game-stats__text">${achiv.TrueRatio}</div>
-                        </div>    
-                        <div class="game-stats game-stats__points">
-                        <i class="game-stats__icon game-stats__trending-icon"></i>
-                        <div class="game-stats__text">${achiv.rateEarnedHardcore}</div>
-                        </div>   
-                        <div class="game-stats__difficult-container">
-                          <div class="game-stats__text achiv-rarity achiv-rarity__${achiv.difficulty}"> </div>
-                        </div>
-                  
-                    </div>
-                </div>             
             </li>
         `;
   }
