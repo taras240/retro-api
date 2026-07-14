@@ -19,6 +19,7 @@ export const filterBy = {
     setID: ({ setID }, { targetSet }) => {
         return setID == targetSet
     },
+    disabled: () => true,
 };
 export const cheevosFiterNames = Object.freeze({
     UNLOCKED: "earned",

@@ -432,52 +432,7 @@
     /* font-weight: 600; */
 }
 
-/* Панель сортування / фільтрації */
-.toolbar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 10px;
-    overflow: scroll;
-}
 
-.toolbar select,
-.toolbar button {
-    font-family: inherit;
-    background: #323232;
-    border: 1px solid #3d3d3d;
-    color: #d6d6d6;
-    font-size: 11px;
-    border-radius: 4px;
-    padding: 5px 8px;
-    cursor: pointer;
-}
-
-.toolbar select {
-    width: 8rem;
-}
-
-.toolbar select:hover,
-.toolbar button:hover {
-    background: #3d3d3d;
-}
-
-.toolbar select:focus,
-.toolbar button:focus {
-    outline: 1px solid #2b88d8;
-}
-
-.toolbar .filter-group {
-    display: flex;
-    gap: 4px;
-    margin-left: auto;
-}
-
-.toolbar .filter-group button.active {
-    background: #2b88d8;
-    border-color: #2b88d8;
-    color: #fff;
-}
 
 
 .achievements-section {
@@ -520,74 +475,21 @@
     border-color: var(--accent-color);
 }
 
-.ach-icon {
-    height: 4rem;
-    aspect-ratio: 1;
-    border-radius: 5px;
-    flex-shrink: 0;
-}
 
-.ach-img {
-    width: 100%;
-    aspect-ratio: 1;
-    border-radius: inherit;
-}
 
-.achievement.unlocked .ach-icon {
+.achievement.unlocked .item-icon {
     /* background: linear-gradient(135deg, #f7b733, #c9891a); */
 }
 
-.achievement.locked .ach-icon {
+.achievement.locked .item-icon {
     filter: grayscale(1);
     opacity: 0.5;
 }
 
-.ach-info {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    height: 100%;
-    flex: 1;
-    min-width: 0;
-}
-
-.ach-name {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--font-color);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.achievement.locked .ach-name {
+.achievement.locked .item-name {
     color: var(--secondary-font-color);
 }
 
-.ach-desc {
-    font-size: 0.9rem;
-    color: var(--secondary-font-color);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.ach-points {
-    font-size: 0.9rem;
-    font-weight: bold;
-    color: #f7b733;
-    font-weight: 600;
-    flex-shrink: 0;
-    background: black;
-    width: 2rem;
-    aspect-ratio: 1;
-    border-radius: 100px;
-    display: grid;
-    place-items: center;
-}
-
-.achievement.locked .ach-points {
+.achievement.locked .item-points {
     color: #d6d6d6;
 }

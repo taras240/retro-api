@@ -1,11 +1,11 @@
 import { generateBadges } from "./components/badges.js"
-import { sortBy } from "../functions/sort.js"
+import { cheevosFiterNames, cheevosSortNames, sortBy, filterBy } from "../../../js/functions/sortFilter.js"
 import { apiWorker, config, ui } from "../main.js"
 import { GAMES_DATA } from "../ui-mobile.js"
-import { filterBy } from "../functions/filter.js"
 import { fromHtml } from "../../../js/functions/html.js"
 import { formatDuration } from "../../../js/functions/time.js"
 import { cheevoImageUrl, gameImageUrl } from "../../../js/functions/raLinks.js"
+import { generateContextMenu } from "./components/contextMenu.js"
 
 export
     class Game {
@@ -13,38 +13,24 @@ export
         return {
             label: "Filter by",
             elements: [
-
+                ...Object.values(cheevosFiterNames)
+                    .map(filterName => {
+                        return {
+                            label: filterName,
+                            id: `filter_${filterName}`,
+                            type: "radio",
+                            onChange: `ui.game.filter = '${filterName}'`,
+                            checked: this.filter === filterName,
+                            name: `filter-by-${filterName}`
+                        }
+                    }),
                 {
-                    label: `Progression`,
-                    id: "filter_progression",
+                    label: "disabled",
+                    id: `filter_disabled`,
                     type: "radio",
-                    onChange: "ui.game.filter = 'progression'",
-                    checked: this.filter === 'progression',
-                    name: "filter-by-progression"
-                },
-                {
-                    label: `Missable`,
-                    id: "filter_missable",
-                    type: "radio",
-                    onChange: "ui.game.filter = 'missable'",
-                    checked: this.filter === 'missable',
-                    name: "filter-by-missable"
-                },
-                {
-                    label: `Earned`,
-                    id: "filter_earned",
-                    type: "radio",
-                    onChange: "ui.game.filter = 'earned'",
-                    checked: this.filter === 'earned',
-                    name: "filter-by-earned"
-                },
-                {
-                    label: `Disable`,
-                    id: "filter_all",
-                    type: "radio",
-                    onChange: "ui.game.filter = 'all'",
-                    checked: this.filter === 'all',
-                    name: "filter-by-all"
+                    onChange: `ui.game.filter = 'disabled'`,
+                    checked: this.filter === "disabled",
+                    name: `filter-by-disabled`
                 },
                 {
                     label: "Reverse filter",
@@ -60,56 +46,27 @@ export
     sortContext = () => {
         return {
             label: "Sort by",
-            elements: [
-                {
-                    label: "Earned date",
-                    id: "sort_latest",
-                    type: "radio",
-                    onChange: "ui.game.sortType = 'date'; ",
-                    checked: this.sortType === 'date',
-                    name: "sort-cheevos"
-                },
-                {
-                    label: "Points",
-                    id: "sort_points-count",
-                    type: "radio",
-                    onChange: "ui.game.sortType = 'points'",
-                    checked: this.sortType === 'points',
-                    name: "sort-cheevos"
-                },
-                {
-                    label: "Retropoits",
-                    id: "sort_retropoints-count",
-                    type: "radio",
-                    onChange: "ui.game.sortType = 'truepoints'",
-                    checked: this.sortType === 'truepoints',
-                    name: "sort-cheevos"
-                },
-                {
-                    label: "Rarity",
-                    id: "sort_rarity-count",
-                    type: "radio",
-                    onChange: "ui.game.sortType = 'earnedCount'",
-                    checked: this.sortType === 'earnedCount',
-                    name: "sort-cheevos"
-                },
-                {
-                    label: "Default",
-                    id: "sort_default-count",
-                    type: "radio",
-                    onChange: "ui.game.sortType = 'default'",
-                    checked: this.sortType === 'default',
-                    name: "sort-cheevos"
-                },
-                {
-                    label: "Reverse sort",
-                    id: "sort_reverse-sort",
-                    type: "checkbox",
-                    onChange: "ui.game.sortTypeReverse = this.checked",
-                    checked: this.sortTypeReverse == -1,
-                    name: "sort-cheevos-reverse"
-                },
-            ]
+            elements: [...Object.values(cheevosSortNames)
+                .filter(sortName => ![cheevosSortNames.CUSTOM_ORDER, cheevosSortNames.TIME_TO_UNLOCK].includes(sortName))
+                .map(sortName => {
+                    return {
+                        label: sortName,
+                        id: `context-${sortName}`,
+                        type: "radio",
+                        onChange: `ui.game.sortType = '${sortName}'; `,
+                        checked: this.sortType === sortName,
+                        name: "sort-cheevos"
+                    };
+                }),
+            {
+                label: "Reverse sort",
+                id: "sort_reverse-sort",
+                type: "checkbox",
+                onChange: "ui.game.sortTypeReverse = this.checked",
+                checked: this.sortTypeReverse == -1,
+                name: "sort-cheevos-reverse"
+            },
+            ],
         }
     }
     cheevosListContext = () => {
@@ -141,7 +98,7 @@ export
         this.updateCheevos();
     }
     get filter() {
-        return config.ui?.mobile?.game?.filter ?? "all";
+        return config.ui?.mobile?.game?.filter ?? "disabled";
     }
     set filter(value) {
         config.ui.mobile.game.filter = value;
@@ -185,12 +142,17 @@ export
         this.update();
     }
     updateCheevos() {
-        this.achievements = Object.values(GAMES_DATA[this.gameID].Achievements);
+        this.achievements = Object.values(GAMES_DATA[this.gameID]?.Achievements ?? {});
+        if (this.filter === "disabled") this.achievements = this.achievements.filter(c => true);
+        else {
+            this.achievements = this.achievements
+                .filter(a => this.filterReverse ?
+                    !filterBy[this.filter](a) : filterBy[this.filter](a)
+                );
 
-        this.achievements = this.achievements.filter(a => this.filterReverse ^ filterBy[this.filter](a));
-        this.achievements = this.achievements.sort((a, b) => this.sortTypeReverse * sortBy[this.sortType](a, b))
-        const cheevosList = document.querySelector(".game-achivs__container");
-        cheevosList.innerHTML = this.AchievementsListHtml();
+        }
+        this.achievements = this.achievements.sort((a, b) => this.sortTypeReverse * sortBy[this.sortType](a, b));
+        this.updateGameSection();
     }
     getSectionElement() {
         const section = document.createElement("div");
@@ -205,59 +167,55 @@ export
         const trend = ~~(1000 * achiv.NumAwardedHardcore / this.gameData.NumDistinctPlayers) / 10;
 
         return `
-      <li class="achiv__achiv-container ${achiv.isHardcoreEarned ? "hardcore" : ""}" onclick="ui.showAchivDetails(${achiv.ID}, ${this.gameID}); event.stopPropagation()">
-        <div class="achiv__title-container">
-            <div class="achiv__preview-container">
-                <img class="user-info__achiv-preview ${achiv.isHardcoreEarned || (ui.isSoftmode && achiv.isEarned) ? "earned" : ""}"
-                    src="https://media.retroachievements.org/Badge/${achiv.BadgeName}.png" alt="">
-            </div>
-
-            <div class="achiv__achiv-description">
-                <h2 class="achiv__achiv-title">${achiv.Title}</h2>
-                <p class="achiv__achiv-text">${achiv.Description}</p>
-                <div class="achiv__icons">
-              <div class="game-stats ">
-                  <i class="game-stats__icon game-stats__points-icon"></i>
-                  <div class="game-stats__text">${achiv.Points}</div>
-              </div>
-              <div class="game-stats game-stats__points">
-                  <i class="game-stats__icon game-stats__retropoints-icon"></i>
-                  <div class="game-stats__text">${achiv.TrueRatio}</div>
-              </div>
-              <div class="game-stats game-stats__points">
-                  <i class="game-stats__icon game-stats__trending-icon"></i>
-                  <div class="game-stats__text">${~~trend}%</div>
-              </div>
-              <div class="game-stats game-stats__points">
-                  <div class="game-stats__text achiv-rarity achiv-rarity__${achiv.difficulty}">${achiv.difficulty}</div>
-              </div>
-            </div>
-            </div>
-            
-        </div>
-        
-      </li>
-    
-    `
+            <li class="achiv__achiv-container ${achiv.isHardcoreEarned ? "hardcore" : ""}" onclick="ui.showAchivDetails(${achiv.ID}, ${this.gameID}); event.stopPropagation()">
+                <div class="achiv__title-container">
+                    <div class="achiv__preview-container">
+                        <img class="user-info__achiv-preview ${achiv.isHardcoreEarned || (ui.isSoftmode && achiv.isEarned) ? "earned" : ""}"
+                            src="https://media.retroachievements.org/Badge/${achiv.BadgeName}.png" alt="">
+                    </div>
+                    <div class="achiv__achiv-description">
+                        <h2 class="achiv__achiv-title">${achiv.Title}</h2>
+                        <p class="achiv__achiv-text">${achiv.Description}</p>
+                        <div class="achiv__icons">
+                            <div class="game-stats ">
+                                <i class="game-stats__icon game-stats__points-icon"></i>
+                                <div class="game-stats__text">${achiv.Points}</div>
+                            </div>
+                            <div class="game-stats game-stats__points">
+                                <i class="game-stats__icon game-stats__retropoints-icon"></i>
+                                <div class="game-stats__text">${achiv.TrueRatio}</div>
+                            </div>
+                            <div class="game-stats game-stats__points">
+                                <i class="game-stats__icon game-stats__trending-icon"></i>
+                                <div class="game-stats__text">${~~trend}%</div>
+                            </div>
+                            <div class="game-stats game-stats__points">
+                                <div class="game-stats__text achiv-rarity achiv-rarity__${achiv.difficulty}">${achiv.difficulty}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        `
     }
     AchievementsListHtml() {
         return `
-      <div class="section__control-container">
-        <button class=" simple-button" onclick="generateContextMenu(ui.game.sortContext(),event)">Sort</button>
-        <button class="games-platform-filter simple-button" 
-          onclick="generateContextMenu(ui.game.filterContext(),event)">
-          ${this.platformFilter ?? "Filter"}
-        </button>
-        <button class="games-items-type simple-button" 
-          onclick="generateContextMenu(ui.game.cheevosListContext(),event)">
-          ${this.listType ?? "List"}
-        </button>
-      </div>
-      ${this.achievements.reduce((elementsHtml, achiv) => {
+            <div class="section__control-container">
+                <button class=" simple-button" onclick="generateContextMenu(ui.game.sortContext(),event)">Sort</button>
+                <button class="games-platform-filter simple-button" 
+                onclick="generateContextMenu(ui.game.filterContext(),event)">
+                ${this.platformFilter ?? "Filter"}
+                </button>
+                <button class="games-items-type simple-button" 
+                onclick="generateContextMenu(ui.game.cheevosListContext(),event)">
+                ${this.listType ?? "List"}
+                </button>
+            </div>
+            ${this.achievements.reduce((elementsHtml, achiv) => {
             elementsHtml += this.AchievementHtml(achiv);
             return elementsHtml;
         }, "")}
-    `;
+        `;
     }
     SectionHeaderHtml() {
         const earnedData = ui.isSoftmode ? {
@@ -348,7 +306,7 @@ export
             const section = this.generateGameSection(this.gameData);
             ui.content.innerHTML = "";
             ui.content.append(section);
-            this.updateGameSection(this.gameData);
+            this.updateCheevos(this.gameData);
             ui.removeLoader();
         }
         else {
@@ -359,6 +317,7 @@ export
     }
 
     updateGameSection(gameData) {
+        gameData ??= this.gameData;
         const updateGameBar = (gameData) => {
             const { ImageIcon, Title, ConsoleName, Developer, UserTotalPlaytime, TotalPoints } = gameData;
 
@@ -384,14 +343,14 @@ export
                 const { Title, Description, Points, BadgeName, DateEarnedHardcore } = cheevo;
                 const element = fromHtml(`
                     <div class="list-item achievement ${DateEarnedHardcore ? 'unlocked' : 'locked'}">
-                        <div class="ach-icon">
-                            <img class="ach-img" src="${cheevoImageUrl({ BadgeName })}"/>
+                        <div class="item-icon">
+                            <img class="item-img" src="${cheevoImageUrl({ BadgeName })}"/>
                         </div>
                         <div class="item-meta">
-                            <div class="ach-name">${Title}</div>
-                            <div class="ach-desc">${Description}</div>
+                            <div class="item-name">${Title}</div>
+                            <div class="item-desc">${Description}</div>
                         </div>
-                        <div class="ach-points">${Points}</div>
+                        <div class="item-points">${Points}</div>
                     </div>
                 `);
                 element.addEventListener("click", (event) => {
@@ -401,12 +360,17 @@ export
                 })
                 return element;
             }
+            const updateButtons = () => {
+                document.querySelector("#sort-name").innerHTML = this.sortType;
+                document.querySelector("#filter-name").innerHTML = this.filter;
+            }
             const container = document.querySelector(".achievement-list");
             container.innerHTML = "";
-            Object.values(gameData.Achievements).sort((a, b) => sortBy.date(a, b)).forEach(cheevo => {
+            this.achievements.forEach(cheevo => {
                 const achievementElement = AchievementElement(cheevo, gameData);
                 container.append(achievementElement)
             })
+            updateButtons();
         }
 
         updateGameBar(gameData);
@@ -456,22 +420,30 @@ export
                 <div class="achievements-section">
                     <div class="section-title">Achievements</div>
                     <div class="toolbar">
-                        <select>
+                        <button id="sort-ach-button" class="btn btn-exp">Sort By: <span id="sort-name"></span></button>
+                        <button id="filter-ach-button" class="btn btn-exp">Filter By: <span id="filter-name"></span></button>
+                        <!--<select>
                             <option>Default</option>
                             <option>Unlock Rate</option>
                             <option>Points</option>
                             <option>Unlocked First</option>
                         </select>
                         <div class="filter-group">
-                            <button class="active">All</button>
-                            <button>Unlocked</button>
-                            <button>Missable</button>
-                            <button>Progression</button>
-                        </div>
+                            <button class="btn active">All</button>
+                            <button class="btn">Unlocked</button>
+                            <button class="btn">Missable</button>
+                            <button class="btn">Progression</button>
+                        </div>-->
                     </div>
                     <div class="achievement-list"></div>
                 </div>
             `);
+            element.querySelector("#sort-ach-button").addEventListener("click", event => {
+                generateContextMenu(this.sortContext(), event)
+            });
+            element.querySelector("#filter-ach-button").addEventListener("click", event => {
+                generateContextMenu(this.filterContext(), event)
+            })
             return element;
         }
         const section = fromHtml(`
