@@ -89,7 +89,7 @@ export
         }
     }
     get sortType() {
-        return config.ui?.mobile?.game?.sortType ?? "title";
+        return config.ui?.mobile?.game?.sortType ?? cheevosSortNames.DEFAULT;
     }
     set sortType(value) {
         config.ui.mobile.game.sortType = value;
@@ -147,11 +147,11 @@ export
         else {
             this.achievements = this.achievements
                 .filter(a => this.filterReverse ?
-                    !filterBy[this.filter](a) : filterBy[this.filter](a)
+                    !filterBy[this.filter]?.(a) : filterBy[this.filter]?.(a)
                 );
 
         }
-        this.achievements = this.achievements.sort((a, b) => this.sortTypeReverse * sortBy[this.sortType](a, b));
+        this.achievements = this.achievements.sort((a, b) => this.sortTypeReverse * sortBy[this.sortType]?.(a, b));
         this.updateGameSection();
     }
     getSectionElement() {
