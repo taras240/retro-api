@@ -35,16 +35,16 @@ export function recentCheevoElement(cheevo, gameData) {
     const unlockClass = (HardcoreAchieved || DateEarned) ? 'unlocked' : 'locked';
     const element = fromHtml(`
                     <div class="list-item achievement ${unlockClass}">
-                        <div class="ach-icon">
-                            <img class="ach-img" src="${cheevoImageUrl({ BadgeName })}"/>
+                        <div class="item-icon">
+                            <img class="item-img" src="${cheevoImageUrl({ BadgeName })}"/>
                         </div>
                         <div class="item-meta">
-                            <div class="ach-name">${Title}</div>
-                            <div class="ach-desc">${Description}</div>
+                            <div class="item-name">${Title}</div>
+                            <div class="item-desc">${Description}</div>
                             <div class="game-stats__text cheevo-stats__unlocked">${getDeltaTime(DateEarned)}</div>
 
                         </div>
-                        <div class="ach-points">${Points}</div>
+                        <div class="item-points">${Points}</div>
                     </div>
                 `);
     element.addEventListener("click", (event) => {
