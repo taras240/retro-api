@@ -481,6 +481,17 @@
     /* background: linear-gradient(135deg, #f7b733, #c9891a); */
 }
 
+.achievement.unlocked {
+    /* background: linear-gradient(135deg, #f7b733, #c9891a); */
+    border-left: 2px solid silver;
+}
+
+.achievement.unlocked.hardcore {
+    /* background: linear-gradient(135deg, #f7b733, #c9891a); */
+    border-left: 2px solid goldenrod;
+
+}
+
 .achievement.locked .item-icon {
     filter: grayscale(1);
     opacity: 0.5;

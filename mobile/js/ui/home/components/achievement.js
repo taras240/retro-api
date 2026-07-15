@@ -25,6 +25,7 @@ export function recentCheevoElement(cheevo, gameData) {
         ID,
         GameID,
         HardcoreAchieved,
+        HardcoreMode,
         IsAwarded,
         DateEarned,
         BadgeName,
@@ -34,15 +35,15 @@ export function recentCheevoElement(cheevo, gameData) {
     gameData ??= { ID: GameID }
     const unlockClass = (HardcoreAchieved || DateEarned) ? 'unlocked' : 'locked';
     const element = fromHtml(`
-                    <div class="list-item achievement ${unlockClass}">
+                    <div class="list-item achievement ${unlockClass} ${DateEarnedHardcore || HardcoreMode ? 'hardcore' : ''}">
                         <div class="item-icon">
                             <img class="item-img" src="${cheevoImageUrl({ BadgeName })}"/>
                         </div>
                         <div class="item-meta">
                             <div class="item-name">${Title}</div>
                             <div class="item-desc">${Description}</div>
+                            
                             <div class="game-stats__text cheevo-stats__unlocked">${getDeltaTime(DateEarned)}</div>
-
                         </div>
                         <div class="item-points">${Points}</div>
                     </div>

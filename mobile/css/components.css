@@ -36,6 +36,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
+    gap: 3px;
     flex: 1;
     min-width: 0;
 }
@@ -57,6 +58,17 @@
     text-overflow: ellipsis;
 }
 
+.item-icons-row {
+    font-size: 0.9rem;
+    color: var(--font-color);
+    white-space: nowrap;
+    overflow-x: scroll;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+}
+
 .item-points {
     font-size: 0.9rem;
     font-weight: bold;
@@ -71,6 +83,15 @@
     place-items: center;
 }
 
+.list-badge-item {
+    align-self: center;
+    background: var(--main-color);
+    color: var(--font-color);
+    padding: 0.1rem 1rem;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    border: 1px solid var(--main-color);
+}
 
 /* Панель сортування / фільтрації */
 .toolbar {
@@ -125,5 +146,17 @@
 .btn.active {
     background: #2b88d8;
     border-color: #2b88d8;
+    color: #fff;
+}
+
+.badge {
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-size: 0.9em;
+    display: inline-block;
+}
+
+.badge.badge_solid-black {
+    background: black;
     color: #fff;
 }

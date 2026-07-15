@@ -44,7 +44,7 @@ export class Favourites {
         const gamesHeader = document.createElement("div");
         gamesHeader.classList.add("section__header-container");
         gamesHeader.innerHTML = `
-        <div class="section__header-title">Favourites</div>
+        <div class="section__header-title">Want To Play</div>
         <div class="section__control-container">
         <!--  <button class=" simple-button" onclick="generateContextMenu(ui.library.gamesSortContext(),event)">Sort</button>
             <button class="games-platform-filter simple-button" onclick="generateContextMenu(ui.library.gamesPlatformContext(),event)">${this.platformFilter ?? "Platform"}</button>

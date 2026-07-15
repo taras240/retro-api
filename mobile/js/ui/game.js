@@ -340,17 +340,27 @@ export
         }
         const updateAchievements = (gameData) => {
             function AchievementElement(cheevo, gameData) {
-                const { Title, Description, Points, BadgeName, DateEarnedHardcore } = cheevo;
+                const { Title, Description, Points, TrueRatio: TruePoints, BadgeName, DateEarnedHardcore, DateEarned, NumAwardedHardcore, rateEarnedHardcore } = cheevo;
+                // const { NumDistinctPlayersHardcore } = gameData;
+                // const unlockRate = Math.round(100 * NumDistinctPlayersHardcore / NumAwardedHardcore) / 100;
+                const earnedDate = DateEarnedHardcore || DateEarned;
+                const trueRatio = Math.round(100 * TruePoints / Points) / 100;
                 const element = fromHtml(`
-                    <div class="list-item achievement ${DateEarnedHardcore ? 'unlocked' : 'locked'}">
+                    <div class="list-item achievement ${DateEarned ? 'unlocked' : 'locked'} ${DateEarnedHardcore ? 'hardcore' : ''}">
                         <div class="item-icon">
                             <img class="item-img" src="${cheevoImageUrl({ BadgeName })}"/>
                         </div>
                         <div class="item-meta">
                             <div class="item-name">${Title}</div>
                             <div class="item-desc">${Description}</div>
+                            <div class="item-icons-row">
+                                <span>${Points}pts.</span>
+                                <span class="badge badge_solid-black">⨯${trueRatio}</span>
+                                <span>◔ ${rateEarnedHardcore}</span>
+                                <span>${earnedDate ? new Date(earnedDate).toLocaleString() : ""}</span>
+                            </div>
                         </div>
-                        <div class="item-points">${Points}</div>
+                        <!--<div class="item-points">${Points}</div>-->
                     </div>
                 `);
                 element.addEventListener("click", (event) => {
