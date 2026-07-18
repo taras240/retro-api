@@ -8,7 +8,7 @@ export async function initSubsets() {
     }
 
     const cachedSubsets = [];
-    const fileSubsets = await fetch(new URL("../../../json/games/all-subsets.json", import.meta.url)).then(resp => resp.json());
+    const fileSubsets = await fetch(`./json/games/all-subsets.json`).then(resp => resp.json());
 
     const subsets = cachedSubsets.length >= fileSubsets.length ? cachedSubsets : fileSubsets;
     _subsetsList = {};
