@@ -1,7 +1,7 @@
 import { ONLINE_STATUS } from "../../enums/onlineStatus.js";
 
 export function onlineChecker({ getLastPlayedFunc, currentStatus, options = {} } = {}) {
-    const rpTimeout = typeof options.rpTimeout === 'number' ? options.rpTimeout : 3 * 60 * 1000; // default 3 minutes
+    const rpTimeout = typeof options.rpTimeout === 'number' ? options.rpTimeout : 5 * 60 * 1000; // default 5 minutes
     const lastPlayedTimeout = typeof options.lastPlayedTimeout === 'number' ? options.lastPlayedTimeout : 5 * 60 * 1000; // default 5 minutes
 
     const parseDate = (value) => {
@@ -27,7 +27,7 @@ export function onlineChecker({ getLastPlayedFunc, currentStatus, options = {} }
     }
 
     const check = async ({ lastPlayedGame, richPresence } = {}) => {
-        status = ONLINE_STATUS.offline;
+        // status = ONLINE_STATUS.offline;
         const now = Date.now();
         lastCheckOnline = now;
 
@@ -37,7 +37,7 @@ export function onlineChecker({ getLastPlayedFunc, currentStatus, options = {} }
         }
 
         // If no RP or we still need confirmation, check last played timestamp
-        if (lastPlayedGame || status === ONLINE_STATUS.offline) {
+        if (lastPlayedGame || status === ONLINE_STATUS.offline || (!lastPlayedGame && !richPresence)) {
             if (!lastPlayedGame && typeof getLastPlayedFunc === 'function') {
                 try {
                     lastPlayedGame = await getLastPlayedFunc();
@@ -47,9 +47,13 @@ export function onlineChecker({ getLastPlayedFunc, currentStatus, options = {} }
             }
 
             const lastPlayedDate = lastPlayedGame && lastPlayedGame.LastPlayed ? parseDate(lastPlayedGame.LastPlayed) : null;
+            console.log({ lastPlayedDate, now, delta: now - lastPlayedDate, lastPlayedTimeout });
             if (lastPlayedDate && (now - lastPlayedDate) < lastPlayedTimeout) {
                 status = ONLINE_STATUS.online;
                 lastSeenOnline = now;
+            }
+            else {
+                lastSeenOnline = lastPlayedDate.getTime();
             }
         }
 
@@ -58,7 +62,7 @@ export function onlineChecker({ getLastPlayedFunc, currentStatus, options = {} }
     const updateWithRPMessage = async ({ richPresence }) => {
         const now = Date.now();
         if (!lastRPMessage) {
-            await check({});
+            // await check({});
             lastRPMessage = richPresence;
         }
         else if (richPresence !== lastRPMessage) {

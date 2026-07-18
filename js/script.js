@@ -4,6 +4,7 @@ import { Watcher } from "./watcher.js";
 import { initSubsets } from "./functions/api/subsets.js";
 import { isSupported } from "./functions/main/isSupported.js";
 import { fromHtml } from "./functions/html.js";
+import { initRaapi } from "./api/index.js";
 let config, ui, watcher, APIEvents, UIEvents, userAuthData;
 const userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
@@ -20,12 +21,15 @@ else {
   APIEvents = new EventTarget();
   UIEvents = new EventTarget();
   config = new Config();
+  initRaapi(config);
   ui = new UI();
   watcher = new Watcher();
   window.ui = ui;
   window.config = config;
   window.configData = config.configData;
   window.watcher = watcher;
+  window.APIEvents = APIEvents;
+  window.UIEvents = UIEvents;
 
   if (window.__TAURI__) {
     let requestId = 0;

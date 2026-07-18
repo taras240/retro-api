@@ -60,7 +60,7 @@
 
 .item-icons-row {
     font-size: 0.9rem;
-    color: var(--font-color);
+    color: var(--secondary-font-color);
     white-space: nowrap;
     overflow-x: scroll;
     display: flex;

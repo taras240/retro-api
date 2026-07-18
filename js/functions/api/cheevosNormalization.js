@@ -1,5 +1,4 @@
 import { CACHE_TYPES } from "../../enums/cacheDataTypes.js";
-import { config } from "../../script.js";
 import { cheevoImageUrl } from "../raLinks.js";
 import { filterBy, sortBy } from "../sortFilter.js";
 import { getCheevoDifficulty } from "./cheevoDifficulty.js";
@@ -8,6 +7,7 @@ import { parseCheevosGenres } from "./genreParser.js";
 import { parseCheevoLevels } from "./levelParser.js";
 
 const normalizeAchievement = (achievement, gameData, savedGameData) => {
+    const { config } = window;
     const gameID = gameData.ID;
     const { BadgeName, DateEarned, DateEarnedHardcore, NumAwardedHardcore, NumAwarded, TrueRatio, ID, Points, DisplayOrder } = achievement;
     const { NumDistinctPlayers } = gameData;
@@ -33,7 +33,7 @@ const normalizeAchievement = (achievement, gameData, savedGameData) => {
         retroRatio,
         difficulty: getCheevoDifficulty(trend, TrueRatio, NumAwardedHardcore),
         customOrder: cheevosCustomOrder[ID] ?? DisplayOrder,
-        ...config.cheevosDB[ID], // Load edited props
+        ...config.cheevosDB?.[ID] ?? {}, // Load edited props
     }
 }
 const parseCheevoGroups = (gameData) => {

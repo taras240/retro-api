@@ -1,4 +1,3 @@
-import { APIEvents, ui, watcher } from "../script.js";
 import { getRecentlyPlayedGames } from './handlers/user/recentlyPlayedGames.js';
 import { getUserProfile } from './handlers/user/userProfile.js';
 import { getUserSummary } from './handlers/user/userSummary.js';
@@ -11,7 +10,6 @@ import * as game from './handlers/game.js';
 import * as achievement from './handlers/achievement.js';
 import { getConsolesList } from './handlers/systems/consolesList.js';
 import { getConsoleGameList } from './handlers/systems/consoleGameList.js';
-
 const handlers = {
     getRecentlyPlayedGames,
     getUserProfile,
@@ -28,14 +26,15 @@ const handlers = {
 };
 
 export async function call(method, ...params) {
-    APIEvents.dispatchEvent(new CustomEvent("APIRequest"));
+    const { ui, APIEvents } = window;
+    APIEvents?.dispatchEvent(new CustomEvent("APIRequest"));
 
     try {
         const result = await handlers[method](...(params || []));
-        ui.showAPIError(false);
+        ui?.showAPIError?.(false);
         return result;
     } catch (error) {
-        ui.showAPIError(true, `RA API [${method}] ${error}`);
         console.error(error.message);
+        ui?.showAPIError?.(true, `RA API [${method}] ${error}`);
     }
 }

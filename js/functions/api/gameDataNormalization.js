@@ -1,6 +1,5 @@
 import { CHEEVO_TYPES } from "../../enums/cheevoTypes.js";
 import { GAME_AWARD_TYPES } from "../../enums/gameAwards.js";
-import { config } from "../../script.js";
 import { addReleaseBadges } from "../releaseTypeParser.js";
 import { sortBy } from "../sortFilter.js";
 import { normalizeCheevos } from "./cheevosNormalization.js";

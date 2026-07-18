@@ -4,31 +4,34 @@ import { groupSubsets } from "../functions/api/groupSubsets.js";
 import { getSubsets } from "../functions/api/subsets.js";
 import { delay } from "../functions/delay.js";
 import { calcEtaTimeToBeat } from "../functions/estimatedTime.js";
-import { config, configData } from "../script.js";
 import { call } from "./api.js";
 
 
-const getUsername = (username) => username || configData.targetUser || config.USER_NAME;
+let { API_KEY, USER_NAME, cache, gamesDB, configData } = window.config ?? {};
 
+const getUsername = (username) => username || configData.targetUser || USER_NAME;
+export const initRaapi = (config) => {
+    ({ API_KEY, USER_NAME, cache, gamesDB, configData } = config ?? {});
+}
 export const raapi = {
     getUserProfile({ username }) {
         return call('getUserProfile', {
             username: getUsername(username),
-            apiKey: config.API_KEY,
+            apiKey: API_KEY,
         });
     },
     getUserSummary({ username, games = 3, cheevos = 5 }) {
         return call('getUserSummary', {
-            username: username || configData.targetUser || config.USER_NAME,
+            username: getUsername(username),
             games,
             cheevos,
-            apiKey: config.API_KEY
+            apiKey: API_KEY
         });
     },
     async getWantToPlayGamesList({ username, count = 50, offset = 0 }) {
         const wtpList = await call('getWantToPlayGamesList', {
-            apiKey: config.API_KEY,
-            username: config.USER_NAME,// getUsername(username),
+            apiKey: API_KEY,
+            username: USER_NAME,// getUsername(username),
             count,
             offset,
         });
@@ -37,14 +40,14 @@ export const raapi = {
 
     getRecentlyPlayedGames({ username, count = 50 }) {
         return call('getRecentlyPlayedGames', {
-            apiKey: config.API_KEY,
+            apiKey: API_KEY,
             username: getUsername(username),
             count,
         });
     },
     getComments({ id, offset = 0, count = 200, type = 2, sort = "-submitted" }) {
         return call("getComments", {
-            apiKey: config.API_KEY,
+            apiKey: API_KEY,
             id: getUsername(id),
             type,
             offset,
@@ -54,19 +57,19 @@ export const raapi = {
     },
     getCheevoComments({ cheevoID }) {
         return call("getCheevoComments", {
-            apiKey: config.API_KEY,
+            apiKey: API_KEY,
             cheevoID,
         })
     },
     getGameComments({ gameID }) {
         return call("getGameComments", {
-            apiKey: config.API_KEY,
+            apiKey: API_KEY,
             gameID,
         })
     },
     getUserComments({ username }) {
         return call("getUserComments", {
-            apiKey: config.API_KEY,
+            apiKey: API_KEY,
             gameID: username,
         })
     },
@@ -77,10 +80,10 @@ export const raapi = {
             timesData = await raapi.getGameTimesInfo({ gameID });
         }
         const gameData = await call("getGameInfoAndUserProgress", {
-            apiKey: config.API_KEY,
+            apiKey: API_KEY,
             username: getUsername(username),
             gameID,
-            config: { gamesDB: config.gamesDB },
+            config: { gamesDB },
             subsets,
             timesData,
         });
@@ -89,14 +92,14 @@ export const raapi = {
         return gameData;
     },
     async getGameTimesInfo({ gameID, preferHardcore = false }) {
-        const cachedData = config.cache.getData({ dataType: CACHE_TYPES.GAME_TIMES, ID: gameID });
+        const cachedData = cache.getData({ dataType: CACHE_TYPES.GAME_TIMES, ID: gameID });
         if (!cachedData?.cachedDate || (Date.now() - cachedData.cachedDate > 3600e3 * 24 * 7)) {
             const timesData = await call("getGameTimesInfo", {
-                apiKey: config.API_KEY,
+                apiKey: API_KEY,
                 gameID,
                 preferHardcore
             });
-            config.cache.push({
+            cache.push({
                 dataType: CACHE_TYPES.GAME_TIMES,
                 data: timesData
             });
@@ -106,21 +109,21 @@ export const raapi = {
     },
     getUserRecentAchievements({ username, minutes = 60 }) {
         return call("getUserRecentAchievements", {
-            apiKey: config.API_KEY,
+            apiKey: API_KEY,
             username: getUsername(username),
             minutes
         })
     },
     async getAotW({ username }) {
-        const cachedData = config.cache.getData({ dataType: CACHE_TYPES.AOTW });
+        const cachedData = cache.getData({ dataType: CACHE_TYPES.AOTW });
         if (cachedData?.endTime && cachedData.endTime - Date.now() > 0) {
             return cachedData;
         }
         const aotwData = await call("getAotW", {
-            apiKey: config.API_KEY,
+            apiKey: API_KEY,
             username,
         });
-        config.cache.push({
+        cache.push({
             dataType: CACHE_TYPES.AOTW,
             data: aotwData
         });
@@ -130,29 +133,29 @@ export const raapi = {
     async getUserCompletionProgress({ username, count, offset = 0 } = {}) {
         if (!count) return cachedCompletionProgress(getUsername(username));
         return call('getUserCompletionProgress', {
-            apiKey: config.API_KEY,
+            apiKey: API_KEY,
             username: getUsername(username),
             count: count || 500,
             offset,
-            cachedData: config.cache.getData({ dataType: CACHE_TYPES.COMPLETION_PROGRESS }),
+            cachedData: cache.getData({ dataType: CACHE_TYPES.COMPLETION_PROGRESS }),
         })
     },
     getUserAwards({ username }) {
         return call("getUserAwards", {
-            apiKey: config.API_KEY,
+            apiKey: API_KEY,
             username: getUsername(username),
         })
     },
 
     getConsolesList({ activeOnly = true }) {
         return call("getConsolesList", {
-            apiKey: config.API_KEY,
+            apiKey: API_KEY,
             activeOnly,
         })
     },
     getConsoleGameList({ ID }) {
         return call("getConsoleGameList", {
-            apiKey: config.API_KEY,
+            apiKey: API_KEY,
             ID,
         })
     },
@@ -165,7 +168,7 @@ export const raapi = {
             const consoleSubsets = groupSubsets(games);
             gamesList.push(...consoleSubsets);
         }
-        config.cache.push({ dataType: CACHE_TYPES.SUBSETS_LIST, data: gamesList });
+        cache.push({ dataType: CACHE_TYPES.SUBSETS_LIST, data: gamesList });
         return gamesList;
     },
     async getUserPlayedGames({ username }) {
@@ -185,7 +188,7 @@ export const raapi = {
             const lastPlayed = await fetch(
                 `/api/raapi/getRecentlyPlayedGames?username=${getUsername(username)}`,
                 {
-                    headers: { 'x-api-key': config.API_KEY, }
+                    headers: { 'x-api-key': API_KEY, }
                 }
             ).then(r => r.json());
             return lastPlayed;
