@@ -1,10 +1,12 @@
 import { RA_PLATFORM_CODES } from "../../enums/RAPlatforms.js";
 import { gameUrl } from "../raLinks.js";
 
-export function searchByTitle({ Title }) {
+export function searchByTitle({ Title, ConsoleName, ConsoleID }) {
     if (!Title) return;
+    ConsoleName ??= ConsoleID ? RA_PLATFORM_CODES[ConsoleID]?.Name : "";
+    ConsoleName = ConsoleName?.split("/")?.[0] ?? "";
     const query = encodeURIComponent(
-        `"${Title}" (${romSearchQuery})`
+        `"${Title}" "${ConsoleName}" (${romSearchQuery})`
     );
     searchQuery(query);
 }
@@ -16,8 +18,9 @@ export function openGameInRA({ ID }) {
 export function searchFaqByGame({ Title, ConsoleName, ConsoleID }) {
     if (!Title) return;
     ConsoleName ??= ConsoleID ? RA_PLATFORM_CODES[ConsoleID]?.Name : "";
+    ConsoleName = ConsoleName?.split("/")?.[0] ?? "";
     const query = encodeURIComponent(
-        `"${Title}" "${ConsoleName?.split("/")[0]}" (${faqSearchQuery})`
+        `"${Title}" "${ConsoleName}" (${faqSearchQuery})`
     );
     searchQuery(query);
 }
