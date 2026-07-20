@@ -85,7 +85,7 @@ export class UI {
     this.app = document.querySelector(".wrapper");
     this.buttons = new SidePanel();
     // this.statusPanel = new StatusPanel();
-    new WiiEvent();
+    // new WiiEvent();
     this.statusPanel = new Status("statusPanel", true);
     this.status = new Status("status", false);
     this.cheevos = new AchievementsBlock(1);
