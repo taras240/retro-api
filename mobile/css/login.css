@@ -12,12 +12,13 @@
     align-items: center;
     justify-content: space-evenly;
     gap: 3rem;
-    height: 500px;
-    padding: 0 3rem;
+    /* background: var(--main-color); */
+    border-radius: var(--border-radius);
+    padding: 2rem;
 }
 
 .login__image-container {
-    width: 15rem;
+    width: 75%;
 
 }
 
@@ -29,6 +30,7 @@
     display: flex;
     flex-direction: column;
     gap: 3rem;
+    width: 100%;
 }
 
 .login__input {
@@ -37,8 +39,8 @@
     color: var(--font-color);
     width: 100%;
     border-radius: 0.5rem;
-    background-color: var(--secondary-color);
-    border: .1rem solid transparent;
+    background-color: var(--main-color);
+    border: .1rem solid var(--main-color);
     text-align: center;
 }
 
@@ -50,10 +52,9 @@
     display: inline-block;
     font-size: 1rem;
     padding: 0.5rem;
-    background-color: var(--secondary-color);
+    background-color: var(--main-color);
     border-radius: .5rem;
     margin-top: 1rem;
-    align-self: flex-end;
 }
 
 .login__apikey-link:active {

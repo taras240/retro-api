@@ -1,6 +1,6 @@
 <div class="login__container">
     <div class="login__image-container">
-        <img src="../assets/img/ra.png" alt="" class="login__image">
+        <img src="../assets/img/tr_logo.png" alt="" class="login__image">
     </div>
     <div class="login__input-container">
         <input class="login__input" id="login_user-name" autocapitalize="none" placeholder="User name" type="text"
@@ -8,11 +8,11 @@
         <div class="">
             <input class="login__input" id="login__api-key" autocapitalize="none" placeholder="API key" type="password"
                 name="login" id="login_user-name">
-            <a class="login__apikey-link" target="_blank" href="https://retroachievements.org/controlpanel.php">Get
+            <a class="login__apikey-link" target="_blank"
+                href="https://retroachievements.org/settings?tab=applications">Get
                 RA API Key</a>
         </div>
 
     </div>
-    <button class="login__input login__submit-button" id="login__submit-button" onclick="submitRAData()">Submit</button>
-
+    <button class="login__input login__submit-button" id="login__submit-button">Submit</button>
 </div>

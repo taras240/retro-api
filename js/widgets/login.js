@@ -1,4 +1,5 @@
 import { fromHtml } from "../functions/html.js";
+import { getRaKeyUrl } from "../functions/raLinks.js";
 import { ui } from "../script.js";
 
 export function LoginWindowElement(config) {
@@ -47,7 +48,7 @@ export function LoginWindowElement(config) {
                     <div class="login-form__container">
                         <div class="login__header-container">
                             <div class="ra-img__container">
-                                <img src="./assets/img/ra.png" alt="" srcset="" class="ra-img">
+                                <img src="./assets/img/tr_logo.png" alt="" srcset="" class="ra-img">
                             </div>
                             <h1 class="login__header">Retrocheevos</h1>
                             <p class="login__description">Unofficial retroachivements.org tracker</p>
@@ -60,7 +61,7 @@ export function LoginWindowElement(config) {
                             <input type="password" id="login__ra-api" class="login__input login__text-input">
                             <label for="login__ra-api" class="login__input-label">${ui.lang.raAPIKey}</label>
                             <a class="login__get-api" data-title="${ui.lang.gotoRASettings}"
-                                href="https://retroachievements.org/controlpanel.php" target="_blank">${ui.lang.getAPIKey}</a>
+                                href="${getRaKeyUrl}" target="_blank">${ui.lang.getAPIKey}</a>
                         </div>
                         <div class="login__buttons-container">
                             <button class="login__input login__button-input" id="submit-login">Submit</button>
