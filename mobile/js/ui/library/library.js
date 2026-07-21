@@ -174,8 +174,7 @@ export class Library {
     }
     async getAllGames() {
         try {
-
-            this.GAMES = await gamesFromJson("../../../json/games/all_min.json");
+            this.GAMES = await gamesFromJson("../json/games/all_min.json");
 
 
         } catch (error) {
