@@ -321,7 +321,7 @@ export class UI {
       setTimeout(() => {
         errorElement?.remove();
         this.hasApiError = false;
-      }, 60e3);
+      }, 5e3);
       ui.app.append(errorElement);
       return;
     }
