@@ -731,7 +731,7 @@ export class Target extends Widget {
             cheevo.dataset.customOrder = cheevos[cheevoID].customOrder;
         })
         if (this.uiProps.sortName === cheevosSortNames.CUSTOM_ORDER) {
-            this.applySorting();
+            this.applySort();
         }
 
     }
@@ -902,6 +902,7 @@ export class Target extends Widget {
         }
     }
     applySort(props = { animation: 500 }) {
+        if (this.searchInput?.value) return;
         applySort({
             container: this.container,
             itemClassName: ".target-achiv",
