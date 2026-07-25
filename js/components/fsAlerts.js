@@ -1,4 +1,3 @@
-import { configData, ui } from "../script.js";
 import { ALERT_TYPES } from "../enums/alerts.js";
 import { badgeElements } from "./badges.js";
 import { delay } from "../functions/delay.js";
@@ -17,15 +16,15 @@ function pushFSAlerts(alertsArray) {
 async function showFSAlert() {
     const { fsAlertDuration, fsNewCheevo, fsNewAward } = configData;
     const { app } = ui;
-    const casualBadge = () => badgeElements.default(ui.lang.casual);
+    const casualBadge = () => badgeElements.default(lang.casual);
     const awardAlert = (gameData, awardName) => {
         const { ImageIcon, Title } = gameData;
         const { MASTERED, COMPLETED, BEATEN, BEATEN_SOFTCORE } = GAME_AWARD_TYPES;
         const awardTitles = {
-            [MASTERED]: ui.lang.masteryUnlocked,
-            [COMPLETED]: `${ui.lang.masteryUnlocked} ${casualBadge()}`,
-            [BEATEN]: ui.lang.gameBeaten,
-            [BEATEN_SOFTCORE]: `${ui.lang.gameBeaten} ${casualBadge()}`,
+            [MASTERED]: lang.masteryUnlocked,
+            [COMPLETED]: `${lang.masteryUnlocked} ${casualBadge()}`,
+            [BEATEN]: lang.gameBeaten,
+            [BEATEN_SOFTCORE]: `${lang.gameBeaten} ${casualBadge()}`,
         }
         app.querySelectorAll(".fs-alert__container").forEach(el => el.remove());
         const alertElement = document.createElement('div');
@@ -53,8 +52,8 @@ async function showFSAlert() {
         alertElement.className = "fs-alert__container";
 
         const alertHeader = isEarnedHardcore ?
-            ui.lang.achievementUnlocked :
-            `${ui.lang.achievementUnlocked} ${casualBadge()}`;
+            lang.achievementUnlocked :
+            `${lang.achievementUnlocked} ${casualBadge()}`;
 
         alertElement.innerHTML = `
             <div class="fs-alert__main-content">

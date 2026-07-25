@@ -8,7 +8,6 @@ import { cacheWorker } from "./functions/api/cacheWorker.js";
 import { loadHandle, openDB, saveHandle } from "./functions/DB.js";
 import { delay } from "./functions/delay.js";
 import { exportSettingsToJson } from "./functions/exportData.js";
-import { ui, watcher } from "./script.js";
 
 let CONFIG_FILE_NAME = "retroApiConfig";
 const CACHE_FILE_NAME = "raApiCache";

@@ -1,5 +1,3 @@
-
-import { config, ui, watcher, configData } from "./script.js";
 import { cheevoPopupElement } from "./components/cheevoPopup.js";
 import { hintElement } from "./components/hint.js";
 import { generateContextMenu } from "./components/contextMenu.js";
@@ -61,6 +59,7 @@ export class UI {
       const lang = await langRep.json();
       this.lang = { ...defLang, ...lang };
     }
+    window.lang = this.lang;
   }
 
   async initUI() {
@@ -204,7 +203,7 @@ export class UI {
       });
     }
 
-    //! awardsArray.length && setTimeout(() => ui.stats.updateChart(), 4000);
+    //! awardsArray.length && setTimeout(() => this.stats.updateChart(), 4000);
   }
   showCheevoAlerts(cheevos = []) {
     const cheevoAlerts = cheevos
@@ -322,12 +321,12 @@ export class UI {
         errorElement?.remove();
         this.hasApiError = false;
       }, 5e3);
-      ui.app.append(errorElement);
+      this.app.append(errorElement);
       return;
     }
     if (!isError && this.hasApiError) {
       this.hasApiError = false;
-      // ui.app.querySelector("#api-error-message")?.remove();
+      // this.app.querySelector("#api-error-message")?.remove();
       return;
     }
   }

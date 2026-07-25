@@ -26,7 +26,6 @@ const handlers = {
 };
 
 export async function call(method, ...params) {
-    const { ui, APIEvents } = window;
     APIEvents?.dispatchEvent(new CustomEvent("APIRequest"));
 
     try {

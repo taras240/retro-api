@@ -5,33 +5,33 @@ import { input } from "./inputElements.js";
 export function gamePropsPopup() {
   const gameDataItems = (gameData) => [
     {
-      label: ui.lang.title,
+      label: lang.title,
       elements: [
         {
           type: "text",
-          title: ui.lang.gameTitleHint,
+          title: lang.gameTitleHint,
           id: "game-props-title",
           value: gameData?.Title ?? '',
         },
       ]
     },
     {
-      label: ui.lang.platform,
+      label: lang.platform,
       elements: [
         {
           type: "text",
-          title: ui.lang.platform,
+          title: lang.platform,
           id: "game-props-platform",
           value: gameData?.ConsoleName ?? '',
         },
       ]
     },
     {
-      label: ui.lang.genre,
+      label: lang.genre,
       elements: [
         {
           type: "text",
-          title: ui.lang.genre,
+          title: lang.genre,
           id: "game-props-genre",
           value: gameData?.Genre ?? '',
         },
@@ -47,11 +47,11 @@ export function gamePropsPopup() {
     //   }]
     // },
     {
-      label: ui.lang.timePlayed,
+      label: lang.timePlayed,
       elements: [
         {
           type: "number",
-          title: ui.lang.timePlayed,
+          title: lang.timePlayed,
           id: "game-props-time",
           value: gameData?.TimePlayed ?? 0,
         },
@@ -61,12 +61,12 @@ export function gamePropsPopup() {
       elements: [
         {
           id: "reset-game-props",
-          label: ui.lang.resetData,
+          label: lang.resetData,
           type: "button",
         },
         {
           id: "save-game-props",
-          label: ui.lang.saveData,
+          label: lang.saveData,
           type: "button",
         },
       ]

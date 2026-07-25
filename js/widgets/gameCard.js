@@ -1,4 +1,3 @@
-import { config, ui, watcher } from "../script.js";
 import { Widget } from "./widget.js";
 import { generateBadges, badgeElements } from "../components/badges.js";
 import { signedIcons } from "../components/icons.js"
@@ -56,20 +55,20 @@ export class GameCard extends Widget {
     get contextMenuItems() {
         return [
             {
-                label: ui.lang.previewType,
+                label: lang.previewType,
                 elements: [
                     ...Object.keys(this.previewTypes).map(previewKey => ({
                         type: inputTypes.RADIO,
                         name: `game-card_preview-type`,
                         id: `game-card_preview-${previewKey}`,
-                        label: ui.lang[previewKey],
+                        label: lang[previewKey],
                         checked: this.uiProps.previewType === this.previewTypes[previewKey],
                         onChange: () => this.uiProps.previewType = this.previewTypes[previewKey],
                     })),
                 ]
             },
             {
-                label: ui.lang.previewSize,
+                label: lang.previewSize,
                 elements: [
                     ...Object.keys(PREVIEW_SIZE).map(previewKey => ({
                         type: inputTypes.RADIO,
@@ -82,49 +81,49 @@ export class GameCard extends Widget {
                 ]
             },
             {
-                label: ui.lang.showHeader,
+                label: lang.showHeader,
                 type: inputTypes.CHECKBOX,
                 id: "game-card_show-header",
                 checked: this.uiProps.showHeader,
                 onChange: (event) => this.uiProps.showHeader = event.currentTarget.checked,
             },
             {
-                label: ui.lang.showTitle,
+                label: lang.showTitle,
                 type: inputTypes.CHECKBOX,
                 id: "game-card_show-title",
                 checked: this.uiProps.showTitle,
                 onChange: (event) => this.uiProps.showTitle = event.currentTarget.checked,
             },
             {
-                label: ui.lang.showIcons,
+                label: lang.showIcons,
                 type: inputTypes.CHECKBOX,
                 id: "game-card_show-icons",
                 event: `onchange="ui.gameCard.uiProps.showIcons = this.checked"`,
                 checked: this.uiProps.showIcons,
             },
             {
-                label: ui.lang.showTitleBadges,
+                label: lang.showTitleBadges,
                 type: inputTypes.CHECKBOX,
                 id: "game-card_show-badges",
                 checked: this.uiProps.showBadges,
                 onChange: (event) => this.uiProps.showBadges = event.currentTarget.checked,
             },
             {
-                label: ui.lang.showCheevosProgress,
+                label: lang.showCheevosProgress,
                 type: inputTypes.CHECKBOX,
                 id: "game-card_show-count-pr",
                 checked: this.uiProps.showCheevosProgress,
                 onChange: (event) => this.uiProps.showCheevosProgress = event.currentTarget.checked,
             },
             {
-                label: ui.lang.showPointsProgress,
+                label: lang.showPointsProgress,
                 type: inputTypes.CHECKBOX,
                 id: "game-card_show-points-pr",
                 checked: this.uiProps.showPointsProgress,
                 onChange: (event) => this.uiProps.showPointsProgress = event.currentTarget.checked,
             },
             {
-                label: ui.lang.showRetropointsProgress,
+                label: lang.showRetropointsProgress,
                 type: inputTypes.CHECKBOX,
                 id: "game-card_show-rp-pr",
                 checked: this.uiProps.showRetropointsProgress,
@@ -169,7 +168,7 @@ export class GameCard extends Widget {
         const widgetData = {
             classes: ["game-card_section", "section"],
             id: "game_section",
-            title: ui.lang.gameCard,
+            title: lang.gameCard,
             headerElementsHtml: headerElementsHtml,
             contentClasses: ["game-card_container", "content-container"],
         };

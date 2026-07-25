@@ -1,6 +1,5 @@
 import { raapi } from "../api/index.js";
 import { RA_PLATFORM_CODES } from "../enums/RAPlatforms.js";
-import { config } from "../script.js";
 import { sendJsonToDiscord } from "./discord.js";
 import { formatTime } from "./time.js";
 

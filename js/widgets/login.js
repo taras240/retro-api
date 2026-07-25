@@ -1,6 +1,5 @@
 import { fromHtml } from "../functions/html.js";
 import { getRaKeyUrl } from "../functions/raLinks.js";
-import { ui } from "../script.js";
 
 export function LoginWindowElement(config) {
     const verifyUserIdent = ({ userName, apiKey }) => {
@@ -55,13 +54,13 @@ export function LoginWindowElement(config) {
                         </div>
                         <div class="login__input-container">
                             <input type="text" name="" id="login__ra-username" class="login__input login__text-input">
-                            <label for="login__ra-username" class="login__input-label">${ui.lang.raUserName}</label>
+                            <label for="login__ra-username" class="login__input-label">${lang.raUserName}</label>
                         </div>
                         <div class="login__input-container">
                             <input type="password" id="login__ra-api" class="login__input login__text-input">
-                            <label for="login__ra-api" class="login__input-label">${ui.lang.raAPIKey}</label>
-                            <a class="login__get-api" data-title="${ui.lang.gotoRASettings}"
-                                href="${getRaKeyUrl}" target="_blank">${ui.lang.getAPIKey}</a>
+                            <label for="login__ra-api" class="login__input-label">${lang.raAPIKey}</label>
+                            <a class="login__get-api" data-title="${lang.gotoRASettings}"
+                                href="${getRaKeyUrl}" target="_blank">${lang.getAPIKey}</a>
                         </div>
                         <div class="login__buttons-container">
                             <button class="login__input login__button-input" id="submit-login">Submit</button>

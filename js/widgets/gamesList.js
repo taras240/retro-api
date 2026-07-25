@@ -1,4 +1,3 @@
-import { config, ui, watcher } from "../script.js";
 import { Widget } from "./widget.js";
 import { sortBy } from "../functions/sortFilter.js";
 import { generateBadges } from "../components/badges.js";
@@ -45,13 +44,13 @@ export class GameList extends Widget {
     }
     generateWidget() {
         const headerElementsHtml = `
-            <div class="header-button header-icon update-icon" title="${ui.lang.forceReloadHint}"></div>
+            <div class="header-button header-icon update-icon" title="${lang.forceReloadHint}"></div>
         `;
 
         const widgetData = {
             classes: ["game-list__section", "section"],
             id: "game-list",
-            title: ui.lang.gameSeriesSectionName,
+            title: lang.gameSeriesSectionName,
             headerElementsHtml: headerElementsHtml,
         };
         const widget = this.generateWidgetElement(widgetData);
@@ -79,7 +78,7 @@ export class GameList extends Widget {
                 <li class="game-info__set-item main-column-item right-bg-icon award-type ${game.Award} ${gameID == game.ID ? "focus" : ""}">
                     <img class="awards__game-preview" src="${gameImageUrlByID(game.ImageIcon)}" alt=" ">
                     <h3 class="game-title">
-                        <a target="_blank" data-title="${ui.lang.goToRAHint}" href="${gameUrl(game.ID)}">
+                        <a target="_blank" data-title="${lang.goToRAHint}" href="${gameUrl(game.ID)}">
                     ${game.Title} ${generateBadges(game?.badges)}</a></h3>
                     <p class="awards__game-description">${game.Console}</p>
                     <p class="awards__game-description">${game.Date ?? "Date unavailable"}</p>

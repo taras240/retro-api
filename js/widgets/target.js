@@ -1,6 +1,5 @@
 import { genreIcons, icons, signedIcons } from "../components/icons.js"
 import { generateBadges, badgeElements, goldBadge } from "../components/badges.js";
-import { config, ui, UIEvents, watcher } from "../script.js";
 import { Widget } from "./widget.js";
 import { applyFilter, applySort, cheevosFiterNames, cheevosSortNames, filterBy, filterMethods, sortBy } from "../functions/sortFilter.js";
 import { showComments } from "../components/comments.js";
@@ -28,7 +27,7 @@ import { formatText } from "../functions/formatText.js";
 export class Target extends Widget {
     sectionCode = "-target";
     widgetIcon = {
-        description: `${ui.lang.targetSectionName}`,
+        description: `${lang.targetSectionName}`,
         iconClass: "target-icon",
     };
     filters = {};
@@ -40,10 +39,10 @@ export class Target extends Widget {
                 type: inputTypes.DIVIDER,
             },
             {
-                label: ui.lang.style,
+                label: lang.style,
                 elements: [
                     {
-                        label: ui.lang.showBackground,
+                        label: lang.showBackground,
                         type: inputTypes.CHECKBOX,
                         checked: !this.uiProps.hideBg,
                         onChange: (event) => this.uiProps.hideBg = !event.currentTarget.checked,
@@ -51,78 +50,78 @@ export class Target extends Widget {
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        label: ui.lang.fixedSize,
+                        label: lang.fixedSize,
                         checked: this.uiProps.isFixedSize,
                         onChange: (event) => this.uiProps.isFixedSize = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.NUM_INPUT,
-                        prefix: ui.lang.cheevosCount,
+                        prefix: lang.cheevosCount,
                         postfix: "",
                         id: "fixed-count",
-                        label: ui.lang.cheevosCount,
+                        label: lang.cheevosCount,
                         value: this.uiProps.fixedSizeCount,
                         onInput: (event) => this.uiProps.fixedSizeCount = event.currentTarget.value,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        label: ui.lang.contrastHighlight,
+                        label: lang.contrastHighlight,
                         checked: this.uiProps.contrastHighlight,
                         onChange: (event) => this.uiProps.contrastHighlight = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.STEPPER,
-                        label: ui.lang.fontSize,
+                        label: lang.fontSize,
                         initValue: this.uiProps.fontScale,
                         step: 0.05,
                         onChange: (value) => this.uiProps.fontScale = value,
                     },
                     {
-                        prefix: ui.lang.cropBorder,
+                        prefix: lang.cropBorder,
                         postfix: "px",
                         type: inputTypes.NUM_INPUT,
                         id: "crop-offset",
-                        label: ui.lang.cropBorder,
+                        label: lang.cropBorder,
                         value: this.uiProps.cropOffset,
                         onInput: (event) => this.uiProps.cropOffset = event.currentTarget.value,
                     },
                 ]
             },
             {
-                label: ui.lang.autoscroll,
+                label: lang.autoscroll,
                 elements: [
                     {
                         type: inputTypes.CHECKBOX,
-                        label: ui.lang.autoscroll,
+                        label: lang.autoscroll,
                         checked: this.uiProps.autoscroll,
                         onChange: (event) => this.uiProps.autoscroll = event.currentTarget.checked
                     },
                     {
-                        prefix: ui.lang.scrollSpeed,
+                        prefix: lang.scrollSpeed,
                         postfix: "px/s",
                         type: inputTypes.NUM_INPUT,
                         id: "menu_scroll-speed",
-                        hint: ui.lang.scrollSpeed,
+                        hint: lang.scrollSpeed,
                         value: this.uiProps.scrollSpeed,
                         onInput: (event) => this.uiProps.scrollSpeed = event.currentTarget.value,
                     },
                     {
-                        prefix: ui.lang.scrollPauseDuration,
+                        prefix: lang.scrollPauseDuration,
                         postfix: "sec",
                         type: inputTypes.NUM_INPUT,
                         id: "menu_scroll-pause-dur",
-                        hint: ui.lang.scrollPauseDuration,
+                        hint: lang.scrollPauseDuration,
                         value: this.uiProps.scrollPauseDuration,
                         onInput: (event) => this.uiProps.scrollPauseDuration = event.currentTarget.value,
                     },
                 ]
             },
             {
-                label: ui.lang.overlay,
+                label: lang.overlay,
                 elements: [
                     {
                         type: inputTypes.CHECKBOX,
-                        label: ui.lang.showOverlay,
+                        label: lang.showOverlay,
                         checked: this.uiProps.showPrevOverlay,
                         onChange: (event) => this.uiProps.showPrevOverlay = event.currentTarget.checked,
                     },
@@ -136,48 +135,48 @@ export class Target extends Widget {
                     }))]
             },
             {
-                label: ui.lang.elements,
+                label: lang.elements,
                 elements: [
                     {
-                        label: ui.lang.showHeader,
+                        label: lang.showHeader,
                         type: inputTypes.CHECKBOX,
                         checked: this.uiProps.showHeader,
                         onChange: (event) => this.uiProps.showHeader = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        label: ui.lang.showGenreBadges,
+                        label: lang.showGenreBadges,
                         checked: this.uiProps.showGenre,
                         onChange: (event) => this.uiProps.showGenre = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        label: ui.lang.showLevel,
+                        label: lang.showLevel,
                         checked: this.uiProps.showLevel,
                         onChange: (event) => this.uiProps.showLevel = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        label: ui.lang.showEvents,
+                        label: lang.showEvents,
                         checked: this.uiProps.showEvents,
                         onChange: (event) => this.uiProps.showEvents = event.currentTarget.checked,
                     },
                     // {
                     //     type: inputTypes.CHECKBOX,
                     //     id: "show-difficult",
-                    //     label: ui.lang.showDifficult,
+                    //     label: lang.showDifficult,
                     //     checked: this.uiProps.showDifficult,
                     //     event: `onchange="ui.target.uiProps.showDifficult = this.checked"`,
                     // },
                     {
                         type: inputTypes.CHECKBOX,
-                        label: ui.lang.showCheevoUnlockRateBar,
+                        label: lang.showCheevoUnlockRateBar,
                         checked: this.uiProps.showCheevoUnlockRateBar,
                         onChange: (event) => this.uiProps.showCheevoUnlockRateBar = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        label: ui.lang.showPins,
+                        label: lang.showPins,
                         checked: this.uiProps.showPins,
                         onChange: (event) => this.uiProps.showPins = event.currentTarget.checked,
                     },
@@ -201,45 +200,45 @@ export class Target extends Widget {
         const cheevoID = cheevoElement.dataset.achivId;
         return [
             {
-                label: ui.lang.openComments,
+                label: lang.openComments,
                 type: inputTypes.BUTTON,
                 onClick: () => showComments(cheevoID, 2),
             }
         ]
     }
     contextSortMenu = () => ({
-        label: ui.lang.sort,
+        label: lang.sort,
         elements: [
             ...Object.values(cheevosSortNames).map(sortName => ({
                 type: inputTypes.RADIO,
                 name: `${this.sectionID}-sort`,
                 id: `${this.sectionID}-sort-${sortName}`,
-                label: ui.lang[sortName],
+                label: lang[sortName],
                 checked: this.uiProps.sortName === sortName,
                 onChange: () => this.uiProps.sortName = sortName,
             })),
             {
                 type: inputTypes.CHECKBOX,
-                label: ui.lang.reverse,
+                label: lang.reverse,
                 checked: this.uiProps.reverseSort == -1,
                 onChange: (event) => this.uiProps.reverseSort = event.currentTarget.checked,
             },
             {
                 type: inputTypes.CHECKBOX,
-                label: ui.lang.strictMode,
+                label: lang.strictMode,
                 checked: this.uiProps.strictSort,
                 onChange: (event) => this.uiProps.strictSort = event.currentTarget.checked,
             },
         ],
     })
     contextFilterMenu = () => ({
-        label: ui.lang.filter,
+        label: lang.filter,
         elements: [
             ...Object.values(cheevosFiterNames).map(filterName => ({
                 type: inputTypes.STATEBOX,
                 name: `${this.sectionID}-filter`,
                 id: `${this.sectionID}-filter-${filterName}`,
-                label: ui.lang[filterName],
+                label: lang[filterName],
                 value: filterName,
                 property: "filterName",
                 state: `${this.uiProps.filters[filterName]?.state ?? 0}`,
@@ -247,7 +246,7 @@ export class Target extends Widget {
             })),
             {
                 type: inputTypes.CHECKBOX,
-                label: ui.lang.hideFiltered,
+                label: lang.hideFiltered,
                 checked: this.uiProps.hideFiltered,
                 onChange: (event) => this.uiProps.hideFiltered = event.currentTarget.checked,
             },
@@ -255,13 +254,13 @@ export class Target extends Widget {
         ],
     })
     contextMultiGameMenu = () => watcher.GAME_DATA?.groups?.length > 1 ? {
-        label: ui.lang.multigame,
+        label: lang.multigame,
         elements: [
             {
                 type: inputTypes.RADIO,
                 name: `${this.sectionID}-mgame`,
                 id: `${this.sectionID}-mgame-all`,
-                label: ui.lang.all,
+                label: lang.all,
                 checked: !this.uiProps.mGameSelection,
                 onChange: () => this.uiProps.mGameSelection = "",
             },
@@ -276,7 +275,7 @@ export class Target extends Widget {
         ]
     } : "";
     contextSetsMenu_ = () => watcher.GAME_DATA?.visibleSubsets?.length ? {
-        label: ui.lang.subsets,
+        label: lang.subsets,
         elements: [
             (() => {
                 const setID = watcher.GAME_DATA.ID;
@@ -465,9 +464,9 @@ export class Target extends Widget {
             ${buttonsHtml.togglePins()}
             ${buttonsHtml.filter(widgetID)}
             ${buttonsHtml.sort(widgetID)}
-            ${buttonsHtml.saveData({ className: "save-order-button", hint: ui.lang.saveAsCustomOrder, id: `${widgetID}-save-order` })}
+            ${buttonsHtml.saveData({ className: "save-order-button", hint: lang.saveAsCustomOrder, id: `${widgetID}-save-order` })}
             ${buttonsHtml.tweek()}
-            <input type="search" name="" id="target__searchbar" class="text-input target__search-bar" data-title="${ui.lang.targetSearchHint}" placeholder="${ui.lang.search}">
+            <input type="search" name="" id="target__searchbar" class="text-input target__search-bar" data-title="${lang.targetSearchHint}" placeholder="${lang.search}">
         `;
         const contentHtml = `
             ${divHtml(["target__pinned-list"])}
@@ -476,7 +475,7 @@ export class Target extends Widget {
         const widgetData = {
             classes: ["target_section", "section", "compact-header"],
             id: widgetID,
-            title: ui.lang.targetSectionName,
+            title: lang.targetSectionName,
             headerElementsHtml,
             contentHtml,
         };
@@ -536,7 +535,7 @@ export class Target extends Widget {
 
                 if (word !== currentWord && descrElement.textContent.includes(word)) {
                     currentWord = word;
-                    descrElement.dataset.title = formatText(ui.lang.quickSearchHint, { query: word });
+                    descrElement.dataset.title = formatText(lang.quickSearchHint, { query: word });
                     // highlightWord(word);
                 }
             }

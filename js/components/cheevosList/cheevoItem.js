@@ -1,7 +1,6 @@
 ﻿import { fromHtml } from "../../functions/html.js";
 import { cheevoImageUrl, cheevoUrl } from "../../functions/raLinks.js";
 import { formatDuration } from "../../functions/time.js";
-import { ui } from "../../script.js";
 import { badgeElements } from "../badges.js";
 import { buttonsHtml } from "../htmlElements.js";
 import { genreIcons, icons, signedIcons } from "../icons.js";
@@ -100,7 +99,7 @@ export function CheevoElement(achievement, uiProps) {
             </div>
             <div class="target__cheevo-details">
                 <h3 class="target__cheevo-header">
-                    <a target="_blanc" data-title="${ui.lang.goToRAHint}" href="${cheevoUrl(achievement)}">
+                    <a target="_blanc" data-title="${lang.goToRAHint}" href="${cheevoUrl(achievement)}">
                         ${achievement.Title}
                     </a>
                     ${levelBadgeHtml}${genresBadgesHtml}

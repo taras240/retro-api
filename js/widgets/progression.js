@@ -1,4 +1,3 @@
-import { config, ui, watcher } from "../script.js";
 import { generateBadges, badgeElements } from "../components/badges.js";
 
 import { Widget } from "./widget.js";
@@ -14,35 +13,35 @@ export class Progression extends Widget {
     get contextMenuItems() {
         return [
             {
-                label: ui.lang.showHeader,
+                label: lang.showHeader,
                 type: inputTypes.CHECKBOX,
                 id: "show-header",
                 checked: this.uiProps.showHeader,
                 onChange: (event) => this.uiProps.showHeader = event.currentTarget.checked,
             },
             {
-                label: ui.lang.showBackground,
+                label: lang.showBackground,
                 type: inputTypes.CHECKBOX,
                 id: "show-bg",
                 checked: this.uiProps.showBG,
                 onChange: (event) => this.uiProps.showBG = event.currentTarget.checked,
             },
             {
-                label: ui.lang.showSubLevels,
+                label: lang.showSubLevels,
                 type: inputTypes.CHECKBOX,
                 id: "show-sublevels",
                 checked: this.uiProps.showSublevels,
                 onChange: (event) => this.uiProps.showSublevels = event.currentTarget.checked,
             },
             {
-                label: ui.lang.showAllDesc,
+                label: lang.showAllDesc,
                 type: inputTypes.CHECKBOX,
                 id: "show-all-descr",
                 checked: this.uiProps.showAllDescriptions,
                 onChange: (event) => this.uiProps.showAllDescriptions = event.currentTarget.checked,
             },
             {
-                label: ui.lang.showTimestamps,
+                label: lang.showTimestamps,
                 type: inputTypes.CHECKBOX,
                 id: "show-timestamps",
                 checked: this.uiProps.showTimestamps,
@@ -106,7 +105,7 @@ export class Progression extends Widget {
         const widgetData = {
             classes: ["progression_section", "section", "compact-header"],
             id: "progression_section",
-            title: ui.lang.progressionSectionName,
+            title: lang.progressionSectionName,
             contentClasses: ["progression__list", "content-container"],
         }
         const widget = this.generateWidgetElement(widgetData);

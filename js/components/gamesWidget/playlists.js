@@ -59,9 +59,9 @@ export function PlaylistItem({ playlistData, onClick, onEdit }) {
                 controlsContainer.style.visibility = "hidden";
                 editableTitleElement = inputElement({
                     type: inputTypes.SEARCH_INPUT,
-                    label: title ?? ui.lang.playlistTitle,
+                    label: title ?? lang.playlistTitle,
                     value: title ?? "",
-                    title: ui.lang.playlistTitle,
+                    title: lang.playlistTitle,
                     classList: ["wide-input"],
 
                 },).querySelector("input");

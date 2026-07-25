@@ -15,7 +15,6 @@ import { moveEvent, setPosition } from "../functions/movingWidget.js";
 import { getRandomID } from "../functions/randomID.js";
 import { resizeEvent } from "../functions/resizingWidget.js";
 import { sortBy } from "../functions/sortFilter.js";
-import { ui, watcher } from "../script.js";
 import { Widget } from "./widget.js";
 
 export class Constructor extends Widget {
@@ -24,7 +23,7 @@ export class Constructor extends Widget {
         // iconID: "widget-id",
         iconClass: "constructor-icon",
         onChangeEvent: () => this.VISIBLE = !this.VISIBLE,
-        description: ui.lang.constructorWidget,
+        description: lang.constructorWidget,
 
     };
     uiDefaultValues = {
@@ -112,7 +111,7 @@ export class Constructor extends Widget {
             })
         })
         const addItem = fromHtml(`
-                        <button class="constructor__add-button">${ui.lang.addElement}</button>
+                        <button class="constructor__add-button">${lang.addElement}</button>
                 `);
         addItem.addEventListener("click", event => {
             this.uiProps.elements = [
@@ -133,7 +132,7 @@ export class Constructor extends Widget {
         this.section = super.generateWidgetElement({
             classes: ["constructor_widget", "section"],
             id: "constructor_widget",
-            title: ui.lang.constructorWidget,
+            title: lang.constructorWidget,
             contentClasses: ["constructor-elements"]
         });
         ui.app.append(this.section);
@@ -269,14 +268,14 @@ export class Constructor extends Widget {
         const editorItems = [
             {
                 type: inputTypes.SEARCH_INPUT,
-                label: ui.lang.elName,
+                label: lang.elName,
                 value: props.name ?? "",
-                title: ui.lang.elName,
+                title: lang.elName,
                 classList: ["wide-input"],
                 onChange: (event) => props.name = event.currentTarget.value,
             },
             {
-                label: ui.lang.possibleElements,
+                label: lang.possibleElements,
                 elements: [
                     ...Object.keys(this.components).map(key => ({
                         type: inputTypes.RADIO,
@@ -294,7 +293,7 @@ export class Constructor extends Widget {
                 elements: [
                     {
                         type: inputTypes.BUTTON,
-                        label: ui.lang.saveData,
+                        label: lang.saveData,
                         onClick: () => saveData(),
                     },
 

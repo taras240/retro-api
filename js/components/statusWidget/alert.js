@@ -1,7 +1,6 @@
 import { ALERT_TYPES } from "../../enums/alerts.js";
 import { delay } from "../../functions/delay.js";
 import { cheevoImageUrl, gameImageUrl } from "../../functions/raLinks.js";
-import { config, watcher } from "../../script.js";
 import { badgeElements, generateBadges, goldBadge } from "../badges.js";
 import { cheevoElementFull } from "../cheevo.js";
 import { divHtml } from "../divContainer.js";

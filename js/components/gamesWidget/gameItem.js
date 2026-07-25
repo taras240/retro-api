@@ -2,7 +2,6 @@ import { highestAwardMap } from "../../enums/gameAwards.js";
 import { GAME_GENRE_CODES } from "../../enums/gameGenres.js";
 import { fromHtml } from "../../functions/html.js";
 import { gameImageUrl } from "../../functions/raLinks.js";
-import { ui } from "../../script.js";
 import { badgeElements, generateBadges } from "../badges.js";
 import { buttonsHtml } from "../htmlElements.js";
 import { signedIcons } from "../icons.js";
@@ -24,7 +23,7 @@ export function GameListElement(gameData) {
         <h3 class="game-description_title">
             <button class="game-description_button" data-id="${gameData.ID}" >
                     ${gameData.Title} 
-                    ${gameData.Award ? badgeElements.gold(ui.lang[highestAwardMap[gameData.Award]]) : ""}
+                    ${gameData.Award ? badgeElements.gold(lang[highestAwardMap[gameData.Award]]) : ""}
                     ${gameData.badges?.length ? generateBadges(gameData.badges, "black") : ""} 
                     ${genreBadges?.length ? genreBadges : ""}
             </button>
@@ -59,7 +58,7 @@ export function GameListElement(gameData) {
     if (gameData.series?.length) {
         gameElement.dataset.series = gameData.series.join(",");
         const seriesButton = fromHtml(`
-            <button class="show-series-button" data-title="${ui.lang.showSeries}">${ui.lang.series}</button>
+            <button class="show-series-button" data-title="${lang.showSeries}">${lang.series}</button>
         `)
         controlsContainer.prepend(seriesButton)
     }

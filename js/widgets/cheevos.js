@@ -1,4 +1,3 @@
-import { config, ui, UIEvents, watcher } from "../script.js";
 import { Widget } from "./widget.js";
 import { applyFilter, applySort, cheevosFiterNames, cheevosSortNames, filterBy, filterMethods, sortBy } from "../functions/sortFilter.js";
 import { delay } from "../functions/delay.js";
@@ -31,66 +30,66 @@ export class AchievementsBlock extends Widget {
                 type: inputTypes.DIVIDER,
             },
             {
-                label: ui.lang.style,
+                label: lang.style,
                 elements: [
                     {
                         type: inputTypes.CHECKBOX,
-                        label: ui.lang.showLoadAnimation,
+                        label: lang.showLoadAnimation,
                         checked: this.uiProps.showLoadAnimation,
                         onChange: (event) => this.uiProps.showLoadAnimation = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        label: ui.lang.unlockAnimation,
+                        label: lang.unlockAnimation,
                         checked: this.uiProps.showMario,
                         onChange: (event) => this.uiProps.showMario = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        label: ui.lang.stretch,
+                        label: lang.stretch,
                         checked: this.uiProps.stretchAchievements,
                         onChange: (event) => this.uiProps.stretchAchievements = event.currentTarget.checked,
                     },
                     {
-                        prefix: ui.lang.minSize,
+                        prefix: lang.minSize,
                         postfix: "px",
                         type: inputTypes.NUM_INPUT,
                         id: "menu_min-size",
-                        label: ui.lang.minSize,
+                        label: lang.minSize,
                         value: this.uiProps.ACHIV_MIN_SIZE,
                         onInput: (event) => this.uiProps.ACHIV_MIN_SIZE = event.currentTarget.value,
                     },
                     {
-                        prefix: ui.lang.maxSize,
+                        prefix: lang.maxSize,
                         postfix: "px",
                         type: inputTypes.NUM_INPUT,
                         id: "menu_max-size",
-                        label: ui.lang.maxSize,
+                        label: lang.maxSize,
                         value: this.uiProps.ACHIV_MAX_SIZE,
                         onInput: (event) => this.uiProps.ACHIV_MAX_SIZE = event.currentTarget.value,
                     },
 
                     {
-                        prefix: ui.lang.cheevosMargin,
+                        prefix: lang.cheevosMargin,
                         postfix: "px",
                         type: inputTypes.NUM_INPUT,
                         id: "menu_margin",
-                        label: ui.lang.cheevosMargin,
+                        label: lang.cheevosMargin,
                         value: this.uiProps.cheevosMargin,
                         onInput: (event) => this.uiProps.cheevosMargin = event.currentTarget.value,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        label: ui.lang.showBorders,
+                        label: lang.showBorders,
                         checked: this.uiProps.showBorders,
                         onChange: (event) => this.uiProps.showBorders = event.currentTarget.checked,
                     },
                     {
-                        prefix: ui.lang.cropBorder,
+                        prefix: lang.cropBorder,
                         postfix: "px",
                         type: inputTypes.NUM_INPUT,
                         id: "crop-offset",
-                        label: ui.lang.cropBorder,
+                        label: lang.cropBorder,
                         value: this.uiProps.cropOffset,
                         onInput: (event) => this.uiProps.cropOffset = event.currentTarget.value,
                     },
@@ -98,56 +97,56 @@ export class AchievementsBlock extends Widget {
                 ]
             },
             {
-                label: ui.lang.autoscroll,
+                label: lang.autoscroll,
                 elements: [
                     {
                         type: inputTypes.CHECKBOX,
-                        label: ui.lang.autoscroll,
+                        label: lang.autoscroll,
                         checked: this.uiProps.autoscroll,
                         onChange: (event) => this.uiProps.autoscroll = event.currentTarget.checked,
                     },
                     {
-                        prefix: ui.lang.scrollSpeed,
+                        prefix: lang.scrollSpeed,
                         postfix: "px/s",
                         type: inputTypes.NUM_INPUT,
                         id: "menu_scroll-speed",
-                        hint: ui.lang.scrollSpeed,
+                        hint: lang.scrollSpeed,
                         value: this.uiProps.scrollSpeed,
                         onInput: (event) => this.uiProps.scrollSpeed = event.currentTarget.value,
                     },
                     {
-                        prefix: ui.lang.scrollPauseDuration,
+                        prefix: lang.scrollPauseDuration,
                         postfix: "sec",
                         type: inputTypes.NUM_INPUT,
                         id: "menu_scroll-pause-dur",
-                        hint: ui.lang.scrollPauseDuration,
+                        hint: lang.scrollPauseDuration,
                         value: this.uiProps.scrollPauseDuration,
                         onInput: (event) => this.uiProps.scrollPauseDuration = event.currentTarget.value,
                     },
                 ]
             },
             {
-                label: ui.lang.elements,
+                label: lang.elements,
                 elements: [
                     {
-                        label: ui.lang.showHeader,
+                        label: lang.showHeader,
                         type: inputTypes.CHECKBOX,
                         checked: this.uiProps.showHeader,
                         onChange: (event) => this.uiProps.showHeader = event.currentTarget.checked,
                     },
                     {
-                        label: ui.lang.showBackground,
+                        label: lang.showBackground,
                         type: inputTypes.CHECKBOX,
                         checked: this.uiProps.bgVisibility,
                         onChange: (event) => this.uiProps.bgVisibility = event.currentTarget.checked,
                     },]
             },
             {
-                label: ui.lang.overlay,
+                label: lang.overlay,
                 elements: [
                     {
                         type: inputTypes.CHECKBOX,
-                        label: ui.lang.showOverlay,
+                        label: lang.showOverlay,
                         checked: this.uiProps.showPrevOverlay,
                         onChange: (event) => this.uiProps.showPrevOverlay = event.currentTarget.checked,
                     },
@@ -172,11 +171,11 @@ export class AchievementsBlock extends Widget {
                 onChange: (setID) => this.updateHiddenSets(setID),
             }),
             {
-                label: ui.lang.groupBy,
+                label: lang.groupBy,
                 elements: [
                     {
                         type: inputTypes.CHECKBOX,
-                        label: ui.lang.groupElements,
+                        label: lang.groupElements,
                         checked: this.uiProps.isGrouping,
                         onChange: (event) => this.uiProps.isGrouping = event.currentTarget.checked,
                     },
@@ -184,14 +183,14 @@ export class AchievementsBlock extends Widget {
                         type: inputTypes.RADIO,
                         name: `${this.sectionID}-group`,
                         id: `${this.sectionID}-group-${groupName}`,
-                        label: ui.lang[groupName],
+                        label: lang[groupName],
                         value: groupName,
                         checked: this.uiProps.groupBy === groupName,
                         onChange: () => this.uiProps.groupBy = groupName,
                     })),
                     {
                         type: inputTypes.CHECKBOX,
-                        label: ui.lang.showCheevosGroupTitle,
+                        label: lang.showCheevosGroupTitle,
                         checked: this.uiProps.showGroupHeader,
                         onChange: (event) => this.uiProps.showGroupHeader = event.currentTarget.checked,
                     },
@@ -207,7 +206,7 @@ export class AchievementsBlock extends Widget {
         const cheevoID = cheevoElement.dataset.achivId;
         return [
             {
-                label: ui.lang.openComments,
+                label: lang.openComments,
                 type: inputTypes.BUTTON,
                 onClick: () => showComments(cheevoID, 2),
             }
@@ -215,25 +214,25 @@ export class AchievementsBlock extends Widget {
     }
     contextSortMenu = () => {
         return {
-            label: ui.lang.sort,
+            label: lang.sort,
             elements: [
                 ...Object.values(cheevosSortNames).map(sortName => ({
                     type: inputTypes.RADIO,
                     name: `${this.sectionID}-sort`,
                     id: `${this.sectionID}-sort-${sortName}`,
-                    label: ui.lang[sortName],
+                    label: lang[sortName],
                     checked: this.uiProps.sortName === sortName,
                     onChange: () => this.uiProps.sortName = sortName,
                 })),
                 {
                     type: inputTypes.CHECKBOX,
-                    label: ui.lang.reverse,
+                    label: lang.reverse,
                     checked: this.uiProps.reverseSort == -1,
                     onChange: (event) => this.uiProps.reverseSort = event.currentTarget.checked,
                 },
                 {
                     type: inputTypes.CHECKBOX,
-                    label: ui.lang.strictMode,
+                    label: lang.strictMode,
                     checked: this.uiProps.strictSort,
                     onChange: (event) => this.uiProps.strictSort = event.currentTarget.checked,
                 },
@@ -242,13 +241,13 @@ export class AchievementsBlock extends Widget {
     }
     contextFilterMenu = () => {
         return {
-            label: ui.lang.filter,
+            label: lang.filter,
             elements: [
                 ...Object.values(cheevosFiterNames).map(filterName => ({
                     type: inputTypes.STATEBOX,
                     name: `${this.sectionID}-filter`,
                     id: `${this.sectionID}-filter-${filterName}`,
-                    label: ui.lang[filterName],
+                    label: lang[filterName],
                     value: filterName,
                     property: "filterName",
                     state: `${this.uiProps.filters[filterName]?.state ?? 0}`,
@@ -256,7 +255,7 @@ export class AchievementsBlock extends Widget {
                 })),
                 {
                     type: inputTypes.CHECKBOX,
-                    label: ui.lang.hideFiltered,
+                    label: lang.hideFiltered,
                     checked: this.uiProps.hideFiltered,
                     onChange: (event) => this.uiProps.hideFiltered = event.currentTarget.checked,
                 },
@@ -264,13 +263,13 @@ export class AchievementsBlock extends Widget {
         }
     }
     contextMultiGameMenu = () => watcher.GAME_DATA?.groups?.length > 1 ? {
-        label: ui.lang.multigame,
+        label: lang.multigame,
         elements: [
             {
                 type: inputTypes.RADIO,
                 name: `${this.sectionID}-mgame`,
                 id: `${this.sectionID}-mgame-all`,
-                label: ui.lang.all,
+                label: lang.all,
                 checked: !this.uiProps.mGameSelection,
                 onChange: () => this.uiProps.mGameSelection = "",
             },
@@ -874,7 +873,7 @@ export class AchievementsBlock extends Widget {
                 <div class="header-container achievements-header_container">
                     <div class="header-icon achievements-icon"></div>
                     <h2 class="widget-header-text achivs-header-text">
-                        ${ui.lang.cheevosSectionName}
+                        ${lang.cheevosSectionName}
                     </h2>
                     ${buttonsHtml.filter(this.SECTION_ID)}
                     ${buttonsHtml.sort(this.SECTION_ID)}
@@ -920,9 +919,9 @@ export class AchievementsBlock extends Widget {
         switch (this.uiProps.groupBy) {
             case ("unlock_status"):
             case (CHEEVO_GROUPS.UNLOCK_STATUS):
-                createGroupElement(ui.lang.earned, filterBy.earned, cheevos);
-                createGroupElement(ui.lang.earnedSoftcore, filterBy.earnedSoftcore, cheevos);
-                createGroupElement(ui.lang.locked, filterBy.notEarned, cheevos);
+                createGroupElement(lang.earned, filterBy.earned, cheevos);
+                createGroupElement(lang.earnedSoftcore, filterBy.earnedSoftcore, cheevos);
+                createGroupElement(lang.locked, filterBy.notEarned, cheevos);
                 break;
             case (CHEEVO_GROUPS.UNLOCK_DATE):
                 const { sessions } = watcher.GAME_DATA;
@@ -931,7 +930,7 @@ export class AchievementsBlock extends Widget {
                     [...all, ...session.cheevos], []);
                 const filterByDay = (cheevo, { dayUnixTime, sessions }) => {
                     const sessionDays = sessions.map(({ unixTime }) => unixTime);
-                    if (dayUnixTime === ui.lang.locked) {
+                    if (dayUnixTime === lang.locked) {
                         return filterBy.notEarned(cheevo)
                     }
                     else if (!sessionDays.includes(dayUnixTime)) {
@@ -940,16 +939,16 @@ export class AchievementsBlock extends Widget {
 
                     return sessions.find(({ unixTime }) => unixTime === dayUnixTime)?.cheevos?.includes(+cheevo.achivId)
                 }
-                createGroupElement(ui.lang.thisSession, filterByDay, cheevos, { dayUnixTime: ui.lang.thisSession, sessions });
+                createGroupElement(lang.thisSession, filterByDay, cheevos, { dayUnixTime: lang.thisSession, sessions });
                 for (let dayUnixTime of daysUnixTime) {
                     createGroupElement(new Date(dayUnixTime).toLocaleDateString(), filterByDay, cheevos, { dayUnixTime, sessions })
                 }
-                createGroupElement(ui.lang.locked, filterByDay, cheevos, { dayUnixTime: ui.lang.locked, sessions });
+                createGroupElement(lang.locked, filterByDay, cheevos, { dayUnixTime: lang.locked, sessions });
                 break;
             case (CHEEVO_GROUPS.TYPE):
-                createGroupElement(ui.lang.progression, filterBy.progression, cheevos);
-                createGroupElement(ui.lang.missable, filterBy.missable, cheevos);
-                createGroupElement(ui.lang.other, filterBy.typeless, cheevos);
+                createGroupElement(lang.progression, filterBy.progression, cheevos);
+                createGroupElement(lang.missable, filterBy.missable, cheevos);
+                createGroupElement(lang.other, filterBy.typeless, cheevos);
                 break;
             case (CHEEVO_GROUPS.LEVEL):
                 const levels = [...cheevos]
@@ -961,9 +960,9 @@ export class AchievementsBlock extends Widget {
                 const { zones } = gameData;
                 const isNamedLevels = zones?.length > 2;
                 for (let level = minLevel; level <= maxLevel; level++) {
-                    createGroupElement(`${ui.lang.level}: ${isNamedLevels ? zones[level - 1] : level}`, filterBy.level, cheevos, { targetLevel: level })
+                    createGroupElement(`${lang.level}: ${isNamedLevels ? zones[level - 1] : level}`, filterBy.level, cheevos, { targetLevel: level })
                 }
-                createGroupElement(ui.lang.other, filterBy.leveless, cheevos);
+                createGroupElement(lang.other, filterBy.leveless, cheevos);
                 break;
             case (CHEEVO_GROUPS.SUBSET):
 

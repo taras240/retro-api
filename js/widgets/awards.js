@@ -1,4 +1,3 @@
-import { config, ui } from "../script.js";
 import { Widget } from "./widget.js";
 import { gameImageUrl } from "../functions/raLinks.js";
 import { buttonsHtml } from "../components/htmlElements.js";
@@ -25,7 +24,7 @@ export class Awards extends Widget {
         const widgetData = {
             classes: ["awards_section", "section"],
             id: "awards_section",
-            title: ui.lang.awardsSectionName,
+            title: lang.awardsSectionName,
             headerElementsHtml: headerElementsHtml,
             contentClasses: ["awards-content_container", "content-container"],
         };
@@ -101,11 +100,11 @@ export class Awards extends Widget {
             consoleListItem.innerHTML = `
                 <h3 class="awards-console_header" onclick="ui.awards.expandAwards(this)">${consoleName}</h3>
                 <ul class="console-awards-values">
-                    <li class="awarded-games total" data-title="${ui.lang.totalAwardsHint}" onclick="ui.awards.filterAwards('all')">
+                    <li class="awarded-games total" data-title="${lang.totalAwardsHint}" onclick="ui.awards.filterAwards('all')">
                         ${total}
                     </li>
                     ${Object.values(GAME_AWARD_TYPES).map(award => `
-                        <li class="awarded-games ${award}" data-title="${ui.lang[award] ?? award}" onclick="ui.awards.filterAwards('${award}')">
+                        <li class="awarded-games ${award}" data-title="${lang[award] ?? award}" onclick="ui.awards.filterAwards('${award}')">
                             ${awardsCount(award)}
                         </li>
                         `).join("")}
@@ -126,7 +125,7 @@ export class Awards extends Widget {
     generateAwardElement(game) {
         let gameElement = document.createElement("li");
         gameElement.classList.add("awarded-game", "awards__game-item", "main-column-item", "right-bg-icon", game.award);
-        gameElement.dataset.title = `${ui.lang.awardTypeHint}: ${game.award}`;
+        gameElement.dataset.title = `${lang.awardTypeHint}: ${game.award}`;
         gameElement.innerHTML = `
             <img class="awards__game-preview" src="${gameImageUrl(game.ImageIcon)}" alt=" ">
             <h3 class="game-title">${game.Title}</h3>

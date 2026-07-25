@@ -1,5 +1,4 @@
 import { DIFFICULTY_NAMES } from "../enums/difficulty.js";
-import { config, configData } from "../script.js";
 import { formatDuration } from "./time.js";
 
 export function generateMagicLineText(gameData, sessionData, userData) {

@@ -2,7 +2,8 @@ import { raapi } from "../../api/index.js";
 import { CACHE_TYPES } from "../../enums/cacheDataTypes.js";
 import { delay } from "../delay.js";
 export async function cachedCompletionProgress(username) {
-    const { cache, USER_NAME, configData } = window.config ?? {};
+    const { cache, USER_NAME, configData } = config ?? {};
+
     let cachedData = cache.getData({ dataType: CACHE_TYPES.COMPLETION_PROGRESS });
 
     if (!cachedData?.Total || (username !== cachedData.UserName)) {
@@ -23,7 +24,7 @@ export async function cachedCompletionProgress(username) {
 }
 async function updateCompletionProgress({ savedArray = [], completionProgress = [], batchSize = 500 }) {
 
-    const { cache, USER_NAME, configData } = window.config ?? {};
+    const { cache, USER_NAME, configData } = config ?? {};
 
     let completionOffset = await raapi.getUserCompletionProgress({ count: batchSize, offset: completionProgress.length });
     completionProgress = [...completionProgress, ...completionOffset.Results];

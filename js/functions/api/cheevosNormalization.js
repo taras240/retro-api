@@ -7,7 +7,6 @@ import { parseCheevosGenres } from "./genreParser.js";
 import { parseCheevoLevels } from "./levelParser.js";
 
 const normalizeAchievement = (achievement, gameData, savedGameData) => {
-    const { config } = window;
     const gameID = gameData.ID;
     const { BadgeName, DateEarned, DateEarnedHardcore, NumAwardedHardcore, NumAwarded, TrueRatio, ID, Points, DisplayOrder } = achievement;
     const { NumDistinctPlayers } = gameData;

@@ -1,6 +1,5 @@
 import { ALERT_TYPES } from "../enums/alerts.js";
 import { GAME_AWARD_TYPES } from "../enums/gameAwards.js";
-import { config, configData, watcher } from "../script.js";
 import { delay } from "./delay.js";
 import { formatText } from "./formatText.js";
 import { cheevoImageUrl, cheevoUrl, gameImageUrl, gameUrl } from "./raLinks.js";
@@ -23,7 +22,7 @@ export async function sendDiscordAlert({ message = "", type, value, award, id })
     const targetUser = configData.targetUser || config.USER_NAME;
     const gameMessage = (gameData) => {
         const author = {
-            name: formatText(ui.lang.userLauchedGame, {
+            name: formatText(lang.userLauchedGame, {
                 user: targetUser
             }),
             url: getAuthorUrl(targetUser),
@@ -46,7 +45,7 @@ export async function sendDiscordAlert({ message = "", type, value, award, id })
     }
     const awardMessage = (gameData, award) => {
         const author = {
-            name: formatText(ui.lang.userEarnedAward, {
+            name: formatText(lang.userEarnedAward, {
                 user: targetUser,
                 award: award.toUpperCase(),
             }),
@@ -54,7 +53,7 @@ export async function sendDiscordAlert({ message = "", type, value, award, id })
         };
         const title = gameData.Title;
         const description = `
-                ${formatText(ui.lang.awardEarnedInTime, {
+                ${formatText(lang.awardEarnedInTime, {
             time: formatTime(gameData.TimePlayed)
         })}
                 ${gameStatsLines(gameData)}
@@ -75,16 +74,16 @@ export async function sendDiscordAlert({ message = "", type, value, award, id })
     }
     const cheevoMessage = (gameData, cheevo) => {
         const author = {
-            name: formatText(ui.lang.userUnlockedCheevo, { user: targetUser }),
+            name: formatText(lang.userUnlockedCheevo, { user: targetUser }),
             url: getAuthorUrl(targetUser),
         };
         const title = cheevo.Title;
         const description = `
-            ${ui.lang.game}: [${gameData.Title}](${gameUrl(gameData.ID)})
-            ${formatText(ui.lang.unlockedInTime, { time: formatTime(gameData.TimePlayed) })}
-            ${ui.lang.description}: ${cheevo.Description}
-            ${ui.lang.points}: ${cheevo.Points}
-            ${ui.lang.retropoints}:  ${cheevo.TrueRatio}
+            ${lang.game}: [${gameData.Title}](${gameUrl(gameData.ID)})
+            ${formatText(lang.unlockedInTime, { time: formatTime(gameData.TimePlayed) })}
+            ${lang.description}: ${cheevo.Description}
+            ${lang.points}: ${cheevo.Points}
+            ${lang.retropoints}:  ${cheevo.TrueRatio}
         `.replace(/\n[ \t]*/g, '\n');
         message = {
             author,
@@ -175,9 +174,9 @@ const gameStatsLines = (gameData) => {
     const formatStatsLine = (stats = []) => [...new Set(stats.filter(v => v))].join("/");
 
     return `
-        ${ui.lang.platform}: ${gameData.ConsoleName}
-        ${ui.lang.released}: ${gameData.Released}
-        ${ui.lang.cheevos}: ${formatStatsLine([gameData?.unlockData?.hardcore.count, gameData?.unlockData?.softcore.count, gameData.NumAchievements])}
-        ${ui.lang.points}: ${formatStatsLine([gameData.unlockData.hardcore.points, gameData.unlockData.softcore.points, gameData.totalPoints])}
-        ${ui.lang.retropoints}: ${formatStatsLine([gameData.unlockData.hardcore.retropoints, gameData.totalRetropoints])}
+        ${lang.platform}: ${gameData.ConsoleName}
+        ${lang.released}: ${gameData.Released}
+        ${lang.cheevos}: ${formatStatsLine([gameData?.unlockData?.hardcore.count, gameData?.unlockData?.softcore.count, gameData.NumAchievements])}
+        ${lang.points}: ${formatStatsLine([gameData.unlockData.hardcore.points, gameData.unlockData.softcore.points, gameData.totalPoints])}
+        ${lang.retropoints}: ${formatStatsLine([gameData.unlockData.hardcore.retropoints, gameData.totalRetropoints])}
 `};

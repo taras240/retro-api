@@ -1,4 +1,3 @@
-import { ui, watcher } from "../script.js";
 import { Widget } from "./widget.js";
 import { icons } from "../components/icons.js";
 import { ALERT_TYPES } from "../enums/alerts.js";
@@ -16,24 +15,24 @@ export class Notifications extends Widget {
     get contextMenuItems() {
         return [
             {
-                label: ui.lang.alertTypes,
+                label: lang.alertTypes,
                 elements: [
                     {
-                        label: ui.lang.showGameAlerts,
+                        label: lang.showGameAlerts,
                         type: inputTypes.CHECKBOX,
                         id: "show-notification-game",
                         checked: this.uiProps.showGameAlerts,
                         onChange: (event) => this.uiProps.showGameAlerts = event.currentTarget.checked,
                     },
                     {
-                        label: ui.lang.showAwardAlerts,
+                        label: lang.showAwardAlerts,
                         type: inputTypes.CHECKBOX,
                         id: "show-notification-award",
                         checked: this.uiProps.showAwardAlerts,
                         onChange: (event) => this.uiProps.showAwardAlerts = event.currentTarget.checked,
                     },
                     {
-                        label: ui.lang.showCheevoAlerts,
+                        label: lang.showCheevoAlerts,
                         type: inputTypes.CHECKBOX,
                         id: "show-notification-cheevo",
                         checked: this.uiProps.showCheevoAlerts,
@@ -42,28 +41,28 @@ export class Notifications extends Widget {
                 ]
             },
             {
-                label: ui.lang.showHeader,
+                label: lang.showHeader,
                 type: inputTypes.CHECKBOX,
                 id: "hide-notification-header",
                 checked: this.uiProps.showHeader,
                 onChange: (event) => this.uiProps.showHeader = event.currentTarget.checked,
             },
             {
-                label: ui.lang.transparentBg,
+                label: lang.transparentBg,
                 type: inputTypes.CHECKBOX,
                 id: "hide-notification-bg",
                 checked: this.uiProps.hideBg,
                 onChange: (event) => this.uiProps.hideBg = event.currentTarget.checked,
             },
             {
-                label: ui.lang.showTimestamps,
+                label: lang.showTimestamps,
                 type: inputTypes.CHECKBOX,
                 id: "show-notification-time",
                 checked: this.uiProps.showTimestamp,
                 onChange: (event) => this.uiProps.showTimestamp = event.currentTarget.checked,
             },
             {
-                label: ui.lang.showSavedAlerts,
+                label: lang.showSavedAlerts,
                 type: inputTypes.CHECKBOX,
                 id: "show-showSaved-alerts",
                 checked: this.uiProps.showSavedAlerts,
@@ -117,7 +116,7 @@ export class Notifications extends Widget {
         const widgetData = {
             classes: ["notification_section", "bg-visible", "section", "compact-header"],
             id: "notification_section",
-            title: ui.lang.alertsSectionName,
+            title: lang.alertsSectionName,
             headerElementsHtml,
             contentClasses: ["notification-container", "content-container"],
         };

@@ -46,15 +46,15 @@ export function cheevoPopupElement(cheevo, isFixed = false) {
             </div>
         </div>
         <div class="cheevo-popup__props">
-            ${propElem(ui.lang.unlockDate, formatDateTime(cheevo.DateEarnedHardcore), !!cheevo.DateEarnedHardcore)}
-            ${propElem(ui.lang.unlockDate + ui.lang.casual_, formatDateTime(cheevo.DateEarned), !!cheevo.DateEarned && (cheevo.DateEarnedHardcore != cheevo.DateEarned))}
-            ${propElem(ui.lang.unlockTime, formatDuration(cheevo.unlockTime), !!cheevo.unlockTime)}
-            ${propElem(ui.lang.playersTotal, [cheevo.totalPlayers])}
-            ${propElem(ui.lang.unlockedBy, [cheevo.NumAwardedHardcore, cheevo.NumAwarded])}
-            ${propElem(ui.lang.unlockRate, [cheevo.rateEarnedHardcore, cheevo.rateEarned])}
-            ${propElem(ui.lang.timeToUnlock, [formatDuration(cheevo.timeToUnlock), formatDuration(cheevo.timeToUnlockSoftcore)])}
-            ${propElem(ui.lang.created, [formatDate(cheevo.DateCreated), formatDate(cheevo.DateModified)])}
-            ${propElem(ui.lang.createdBy, cheevo.Author)}
+            ${propElem(lang.unlockDate, formatDateTime(cheevo.DateEarnedHardcore), !!cheevo.DateEarnedHardcore)}
+            ${propElem(lang.unlockDate + lang.casual_, formatDateTime(cheevo.DateEarned), !!cheevo.DateEarned && (cheevo.DateEarnedHardcore != cheevo.DateEarned))}
+            ${propElem(lang.unlockTime, formatDuration(cheevo.unlockTime), !!cheevo.unlockTime)}
+            ${propElem(lang.playersTotal, [cheevo.totalPlayers])}
+            ${propElem(lang.unlockedBy, [cheevo.NumAwardedHardcore, cheevo.NumAwarded])}
+            ${propElem(lang.unlockRate, [cheevo.rateEarnedHardcore, cheevo.rateEarned])}
+            ${propElem(lang.timeToUnlock, [formatDuration(cheevo.timeToUnlock), formatDuration(cheevo.timeToUnlockSoftcore)])}
+            ${propElem(lang.created, [formatDate(cheevo.DateCreated), formatDate(cheevo.DateModified)])}
+            ${propElem(lang.createdBy, cheevo.Author)}
         </div>
     `;
 

@@ -1,5 +1,3 @@
-import { config, ui } from "../script.js";
-
 export function setPosition(event, offsetX, offsetY, section) {
     event.preventDefault();
     const XPos = event.clientX - offsetX;

@@ -23,7 +23,7 @@ export const badgeElements = {
     gameGenre: (text) => badgeTemplate({ text, classes: ["game-title_genre"] }),
     cheevoLevel: (level, isTarget) => `<div 
             class="${isTarget ? "target-level-badge" : ""} badge badge-green" 
-            data-title="${ui.lang.level}" >
+            data-title="${lang.level}" >
             ${icons.flag}${level}
         </div>`,
     difficultBadge: (difficulty, prefix = "") => {

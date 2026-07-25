@@ -1,11 +1,10 @@
 import { inputTypes } from "../../components/inputElements.js";
-import { config, configData, ui, watcher } from "../../script.js";
 
 export function contextSwitchSetsMenu() {
     const subsets = Object.entries(watcher.GAME_DATA?.availableSubsets ?? {});
     const setID = watcher.GAME_DATA?.ID;
     return subsets.length > 1 ? {
-        label: ui.lang.switchSubset,
+        label: lang.switchSubset,
         elements: subsets.map(([subsetName, subsetID]) => {
             const gameID = configData.gameID;
             subsetID = parseInt(subsetID);
@@ -37,7 +36,7 @@ export function contextSetsMenu({ onChange, isChecked } = {}) {
     const setID = watcher.GAME_DATA?.ID;
     const subsets = Object.entries(watcher.GAME_DATA?.availableSubsets ?? {});
     return subsets.length > 1 ? {
-        label: ui.lang.subsets,
+        label: lang.subsets,
         elements: subsets.map(([subsetName, subsetID]) => {
             subsetID = parseInt(subsetID);
             const isCurrentSet = subsetID === setID;

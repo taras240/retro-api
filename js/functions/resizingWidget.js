@@ -1,5 +1,4 @@
 import { moveDirections } from "../enums/moveDirections.js";
-import { config, ui } from "../script.js";
 import { stickMovingSection } from "./movingWidget.js";
 
 // Resizing func for widgets

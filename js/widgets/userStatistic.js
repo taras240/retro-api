@@ -1,5 +1,4 @@
 import { generateBadges, badgeElements, goldBadge } from "../components/badges.js";
-import { config, ui } from "../script.js";
 import { Widget } from "./widget.js";
 import { moveEvent } from "../functions/movingWidget.js";
 import { resizeEvent } from "../functions/resizingWidget.js";
@@ -21,107 +20,107 @@ export class UserStatistic extends Widget {
     get contextMenuItems() {
         return [
             {
-                label: ui.lang.showStats,
+                label: lang.showStats,
                 elements: [
                     {
                         type: inputTypes.CHECKBOX,
-                        label: ui.lang.points,
+                        label: lang.points,
                         checked: this.uiProps.showHP,
                         onChange: (event) => this.uiProps.showHP = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        label: ui.lang.retropoints,
+                        label: lang.retropoints,
                         checked: this.uiProps.showRP,
                         onChange: (event) => this.uiProps.showRP = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        label: ui.lang.softpoints,
+                        label: lang.softpoints,
                         checked: this.uiProps.showSP,
                         onChange: (event) => this.uiProps.showSP = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        label: ui.lang.rank,
+                        label: lang.rank,
                         checked: this.uiProps.showRank,
                         onChange: (event) => this.uiProps.showRank = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        label: ui.lang.percentile,
+                        label: lang.percentile,
                         checked: this.uiProps.showPercentile,
                         onChange: (event) => this.uiProps.showPercentile = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        label: ui.lang.unlocks,
+                        label: lang.unlocks,
                         checked: this.uiProps.showUnlocksHardcore,
                         onChange: (event) => this.uiProps.showUnlocksHardcore = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        label: ui.lang.unlocksTotal,
+                        label: lang.unlocksTotal,
                         checked: this.uiProps.showUnlocksSoftcore,
                         onChange: (event) => this.uiProps.showUnlocksSoftcore = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        label: ui.lang.trueRatio,
+                        label: lang.trueRatio,
                         checked: this.uiProps.showTrueRatio,
                         onChange: (event) => this.uiProps.showTrueRatio = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        label: ui.lang.played,
+                        label: lang.played,
                         checked: this.uiProps.showTotalGames,
                         onChange: (event) => this.uiProps.showTotalGames = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        label: ui.lang.mastered,
+                        label: lang.mastered,
                         checked: this.uiProps.showMastered,
                         onChange: (event) => this.uiProps.showMastered = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        label: ui.lang.completed,
+                        label: lang.completed,
                         checked: this.uiProps.showCompleted,
                         onChange: (event) => this.uiProps.showCompleted = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        label: ui.lang.beaten,
+                        label: lang.beaten,
                         checked: this.uiProps.showBeaten,
                         onChange: (event) => this.uiProps.showBeaten = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        label: ui.lang.beatenSoftcore,
+                        label: lang.beatenSoftcore,
                         checked: this.uiProps.showBeatenSoftcore,
                         onChange: (event) => this.uiProps.showBeatenSoftcore = event.currentTarget.checked,
                     },
 
                     {
                         type: inputTypes.CHECKBOX,
-                        label: ui.lang.completionChart,
+                        label: lang.completionChart,
                         checked: this.uiProps.completionChart,
                         onChange: (event) => this.uiProps.completionChart = event.currentTarget.checked,
                     },
                 ]
             },
             {
-                label: ui.lang.style,
+                label: lang.style,
                 elements: [
                     {
                         type: inputTypes.CHECKBOX,
-                        label: ui.lang.showHeader,
+                        label: lang.showHeader,
                         checked: this.uiProps.showHeader,
                         onChange: (event) => this.uiProps.showHeader = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
-                        label: ui.lang.showBackground,
+                        label: lang.showBackground,
                         checked: this.uiProps.showBG,
                         onChange: (event) => this.uiProps.showBG = event.currentTarget.checked,
                     },
@@ -146,13 +145,13 @@ export class UserStatistic extends Widget {
             },
             {
                 type: inputTypes.CHECKBOX,
-                label: ui.lang.showSessionProgress,
+                label: lang.showSessionProgress,
                 checked: this.uiProps.showSessionProgress,
                 onChange: (event) => this.uiProps.showSessionProgress = event.currentTarget.checked,
             },
             {
                 type: inputTypes.CHECKBOX,
-                label: ui.lang.showSeparator,
+                label: lang.showSeparator,
                 checked: this.uiProps.showSeparator,
                 onChange: (event) => this.uiProps.showSeparator = event.currentTarget.checked,
             }
@@ -252,13 +251,13 @@ export class UserStatistic extends Widget {
     generateWidget() {
         const headerElementsHtml = `
             ${buttonsHtml.tweek()}
-            ${buttonsHtml.reload({ hint: ui.lang.update })}
+            ${buttonsHtml.reload({ hint: lang.update })}
         `;
 
         const widgetData = {
             classes: ["section", "stats_section", "compact-header"],
             id: "stats_section",
-            title: ui.lang.statisticsSectionName,
+            title: lang.statisticsSectionName,
             headerElementsHtml: headerElementsHtml,
             contentClasses: ["stats-container", "content-container"],
         };
@@ -561,19 +560,19 @@ export class UserStatistic extends Widget {
 
     }
     statusProperties = {
-        percentile: { label: ui.lang.top, id: "stats_rank-rate", class: 'stats__rank-value' },
-        rank: { label: ui.lang.rank, id: "stats_rank", class: 'stats__rank-value' },
-        unlocks: { label: ui.lang.cheevos, id: "stats_cheevos-hardcore", },
-        unlocksSoftcore: { label: ui.lang.cheevos, id: "stats_cheevos-softcore", },
-        points: { label: ui.lang.points, id: "stats_points", },
-        retropoints: { label: ui.lang.retropoints, id: "stats_retropoints", },
-        trueRatio: { label: ui.lang.trueRatio, id: "stats_true-ratio", },
-        softpoints: { label: ui.lang.softpoints, id: "stats_softpoints", },
-        mastered: { label: ui.lang.mastered, id: "stats_mastered" },
-        completed: { label: ui.lang.completed, id: "stats_completed" },
-        beaten: { label: ui.lang.beaten, id: "stats_beaten" },
-        beatenSoftcore: { label: ui.lang.beatenSoftcore, id: "stats_beaten-softcore" },
-        played: { label: ui.lang.played, id: "stats_played" },
+        percentile: { label: lang.top, id: "stats_rank-rate", class: 'stats__rank-value' },
+        rank: { label: lang.rank, id: "stats_rank", class: 'stats__rank-value' },
+        unlocks: { label: lang.cheevos, id: "stats_cheevos-hardcore", },
+        unlocksSoftcore: { label: lang.cheevos, id: "stats_cheevos-softcore", },
+        points: { label: lang.points, id: "stats_points", },
+        retropoints: { label: lang.retropoints, id: "stats_retropoints", },
+        trueRatio: { label: lang.trueRatio, id: "stats_true-ratio", },
+        softpoints: { label: lang.softpoints, id: "stats_softpoints", },
+        mastered: { label: lang.mastered, id: "stats_mastered" },
+        completed: { label: lang.completed, id: "stats_completed" },
+        beaten: { label: lang.beaten, id: "stats_beaten" },
+        beatenSoftcore: { label: lang.beatenSoftcore, id: "stats_beaten-softcore" },
+        played: { label: lang.played, id: "stats_played" },
     }
     generateStatsElements() {
         const order = this.uiProps.displayOrder ?? {};
@@ -600,11 +599,11 @@ export class UserStatistic extends Widget {
                 <div class="round-stat__total" id="sector"></div>
                 </div>
                 <div class="round-stat__legend">
-                    <div class="legend__award legend__mastered">${ui.lang.mastered}: <span class="legend__value-mastered"></span></div>
-                    <div class="legend__award legend__completed">${ui.lang.completed}: <span class="legend__value-completed"></div>
-                    <div class="legend__award legend__beaten">${ui.lang.beaten}: <span class="legend__value-beaten"></div>
-                    <div class="legend__award legend__beaten-soft">${ui.lang.beatenSoftcore}: <span class="legend__value-beaten-soft"></div>
-                    <div class="legend__award legend__started">${ui.lang.inProgress}: <span class="legend__value-progress"></div>
+                    <div class="legend__award legend__mastered">${lang.mastered}: <span class="legend__value-mastered"></span></div>
+                    <div class="legend__award legend__completed">${lang.completed}: <span class="legend__value-completed"></div>
+                    <div class="legend__award legend__beaten">${lang.beaten}: <span class="legend__value-beaten"></div>
+                    <div class="legend__award legend__beaten-soft">${lang.beatenSoftcore}: <span class="legend__value-beaten-soft"></div>
+                    <div class="legend__award legend__started">${lang.inProgress}: <span class="legend__value-progress"></div>
                 </div>
             </div>
             </li>

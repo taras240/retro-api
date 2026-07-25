@@ -1,4 +1,3 @@
-import { config, ui } from "../script.js";
 import { Widget } from "./widget.js";
 export class Links extends Widget {
     widgetIcon = {
@@ -54,7 +53,7 @@ export class Links extends Widget {
         const widgetData = {
             classes: ["links_section", "section"],
             id: "links_section",
-            title: ui.lang.linksSectionName,
+            title: lang.linksSectionName,
             contentClasses: ["links-container", "content-container", "flex-main-list"],
         };
 

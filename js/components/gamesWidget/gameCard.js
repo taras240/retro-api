@@ -31,17 +31,17 @@ export function GameCardElement(gameData) {
     `);
     const descriptionsContainer = fromHtml(`
         <div class="game-info__descriptions-container">
-            ${properyLine(ui.lang.platform, gameData?.ConsoleName)}
-            ${properyLine(ui.lang.developer, gameData?.Developer)}
-            ${properyLine(ui.lang.genre, gameData?.Genre)}
-            ${properyLine(ui.lang.publisher, gameData?.Publisher)}
-            ${properyLine(ui.lang.released, gameData?.Released)}
-            ${properyLine(ui.lang.cheevosCount, `${gameData?.NumAwardedToUserHardcore} / ${gameData?.NumAwardedToUser} / ${gameData?.NumAchievements}`)}
-            ${properyLine(ui.lang.retropoints, `${gameData?.unlockData.hardcore.retropoints} / ${gameData?.totalRetropoints}`)}
-            ${properyLine(ui.lang.points, `${gameData?.unlockData.hardcore.points} / ${gameData?.unlockData.softcore.points} / ${gameData?.totalPoints}`)}
-            ${properyLine(ui.lang.retroRatio, gameData?.retroRatio)}
-            ${properyLine(ui.lang.players, `${gameData?.masteredCount} / ${gameData?.beatenCount} / ${gameData?.players_total}`)}
-            ${properyLine(ui.lang.completion, `${gameData?.masteryRate}% / ${gameData?.beatenRate}%`)}
+            ${properyLine(lang.platform, gameData?.ConsoleName)}
+            ${properyLine(lang.developer, gameData?.Developer)}
+            ${properyLine(lang.genre, gameData?.Genre)}
+            ${properyLine(lang.publisher, gameData?.Publisher)}
+            ${properyLine(lang.released, gameData?.Released)}
+            ${properyLine(lang.cheevosCount, `${gameData?.NumAwardedToUserHardcore} / ${gameData?.NumAwardedToUser} / ${gameData?.NumAchievements}`)}
+            ${properyLine(lang.retropoints, `${gameData?.unlockData.hardcore.retropoints} / ${gameData?.totalRetropoints}`)}
+            ${properyLine(lang.points, `${gameData?.unlockData.hardcore.points} / ${gameData?.unlockData.softcore.points} / ${gameData?.totalPoints}`)}
+            ${properyLine(lang.retroRatio, gameData?.retroRatio)}
+            ${properyLine(lang.players, `${gameData?.masteredCount} / ${gameData?.beatenCount} / ${gameData?.players_total}`)}
+            ${properyLine(lang.completion, `${gameData?.masteryRate}% / ${gameData?.beatenRate}%`)}
         </div>
     `);
 

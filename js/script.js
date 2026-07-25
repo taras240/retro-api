@@ -19,17 +19,23 @@ else if (/android/i.test(userAgent) || (/iPhone/.test(userAgent) && !window.MSSt
 }
 else {
   APIEvents = new EventTarget();
+  window.APIEvents = APIEvents;
+
   UIEvents = new EventTarget();
+  window.UIEvents = UIEvents;
+
   config = new Config();
-  initRaapi(config);
-  ui = new UI();
-  watcher = new Watcher();
-  window.ui = ui;
   window.config = config;
   window.configData = config.configData;
+
+  initRaapi(config);
+
+  ui = new UI();
+  window.ui = ui;
+
+
+  watcher = new Watcher();
   window.watcher = watcher;
-  window.APIEvents = APIEvents;
-  window.UIEvents = UIEvents;
 
   if (window.__TAURI__) {
     let requestId = 0;

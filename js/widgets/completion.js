@@ -1,5 +1,4 @@
 import { buttonsHtml } from "../components/htmlElements.js";
-import { ui } from "../script.js";
 import { Widget } from "./widget.js";
 
 export class Completion extends Widget {

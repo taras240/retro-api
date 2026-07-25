@@ -1,25 +1,24 @@
 
 import { CHEEVO_GENRES } from "../enums/cheevoGenres.js"
 import { RA_PLATFORM_CODES } from "../enums/RAPlatforms.js"
-import { ui } from "../script.js"
 
 const signedIconTemplate = ({ icon, label = "", hint = "", }) => {
     return `<p class="signed-icon" data-title="${hint}">${icon}${label}</p>`
 }
 export const signedIcons = {
-    cheevos: (count) => signedIconTemplate({ icon: icons.cheevos, label: count, hint: ui.lang.cheevosCount }),
-    points: (points) => signedIconTemplate({ icon: icons.points, label: points, hint: ui.lang.points }),
-    retropoints: (retropoints) => signedIconTemplate({ icon: icons.retropoints, label: retropoints, hint: ui.lang.retropoints }),
-    rarity: (rateEarned) => signedIconTemplate({ icon: icons.rarity, label: rateEarned, hint: ui.lang.unlockRate }),
-    retroRatio: (retroRatio) => signedIconTemplate({ icon: icons.retroRatio, label: retroRatio, hint: ui.lang.trueRatio }),
-    level: (level) => signedIconTemplate({ icon: icons.level, label: level, hint: ui.lang.level }),
+    cheevos: (count) => signedIconTemplate({ icon: icons.cheevos, label: count, hint: lang.cheevosCount }),
+    points: (points) => signedIconTemplate({ icon: icons.points, label: points, hint: lang.points }),
+    retropoints: (retropoints) => signedIconTemplate({ icon: icons.retropoints, label: retropoints, hint: lang.retropoints }),
+    rarity: (rateEarned) => signedIconTemplate({ icon: icons.rarity, label: rateEarned, hint: lang.unlockRate }),
+    retroRatio: (retroRatio) => signedIconTemplate({ icon: icons.retroRatio, label: retroRatio, hint: lang.trueRatio }),
+    level: (level) => signedIconTemplate({ icon: icons.level, label: level, hint: lang.level }),
 
-    date: (date) => signedIconTemplate({ icon: icons.date, label: date, hint: ui.lang.date }),
-    time: (time) => time ? signedIconTemplate({ icon: icons.time, label: time, hint: ui.lang.time }) : "",
-    rating: (rating) => signedIconTemplate({ icon: icons.rating, label: rating, hint: ui.lang.gameRating }),
+    date: (date) => signedIconTemplate({ icon: icons.date, label: date, hint: lang.date }),
+    time: (time) => time ? signedIconTemplate({ icon: icons.time, label: time, hint: lang.time }) : "",
+    rating: (rating) => signedIconTemplate({ icon: icons.rating, label: rating, hint: lang.gameRating }),
     platform: (platformID) => signedIconTemplate({ icon: icons.platform(platformID), label: RA_PLATFORM_CODES[platformID].Name, hint: platformID }),
 
-    difficulty: (difficulty) => `<p class="description-icon difficult-icon difficult-badge__${difficulty}" data-title="${ui.lang.difficulty} [${difficulty}]"></p>`,
+    difficulty: (difficulty) => `<p class="description-icon difficult-icon difficult-badge__${difficulty}" data-title="${lang.difficulty} [${difficulty}]"></p>`,
     award: (award) => `<p  class="signed-icon award-type" data-title="${award}">
     ${icons.award(award)}</p>`,
     empty: (icon) => signedIconTemplate({ icon }),

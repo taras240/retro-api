@@ -5,7 +5,6 @@ import { formatText } from "../../functions/formatText.js";
 import { scrollElementIntoView } from "../../functions/scrollingToElement.js";
 import { filterBy, sortBy } from "../../functions/sortFilter.js";
 import { formatDuration } from "../../functions/time.js";
-import { ui } from "../../script.js";
 import { badgeElements } from "../badges.js";
 
 const mainClass = "rp__progression";
@@ -22,9 +21,9 @@ export const updateProgressionBar = (container, gameData, isHardMode = true) => 
         if (focusIndex >= 0) {
             message = `${badgeElements.gold(`${focusIndex + 1}/${cheevos.length}`)} ${focusCheevo.Description}`;
         } else if (gameData?.progressionAward || gameData.subsetsData?.[mainSetID]?.progressionAward) {
-            message = winCount > 1 ? ui.lang.gameBeatenAllEndingsMsg : ui.lang.gameBeatenMsg;
+            message = winCount > 1 ? lang.gameBeatenAllEndingsMsg : lang.gameBeatenMsg;
         } else {
-            message = ui.lang.noProgressionMsg;
+            message = lang.noProgressionMsg;
         }
         return message;
     }
@@ -57,7 +56,7 @@ export const updateProgressionBar = (container, gameData, isHardMode = true) => 
         if (!etaTime) return null;
         const beatenRate = Math.round(gameData.TimePlayed / (etaTime + gameData.TimePlayed) * 100) + "%";
         const time = formatDuration(etaTime);
-        return formatText(ui.lang.estTimeMsg, { beatenRate, time });
+        return formatText(lang.estTimeMsg, { beatenRate, time });
     }
     const cheevos = reorderCheevos(Object.values(gameData.AllAchievements));
     const winCount = Object.values(gameData.AllAchievements).filter(c => c.Type == CHEEVO_TYPES.WIN).length;

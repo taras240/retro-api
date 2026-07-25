@@ -3,7 +3,6 @@ import { progressStyle, PROGRESS_TYPES } from "../../enums/progressBar.js";
 import { getCheevosCount, getPointsCount, getRetropointsCount } from "../../functions/gameProperties.js";
 import { formatText } from "../../functions/formatText.js";
 import { filterBy, sortBy } from "../../functions/sortFilter.js";
-import { ui } from "../../script.js";
 import { badgeElements } from "../badges.js";
 import { recentCheevoHtml } from "./recentCheevo.js";
 
@@ -11,8 +10,8 @@ const baseClass = "rp__progressbar";
 export const completionMsg = (gameData, progressType, isHardMode = true) => {
 
     const { unlocked, total, unlockedRate } = getStats(gameData, isHardMode, progressType);
-    const { gameMasteredMsg, gameCompletedMsg, unlockProgressMsg } = ui.lang;
-    const progressTypeName = ui.lang?.[`${progressType}Progress`] ?? progressType;
+    const { gameMasteredMsg, gameCompletedMsg, unlockProgressMsg } = lang;
+    const progressTypeName = lang?.[`${progressType}Progress`] ?? progressType;
     const isMainSet = !Object.values(gameData.subsetsData ?? {}).length;
     if (isMainSet && gameData.award === GAME_AWARD_TYPES.MASTERED) {
         return `${badgeElements.gold(`${unlocked}/${total}`)} ${gameMasteredMsg}`;
@@ -36,9 +35,9 @@ const sessionsProgressHtml = (gameData, isHardMode, progressType) => {
                 count = isHardMode ? cheevosCountHardcore : cheevosCount;
 
                 totalCount = gameData.NumAchievements;
-                hint = formatText(ui.lang.progressUnlockCheevosHint, {
+                hint = formatText(lang.progressUnlockCheevosHint, {
                     count,
-                    type: `${count === 1 ? ui.lang.cheevo : ui.lang.cheevos}`,
+                    type: `${count === 1 ? lang.cheevo : lang.cheevos}`,
                     date: startDate
                 });
                 break;
@@ -49,9 +48,9 @@ const sessionsProgressHtml = (gameData, isHardMode, progressType) => {
                     return points;
                 }, 0);
                 totalCount = gameData.totalPoints;
-                hint = formatText(ui.lang.progressEarnedPointsHint, {
+                hint = formatText(lang.progressEarnedPointsHint, {
                     count,
-                    type: `${count === 1 ? ui.lang.point : ui.lang.points}`,
+                    type: `${count === 1 ? lang.point : lang.points}`,
                     date: startDate
                 })
                 break;
@@ -62,9 +61,9 @@ const sessionsProgressHtml = (gameData, isHardMode, progressType) => {
                     return retropoints;
                 }, 0);
                 totalCount = gameData.totalRetropoints;
-                hint = formatText(ui.lang.progressEarnedPointsHint, {
+                hint = formatText(lang.progressEarnedPointsHint, {
                     count,
-                    type: `${count === 1 ? ui.lang.retropoint : ui.lang.retropoints}`,
+                    type: `${count === 1 ? lang.retropoint : lang.retropoints}`,
                     date: startDate
                 })
 

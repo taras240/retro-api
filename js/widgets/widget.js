@@ -1,6 +1,5 @@
 import { generateBadges, badgeElements, goldBadge } from "../components/badges.js";
 
-import { config, ui, APIEvents, UIEvents } from "../script.js";
 import { moveEvent } from "../functions/movingWidget.js";
 import { resizeEvent } from "../functions/resizingWidget.js";
 import { moveDirections, sumDirections } from "../enums/moveDirections.js";
@@ -77,6 +76,7 @@ export class Widget {
         this.addAPIEvents();
         this.addUIEvents();
     }
+
     addEvents() {
         this.section.addEventListener('mousedown', (event) => {
             const hoveredEdge = getHoveredEdge(event, this.section);

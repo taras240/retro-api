@@ -15,7 +15,6 @@ import { readLog } from "./functions/logParser.js";
 import { parseTimeParts } from "./functions/time.js";
 import { getAwardAlerts } from "./functions/watcher/awardsAlerts.js";
 import { onlineChecker } from "./functions/watcher/onlineStatus.js";
-import { APIEvents, config, configData, ui, watcher } from "./script.js";
 export class Watcher {
     IS_HARD_MODE = true;
     isWatching = false;

@@ -1,6 +1,5 @@
 import { generateBadges, badgeElements } from "../components/badges.js";
 
-import { config, ui } from "../script.js";
 import { fromHtml } from "../functions/html.js";
 export class SidePanel {
     get VISIBLE() {

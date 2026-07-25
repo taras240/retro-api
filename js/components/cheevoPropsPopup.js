@@ -1,60 +1,59 @@
 import { delay } from "../functions/delay.js";
-import { config, ui, watcher } from "../script.js";
 import { PopupWindow } from "../widgets/popupWindow.js";
 import { input } from "./inputElements.js";
 
 export function cheevoPropsPopup() {
     const cheevoDataItems = (cheevoData) => [
         {
-            label: ui.lang.title,
+            label: lang.title,
             elements: [
                 {
                     type: "text",
-                    title: ui.lang.cheevoTitleHint,
+                    title: lang.cheevoTitleHint,
                     id: "cheevo-props-title",
                     value: cheevoData?.Title ?? '',
                 },
             ]
         },
         {
-            label: ui.lang.description,
+            label: lang.description,
             elements: [
                 {
                     type: "text",
-                    title: ui.lang.cheevoDescrHint,
+                    title: lang.cheevoDescrHint,
                     id: "cheevo-props-description",
                     value: cheevoData?.Description ?? "",
                 },
             ]
         },
         {
-            label: ui.lang.genre,
+            label: lang.genre,
             elements: [
                 {
                     type: "text",
-                    title: ui.lang.editGenreHint,
+                    title: lang.editGenreHint,
                     id: "cheevo-props-genres",
                     value: cheevoData?.genres?.join(",") ?? "",
                 },
             ]
         },
         {
-            label: ui.lang.levelName,
+            label: lang.levelName,
             elements: [
                 {
                     type: "text",
-                    title: ui.lang.levelNameHint,
+                    title: lang.levelNameHint,
                     id: "cheevo-props-zonename",
                     value: cheevoData?.zone ?? "",
                 },
             ]
         },
         {
-            label: ui.lang.levelNumber,
+            label: lang.levelNumber,
             elements: [
                 {
                     type: "number",
-                    title: ui.lang.editlevelHint,
+                    title: lang.editlevelHint,
                     id: "cheevo-props-level",
                     value: cheevoData?.level ?? "",
                 },
@@ -64,12 +63,12 @@ export function cheevoPropsPopup() {
             elements: [
                 {
                     id: "reset-cheevo-props",
-                    label: ui.lang.resetData,
+                    label: lang.resetData,
                     type: "button",
                 },
                 {
                     id: "save-cheevo-props",
-                    label: ui.lang.saveData,
+                    label: lang.saveData,
                     type: "button",
                 },
             ]

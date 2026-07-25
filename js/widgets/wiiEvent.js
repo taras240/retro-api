@@ -3,7 +3,6 @@ import { badgeElements } from "../components/badges.js";
 import { buttonsHtml } from "../components/htmlElements.js";
 import { fromHtml } from "../functions/html.js";
 import { gameImageUrl, gameUrl } from "../functions/raLinks.js";
-import { ui } from "../script.js";
 import { Widget } from "./widget.js";
 
 

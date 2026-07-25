@@ -1,6 +1,5 @@
 import { fromHtml } from "../functions/html.js";
 import { getRandomID } from "../functions/randomID.js";
-import { ui } from "../script.js";
 import { addEvents, inputTypes } from "./inputElements.js";
 
 const generateContextMenu = ({ menuItems, sectionCode = "", isSubmenu = false }) => {

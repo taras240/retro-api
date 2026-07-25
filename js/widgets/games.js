@@ -1,6 +1,5 @@
 import { icons, signedIcons } from "../components/icons.js"
 
-import { config, ui, watcher } from "../script.js";
 import { Widget } from "./widget.js";
 import { generateBadges, badgeElements } from "../components/badges.js";
 import { sortGamesBy, gamesSortNames, filterBy } from "../functions/sortFilter.js";
@@ -28,7 +27,7 @@ import { gameLinksMenu } from "../functions/settings/gameLinks.js";
 
 export class Games extends Widget {
     widgetIcon = {
-        description: ui.lang.gamesLibrary,
+        description: lang.gamesLibrary,
         iconClass: "games-icon",
     };
     uiDefaultValues = {
@@ -59,14 +58,14 @@ export class Games extends Widget {
             {
                 type: inputTypes.BUTTON,
                 id: "update-game",
-                label: ui.lang.showInTracker,
+                label: lang.showInTracker,
                 onClick: () => {
                     watcher.stop();
                     watcher.updateGameData(gameID);
                 },
             },
             {
-                label: ui.lang.addToPlaylist,
+                label: lang.addToPlaylist,
                 elements: [
                     ...Object.entries(this.uiProps.userPlaylists).map(([playlistName, playlistData]) => {
                         return {
@@ -95,7 +94,7 @@ export class Games extends Widget {
                 type: inputTypes.DIVIDER,
             },
             {
-                label: ui.lang.sort,
+                label: lang.sort,
                 elements: this.sortGamesMenu(),
             },
 
@@ -107,14 +106,14 @@ export class Games extends Widget {
                 type: inputTypes.RADIO,
                 name: "games-sort-method",
                 id: `games-sort-method-${sortName}`,
-                label: ui.lang[sortName] ?? sortName,
+                label: lang[sortName] ?? sortName,
                 checked: this.uiProps.sortName === sortName,
                 onChange: () => this.uiProps.sortName = sortName,
             })
         ),
         {
             type: inputTypes.CHECKBOX,
-            label: ui.lang.reverse,
+            label: lang.reverse,
             checked: this.uiProps.reverseSort === -1,
             onChange: (event) => this.uiProps.reverseSort = event.currentTarget.checked,
         }
@@ -125,14 +124,14 @@ export class Games extends Widget {
 
             {
                 type: inputTypes.CHECKBOX,
-                label: ui.lang.gameOfTheDay,
+                label: lang.gameOfTheDay,
                 id: "gotd-checkbox",
                 checked: this.gameOfTheDayFilter,
                 onChange: (event) => this.gameOfTheDayFilter = event.currentTarget.checked,
             },
             {
                 type: inputTypes.SELECTOR,
-                label: ui.lang.sort,
+                label: lang.sort,
                 id: "games__sort-selector",
                 onClick: (event) => ui.showContextmenu({
                     event, menuItems: [
@@ -142,14 +141,14 @@ export class Games extends Widget {
             },
             {
                 type: inputTypes.CHECKBOX,
-                label: ui.lang.filter,
+                label: lang.filter,
                 checked: false,
                 onChange: (event) => this.showFilters(event.currentTarget.checked),
             },
             {
                 type: inputTypes.SEARCH_INPUT,
-                label: ui.lang.search,
-                title: ui.lang.searchGameInputHint,
+                label: lang.search,
+                title: lang.searchGameInputHint,
                 onInput: (event) => {
                     const searchbarValue = event.target.value;
                     this.titleFilter = searchbarValue;
@@ -197,7 +196,7 @@ export class Games extends Widget {
         return Object.keys(highestAwardMap).map((awardType) => ({
             id: `games-filter-award-${awardType}`,
             type: inputTypes.CHECKBOX,
-            label: ui.lang[highestAwardMap[awardType]] ?? awardType,
+            label: lang[highestAwardMap[awardType]] ?? awardType,
             checked: this.awardFilter.includes(awardType),
             onChange: (event) => {
                 const isChecked = event.currentTarget.checked;
@@ -610,7 +609,7 @@ export class Games extends Widget {
         const widgetData = {
             classes: ["games_setion", "section"],
             id: widgetID,
-            title: ui.lang.gamesLibrary,
+            title: lang.gamesLibrary,
             headerElementsHtml: headerElementsHtml,
             contentClasses: ["games_container", "content-container"],
         };
@@ -760,7 +759,7 @@ export class Games extends Widget {
         if (this.gameOfTheDayFilter) {
             filters.push({
                 type: 'relisedToday',
-                label: ui.lang.gameOfTheDay,
+                label: lang.gameOfTheDay,
                 remove: () => {
                     this.gameOfTheDayFilter = false;
                 },
@@ -769,7 +768,7 @@ export class Games extends Widget {
         if (this.titleFilter?.trim()) {
             filters.push({
                 type: 'search',
-                label: `${ui.lang.search}: ${this.titleFilter}`,
+                label: `${lang.search}: ${this.titleFilter}`,
                 remove: () => {
                     this.titleFilter = '';
                     if (this.searchbar) {
@@ -783,7 +782,7 @@ export class Games extends Widget {
         if (this.currentPlaylist) {
             filters.push({
                 type: 'playlist',
-                label: `${ui.lang.playlist}: ${this.playlists[this.currentPlaylist]?.title ?? this.currentPlaylist}`,
+                label: `${lang.playlist}: ${this.playlists[this.currentPlaylist]?.title ?? this.currentPlaylist}`,
                 remove: () => {
                     this.currentPlaylist = null;
                 },
@@ -792,7 +791,7 @@ export class Games extends Widget {
         if (this.seriesFilter.length) {
             filters.push({
                 type: 'series',
-                label: `${ui.lang.series}: ${this.seriesFilter.join(", ")}`,
+                label: `${lang.series}: ${this.seriesFilter.join(", ")}`,
                 remove: () => {
                     this.seriesFilter = [];
                 },
@@ -825,7 +824,7 @@ export class Games extends Widget {
             filters.push({
                 type: 'award',
                 value: code,
-                label: ui.lang[highestAwardMap[code]] ?? code,
+                label: lang[highestAwardMap[code]] ?? code,
                 remove: () => {
                     this.awardFilter = this.awardFilter.filter(item => item != code);
                 },
@@ -849,13 +848,13 @@ export class Games extends Widget {
             const from = filterValue.from ?? 0;
             const to = filterValue.to ?? Infinity;
             if (from > 0 || to < Infinity) {
-                let label = `${ui.lang[title] ?? title}: `;
+                let label = `${lang[title] ?? title}: `;
                 if (from > 0 && to < Infinity) {
                     label += `${from}-${to}`;
                 } else if (from > 0) {
-                    label += `${ui.lang.from ?? 'from'} ${from}`;
+                    label += `${lang.from ?? 'from'} ${from}`;
                 } else {
-                    label += `${ui.lang.to ?? 'to'} ${to}`;
+                    label += `${lang.to ?? 'to'} ${to}`;
                 }
                 filters.push({
                     type: 'range',
@@ -1099,11 +1098,11 @@ export class Games extends Widget {
 
     sideMenuElement(menu, title) {
         if (!menu) {
-            title = ui.lang.filters;
+            title = lang.filters;
             menu = [
 
                 {
-                    title: ui.lang.platform,
+                    title: lang.platform,
                     type: "submenu",
                     submenu: [
                         {
@@ -1113,7 +1112,7 @@ export class Games extends Widget {
                     ]
                 },
                 {
-                    title: ui.lang.genre,
+                    title: lang.genre,
                     type: "submenu",
                     submenu: [
                         {
@@ -1122,12 +1121,12 @@ export class Games extends Widget {
                     ]
                 },
                 ...Object.entries(this.rangeFilters).map(([filterName, { title }]) => ({
-                    title: `${ui.lang[title] ?? title}:`,
+                    title: `${lang[title] ?? title}:`,
                     elements: [
                         {
                             id: `games-filter-${filterName}-from`,
                             type: inputTypes.NUM_INPUT,
-                            label: ui.lang.from,
+                            label: lang.from,
                             onChange: (event) => this[filterName] = {
                                 ...this[filterName],
                                 from: Number(event.currentTarget.value) || 0
@@ -1136,7 +1135,7 @@ export class Games extends Widget {
                         {
                             id: `games-filter-${filterName}-to`,
                             type: inputTypes.NUM_INPUT,
-                            label: ui.lang.to,
+                            label: lang.to,
                             onChange: (event) => this[filterName] = {
                                 ...this[filterName],
                                 to: Number(event.currentTarget.value) || Infinity
@@ -1145,11 +1144,11 @@ export class Games extends Widget {
                     ]
                 })),
                 {
-                    title: `${ui.lang.highestAward}:`,
+                    title: `${lang.highestAward}:`,
                     elements: this.awardsFilterItems
                 },
                 {
-                    title: `${ui.lang.releaseVersion}:`,
+                    title: `${lang.releaseVersion}:`,
                     elements: this.releaseVersionFilterItems
                 },
             ]

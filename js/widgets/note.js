@@ -1,4 +1,3 @@
-import { config, ui, watcher } from "../script.js";
 import { Widget } from "./widget.js";
 import { moveEvent } from "../functions/movingWidget.js";
 import { resizeEvent } from "../functions/resizingWidget.js";
@@ -16,19 +15,19 @@ export class Note extends Widget {
                 type: "radio",
                 name: "note__tabs",
                 id: "notes__main-tab",
-                label: ui.lang.mainNote,
+                label: lang.mainNote,
                 checked: this.uiProps.currentTab === 'main',
                 onChange: () => this.uiProps.currentTab = 'main',
-                hint: ui.lang.noteMainTabHint,
+                hint: lang.noteMainTabHint,
             },
             {
                 type: "radio",
                 name: "note__tabs",
                 id: "notes__game-tab",
-                label: ui.lang.gameNote,
+                label: lang.gameNote,
                 checked: this.uiProps.currentTab === 'game',
                 onChange: () => this.uiProps.currentTab = 'game',
-                hint: ui.lang.noteGameTabHint,
+                hint: lang.noteGameTabHint,
             },
         ]
     }
@@ -74,9 +73,9 @@ export class Note extends Widget {
     generateWidget() {
         const controlsHtml = `
                 <div class="note__controls">
-                    <button id="note_copy" data-title="${ui.lang.copy}" class="note__control-button copy-icon"></button>
-                    <button id="note_paste" data-title="${ui.lang.paste}" class="note__control-button paste-icon"></button>
-                    <button id="note_clear" data-title="${ui.lang.deleteAll}" class="note__control-button clear-icon"></button>
+                    <button id="note_copy" data-title="${lang.copy}" class="note__control-button copy-icon"></button>
+                    <button id="note_paste" data-title="${lang.paste}" class="note__control-button paste-icon"></button>
+                    <button id="note_clear" data-title="${lang.deleteAll}" class="note__control-button clear-icon"></button>
                 </div>
         `;
         const widget = fromHtml(`
@@ -90,7 +89,7 @@ export class Note extends Widget {
                 </div>
                 <div class="note-container content-container">
                     ${controlsHtml}
-                    <textarea id="note_textarea" class="note-textaria scrollable" name="note_textaria" cols="auto" rows="auto" placeholder="${ui.lang.emptyNotesMsg}"></textarea>
+                    <textarea id="note_textarea" class="note-textaria scrollable" name="note_textaria" cols="auto" rows="auto" placeholder="${lang.emptyNotesMsg}"></textarea>
                 </div>
                 <div class="resizer"></div>
             </section>
