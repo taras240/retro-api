@@ -254,13 +254,6 @@ export class Watcher {
                 if (hasSubsets && configData.ignoreSubsets) {
                     return subsets.Main ?? profileGameID;
                 }
-                else if (hasSubsets && configData.preventSubsetBug) {
-                    await delay(250);
-                    const completionData = await raapi.getUserCompletionProgress({ count: 1, offset: 0 });
-                    const completionGameID = completionData?.Results?.[0]?.GameID ?? profileGameID;
-                    await delay(250);
-                    return Object.values(subsets).includes(completionGameID) ? completionGameID : profileGameID;
-                }
                 return profileGameID;
             }
             const newGameID = await getGameID(raProfileInfo);
