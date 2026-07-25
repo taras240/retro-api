@@ -489,12 +489,20 @@ export class AchievementsBlock extends Widget {
     setElementsValues() {
         this.section.classList.toggle("hide-bg", !this.uiProps.bgVisibility);
         this.section.classList.toggle("compact", !this.uiProps.showHeader);
-        this.container.style.alignContent = this.uiProps.stretchAchievements ? "space-around" : "start";
-        this.container.style.justifyContent = this.uiProps.stretchAchievements ? "space-around" : "center";
         this.section.dataset.previewFilter = this.uiProps.lockedPreviewFilter;
         this.section.classList.toggle("borderless", !this.uiProps.showBorders);
         this.section.style.setProperty("--cheevos-margin", `${this.uiProps.cheevosMargin}px`);
         this.section.style.setProperty("--crop-offset", `${this.uiProps.cropOffset}px`);
+        if (this.uiProps.stretchAchievements) {
+            this.container.style.alignContent = "space-around";
+            this.container.style.justifyContent = "space-around";
+            this.container.style.rowGap = "var(--row-gap)";
+        }
+        else {
+            this.container.style.alignContent = "start";
+            this.container.style.justifyContent = "center";
+            this.container.style.rowGap = "0";
+        }
     }
     setValues() {
         this.applyPosition();
@@ -691,8 +699,8 @@ export class AchievementsBlock extends Widget {
             this.section.style.setProperty("--achiv-height", achivWidth + "px");
             section.offsetHeight;
         }
-        while (container.scrollHeight > container.offsetHeight && achivWidth > minSize)
-
+        while (container.scrollHeight > container.offsetHeight && achivWidth > minSize);
+        let gap = 0;
         achivWidth = normalizeCheevoSize(achivWidth);
         if (container.scrollHeight > container.offsetHeight + 2) {
             const margin = +this.uiProps.cheevosMargin;
@@ -700,8 +708,11 @@ export class AchievementsBlock extends Widget {
             const cheevosInRowCount = Math.floor((containerWidth + margin) / (achivWidth + margin));
             const roundedSize = Math.round((containerWidth + margin * (1 - cheevosInRowCount)) / cheevosInRowCount);
             achivWidth = roundedSize - 1;
+            gap = (containerWidth - (cheevosInRowCount * achivWidth)) / (cheevosInRowCount - 1);
         }
+
         this.section.style.setProperty("--achiv-height", achivWidth + "px");
+        this.section.style.setProperty("--row-gap", gap + "px");
     }
     autoscroll;
     startAutoScroll() {
