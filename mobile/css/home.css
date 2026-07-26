@@ -565,8 +565,8 @@
     padding: 0 1rem;
     width: 100%;
     text-align: justify;
-    font-size: 1.3rem;
-    font-weight: 400;
+    font-size: 1.2rem;
+    font-weight: normal;
 }
 
 .popup-info__properties {
@@ -575,14 +575,14 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: 1rem;
+    gap: 1.1rem;
     max-width: 100%;
     overflow-x: scroll;
 }
 
 .popup-info__property {
     padding: 0 1rem;
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     display: flex;
     justify-content: space-between;
     max-width: 100%;

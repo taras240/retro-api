@@ -340,7 +340,7 @@ export
         }
         const updateAchievements = (gameData) => {
             function AchievementElement(cheevo, gameData) {
-                const { Title, Description, Points, TrueRatio: TruePoints, BadgeName, DateEarnedHardcore, DateEarned, NumAwardedHardcore, rateEarnedHardcore } = cheevo;
+                const { Title, Description, Points, TrueRatio: TruePoints, Type, BadgeName, DateEarnedHardcore, DateEarned, NumAwardedHardcore, rateEarnedHardcore } = cheevo;
                 // const { NumDistinctPlayersHardcore } = gameData;
                 // const unlockRate = Math.round(100 * NumDistinctPlayersHardcore / NumAwardedHardcore) / 100;
                 const earnedDate = DateEarnedHardcore || DateEarned;
@@ -354,6 +354,7 @@ export
                             <div class="item-name">${Title}</div>
                             <div class="item-desc">${Description}</div>
                             <div class="item-icons-row">
+                                <span class="mask-icon ${Type ?? "none"}"></span> 
                                 <span>${Points}pts.</span>
                                 <span class="badge badge_solid-black">⨯${trueRatio}</span>
                                 <span>◔ ${rateEarnedHardcore}</span>

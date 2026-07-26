@@ -1,0 +1,28 @@
+.mask-icon {
+    display: inline-block;
+    position: relative;
+    height: 1.1em;
+    aspect-ratio: 1;
+    background-color: var(--font-color);
+    mask-size: contain;
+    mask-position: center;
+    mask-repeat: no-repeat;
+}
+
+.mask-icon.none {
+    display: none;
+}
+
+.win_condition {
+    mask-image: url(../../assets/img/win-condition.svg);
+}
+
+.missable {
+    /* scale: 1.05; */
+    mask-image: url(../../assets/img/missable_ra.svg);
+}
+
+.progression {
+    scale: 1.05;
+    mask-image: url(../../assets/img/progression.svg);
+}

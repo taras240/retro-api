@@ -5,6 +5,7 @@
 @import url(./awards.css);
 @import url(./game.css);
 @import url(./library.css);
+@import url(./icons.css);
 
 body {
     --main-color: #0c121b;

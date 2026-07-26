@@ -231,7 +231,6 @@ export class UI {
         .getGameProgress({ gameID: gameID })
         .then(gameObj => {
           GAMES_DATA[gameID] = gameObj;
-          console.log(gameObj)
           gameElement.innerHTML = this.gamePopupHtml(gameObj);
           this.content.append(gameElement);
         }).then(() => this.removeLoader())
@@ -259,11 +258,13 @@ export class UI {
     })
   }
   gamePopupHtml(game) {
+    const propertyLine = (title, value) => `
+        <div class="popup-info__property">${title}: <span>${value}</span></div>
+    `;
     return `
       <button class="close-popup" onclick="ui.removePopups()">X</button>
       <div class="popup-info__preview-container">
           <img src="https://media.retroachievements.org${game?.ImageIcon}" alt="icon" class="popup-info__preview">
-          <span class="game-header__retro-ratio  achiv-rarity__${game?.gameDifficulty}">${game?.retroRatio}</span>
       </div>
       <h2 class="popup-info__title">${game?.Title}</h2>
       <div class="hor-line"></div>
@@ -285,19 +286,20 @@ export class UI {
           href="https://google.com/search?q='${game?.FixedTitle}' '${RAPlatforms[game?.ConsoleID]}' ${googleQuerySite}" target="_blank"></a>
       <a class="round-button icon-button redirect-icon simple-button game-popup__ra-button"
           href="https://retroachievements.org/game/${game?.ID}" target="_blank"></a>
-      <button class="${ui.favouritesGames[game?.ID] ? "checked" : ''} round-button icon-button like-icon simple-button game-popup__like-button"
-          onclick="addGameToFavourite(${game?.ID});this.classList.toggle('checked'); event.stopPropagation()"></button>
+      <!--<button class="${ui.favouritesGames[game?.ID] ? "checked" : ''} round-button icon-button like-icon simple-button game-popup__like-button"
+          onclick="addGameToFavourite(${game?.ID});this.classList.toggle('checked'); event.stopPropagation()"></button>-->
     </div>
     <div class="hor-line"></div>
       <div class="popup-info__properties">
-          <div class="popup-info__property">Platform: <span>${game?.ConsoleName}</span></div>
-          <div class="popup-info__property">Developer: <span>${game?.Developer} Soft</span></div>
-          <div class="popup-info__property">Genre: <span>${game?.Genre}</span></div>
-          <div class="popup-info__property">Publisher: <span>${game?.Publisher} Soft</span></div>
-          <div class="popup-info__property">Released: <span>${game?.Released}</span></div>
-          <div class="popup-info__property">Achievements total : <span>${game?.NumAchievements}</span></div>
-          <div class="popup-info__property">Total points : <span>${game?.points_total}</span></div>
-          <div class="popup-info__property">Total players : <span>${game?.players_total}</span></div>
+          ${propertyLine("Platform", game?.ConsoleName)}
+          ${propertyLine("Developer", game?.Developer)}
+          ${propertyLine("Genre", game?.Genre)}
+          ${propertyLine("Publisher", game?.Publisher)}
+          ${propertyLine("Released", game?.Released)}
+          ${propertyLine("Achievements", game?.NumAchievements)}
+          ${propertyLine("Points", game?.points_total)}
+          ${propertyLine("True Ratio", game?.retroRatio)}
+          ${propertyLine("Total players", game?.NumDistinctPlayers)}
 
       </div>
     `
@@ -323,29 +325,38 @@ export class UI {
     }
 
   }
-  achivPopupHtml(achiv) {
+  achivPopupHtml(cheevo) {
+    const propertyLine = (title, ...values) => {
+      values = values.filter(v => v);
+      if (!values.length) return "";
+      return `
+          <div class="popup-info__property">${title}: <span>${values.join(" | ")}</span></div>
+      `;
+    };
     return `
     <button class="close-popup" onclick="ui.removePopups()"></button>
     <div class="popup-info__preview-container">
-        <img src="${achiv?.prevSrc}" alt="" class="popup-info__preview">
-        <span class="game-header__retro-ratio  achiv-rarity__${achiv?.difficulty}">${achiv?.difficulty}</span>
+        <img src="${cheevo?.prevSrc}" alt="" class="popup-info__preview">
+        <!--<span class="game-header__retro-ratio  achiv-rarity__${cheevo?.difficulty}">${cheevo?.difficulty}</span>-->
     </div>
-    <h2 class="popup-info__title">${achiv?.Title}</h2>
+    <h2 class="popup-info__title">${cheevo?.Title}</h2>
     <div class="hor-line"></div>
     <p class="popup-info__description">
-    ${achiv?.Description}
+    ${cheevo?.Description}
     </p>
     <div class="hor-line"></div>
     <div class="popup-info__properties">
-        <div class="popup-info__property">Points: <span>${achiv?.Points}</span></div>
-        <div class="popup-info__property">Retropoints: <span>${achiv?.TrueRatio}</span></div>
-        <div class="popup-info__property">Total players: <span>${achiv?.totalPlayers}</span></div>
-        <div class="popup-info__property">Earned by: <span>${achiv?.NumAwarded}</span></div>
-        <div class="popup-info__property">Earned harcore by: <span>${achiv?.NumAwardedHardcore}</span></div>
-        ${achiv?.isEarned ? `<div class="popup-info__property">Date earned : <span>${toLocalString(achiv?.DateEarned)}</span></div>` : ''}
-        ${achiv?.isHardcoreEarned ? `<div class="popup-info__property">Date earned hardcore: <span>${toLocalString(achiv?.DateEarnedHardcore)}</span></div>` : ''}
-        <div class="popup-info__property">Date created : <span>${new Date(achiv?.DateCreated).toLocaleDateString()}</span></div>
-        <div class="popup-info__property">Author : <span>${achiv?.Author}</span></div>
+        ${propertyLine("Type", cheevo?.Type)}
+        ${propertyLine("Points", cheevo?.Points)}
+        ${propertyLine("Retropoints", cheevo?.TrueRatio)}
+        ${propertyLine("True Ratio", Number(100 * cheevo?.TrueRatio / cheevo?.Points) / 100)}
+        ${propertyLine("Total players", cheevo?.totalPlayers)}
+        ${propertyLine("Total unlocks", cheevo?.NumAwardedHardcore, cheevo?.NumAwarded)}
+        ${propertyLine("Unlock Rate", cheevo?.rateEarnedHardcore, cheevo?.rateEarned)}
+        <!--${propertyLine("Difficulty", cheevo?.difficulty)}-->
+        ${propertyLine("Unlock Date", toLocalString(cheevo?.DateEarnedHardcore) || toLocalString(cheevo?.DateEarned))}
+        ${propertyLine("Created", new Date(cheevo?.DateCreated).toLocaleDateString(), cheevo?.DateModified && new Date(cheevo?.DateModified).toLocaleDateString())}
+
     </div>
   `;
   }
