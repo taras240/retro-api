@@ -115,6 +115,7 @@ export const calcEtaTimeToBeat = (gameData, hardMode = true) => {
     }
     else {
         const focusCheevo = getFocusCheevo(cheevos, isHardMode);
+        if (!focusCheevo) return null;
         const focusTTU = getCheevoTTU(focusCheevo, isHardMode);
         const focusMult = focusTTU ? (timeElapsed + 5 * 60) / focusTTU : 1;
 
