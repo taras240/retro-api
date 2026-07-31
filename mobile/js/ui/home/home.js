@@ -7,8 +7,10 @@ import { fromHtml } from "../../../../js/functions/html.js"
 import { headerHtml } from "./components/header.js";
 import { recentCheevosElements } from "./components/achievement.js";
 import { recentGamesElements } from "./components/game.js";
+import { delay } from "../../../../js/functions/delay.js";
+import { dailyProgressHtml } from "./components/dailyProgress.js";
 
-let USER_INFO;
+let USER_INFO, recentUnlocks;
 export class Home {
     constructor() {
         this.update();
@@ -29,7 +31,8 @@ export class Home {
     }
     async loadUserInfo() {
         const userData = await apiWorker.getUserSummary({ gamesCount: 5, achievesCount: 8 });
-
+        // await delay(250);
+        // recentUnlocks = await apiWorker.getLastUnlocks({ minutes: 24 * 60 });
         USER_INFO = {
             userName: userData.User,
             status: userData.Status?.toLowerCase(),
@@ -41,21 +44,23 @@ export class Home {
             retropoints: userData.TotalTruePoints,
             hardpoints: userData.TotalPoints,
             lastGames: userData.RecentlyPlayed,
-            lastAchievements: Object.values(userData.RecentAchievements).map(a => {
-                a.DateEarnedHardcore = a.DateAwarded;
-                return a;
+            lastAchievements: Object.values(userData.RecentAchievements).map(cheevo => {
+                if (cheevo.HardcoreAchieved) cheevo.DateEarnedHardcore = cheevo.DateAwarded;
+                else cheevo.DateEarned = cheevo.DateAwarded;
+                return cheevo;
             })
                 .sort((a, b) => sortBy.date(a, b)),
             isInGame: userData.isInGame,
         }
-    }
 
+    }
+    // ${dailyProgressHtml(USER_INFO, recentUnlocks)}
     HomeSection() {
         const homeSection = fromHtml(`
             <section class="home__section section">
                 ${headerHtml(USER_INFO)}
                 <div class="user-info__container">
-                <ul class="list recent-cheevos-list">
+                    <ul class="list recent-cheevos-list">
                         <button id="see-more-cheevos" class="user-info__block-header">
                             <h2>Last Unlocks</h2>
                             <p>See more</p>

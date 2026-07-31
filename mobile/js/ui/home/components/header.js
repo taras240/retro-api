@@ -18,8 +18,6 @@ export function headerHtml(userInfo) {
             ${userInfo.isInGame ? `
             <div class="user-info__rich-presence"> ${userInfo.richPresence}</div>
             `: ""}
-            
-            
         </div>
     `;//${this.pointsHtml()}
 }

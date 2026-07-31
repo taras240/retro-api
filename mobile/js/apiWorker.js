@@ -45,14 +45,14 @@ export class APIWorker {
     userSummary: "API_GetUserSummary.php",
     wantToPlay: "API_GetUserWantToPlayList.php",
   };
-  async getLastUnlocks({ apiKey, targetUser }) {
+  async getLastUnlocks({ apiKey, targetUser, minutes }) {
     let url = new URL(this.endpoints.recentAchieves, this.baseUrl);
 
     // Параметри запиту
     let params = {
       y: apiKey || config.API_KEY,
       u: targetUser || config.targetUser,
-      m: 60 * 24 * 31,
+      m: minutes || 60 * 24 * 7,
     };
     // Додавання параметрів до URL
     url.search = new URLSearchParams(params);
