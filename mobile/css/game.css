@@ -492,6 +492,18 @@
 
 }
 
+.achievement.progression:not(.unlocked) {
+    border-left: 2px solid green;
+}
+
+.achievement.win_condition:not(.unlocked) {
+    border-left: 2px solid limegreen;
+}
+
+.achievement.missable:not(.unlocked) {
+    border-left: 2px solid crimson;
+}
+
 .achievement.locked .item-icon {
     filter: grayscale(1);
     opacity: 0.5;

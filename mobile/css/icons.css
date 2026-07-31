@@ -13,16 +13,16 @@
     display: none;
 }
 
-.win_condition {
+.mask-icon.win_condition {
     mask-image: url(../../assets/img/win-condition.svg);
 }
 
-.missable {
+.mask-icon.missable {
     /* scale: 1.05; */
     mask-image: url(../../assets/img/missable_ra.svg);
 }
 
-.progression {
+.mask-icon.progression {
     scale: 1.05;
     mask-image: url(../../assets/img/progression.svg);
 }

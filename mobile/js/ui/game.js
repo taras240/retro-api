@@ -346,7 +346,7 @@ export
                 const earnedDate = DateEarnedHardcore || DateEarned;
                 const trueRatio = Math.round(100 * TruePoints / Points) / 100;
                 const element = fromHtml(`
-                    <div class="list-item achievement ${DateEarned ? 'unlocked' : 'locked'} ${DateEarnedHardcore ? 'hardcore' : ''}">
+                    <div class="list-item achievement ${Type || ""} ${DateEarned ? 'unlocked' : 'locked'} ${DateEarnedHardcore ? 'hardcore' : ''} ">
                         <div class="item-icon">
                             <img class="item-img" src="${cheevoImageUrl({ BadgeName })}"/>
                         </div>
