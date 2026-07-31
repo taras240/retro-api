@@ -500,7 +500,7 @@ export class AchievementsBlock extends Widget {
         else {
             this.container.style.alignContent = "start";
             this.container.style.justifyContent = "center";
-            this.container.style.rowGap = "0";
+            this.container.style.rowGap = this.uiProps.cheevosMargin;
         }
     }
     setValues() {
@@ -711,7 +711,7 @@ export class AchievementsBlock extends Widget {
         }
 
         this.section.style.setProperty("--achiv-height", achivWidth + "px");
-        this.section.style.setProperty("--row-gap", gap + "px");
+        this.section.style.setProperty("--row-gap", Math.max(gap, +this.uiProps.cheevosMargin) + "px");
     }
     autoscroll;
     startAutoScroll() {
