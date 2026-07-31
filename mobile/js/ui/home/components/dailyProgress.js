@@ -1,10 +1,26 @@
 import { ui } from "../../../main.js";
-
+const formatStatsLine = (...stats) => [...new Set(stats.filter(v => v))].join(" | ");
 export function dailyProgressHtml(userInfo, recentUnlocks) {
+    const progressItem = (label, ...values) => {
+        const formattedStats = formatStatsLine(...values);
+        if (formattedStats) {
+            return `
+                <li class="daily__item-container">
+                    <p class="daily__item">
+                        ${label}
+                        <span class="daily__value">
+                            ${formattedStats}
+                        </span>
+                    </p>
+                </li>
+            `
+        }
+        return ""
+    }
     const nowDay = new Date().toLocaleDateString();
     const dailyUnlocks = recentUnlocks.filter(c => new Date(c.Date).toLocaleDateString() == nowDay);
     const unlocksProgress = dailyUnlocks.length;
-    const pointsProgress = dailyUnlocks.reduce((acc, c) => {
+    const progress = dailyUnlocks.reduce((acc, c) => {
         if (c.HardcoreMode === 1) {
             acc.hardcorePoints += c.Points;
             acc.retroPoints += c.TrueRatio;
@@ -16,24 +32,17 @@ export function dailyProgressHtml(userInfo, recentUnlocks) {
         }
         return acc;
     }, { countHardcore: 0, hardcorePoints: 0, retroPoints: 0, countCasual: 0, casualPoints: 0 });
-    console.log(pointsProgress);
-    return `${unlocksProgress}`;
-    //  `
-    //     <div class="section__header-container user-info__header-container">
-    //         <div class="user-info__header">
-    //             <div class="user-info__avatar-container">
-    //                 <img class="user-info__avatar" src="${userInfo.userImageSrc}" onclick="ui.goto.login()">
-    //             </div>
-    //             <button class="button__switch-mode ${ui.isSoftmode ? "softmode" : ""}" onclick="ui.switchGameMode()">${ui.isSoftmode ? "SOFT" : "HARD"}</button>
-    //             <div class="user-info__user-name-container">
-    //                 <h1 class="user-info__user-name">${userInfo.userName}</h1>
-    //                 <div class="user-info__user-rank">${userInfo.userRank}</div>
-    //                 <div class="user-info__rich-presence">Member since: ${new Date(userInfo.memberSince).toLocaleDateString()}</div>
-    //             </div>
-    //         </div>
-    //         ${userInfo.isInGame ? `
-    //         <div class="user-info__rich-presence"> ${userInfo.richPresence}</div>
-    //         `: ""}
-    //     </div>
-    // `;//${this.pointsHtml()}
+    if (unlocksProgress) {
+        return `
+            <div class="daily__container">
+                <h2 class="daily__header">Daily progress</h2>
+                <ul class="daily__progress-list">
+                    ${progressItem("Unlocks", progress.countHardcore, progress.countCasual)}
+                    ${progressItem("Points", progress.hardcorePoints, progress.casualPoints)}
+                    ${progressItem("Retropoints", progress.retroPoints)}
+                </ul>
+            </div>
+        `;
+    }
+    return "";
 }

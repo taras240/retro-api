@@ -618,3 +618,50 @@
 .popup-info__image {
     height: 100%;
 }
+
+.daily__container {
+    padding: 1rem;
+    background: var(--main-color);
+    border-radius: var(--border-radius);
+}
+
+.daily__header {
+    padding: 0 0.25rem 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: start;
+    text-transform: uppercase;
+}
+
+.daily__progress-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.daily__item-container {
+    background: var(--main-color);
+    border: 1px solid var(--main-color);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+}
+
+.daily__item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1rem;
+    line-height: 1.1rem;
+}
+
+.daily__value {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: goldenrod;
+    background: black;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    min-width: 3rem;
+    text-align: center;
+}

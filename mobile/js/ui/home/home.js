@@ -30,9 +30,9 @@ export class Home {
 
     }
     async loadUserInfo() {
-        const userData = await apiWorker.getUserSummary({ gamesCount: 5, achievesCount: 8 });
-        // await delay(250);
-        // recentUnlocks = await apiWorker.getLastUnlocks({ minutes: 24 * 60 });
+        const userData = await apiWorker.getUserSummary({ gamesCount: 8, achievesCount: 8 });
+        await delay(50);
+        recentUnlocks = await apiWorker.getLastUnlocks({ minutes: 24 * 60 });
         USER_INFO = {
             userName: userData.User,
             status: userData.Status?.toLowerCase(),
@@ -54,12 +54,13 @@ export class Home {
         }
 
     }
-    // ${dailyProgressHtml(USER_INFO, recentUnlocks)}
+    // 
     HomeSection() {
         const homeSection = fromHtml(`
             <section class="home__section section">
                 ${headerHtml(USER_INFO)}
                 <div class="user-info__container">
+                    ${dailyProgressHtml(USER_INFO, recentUnlocks)}
                     <ul class="list recent-cheevos-list">
                         <button id="see-more-cheevos" class="user-info__block-header">
                             <h2>Last Unlocks</h2>
