@@ -138,14 +138,18 @@
   --mark-color: var(--rare-color);
 }
 
-.target-achiv:not(.hardcore).highlight::before {
-  --mark-color: green;
+.target-achiv:not(.earned)[data--type="progression"]::before {
+  --mark-color: rgba(0, 128, 0, 0.8);
   /* border: 1px solid greenyellow; */
   /* box-shadow: 0 0 5px 2px var(--font-color); */
 }
 
-.highlight-passed .target-achiv:not(.hardcore).passed::before {
-  --mark-color: crimson;
+.target-achiv:not(.earned)[data--type="win_condition"]::before {
+  --mark-color: rgba(0, 179, 0, 0.8);
+}
+
+.target-achiv:not(.hardcore)[data--type="missable"]::before {
+  --mark-color: rgba(220, 20, 60, 0.8);
   /* border: 1px solid red; */
   /* box-shadow: 0 0 5px 2px var(--font-color); */
 }
