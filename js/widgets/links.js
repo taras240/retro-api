@@ -6,6 +6,12 @@ export class Links extends Widget {
     };
     links = [
         {
+            name: "Support me on Ko-fi",
+            url: "https://ko-fi.com/C1T625DJRG",
+            iconUrl: "https://storage.ko-fi.com/cdn/logomarkLogo.png",
+            type: "support"
+        },
+        {
             name: "Windows APP",
             url: "https://github.com/taras240/retro-api/releases"
         },
@@ -62,15 +68,16 @@ export class Links extends Widget {
     }
     initializeElements() {
         this.section = document.querySelector("#links_section");
+        this.sectionID = this.section.id;
     }
     addEvents() {
         super.addEvents();
     }
     generateWidgetContent() {
         const linksContainer = this.section.querySelector(".links-container");
-        const linksHtml = this.links.map(({ name, url, iconUrl }) =>
+        const linksHtml = this.links.map(({ name, url, iconUrl, type }) =>
             `<li class="links__link-item">
-                <a class="signed-icon links__link-container" href="${url}" target="_blank">
+                <a class="signed-icon links__link-container ${type || ""}" href="${url}" target="_blank">
                     ${iconUrl ? `<img class="links__link-image" src="${iconUrl}" alt="${name}">` : " "}
                     <span class="links__link-title">${name}</span>
                 </a>

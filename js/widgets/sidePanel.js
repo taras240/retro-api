@@ -89,6 +89,12 @@ export class SidePanel {
                         </a>
                     </div>
                     <div class="setting-radio-group ">
+                        <a class="side-panel_input side-panel_link" data-title="Support me on Ko-fi"
+                            href="https://ko-fi.com/C1T625DJRG" target="_blank">
+                            <i class="side-panel__icon kofi-icon"></i>
+                        </a>
+                    </div>
+                    <div class="setting-radio-group ">
                         <input type="checkbox" name="open-settings-button" id="open-settings-button">
                         </input>
                         <label class="side-panel_input " data-title="settings" for="open-settings-button">

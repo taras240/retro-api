@@ -15,11 +15,29 @@
     width: 100%;
 }
 
+.links__link-container.support {
+    background: var(--orange-gradient);
+    color: black;
+    font-weight: bold;
+    font-size: 1.2em;
+    transition: 150ms;
+}
+
+.links__link-container.support:hover {
+    scale: 1.01;
+    /* background: var(--orange-gradient);
+  color: black;
+  font-weight: bold;
+  font-size: 1.2em; */
+}
+
 .links__link-image {
     height: 3em;
     aspect-ratio: 1;
     flex-shrink: 0;
     flex-grow: 0;
     object-fit: contain;
-    padding: 0.25em;
+    padding: 0.5em;
+    padding-left: 0;
+    image-rendering: auto;
 }

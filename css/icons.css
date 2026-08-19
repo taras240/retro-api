@@ -266,6 +266,15 @@
     justify-self: center;
 }
 
+.kofi-icon {
+    background-image: url(https://storage.ko-fi.com/cdn/logomarkLogo.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+    mask-image: none;
+}
+
 .unlock_icon {
     mask-image: url(../assets/img/unlock.svg);
 }
