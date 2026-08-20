@@ -30,6 +30,7 @@ async function showComments(id, type = 2) {
         content: commentsHtml,
         id: `comments_type-${type}`,
     }
+    ui.app.querySelectorAll(`#comments_type-${type}`).forEach(window => window.remove());
     new PopupWindow(popupData);
 }
 
