@@ -1,8 +1,8 @@
 import { delay } from "../functions/delay.js";
-import { PopupWindow } from "../widgets/popupWindow.js";
+import { ModalWindow } from "../widgets/modalWindow.js";
 import { input } from "./inputElements.js";
 
-export function gamePropsPopup() {
+export function gamePropsModal() {
   const gameDataItems = (gameData) => [
     {
       label: lang.title,
@@ -133,13 +133,13 @@ export function gamePropsPopup() {
 
   }
   const open = (gameData) => {
-    const popupData = () => ({
+    const windowData = () => ({
       title: gameData?.Title,
       content: contentHtml(gameDataItems(gameData)),
       id: `game-data-popup`,
       classList: ["game-data__section"]
     })
-    gameDataWindow = new PopupWindow(popupData());
+    gameDataWindow = new ModalWindow(windowData());
     addEvents(gameDataWindow.section, gameData)
   }
 

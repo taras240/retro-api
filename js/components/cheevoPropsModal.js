@@ -1,8 +1,7 @@
-import { delay } from "../functions/delay.js";
-import { PopupWindow } from "../widgets/popupWindow.js";
+import { ModalWindow } from "../widgets/modalWindow.js";
 import { input } from "./inputElements.js";
 
-export function cheevoPropsPopup() {
+export function cheevoPropsModal() {
     const cheevoDataItems = (cheevoData) => [
         {
             label: lang.title,
@@ -145,13 +144,13 @@ export function cheevoPropsPopup() {
     }
 
     const open = (cheevoData) => {
-        const popupData = () => ({
+        const windowData = () => ({
             title: cheevoData?.Title,
             content: contentHtml(cheevoDataItems(cheevoData)),
             id: `cheevo-data-popup`,
             classList: ["game-data__section"]
         })
-        gameDataWindow = new PopupWindow(popupData());
+        gameDataWindow = new ModalWindow(windowData());
         addEvents(gameDataWindow.section, cheevoData)
     }
     return { open }

@@ -1,5 +1,5 @@
 import { raapi } from "../api/index.js";
-import { PopupWindow } from "../widgets/popupWindow.js";
+import { ModalWindow } from "../widgets/modalWindow.js";
 
 async function showComments(id, type = 2) {
     const comments = await raapi.getComments({ id, type });
@@ -25,13 +25,13 @@ async function showComments(id, type = 2) {
     else {
         commentsHtml = `<h2 style="width: 100%;padding: 1rem; font-size: 2rem; text-align:center">No comments yet</h2>`;
     }
-    const popupData = {
+    const windowData = {
         title: `${type === 1 ? "Game" : type === 2 ? "Cheevo" : "User"} comments`,
         content: commentsHtml,
         id: `comments_type-${type}`,
     }
     ui.app.querySelectorAll(`#comments_type-${type}`).forEach(window => window.remove());
-    new PopupWindow(popupData);
+    new ModalWindow(windowData);
 }
 
 const commentInnerText = ({ CommentText }) => CommentText?.replace(

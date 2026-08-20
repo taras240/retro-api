@@ -1,23 +1,21 @@
-import { icons, signedIcons } from "../components/icons.js"
 import { Widget } from "./widget.js";
-import { generateBadges, badgeElements } from "../components/badges.js";
 import { buttonsHtml } from "../components/htmlElements.js";
 import { resizerHtml } from "../components/resizer.js";
 
 
-export class PopupWindow extends Widget {
+export class ModalWindow extends Widget {
     widgetIcon = {
         iconClass: "info-icon",
     };
-    constructor(popupData) {
+    constructor(windowData) {
         super();
-        this.generatePopupElement(popupData);
+        this.generateModalElement(windowData);
         this.initializeElements();
         this.addEvents();
         this.applyPosition();
         this.switchVisibility();
     }
-    generatePopupElement({ id, classList = [], title, content }) {
+    generateModalElement({ id, classList = [], title, content }) {
         this.close(id);
         const widget = document.createElement("section");
         widget.classList.add("popup-section", "section", ...classList);

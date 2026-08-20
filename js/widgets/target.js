@@ -1,15 +1,13 @@
-import { genreIcons, icons, signedIcons } from "../components/icons.js"
-import { generateBadges, badgeElements, goldBadge } from "../components/badges.js";
+import { icons, signedIcons } from "../components/icons.js"
+import { badgeElements } from "../components/badges.js";
 import { Widget } from "./widget.js";
 import { applyFilter, applySort, cheevosFiterNames, cheevosSortNames, filterBy, filterMethods, sortBy } from "../functions/sortFilter.js";
 import { showComments } from "../components/comments.js";
-import { cheevoPropsPopup } from "../components/cheevoPropsPopup.js";
 import { delay } from "../functions/delay.js";
-import { cheevoImageUrl, cheevoUrl, gameImageUrl, gameUrl } from "../functions/raLinks.js";
+import { cheevoUrl, gameImageUrl, gameUrl } from "../functions/raLinks.js";
 import { scrollElementIntoView } from "../functions/scrollingToElement.js";
 import { inputTypes } from "../components/inputElements.js";
 import { imageFilters } from "../enums/imageFilters.js";
-import { formatDuration } from "../functions/time.js";
 import { buttonsHtml } from "../components/htmlElements.js";
 import { CACHE_TYPES } from "../enums/cacheDataTypes.js";
 import { divHtml } from "../components/divContainer.js";
@@ -18,7 +16,6 @@ import { parseCurrentGameLevel } from "../functions/parseRP.js";
 import { createAutoScroll } from "../functions/autosScroll.js";
 import { UI_EVENTS_LIST } from "../enums/UIEvents.js";
 import { saveOrder } from "../functions/customOrder.js";
-import { CHEEVO_TYPES } from "../enums/cheevoTypes.js";
 import { contextSetsMenu } from "../functions/settings/subsetSettings.js";
 import { raapi } from "../api/index.js";
 import { CheevoElement } from "../components/cheevosList/cheevoItem.js";
@@ -571,7 +568,7 @@ export class Target extends Widget {
             // else if (event.target.matches(".edit-cheevo-button")) {
             //     const cheevoID = event.target.dataset.cheevoId;
             //     const cheevo = watcher.CHEEVOS[cheevoID];
-            //     cheevo && cheevoPropsPopup().open(cheevo);
+            //     cheevo && cheevoPropsModal().open(cheevo);
             // }
             else if (event.target.matches(".pin-cheevo")) {
                 const cheevo = event.target.closest(".target-achiv");
@@ -594,7 +591,7 @@ export class Target extends Widget {
             // else if (event.target.matches(".edit-cheevo-button")) {
             //     const cheevoID = event.target.dataset.cheevoId;
             //     const cheevo = watcher.CHEEVOS[cheevoID];
-            //     cheevo && cheevoPropsPopup().open(cheevo);
+            //     cheevo && cheevoPropsModal().open(cheevo);
             // }
             else if (event.target.matches(".pin-cheevo")) {
                 const cheevo = event.target.closest(".target-achiv");
