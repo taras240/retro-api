@@ -1,14 +1,13 @@
 import { Config } from "./config.js";
 import { UI } from "./ui.js";
 import { Watcher } from "./watcher.js";
-import { initSubsets } from "./functions/api/subsets.js";
 import { isSupported } from "./functions/main/isSupported.js";
 import { fromHtml } from "./functions/html.js";
 import { initRaapi } from "./api/index.js";
 let config, ui, watcher, APIEvents, UIEvents, userAuthData;
 const userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
-if (!isSupported()) {
+if (false && !isSupported()) {
   document.body.innerHTML = "";
   document.body.append(fromHtml(`
     <div style="font-family: 'system-ui','arial'; font-size: 2rem;">This platform is not supported.</div>
@@ -66,6 +65,3 @@ else {
 
   }
 }
-
-export { config, ui, watcher, APIEvents, UIEvents, userAuthData }
-export const { configData } = config

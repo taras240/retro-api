@@ -1,14 +1,10 @@
-import { generateBadges, badgeElements, goldBadge } from "../components/badges.js";
 import { Widget } from "./widget.js";
-import { moveEvent } from "../functions/movingWidget.js";
-import { resizeEvent } from "../functions/resizingWidget.js";
 import { inputTypes } from "../components/inputElements.js";
 import { buttonsHtml } from "../components/htmlElements.js";
 import { normalizeUserData } from "../functions/api/userDataNormalization.js";
 import { applySort, sortBy } from "../functions/sortFilter.js";
 import { GAME_AWARD_TYPES } from "../enums/gameAwards.js";
 import { animateValue } from "../functions/animations/valueAnimation.js";
-import { fromHtml } from "../functions/html.js";
 import { raapi } from "../api/index.js";
 
 
