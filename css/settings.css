@@ -171,19 +171,23 @@ input:checked+.settings-input,
 
 .settings_container {
   overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
 }
 
-.settings_container>* {
+/* .settings_container>* {
   padding: 7px 20px;
-}
+} */
 
 /* .settings_container > *:nth-child(even) {
   background-color: var(--secondary-color);
 } */
 
-.settings_container>*:not(:first-child) {
+/* .settings_container>*:not(:first-child) {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
+} */
 
 .colors-block {
   display: flex;

@@ -51,7 +51,11 @@ const stepper = ({ initValue, step, label }) => `
 const radioButton = (props) => {
     return checkbox({ ...props, isRadio: true });
 }
-
+const container = ({ label }) => {
+    return `
+        <div class="inputs-container" label="${label}"/>
+    `;
+}
 const textInput = ({ prefix, title, id, value, label, isNumber, isSearch, placeholder, classList = [] }) => {
     return `
     <div>
@@ -237,6 +241,8 @@ const inputHtml = (inputData) => {
             return stepper(inputData);
         case inputTypes.DIVIDER:
             return divider();
+        case inputTypes.CONTAINER:
+            return container(inputData);
         default:
             return `[${inputData.type} N/A]`;
     }
@@ -255,7 +261,8 @@ const inputTypes = Object.freeze({
     TEXT: "plain-text",
     STEPPER: "stepper",
     DIVIDER: "divider",
-    CONTEXT_BUTTON: "context_button"
+    CONTEXT_BUTTON: "context_button",
+    CONTAINER: "container",
 })
 export { inputTypes, inputHtml as input, inputElement, addEvents }
 // export { checkbox, statebox, radioButton, numberInput, textInput, searchInput, selectorInput, button, }

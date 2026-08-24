@@ -620,27 +620,16 @@ export class Settings extends Widget {
             container.innerHTML = ``;
             settingsItems.forEach(setting => {
                 if (!setting) return;
-                if (setting.elements) {
-                    const settingItemsLine = document.createElement("li");
-                    settingItemsLine.classList.add("settings_setting-line");
-                    const id = getRandomID();
-                    const settingLabel = fromHtml(`
-                            <label class="settings_setting-header" for="${id}">
-                                ${setting?.label}
-                            </label>
-                        `);
-                    const expandCheckbox = fromHtml(`
-                            <input type="checkbox" id="${id}" checked>`);
-                    const content = fromHtml(`
-                        <div class="settings__content"></div>
-                        `);
-                    settingItemsLine.append(expandCheckbox, settingLabel, content);
+                if (setting.elements || setting.type === inputTypes.CONTAINER) {
+                    const { label } = setting
+                    const settingsGroup = inputElement({ label, type: inputTypes.CONTAINER });
+
 
                     setting.elements.forEach(settingItem => {
                         const element = inputElement(settingItem);
-                        element && content.append(element);
+                        element && settingsGroup.append(element);
                     });
-                    container.appendChild(settingItemsLine);
+                    container.appendChild(settingsGroup);
                 }
                 else {
                     if (setting && setting.type !== inputTypes.DIVIDER) {
