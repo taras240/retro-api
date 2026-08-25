@@ -871,7 +871,6 @@ export class AchievementsBlock extends Widget {
         const newWidget = fromHtml(`
             <section id="${this.SECTION_ID}" class="section achivs">
                 <div class="header-container achievements-header_container">
-                    <div class="header-icon achievements-icon"></div>
                     <h2 class="widget-header-text achivs-header-text">
                         ${lang.cheevosSectionName}
                     </h2>

@@ -209,7 +209,7 @@ export class Widget {
         widget.id = id;
         widget.innerHTML = `
             <div class="header-container">
-                <div class="header-icon ${this.widgetIcon.iconClass}"></div>
+                <!--<div class="header-icon ${this.widgetIcon.iconClass}"></div>-->
                 <h2 class="widget-header-text">${title}</h2>
                 ${headerElementsHtml ?? ""}
                 ${buttonsHtml.close()}

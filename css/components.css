@@ -201,9 +201,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 0.25em;
+    gap: 0.5em;
     padding: 0.2em 0.5em;
-    background-color: var(--secondary-color);
+    background-color: var(--main-color);
     /* font-weight: bold; */
     border-radius: var(--border-radius) var(--border-radius) 0 0;
     border-bottom: 1px solid var(--main-color);
@@ -215,8 +215,8 @@
     width: fit-content;
     display: none;
     border-radius: var(--border-radius);
-    border: 1px solid var(--accent-color);
-    box-shadow: 0 0 2px 0px var(--accent-color);
+    border: 1px solid var(--selection-color);
+    box-shadow: 0 0 2px 0px var(--selection-color);
     z-index: 2;
 }
 
@@ -264,11 +264,13 @@
 
 .widget-header-text {
     color: var(--font-color);
-    text-align: center;
+    text-align: left;
     /* padding: 5px; */
-    /* font-weight: bold; */
+    font-weight: 600;
     font-size: 1.2em;
+    line-height: 1.2em;
     flex: 1;
+    margin-right: 0.5em;
 }
 
 .header-icon.hidden {
