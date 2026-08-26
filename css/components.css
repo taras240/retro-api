@@ -206,7 +206,7 @@
     background-color: var(--main-color);
     /* font-weight: bold; */
     border-radius: var(--border-radius) var(--border-radius) 0 0;
-    border-bottom: 1px solid var(--main-color);
+    border-bottom: 1px solid transparent;
     font-family: system-ui;
 }
 
@@ -217,6 +217,7 @@
     border-radius: var(--border-radius);
     border: 1px solid var(--selection-color);
     box-shadow: 0 0 2px 0px var(--selection-color);
+    background: var(--main-color) !important;
     z-index: 2;
 }
 

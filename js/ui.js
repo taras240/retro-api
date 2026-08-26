@@ -38,7 +38,6 @@ export class UI {
   STICK_MARGIN = 1;
   STICK_TOLERANCE = 7;
   hltb = {};
-  // isTest = true;
   constructor() {
     this.toggleLoading(false);
     this.initUI();
@@ -290,7 +289,9 @@ export class UI {
       accentColor,
       fontColor,
       secondaryFontColor,
-      selectionColor
+      selectionColor,
+      windowsStyle,
+      bgColor
     } = getColors(configData.preset);
 
     style.setProperty("--main-color", mainColor);
@@ -299,7 +300,9 @@ export class UI {
     style.setProperty("--font-color", fontColor);
     style.setProperty("--secondary-font-color", secondaryFontColor);
     style.setProperty("--selection-color", selectionColor);
-    style.setProperty("--page-bg", configData.bgColor);
+    style.setProperty("--page-bg", bgColor || configData.bgColor);
+    this.app.setAttribute("style", windowsStyle || "normal");
+
   }
   hasApiError = false;
   errorTimeout = null;

@@ -94,7 +94,6 @@
     border-radius: var(--border-radius);
     display: flex;
     cursor: grab;
-    background-color: var(--main-color);
 }
 
 .game-bg:is(.rp__section, .status__section) {

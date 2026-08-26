@@ -5,6 +5,14 @@ export const colorPresets = Object.freeze({
         accentColor: "#3663D8",
         fontColor: "#d6d6d6",
     },
+    glass: {
+        mainColor: "#171A21",
+        secondaryColor: "#202329",
+        accentColor: "#3663D8",
+        fontColor: "#d6d6d6",
+        windowsStyle: "glass",
+        bgColor: "linear-gradient(0deg, #2b2c49, #545673)",
+    },
     white: {
         mainColor: "#FFFFFF",
         secondaryColor: "#F0F0F0",

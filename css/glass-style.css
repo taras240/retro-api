@@ -1,0 +1,29 @@
+.wrapper[style="glass"] :is(.section,
+    .target-achiv,
+    .stats__stat-container,
+    .notification_timeblock-list,
+    .notification-game,
+    .notification-achiv,
+    .platform_game-item,
+    .games__playlist-item,
+    .cheevo-popup,
+    .console-awards) {
+    background: rgba(17, 17, 17, 0.2);
+    backdrop-filter: blur(5px);
+}
+
+.wrapper[style="glass"] :is(.header-container,
+    .content-container,
+    .notification_timestamp) {
+    background: transparent;
+}
+
+.wrapper[style="glass"] :is(input:checked + .radio-tab) {
+    border-radius: var(--border-radius);
+}
+
+body {
+    /* background: linear-gradient(180deg, #152331, #000000) !important;
+    background: linear-gradient(135deg, #ef9393, #e17dc2, #998ee0, #43add0, #8bdeda) !important;
+    background: linear-gradient(0deg, #2b2c49, #545673) !important; */
+}

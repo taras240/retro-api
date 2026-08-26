@@ -9,7 +9,6 @@
   cursor: grab;
   display: flex;
   flex-direction: column;
-  background-color: var(--main-color);
   border-radius: var(--border-radius);
   overflow: hidden;
 }
