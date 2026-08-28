@@ -1,0 +1,79 @@
+.event-item__container {
+    background: var(--secondary-color);
+    border-radius: 3px;
+    width: 100%;
+}
+
+.event-item {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    cursor: pointer;
+    align-items: center;
+}
+
+.row-item__text-block {
+    display: flex;
+    flex-direction: column;
+    font-size: 1em;
+
+}
+
+.event-item .icons-row-list {
+    font-size: 0.96em;
+}
+
+.event-item__container:not(.expanded) .expandable {
+    opacity: 0;
+    height: 0;
+    padding: 0;
+}
+
+.event-cheevos__cheevo {
+    display: grid;
+    gap: 0.25em 0.5em;
+    grid-template-columns: auto 1fr;
+    transition: 0.2s;
+    background-color: var(--main-color);
+    flex-shrink: 0;
+    width: 100%;
+}
+
+.row-item__preview {
+    aspect-ratio: 1;
+    grid-row: 1 / 4;
+
+}
+
+.w-3em {
+    width: 3em;
+}
+
+.w-4em {
+    width: 4em;
+}
+
+.expander-button {
+    position: absolute;
+    top: 0;
+    right: 0.5em;
+    height: 100%;
+    width: 1.8em;
+    opacity: .5;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+    mask-image: url(../assets/img/expand_more.svg);
+    transform: scaleY(1);
+    transition: transform 150ms;
+}
+
+.expanded>*>.expander-button {
+    transform: scaleY(-1);
+}
+
+.list-item__title {
+    font-size: 1.0em;
+    font-weight: 600;
+    line-height: 1em;
+}

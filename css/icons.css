@@ -611,6 +611,10 @@
     mask-image: url(../assets/img/handyman.svg);
 }
 
+.event-icon {
+    mask-image: url(../assets/img/event.svg);
+}
+
 /** Difficult badges */
 .difficult-badge {
     --bg-color: var(--selection-color);

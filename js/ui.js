@@ -27,6 +27,7 @@ import { Constructor } from "./widgets/constructor.js";
 import { GAME_AWARD_TYPES } from "./enums/gameAwards.js";
 import { blendColors, hexToRgba } from "./functions/ui/generateColors.js";
 import { fromHtml } from "./functions/html.js";
+import { EventAchievements } from "./widgets/events.js";
 
 
 export class UI {
@@ -38,6 +39,7 @@ export class UI {
   STICK_MARGIN = 1;
   STICK_TOLERANCE = 7;
   hltb = {};
+  // isTest = true;
   constructor() {
     this.toggleLoading(false);
     this.initUI();
@@ -86,6 +88,7 @@ export class UI {
     new AchievementsBlock(2);
     this.target = new Target();
     new Target(2);
+    this.events = new EventAchievements();
     this.gameCard = new GameCard();
     this.stats = new UserStatistic();
     // this.gameList = new GameList();

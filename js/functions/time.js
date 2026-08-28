@@ -46,11 +46,12 @@ export function formatDuration(seconds, compact = false) {
 
         return `${Math.round(seconds)}s`;
     }
-
+    const days = Math.floor(seconds / (24 * 3600));
+    seconds -= days * 24 * 3600;
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor(seconds % 3600 / 60);
     const remainingSeconds = Math.floor(seconds % 60);
-
+    if (days) return `${days}d ${hours}h`;
     if (hours) return `${hours}h ${minutes}m`;
     if (minutes) return `${minutes} min${minutes > 1 ? "s" : ""}`;
     return `${remainingSeconds} secs`;

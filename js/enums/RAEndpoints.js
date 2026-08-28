@@ -18,3 +18,6 @@ export const raEdpoints = Object.freeze({
     consoleGamesList: "API_GetGameList.php",
     consolesList: "API_GetConsoleIDs.php",
 });
+export const raEdpointsV2 = {
+    eventAchievements: "event-achievements"
+}

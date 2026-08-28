@@ -67,7 +67,7 @@ async function processQueue() {
     isProcessingQueue = false;
 }
 
-export async function request(endpoint, params) {
+export async function request(endpoint, params, isV2 = false) {
     const key = getCacheKey(endpoint, params);
 
     // Check cache first
@@ -81,14 +81,17 @@ export async function request(endpoint, params) {
         return inFlightRequests.get(key);
     }
 
-    const BASE_URL = `https://retroachievements.org/API/`;
+    const BASE_URL = isV2 ?
+        `https://api.retroachievements.org/v2/` :
+        `https://retroachievements.org/API/`;
+
     const TEST_BASE_URL = `/json/apiTemplates/`
     let url = new URL(BASE_URL + endpoint);
     if (ui?.isTest) {
         return await fetch(TEST_BASE_URL + endpoint.replace(/\.php.*/, ".json")).then(r => r.json());
     }
     for (const [pkey, value] of Object.entries(params || {})) {
-        if (value !== undefined && value !== null) {
+        if (value !== undefined && value !== null && value !== "") {
             url.searchParams.set(pkey, value);
         }
     }
@@ -107,7 +110,12 @@ export async function request(endpoint, params) {
             const controller = new AbortController();
             const id = setTimeout(() => controller.abort(), 3000);
             try {
-                const response = await fetch(url.toString(), { signal: controller.signal });
+                const response = await fetch(url.toString(), {
+                    signal: controller.signa,
+                    headers: isV2 ? {
+                        "x-api-key": config.API_KEY,
+                    } : {}
+                });
                 clearTimeout(id);
 
                 if (!response.ok) {

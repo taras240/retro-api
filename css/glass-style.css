@@ -7,7 +7,9 @@
     .platform_game-item,
     .games__playlist-item,
     .cheevo-popup,
-    .console-awards) {
+    .console-awards,
+    .event-item__container,
+    .event-cheevos__cheevo) {
     background: rgba(17, 17, 17, 0.2);
     backdrop-filter: blur(5px);
 }

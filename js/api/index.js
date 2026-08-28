@@ -5,6 +5,7 @@ import { getSubsets } from "../functions/api/subsets.js";
 import { delay } from "../functions/delay.js";
 import { calcEtaTimeToBeat } from "../functions/estimatedTime.js";
 import { call } from "./api.js";
+import { getEventAchievements } from "./handlers/v2/eventAchievements.js";
 
 
 let { API_KEY, USER_NAME, cache, gamesDB, configData } = window.config ?? {};
@@ -197,5 +198,39 @@ export const raapi = {
             return null;
         }
 
+    },
+    async getEventAchievements({ eventID = [], active = true, evergreen = false, }) {
+        let pagesCount = 1;
+        let eventAchievements = [];
+        let events = [];
+        for (let page = 1; page <= pagesCount; page++) {
+            const response = await call("getEventAchievements", {
+                eventID, page, count: 100, active, evergreen,
+            });
+            if (page === 1) {
+                const totalPages = response.meta?.page?.lastPage ?? 1;
+                pagesCount = totalPages;
+            }
+            const pageAchievements = response.data?.map(data => {
+                const { attributes } = data;
+                const cheevoID = data?.relationships?.eventAchievement?.data?.id ?? null;
+                const eventAchievement = {
+                    cheevoID,
+                    ...attributes,
+                }
+                return eventAchievement;
+            })
+            const pageEvents = response.included?.filter(item => item.type === "events");
+            events.push(...pageEvents);
+            eventAchievements.push(...pageAchievements);
+        }
+        events = [...new Map(events.map(item => [item.id, item])).values()].map(event => {
+            event.items = eventAchievements.filter(cheevo => cheevo.eventTitle === event.attributes?.title);
+            return event;
+        })
+        return events;
     }
+
+
+
 };

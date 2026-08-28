@@ -2,5 +2,6 @@ export const cheevoImageUrl = ({ BadgeName }) => `https://media.retroachievement
 export const gameImageUrl = (imageEndpoint) => `https://media.retroachievements.org${imageEndpoint}`;
 export const gameImageUrlByID = (imageID) => `https://media.retroachievements.org/Images/${imageID}.png`;
 export const gameUrl = (gameID) => `https://retroachievements.org/game/${gameID}`;
+export const eventUrl = (eventID) => `https://retroachievements.org/event/${eventID}`;
 export const cheevoUrl = ({ ID }) => `https://retroachievements.org/achievement/${ID}`;
 export const getRaKeyUrl = `https://retroachievements.org/settings?tab=applications`;
