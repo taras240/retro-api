@@ -1,4 +1,5 @@
 import { badgeElements } from "../badges.js";
+import { buttonsHtml } from "../htmlElements.js";
 
 export function focusCheevoHtml() {
     return `
@@ -9,6 +10,11 @@ export function focusCheevoHtml() {
             <div class="rp__focus-info">
                 <h3 class="rp__focus-title"></h3>
                 <p class="rp__focus-description"></p>
+            </div>
+            <div class="element-control__container">
+                ${buttonsHtml.prev("previous_focus")}
+                ${buttonsHtml.reset("reset_focus")}
+                ${buttonsHtml.next("next_focus")}
             </div>
         </div>
     `

@@ -1341,3 +1341,20 @@ input[type="radio"]:checked+.context-menu_radio::after {
     box-shadow: inset 0 0 3px 1px black;
     z-index: 2;
 }
+
+.element-control__container {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: var(--secondary-color);
+    border-radius: 3px;
+    border: 1px solid var(--selection-color);
+    display: flex;
+    flex-direction: row;
+    opacity: 0;
+    transition: opacity 150ms;
+}
+
+*:hover>.element-control__container {
+    opacity: 1;
+}

@@ -39,6 +39,7 @@ import { getRandomID } from "../functions/randomID.js";
 import { focusCheevoHtml } from "../components/statusWidget/focusCheevo.js";
 import { contextSetsMenu, contextSwitchSetsMenu } from "../functions/settings/subsetSettings.js";
 import { gameLinksMenu } from "../functions/settings/gameLinks.js";
+import { UI_EVENTS_LIST } from "../enums/UIEvents.js";
 
 export class Status extends Widget {
     widgetIcon = {
@@ -595,6 +596,58 @@ export class Status extends Widget {
                 menuItems: this.contextMenuItems,
             });
         });
+        this.section.addEventListener("click", (event) => {
+            const isCheevoUnlocked = (cheevo) =>
+                this.uiProps.isHardMode ? cheevo.isEarnedHardcore : cheevo.isEarned;
+            const focusControl = () => {
+                const gameID = watcher.GAME_DATA.ID;
+                let focusCheevoOffset = config.gamesDB[gameID]?.focusOffset ?? 0;
+
+                const cheevos = Object.values(watcher.CHEEVOS);
+
+                const sortedCheevos = cheevos.filter(c => !isCheevoUnlocked(c)).sort((a, b) => sortBy.customOrder(a, b));
+
+                const currentIndex = Math.min(sortedCheevos.length - 1, focusCheevoOffset);
+
+
+                const saveFocusOffset = (offset) => {
+                    config.gamesDB[gameID] ??= {};
+                    config.gamesDB[gameID].focusOffset = offset;
+                    UIEvents.dispatchEvent(new CustomEvent(UI_EVENTS_LIST.customOrderChanged, {}));
+                }
+                const focusPrevious = () => {
+                    let newIndex = Math.max(0, currentIndex - 1);
+                    saveFocusOffset(newIndex);
+                }
+                const focusNext = () => {
+                    let newIndex = Math.min(sortedCheevos.length - 1, currentIndex + 1);
+                    saveFocusOffset(newIndex);
+                }
+                const focusReset = () => {
+
+                    saveFocusOffset(0);
+                }
+                return { focusPrevious, focusReset, focusNext }
+            }
+
+            const button = event.target.closest("[data-action]");
+            if (!button) return;
+
+            const action = button.dataset.action;
+            switch (action) {
+                case "previous_focus":
+                    focusControl().focusPrevious();
+                    break;
+
+                case "reset_focus":
+                    focusControl().focusReset();
+                    break;
+
+                case "next_focus":
+                    focusControl().focusNext();
+                    break;
+            }
+        });
         this.watchButton.addEventListener("click", (e) => {
             e.stopPropagation();
             watcher.isActive ?
@@ -618,8 +671,15 @@ export class Status extends Widget {
         this.updateFocusCheevo();
     }
     getFocusCheevo() {
+        const isCheevoUnlocked = (cheevo) =>
+            this.uiProps.isHardMode ? cheevo.isEarnedHardcore : cheevo.isEarned;
+
+        const gameID = watcher.GAME_DATA.ID;
+        let focusCheevoOffset = config.gamesDB[gameID]?.focusOffset ?? 0;
         const cheevos = Object.values(watcher.CHEEVOS);
-        const focusCheevo = cheevos.filter(c => this.uiProps.isHardMode ? !c.isEarnedHardcore : !c.isEarned).sort((a, b) => sortBy.customOrder(a, b))[0];
+        const sortedCheevos = cheevos.filter(c => !isCheevoUnlocked(c)).sort((a, b) => sortBy.customOrder(a, b));
+        const currentIndex = Math.min(sortedCheevos.length - 1, focusCheevoOffset);
+        const focusCheevo = sortedCheevos[currentIndex];
         return focusCheevo;
     }
     updateFocusCheevo() {
@@ -632,11 +692,17 @@ export class Status extends Widget {
             titleElements.forEach(el => el.innerHTML = `
                 ${badgeElements.gold("focus")} ${focusCheevo.Title}
             `);
-            descriptionElements.forEach(el => el.innerText = focusCheevo.Description);
+            descriptionElements.forEach(el => {
+                el.innerText = focusCheevo.Description;
+                el.dataset.title = focusCheevo.Description;
+            });
         }
         else {
-            titleElements.innerHTML = badgeElements.gold("focus");
-            descriptionElements.innerText = lang.noFocusMsg;
+            titleElements.forEach(el => el.innerHTML = `${badgeElements.gold("focus")} ${lang.noCheevoToShow}`
+            );
+            descriptionElements.forEach(el => {
+                el.innerText = "...";
+            });
         }
     }
     updateHardMode(cheevos) {

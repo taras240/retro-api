@@ -283,6 +283,21 @@
     mask-image: url(../assets/img/close.svg);
 }
 
+.reset-icon {
+    mask-image: url(../assets/img/close.svg);
+    scale: 0.9;
+}
+
+.next-icon {
+    transform: rotateZ(-90deg);
+    mask-image: url(../assets/img/expand_more.svg);
+}
+
+.prev-icon {
+    transform: rotateZ(90deg);
+    mask-image: url(../assets/img/expand_more.svg);
+}
+
 .export-icon {
     mask-image: url(../assets/img/download.svg);
 }

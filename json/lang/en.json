@@ -365,5 +365,9 @@
     "releasedYear": "Release Year",
     "unlocked": "unlocked",
     "cropBorder": "Crop Border",
-    "modifiedDate": "Modified Update"
+    "modifiedDate": "Modified Update",
+    "reset": "Reset",
+    "next": "Next",
+    "prev": "Previous",
+    "noCheevoToShow": "No achievement to display"
 }

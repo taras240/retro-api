@@ -29,6 +29,7 @@ export const buttonsHtml = {
     togglePins: () => `<button class="header-button header-icon pins-icon toggle-pins" data-title="${lang.togglePins}"></button>`,
     close: (onClick) => `<button class="header-icon header-button close-icon" onclick="${onClick}" data-title="${lang.close}"></button>`,
     delete: () => `<button class="header-icon header-button delete-icon" data-title="${lang.delete}"></button>`,
+
     sort: (sectionID, onClick) => `<button class="header-button header-icon sort-icon" id="${sectionID}-sort-button" data-title="${lang.sort}"></button>`,
 
     filter: (sectionID, onClick) => `<button class="header-button header-icon filter-icon" id="${sectionID}-filter-button" data-title="${lang.filter}"></button>`,
@@ -38,5 +39,8 @@ export const buttonsHtml = {
     reload: ({ hint } = {}) => `<button class="header-button header-icon update-icon" data-title="${hint ?? lang.forceReloadHint}"></button>`,
     fulscreen: (onClick) => `
         <button class="header-button header-icon fullscreen-button fullscreen-icon" data-title="${lang.fullscreen}" onclick="${onClick}"></button>
-    `
+    `,
+    reset: (action) => `<button class="header-icon header-button reset-icon" data-action="${action}" data-title="${lang.reset}"/>`,
+    next: (action) => `<button class="header-icon header-button next-icon" data-action="${action}" data-title="${lang.next}"/>`,
+    prev: (action) => `<button class="header-icon header-button prev-icon" data-action="${action}" data-title="${lang.prev}"/>`,
 }

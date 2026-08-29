@@ -1186,6 +1186,7 @@
 }
 
 .rp__focus-cheevo {
+    position: relative;
     display: flex;
     flex-direction: row;
     gap: 0.5em;
