@@ -509,7 +509,7 @@ export class Watcher {
                 await this.checkApiUpdates();
             }, configData.updateDelaySec * 1000);
         }
-        this.stop()
+        this.stop(true);
 
         startApiWorker();
         startTimer();
@@ -529,8 +529,8 @@ export class Watcher {
         const eta = calcEtaTimeToBeat(this.GAME_DATA);
         this.GAME_DATA.eta = eta;
     }
-    stop() {
-        this.onStopSession();
+    stop(isInit) {
+        !isInit && this.onStopSession();
         clearInterval(this.apiTrackerInterval);
         clearInterval(this.logWatcherInterval);
         this.isWatching = false;

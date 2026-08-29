@@ -650,6 +650,7 @@ export class Status extends Widget {
         });
         this.watchButton.addEventListener("click", (e) => {
             e.stopPropagation();
+            this.watchButton.classList.add("load");
             watcher.isActive ?
                 watcher.stop() : watcher.start();
         });
@@ -743,11 +744,12 @@ export class Status extends Widget {
     }
     onStartSession({ }) {
         this.timeWatcher().start();
+        this.watchButton.classList.remove("load");
         this.watchButton.classList.add("active");
     }
     onStopSession() {
         this.timeWatcher().stop();
-        this.watchButton.classList.remove("active");
+        this.watchButton.classList.remove("active", "load");
     }
     onStatsUpdate({ userData }) {
         const { richPresence } = userData;

@@ -1168,6 +1168,10 @@
     opacity: 1;
 }
 
+.status__watch-button.load::after {
+    mask-image: url(../assets/img/circle.svg);
+}
+
 .status__watch-button.active::after {
     mask-image: url(../assets/img/pause.svg);
 }

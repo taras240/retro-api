@@ -1,6 +1,5 @@
 @import url(./reset.css);
 @import url(./components.css);
-/* @import url(./background.css); */
 @import url(./icons.css);
 @import url(./settings.css);
 @import url(./side-panel.css);
@@ -8,11 +7,9 @@
 @import url(./achievement.css);
 @import url(./targetAchivs.css);
 @import url(./awards.css);
-/* @import url(./status.css); */
 @import url(./games.css);
 @import url(./progression.css);
 @import url(./note.css);
-/* @import url(./userInfo.css); */
 @import url(./notification.css);
 @import url(./game-popup.css);
 @import url(./stats.css);
@@ -25,7 +22,6 @@
 @import url(./constructor.css);
 @import url(./events.css);
 @import url(./glass-style.css);
-/* @import url(./achievemas.css); */
 
 /* @import url('../assets/fonts/bucky_ohare_nes.ttf'); */
 /* @font-face {
