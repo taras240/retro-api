@@ -5,7 +5,7 @@
     .notification-game,
     .notification-achiv,
     .platform_game-item,
-    .games__playlist-item,
+    .games__playlist-item:not(.active),
     .cheevo-popup,
     .console-awards,
     .event-item__container,

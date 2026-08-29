@@ -141,7 +141,7 @@ section.section.games_setion:hover {
   padding: 1em 0.5em;
   background: var(--secondary-color);
   border-radius: 3px;
-  border: 1px solid var(--secondary-color);
+  border: 1px solid transparent;
   transition: 200ms;
   cursor: pointer;
 }
