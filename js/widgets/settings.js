@@ -616,28 +616,38 @@ export class Settings extends Widget {
         };
 
         const generateSettingsContainer = (settingsItems) => {
+            const showSettingsGroup = (group) => {
+                const { label, elements } = group
+                const settingsGroup = inputElement({ label, type: inputTypes.CONTAINER });
+
+
+                elements.forEach(settingItem => {
+                    const element = inputElement(settingItem);
+                    element && settingsGroup.append(element);
+                });
+                container.appendChild(settingsGroup);
+            }
             const container = this.section.querySelector(".content-container");
             container.replaceChildren();
+
+            const ungroupped = [];
             settingsItems.forEach(setting => {
                 if (!setting) return;
                 if (setting.elements || setting.type === inputTypes.CONTAINER) {
-                    const { label } = setting
-                    const settingsGroup = inputElement({ label, type: inputTypes.CONTAINER });
-
-
-                    setting.elements.forEach(settingItem => {
-                        const element = inputElement(settingItem);
-                        element && settingsGroup.append(element);
-                    });
-                    container.appendChild(settingsGroup);
+                    showSettingsGroup(setting);
                 }
                 else {
                     if (setting && setting.type !== inputTypes.DIVIDER) {
-                        const element = inputElement(setting);
-                        element && container.append(element);
+                        ungroupped.push(setting);
                     }
                 }
             })
+            if (ungroupped.length) {
+                showSettingsGroup({
+                    label: lang.other,
+                    elements: ungroupped,
+                })
+            }
 
         }
         const widget = this.generateWidgetElement(widgetData);

@@ -267,12 +267,18 @@ export class Constructor extends Widget {
         }
         const editorItems = [
             {
-                type: inputTypes.SEARCH_INPUT,
-                label: lang.elName,
-                value: props.name ?? "",
-                title: lang.elName,
-                classList: ["wide-input"],
-                onChange: (event) => props.name = event.currentTarget.value,
+                label: lang.title,
+                type: inputTypes.CONTAINER,
+                elements: [
+                    {
+                        type: inputTypes.SEARCH_INPUT,
+                        label: lang.elName,
+                        value: props.name ?? "",
+                        title: lang.elName,
+                        classList: ["wide-input"],
+                        onChange: (event) => props.name = event.currentTarget.value,
+                    },
+                ]
             },
             {
                 label: lang.possibleElements,
