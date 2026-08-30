@@ -215,7 +215,7 @@ export class Notifications extends Widget {
     }
     showSavedAlert() {
         if (!this.uiProps.showSavedAlerts) return;
-        this.container.innerHTML = "";
+        this.container.replaceChildren();
         const savedAlerts = this.getSavedAlerts();
         savedAlerts.forEach(({ timeStamp, alerts }) => {
             this.showAlerts(alerts, new Date(timeStamp).getTime());

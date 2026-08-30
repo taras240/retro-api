@@ -2,7 +2,6 @@ import { ALERT_TYPES } from "../../enums/alerts.js";
 import { delay } from "../../functions/delay.js";
 import { cheevoImageUrl, gameImageUrl } from "../../functions/raLinks.js";
 import { badgeElements, generateBadges, goldBadge } from "../badges.js";
-import { cheevoElementFull } from "../cheevo.js";
 import { divHtml } from "../divContainer.js";
 import { icons } from "../icons.js";
 
@@ -144,7 +143,7 @@ export const hideAlert = async (alertContainer, animDurationMs) => {
     alertContainer.classList.remove("show-alert");
     alertContainer.classList.add("hide-alert");
     await delay(animDurationMs ?? 1000);
-    alertContainer.innerHTML = "";
+    alertContainer.replaceChildren();
 }
 const fitFontSize = (alertContainer) => {
     const MAX_SIZE = 1.8;

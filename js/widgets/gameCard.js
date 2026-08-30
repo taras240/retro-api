@@ -9,7 +9,7 @@ import { DIFFICULTY_NAMES } from "../enums/difficulty.js";
 import { gameImageUrl, gameUrl } from "../functions/raLinks.js";
 import { inputTypes } from "../components/inputElements.js";
 import { buttonsHtml } from "../components/htmlElements.js";
-import { completionMsg } from "../components/statusWidget/progressBar.js";
+import { CompletionMsg } from "../components/statusWidget/progressBar.js";
 import { PROGRESS_TYPES } from "../enums/progressBar.js";
 import { getCheevosCount, getPointsCount, getRetropointsCount } from "../functions/gameProperties.js";
 const PREVIEW_SIZE = {
@@ -246,9 +246,15 @@ export class GameCard extends Widget {
         const gameData = watcher.GAME_DATA;
         const isHardMode = watcher.IS_HARD_MODE;
 
-        this.progressCountContainer.innerHTML = completionMsg(gameData, PROGRESS_TYPES.cheevos, isHardMode);
-        this.progressPointsContainer.innerHTML = completionMsg(gameData, PROGRESS_TYPES.points, isHardMode);
-        this.progressRetropointsContainer.innerHTML = completionMsg(gameData, PROGRESS_TYPES.retropoints, isHardMode);
+        this.progressCountContainer.replaceChildren(
+            ...CompletionMsg(gameData, PROGRESS_TYPES.cheevos, isHardMode)
+        );
+        this.progressPointsContainer.replaceChildren(
+            ...CompletionMsg(gameData, PROGRESS_TYPES.points, isHardMode)
+        );
+        this.progressRetropointsContainer.replaceChildren(
+            ...CompletionMsg(gameData, PROGRESS_TYPES.retropoints, isHardMode)
+        );
     }
     async onGameChange({ gameData, isNewGame }) {
         const {

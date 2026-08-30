@@ -1,3 +1,2 @@
-import { divHtml } from "../divContainer.js";
 
-export const tickerHtml = () => divHtml(["rp__ticker"]);
+export const tickerHtml = "<.rp__ticker/>";

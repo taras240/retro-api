@@ -29,7 +29,7 @@ export class ModalWindow extends Widget {
             <div class="${"widget-content__container"}">
                 ${content}
             </div>
-            ${resizerHtml()}`;
+            ${resizerHtml}`;
         this.section = widget;
         ui.app.appendChild(widget);
         this.section = widget;

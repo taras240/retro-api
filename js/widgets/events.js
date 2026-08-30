@@ -149,7 +149,7 @@ export class EventAchievements extends Widget {
 
         // console.log(events);
 
-        this.container.innerHTML = "";
+        this.container.replaceChildren();
         this.container.append(await cheevosListElement(events));
     }
 }

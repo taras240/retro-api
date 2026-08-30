@@ -207,15 +207,16 @@ export class Widget {
         const widget = document.createElement("section");
         widget.classList.add(...classes);
         widget.id = id;
-        widget.innerHTML = `
+        const header = fromHtml(`
             <div class="header-container">
-                <!--<div class="header-icon ${this.widgetIcon.iconClass}"></div>-->
                 <h2 class="widget-header-text">${title}</h2>
                 ${headerElementsHtml ?? ""}
                 ${buttonsHtml.close()}
             </div>
-            ${contentHtml}
-            ${resizerHtml()}`;
+        `);
+        const content = fromHtml(contentHtml, true);
+        const resizer = fromHtml(resizerHtml);
+        widget.append(header, ...content, resizer);
         return widget;
     }
     open() {

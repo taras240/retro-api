@@ -587,7 +587,7 @@ export class AchievementsBlock extends Widget {
     // Розбирає отримані досягнення гри та відображає їх на сторінці
     async parseGameAchievements(gameData) {
         const clearContainer = () => {
-            this.container.innerHTML = "";
+            this.container.replaceChildren();
         }
         const fillCheevosContainer = (gameData) => {
             Object.values(gameData.AllAchievements).forEach((achievement) => {
@@ -880,7 +880,7 @@ export class AchievementsBlock extends Widget {
                     ${buttonsHtml.close()}
                 </div>
                 <ul class="achievements-container content-container"></ul>
-                ${resizerHtml()}
+                ${resizerHtml}
             </section>
         `);
         return newWidget;
@@ -910,7 +910,7 @@ export class AchievementsBlock extends Widget {
         }
         const gameData = watcher.GAME_DATA;
         const cheevos = this.container.querySelectorAll(".achiv-block");
-        this.container.innerHTML = "";
+        this.container.replaceChildren();
         if (!this.uiProps.isGrouping) {
             removeGroups(cheevos);
             return;

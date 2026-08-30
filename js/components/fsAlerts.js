@@ -3,6 +3,7 @@ import { badgeElements } from "./badges.js";
 import { delay } from "../functions/delay.js";
 import { cheevoImageUrl, gameImageUrl } from "../functions/raLinks.js";
 import { GAME_AWARD_TYPES } from "../enums/gameAwards.js";
+import { fromHtml } from "../functions/html.js";
 
 let fsAlerts = [];
 function pushFSAlerts(alertsArray) {
@@ -12,6 +13,29 @@ function pushFSAlerts(alertsArray) {
             showFSAlert();
         }
     });
+}
+function FSAlertElement({ header, iconUrl, title, description, isCheevo }) {
+    return fromHtml(`
+            <.fs-alert__container>
+                <.fs-alert__main-content>
+                    <.fs-alert__border.fs-alert__border-top/>
+                    <.fs-alert__header>${header}</>
+                    <.fs-alert__sub-border/>
+                    <.fs-alert__image-container>
+                        <.fs-alert__light/>
+                        <img.fs-alert__image src="${iconUrl}">
+                        <.fs-alert__blick/>
+                    </>
+                    <.fs-alert__title>
+                        ${title}
+                    </>
+                    <.fs-alert__border.fs-alert__border-botton/>
+                    <.fs-alert__description>
+                        ${description || ""}
+                    </>
+                </>
+            </>
+        `);
 }
 async function showFSAlert() {
     const { fsAlertDuration, fsNewCheevo, fsNewAward } = configData;
@@ -27,53 +51,26 @@ async function showFSAlert() {
             [BEATEN_SOFTCORE]: `${lang.gameBeaten} ${casualBadge()}`,
         }
         app.querySelectorAll(".fs-alert__container").forEach(el => el.remove());
-        const alertElement = document.createElement('div');
-        alertElement.className = "fs-alert__container";
-        alertElement.innerHTML = `
-            <div class="fs-alert__main-content">
-                <div class="fs-alert__border fs-alert__border-top"></div>
-                <div class="fs-alert__header">${awardTitles[awardName]}</div>
-                <div class="fs-alert__sub-border "></div>
-                <div class="fs-alert__image-container">
-                    <div class="fs-alert__light"></div>
-                    <img src="${gameImageUrl(ImageIcon)}" alt="" class="fs-alert__image">
-                    <div class="fs-alert__blick"></div>
-                </div>
-                <div class="fs-alert__description">${Title}</div>
-                <div class="fs-alert__border fs-alert__border-botton"></div>
-            </div>
-        `;
+        const alertElement = FSAlertElement({
+            header: awardTitles[awardName],
+            iconUrl: gameImageUrl(ImageIcon),
+            title: Title,
+        })
         return alertElement;
     }
     const cheevoAlert = ({ isEarnedHardcore, Title, BadgeName, Points, TrueRatio, rateEarned, rateEarnedHardcore, difficulty, Description }) => {
         app.querySelectorAll(".fs-alert__container").forEach(el => el.remove());
 
-        const alertElement = document.createElement('div');
-        alertElement.className = "fs-alert__container";
-
         const alertHeader = isEarnedHardcore ?
             lang.achievementUnlocked :
             `${lang.achievementUnlocked} ${casualBadge()}`;
 
-        alertElement.innerHTML = `
-            <div class="fs-alert__main-content">
-                <div class="fs-alert__border fs-alert__border-top"></div>
-                <div class="fs-alert__header">${alertHeader}</div>
-                <div class="fs-alert__sub-border"></div>
-                <div class="fs-alert__image-container">
-                    <div class="fs-alert__light"></div>
-                    <img src="${cheevoImageUrl({ BadgeName })}" alt="" class="fs-alert__image">
-                    <div class="fs-alert__blick"></div>
-                </div>
-                <div class="fs-alert__title">
-                    ${Title}
-                </div>
-                <div class="fs-alert__border fs-alert__border-botton"></div>
-                <div class="fs-alert__description">
-                    ${Description}
-                </div>
-            </div>
-        `;
+        const alertElement = FSAlertElement({
+            header: alertHeader,
+            iconUrl: cheevoImageUrl({ BadgeName }),
+            title: Title,
+            description: Description,
+        })
         return alertElement;
     }
 

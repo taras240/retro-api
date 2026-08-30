@@ -2,6 +2,7 @@ import { CHEEVO_TYPES } from "../../enums/cheevoTypes.js";
 import { GAME_AWARD_TYPES } from "../../enums/gameAwards.js";
 import { calcEtaTimeToBeat } from "../../functions/estimatedTime.js";
 import { formatText } from "../../functions/formatText.js";
+import { fromHtml } from "../../functions/html.js";
 import { scrollElementIntoView } from "../../functions/scrollingToElement.js";
 import { filterBy, sortBy } from "../../functions/sortFilter.js";
 import { formatDuration } from "../../functions/time.js";
@@ -9,12 +10,30 @@ import { badgeElements } from "../badges.js";
 
 const mainClass = "rp__progression";
 let updateInterval, updateTimeout;
+const isEarned = (cheevo, isHardMode) => {
+    const isEarnedCasual = cheevo.isEarned && !isHardMode;
+    return cheevo.isEarnedHardcore || isEarnedCasual;
+};
+const PointElement = ({ cheevo, focusCheevo, isHardMode }) => {
+    const isFocus = focusCheevo?.ID === cheevo.ID;
+    const classList = [
+        `${mainClass}-point`,
+        cheevo.Type === CHEEVO_TYPES.WIN && "win",
+        isEarned(cheevo, isHardMode) && "earned",
+        isFocus && "focus",
+    ].filter(Boolean);
+
+    const point = fromHtml(`
+            <.${classList.join(".")} data-achiv-id="${cheevo.ID}" style="--focus-time:${cheevo.progressionFocusTime || 1}"/>
+        `)
+    return point;
+}
+
 export const updateProgressionBar = (container, gameData, isHardMode = true) => {
     updateInterval && clearInterval(updateInterval);
     updateTimeout && clearTimeout(updateTimeout);
     const mainSetID = gameData.availableSubsets?.Main;
-    const isEarned = (cheevo) => cheevo.isEarnedHardcore ||
-        (cheevo.isEarned && !isHardMode);
+
 
     const progressionMessage = (focusCheevo, focusIndex, cheevos, winCount) => {
         let message;
@@ -27,22 +46,7 @@ export const updateProgressionBar = (container, gameData, isHardMode = true) => 
         }
         return message;
     }
-    const progressionPoints = (focusCheevo, cheevos) => {
-        return cheevos
-            .map((cheevo) => {
-                const classes = [
-                    "rp__progression-point",
-                    cheevo.Type === CHEEVO_TYPES.WIN && "win",
-                    isEarned(cheevo) && "earned",
-                    focusCheevo?.ID === cheevo.ID && "focus",
-                ]
-                    .filter(Boolean)
-                    .join(" ");
 
-                return `<div class="${classes}" data-achiv-id="${cheevo.ID}" style="--focus-time:${cheevo.progressionFocusTime || 1}"></div>`;
-            })
-            .join("");
-    }
     if (!gameData) return "n/a";
     const reorderCheevos = (cheevos) => {
         const sortedCheevos = cheevos.sort((a, b) => sortBy.progression(a, b)).sort((a, b) =>
@@ -61,17 +65,24 @@ export const updateProgressionBar = (container, gameData, isHardMode = true) => 
     const cheevos = reorderCheevos(Object.values(gameData.AllAchievements));
     const winCount = Object.values(gameData.AllAchievements).filter(c => c.Type == CHEEVO_TYPES.WIN).length;
 
-    const focusCheevo = cheevos.find(a => !isEarned(a));
-    const focusIndex = cheevos.findIndex(c => !isEarned(c));
+    const focusCheevo = cheevos.find(a => !isEarned(a, isHardMode));
+    const focusIndex = cheevos.findIndex(c => !isEarned(c, isHardMode));
     const message = progressionMessage(focusCheevo, focusIndex, cheevos, winCount);
-    container.innerHTML = `
-        <h3 class="${mainClass}-target" data-title="${focusCheevo?.Description ?? ""}">
+
+    const tittleEl = fromHtml(`
+        <h3.${mainClass}-target data-title="${focusCheevo?.Description ?? ""}">
             ${message}
         </h3>
-        <div class="${mainClass}-points">
-            ${progressionPoints(focusCheevo, cheevos)}
-        </div>
-    `;
+    `);
+    const progressContainer = fromHtml(`
+        <.${mainClass}-points/>
+    `)
+    progressContainer.append(
+        ...cheevos.map((cheevo) => PointElement({ cheevo, focusCheevo, isHardMode }))
+    )
+
+    container.replaceChildren(tittleEl, progressContainer);
+
     scrollElementIntoView({
         container: container.querySelector(`.${mainClass}-points`),
         element: container.querySelector(".focus"),
@@ -103,9 +114,9 @@ export const updateProgressionBar = (container, gameData, isHardMode = true) => 
 
 export const progressionBarHtml = (theme) => {
     return `
-        <div class="${mainClass}-container">
-            <h3 class="${mainClass}-target"></h3>
-            <div class="${mainClass}-points"></div>
-        </div>
+        <.${mainClass}-container>
+            <h3.${mainClass}-target/>
+            <.${mainClass}-points/>
+        </>
     `;
 }

@@ -89,7 +89,7 @@ export class Constructor extends Widget {
         this.fillConfigItems();
     }
     fillConfigItems() {
-        this.container.innerHTML = "";
+        this.container.replaceChildren();
         this.uiProps.elements.forEach((props, index) => {
             props.index = index;
             const item = fromHtml(`

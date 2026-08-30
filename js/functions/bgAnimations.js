@@ -32,7 +32,7 @@ function randomImage(container) {
     }
     const start = () => {
         const initContainer = () => {
-            container.innerHTML = "";
+            container.replaceChildren();
             imageElement = document.createElement("img");
             imageElement.id = "background-image";
             container.appendChild(imageElement);
@@ -102,7 +102,7 @@ function particlesAnimation(container, moveType) {
 
     const init = (moveType) => {
         const initContainer = () => {
-            container.innerHTML = "";
+            container.replaceChildren();
             canvas = document.createElement("canvas");
             container.appendChild(canvas);
 
@@ -183,7 +183,7 @@ function wavesAnimation(container) {
     let canvas, ctx;
     const init = (moveType) => {
         const initContainer = () => {
-            container.innerHTML = "";
+            container.replaceChildren();
             canvas = document.createElement("canvas");
             container.appendChild(canvas);
 
@@ -279,7 +279,7 @@ function wavesAnimation(container) {
     }
     const stop = () => {
         isPlay = false;
-        container.innerHTML = "";
+        container.replaceChildren();
     }
     // animate();
     return { start, stop };

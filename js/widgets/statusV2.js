@@ -21,9 +21,7 @@ import { progressBarHtml, updateProgressBarData } from "../components/statusWidg
 import { PROGRESS_TYPES } from "../enums/progressBar.js";
 import { buttonsHtml } from "../components/htmlElements.js";
 import { resizerHtml } from "../components/resizer.js";
-import { tickerHtml } from "../components/statusWidget/ticker.js";
 import { richPresenceHtml } from "../components/statusWidget/richPresence.js";
-import { indicatorHtml } from "../components/statusWidget/statusIndicator.js";
 import { statusStyles } from "../enums/statusThemes.js";
 import { alertHtml, hideAlert, showAlert } from "../components/statusWidget/alert.js";
 import { gameInfoHtml } from "../components/statusWidget/gameInfo.js";
@@ -40,6 +38,7 @@ import { focusCheevoHtml } from "../components/statusWidget/focusCheevo.js";
 import { contextSetsMenu, contextSwitchSetsMenu } from "../functions/settings/subsetSettings.js";
 import { gameLinksMenu } from "../functions/settings/gameLinks.js";
 import { UI_EVENTS_LIST } from "../enums/UIEvents.js";
+import { fromHtml } from "../functions/html.js";
 
 export class Status extends Widget {
     widgetIcon = {
@@ -500,9 +499,9 @@ export class Status extends Widget {
         `;
 
         const widgetData = {
-            classes: isLegacy ? ["status__section", "section"] : ["rp__section", "section"],
-            id: widgetID,
-            headerElementsHtml: headerElementsHtml,
+            classList: isLegacy ? ["status__section", "section"] : ["rp__section", "section"],
+            widgetID,
+            headerElementsHtml,
             isLegacy
         };
 
@@ -510,44 +509,46 @@ export class Status extends Widget {
         ui.app.appendChild(widget);
         this.initializeElements(widget);
     }
-    generateWidgetElement({ classes, id, headerElementsHtml, isLegacy }) {
-        const modernThemeHtml = () => `
-            <div class="hidden-header-buttons">
-                ${headerElementsHtml ?? ""}
+    generateWidgetElement({ classList, widgetID, headerElementsHtml, isLegacy }) {
+        const widget = fromHtml(`
+            <section#${widgetID}.${classList.join(".")}"/>
+        `);
+        const header = fromHtml(`
+            <.hidden-header-buttons>
+                ${headerElementsHtml || ""}
                 ${buttonsHtml.close()}
-            </div>
-            ${indicatorHtml()}
-            ${alertHtml()}
-            <div class="rp-content__container">
-                ${gameInfoHtml()}
-                ${richPresenceHtml()}
-                ${focusCheevoHtml()}
-                ${progressionBarHtml()}
-                ${progressBarHtml(PROGRESS_TYPES.cheevos)}
-                ${progressBarHtml(PROGRESS_TYPES.points)}
-                ${progressBarHtml(PROGRESS_TYPES.retropoints)}
-            </div>
-            ${tickerHtml()}
-            ${resizerHtml()}`;
-        const legacyThemeHtml = () => `
-            <div class="hidden-header-buttons">
-                ${headerElementsHtml ?? ""}
-                ${buttonsHtml.close()}
-            </div>
-            ${indicatorHtml()}
-            <div class="status__container">
-                ${alertHtml()}
-                <div class="rp-content__container">
-                    ${gameInfoHtml()}
-                </div>
-            </div>
-            ${resizerHtml()}`
-        const widget = document.createElement("section");
-        widget.classList.add(...classes);
-        widget.id = id;
-        const theme = config.ui?.[id]?.statusTheme ?? statusStyles.DEFAULT;
+            </>
+        `)
+        const indicator = fromHtml(`<.rp__indicator/>`);
+        const alert = fromHtml(alertHtml());
+        const rpContentContainer = fromHtml(`<.rp-content__container/>`);
+        const resizer = fromHtml(resizerHtml);
+        const gameInfo = fromHtml(gameInfoHtml());
 
-        widget.innerHTML = isLegacy ? legacyThemeHtml() : modernThemeHtml();;
+        if (isLegacy) {
+            rpContentContainer.append(gameInfo);
+
+            const legacyContainer = fromHtml(`<.status__container/>`);
+            legacyContainer.append(alert, rpContentContainer);
+
+            widget.append(header, indicator, legacyContainer, resizer);
+        }
+        else {
+            const ticker = fromHtml(`<.rp__ticker/>`);
+            rpContentContainer.append(
+                ...fromHtml([
+                    gameInfoHtml(),
+                    richPresenceHtml(),
+                    focusCheevoHtml(),
+                    progressionBarHtml(),
+                    progressBarHtml(PROGRESS_TYPES.cheevos),
+                    progressBarHtml(PROGRESS_TYPES.points),
+                    progressBarHtml(PROGRESS_TYPES.retropoints)
+                ]),
+
+            )
+            widget.append(header, indicator, alert, rpContentContainer, ticker, resizer);
+        }
         return widget;
     }
 
@@ -690,19 +691,27 @@ export class Status extends Widget {
         const focusCheevo = this.getFocusCheevo();
 
         if (focusCheevo) {
-            titleElements.forEach(el => el.innerHTML = `
-                ${badgeElements.gold("focus")} ${focusCheevo.Title}
-            `);
+            titleElements.forEach(el => el.replaceChildren(
+                ...fromHtml([
+                    badgeElements.gold("focus"),
+                    `<span> ${focusCheevo.Title}</span>`
+                ])
+            ));
             descriptionElements.forEach(el => {
                 el.innerText = focusCheevo.Description;
                 el.dataset.title = focusCheevo.Description;
             });
         }
         else {
-            titleElements.forEach(el => el.innerHTML = `${badgeElements.gold("focus")} ${lang.noCheevoToShow}`
-            );
+            titleElements.forEach(el => el.replaceChildren(
+                ...fromHtml([
+                    badgeElements.gold("focus"),
+                    `<span> ${lang.noCheevoToShow}</span>`
+                ])
+            ));
             descriptionElements.forEach(el => {
                 el.innerText = "...";
+                delete el.dataset.title;
             });
         }
     }
@@ -861,16 +870,23 @@ export class Status extends Widget {
             const platformElement = this.section.querySelector(".rp__game-platform");
             const iconsContainerElement = this.section.querySelector(".rp__game-icons");
 
-            if (platformElement) platformElement.innerHTML = signedIcons.platform(ConsoleID);
-            if (iconsContainerElement) iconsContainerElement.innerHTML = `
-                    ${signedIcons.cheevos(NumAchievements)}
-                    ${signedIcons.points(totalPoints)}
-                    ${signedIcons.retroRatio(retroRatio)}
-                `;
+            platformElement?.replaceChildren(
+                fromHtml(signedIcons.platform(ConsoleID))
+            )
+
+            iconsContainerElement?.replaceChildren(
+                ...fromHtml([
+                    signedIcons.cheevos(NumAchievements),
+                    signedIcons.points(totalPoints),
+                    signedIcons.retroRatio(retroRatio),
+                ])
+            )
         }
         switch (this.uiProps.gameInfoType) {
             case GAME_INFO_TYPES.progressbar:
-                gameInfoContent.innerHTML = progressBarHtml(this.uiProps.progressType);
+                gameInfoContent.replaceChildren(
+                    ...fromHtml(progressBarHtml(this.uiProps.progressType), true)
+                );
                 this.updateProgressBar();
                 break;
             case GAME_INFO_TYPES.progression:
@@ -879,28 +895,40 @@ export class Status extends Widget {
                 const isProgressionAvailable = watcher.GAME_DATA.progressionSteps || watcher.GAME_DATA.subsetsData?.progressionSteps;
 
                 if (this.uiProps.switchProgressionIfBeaten && (isGameBeaten || !isProgressionAvailable) && !isProgressbarVisible) {
-                    gameInfoContent.innerHTML = progressBarHtml();
+                    gameInfoContent.replaceChildren(
+                        ...fromHtml(progressBarHtml(this.uiProps.progressType), true)
+                    );
                     this.updateProgressBar(this.uiProps.progressType);
                 }
                 else {
-                    gameInfoContent.innerHTML = progressionBarHtml();
+                    gameInfoContent.replaceChildren(
+                        ...fromHtml(progressionBarHtml(), true)
+                    )
                     this.updateProgressionBar();
                 }
                 break;
             case GAME_INFO_TYPES.icons:
-                gameInfoContent.innerHTML = gameInfoIconsHtml();
+                gameInfoContent.replaceChildren(
+                    ...fromHtml(gameInfoIconsHtml(), true)
+                );
                 updateIcons();
                 break;
             case GAME_INFO_TYPES.richPresence:
-                gameInfoContent.innerHTML = richInfoHtml();
+                gameInfoContent.replaceChildren(
+                    ...fromHtml(richInfoHtml(), true)
+                );
                 updateIcons();
                 break;
             case GAME_INFO_TYPES.focusCheevo:
-                gameInfoContent.innerHTML = focusCheevoHtml();
+                gameInfoContent.replaceChildren(
+                    ...fromHtml(focusCheevoHtml(), true)
+                );
                 this.updateFocusCheevo();
                 break;
             default:
-                gameInfoContent.innerHTML = progressionBarHtml();
+                gameInfoContent.replaceChildren(
+                    ...fromHtml(progressionBarHtml(), true)
+                )
                 this.updateProgressionBar();
                 break;
         }
@@ -935,10 +963,12 @@ export class Status extends Widget {
             this.gameElements.icon.src = gameImageUrl(ImageIcon);
 
             this.section.style.setProperty("--bg-image", `url(${gameImageUrl(ImageIngame)})`);
-            this.gameElements.title.innerHTML = `
-                ${Title || ""}
-                ${generateBadges(badges)}
-            `;
+            this.gameElements.title.replaceChildren(
+                ...fromHtml([
+                    `<span>${Title} </span>`,
+                    generateBadges(badges),
+                ])
+            );
             this.gameElements.title.href = gameUrl(ID);
         }
 

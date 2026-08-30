@@ -1,3 +1,4 @@
+import { fromHtml } from "../functions/html.js";
 import { formatDate, formatDateTime, formatDuration } from "../functions/time.js";
 import { badgeElements, generateBadges } from "./badges.js";
 import { icons, signedIcons } from "./icons.js";
@@ -26,12 +27,19 @@ export function cheevoPopupElement(cheevo, isFixed = false) {
         subLevel ? `${cheevo.zone} [${subLevel}]` : cheevo.zone :
         cheevo.level?.toString()?.replace(".", "-");
 
-    let popup = document.createElement("div");
-    popup.classList.add("cheevo-popup", "popup", cheevo.isEarnedHardcore ? "hardcore" : cheevo.isEarned ? "softcore" : "f",);
-    popup.classList.toggle("fixed", isFixed);
-    popup.dataset.id = cheevo.ID;
+    const popupClassList = [
+        "popup",
+        "cheevo-popup",
+        (cheevo.isEarnedHardcore && "hardcore") || (cheevo.isEarned && "softcore"),
+        isFixed && "fixed",
+    ].filter(Boolean);
+
+    let popupContainer = fromHtml(`
+        <div class="${popupClassList.join(" ")}" data-id="${cheevo.ID}"/>
+    `);
+
     const focusTime = cheevo.progressionFocusTime ? formatDuration(cheevo.progressionFocusTime) : "";
-    popup.innerHTML = `
+    const content = fromHtml(`
         <div class="cheevo-popup__header">
             <h3 class="cheevo-popup__title">${cheevo.Title}</h3>
             <div class="cheevo-popup__description"> ${cheevo.Description} </div>
@@ -56,7 +64,8 @@ export function cheevoPopupElement(cheevo, isFixed = false) {
             ${propElem(lang.created, [formatDate(cheevo.DateCreated), formatDate(cheevo.DateModified)])}
             ${propElem(lang.createdBy, cheevo.Author)}
         </div>
-    `;
+    `, true);
 
-    return popup;
+    popupContainer.append(...content);
+    return popupContainer;
 }

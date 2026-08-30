@@ -47,7 +47,7 @@ export async function applySort({ container, itemClassName, sortMethod, reverse,
         await animateNewOrder(container, newOrder, animationDuration);
     }
     else {
-        container.innerHTML = "";
+        container.replaceChildren();
         newOrder.forEach((element) => {
             container.appendChild(element);
         });

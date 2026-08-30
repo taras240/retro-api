@@ -617,7 +617,7 @@ export class Settings extends Widget {
 
         const generateSettingsContainer = (settingsItems) => {
             const container = this.section.querySelector(".content-container");
-            container.innerHTML = ``;
+            container.replaceChildren();
             settingsItems.forEach(setting => {
                 if (!setting) return;
                 if (setting.elements || setting.type === inputTypes.CONTAINER) {

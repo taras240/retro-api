@@ -749,12 +749,12 @@ export class Target extends Widget {
     }
     async onCheevoUnlocks({ cheevos }) {
         const animElement = () => {
-            const animContainer = document.createElement("div");
-            animContainer.classList.add("target-unlock-anim");
-            animContainer.innerHTML = `
-                <div class="lines"></div>
-                <div class="lock"></div>
-            `;
+            const animContainer = fromHtml(`
+                <div class="target-unlock-anim">
+                    <div class="lines"/>
+                    <div class="lock"/>
+                </div>
+            `);
             return animContainer;
         }
         const scrollPosition = this.container.scrollTop;
@@ -952,7 +952,7 @@ export class Target extends Widget {
         });
     }
     clearAllAchivements() {
-        this.container.innerHTML = "";
+        this.container.replaceChildren();
     }
     pushToPins(cheevoID) {
         if (!watcher.CHEEVOS[cheevoID]) return;
@@ -960,7 +960,7 @@ export class Target extends Widget {
         this.pinnedContainer.appendChild(pinnedCheevoElement);
     }
     fillPinnedItems(pinnedIDs) {
-        this.pinnedContainer.innerHTML = "";
+        this.pinnedContainer.replaceChildren();
         const gameID = watcher.GAME_DATA?.ID;
         pinnedIDs ??= config.gamesDB[gameID]?.pinned ?? [];
         pinnedIDs.forEach(cheevoID => {

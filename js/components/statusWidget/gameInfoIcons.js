@@ -1,10 +1,10 @@
 import { richPresenceHtml } from "./richPresence.js";
 
 export const gameInfoIconsHtml = () => `
-        <p class="rp__game-platform"></p>
-        <div class="icons-row-list rp__game-icons"></div>
+        <p.rp__game-platform/>
+        <.icons-row-list.rp__game-icons/>
     `;
 export const richInfoHtml = () => `
-${richPresenceHtml()}
-        <div class="icons-row-list rp__game-icons"></div>
+        ${richPresenceHtml()}
+        <.icons-row-list.rp__game-icons/>
     `

@@ -66,6 +66,6 @@ onAuthStateChanged(auth, (user) => {
     } else {
         loginBtn.hidden = false;
         logoutBtn.hidden = true;
-        userInfo.innerHTML = "";
+        userInfo.replaceChildren();
     }
 });

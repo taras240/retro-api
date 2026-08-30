@@ -1,21 +1,19 @@
 import { badgeElements } from "../badges.js";
 import { buttonsHtml } from "../htmlElements.js";
 
-export function focusCheevoHtml() {
-    return `
-        <div class="rp__focus-cheevo">
-            <div class="rp__focus-preview">
-                <img class="rp__focus-image" src="">
-            </div>
-            <div class="rp__focus-info">
-                <h3 class="rp__focus-title"></h3>
-                <p class="rp__focus-description"></p>
-            </div>
-            <div class="element-control__container">
+export const focusCheevoHtml = () => `
+        <.rp__focus-cheevo>
+            <.rp__focus-preview>
+                <img.rp__focus-image src="">
+            </>
+            <.rp__focus-info>
+                <h3.rp__focus-title/>
+                <.rp__focus-description"/>
+            </>
+            <.element-control__container>
                 ${buttonsHtml.prev("previous_focus")}
                 ${buttonsHtml.reset("reset_focus")}
                 ${buttonsHtml.next("next_focus")}
-            </div>
-        </div>
-    `
-}
+            </>
+        </>
+    `;

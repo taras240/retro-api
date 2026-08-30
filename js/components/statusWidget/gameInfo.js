@@ -6,27 +6,27 @@ import { progressionBarHtml } from "./progressionBar.js";
 
 const gameInfoContent = (game, theme) => {
     return `
-        <div class="rp__preview-container">
-            <img class="rp__game-image" src="" alt="" srcset="">
-            <button class="status__watch-button" id="rp__watch-button"></button>
-        </div>
-        <div class="rp__game-info">
-            <a class="rp__game-title" target="_blank"></a>
-            <div class="rp__game-info-grid">
-                <div class="rp__game-info-content"></div>
-                <div class="rp__game-time">
-                    <span class="rp__time-mark"></span>
-                    <span class="rp__time-hours"></span>
-                    <span class="rp__time-minutes"></span>
-                    <span class="rp__time-seconds"></span>
-                </div>
-            </div>
-        </div>
+        <.rp__game-container>
+            <.rp__preview-container>
+                <img.rp__game-image src="" alt="GAME" srcset="">
+                <button#rp__watch-button.status__watch-button/>
+            </>
+            <.rp__game-info>
+                <a.rp__game-title target="_blank"/>
+                <.rp__game-info-grid>
+                    <.rp__game-info-content"/>
+                    <.rp__game-time">
+                        <span.rp__time-mark"/>
+                        <span.rp__time-hours"/>
+                        <span.rp__time-minutes"/>
+                        <span.rp__time-seconds"/>
+                    </>
+                </>
+            </>
+        </>
     `;
 }
 
-/* <p class="rp__game-platform"></p>
-<div class="icons-row-list rp__game-icons"></div> */
 export const gameInfoHtml = (gameData, theme) => {
-    return divHtml(["rp__game-container"], gameInfoContent(gameData, theme))
+    return gameInfoContent(gameData, theme)
 }

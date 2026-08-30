@@ -51,7 +51,7 @@ export class Awards extends Widget {
     }
     parseAwards(userAwards) {
         if (!userAwards?.TotalAwardsCount) return;
-        this.container.innerHTML = "";
+        this.container.replaceChildren();
         const { dataset } = this.container;
 
         dataset.total = userAwards.TotalAwardsCount;

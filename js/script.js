@@ -8,7 +8,7 @@ let config, ui, watcher, APIEvents, UIEvents, userAuthData;
 const userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
 if (false && !isSupported()) {
-  document.body.innerHTML = "";
+  document.body.replaceChildren();
   document.body.append(fromHtml(`
     <div style="font-family: 'system-ui','arial'; font-size: 2rem;">This platform is not supported.</div>
   `));

@@ -1,3 +1,3 @@
 import { divHtml } from "./divContainer.js";
 
-export const resizerHtml = () => divHtml(["resizer"]);
+export const resizerHtml = divHtml(["resizer"]);

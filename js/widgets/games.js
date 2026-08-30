@@ -615,10 +615,10 @@ export class Games extends Widget {
         };
 
         const widget = this.generateWidgetElement(widgetData);
+        ui.app.appendChild(widget);
         const contentContainer = widget.querySelector(".games_container");
         contentContainer.append(playlistsContainer, gameListWrapper, this.sideMenuElement());
         widget.insertBefore(controlsElement, contentContainer);
-        ui.app.appendChild(widget);
     }
     initializeElements() {
         this.section = document.querySelector("#games_section");
@@ -750,7 +750,7 @@ export class Games extends Widget {
         this.applySort();
         this.renderActiveFilters();
         this.syncFilterPanelState();
-        this.gamesList.innerHTML = "";
+        this.gamesList.replaceChildren();
         lazyLoad({ list: this.gamesList, items: this.games, elementGenerator: GameListElement })
     }
 
