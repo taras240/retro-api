@@ -265,4 +265,11 @@ export class Widget {
             this.uiProps.hidden = true;
         }
     }
+    toggleLoader({ show = true, message = "Loading" }) {
+        this.section.querySelector(`.section-loader`)?.remove();
+        if (show) {
+            const loader = fromHtml(`<.section-loader  msg="${message}"/>`);
+            this.section.append(loader);
+        }
+    }
 }

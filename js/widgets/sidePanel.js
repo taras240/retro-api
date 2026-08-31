@@ -71,41 +71,41 @@ export class SidePanel {
     }
     generatePanel() {
         const logginButton = fromHtml(`
-                    <button class="side-panel_login login-icon"
+                    <button.side-panel_login.login-icon
                         data-title="login window">
-                        <img id="side-panel-user-image" src="" onerror="this.src='./assets/img/account.svg';" alt="">
+                        <img#side-panel-user-image" src="" onerror="this.src='./assets/img/account.svg';">
                     </button>
             `);
         logginButton.addEventListener("click", () => ui.showLogin())
         const widgetsContainer = fromHtml(`
-                <div class="buttons-block__shortcuts"></div>
+                <.buttons-block__shortcuts/>
             `);
         const tools = fromHtml(`
-                <div class="buttons-block_tools">
-                    <div class="setting-radio-group ">
+                <.buttons-block_tools>
+                    <.setting-radio-group>
                         <a class="side-panel_input side-panel_link" data-title="go to discord channel"
                             href="https://discord.gg/apzc6kCAbH" target="_blank">
                             <i class="side-panel__icon discord-icon"></i>
                         </a>
-                    </div>
-                    <div class="setting-radio-group ">
+                    </>
+                    <.setting-radio-group>
                         <a class="side-panel_input side-panel_link" data-title="Support me on Ko-fi"
                             href="https://ko-fi.com/C1T625DJRG" target="_blank">
                             <i class="side-panel__icon kofi-icon"></i>
                         </a>
-                    </div>
-                    <div class="setting-radio-group ">
+                    </>
+                    <.setting-radio-group>
                         <input type="checkbox" name="open-settings-button" id="open-settings-button">
                         </input>
                         <label class="side-panel_input " data-title="settings" for="open-settings-button">
                             <i class="side-panel__icon settings-icon"></i>
                         </label>
-                    </div>
-                </div>
+                    </>
+                </>
             `);
         const sidePanel = fromHtml(`
-            <section id="side_panel" class="buttons-block expanded"></section>
-            `);
+            <section#side_panel.buttons-block.expanded/>
+        `);
         sidePanel.append(logginButton, widgetsContainer, tools);
         ui.app.append(sidePanel);
     }

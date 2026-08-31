@@ -588,16 +588,14 @@ export class Games extends Widget {
         this.searchbar = this.section.querySelector("#games__searchbar");
     }
     generateWidget() {
-        const controlsElement = document.createElement("div");
-        controlsElement.classList.add("games__main-controls");
+        const controlsElement = fromHtml(`<.games__main-controls/>`);
         const gameList = fromHtml(`
-            <ul id="games-list" class="games-list scrollable" data-current-games-array-position="0"/>
+            <ul#games-list.games-list.scrollable data-current-games-array-position="0"/>
         `);
         const activeFiltersRow = fromHtml(`
-            <div class="games__active-filters-row hidden"></div>
+            <.games__active-filters-row.hidden/>
         `);
-        const gameListWrapper = document.createElement("div");
-        gameListWrapper.classList.add("games__listing-wrapper");
+        const gameListWrapper = fromHtml(`<.games__listing-wrapper/>`);
         gameListWrapper.append(activeFiltersRow, gameList);
         const playlistsContainer = PlaylistsContainer({});
         const widgetID = "games_section";
@@ -874,7 +872,7 @@ export class Games extends Widget {
         if (!this.activeFiltersRow) return;
 
         const filters = this.getActiveFilters();
-        this.activeFiltersRow.innerHTML = '';
+        this.activeFiltersRow.replaceChildren();
         if (!filters.length) {
             this.activeFiltersRow.classList.add('hidden');
             return;
@@ -883,7 +881,7 @@ export class Games extends Widget {
         this.activeFiltersRow.classList.remove('hidden');
         filters.forEach(filter => {
             const filterButton = fromHtml(`
-                <button type="button" class="games__active-filter badge badge-button badge_transparent">
+                <button class="games__active-filter badge badge-button badge_transparent" type="button">
                     <span>${filter.label}</span>
                     <span aria-hidden="true">×</span>
                 </button>
@@ -1157,18 +1155,19 @@ export class Games extends Widget {
             title = `<-- ${title}`;
         }
         const generateMenuItem = ({ title, elements, type, submenu }) => {
-            const menuHeader = (title) => `<h3 class="side-menu__item-header">
-                        ${title}
-                    </h3>`;
+            const menuHeader = (title) => `
+                <h3.side-menu__item-header>
+                    ${title}
+                </h3>`;
             const menuItem = () => {
                 const submenuClass = submenu ? "submenu" : "";
                 const menuElement = fromHtml(`
-                        <div class="side-menu__item-container ${submenuClass}">
+                        <.side-menu__item-container.${submenuClass}>
                             ${title ? menuHeader(title) : "<br>"}
-                        </div>
+                        </>
                     `);
                 const menuContent = fromHtml(`
-                        <div class="side-menu__item-inputs ${submenuClass}"/>
+                        <.side-menu__item-inputs.${submenuClass}/>
                     `);
                 if (submenu) {
                     menuContent.append(this.sideMenuElement(submenu, title));
@@ -1186,12 +1185,12 @@ export class Games extends Widget {
             return menuItem();
         };
         const sideMenu = fromHtml(`
-            <div class="section__side-menu">
-                <h2 class="side-menu__header">${title}</h2>
-            </div>
+            <.section__side-menu>
+                <h2.side-menu__header>${title}</h2>
+            </>
         `);
         const sideMenuContainer = fromHtml(`
-            <div class="side-menu__content scrollable"/>`);
+            <.side-menu__content.scrollable/>`);
         menu.forEach(item => {
             const menu = generateMenuItem(item)
             sideMenuContainer.append(menu);

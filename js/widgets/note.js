@@ -79,19 +79,19 @@ export class Note extends Widget {
                 </div>
         `;
         const widget = fromHtml(`
-            <section id="note_section" class="note_section section">
-                <div class="header-container note-header">
-                    <div class="header-icon note-icon"></div>
-                    <h2 class="widget-header-text note-header-text">
-                        <div class="note__tabs-container"></div>
+            <section#note_section.note_section.section>
+                <.header-container.note-header>
+                    <.header-icon.note-icon"/>
+                    <h2.widget-header-text.note-header-text>
+                        <.note__tabs-container/>
                     </h2>
                     ${buttonsHtml.close()}
-                </div>
-                <div class="note-container content-container">
+                </>
+                <.note-container.content-container>
                     ${controlsHtml}
                     <textarea id="note_textarea" class="note-textaria scrollable" name="note_textaria" cols="auto" rows="auto" placeholder="${lang.emptyNotesMsg}"></textarea>
-                </div>
-                <div class="resizer"></div>
+                </>
+                <.resizer"/>
             </section>
         `);
         ui.app.append(widget);
@@ -106,11 +106,11 @@ export class Note extends Widget {
     generateTabs() {
         const tabElement = ({ onChange, label, name, id, checked, hint }) => {
             const element = fromHtml(`
-                    <div class="checkbox-input_container" data-title="${hint}">
-                        <input type="radio" id="${id}" ${checked ? "checked" : ""} name="${name}">
-                        <label class="radio-tab" for="${id}">${label}</label>
-                    </div>
-                `);
+                <.checkbox-input_container data-title="${hint}">
+                    <input type="radio" id="${id}" ${checked ? "checked" : ""} name="${name}">
+                    <label.radio-tab for="${id}">${label}</label>
+                </>
+            `);
             element.addEventListener("mousedown", e => e.stopPropagation());
             element.querySelector("input")?.addEventListener("change", event => onChange(event));
             return element;

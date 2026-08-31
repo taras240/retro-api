@@ -5,6 +5,7 @@ import { cheevoImageUrl, cheevoUrl, gameImageUrl, gameUrl } from "../functions/r
 import { inputTypes } from "../components/inputElements.js";
 import { alertHtml } from "../components/notifications/alertElement.js";
 import { buttonsHtml } from "../components/htmlElements.js";
+import { fromHtml } from "../functions/html.js";
 
 
 export class Notifications extends Widget {
@@ -276,23 +277,19 @@ export class Notifications extends Widget {
         }
     }
     generatePopupTime(popupTime) {
-
         popupTime ??= new Date().getTime();
 
-
-        const timestampElement = document.createElement("li");
-        timestampElement.dataset.time = popupTime;
-        timestampElement.classList.add("notification_timestamp");
-        timestampElement.innerHTML = `
-            ${this.getDeltaTime(popupTime)}
-        `;
+        const timestampElement = fromHtml(`
+            <li.notification_timestamp data-time="${popupTime}">
+                ${this.getDeltaTime(popupTime)}
+            </li>
+        `);
         return timestampElement;
     }
 
 
     gameAlertElement(game) {
-        const gameMessage = document.createElement("li");
-        gameMessage.classList.add("notification-game", "new-game");
+        const gameMessage = fromHtml(`<li.notification-game.new-game/>`);
         const html = alertHtml({
             alertType: ALERT_TYPES.GAME,
             imageUrl: gameImageUrl(game.ImageIcon),
@@ -318,13 +315,14 @@ export class Notifications extends Widget {
                 },
             ]
         });
-        gameMessage.innerHTML = html;
+        gameMessage.append(
+            fromHtml(html)
+        );
         return gameMessage;
     }
 
     cheevoAlertElement(cheevo) {
-        const cheevoAlert = document.createElement("li");
-        cheevoAlert.classList.add("notification-achiv", "new-achiv");
+        const cheevoAlert = fromHtml(`<li.notification-achiv.new-achiv/>`);
         const html = alertHtml({
             alertType: ALERT_TYPES.CHEEVO,
             imageUrl: cheevoImageUrl(cheevo),
@@ -351,7 +349,9 @@ export class Notifications extends Widget {
                 },
             ]
         });
-        cheevoAlert.innerHTML = html;
+        cheevoAlert.append(
+            fromHtml(html)
+        );
         return cheevoAlert;
     }
 
@@ -361,8 +361,7 @@ export class Notifications extends Widget {
         // award: "beaten-softcore",
         // value: this.GAME_DATA
         // }
-        const gameMessage = document.createElement("li");
-        gameMessage.classList.add("notification-game", "new-game");
+        const gameMessage = fromHtml(`<li.notification-game.new-game/>`);
         const html = alertHtml({
             alertType: award,
             imageUrl: gameImageUrl(game.ImageIcon),
@@ -389,7 +388,9 @@ export class Notifications extends Widget {
                 },
             ]
         });
-        gameMessage.innerHTML = html;
+        gameMessage.append(
+            fromHtml(html)
+        );
         return gameMessage;
     }
     getDeltaTime(timeStamp) {

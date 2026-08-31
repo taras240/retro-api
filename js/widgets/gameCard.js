@@ -12,6 +12,7 @@ import { buttonsHtml } from "../components/htmlElements.js";
 import { CompletionMsg } from "../components/statusWidget/progressBar.js";
 import { PROGRESS_TYPES } from "../enums/progressBar.js";
 import { getCheevosCount, getPointsCount, getRetropointsCount } from "../functions/gameProperties.js";
+import { fromHtml } from "../functions/html.js";
 const PREVIEW_SIZE = {
     cover: "cover",
     contain: "contain"
@@ -142,24 +143,24 @@ export class GameCard extends Widget {
         this.applyPosition();
     }
     generateWidget() {
-        const innerContentHtml = `
-            <div class="game-card_image-container">
-                <div class="game-card__icons-container"></div>
-                <img id="game-card-image" class="game-card_image" src="" onerror="this.src='./assets/img/missable.svg';" alt=" " />
-            </div>
-            <div class="hor-line-decorate"></div>
-            <div class="game-card__description">
-                <h2 class="game-card__title-container">
-                    <span class="game-card__progression-award"></span>
-                    <span class="game-card__award"></span>
-                    <a id="game-card-header" href="#" target="_blank"> </a>
+        const content = fromHtml(`
+            <.game-card_image-container>
+                <.game-card__icons-container/>
+                <img#game-card-image.game-card_image src="" onerror="this.src='./assets/img/missable.svg';">
+            </>
+            <.hor-line-decorate/>
+            <.game-card__description>
+                <h2.game-card__title-container>
+                    <span.game-card__progression-award/>
+                    <span.game-card__award/>
+                    <a#game-card-header href="#" target="_blank"/>
                 </h2>
-                <div class="game-card__info game-card__genres-container"></div>
-                <div class="game-card__info game-card__progress-container game-card__progress-count"></div>
-                <div class="game-card__info game-card__progress-container game-card__progress-points"></div>
-                <div class="game-card__info game-card__progress-container game-card__progress-retropoints"></div>
-            </div>
-        `
+                <.game-card__info.game-card__genres-container/>
+                <.game-card__info.game-card__progress-container.game-card__progress-count/>
+                <.game-card__info.game-card__progress-container.game-card__progress-points"/>
+                <.game-card__info.game-card__progress-container.game-card__progress-retropoints/>
+            </>
+        `, true)
         const headerElementsHtml = `
             ${buttonsHtml.comments()}
             ${buttonsHtml.tweek()}
@@ -174,7 +175,7 @@ export class GameCard extends Widget {
         };
 
         const widget = this.generateWidgetElement(widgetData);
-        widget.querySelector(".content-container").innerHTML = innerContentHtml;
+        widget.querySelector(".content-container").replaceChildren(...content);
 
         ui.app.appendChild(widget);
 
@@ -287,7 +288,7 @@ export class GameCard extends Widget {
             }
             const infoBadges = generateInfoBadges();
             this.setElementsValues();
-            this.header.innerHTML = `${Title.replaceAll(/\,\s*the$/gi, "")}`;
+            this.header.innerText = `${Title.replaceAll(/\,\s*the$/gi, "")}`;
             this.header.href = gameUrl(ID);
             this.preview.alt = `${Title} boxart`;
             const hltb = `HLTB: 
@@ -305,7 +306,9 @@ export class GameCard extends Widget {
                 hltb,
 
             ]
-            this.badgesContainer.innerHTML = generateBadges(badgesArray, "selection");
+            this.badgesContainer.replaceChildren(
+                ...fromHtml(generateBadges(badgesArray, "selection"), true)
+            );
             this.updateProgressData();
         }
         const generateIcons = () => {
@@ -313,12 +316,14 @@ export class GameCard extends Widget {
             const pointsCount = getPointsCount(gameData);
             const retropointsCount = getRetropointsCount(gameData);
             const retroRatio = (retropointsCount / pointsCount).toFixed(2);
-            this.iconsContainer.innerHTML = `
-                ${badgeElements.black(signedIcons.cheevos(cheevosCount))}
-                ${badgeElements.black(signedIcons.points(pointsCount))}
-                ${badgeElements.black(signedIcons.retropoints(retropointsCount))}
-                ${badgeElements.black(signedIcons.retroRatio(retroRatio))}
-            `;
+            this.iconsContainer.replaceChildren(
+                ...fromHtml([
+                    badgeElements.black(signedIcons.cheevos(cheevosCount)),
+                    badgeElements.black(signedIcons.points(pointsCount)),
+                    badgeElements.black(signedIcons.retropoints(retropointsCount)),
+                    badgeElements.black(signedIcons.retroRatio(retroRatio)),
+                ])
+            )
         }
         fillInfoValues();
         generateIcons();

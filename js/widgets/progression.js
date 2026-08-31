@@ -5,6 +5,7 @@ import { formatDateTime } from "../functions/time.js";
 import { CHEEVO_TYPES } from "../enums/cheevoTypes.js";
 import { inputTypes } from "../components/inputElements.js";
 import { filterBy, sortBy } from "../functions/sortFilter.js";
+import { fromHtml } from "../functions/html.js";
 export class Progression extends Widget {
     widgetIcon = {
         description: "progression widget",
@@ -15,35 +16,30 @@ export class Progression extends Widget {
             {
                 label: lang.showHeader,
                 type: inputTypes.CHECKBOX,
-                id: "show-header",
                 checked: this.uiProps.showHeader,
                 onChange: (event) => this.uiProps.showHeader = event.currentTarget.checked,
             },
             {
                 label: lang.showBackground,
                 type: inputTypes.CHECKBOX,
-                id: "show-bg",
                 checked: this.uiProps.showBG,
                 onChange: (event) => this.uiProps.showBG = event.currentTarget.checked,
             },
             {
                 label: lang.showSubLevels,
                 type: inputTypes.CHECKBOX,
-                id: "show-sublevels",
                 checked: this.uiProps.showSublevels,
                 onChange: (event) => this.uiProps.showSublevels = event.currentTarget.checked,
             },
             {
                 label: lang.showAllDesc,
                 type: inputTypes.CHECKBOX,
-                id: "show-all-descr",
                 checked: this.uiProps.showAllDescriptions,
                 onChange: (event) => this.uiProps.showAllDescriptions = event.currentTarget.checked,
             },
             {
                 label: lang.showTimestamps,
                 type: inputTypes.CHECKBOX,
-                id: "show-timestamps",
                 checked: this.uiProps.showTimestamps,
                 onChange: (event) => this.uiProps.showTimestamps = event.currentTarget.checked,
             },
@@ -113,7 +109,7 @@ export class Progression extends Widget {
     }
     generateProgression() {
         const listContainer = this.section.querySelector(".progression__list");
-        function generatePoint(cheevo, cheevosArray) {
+        function PointElement(cheevo, cheevosArray) {
             const pointLevel = cheevo.level;
             const nextLevel = cheevosArray
                 ?.find(c => c.level > pointLevel)
@@ -122,36 +118,27 @@ export class Progression extends Widget {
                 .filter(c =>
                     c.level && ![CHEEVO_TYPES.PROGRESSION, CHEEVO_TYPES.WIN].includes(c.Type) && c.level >= pointLevel && c.level < nextLevel
                 ) : [];
-
-            const point = `
-                <li class="progression__item ${focusID === cheevo.ID ? "focus" : ""} ${cheevo.Type}-cheevo">
-                    <p class="cheevo-date">${formatDateTime(cheevo.DateEarnedHardcore || cheevo.DateEarned, { year: "2-digit" })}</p>
-                    <div class="mark ${cheevo.isEarned ? "earned" : ""} ${cheevo.isEarnedHardcore ? "hardcore" : ""}"></div>
-                    <div class="cheevo-container">
-                        <h3 class="cheevo-title" data-achiv-id="${cheevo.ID}">${cheevo.Title}</h3>
-                        <p class="cheevo-description">
+            const timeStamp = formatDateTime(cheevo.DateEarnedHardcore || cheevo.DateEarned, { year: "2-digit" });
+            const isFocus = focusID === cheevo.ID;
+            const point = fromHtml(`
+                <li class="progression__item ${isFocus ? "focus" : ""} ${cheevo.Type}-cheevo">
+                    <p.cheevo-date>${timeStamp}</p>
+                    <div class="mark ${cheevo.isEarned ? "earned" : ""} ${cheevo.isEarnedHardcore ? "hardcore" : ""}"/>
+                    <.cheevo-container>
+                        <h3.cheevo-title data-achiv-id="${cheevo.ID}">${cheevo.Title}</h3>
+                        <p.cheevo-description>
                             ${cheevo.Description}</p>
-                        <div class="subcheevos-container">
+                        <.subcheevos-container>
                             ${subCheevos?.reduce((html, cheevo) => {
                 html += `<h3 class="progression__subcheevo ${cheevo.isEarned ? "earned" : ""} ${cheevo.isEarnedHardcore ? "hardcore" : ""}" data-achiv-id="${cheevo.ID}">${cheevo.Title}</h3>`;
                 return html;
             }, "")}
-                        </div>
-                    </div>
+                        </>
+                    </>
                 </li>
-            `
+            `);
             return point;
         }
-        // function formatDate(dateString) {
-        //     if (!dateString) return "";
-        //     const [date, time] = dateString.split(', ');
-
-        //     let [day, month, year] = date.split('.');
-
-        //     year = year.slice(2);
-
-        //     return `${day}.${month}.${year} ${time}`;
-        // }
 
         const cheevos = Object.values(watcher.CHEEVOS)
             ?.filter(c => filterBy.progression(c))
@@ -159,10 +146,9 @@ export class Progression extends Widget {
 
         const focusID = cheevos.find(c => this.uiProps.hardMode ? !c.isEarnedHardcore : !c.isEarned)?.ID;
 
-        listContainer.innerHTML = cheevos?.reduce((html, cheevo) => {
-            html += generatePoint(cheevo, cheevos);
-            return html;
-        }, "") ?? "";
+        listContainer.replaceChildren(
+            ...cheevos?.map(cheevo => PointElement(cheevo, cheevos))
+        );
         this.scrollToFocus();
     }
     scrollToFocus() {

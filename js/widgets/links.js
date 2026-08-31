@@ -1,3 +1,4 @@
+import { fromHtml } from "../functions/html.js";
 import { Widget } from "./widget.js";
 export class Links extends Widget {
     widgetIcon = {
@@ -75,13 +76,20 @@ export class Links extends Widget {
     }
     generateWidgetContent() {
         const linksContainer = this.section.querySelector(".links-container");
-        const linksHtml = this.links.map(({ name, url, iconUrl, type }) =>
-            `<li class="links__link-item">
-                <a class="signed-icon links__link-container ${type || ""}" href="${url}" target="_blank">
-                    ${iconUrl ? `<img class="links__link-image" src="${iconUrl}" alt="${name}">` : " "}
-                    <span class="links__link-title">${name}</span>
-                </a>
-            </li> `).join("");
-        linksContainer.innerHTML = `<ul class="flex-main-list links-list">${linksHtml}</ul>`;
+
+        const linkElements = this.links.map(({ name, url, iconUrl, type }) =>
+            fromHtml(`
+                <li.links__link-item>
+                    <a class="signed-icon links__link-container ${type || ""}" href="${url}" target="_blank">
+                        ${iconUrl ? `<img.links__link-image src="${iconUrl}" >` : " "}
+                        <span.links__link-title>${name}</span>
+                    </a>
+                </li>`
+            )
+        );
+        const linksList = fromHtml(`<ul.flex-main-list.links-list/>`);
+        linksList.append(...linkElements);
+
+        linksContainer.append(linksList);
     }
 }

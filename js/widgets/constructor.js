@@ -93,11 +93,11 @@ export class Constructor extends Widget {
         this.uiProps.elements.forEach((props, index) => {
             props.index = index;
             const item = fromHtml(`
-                    <div class="constructor__item">
-                        <h2 class="constructor-item__header">${props.name || props.type}</h2>
-                        <p class="constructor-item__description">${props.value || ""}</p>
-                        <div class="constructor-item__controls-container"></div>
-                    </div>
+                    <.constructor__item>
+                        <h2.constructor-item__header>${props.name || props.type}</h2>
+                        <p.constructor-item__description>${props.value || ""}</p>
+                        <.constructor-item__controls-container/>
+                    </>
                 `);
             const deleteButton = fromHtml(buttonsHtml.delete());
             item.querySelector(".constructor-item__controls-container").append(deleteButton);
@@ -111,7 +111,7 @@ export class Constructor extends Widget {
             })
         })
         const addItem = fromHtml(`
-                        <button class="constructor__add-button">${lang.addElement}</button>
+                        <button.constructor__add-button>${lang.addElement}</button>
                 `);
         addItem.addEventListener("click", event => {
             this.uiProps.elements = [
@@ -200,7 +200,7 @@ export class Constructor extends Widget {
     }
     showWidgets() {
         if (!this.elContainer) {
-            this.elContainer = fromHtml(`<div class="constructor"></div>`);
+            this.elContainer = fromHtml(`<.constructor/>`);
             ui.app.append(this.elContainer);
         }
         this.removeWidgets();
@@ -307,7 +307,7 @@ export class Constructor extends Widget {
             },
         ]
         const editorContainer = fromHtml(`
-            <div class="editor-container"></div>
+            <.editor-container"/>
         `);
 
         ui.settings.openSettings(editorItems)

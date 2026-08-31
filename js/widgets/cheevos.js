@@ -620,53 +620,50 @@ export class AchievementsBlock extends Widget {
         this.startAutoScroll();
     }
 
-    generateAchievement(achievement) {
+    generateAchievement(cheevo) {
         //------- Achievement-----------
         function setClasses(widget) {
-            achivElement.classList.add("achiv-block");
-            achivElement.classList.toggle("start-load-anim", widget.uiProps.showLoadAnimation);
-            achivElement.classList.toggle("overlay", widget.uiProps.showPrevOverlay);
-            achivElement.classList.toggle("earned", achievement.isEarned);
-            achivElement.classList.toggle("hardcore", achievement.isEarnedHardcore);
-            achivElement.classList.toggle("rare", achievement.trend <= 3);
+            cheevoElement.classList.toggle("start-load-anim", widget.uiProps.showLoadAnimation);
+            cheevoElement.classList.toggle("overlay", widget.uiProps.showPrevOverlay);
+            cheevoElement.classList.toggle("earned", cheevo.isEarned);
+            cheevoElement.classList.toggle("hardcore", cheevo.isEarnedHardcore);
+            cheevoElement.classList.toggle("rare", cheevo.trend <= 3);
         }
         function setData() {
-            achivElement.dataset.achivId = achievement.ID;
-            achivElement.dataset.Points = achievement.Points;
-            achivElement.dataset.TrueRatio = achievement.TrueRatio;
-            achievement.TrueRatio > 50 && (achivElement.dataset.rarity = "normal");
-            achievement.TrueRatio > 150 && (achivElement.dataset.rarity = "rare");
-            achievement.TrueRatio > 300 && (achivElement.dataset.rarity = "mythycal");
-            achivElement.dataset.DisplayOrder = achievement.DisplayOrder;
-            achivElement.dataset.customOrder = achievement.customOrder;
-            achivElement.dataset.Type = achievement.Type;
-            achivElement.dataset.difficulty = achievement.difficulty;
-            achivElement.dataset.group = achievement.group;
-            achivElement.dataset.setID = achievement.gameID;
-            achievement.level && (achivElement.dataset.level = achievement.level);
+            cheevoElement.dataset.achivId = cheevo.ID;
+            cheevoElement.dataset.Points = cheevo.Points;
+            cheevoElement.dataset.TrueRatio = cheevo.TrueRatio;
+            cheevo.TrueRatio > 50 && (cheevoElement.dataset.rarity = "normal");
+            cheevo.TrueRatio > 150 && (cheevoElement.dataset.rarity = "rare");
+            cheevo.TrueRatio > 300 && (cheevoElement.dataset.rarity = "mythycal");
+            cheevoElement.dataset.DisplayOrder = cheevo.DisplayOrder;
+            cheevoElement.dataset.customOrder = cheevo.customOrder;
+            cheevoElement.dataset.Type = cheevo.Type;
+            cheevoElement.dataset.difficulty = cheevo.difficulty;
+            cheevoElement.dataset.group = cheevo.group;
+            cheevoElement.dataset.setID = cheevo.gameID;
+            cheevo.level && (cheevoElement.dataset.level = cheevo.level);
 
-            achivElement.dataset.NumAwardedHardcore = achievement.NumAwardedHardcore;
-            achievement.DateEarnedHardcore && (achivElement.dataset.DateEarnedHardcore = achievement.DateEarnedHardcore);
-            achievement.DateEarned && (achivElement.dataset.DateEarned = achievement.DateEarned);
-            achivElement.dataset.timeToUnlock = achievement.timeToUnlock;
+            cheevoElement.dataset.NumAwardedHardcore = cheevo.NumAwardedHardcore;
+            cheevo.DateEarnedHardcore && (cheevoElement.dataset.DateEarnedHardcore = cheevo.DateEarnedHardcore);
+            cheevo.DateEarned && (cheevoElement.dataset.DateEarned = cheevo.DateEarned);
+            cheevoElement.dataset.timeToUnlock = cheevo.timeToUnlock;
 
         }
-        function setHtmlCode() {
-            achivElement.innerHTML = `
-                <div class="preview-container">
-                    <img class="achiv-preview" src="${cheevoImageUrl(achievement)}"  alt="${achievement.Title} icon"/>
-                    <div class="prev-lock-overlay"></div>
-                    <div class="box-inner-shadow"></div>
-                </div>
-            `;
-        }
 
-        const achivElement = document.createElement("li");
+        const cheevoElement = fromHtml(`
+            <li.achiv-block>
+                <.preview-container>
+                    <img.achiv-preview src="${cheevoImageUrl(cheevo)}"/>
+                    <.prev-lock-overlay/>
+                    <.box-inner-shadow/>
+                </>
+            </li>
+        `);
         setClasses(this);
         setData();
-        setHtmlCode();
 
-        return achivElement;
+        return cheevoElement;
     }
 
     fitCheevoSize(isLoadDynamic = false) {
@@ -869,17 +866,17 @@ export class AchievementsBlock extends Widget {
     }
     generateNewWidget({ }) {
         const newWidget = fromHtml(`
-            <section id="${this.SECTION_ID}" class="section achivs">
-                <div class="header-container achievements-header_container">
-                    <h2 class="widget-header-text achivs-header-text">
+            <section#${this.SECTION_ID}.section.achivs>
+                <.header-container.achievements-header_container>
+                    <h2.widget-header-text.achivs-header-text>
                         ${lang.cheevosSectionName}
                     </h2>
                     ${buttonsHtml.filter(this.SECTION_ID)}
                     ${buttonsHtml.sort(this.SECTION_ID)}
                     ${buttonsHtml.tweek()}
                     ${buttonsHtml.close()}
-                </div>
-                <ul class="achievements-container content-container"></ul>
+                </>
+                <ul.achievements-container.content-container/>
                 ${resizerHtml}
             </section>
         `);
@@ -889,20 +886,22 @@ export class AchievementsBlock extends Widget {
         const createGroupElement = (title, filterFunc, cheevos, ...props) => {
             const groupCheevos = [...cheevos].filter(c => filterFunc(c.dataset, ...props));
             if (groupCheevos.length === 0) return;
-            const group = document.createElement("div");
-            group.classList.add("cheevos__group");
+            const group = fromHtml(`
+                <.cheevos__group>
+                    <.cheevos__group-header>
+                        <h3.cheevos__group-title>${title}</h3>
+                    </>
+                </>
+            `);
             group.classList.toggle("compact", !this.uiProps.showGroupHeader);
-            group.innerHTML = `
-                <div class="cheevos__group-header">
-                    <h3 class="cheevos__group-title">${title}</h3>
-                </div>
-                <div class="cheevos__group-container"></div>
-            `;
             this.container.appendChild(group);
-            const groupContainer = group.querySelector(".cheevos__group-container");
-            groupCheevos.forEach(c => groupContainer.appendChild(c));
-            if (groupContainer.offsetHeight == 0) group.classList.add("hidden")
 
+            const groupContent = fromHtml(`<.cheevos__group-container"/>`);
+            group.append(groupContent);
+
+            groupCheevos.forEach(c => groupContent.appendChild(c));
+
+            group.classList.toggle("hidden", !groupContent.offsetHeight)
         }
         const removeGroups = (cheevos) => {
             cheevos.forEach(c => this.container.appendChild(c));

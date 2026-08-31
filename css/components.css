@@ -1358,3 +1358,26 @@ input[type="radio"]:checked+.context-menu_radio::after {
 *:hover>.element-control__container {
     opacity: 1;
 }
+
+.section-loader {
+    z-index: 1000;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(17, 17, 17, 0.5);
+    backdrop-filter: blur(5px);
+    border-radius: inherit;
+
+}
+
+.section-loader::after {
+    content: attr(msg);
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    font-size: 1.5em;
+    font-weight: bold;
+}

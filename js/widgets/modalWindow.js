@@ -1,6 +1,7 @@
 import { Widget } from "./widget.js";
 import { buttonsHtml } from "../components/htmlElements.js";
 import { resizerHtml } from "../components/resizer.js";
+import { fromHtml } from "../functions/html.js";
 
 
 export class ModalWindow extends Widget {
@@ -17,19 +18,20 @@ export class ModalWindow extends Widget {
     }
     generateModalElement({ id, classList = [], title, content }) {
         this.close(id);
-        const widget = document.createElement("section");
-        widget.classList.add("popup-section", "section", ...classList);
-        widget.id = id;
-        widget.innerHTML = `
-            <div class="header-container">
-                <div class="header-icon ${this.widgetIcon.iconClass}"></div>
-                <h2 class="widget-header-text">${title}</h2>
-                ${buttonsHtml.close()}
-            </div>
-            <div class="${"widget-content__container"}">
-                ${content}
-            </div>
-            ${resizerHtml}`;
+        const widget = fromHtml(`
+            <section#${id} class="popup-section section ${classList.join(" ")}">
+                <.header-container>
+                    <.header-icon.${this.widgetIcon.iconClass}/>
+                    <h2.widget-header-text>${title}</h2>
+                    ${buttonsHtml.close()}
+                </>
+                <.${"widget-content__container"}>
+                    ${content}
+                </>
+                ${resizerHtml}
+            </section>
+        `);
+
         this.section = widget;
         ui.app.appendChild(widget);
         this.section = widget;

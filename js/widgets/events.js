@@ -36,7 +36,7 @@ export class EventAchievements extends Widget {
         this.section = widget;
         ui.app.appendChild(widget);
 
-        const loadButton = fromHtml(`<button class="games__load-button"></button>`);
+        const loadButton = fromHtml(`<button.games__load-button/>`);
         loadButton.addEventListener("click", () => this.generateContent());
         widget.querySelector(".content-container")?.append(loadButton);
     }
@@ -73,13 +73,13 @@ export class EventAchievements extends Widget {
                 const timeRemaining = new Date(activeUntil) - Date.now();
                 const formattedTime = formatDuration(timeRemaining / 1000);
                 const element = fromHtml(`
-                    <li class="event-cheevos__cheevo main-column-item right-bg-icon award-type">
-                        <img class="row-item__preview w-4em" src="${achievementBadgeUrl}">
-                        <h3 class="list-item__title">
-                            <a target="_blank" data-title="go to retroachievements.org" href="${cheevoUrl({ ID: cheevoID })}">${achievementTitle}</a>
+                    <li.event-cheevos__cheevo.main-column-item.right-bg-icon award-type>
+                        <img.row-item__preview.w-4em src="${achievementBadgeUrl}">
+                        <h3.list-item__title>
+                            <a target="_blank" data-title="${lang.goToRAHint}" href="${cheevoUrl({ ID: cheevoID })}">${achievementTitle}</a>
                         </h3>
-                        <p class="list-item__text">${achievementDescription}</p>
-                        <p class="icons-row-list">${badgeElements.gold(`${formattedTime} remaining`)}</p>
+                        <p.list-item__text>${achievementDescription}</p>
+                        <p.icons-row-list>${badgeElements.gold(`${formattedTime} remaining`)}</p>
                     </li>
                 `);
                 element.style.setProperty("--percentage", percentage + "%")
@@ -101,38 +101,38 @@ export class EventAchievements extends Widget {
                 const timeDuration = activeThrough ? `${new Date(activeFrom).toLocaleDateString()} - ${new Date(activeThrough).toLocaleDateString()}` : "Ongoing";
 
                 const element = fromHtml(`
-                    <div class="event-item main-column-item right-bg-icon">
-                        <img class="row-item__preview w-4em" src="${badgeUrl}">
-                        <div class="row-item__text-block">
-                            <h3 class="game-title">
-                                <a target="_blank" data-title="go to retroachievements.org" href="${eventUrl(id)}">${title}</a>
+                    <.event-item.main-column-item.right-bg-icon>
+                        <img.row-item__preview.w-4em src="${badgeUrl}">
+                        <.row-item__text-block>
+                            <h3.game-title>
+                                <a target="_blank" data-title="${lang.goToRAHint}" href="${eventUrl(id)}">${title}</a>
                             </h3>
-                            <p class="list-item__text">
+                            <p.list-item__text>
                                 ${timeDuration}
                             </p>
-                            <div class="icons-row-list">
+                            <.icons-row-list>
                                 ${signedIcons.cheevos(achievementsPublished)}
                                 ${signedIcons.players(playersTotal)}
                                 ${signedIcons.time(timeRemaining)}
-                            </div>
-                        </div>
-                    </div>
+                            </>
+                        </>
+                    </>
                 `);
-                const expanderButton = fromHtml(`<button class="expander-button"/>`);
+                const expanderButton = fromHtml(`<button.expander-button/>`);
                 element.append(expanderButton);
                 element.addEventListener("click", (event) => {
                     event.target.closest(".event-item__container")?.classList.toggle("expanded");
                 })
                 return element;
             }
-            const container = fromHtml(`<ul class="flex-main-list"/>`);
+            const container = fromHtml(`<ul.flex-main-list/>`);
 
             Object.values(events).map(event => {
                 const eventContainer = fromHtml(`
-                    <div class="event-item__container"/>
+                    <.event-item__container/>
                 `)
                 const element = eventElement({ id: event.id, ...event.attributes });
-                const listContainer = fromHtml(`<ul class="flex-main-list expandable"/>`);
+                const listContainer = fromHtml(`<ul.flex-main-list.expandable/>`);
                 eventContainer.append(element, listContainer);
                 const cheevoItems = event.items.map(cheevo => cheevoElement(cheevo));
                 listContainer.append(...cheevoItems);
@@ -142,12 +142,10 @@ export class EventAchievements extends Widget {
 
             return container;
         }
-
-        ui.toggleLoading(true, "Loading Events");
+        this.toggleLoader({ message: "Loading Events" });
         const events = await raapi.getEventAchievements({});
-        ui.toggleLoading(false, "");
+        this.toggleLoader({ show: false });
 
-        // console.log(events);
 
         this.container.replaceChildren();
         this.container.append(await cheevosListElement(events));
