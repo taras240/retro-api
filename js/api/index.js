@@ -93,16 +93,19 @@ export const raapi = {
         return gameData;
     },
     async getGameTimesInfo({ gameID, preferHardcore = false }) {
-        const cachedData = cache.getData({ dataType: CACHE_TYPES.GAME_TIMES, ID: gameID });
+        const cachedData = await cache.getData({ dataType: CACHE_TYPES.GAME_TIMES, ID: Number(gameID) });
         if (!cachedData?.cachedDate || (Date.now() - cachedData.cachedDate > 3600e3 * 24 * 7)) {
             const timesData = await call("getGameTimesInfo", {
                 apiKey: API_KEY,
                 gameID,
                 preferHardcore
             });
-            cache.push({
+            await cache.push({
                 dataType: CACHE_TYPES.GAME_TIMES,
-                data: timesData
+                data: {
+                    ...timesData,
+                    cachedDate: Date.now()
+                }
             });
             return timesData;
         }
@@ -116,7 +119,7 @@ export const raapi = {
         })
     },
     async getAotW({ username }) {
-        const cachedData = cache.getData({ dataType: CACHE_TYPES.AOTW });
+        const cachedData = await cache.getData({ dataType: CACHE_TYPES.AOTW });
         if (cachedData?.endTime && cachedData.endTime - Date.now() > 0) {
             return cachedData;
         }
@@ -124,7 +127,7 @@ export const raapi = {
             apiKey: API_KEY,
             username,
         });
-        cache.push({
+        await cache.push({
             dataType: CACHE_TYPES.AOTW,
             data: aotwData
         });
@@ -138,7 +141,7 @@ export const raapi = {
             username: getUsername(username),
             count: count || 500,
             offset,
-            cachedData: cache.getData({ dataType: CACHE_TYPES.COMPLETION_PROGRESS }),
+            cachedData: await cache.getData({ dataType: CACHE_TYPES.COMPLETION_PROGRESS }),
         })
     },
     getUserAwards({ username }) {
@@ -169,7 +172,7 @@ export const raapi = {
             const consoleSubsets = groupSubsets(games);
             gamesList.push(...consoleSubsets);
         }
-        cache.push({ dataType: CACHE_TYPES.SUBSETS_LIST, data: gamesList });
+        await cache.push({ dataType: CACHE_TYPES.SUBSETS_LIST, data: gamesList });
         return gamesList;
     },
     async getUserPlayedGames({ username }) {

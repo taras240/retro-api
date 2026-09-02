@@ -1,22 +1,24 @@
 import { CACHE_TYPES } from "../../enums/cacheDataTypes.js";
 
 let _subsetsList;
-
+let _cachedSubsetsList;
 export async function initSubsets() {
-    if (_subsetsList) {
-        return _subsetsList;
+    const parseSubsets = (subsetsData) => {
+        const subsets = {};
+        subsetsData?.forEach(gameSets => {
+            Object.values(gameSets).forEach(setID => {
+                subsets[setID] = gameSets;
+            })
+        });
+        return subsets;
     }
 
-    const cachedSubsets = [];
+    const cachedSubsets = await config.cache.getData({ dataType: CACHE_TYPES.SUBSETS_LIST });
     const fileSubsets = await fetch(`./json/games/all-subsets.json`).then(resp => resp.json()).catch(() => []);
 
-    const subsets = cachedSubsets.length >= fileSubsets.length ? cachedSubsets : fileSubsets;
-    _subsetsList = {};
-    subsets.forEach(gameSets => {
-        Object.values(gameSets).forEach(setID => {
-            _subsetsList[setID] = gameSets;
-        })
-    });
+    _subsetsList = parseSubsets(fileSubsets);
+    _cachedSubsetsList = parseSubsets(cachedSubsets);
+
 
     return _subsetsList;
 }
@@ -26,5 +28,5 @@ export async function getSubsets(gameID) {
         await initSubsets();
     }
 
-    return _subsetsList[gameID] ?? { Main: gameID };
+    return _cachedSubsetsList[gameID] || _subsetsList[gameID] || { Main: gameID };
 }

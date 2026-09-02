@@ -4,11 +4,11 @@ import { delay } from "../delay.js";
 export async function cachedCompletionProgress(username) {
     const { cache, USER_NAME, configData } = config ?? {};
 
-    let cachedData = cache.getData({ dataType: CACHE_TYPES.COMPLETION_PROGRESS });
+    let cachedData = await cache.getData({ dataType: CACHE_TYPES.COMPLETION_PROGRESS });
 
     if (!cachedData?.Total || (username !== cachedData.UserName)) {
         await updateCompletionProgress({ batchSize: 500 });
-        cachedData = cache.getData({ dataType: CACHE_TYPES.COMPLETION_PROGRESS });
+        cachedData = await cache.getData({ dataType: CACHE_TYPES.COMPLETION_PROGRESS });
         return cachedData;
     }
     else {
@@ -38,7 +38,7 @@ async function updateCompletionProgress({ savedArray = [], completionProgress = 
         const completionIDs = completionProgress.map(game => game.GameID);
         savedArray = savedArray.filter(game => !completionIDs.includes(game.GameID))
         savedArray = [...completionProgress, ...savedArray];
-        cache.push({
+        await cache.push({
             dataType: CACHE_TYPES.COMPLETION_PROGRESS,
             data: {
                 Date: new Date(),

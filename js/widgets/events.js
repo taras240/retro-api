@@ -151,3 +151,14 @@ export class EventAchievements extends Widget {
         this.container.append(await cheevosListElement(events));
     }
 }
+const unlocksCache = {
+    cachedFrom: 653435432,
+    cachedTo: 765453453,
+    unlocks: {
+        9: {
+            unlockedAt: 1234322424,
+            unlockedAtHardcore: 1234334534,
+            gameID: 1,
+        }
+    }
+}

@@ -1060,7 +1060,7 @@ export class Target extends Widget {
     async hideAotw() {
         this.section.querySelector(`.target__aotw-container`)?.remove();
         const aotwData = await raapi.getAotW({});
-        config.cache.push({
+        await config.cache.push({
             dataType: CACHE_TYPES.AOTW,
             data: {
                 ...aotwData,

@@ -13,6 +13,7 @@ import { raapi } from "../api/index.js";
 import { contextSetsMenu, contextSwitchSetsMenu } from "../functions/settings/subsetSettings.js";
 import { gameLinksMenu } from "../functions/settings/gameLinks.js";
 import { exportToCSV } from "../functions/exportData.js";
+import { initSubsets } from "../functions/api/subsets.js";
 export class Settings extends Widget {
     widgetIcon = {
         iconClass: "settings-icon",
@@ -690,6 +691,7 @@ export class Settings extends Widget {
             await raapi.getSubsetsList({
                 onProgressChange: (props) => ui.toggleLoading(true, progressMessage(props))
             });
+            await initSubsets();
         }
         catch (e) {
             console.warn(e)

@@ -3,5 +3,6 @@ export const CACHE_TYPES = {
     COMPLETION_PROGRESS: "completionProgress",
     AOTW: "aotw",
     SUBSETS_LIST: "subsetsList",
-    CHEEVO: "cheevo"
+    CHEEVO: "cheevo",
+    UNLOCKS: "unlocks",
 }

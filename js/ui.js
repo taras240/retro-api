@@ -60,6 +60,9 @@ export class UI {
   }
 
   async initUI() {
+    this.dbCache = config.cache;
+    await this.dbCache.initialize();
+    window.db = this.dbCache;
     await this.loadLang();
 
     // Ініціалізація елементів

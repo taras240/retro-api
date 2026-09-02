@@ -4,7 +4,7 @@ import { colorPresets } from "./enums/colorPresets.js";
 import { fonts } from "./enums/fontsPreset.js";
 import { uiLayouts } from "./enums/uiLayouts.js";
 import { WATCHER_MODES } from "./enums/watcherModes.js";
-import { cacheWorker } from "./functions/api/cacheWorker.js";
+import { dbCacheWorker } from "./functions/api/cacheWorker.js";
 import { loadHandle, openDB, saveHandle } from "./functions/DB.js";
 import { delay } from "./functions/delay.js";
 import { exportSettingsToJson } from "./functions/exportData.js";
@@ -13,7 +13,7 @@ let CONFIG_FILE_NAME = "retroApiConfig";
 const CACHE_FILE_NAME = "raApiCache";
 const CONFIG_VERSION = 3.14;
 export class Config {
-  cache = cacheWorker(CACHE_FILE_NAME);
+  cache = dbCacheWorker();
   //! ----------[ Login information ]------------------
   get version() {
     return this._cfg.version ?? "0";
