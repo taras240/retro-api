@@ -40,6 +40,11 @@
   gap: var(--cheevos-margin);
 }
 
+.section.horizontal-scroll .achievements-container {
+  flex-direction: column;
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
 
 /** ------------[ ACHIEVEMENT ]------------*/
 /*--------------- OVERLAT-SETS---------------- */

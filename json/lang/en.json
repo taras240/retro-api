@@ -369,5 +369,6 @@
     "reset": "Reset",
     "next": "Next",
     "prev": "Previous",
-    "noCheevoToShow": "No achievement to display"
+    "noCheevoToShow": "No achievement to display",
+    "horizontalScroll": "Horizontal Scroll"
 }

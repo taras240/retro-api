@@ -51,6 +51,12 @@ export class AchievementsBlock extends Widget {
                         onChange: (event) => this.uiProps.stretchAchievements = event.currentTarget.checked,
                     },
                     {
+                        type: inputTypes.CHECKBOX,
+                        label: lang.horizontalScroll,
+                        checked: this.uiProps.horizontalScroll,
+                        onChange: (event) => this.uiProps.horizontalScroll = event.currentTarget.checked,
+                    },
+                    {
                         prefix: lang.minSize,
                         postfix: "px",
                         type: inputTypes.NUM_INPUT,
@@ -314,6 +320,7 @@ export class AchievementsBlock extends Widget {
         scrollPauseDuration: 15,
         cheevosMargin: 1,
         cropOffset: 0,
+        horizontalScroll: false,
     }
     uiSetCallbacks = {
         ACHIV_MIN_SIZE(value) {
@@ -323,6 +330,7 @@ export class AchievementsBlock extends Widget {
             this.fitCheevoSize();
         },
         isGrouping(value) {
+            if (value) this.uiProps.horizontalScroll = false;
             this.groupCheevos();
         },
         groupBy() {
@@ -332,7 +340,7 @@ export class AchievementsBlock extends Widget {
             this.groupCheevos();
         },
         autoscroll(value) {
-            value ? this.startAutoScroll() : this.stopAutoScroll();
+            value ? this.startAutoScroll() : this.stopAutoScroll(true);
         },
         showPrevOverlay(value) {
             this.container.querySelectorAll(".achiv-block").forEach(el => el.classList.toggle("overlay", value));
@@ -367,8 +375,7 @@ export class AchievementsBlock extends Widget {
         },
         scrollPauseDuration(value) {
             value = value < 0 ? 0 : value;
-            this.autoscroll?.stop();
-            this.autoscroll = null;
+            stopAutoScroll(true);
             this.startAutoScroll();
         },
         cheevosMargin(value) {
@@ -377,6 +384,13 @@ export class AchievementsBlock extends Widget {
         },
         cropOffset(value) {
             this.section.style.setProperty("--crop-offset", `${value}px`);
+        },
+        horizontalScroll(value) {
+            this.setElementsValues();
+            this.autoscroll?.stop(true);
+            this.autoscroll = null;
+            this.startAutoScroll();
+            if (value) this.uiProps.isGrouping = false;
         }
     };
     uiValuePreprocessors = {
@@ -400,7 +414,7 @@ export class AchievementsBlock extends Widget {
         },
         cropOffset(value) {
             return (value && value > 0 && value <= 10) ? value : 0;
-        }
+        },
     };
 
     updateHiddenSets(setID) {
@@ -490,17 +504,18 @@ export class AchievementsBlock extends Widget {
         this.section.classList.toggle("compact", !this.uiProps.showHeader);
         this.section.dataset.previewFilter = this.uiProps.lockedPreviewFilter;
         this.section.classList.toggle("borderless", !this.uiProps.showBorders);
+        this.section.classList.toggle("horizontal-scroll", this.uiProps.horizontalScroll);
         this.section.style.setProperty("--cheevos-margin", `${this.uiProps.cheevosMargin}px`);
         this.section.style.setProperty("--crop-offset", `${this.uiProps.cropOffset}px`);
         if (this.uiProps.stretchAchievements) {
             this.container.style.alignContent = "space-around";
             this.container.style.justifyContent = "space-around";
-            this.container.style.rowGap = "var(--row-gap)";
+            this.container.style.gap = "var(--row-gap)";
         }
         else {
             this.container.style.alignContent = "start";
             this.container.style.justifyContent = "center";
-            this.container.style.rowGap = this.uiProps.cheevosMargin;
+            this.container.style.gap = this.uiProps.cheevosMargin;
         }
     }
     setValues() {
@@ -669,6 +684,7 @@ export class AchievementsBlock extends Widget {
     fitCheevoSize(isLoadDynamic = false) {
         const maxSize = +this.uiProps.ACHIV_MAX_SIZE;
         const minSize = +this.uiProps.ACHIV_MIN_SIZE;
+        const isHorizontal = this.uiProps.horizontalScroll;
         const normalizeCheevoSize = (size) => {
             return Math.max(
                 minSize,
@@ -690,21 +706,28 @@ export class AchievementsBlock extends Widget {
         let achivWidth = Math.floor(
             Math.sqrt((windowWidth * windowHeight) / cheevosCount)
         );
-        do {
+
+        const containerScrollSize = () => isHorizontal ? container.scrollWidth : container.scrollHeight;
+        const containerOffsetSize = isHorizontal ? container.offsetWidth : container.offsetHeight;
+        const containerSideSize = isHorizontal ? container.offsetHeight : container.offsetWidth;
+        let isOverflow = true;
+        while (isOverflow) {
             achivWidth--;
             this.section.style.setProperty("--achiv-height", achivWidth + "px");
             section.offsetHeight;
-        }
-        while (container.scrollHeight > container.offsetHeight && achivWidth > minSize);
+
+            isOverflow = containerScrollSize() > containerOffsetSize && achivWidth > minSize;
+        };
         let gap = 0;
         achivWidth = normalizeCheevoSize(achivWidth);
-        if (container.scrollHeight > container.offsetHeight + 2) {
+        if (containerScrollSize() > containerOffsetSize + 2) {
             const margin = +this.uiProps.cheevosMargin;
-            const containerWidth = container.offsetWidth;
-            const cheevosInRowCount = Math.floor((containerWidth + margin) / (achivWidth + margin));
-            const roundedSize = Math.round((containerWidth + margin * (1 - cheevosInRowCount)) / cheevosInRowCount);
+            const sideSize = containerSideSize;
+            const cheevosInRowCount = Math.floor((sideSize + margin) / (achivWidth + margin));
+            const roundedSize = Math.floor(sideSize / (cheevosInRowCount + margin / 2));
+            console.log(roundedSize)
             achivWidth = roundedSize - 1;
-            gap = (containerWidth - (cheevosInRowCount * achivWidth)) / (cheevosInRowCount - 1);
+            gap = (sideSize - (cheevosInRowCount * achivWidth)) / (cheevosInRowCount - 1);
         }
 
         this.section.style.setProperty("--achiv-height", achivWidth + "px");
@@ -715,11 +738,15 @@ export class AchievementsBlock extends Widget {
         this.autoscroll ??= createAutoScroll(this.container, {
             speed: this.uiProps.scrollSpeed,
             pauseOnEndMs: this.uiProps.scrollPauseDuration * 1e3,
+            axis: this.uiProps.horizontalScroll ? "x" : "y",
         });
         this.uiProps.autoscroll && this.autoscroll.start();
     }
-    stopAutoScroll() {
-        this.autoscroll?.stop();
+    stopAutoScroll(reset) {
+        this.autoscroll?.stop(reset);
+        if (reset && this.autoscroll) {
+            this.autoscroll = null;
+        }
     }
     isAllEarnedAchievesVisible() {
         let isVisible = true;
