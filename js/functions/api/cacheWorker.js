@@ -287,7 +287,7 @@ export function dbCacheWorker() {
 
     const clear = async () => {
         await initialize();
-        await Promise.all([...collectionTypes, ...singleTypes].map(dataType => clearProperty({ dataType })));
+        await Promise.all([...collectionTypes, ...singleTypes, "meta"].map(dataType => clearProperty({ dataType })));
     };
 
     const optimizeCache = async () => {

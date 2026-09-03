@@ -40,9 +40,19 @@
 }
 
 .event-cheevos__cheevo.unlocked {
-    --secondary-font-color: black;
-    background-color: goldenrod;
-    color: black;
+    --secondary-font-color: black !important;
+    background-color: goldenrod !important;
+    color: black !important;
+}
+
+.event-cheevos__cheevo.unlocked.not-in-time {
+    background-color: rgb(218, 91, 32) !important;
+
+}
+
+.event-cheevos__cheevo.unlocked.not-in-time:hover {
+    background-color: rgb(255, 105, 36) !important;
+
 }
 
 .event-cheevos__cheevo.unlocked:hover {

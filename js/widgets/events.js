@@ -2,6 +2,7 @@ import { raapi } from "../api/index.js";
 import { badgeElements } from "../components/badges.js";
 import { buttonsHtml } from "../components/htmlElements.js";
 import { signedIcons } from "../components/icons.js";
+import { delay } from "../functions/delay.js";
 import { fromHtml } from "../functions/html.js";
 import { cheevoUrl, eventUrl, gameImageUrl, gameUrl } from "../functions/raLinks.js";
 import { formatDuration, formatTime } from "../functions/time.js";
@@ -70,26 +71,31 @@ export class EventAchievements extends Widget {
                     eventTitle,
                     eventBadgeUrl
                 } = cheevo;
-                const fromTimestamp = new Date(activeFrom);
-                const toTimestamp = new Date(activeUntil);
-                const isUnlocked = !!unlocks.find(u => {
-                    const isUnlockedHardcore = u.AchievementID == cheevoID && u.HardcoreMode === 1;
-                    if (!isUnlockedHardcore) return;
-                    const timestamp = new Date(u.Date);
-                    const isUnlockedInTime = timestamp > fromTimestamp && timestamp < toTimestamp;
-                    return isUnlockedInTime;
-                });
+                const fromTimestamp = new Date(activeFrom).getTime();
+                const toTimestamp = new Date(activeUntil).getTime();
+                const unlock = unlocks.find(u => u.AchievementID == cheevoID && u.HardcoreMode === 1);
+                const isUnlocked = !!unlock;
+                const timestamp = isUnlocked ? new Date(unlock.Date).getTime() : null;
+                const isUnlockedInTime = timestamp > fromTimestamp && timestamp < toTimestamp;
                 const percentage = (Date.now() - new Date(activeFrom)) / (new Date(activeUntil) - new Date(activeFrom)) * 100;
+
                 const timeRemaining = new Date(activeUntil) - Date.now();
                 const formattedTime = formatDuration(timeRemaining / 1000);
                 const element = fromHtml(`
-                    <li.event-cheevos__cheevo.main-column-item.right-bg-icon${isUnlocked ? ".unlocked" : ""} award-type>
+                    <li.event-cheevos__cheevo.main-column-item.right-bg-icon${isUnlocked ? ".unlocked" : ""}${!isUnlockedInTime ? ".not-in-time" : ""} award-type>
                         <img.row-item__preview.w-4em src="${isUnlocked ? achievementBadgeUrl : achievementBadgeLockedUrl}">
                         <h3.list-item__title>
                             <a target="_blank" data-title="${lang.goToRAHint}" href="${cheevoUrl({ ID: cheevoID })}">${achievementTitle}</a>
                         </h3>
                         <p.list-item__text>${achievementDescription}</p>
-                        <p.icons-row-list>${badgeElements.gold(`${formattedTime} remaining`)}</p>
+                        <p.icons-row-list>
+                            ${isUnlocked ?
+                        isUnlockedInTime ?
+                            badgeElements.green("Unlocked · " + new Date(unlock.Date).toLocaleDateString()) :
+                            badgeElements.green(`Unlocked previosly · ${formattedTime} remaining`) :
+                        badgeElements.green(`${formattedTime} remaining`)
+                    }
+                        </p>
                     </li>
                 `);
                 element.style.setProperty("--percentage", percentage + "%")
@@ -161,7 +167,7 @@ export class EventAchievements extends Widget {
                 if (Number.isInteger(timeStamp)) fromDate = Math.min(fromDate, timeStamp)
             })
         );
-        console.log(fromDate);
+        await delay(500);
         const unlocks = await raapi.getUserAchievementsByDateRange({ fromDate, toDate: Date.now() });
         this.toggleLoader({ show: false });
 
