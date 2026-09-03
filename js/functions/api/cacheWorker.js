@@ -3,7 +3,8 @@ import { CACHE_TYPES } from "../../enums/cacheDataTypes.js";
 export function cacheWorker(cacheFileName) {
     let cachedData = {
         [CACHE_TYPES.GAME_TIMES]: {},
-        [CACHE_TYPES.CHEEVO]: {}
+        [CACHE_TYPES.CHEEVO]: {},
+        [CACHE_TYPES.UNLOCKS]: []
     };
 
     const initialize = () => {
@@ -12,9 +13,7 @@ export function cacheWorker(cacheFileName) {
             cachedData = {
                 [CACHE_TYPES.GAME_TIMES]: {},
                 [CACHE_TYPES.CHEEVO]: {},
-                [CACHE_TYPES.UNLOCKS]: {
-                    unlocks: {}
-                },
+                [CACHE_TYPES.UNLOCKS]: [],
             };
             return;
         }
@@ -24,11 +23,12 @@ export function cacheWorker(cacheFileName) {
             cachedData = {
                 [CACHE_TYPES.GAME_TIMES]: {},
                 [CACHE_TYPES.CHEEVO]: {},
-                [CACHE_TYPES.UNLOCKS]: {
-                    unlocks: {}
-                },
+                [CACHE_TYPES.UNLOCKS]: [],
                 ...cache
             };
+            if (cachedData[CACHE_TYPES.UNLOCKS]?.unlocks) {
+                cachedData[CACHE_TYPES.UNLOCKS] = Object.values(cachedData[CACHE_TYPES.UNLOCKS].unlocks);
+            }
             optimizeCache();
             console.warn(`Cache size: ~${JSON.stringify(cachedData).length * 2 / 1e6}Mb`);
         } catch (error) {
@@ -36,9 +36,7 @@ export function cacheWorker(cacheFileName) {
             cachedData = {
                 [CACHE_TYPES.GAME_TIMES]: {},
                 [CACHE_TYPES.CHEEVO]: {},
-                [CACHE_TYPES.UNLOCKS]: {
-                    unlocks: {}
-                },
+                [CACHE_TYPES.UNLOCKS]: [],
             };
             saveCache();
         }
@@ -63,9 +61,7 @@ export function cacheWorker(cacheFileName) {
         cachedData = {
             [CACHE_TYPES.GAME_TIMES]: {},
             [CACHE_TYPES.CHEEVO]: {},
-            [CACHE_TYPES.UNLOCKS]: {
-                unlocks: {}
-            },
+            [CACHE_TYPES.UNLOCKS]: [],
         };
         saveCache();
     };
@@ -78,8 +74,10 @@ export function cacheWorker(cacheFileName) {
     };
 
     const clearProperty = ({ dataType }) => {
-        if ([CACHE_TYPES.GAME_TIMES, CACHE_TYPES.CHEEVO, CACHE_TYPES.UNLOCKS].includes(dataType)) {
+        if ([CACHE_TYPES.GAME_TIMES, CACHE_TYPES.CHEEVO].includes(dataType)) {
             cachedData[dataType] = {};
+        } else if (dataType === CACHE_TYPES.UNLOCKS) {
+            cachedData[dataType] = [];
         } else {
             delete cachedData[dataType];
         }
@@ -115,8 +113,8 @@ export function dbCacheWorker() {
 
     const DB_NAME = "retrocheevos";
     const DB_VERSION = 2;
-    const collectionTypes = [CACHE_TYPES.GAME_TIMES, CACHE_TYPES.CHEEVO, CACHE_TYPES.UNLOCKS];
-    const singleTypes = [CACHE_TYPES.AOTW, CACHE_TYPES.COMPLETION_PROGRESS, CACHE_TYPES.SUBSETS_LIST];
+    const collectionTypes = [CACHE_TYPES.GAME_TIMES, CACHE_TYPES.CHEEVO];
+    const singleTypes = [CACHE_TYPES.AOTW, CACHE_TYPES.COMPLETION_PROGRESS, CACHE_TYPES.SUBSETS_LIST, CACHE_TYPES.UNLOCKS];
 
     const _migrateFromLocalStorage = (db, transaction) => {
         const rawCache = localStorage.getItem("raApiCache");
@@ -132,15 +130,18 @@ export function dbCacheWorker() {
                 }
             }
 
-            for (const data of Object.values(cache[CACHE_TYPES.UNLOCKS]?.unlocks || {})) {
-                if (data?.ID !== undefined && data?.ID !== null) {
-                    transaction.objectStore(CACHE_TYPES.UNLOCKS).put(data);
-                }
-            }
+            // for (const data of Object.values(cache[CACHE_TYPES.UNLOCKS]?.unlocks || {})) {
+            //     if (data?.ID !== undefined && data?.ID !== null) {
+            //         transaction.objectStore(CACHE_TYPES.UNLOCKS).put(data);
+            //     }
+            // }
 
             for (const dataType of singleTypes) {
                 if (cache[dataType] !== undefined) {
-                    transaction.objectStore(dataType).put(cache[dataType], "main");
+                    const value = dataType === CACHE_TYPES.UNLOCKS && cache[dataType]?.unlocks
+                        ? Object.values(cache[dataType].unlocks)
+                        : cache[dataType];
+                    transaction.objectStore(dataType).put(value, "main");
                 }
             }
 
@@ -189,9 +190,7 @@ export function dbCacheWorker() {
                 }
 
                 if (!db.objectStoreNames.contains(CACHE_TYPES.UNLOCKS)) {
-                    db.createObjectStore(CACHE_TYPES.UNLOCKS, {
-                        keyPath: "ID"
-                    });
+                    db.createObjectStore(CACHE_TYPES.UNLOCKS);
                 }
                 if (db.objectStoreNames.contains(CACHE_TYPES.SUBSETS_LIST)) {
                     const subsetsStore = event.target.transaction.objectStore(CACHE_TYPES.SUBSETS_LIST);
@@ -242,8 +241,13 @@ export function dbCacheWorker() {
             return get(dataType, ID);
         }
         if (dataType === CACHE_TYPES.UNLOCKS) {
-            const records = await get(dataType, undefined);
-            return { unlocks: Object.fromEntries(records.map(data => [data.ID, data])) };
+            const data = await get(dataType);
+            if (data?.unlocks && !Array.isArray(data)) {
+                const unlocks = Object.values(data.unlocks);
+                await put(dataType, unlocks);
+                return unlocks;
+            }
+            return data;
         }
         return get(dataType);
     };

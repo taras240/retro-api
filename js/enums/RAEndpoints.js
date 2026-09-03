@@ -4,6 +4,7 @@ export const raEdpoints = Object.freeze({
     gameTimesInfo: "API_GetGameProgression.php",
     recentAchieves: "API_GetUserRecentAchievements.php",
     userRecentAchievements: "API_GetUserRecentAchievements.php",
+    userAchievementsByDateRange: "API_GetAchievementsEarnedBetween.php",
     gameInfo: "API_GetGame.php",
     extendedGameInfo: "API_GetGameExtended.php",
     recentlyPlayedGames: "API_GetUserRecentlyPlayedGames.php",
@@ -17,6 +18,8 @@ export const raEdpoints = Object.freeze({
     wantToPlay: "API_GetUserWantToPlayList.php",
     consoleGamesList: "API_GetGameList.php",
     consolesList: "API_GetConsoleIDs.php",
+    achievement: "API_GetAchievementUnlocks.php",
+
 });
 export const raEdpointsV2 = {
     eventAchievements: "event-achievements"

@@ -58,6 +58,7 @@ export class EventAchievements extends Widget {
             const cheevoElement = (cheevo) => {
                 const {
                     cheevoID,
+                    eventCheevoID,
                     activeFrom,
                     activeUntil,
                     decorator,
@@ -69,12 +70,21 @@ export class EventAchievements extends Widget {
                     eventTitle,
                     eventBadgeUrl
                 } = cheevo;
+                const fromTimestamp = new Date(activeFrom);
+                const toTimestamp = new Date(activeUntil);
+                const isUnlocked = !!unlocks.find(u => {
+                    const isUnlockedHardcore = u.AchievementID == cheevoID && u.HardcoreMode === 1;
+                    if (!isUnlockedHardcore) return;
+                    const timestamp = new Date(u.Date);
+                    const isUnlockedInTime = timestamp > fromTimestamp && timestamp < toTimestamp;
+                    return isUnlockedInTime;
+                });
                 const percentage = (Date.now() - new Date(activeFrom)) / (new Date(activeUntil) - new Date(activeFrom)) * 100;
                 const timeRemaining = new Date(activeUntil) - Date.now();
                 const formattedTime = formatDuration(timeRemaining / 1000);
                 const element = fromHtml(`
-                    <li.event-cheevos__cheevo.main-column-item.right-bg-icon award-type>
-                        <img.row-item__preview.w-4em src="${achievementBadgeUrl}">
+                    <li.event-cheevos__cheevo.main-column-item.right-bg-icon${isUnlocked ? ".unlocked" : ""} award-type>
+                        <img.row-item__preview.w-4em src="${isUnlocked ? achievementBadgeUrl : achievementBadgeLockedUrl}">
                         <h3.list-item__title>
                             <a target="_blank" data-title="${lang.goToRAHint}" href="${cheevoUrl({ ID: cheevoID })}">${achievementTitle}</a>
                         </h3>
@@ -144,6 +154,15 @@ export class EventAchievements extends Widget {
         }
         this.toggleLoader({ message: "Loading Events" });
         const events = await raapi.getEventAchievements({});
+        let fromDate = Date.now();
+        events?.forEach(event =>
+            event.items.forEach(cheevo => {
+                const timeStamp = new Date(cheevo.activeFrom).getTime();
+                if (Number.isInteger(timeStamp)) fromDate = Math.min(fromDate, timeStamp)
+            })
+        );
+        console.log(fromDate);
+        const unlocks = await raapi.getUserAchievementsByDateRange({ fromDate, toDate: Date.now() });
         this.toggleLoader({ show: false });
 
 

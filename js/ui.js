@@ -28,6 +28,7 @@ import { GAME_AWARD_TYPES } from "./enums/gameAwards.js";
 import { blendColors, hexToRgba } from "./functions/ui/generateColors.js";
 import { fromHtml } from "./functions/html.js";
 import { EventAchievements } from "./widgets/events.js";
+import { raapi } from "./api/index.js";
 
 
 export class UI {
@@ -43,6 +44,7 @@ export class UI {
   constructor() {
     this.toggleLoading(false);
     this.initUI();
+    window.getUnlocks = raapi.getUserAchievementsByDateRange;
   }
   async loadLang() {
     const defLangResp = await fetch(langPackUrl(local.en));

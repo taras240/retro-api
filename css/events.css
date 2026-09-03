@@ -39,6 +39,16 @@
     width: 100%;
 }
 
+.event-cheevos__cheevo.unlocked {
+    --secondary-font-color: black;
+    background-color: goldenrod;
+    color: black;
+}
+
+.event-cheevos__cheevo.unlocked:hover {
+    background-color: gold !important;
+}
+
 .row-item__preview {
     aspect-ratio: 1;
     grid-row: 1 / 4;

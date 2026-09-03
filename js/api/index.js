@@ -2,9 +2,11 @@ import { CACHE_TYPES } from "../enums/cacheDataTypes.js";
 import { cachedCompletionProgress } from "../functions/api/completionProgress.js";
 import { groupSubsets } from "../functions/api/groupSubsets.js";
 import { getSubsets } from "../functions/api/subsets.js";
+import { filterUnlocksByDateRange, getUniqueUnlocks, normalizeTimeStamp } from "../functions/api/unlocksRange.js";
 import { delay } from "../functions/delay.js";
 import { calcEtaTimeToBeat } from "../functions/estimatedTime.js";
 import { call } from "./api.js";
+import { unlocksByDateRange } from "./cachedCalls/unlocksByDateRange.js";
 import { getEventAchievements } from "./handlers/v2/eventAchievements.js";
 
 
@@ -118,6 +120,15 @@ export const raapi = {
             minutes
         })
     },
+    async getUserAchievementsByDateRange({ username, fromDate, toDate }) {
+        return await unlocksByDateRange({
+            apiKey: API_KEY,
+            username: getUsername(username),
+            fromDate,
+            toDate,
+            cache
+        })
+    },
     async getAotW({ username }) {
         const cachedData = await cache.getData({ dataType: CACHE_TYPES.AOTW });
         if (cachedData?.endTime && cachedData.endTime - Date.now() > 0) {
@@ -216,9 +227,12 @@ export const raapi = {
             }
             const pageAchievements = response.data?.map(data => {
                 const { attributes } = data;
-                const cheevoID = data?.relationships?.eventAchievement?.data?.id ?? null;
+                const cheevoID = data?.relationships?.sourceAchievement?.data?.id ?? null;
+                const eventCheevoID = data?.relationships?.eventAchievement?.data?.id ?? null;
+
                 const eventAchievement = {
                     cheevoID,
+                    eventCheevoID,
                     ...attributes,
                 }
                 return eventAchievement;
