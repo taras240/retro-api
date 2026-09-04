@@ -6,7 +6,7 @@ import { showComments } from "../components/comments.js";
 import { delay } from "../functions/delay.js";
 import { cheevoUrl, gameImageUrl, gameUrl } from "../functions/raLinks.js";
 import { scrollElementIntoView } from "../functions/scrollingToElement.js";
-import { inputTypes } from "../components/inputElements.js";
+import { input, inputTypes } from "../components/inputElements.js";
 import { imageFilters } from "../enums/imageFilters.js";
 import { buttonsHtml } from "../components/htmlElements.js";
 import { CACHE_TYPES } from "../enums/cacheDataTypes.js";
@@ -463,7 +463,13 @@ export class Target extends Widget {
             ${buttonsHtml.sort(widgetID)}
             ${buttonsHtml.saveData({ className: "save-order-button", hint: lang.saveAsCustomOrder, id: `${widgetID}-save-order` })}
             ${buttonsHtml.tweek()}
-            <input type="search" name="" id="target__searchbar" class="text-input target__search-bar" data-title="${lang.targetSearchHint}" placeholder="${lang.search}">
+            ${input({
+            type: inputTypes.SEARCH_INPUT,
+            id: "target__searchbar",
+            classList: ["target__search-bar"],
+            title: lang.targetSearchHint,
+            label: lang.search,
+        })}
         `;
         const contentHtml = `
             ${divHtml(["target__pinned-list"])}
@@ -654,6 +660,11 @@ export class Target extends Widget {
             dragToPinned(id);
         }, false)
         this.searchInput?.addEventListener("input", (event) => this.searchInputEvent(event));
+        this.section.querySelector("#target__searchbar-clear")?.addEventListener("click", event => {
+            event.stopPropagation();
+            this.searchInput.value = "";
+            this.searchInput.dispatchEvent(new Event("input"));
+        })
     }
     searchInputEvent(event) {
         event.stopPropagation();

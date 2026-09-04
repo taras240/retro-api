@@ -58,19 +58,20 @@ const container = ({ label }) => {
 }
 const textInput = ({ prefix, title, id, value, label, isNumber, isSearch, placeholder, classList = [] }) => {
     return `
-    <div>
+    <div class="${isSearch ? "search" : "text"}-input-wrapper">
         <input ${[
             `type="${isNumber ? "number" : isSearch ? "search" : "text"}"`,
             (title || prefix) && `data-title="${title || prefix}"`,
             `class="text-input ${classList.join(" ")}"`,
             id && `id="${id}"`,
             value !== undefined && `value="${value}"`,
-            label && `placeholder="${label}"`,
+            label && `placeholder="${placeholder || label}"`,
         ]
             .filter(Boolean)
             .join(" ")}
         />
-        </div>
+        <button id="${id}-clear" class="search-input-clear" type="button" data-title="${lang.clear}"></button>
+    </div>
     `;
 
 }

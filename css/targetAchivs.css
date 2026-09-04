@@ -481,7 +481,6 @@
 .text-input.target__search-bar {
   background-color: var(--main-color);
   max-width: 6em;
-  padding-right: 0.5em;
   border-radius: 4px;
 }
 
