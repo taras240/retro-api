@@ -519,12 +519,12 @@ export class AchievementsBlock extends Widget {
         if (this.uiProps.stretchAchievements) {
             this.container.style.alignContent = "space-around";
             this.container.style.justifyContent = "space-around";
-            this.container.style.gap = "var(--row-gap)";
+            this.container.style.gap = "var(--row-gap) var(--column-gap)";
         }
         else {
             this.container.style.alignContent = "start";
             this.container.style.justifyContent = "center";
-            this.container.style.gap = this.uiProps.cheevosMargin;
+            this.container.style.gap = `${this.uiProps.cheevosMargin}px`;
         }
     }
     setValues() {
@@ -698,6 +698,7 @@ export class AchievementsBlock extends Widget {
     fitCheevoSize(isLoadDynamic = false) {
         const maxSize = +this.uiProps.ACHIV_MAX_SIZE;
         const minSize = +this.uiProps.ACHIV_MIN_SIZE;
+        const margin = +this.uiProps.cheevosMargin;
         const isHorizontal = this.uiProps.horizontalScroll;
         const normalizeCheevoSize = (size) => {
             return Math.max(
@@ -723,29 +724,60 @@ export class AchievementsBlock extends Widget {
 
         const containerScrollSize = () => isHorizontal ? container.scrollWidth : container.scrollHeight;
         const containerOffsetSize = isHorizontal ? container.offsetWidth : container.offsetHeight;
-        const containerSideSize = isHorizontal ? container.offsetHeight : container.offsetWidth;
-        let isOverflow = true;
-        while (isOverflow) {
-            achivWidth--;
-            this.section.style.setProperty("--achiv-height", achivWidth + "px");
+        const setLayout = (size, gap) => {
+            this.section.style.setProperty("--achiv-height", `${size}px`);
+            this.section.style.setProperty("--row-gap", `${gap}px`);
+            this.section.style.setProperty("--column-gap", `${gap}px`);
+            container.style.gap = `${gap}px`;
             section.offsetHeight;
-
-            isOverflow = containerScrollSize() > containerOffsetSize && achivWidth > minSize;
         };
-        let gap = 0;
+        const overflows = () => containerScrollSize() > containerOffsetSize + 2;
+
         achivWidth = normalizeCheevoSize(achivWidth);
-        if (containerScrollSize() > containerOffsetSize + 2) {
-            const margin = +this.uiProps.cheevosMargin;
-            const sideSize = containerSideSize;
-            const cheevosInRowCount = Math.floor((sideSize + margin) / (achivWidth + margin));
-            const roundedSize = Math.floor(sideSize / (cheevosInRowCount + margin / 2));
-            console.log(roundedSize)
-            achivWidth = roundedSize - 1;
-            gap = (sideSize - (cheevosInRowCount * achivWidth)) / (cheevosInRowCount - 1);
+        setLayout(achivWidth, margin);
+        while (overflows() && achivWidth > minSize) {
+            achivWidth--;
+            setLayout(achivWidth, margin);
+        }
+
+        let gap = margin;
+        let crossGap = margin;
+        if (overflows()) {
+            setLayout(minSize, margin);
+            if (!overflows()) {
+                let low = minSize;
+                let high = maxSize;
+                while (low < high) {
+                    const candidate = Math.ceil((low + high) / 2);
+                    setLayout(candidate, margin);
+                    if (overflows()) {
+                        high = candidate - 1;
+                    }
+                    else {
+                        low = candidate;
+                    }
+                }
+                achivWidth = Math.floor((minSize + low) / 2);
+            }
+
+            const crossSize = isHorizontal ? windowHeight : windowWidth;
+            const itemsInCrossAxis = Math.max(
+                1,
+                Math.floor((crossSize + margin) / (achivWidth + margin))
+            );
+            if (itemsInCrossAxis > 1) {
+                const availableCrossSize = crossSize - itemsInCrossAxis * achivWidth;
+                const calculatedGap = availableCrossSize / (itemsInCrossAxis - 1);
+                crossGap = Math.min(margin + 10, Math.max(margin, calculatedGap));
+            }
+            gap = crossGap;
         }
 
         this.section.style.setProperty("--achiv-height", achivWidth + "px");
-        this.section.style.setProperty("--row-gap", Math.max(gap, +this.uiProps.cheevosMargin) + "px");
+        this.section.style.setProperty("--row-gap", `${isHorizontal ? crossGap : gap}px`);
+        this.section.style.setProperty("--column-gap", `${isHorizontal ? gap : crossGap}px`);
+        container.style.rowGap = `${isHorizontal ? crossGap : gap}px`;
+        container.style.columnGap = `${isHorizontal ? gap : crossGap}px`;
     }
     autoscroll;
     startAutoScroll() {
