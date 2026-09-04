@@ -568,7 +568,12 @@ export class AchievementsBlock extends Widget {
                 unlockChevo(cheevoElement, cheevo);
             }
             else {
-                await scrollElementIntoView({ container: this.container, element: cheevoElement, scrollByX: false });
+                await scrollElementIntoView({
+                    container: this.container,
+                    element: cheevoElement,
+                    scrollByX: this.uiProps.horizontalScroll,
+                    scrollByY: !this.uiProps.horizontalScroll
+                });
                 await smb3UnlockAnimation().doAction(cheevoElement, () => unlockChevo(cheevoElement, cheevo))
             }
             await delay(100);
