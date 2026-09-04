@@ -477,6 +477,15 @@ export class AchievementsBlock extends Widget {
         this.section.querySelector(`#${this.SECTION_ID}-sort-button`).addEventListener("click", event => {
             ui.showContextmenu({ event, menuItems: this.contextSortMenu().elements, sectionCode: this.SECTION_ID })
         });
+        this.container.addEventListener('wheel', (event) => {
+            if (!this.uiProps.horizontalScroll) return;
+
+            event.preventDefault();
+            this.container.scrollBy({
+                left: event.deltaY / 1,
+                behavior: 'smooth'
+            });
+        }, { passive: false });
         new Sortable(this.container, {
             group: {
                 name: "cheevos", pull: "clone", push: "false",
