@@ -128,7 +128,7 @@
             ${t(lang.createdBy,s.Author)}
         </div>
     `,!0);return a.append(...d),a}function Zo(s){return E(`
-    <div class="popup hint hint-popup">
+    <div class="popup hint tooltip">
       ${s}
     </div>
   `)}var Us=({menuItems:s,sectionCode:e="",isSubmenu:t=!1})=>{let o=document.createElement("ul");return o.className=t?"context-menu_item-menu context-submenu":"achievement_context-menu context-menu hidden",s.forEach(i=>{let n=i.hasOwnProperty("elements"),r;if(i){if(n){r=E(`

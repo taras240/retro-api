@@ -781,7 +781,7 @@ input:checked+.checkbox-input::before {
 .popup {
     position: absolute;
     background-color: var(--main-color);
-    box-shadow: 0 0 3px 0 black;
+    box-shadow: 0 0 1px 0 black;
     border-radius: var(--border-radius);
     overflow: hidden;
     visibility: hidden;
@@ -792,10 +792,11 @@ input:checked+.checkbox-input::before {
 
 }
 
-.hint-popup {
-    padding: 0.5em 1em;
+.tooltip {
+    padding: 0.25em 0.5em;
     width: auto;
-    min-width: 10em;
+    max-width: 25em;
+    /* min-width: 10em; */
 }
 
 .cheevo-popup {
@@ -811,7 +812,7 @@ input:checked+.checkbox-input::before {
     /* background: linear-gradient(to top left,
             var(--main-color),
             var(--secondary-color)); */
-    box-shadow: 0 0 3px 0 black;
+    box-shadow: 1px 1px 1px 0 black;
     border-radius: var(--border-radius);
     overflow: hidden;
     visibility: hidden;

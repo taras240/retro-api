@@ -2,7 +2,7 @@ import { fromHtml } from "../functions/html.js";
 
 export function hintElement(content) {
   let popup = fromHtml(`
-    <div class="popup hint hint-popup">
+    <div class="popup hint tooltip">
       ${content}
     </div>
   `);
