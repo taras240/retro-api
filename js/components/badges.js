@@ -1,5 +1,5 @@
 import { DIFFICULTY_NAMES } from "../enums/difficulty.js";
-import { genreIcons, icons, signedIcons } from "./icons.js";
+import { icons } from "./icons.js";
 
 export function generateBadges(badges, badgeType = "gameTitle") {
     return badges?.reduce((acc, label) => {

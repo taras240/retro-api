@@ -149,6 +149,7 @@ export class Games extends Widget {
                 type: inputTypes.SEARCH_INPUT,
                 label: lang.search,
                 title: lang.searchGameInputHint,
+                id: "games__searchbar",
                 onInput: (event) => {
                     const searchbarValue = event.target.value;
                     this.titleFilter = searchbarValue;
@@ -674,8 +675,11 @@ export class Games extends Widget {
 
             this.addGameToPlaylist(gameID, playlistName);
         });
+
         this.container.addEventListener("click", event => {
             const gameItem = event.target.closest(".games__game-item");
+
+
             if (gameItem) {
                 if (event.target.closest("button.delete-icon")) {
                     this.removeGameFromPlaylist(gameItem.dataset.id, this.currentPlaylist, gameItem);

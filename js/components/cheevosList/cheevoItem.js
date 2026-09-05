@@ -3,7 +3,7 @@ import { cheevoImageUrl, cheevoUrl } from "../../functions/raLinks.js";
 import { formatDuration } from "../../functions/time.js";
 import { badgeElements } from "../badges.js";
 import { buttonsHtml } from "../htmlElements.js";
-import { genreIcons, icons, signedIcons } from "../icons.js";
+import { icons, signedIcons } from "../icons.js";
 
 const getLevelLabel = ({ level, zone }) => {
     const subLevel = level?.toString()?.split(".")[1];
@@ -16,8 +16,6 @@ const getLevelLabel = ({ level, zone }) => {
 };
 
 const buildGenresBadges = (genres = []) => genres.map(genre => badgeElements.buttonGenreBadge(genre)).join("");
-
-const buildGenreIcons = (genres = []) => genres.map(genre => genreIcons[genre]).join("");
 
 const buildIconsRow = achievement => [
     icons.cheevoType(achievement.Type),

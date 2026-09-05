@@ -478,11 +478,12 @@ export class AchievementsBlock extends Widget {
             ui.showContextmenu({ event, menuItems: this.contextSortMenu().elements, sectionCode: this.SECTION_ID })
         });
         this.container.addEventListener('wheel', (event) => {
-            if (!this.uiProps.horizontalScroll) return;
+            // if (!this.uiProps.horizontalScroll) return;
 
             event.preventDefault();
             this.container.scrollBy({
-                left: event.deltaY / 1,
+                left: this.uiProps.horizontalScroll ? event.deltaY / 1 : 0,
+                top: !this.uiProps.horizontalScroll ? event.deltaY / 1 : 0,
                 behavior: 'smooth'
             });
         }, { passive: false });

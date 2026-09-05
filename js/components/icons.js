@@ -42,9 +42,30 @@ function formatViews(n) {
     return `${parseFloat(n.toFixed(1))}${units[i]}`;
 }
 const unicodeIcon = (symbol) => `<i>${symbol}</i>`
+const svgIcon = (iconID) => `
+    <svg class="icon">
+        <use href="../assets/icons.svg#${iconID}"></use>
+    </svg>
+`;
+const svgIcons = {
+    flag: '<i class="description-icon map-icon"/>',
+    // time: unicodeIcon("⏰"),
+    // level: unicodeIcon("🚩"),
+    points: svgIcon("coins"),
+    // retropoints: unicodeIcon("⚡️"),
+    cheevos: svgIcon("trophy-cup"),
+    trueratio: svgIcon("diamond"),
+    // players: unicodeIcon("👥"),
+    // date: unicodeIcon("📅"),
+    // rating: unicodeIcon("🔥"),
+    // rarity: unicodeIcon("📈"),
+    retroRatio: svgIcon("diamond"),
+    // masteryAward: unicodeIcon("🏆"),
+    // progressionAward: unicodeIcon("🎖️"),
+}
 export const icons = {
     flag: '<i class="description-icon map-icon"/>',
-    time: unicodeIcon("⏰"),//⌛
+    time: unicodeIcon("⏰"),
     level: unicodeIcon("🚩"),
     points: unicodeIcon("💰"),
     retropoints: unicodeIcon("⚡️"),
@@ -57,10 +78,8 @@ export const icons = {
     retroRatio: unicodeIcon("💎"),
     masteryAward: unicodeIcon("🏆"),
     progressionAward: unicodeIcon("🎖️"),
-    // rarity: (rarity) => `<i>📈</i>`,
-    // retroRatio: (retroRatio) => `<i>💎</i>`,
-    cheevoType: (type) => `<i class=" description-icon ${type ?? "none"}" data-title="[${type ?? "none"}]"/> `,
-    // cheevoType: (type) => type ? `<i data-title="${type}">${type == "win_condition" ? "🏁" : type == "progression" ? "🔹" : "❕"}</i>` : "",
+
+    cheevoType: (type) => `<i class="description-icon ${type ?? "none"}" data-title="[${type ?? "none"}]"/> `,
     chat: '<i class="description-icon link_icon chat-icon"/>',
     award: (awardType) => awardType ? `<i class="description-icon award-type__icon ${awardType}_icon"/>` : "",
     favourite: `<i class="description-icon favourite_icon"/>`,
@@ -69,14 +88,4 @@ export const icons = {
     link: '<i class="description-icon link_icon ra-link_icon"/>',
     platform: (platformID) => `<img class="image-icon console-icon" src="${RA_PLATFORM_CODES[platformID].IconURL}">`,
     unlock: '<i class="description-icon unlock_icon"/>',
-}
-export const genreIcons = {
-    [CHEEVO_GENRES.KILLER]: `<i class="cheevo-genre__icon">💀</i>`,
-    [CHEEVO_GENRES.PACIFIST]: `<i class="cheevo-genre__icon">☮️</i>`,
-    [CHEEVO_GENRES.SCORE]: `<i class="cheevo-genre__icon">💲</i>`,
-    [CHEEVO_GENRES.TIMETRIAL]: `<i class="cheevo-genre__icon">⏳</i>`,
-    [CHEEVO_GENRES.NO_DEATH]: `<i class="cheevo-genre__icon">👼</i>`,//👻
-    [CHEEVO_GENRES.NO_DAMAGE]: `<i class="cheevo-genre__icon">❤️</i>`,
-    [CHEEVO_GENRES.COLLECTOR]: `<i class="cheevo-genre__icon">👑</i>`,
-    [CHEEVO_GENRES.BOSSFIGHT]: `<i class="cheevo-genre__icon">😈</i>`,
 }

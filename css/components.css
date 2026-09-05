@@ -643,9 +643,12 @@ input:checked+.checkbox-input::before {
     opacity: 1;
 }
 
+/* autoprefixer: off */
 .search-input-wrapper:has(input:not(:placeholder-shown)) .search-input-clear {
     display: block;
 }
+
+/* autoprefixer: on */
 
 
 .wide-input.text-input {

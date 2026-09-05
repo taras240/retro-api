@@ -201,9 +201,21 @@ const addEvents = (element, props) => {
                     onChange(event);
                 }
             });
+            element.querySelector("button.search-input-clear")?.addEventListener("click", event => {
+                event.stopPropagation();
+                input.value = "";
+                input.dispatchEvent(new Event("change"));
+
+            })
         }
         if (onInput) {
-            input?.addEventListener("input", onInput)
+            input?.addEventListener("input", onInput);
+            element.querySelector("button.search-input-clear")?.addEventListener("click", event => {
+                event.stopPropagation();
+                input.value = "";
+                input.dispatchEvent(new Event("input"));
+
+            })
         }
         if (onClick) {
             const button = element?.matches('button')

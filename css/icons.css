@@ -171,10 +171,14 @@
 
 
 /** ICONS  */
-.svg-icon {
-    fill: var(--font-color);
+svg.icon {
     height: 1em;
-    width: 1em;
+    aspect-ratio: 1;
+    line-height: 1em;
+    fill: transparent;
+    stroke: currentColor;
+    stroke-width: 2;
+    translate: 0 0.05em;
 }
 
 .description-icon {
