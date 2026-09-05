@@ -189,6 +189,12 @@ export class Target extends Widget {
                 isChecked: (setID) => !this.uiProps.hiddenSets.includes(setID),
                 onChange: (setID) => this.updateHiddenSets(setID),
             }),
+            {
+                label: lang.saveAsCustomOrder,
+                type: inputTypes.BUTTON,
+                hint: lang.saveAsCustomOrderHint,
+                onClick: () => this.saveAsCustomOrder(),
+            },
         ];
     }
     cheevoMenu = (event) => {

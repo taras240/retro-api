@@ -809,9 +809,6 @@ input:checked+.checkbox-input::before {
     flex-direction: column;
     justify-content: start;
     background-color: var(--main-color);
-    /* background: linear-gradient(to top left,
-            var(--main-color),
-            var(--secondary-color)); */
     box-shadow: 1px 1px 1px 0 black;
     border-radius: var(--border-radius);
     overflow: hidden;
@@ -821,8 +818,6 @@ input:checked+.checkbox-input::before {
     z-index: 1000;
     transition: opacity 0.2s;
 }
-
-.cheevo-popup {}
 
 .cheevo-popup__header {
     --font-color: var(--header-font-color);

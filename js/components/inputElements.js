@@ -90,11 +90,12 @@ const selectorInput = ({ id, label }) => {
     `;
 }
 
-const button = ({ event, onClick, label, id }) => {
+const button = ({ event, onClick, label, id, hint }) => {
     return `
         <button ${[
             id && `id="${id}"`,
             'class="button-input"',
+            hint && `data-title="${hint}"`,
         ]
             .filter(Boolean)
             .join(" ")}>

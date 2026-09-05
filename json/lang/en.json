@@ -370,5 +370,6 @@
     "next": "Next",
     "prev": "Previous",
     "noCheevoToShow": "No achievement to display",
-    "horizontalScroll": "Horizontal Scroll"
+    "horizontalScroll": "Horizontal Scroll",
+    "saveAsCustomOrderHint": "This will replace the saved achievement order with the new one. This action can't be undone."
 }

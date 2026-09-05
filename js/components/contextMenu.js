@@ -116,11 +116,12 @@ const contextInputs = {
             min="${minRange}" 
             max="${maxRange}" 
             value="${value}">`,
-    button: ({ type, id, sectionCode, event, label = "" }) => `
+    button: ({ type, id, sectionCode, event, label = "", hint = "" }) => `
             <button 
                 class="context-menu_${type}" 
                 id="${getRandomID()}"
-                ${event ?? ""} 
+                ${event ?? ""}
+                data-title="${hint}" 
                 type="button"
             >
                 ${label ?? "NOLABEL"}

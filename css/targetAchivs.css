@@ -683,6 +683,11 @@
   left: 0;
   top: calc(100% + 4px);
   position: absolute;
+  display: none;
+}
+
+.show-progression-bar .target__cheevo-progression-container {
+  display: block;
 }
 
 .target__cheevo-progression {
@@ -696,9 +701,6 @@
   /* box-shadow: -10px 0 15px 5px var(--accent-color); */
 }
 
-.show-progression-bar .target__cheevo-progression-container {
-  display: block;
-}
 
 .target-unlock-anim {
   position: absolute;
