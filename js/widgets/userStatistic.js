@@ -50,6 +50,12 @@ export class UserStatistic extends Widget {
                     },
                     {
                         type: inputTypes.CHECKBOX,
+                        label: lang.userLevel,
+                        checked: this.uiProps.showUserLevel,
+                        onChange: (event) => this.uiProps.showUserLevel = event.currentTarget.checked,
+                    },
+                    {
+                        type: inputTypes.CHECKBOX,
                         label: lang.unlocks,
                         checked: this.uiProps.showUnlocksHardcore,
                         onChange: (event) => this.uiProps.showUnlocksHardcore = event.currentTarget.checked,
@@ -175,6 +181,7 @@ export class UserStatistic extends Widget {
         showBeatenSoftcore: false,
         showBeaten: false,
         showTotalGames: false,
+        showUserLevel: false,
         showSeparator: true,
     }
     uiSetCallbacks = {
@@ -229,6 +236,12 @@ export class UserStatistic extends Widget {
                 this.updateCompletionStats();
             }
         },
+        showUserLevel(isShow) {
+            this.setElementsValues();
+            if (isShow) {
+                this.updateCompletionStats();
+            }
+        },
     }
     initialUserSummary;
     userSummary;
@@ -277,6 +290,7 @@ export class UserStatistic extends Widget {
         this.hardcoreUnlocksElement = this.section.querySelector('#stats_cheevos-hardcore');
         this.softpointsElement = this.section.querySelector('#stats_softpoints');
         this.trueRatioElement = this.section.querySelector('#stats_true-ratio');
+        this.userLevelElement = this.section.querySelector('#stats_user-level');
         this.completionElement = this.section.querySelector(".stats__chart-container");
         this.masteredElement = this.section.querySelector('#stats_mastered');
         this.beatenElement = this.section.querySelector('#stats_beaten');
@@ -307,6 +321,7 @@ export class UserStatistic extends Widget {
             [this.beatenElement, this.uiProps.showBeaten],
             [this.beatenSoftElement, this.uiProps.showBeatenSoftcore],
             [this.playedElement, this.uiProps.showTotalGames],
+            [this.userLevelElement, this.uiProps.showUserLevel],
         ].forEach(([element, visible]) => {
             element?.closest("li")?.classList.toggle("hidden", !visible);
         });
@@ -358,9 +373,10 @@ export class UserStatistic extends Widget {
             showCompleted,
             showBeatenSoftcore,
             showBeaten,
-            showTotalGames
+            showTotalGames,
+            showUserLevel,
         } = this.uiProps;
-        return completionChart || showUnlocksHardcore || showUnlocksSoftcore || showMastered || showCompleted || showBeaten || showBeatenSoftcore || showTotalGames;
+        return completionChart || showUnlocksHardcore || showUnlocksSoftcore || showMastered || showCompleted || showBeaten || showBeatenSoftcore || showTotalGames || showUserLevel;
     }
     async updateCompletionStats() {
         if (!this.hasCompletionPropery()) return;
@@ -393,9 +409,63 @@ export class UserStatistic extends Widget {
             return awardsData;
 
         }
+        const getUserLevel = (awardsData) => {
+            const brackets = [
+                { start: 1, end: 99, points: 60 },
+                { start: 100, end: 199, points: 90 },
+                { start: 200, end: 299, points: 450 },
+                { start: 300, end: 399, points: 900 },
+                { start: 400, end: 499, points: 1350 },
+                { start: 500, end: 599, points: 1800 },
+                { start: 600, end: 699, points: 2250 },
+                { start: 700, end: 799, points: 2700 },
+                { start: 800, end: 899, points: 3150 },
+                { start: 900, end: 998, points: 3600 }
+            ];
+            const {
+                mastered,
+                completed,
+                "beaten-hardcore": beaten,
+                "beaten-softcore": beatenCasual } = awardsData;
+
+            const totalPoints = mastered * 300 + completed * 60 + beaten * 60 + beatenCasual * 15;
+            if (!isFinite(totalPoints)) return {};
+            let currentPoints = totalPoints;
+            let level = 1;
+
+            const getPointsRequired = (lvl) => {
+                const bracket = brackets.find(b => lvl >= b.start && lvl <= b.end);
+                return bracket ? bracket.points : 0;
+            };
+
+            while (level < 999) {
+                const required = getPointsRequired(level);
+                if (currentPoints >= required) {
+                    currentPoints -= required;
+                    level++;
+                } else {
+                    break;
+                }
+            }
+
+            const pointsRequiredForNext = level < 999 ? getPointsRequired(level) : 0;
+            const pointsToNextLevel = level < 999 ? (pointsRequiredForNext - currentPoints) : 0;
+            const progressPercentage = level < 999 ? Math.floor((currentPoints / pointsRequiredForNext) * 100) : 100;
+
+            return {
+                userLevel: level,
+                totalPoints,
+                currentLevelPoints: currentPoints,
+                pointsNeededForNextLevel: pointsRequiredForNext,
+                pointsToNextLevel,
+                progressPercentage
+            };
+        }
         const unlocksData = getCheevosCount(completionData);
         const awardsData = getAwardsCount(completionData);
-        const completionStats = { ...unlocksData, ...awardsData };
+        const userLevelData = getUserLevel(awardsData);
+        console.log(userLevelData);
+        const completionStats = { ...unlocksData, ...awardsData, ...userLevelData };
         Object.assign(this.initialData, completionStats);
         Object.assign(this.userData, completionStats);
         this.updateStats({ userData: completionStats });
@@ -510,6 +580,7 @@ export class UserStatistic extends Widget {
         }
         setValue(this.rankRateElement, "percentile");
         setValue(this.rankElement, "rank");
+        setValue(this.userLevelElement, "userLevel");
         setValue(this.hardcoreUnlocksElement, "hardcoreUnlocks");
         setValue(this.softcoreUnlocksElement, "softcoreUnlocks");
         setValue(this.pointsElement, "points");
@@ -558,6 +629,7 @@ export class UserStatistic extends Widget {
     statusProperties = {
         percentile: { label: lang.top, id: "stats_rank-rate", class: 'stats__rank-value' },
         rank: { label: lang.rank, id: "stats_rank", class: 'stats__rank-value' },
+        userLevel: { label: lang.userLevel, id: "stats_user-level", },
         unlocks: { label: lang.cheevos, id: "stats_cheevos-hardcore", },
         unlocksSoftcore: { label: lang.cheevos, id: "stats_cheevos-softcore", },
         points: { label: lang.points, id: "stats_points", },
