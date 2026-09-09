@@ -13,6 +13,65 @@
   overflow-y: hidden;
 }
 
+.target__filter-panel {
+  display: none;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.25em;
+  padding: 0.25em 0;
+}
+
+.target_section.show-filter-panel .target__filter-panel {
+  display: flex;
+}
+
+.target__filter-fixed {
+  flex: 0 0 auto;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  padding: 0 0.25em;
+  gap: 0.25em;
+}
+
+.target__clear-filters.hidden {
+  display: none;
+}
+
+.target__filter-fixed .checkbox-input_container {
+  display: flex;
+}
+
+.target__filter-fixed .checkbox-input {
+  width: auto;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 2px 1em;
+}
+
+.target__filter-fixed input:checked+.checkbox-input::before {
+  display: none;
+}
+
+.target__filter-fixed input:checked+.checkbox-input {
+  padding-left: 1em;
+}
+
+.target__filter-scrollable {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: 0.25em;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-right: 0.25em;
+}
+
+.target__filter-scrollable>* {
+  flex: 0 0 auto;
+}
+
 /* ! fixed size*/
 .target_section.fixed-size {
   height: fit-content !important;

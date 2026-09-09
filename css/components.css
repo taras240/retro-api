@@ -539,7 +539,8 @@
     cursor: pointer;
 }
 
-.checkbox-input:hover {
+.checkbox-input:hover,
+.statebox:hover {
     background-color: var(--accent-color);
 
 }
@@ -552,12 +553,12 @@ input:checked+.checkbox-input {
 }
 
 .statebox__container[data-state="1"] {
-    background-color: greenyellow;
+    background-color: var(--green-color);
     color: black;
 }
 
 .statebox__container[data-state="-1"] {
-    background-color: crimson;
+    background-color: rgb(161, 13, 42);
     color: white;
     /* padding-left: 30px; */
 }

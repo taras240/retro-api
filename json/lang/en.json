@@ -372,5 +372,6 @@
     "noCheevoToShow": "No achievement to display",
     "horizontalScroll": "Horizontal Scroll",
     "saveAsCustomOrderHint": "This will replace the saved achievement order with the new one. This action can't be undone.",
-    "userLevel": "User Level"
+    "userLevel": "User Level",
+    "hide": "Hide"
 }
