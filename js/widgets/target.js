@@ -280,24 +280,18 @@ export class Target extends Widget {
                 onChange: (stateData) => this.uiProps.filters = (stateData),
             })),
             {
-                type: inputTypes.CHECKBOX,
-                label: lang.hideFiltered,
-                checked: this.uiProps.hideFiltered,
-                onChange: (event) => this.uiProps.hideFiltered = event.currentTarget.checked,
-            },
-            {
                 label: lang.genre,
                 elements: this.getTargetFilterGenres().map(genre => ({
                     type: inputTypes.CHECKBOX,
                     id: `${this.sectionID}-context-genre-${genre}`,
                     label: `#${genre.replace(/^./, char => char.toUpperCase())}`,
                     checked: this.genreFilters.includes(genre),
+                    dataset: [{ name: "genre", value: genre }],
                     onChange: event => {
                         this.genreFilters = event.currentTarget.checked
                             ? [...this.genreFilters, genre]
                             : this.genreFilters.filter(item => item !== genre);
                         this.applyFilter();
-                        this.syncClearFiltersButton();
                     },
                 })),
             },
@@ -311,9 +305,14 @@ export class Target extends Widget {
                     onChange: event => {
                         this.setTargetLevelSelected(level, event.currentTarget.checked);
                         this.applyFilter();
-                        this.syncClearFiltersButton();
                     },
                 })),
+            },
+            {
+                type: inputTypes.CHECKBOX,
+                label: lang.hideFiltered,
+                checked: this.uiProps.hideFiltered,
+                onChange: (event) => this.uiProps.hideFiltered = event.currentTarget.checked,
             },
         ],
     })
@@ -421,11 +420,9 @@ export class Target extends Widget {
         },
         filters() {
             this.applyFilter();
-            this.syncClearFiltersButton();
         },
         hideFiltered() {
             this.applyFilter();
-            this.syncClearFiltersButton();
         },
         lockedPreviewFilter() {
             // this.section.dataset.previewFilter = value;
@@ -566,87 +563,97 @@ export class Target extends Widget {
         if (!this.filterPanel) return;
 
         const filterMenu = this.contextFilterMenu();
+
         const genreMenu = filterMenu.elements.find(filter => filter.label === lang.genre);
         const levelMenu = filterMenu.elements.find(filter => filter.label === lang.level);
+        const hasLevelFilters = Boolean(levelMenu?.elements?.length);
+
         const mainFilters = filterMenu.elements
-            .filter(filter => filter !== genreMenu && filter !== levelMenu)
-            .map(filter => {
-                if (filter.type === inputTypes.CHECKBOX && filter.label === lang.hideFiltered) {
-                    return {
-                        ...filter,
-                        id: "filters-hide-filtered",
-                        label: lang.hide,
-                        onChange: event => {
-                            this.uiProps.hideFiltered = event.currentTarget.checked;
-                            this.applyFilter();
-                        },
-                    };
-                }
-                return filter;
-            });
-        const hideFiltered = mainFilters.find(filter => filter.id === "filters-hide-filtered");
-        const scrollFilters = mainFilters.filter(filter => filter !== hideFiltered);
-        const genreFilters = genreMenu?.elements?.map(inputElement) ?? [];
-        const levelFilters = levelMenu?.elements?.length ? inputElement({
-            type: inputTypes.BUTTON,
-            label: lang.level,
-            onClick: event => {
-                const currentLevelMenu = this.contextFilterMenu().elements
-                    .find(filter => filter.label === lang.level);
-                ui.showContextmenu({
-                    event,
-                    menuItems: currentLevelMenu?.elements ?? [],
-                });
-            },
-        }) : null;
+            .filter(filter => filter.type === inputTypes.STATEBOX);
+        const genreFilters = genreMenu?.elements?.map(props => inputElement({ ...props, classList: ["compact"] })) ?? [];
+
         const filterElements = [
-            ...(levelFilters ? [levelFilters] : []),
-            ...scrollFilters.map(inputElement),
+            ...mainFilters.map(inputElement),
             ...genreFilters,
         ];
 
+        if (hasLevelFilters) {
+            const levelFiltersButton = inputElement({
+                type: inputTypes.BUTTON,
+                id: `${this.sectionID}_filters-row__levels-button`,
+                label: lang.level,
+                onClick: event => {
+                    const currentLevelMenu = this.contextFilterMenu().elements
+                        .find(filter => filter.label === lang.level);
+                    ui.showContextmenu({
+                        event,
+                        menuItems: currentLevelMenu?.elements ?? [],
+                    });
+                },
+            });
+            filterElements.unshift(levelFiltersButton);
+        }
+
+
         const fixedFilters = fromHtml(`<.target__filter-fixed/>`);
         const scrollableFilters = fromHtml(`<.target__filter-scrollable/>`);
-        if (hideFiltered) {
-            fixedFilters.append(inputElement(hideFiltered));
-            this.clearFiltersButton = inputElement({
-                type: inputTypes.BUTTON,
-                label: lang.clear,
-                onClick: () => this.clearFilters(),
-            });
-            this.clearFiltersButton.classList.add("target__clear-filters");
-            fixedFilters.append(this.clearFiltersButton);
-        }
+
+        const hideFiltered = inputElement({
+            type: inputTypes.CHECKBOX,
+            id: `${this.sectionID}_filters-row__hide-filtered`,
+            label: lang.hide,
+            classList: ["compact"],
+            onChange: (event) => this.uiProps.hideFiltered = event.currentTarget.checked,
+        })
+        this.clearFiltersButton = inputElement({
+            type: inputTypes.BUTTON,
+            label: lang.clear,
+            onClick: () => this.clearFilters(),
+        });
+        this.clearFiltersButton.classList.add("target__clear-filters");
+
+        fixedFilters.append(hideFiltered, this.clearFiltersButton);
         scrollableFilters.append(...filterElements);
-        this.filterPanel.replaceChildren(fixedFilters, scrollableFilters);
-        this.syncClearFiltersButton();
+
+        this.filterPanel.replaceChildren(scrollableFilters, fixedFilters);
+        this.syncFilterControls();
     }
     hasCustomFilters() {
         return Object.values(this.uiProps.filters ?? {}).some(filter => filter?.state !== 0)
             || this.genreFilters.length > 0
             || this.levelFilters.length > 0;
     }
-    syncClearFiltersButton() {
-        this.clearFiltersButton?.classList.toggle("hidden", !this.hasCustomFilters());
-    }
     syncFilterControls() {
-        this.filterPanel?.querySelectorAll(".statebox").forEach(filter => {
-            filter.dataset.state = "0";
+        const stateFilters = this.filterPanel?.querySelectorAll(".statebox");
+        stateFilters.forEach(filter => {
+            const stateName = filter.dataset.value;
+            const stateValue = this.uiProps.filters[stateName]?.state;
+            filter.dataset.state = stateValue || 0;
         });
         this.filterPanel?.querySelectorAll(".target__filter-scrollable input[type=checkbox]").forEach(input => {
-            input.checked = false;
+            const genre = input.dataset.genre;
+            const isChecked = this.genreFilters.includes(genre);
+            input.checked = isChecked;
         });
+
+        this.filterPanel?.querySelector(`#${this.sectionID}_filters-row__levels-button`)?.classList.toggle("active", this.levelFilters?.length);
+
+        const hideCheckbox = this.filterPanel?.querySelector(
+            `#${this.sectionID}_filters-row__hide-filtered`
+        );
+        if (hideCheckbox) {
+            hideCheckbox.checked = this.uiProps.hideFiltered;
+        }
+
+        this.clearFiltersButton?.classList.toggle("hidden", !this.hasCustomFilters());
     }
     clearFilters() {
         Object.keys(this.uiProps.filters ?? {}).forEach(filterName => {
             this.uiProps.filters = { filterName, state: 0 };
         });
-        this.genreFilter = "";
         this.genreFilters = [];
         this.levelFilters = [];
         this.applyFilter();
-        this.syncFilterControls();
-        this.syncClearFiltersButton();
     }
     addEvents() {
         let ctrlPressed = false;
@@ -747,13 +754,14 @@ export class Target extends Widget {
                 const cheevo = event.target.closest(".target-achiv");
                 this.toggleCheevoPin(cheevo);
             }
-            else if (event.target.matches(".delete-from-target")) {
-                const cheevo = event.target.closest(".target-achiv");
-                this.deleteFromTarget(cheevo);
-            }
             else if (event.target.matches(".target-genre-badge")) {
                 const genre = event.target.dataset.genre;
-                this.filterByGenre(genre)
+                const genreIsFiltered = this.genreFilters.includes(genre);
+
+                this.genreFilters = genreIsFiltered ? this.genreFilters.filter(item => item !== genre) : [...this.genreFilters, genre];
+
+                this.applyFilter();
+                this.syncFilterControls();
             }
         });
         this.pinnedContainer.addEventListener("click", (event) => {
@@ -769,10 +777,6 @@ export class Target extends Widget {
             else if (event.target.matches(".pin-cheevo")) {
                 const cheevo = event.target.closest(".target-achiv");
                 this.toggleCheevoPin(cheevo);
-            }
-            else if (event.target.matches(".delete-from-target")) {
-                const cheevo = event.target.closest(".target-achiv");
-                this.deleteFromPinned(cheevo);
             }
         });
         const dragElements = (container, onDragEnd, pull) => {
@@ -914,7 +918,6 @@ export class Target extends Widget {
         // if (true || isNewGame) {
         //     this.filters = this.uiProps.filters
         // }
-        this.genreFilter = "";
         this.genreFilters = [];
         this.levelFilters = [];
         this.isDisplayOrderChanged = false;
@@ -927,7 +930,6 @@ export class Target extends Widget {
         const { richPresence } = userData;
         const gameData = watcher.GAME_DATA;
         const currentLevel = parseCurrentGameLevel(richPresence, gameData);
-        this.highlightCurrentLevel(currentLevel);
     }
     async onCheevoUnlocks({ cheevos }) {
         const animElement = () => {
@@ -966,7 +968,6 @@ export class Target extends Widget {
         });
         this.applyFilter();
         this.applySort();
-        this.genreFilter && this.filterByGenre(this.genreFilter, true);
     }
     autoscroll;
     startAutoScroll() {
@@ -1026,6 +1027,7 @@ export class Target extends Widget {
     }
 
     applyFilter() {
+        this.syncFilterControls();
         applyFilter({
             container: this.container,
             itemClassName: ".target-achiv",
@@ -1047,24 +1049,6 @@ export class Target extends Widget {
                 this.uiProps.hideFiltered && cheevo.classList.add("removed");
             }
         });
-    }
-    filterByGenre(genre, isUpdate = false) {
-        const clearGenreFilter = () => {
-            this.container.querySelectorAll(".hidden").forEach(el => el.classList.remove("hidden"))
-        }
-        clearGenreFilter();
-
-        if ((!isUpdate && this.genreFilter === genre) || !genre) {
-            this.genreFilter = "";
-            this.genreFilters = [];
-            this.applyFilter();
-        }
-        else {
-            this.genreFilter = genre;
-            this.genreFilters = [String(genre)];
-            this.applyFilter();
-        }
-        this.syncClearFiltersButton();
     }
     setSubsetSelection() {
         if (!watcher.GAME_DATA.visibleSubsets?.length) return;
@@ -1095,29 +1079,6 @@ export class Target extends Widget {
             strictMode: this.uiProps.strictSort,
             animationDuration: this.IS_GROUPING ? 0 : props.animation
         });
-    }
-    highlightCurrentLevel(currentLevel) {
-
-        [...this.container.querySelectorAll('.target-achiv')].forEach(cheevo => {
-            cheevo.classList.remove("highlight");
-            cheevo.classList.remove("passed");
-            const cheevoLevel = cheevo.dataset.level;
-            cheevoLevel == currentLevel && cheevo.classList.add("highlight");
-            //set highlight
-            if (!Number.isInteger(currentLevel)) {
-                const mainLevel = parseInt(currentLevel);
-                cheevo.dataset.level == mainLevel && cheevo.classList.add("highlight");
-            }
-
-            //set passed
-            if (!Number.isInteger(+cheevoLevel)) {
-                cheevoLevel < currentLevel && cheevo.classList.add("passed");
-            }
-            else {
-                cheevoLevel < parseInt(currentLevel) && cheevo.classList.add("passed");
-            }
-        });
-
     }
     deleteFromPinned(button) {
         const element = button.closest(".target-achiv");

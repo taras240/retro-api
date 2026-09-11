@@ -3,15 +3,16 @@ import { getRandomID } from "../functions/randomID.js";
 import { updateStateBox } from "../functions/stateBoxClick.js";
 
 
-const checkbox = ({ event, onChange, id, checked, label, name, isRadio }) => {
+const checkbox = ({ event, onChange, id, checked, label, name, isRadio, classList = [], dataset = [] }) => {
     id ??= getRandomID();
     return `
-        <div class="${isRadio ? "radio" : "checkbox"}-input_container">
+        <div class="${isRadio ? "radio" : "checkbox"}-input_container ${classList.join(" ")}">
             <input ${[
             `type="${isRadio ? "radio" : "checkbox"}"`,
             id && `id="${id}"`,
             `name="${name || id}"`,
-            checked && "checked"
+            checked && "checked",
+            ...dataset.map(prop => `data-${prop.name}="${prop.value}"`)
         ].filter(Boolean).join(" ")}
             >
             <label class="checkbox-input" ${id ? `for="${id}"` : ""}>
@@ -30,10 +31,10 @@ const statebox = ({ state, type, property, value, id, label, sectionCode }) => `
             <input 
                 type="checkbox" 
                 name="statebox-${id}-checkbox"
-                id="statebox-${id}${sectionCode}"
+                id="statebox-${id}"
                 checked
                 ></input>
-            <label class="statebox__label statebox-input" for="statebox-${id}${sectionCode}">${label}</label>
+            <label class="statebox__label statebox-input" for="statebox-${id}">${label}</label>
         </div>
 `;
 const stepper = ({ initValue, step, label }) => `
