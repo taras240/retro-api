@@ -211,10 +211,17 @@ export class Target extends Widget {
         const cheevoID = cheevoElement.dataset.achivId;
         return [
             {
-                label: lang.openComments,
                 type: inputTypes.BUTTON,
+                label: lang.openComments,
                 onClick: () => showComments(cheevoID, 2),
-            }
+            },
+            // {
+            //     type: inputTypes.CONTAINER,
+            //     label: "**SET LEVEL**",
+            //     items: [
+            //         // ...watcher.GAME_DATA.levels
+            //     ]
+            // }
         ]
     }
     contextSortMenu = () => ({
