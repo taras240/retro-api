@@ -576,7 +576,8 @@ export class Target extends Widget {
         const hasLevelFilters = Boolean(levelMenu?.elements?.length);
 
         const mainFilters = filterMenu.elements
-            .filter(filter => filter.type === inputTypes.STATEBOX);
+            .filter(filter => filter.type === inputTypes.STATEBOX)
+            .map(item => ({ ...item, id: "filters-row__" + item.id }));
         const genreFilters = genreMenu?.elements?.map(props => inputElement({ ...props, classList: ["compact"] })) ?? [];
 
         const filterElements = [
