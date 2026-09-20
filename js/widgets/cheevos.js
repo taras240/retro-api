@@ -732,11 +732,11 @@ export class AchievementsBlock extends Widget {
             container.style.gap = `${gap}px`;
             section.offsetHeight;
         };
-        const overflows = () => containerScrollSize() > containerOffsetSize + 2;
+        const overflows = () => containerScrollSize() > containerOffsetSize;
 
         achivWidth = normalizeCheevoSize(achivWidth);
         setLayout(achivWidth, margin);
-        while (overflows() && achivWidth > minSize) {
+        while (overflows() && achivWidth >= minSize) {
             achivWidth--;
             setLayout(achivWidth, margin);
         }
