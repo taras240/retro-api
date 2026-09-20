@@ -298,6 +298,12 @@ svg.icon {
     mask-image: none;
 }
 
+.hide-icon {
+    mask-image: url("../assets/img/hide.svg");
+    transform: scale(0.9, -0.9);
+}
+
+
 .unlock_icon {
     mask-image: url(../assets/img/unlock.svg);
 }
@@ -307,8 +313,7 @@ svg.icon {
 }
 
 .reset-icon {
-    mask-image: url(../assets/img/close.svg);
-    scale: 0.9;
+    mask-image: url(../assets/img/clear_all.svg);
 }
 
 .next-icon {
@@ -546,7 +551,8 @@ svg.icon {
     mask-image: url(../assets/img/close.svg);
 }
 
-.header-icon {
+.header-icon,
+.svg-icon {
     width: 1.3em;
     aspect-ratio: 1;
     background-color: var(--font-color);
@@ -554,6 +560,14 @@ svg.icon {
     mask-position: center;
     mask-repeat: no-repeat;
     flex-shrink: 0;
+}
+
+.svg-icon {
+    font-size: inherit;
+}
+
+.checkbox-icon {
+    display: inline-block;
 }
 
 .target-icon {

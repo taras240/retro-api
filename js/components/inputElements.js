@@ -2,7 +2,25 @@ import { fromHtml } from "../functions/html.js";
 import { getRandomID } from "../functions/randomID.js";
 import { updateStateBox } from "../functions/stateBoxClick.js";
 
+const iconCheckbox = ({ event, onChange, id, checked, label, name, isRadio, classList = [], dataset = [], iconName }) => {
+    id ??= getRandomID();
+    return `
+        <div class="${isRadio ? "radio" : "checkbox"}-input_container compact ${classList.join(" ")}">
+            <input ${[
+            `type="${isRadio ? "radio" : "checkbox"}"`,
+            id && `id="${id}"`,
+            `name="${name || id}"`,
+            checked && "checked",
+            ...dataset.map(prop => `data-${prop.name}="${prop.value}"`)
+        ].filter(Boolean).join(" ")}
+            >
+            <label class="checkbox-input checkbox-icon-input" ${id ? `for="${id}"` : ""}>
+                <i class="svg-icon checkbox-icon ${iconName}">${label ?? ""}</i>
+            </label>
+        </div>
+    `;
 
+}
 const checkbox = ({ event, onChange, id, checked, label, name, isRadio, classList = [], dataset = [] }) => {
     id ??= getRandomID();
     return `
@@ -103,7 +121,19 @@ const button = ({ event, onClick, label, id, hint }) => {
             ${label}
         </button>
     `;
-
+}
+const iconButton = ({ event, onClick, label, id, hint, iconName }) => {
+    return `
+        <button ${[
+            id && `id="${id}"`,
+            'class="button-input icon-button-input"',
+            hint && `data-title="${hint}"`,
+        ]
+            .filter(Boolean)
+            .join(" ")}>
+            <i class="svg-icon ${iconName}">${label ?? ""}</i>
+        </button>
+    `;
 }
 const group = ({ label }) => {
     return `
@@ -238,8 +268,12 @@ const inputHtml = (inputData) => {
             return numberInput(inputData);
         case inputTypes.BUTTON:
             return button(inputData);
+        case inputTypes.ICON_BUTTON:
+            return iconButton(inputData);
         case inputTypes.CHECKBOX:
             return checkbox(inputData);
+        case inputTypes.ICON_CHECKBOX:
+            return iconCheckbox(inputData);
         case inputTypes.STATEBOX:
             return statebox(inputData);
         case inputTypes.RADIO:
@@ -264,6 +298,7 @@ const inputHtml = (inputData) => {
 }
 const inputTypes = Object.freeze({
     CHECKBOX: "checkbox",
+    ICON_CHECKBOX: "iconCheckbox",
     STATEBOX: "statebox",
     RADIO: "radio",
     NUM_INPUT: "number",
@@ -271,6 +306,7 @@ const inputTypes = Object.freeze({
     SEARCH_INPUT: "search",
     SELECTOR: "selector",
     BUTTON: "button",
+    ICON_BUTTON: "iconButton",
     GROUP: "group",
     COLOR: "color",
     TEXT: "plain-text",

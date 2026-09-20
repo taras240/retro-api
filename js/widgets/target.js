@@ -607,20 +607,21 @@ export class Target extends Widget {
         const scrollableFilters = fromHtml(`<.target__filter-scrollable/>`);
 
         const hideFiltered = inputElement({
-            type: inputTypes.CHECKBOX,
+            type: inputTypes.ICON_CHECKBOX,
             id: `${this.sectionID}_filters-row__hide-filtered`,
-            label: lang.hide,
-            classList: ["compact"],
+            hint: lang.hideFiltered,
+            iconName: "hide-icon",
             onChange: (event) => this.uiProps.hideFiltered = event.currentTarget.checked,
         })
         this.clearFiltersButton = inputElement({
-            type: inputTypes.BUTTON,
-            label: lang.clear,
+            type: inputTypes.ICON_BUTTON,
+            hint: lang.resetFilters,
+            iconName: "reset-icon",
             onClick: () => this.clearFilters(),
         });
         this.clearFiltersButton.classList.add("target__clear-filters");
 
-        fixedFilters.append(hideFiltered, this.clearFiltersButton);
+        fixedFilters.append(this.clearFiltersButton, hideFiltered,);
         scrollableFilters.append(...filterElements);
 
         this.filterPanel.replaceChildren(scrollableFilters, fixedFilters);
