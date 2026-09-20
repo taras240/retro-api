@@ -58,9 +58,13 @@ export const updateProgressionBar = (container, gameData, isHardMode = true) => 
     const etaMessage = (cheevos) => {
         let etaTime = gameData.eta;
         if (!etaTime) return null;
-        const beatenRate = Math.round(gameData.TimePlayed / (etaTime + gameData.TimePlayed) * 100) + "%";
+        const unlockedCount = cheevos.filter(c => isEarned(c, isHardMode)).length;
+        const progressionCount = cheevos.filter(c => c.Type === CHEEVO_TYPES.PROGRESSION).length;
+        const totalCount = progressionCount < cheevos.length ? progressionCount + 1 : progressionCount;
+        const beatenRateByTime = Math.round(gameData.TimePlayed / (etaTime + gameData.TimePlayed) * 100) + "%";
+        const beatenRateByCount = Math.min(Math.round(100 * unlockedCount / totalCount), 100) + "%";
         const time = formatDuration(etaTime);
-        return formatText(lang.estTimeMsg, { beatenRate, time });
+        return formatText(lang.estTimeMsg, { beatenRate: beatenRateByCount, time });
     }
     const cheevos = reorderCheevos(Object.values(gameData.AllAchievements));
     const winCount = Object.values(gameData.AllAchievements).filter(c => c.Type == CHEEVO_TYPES.WIN).length;
@@ -94,7 +98,7 @@ export const updateProgressionBar = (container, gameData, isHardMode = true) => 
         const textContainer = container.querySelector(`.${mainClass}-target`);
         if (textContainer) {
             textContainer.innerHTML = message;
-            textContainer.dataset.title = etaMessage(cheevos);
+            textContainer.dataset.title = etaMessage(cheevos) || "";
         }
         updateTimeout = setTimeout(() => {
             if (!textContainer) return;
