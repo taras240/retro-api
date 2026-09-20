@@ -22,7 +22,7 @@ export class Awards extends Widget {
         const headerElementsHtml = buttonsHtml.reload();
 
         const widgetData = {
-            classes: ["awards_section", "section"],
+            classList: ["awards_section", "section"],
             id: "awards_section",
             title: lang.awardsSectionName,
             headerElementsHtml: headerElementsHtml,

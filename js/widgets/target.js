@@ -555,7 +555,7 @@ export class Target extends Widget {
             ${divHtml(["target-container", "content-container", "flex-main-list"])}
         `
         const widgetData = {
-            classes: ["target_section", "section", "compact-header"],
+            classList: ["target_section", "section", "compact-header"],
             id: widgetID,
             title: lang.targetSectionName,
             headerElementsHtml,

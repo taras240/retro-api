@@ -610,7 +610,7 @@ export class Settings extends Widget {
     }
     generateWidget(settingsItems) {
         const widgetData = {
-            classes: ["prefs_section", "section"],
+            classList: ["prefs_section", "section"],
             id: "settings_section",
             title: lang.settingsSectionName,
             contentClasses: ["settings_container", "content-container"]

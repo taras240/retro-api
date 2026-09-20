@@ -99,7 +99,7 @@ export class Progression extends Widget {
     }
     generateWidget() {
         const widgetData = {
-            classes: ["progression_section", "section", "compact-header"],
+            classList: ["progression_section", "section", "compact-header"],
             id: "progression_section",
             title: lang.progressionSectionName,
             contentClasses: ["progression__list", "content-container"],

@@ -21,7 +21,7 @@ export class Completion extends Widget {
         `;
 
         const widgetData = {
-            classes: ["games_setion", "section"],
+            classList: ["games_setion", "section"],
             id: widgetID,
             title: `Completion Progress`,
             headerElementsHtml: headerElementsHtml,

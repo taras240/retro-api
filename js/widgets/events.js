@@ -26,7 +26,7 @@ export class EventAchievements extends Widget {
     generateWidget() {
         const headerElementsHtml = buttonsHtml.reload();
         const widgetData = {
-            classes: ["wii-event_section", "section"],
+            classList: ["wii-event_section", "section"],
             id: "cheevo-events_section",
             title: `Achievement Events`,
             headerElementsHtml,

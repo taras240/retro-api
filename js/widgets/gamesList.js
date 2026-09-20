@@ -48,7 +48,7 @@ export class GameList extends Widget {
         `;
 
         const widgetData = {
-            classes: ["game-list__section", "section"],
+            classList: ["game-list__section", "section"],
             id: "game-list",
             title: lang.gameSeriesSectionName,
             headerElementsHtml: headerElementsHtml,

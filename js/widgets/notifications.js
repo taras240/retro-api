@@ -115,7 +115,7 @@ export class Notifications extends Widget {
     generateWidget() {
         const headerElementsHtml = buttonsHtml.tweek();
         const widgetData = {
-            classes: ["notification_section", "bg-visible", "section", "compact-header"],
+            classList: ["notification_section", "bg-visible", "section", "compact-header"],
             id: "notification_section",
             title: lang.alertsSectionName,
             headerElementsHtml,

@@ -264,7 +264,7 @@ export class UserStatistic extends Widget {
         `;
 
         const widgetData = {
-            classes: ["section", "stats_section", "compact-header"],
+            classList: ["section", "stats_section", "compact-header"],
             id: "stats_section",
             title: lang.statisticsSectionName,
             headerElementsHtml: headerElementsHtml,

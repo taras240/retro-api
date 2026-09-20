@@ -58,7 +58,7 @@ export class Links extends Widget {
     }
     generateWidget() {
         const widgetData = {
-            classes: ["links_section", "section"],
+            classList: ["links_section", "section"],
             id: "links_section",
             title: lang.linksSectionName,
             contentClasses: ["links-container", "content-container", "flex-main-list"],

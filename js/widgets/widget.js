@@ -202,10 +202,17 @@ export class Widget {
         this.widgetIcon.element = input;
 
     }
-    generateWidgetElement({ classes, id, title, headerElementsHtml, contentClasses = ["widget-content__container"], contentHtml }) {
+    generateWidgetElement({
+        classList,
+        id,
+        title,
+        headerElementsHtml,
+        contentClasses = ["widget-content__container"],
+        contentHtml,
+    }) {
         contentHtml ??= divHtml(contentClasses);
         const widget = document.createElement("section");
-        widget.classList.add(...classes);
+        widget.classList.add(...classList);
         widget.id = id;
         const header = fromHtml(`
             <div class="header-container">

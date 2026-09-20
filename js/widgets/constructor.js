@@ -130,7 +130,7 @@ export class Constructor extends Widget {
     openConfig() {
         this.section?.remove();
         this.section = super.generateWidgetElement({
-            classes: ["constructor_widget", "section"],
+            classList: ["constructor_widget", "section"],
             id: "constructor_widget",
             title: lang.constructorWidget,
             contentClasses: ["constructor-elements"]

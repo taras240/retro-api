@@ -606,7 +606,7 @@ export class Games extends Widget {
         `;
 
         const widgetData = {
-            classes: ["games_setion", "section"],
+            classList: ["games_setion", "section"],
             id: widgetID,
             title: lang.gamesLibrary,
             headerElementsHtml: headerElementsHtml,

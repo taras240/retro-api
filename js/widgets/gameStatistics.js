@@ -31,7 +31,7 @@ export class GameStatistics extends Widget {
         super.addEvents();
     }
     generateWidget() {
-        const widget = this.generateWidgetElement({ classes: ["game-statistics__section", "section"], id: "game-statistics", title: "**Game Stats**" });
+        const widget = this.generateWidgetElement({ classList: ["game-statistics__section", "section"], id: "game-statistics", title: "**Game Stats**" });
         ui.app.appendChild(widget);
     }
     generateWidgetContent() {

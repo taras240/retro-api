@@ -167,7 +167,7 @@ export class GameCard extends Widget {
         `;
 
         const widgetData = {
-            classes: ["game-card_section", "section"],
+            classList: ["game-card_section", "section"],
             id: "game_section",
             title: lang.gameCard,
             headerElementsHtml: headerElementsHtml,
