@@ -16,6 +16,25 @@
     flex-shrink: 0;
 }
 
+.points-badge {
+    --badge-bg-color: transparent;
+    border: 1px solid #00ff006e;
+    padding-right: 0;
+    align-content: center;
+    display: flex;
+    gap: 0.25em;
+}
+
+.ratio-badge {
+    height: 100%;
+    display: inline-block;
+    line-height: 1em;
+    font-size: 1em;
+    padding: 0.2em;
+    --badge-bg-color: #00ff002b;
+    border-radius: 0;
+}
+
 .badge-button {
     cursor: pointer;
     transition: color .2s, background-color .2s;

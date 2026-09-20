@@ -45,7 +45,18 @@ export const badgeElements = {
         // hint: text.toUpperCase(),
         dataProp: `data-genre="${text}"`
     }),
-    customBadge: (text) => badgeTemplate({ text, classes: ["badge_custom-color"] })
+    customBadge: (text) => badgeTemplate({ text, classes: ["badge_custom-color"] }),
+    pointsBadge: ({ Points, retroRatio }) => {
+        const rarity = "common";
+        const html = `
+            <i class="badge points-badge ${rarity}-rarity-badge">
+                ${Points}pts.
+                <span class="badge ratio-badge ${rarity}-rarity-badge">×${retroRatio}</span>
+            </i>
+        `;
+        return html;
+
+    }
 }
 export const badgeTemplate = ({ text, classes = [], hint, event, dataProp }) => {
     const classNames = ["badge", ...classes].join(" ");
