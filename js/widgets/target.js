@@ -45,7 +45,6 @@ export class Target extends Widget {
                         type: inputTypes.CHECKBOX,
                         checked: !this.uiProps.hideBg,
                         onChange: (event) => this.uiProps.hideBg = !event.currentTarget.checked,
-                        // event: `onchange="ui.target.uiProps.hideBg = !this.checked;"`,
                     },
                     {
                         type: inputTypes.CHECKBOX,
@@ -74,6 +73,13 @@ export class Target extends Widget {
                         initValue: this.uiProps.fontScale,
                         step: 0.05,
                         onChange: (value) => this.uiProps.fontScale = value,
+                    },
+                    {
+                        type: inputTypes.STEPPER,
+                        label: lang.iconScale,
+                        initValue: this.uiProps.iconScale,
+                        step: 0.025,
+                        onChange: (value) => this.uiProps.iconScale = value,
                     },
                     {
                         prefix: lang.cropBorder,
@@ -404,6 +410,7 @@ export class Target extends Widget {
         scrollSpeed: 20,
         scrollPauseDuration: 15,
         fontScale: 1.0,
+        iconScale: 1.0,
         cropOffset: 0,
     }
     uiSetCallbacks = {
@@ -885,6 +892,7 @@ export class Target extends Widget {
     }
     setElementsValues() {
         this.section.style.setProperty("--font-size", `${this.uiProps.fontScale}em`);
+        this.section.style.setProperty("--icon-size", `${5 * this.uiProps.iconScale}em`);
         this.section.classList.toggle("show-events", this.uiProps.showEvents);
         this.section.classList.toggle("compact-header", !this.uiProps.showHeader);
         this.section.classList.toggle("hide-bg", this.uiProps.hideBg);

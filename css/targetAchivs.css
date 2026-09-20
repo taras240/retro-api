@@ -225,10 +225,11 @@
 }
 
 .prev {
+
   /* top: -3px; */
   --image-offset: 0px;
-  height: 5em;
-  width: 5em;
+  height: var(--icon-size);
+  width: var(--icon-size);
   /* overflow: hidden; */
 }
 
