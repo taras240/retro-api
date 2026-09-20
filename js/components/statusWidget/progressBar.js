@@ -155,6 +155,28 @@ export const progressBarHtml = (type = PROGRESS_TYPES.cheevos) => {
         </>
     `;
 }
+const getHint = (gameData, isHardMode) => {
+    const unlockText = ({ unlocked, total, unlockedRate }) => `${unlocked}/${total} [${unlockedRate}]`
+    const countStats = getStats(gameData, isHardMode, PROGRESS_TYPES.cheevos);
+    const pointsStats = getStats(gameData, isHardMode, PROGRESS_TYPES.points);
+    const ratioStats = getStats(gameData, isHardMode, PROGRESS_TYPES.retropoints);
+
+    const countMsg = formatText(lang.unlockProgressMsg, {
+        rate: unlockText(countStats),
+        progressTypeName: lang?.[`${PROGRESS_TYPES.cheevos}Progress`]
+    })
+    const pointsMsg = formatText(lang.unlockProgressMsg, {
+        rate: unlockText(pointsStats),
+        progressTypeName: lang?.[`${PROGRESS_TYPES.points}Progress`]
+    })
+    const ratioMsg = formatText(lang.unlockProgressMsg, {
+        rate: unlockText(ratioStats),
+        progressTypeName: lang?.[`${PROGRESS_TYPES.retropoints}Progress`]
+    })
+    const hintMsg = `${countMsg}<br/>${pointsMsg}<br/>${ratioMsg}<br/>`;
+
+    return hintMsg;
+}
 export const updateProgressBarData = (container, gameData, isHardMode, progressType) => {
     if (!container) return;
 
@@ -174,4 +196,5 @@ export const updateProgressBarData = (container, gameData, isHardMode, progressT
         ...sessionsProgressHtml(gameData, isHardMode, progressType)
     );
     progressSessionsElement.classList.toggle("completed", unlocked === total);
+    container.dataset.title = getHint(gameData, isHardMode);
 }
