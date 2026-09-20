@@ -313,6 +313,11 @@ svg.icon {
 }
 
 .reset-icon {
+    mask-image: url(../assets/img/close.svg);
+    scale: 0.9;
+}
+
+.reset-filters-icon {
     mask-image: url(../assets/img/clear_all.svg);
 }
 

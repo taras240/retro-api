@@ -616,7 +616,7 @@ export class Target extends Widget {
         this.clearFiltersButton = inputElement({
             type: inputTypes.ICON_BUTTON,
             hint: lang.resetFilters,
-            iconName: "reset-icon",
+            iconName: "reset-filters-icon",
             onClick: () => this.clearFilters(),
         });
         this.clearFiltersButton.classList.add("target__clear-filters");
