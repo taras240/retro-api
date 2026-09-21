@@ -125,10 +125,12 @@ export class UI {
 
       const oldPopups = document.querySelectorAll(".popup:not(.fixed)");
 
-      if (hint && hint === oldPopups[0]?.innerText) return;
+      if (this.currentHint && hint && hint === this.currentHint) return;
       if (!hint && oldPopups[0]?.dataset.id && oldPopups[0]?.dataset.id == cheevoID) return;
 
+      this.currentHint = hint;
       removePopups(oldPopups);
+
       const isCheevoPopup = !hint && cheevo;
       if (isCheevoPopup && !configData.showCheevoOnHover) return;
       const popup = hint ?
