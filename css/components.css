@@ -1409,22 +1409,44 @@ input[type="radio"]:checked+.context-menu_radio::after {
 }
 
 .sweep-effect-element {
+    --sweep-color: rgba(255, 0, 234, 0.75);
     position: absolute;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    left: 100%;
-    background: linear-gradient(to right, transparent, rgb(255, 0, 234), transparent);
-    animation: sweep-bg-animation 1s ease-in-out forwards;
+    inset: 0;
+    mask-image: linear-gradient(#000 0 0), url(../assets/img/gplay.png);
+    mask-composite: exclude;
+    mask-repeat: repeat;
+    mask-mode: alpha;
+    background: linear-gradient(to right, transparent 0%, var(--sweep-color) 25%, transparent 50%);
+    background-repeat: repeat;
+    background-size: auto;
+    background-size: 200% 100%;
+    background-repeat: no-repeat;
+    animation: sweep-bg-animation 1.5s ease-in-out forwards;
+    z-index: 1;
+}
+
+.sweep-effect-element.game {
+    /* --sweep-color: rgba(32, 189, 32, 0.5); */
+    --sweep-color: var(--accent-color);
+    opacity: 0.75;
+
+}
+
+.sweep-effect-element.unlock {
+    --sweep-color: rgba(206, 203, 28, 0.75);
+}
+
+.sweep-effect-element.award {
+    --sweep-color: rgba(206, 28, 147, 0.75);
 }
 
 @keyframes sweep-bg-animation {
     from {
-        left: -100%;
+        background-position-x: 100%;
     }
 
     to {
-        left: 100%;
+        background-position-x: -100%;
     }
 }
 

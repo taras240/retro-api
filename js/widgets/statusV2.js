@@ -663,7 +663,7 @@ export class Status extends Widget {
         }
         this.updateHardMode();
         this.fillGameData();
-        this.doUpdateAnimation();
+        this.doUpdateAnimation("game");
         this.updateTicker();
         this.startElementsAutoscroll();
         this.updateFocusCheevo();
@@ -740,7 +740,7 @@ export class Status extends Widget {
         this.updateFocusCheevo();
         this.updateProgressBar();
         this.updateTicker();
-        this.doUpdateAnimation();
+        this.doUpdateAnimation("unlock");
 
         pushCheevoAlerts(cheevos);
 
@@ -792,9 +792,9 @@ export class Status extends Widget {
 
         addScrollableFlags();
     }
-    doUpdateAnimation() {
+    doUpdateAnimation(alertType = "game") {
         if (this.theme === Status.themes.legacy) return;
-        sweepEffect(this.section);
+        sweepEffect(this.section, alertType);
     }
 
     updateTicker() {
