@@ -215,6 +215,10 @@
   filter: blur(2px);
 }
 
+[data-preview-filter="ra-locked"] .achiv-preview {
+  filter: blur(0.9px) contrast(0.6) saturate(0);
+}
+
 [data-preview-filter="opacity"] .achiv-preview {
   filter: opacity(0.3);
 }

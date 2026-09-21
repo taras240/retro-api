@@ -3,4 +3,5 @@ export const imageFilters = {
     BLUR: "blur",
     GRAYSCALE: "grayscale",
     OPACITY: "opacity",
+    RA_LOCKED: "ra-locked"
 }
