@@ -1436,7 +1436,7 @@ input[type="radio"]:checked+.context-menu_radio::after {
 }
 
 .sweep-effect-element.unlock {
-    --sweep-color: rgba(206, 203, 28, 0.75);
+    --sweep-color: rgb(255, 217, 0);
 }
 
 .sweep-effect-element.award {

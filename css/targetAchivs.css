@@ -360,6 +360,7 @@
 
 .section.contrast-highlight .target-achiv.earned {
   --font-color: black;
+  --secondary-font-color: #272727;
   --main-color: white;
   --secondary-color: var(--silver-color);
   color: var(--font-color);
@@ -369,7 +370,7 @@
 
 .section.contrast-highlight .target-achiv.earned.hardcore {
   --font-color: #000;
-  --secondary-font-color: #000;
+  --secondary-font-color: #272727;
   --secondary-color: var(--gold-color);
   color: var(--font-color);
 

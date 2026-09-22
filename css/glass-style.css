@@ -1,5 +1,5 @@
 .wrapper[style="glass"] :is(.section,
-    .target-achiv,
+    .section:not(.contrast-highlight) .target-achiv,
     .stats__stat-container,
     .notification_timeblock-list,
     .notification-game,

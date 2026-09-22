@@ -20,6 +20,7 @@ import { contextSetsMenu } from "../functions/settings/subsetSettings.js";
 import { raapi } from "../api/index.js";
 import { CheevoElement } from "../components/cheevosList/cheevoItem.js";
 import { formatText } from "../functions/formatText.js";
+import { sweepEffect } from "../components/windowEffects.js";
 
 export class Target extends Widget {
     sectionCode = "-target";
@@ -959,22 +960,21 @@ export class Target extends Widget {
             return animContainer;
         }
         const scrollPosition = this.container.scrollTop;
+        this.stopAutoScroll();
         for (let cheevo of cheevos) {
             const cheevoID = cheevo.ID;
             const cheevoElement = this.container.querySelector(`.target-achiv[data-achiv-id='${cheevoID}']`);
             if (cheevoElement) {
-                const animEl = animElement();
                 await scrollElementIntoView({ container: this.container, element: cheevoElement, scrollByX: false })
                 // cheevoElement.scrollIntoView({ behavior: ui.isCEF ? "auto" : "smooth", block: "center", });
                 await delay(600);
+                sweepEffect(cheevoElement, "unlock");
                 cheevoElement.classList.add("earned", "show-hard-anim");
                 cheevoElement.classList.toggle("hardcore", cheevo?.isEarnedHardcore);
                 cheevo.isEarnedHardcore && (cheevoElement.dataset.DateEarnedHardcore = cheevo.DateEarnedHardcore);
                 cheevoElement.dataset.DateEarned = cheevo.DateEarned;
-                cheevoElement.appendChild(animEl);
                 setTimeout(() => {
                     cheevoElement.classList.remove("show-hard-anim");
-                    animEl?.remove();
                 }, 2000);
                 await delay(2100);
             }
@@ -985,6 +985,7 @@ export class Target extends Widget {
         });
         this.applyFilter();
         this.applySort();
+        this.startAutoScroll();
     }
     autoscroll;
     startAutoScroll() {
