@@ -793,7 +793,7 @@ export class Status extends Widget {
         addScrollableFlags();
     }
     doUpdateAnimation(alertType = "game") {
-        if (this.theme === Status.themes.legacy) return;
+        // if (this.theme === Status.themes.legacy) return;
         sweepEffect(this.section, alertType);
     }
 
