@@ -858,7 +858,8 @@ input:checked+.checkbox-input:not(.checkbox-icon-input)::before {
 
 .cheevo-popup {
     --header-font-color: var(--font-color);
-    --header-bg-color: var(--selection-color);
+    --header-bg-color: var(--accent-color);
+    --header-mask: url(../assets/img/gplay.png);
     position: absolute;
     max-width: 25em;
     width: 25em;
@@ -881,7 +882,7 @@ input:checked+.checkbox-input:not(.checkbox-icon-input)::before {
     position: relative;
     width: 100%;
     height: fit-content;
-    background: var(--header-bg-color);
+    background: var(--main-color);
     padding: 0.5em 1em 0;
     color: var(--header-font-color);
 }
@@ -889,11 +890,13 @@ input:checked+.checkbox-input:not(.checkbox-icon-input)::before {
 .cheevo-popup.hardcore {
     --header-font-color: black;
     --header-bg-color: var(--gold-color);
+    --header-mask: linear-gradient(#000 0 0), url(../assets/img/gplay.png);
 }
 
 .cheevo-popup.softcore {
     --header-font-color: black;
     --header-bg-color: var(--silver-color);
+    --header-mask: linear-gradient(#000 0 0), url(../assets/img/gplay.png);
 }
 
 .cheevo-popup__header::before {
@@ -903,15 +906,14 @@ input:checked+.checkbox-input:not(.checkbox-icon-input)::before {
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: var(--header-bg-color);
+    background: var(--header-bg-color);
     box-shadow: 0 0 5px 0px var(--accent-color);
     z-index: 0;
-    opacity: 1;
-    mask-image: url(../assets/img/triangle-bg.webp);
-    mask-size: cover;
-    mix-blend-mode: multiply;
     transform: rotateZ(180deg);
-    opacity: 0.5;
+    mask-image: var(--header-mask);
+    mask-composite: exclude;
+    mask-repeat: repeat;
+    mask-mode: alpha;
 }
 
 
@@ -926,6 +928,7 @@ input:checked+.checkbox-input:not(.checkbox-icon-input)::before {
 
 
 .cheevo-popup__header>* {
+    position: relative;
     margin-bottom: 0.5em;
 }
 
