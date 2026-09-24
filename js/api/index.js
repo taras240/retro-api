@@ -246,8 +246,12 @@ export const raapi = {
             return event;
         })
         return events;
+    },
+
+    async getUserProfileV2({ username }) {
+        const response = await call("getUserProfileV2", {
+            username: getUsername(username)
+        });
+        return response;
     }
-
-
-
 };

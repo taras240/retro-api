@@ -22,5 +22,6 @@ export const raEdpoints = Object.freeze({
 
 });
 export const raEdpointsV2 = {
-    eventAchievements: "event-achievements"
+    eventAchievements: "event-achievements",
+    user: "users/{{username}}",
 }

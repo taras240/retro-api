@@ -11,9 +11,11 @@ import * as achievement from './handlers/achievement.js';
 import { getConsolesList } from './handlers/systems/consolesList.js';
 import { getConsoleGameList } from './handlers/systems/consoleGameList.js';
 import { getEventAchievements } from './handlers/v2/eventAchievements.js';
+import { getUserProfileV2 } from './handlers/v2/user.js';
 const handlers = {
     getRecentlyPlayedGames,
     getUserProfile,
+    getUserProfileV2,
     getUserSummary,
     getWantToPlayGamesList,
     getAotW,

@@ -517,7 +517,7 @@ export class UserStatistic extends Widget {
     }
     async updateStats({ userData }) {
         if (!userData) {
-            const userSummary = await raapi.getUserSummary({ gamesCount: "0", achievesCount: 0 });
+            const userSummary = await raapi.getUserProfileV2({});
             userData = {
                 ...this.userData,
                 ...normalizeUserData({ userSummary })

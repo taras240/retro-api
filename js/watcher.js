@@ -172,7 +172,7 @@ export class Watcher {
             this.userInfoTimeout && clearTimeout(this.userInfoTimeout);
 
             this.userInfoTimeout = setTimeout(async () => {
-                const userSummary = await raapi.getUserSummary({ games: 0, cheevos: 0 });
+                const userSummary = await raapi.getUserProfileV2({});
                 this.updateUserData({ userSummary, isInit });
             }, delay);
             return;
