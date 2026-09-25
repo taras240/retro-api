@@ -88,7 +88,7 @@ export async function request(endpoint, params, isV2 = false) {
     const TEST_BASE_URL = `/json/apiTemplates/`
     let url = new URL(BASE_URL + endpoint);
     if (ui?.isTest) {
-        return await fetch(TEST_BASE_URL + endpoint.replace(/\.php.*/, ".json")).then(r => r.json());
+        return await fetch(TEST_BASE_URL + endpoint.replace(/(\.php)*$/, ".json")).then(r => r.json());
     }
     for (const [pkey, value] of Object.entries(params || {})) {
         if (value !== undefined && value !== null && value !== "") {

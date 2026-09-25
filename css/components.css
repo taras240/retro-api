@@ -1411,6 +1411,17 @@ input[type="radio"]:checked+.context-menu_radio::after {
     }
 }
 
+.sweep-effect-container {
+    --rotate-x: 0deg;
+    --rotate-y: 0deg;
+    --rotate-z: 0deg;
+    transform: perspective(1800px) rotateX(var(--rotate-x)) rotateY(var(--rotate-y)) rotateZ(var(--rotate-z));
+    transform-style: preserve-3d;
+    transition: transform 0.15s ease-out;
+    will-change: transform;
+    animation: sweep-rotate-animation var(--sweep-anim-duration) ease-in-out forwards;
+}
+
 .sweep-effect-element {
     --sweep-color: rgba(255, 0, 234, 0.75);
     position: absolute;
@@ -1419,13 +1430,14 @@ input[type="radio"]:checked+.context-menu_radio::after {
     mask-composite: exclude;
     mask-repeat: repeat;
     mask-mode: alpha;
-    background: linear-gradient(to right, transparent 0%, var(--sweep-color) 25%, transparent 50%);
+    background: linear-gradient(90deg, transparent 25%, var(--sweep-color) 50%, transparent 75%);
     background-repeat: repeat;
-    background-size: auto;
-    background-size: 200% 100%;
+    background-size: 200% 300%;
+    background-position-y: center;
     background-repeat: no-repeat;
-    animation: sweep-bg-animation 1.5s ease-in-out forwards;
+    animation: sweep-bg-animation var(--sweep-anim-duration) ease-in-out forwards;
     z-index: 1;
+
 }
 
 .sweep-effect-element.game {
@@ -1443,14 +1455,71 @@ input[type="radio"]:checked+.context-menu_radio::after {
     --sweep-color: rgba(206, 28, 147, 0.75);
 }
 
+
+@property --rotate-y {
+    syntax: "<angle>";
+    inherits: false;
+    initial-value: 0deg;
+}
+
+@property --rotate-x {
+    syntax: "<angle>";
+    inherits: false;
+    initial-value: 0deg;
+}
+
+
+@keyframes sweep-rotate-animation {
+    0% {
+        --rotate-x: 0deg;
+        --rotate-y: 0deg;
+    }
+
+    40% {
+        --rotate-x: 30deg;
+        --rotate-y: -1deg;
+    }
+
+    60% {
+        --rotate-x: 30deg;
+        --rotate-y: -1deg;
+    }
+
+    100% {
+        --rotate-x: 0deg;
+        --rotate-y: 0deg;
+    }
+}
+
 @keyframes sweep-bg-animation {
     from {
-        background-position-x: 100%;
+        background-position-x: 150%;
     }
 
     to {
-        background-position-x: -100%;
+        background-position-x: -50%;
     }
+
+    /* 0% {
+        background-position-y: 150%;
+        background-position-x: 150%;
+
+    }
+
+    40% {
+        background-position-y: 0%;
+        background-position-x: 0%;
+    }
+
+    60% {
+        background-position-y: 0%;
+        background-position-x: 0%;
+    }
+
+    100% {
+        background-position-y: 150%;
+        background-position-x: 150%;
+    } */
 }
 
 .box-inner-shadow {

@@ -409,7 +409,7 @@
   --mark-color: var(--gold-color);
 }
 
-.target-achiv.show-hard-anim {
+/* .target-achiv.show-hard-anim {
   transform: translate(-0.25em, -0.25em);
   z-index: 2;
   box-shadow: 0 0 3px 0 black;
@@ -432,7 +432,7 @@
     opacity: 1;
   }
 }
-
+ */
 .target__cheevo-details {
   width: 100%;
   overflow: hidden;

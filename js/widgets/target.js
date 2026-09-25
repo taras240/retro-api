@@ -967,16 +967,16 @@ export class Target extends Widget {
             if (cheevoElement) {
                 await scrollElementIntoView({ container: this.container, element: cheevoElement, scrollByX: false })
                 // cheevoElement.scrollIntoView({ behavior: ui.isCEF ? "auto" : "smooth", block: "center", });
-                await delay(600);
+                await delay(1000);
                 sweepEffect(cheevoElement, "unlock");
-                cheevoElement.classList.add("earned", "show-hard-anim");
+                cheevoElement.classList.add("earned");//, "show-hard-anim"
                 cheevoElement.classList.toggle("hardcore", cheevo?.isEarnedHardcore);
                 cheevo.isEarnedHardcore && (cheevoElement.dataset.DateEarnedHardcore = cheevo.DateEarnedHardcore);
                 cheevoElement.dataset.DateEarned = cheevo.DateEarned;
                 setTimeout(() => {
-                    cheevoElement.classList.remove("show-hard-anim");
+                    // cheevoElement.classList.remove("show-hard-anim");
                 }, 2000);
-                await delay(2100);
+                await delay(3000);
             }
         };
         this.container.scrollTo({
