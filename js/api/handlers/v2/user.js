@@ -33,10 +33,9 @@ const normalizeUserInfo = (userData) => {
     } = userData?.meta?.rankedUsers ?? {};
 
 
-    const {
-        id: LastGameID
-    } = userData?.data?.relationships?.lastGame?.data ?? {};
-
+    const LastGameID = Number(
+        userData?.data?.relationships?.lastGame?.data?.id
+    );
     return {
         User,
         Motto,
