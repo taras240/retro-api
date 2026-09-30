@@ -278,8 +278,8 @@ export class Watcher {
             this.lastZeroCheck = new Date();
         }
 
-        const richPresence = raProfileInfo.RichPresenceMsg;
-        this.online.updateWithRPMessage({ richPresence });
+        const { RichPresenceMsg: richPresence, RichPresenceMsgDate: richPresenceDate } = raProfileInfo;
+        this.online.updateWithRPMessage({ richPresence, richPresenceDate });
         this.updateUserData({ raProfileInfo });
         if (!this.isOnline && !this.onlineCheckTimeOut) {
             await this.checkForOnline();
