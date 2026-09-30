@@ -266,7 +266,7 @@ export class Watcher {
         }
         if (!isStart && !isForced && (configData.pauseIfOffline && this.onlineCheckTimeOut)) return;
 
-        const raProfileInfo = await raapi.getUserProfile({});
+        const raProfileInfo = await raapi.getUserProfileV2({});
         if (isGameChanged(raProfileInfo, isStart)) {
             await onGameChanged(raProfileInfo);
         }
@@ -471,19 +471,25 @@ export class Watcher {
         config.writeConfiguration();
         this.updateGameData();
     }
-    async autostart() {
+    async init() {
+        const userSummary = await raapi.getUserProfileV2({});
+        this.updateUserData({ userSummary, isInit: true });
+        const lastGameID = userSummary.LastGameID;
+        this.autostart(lastGameID);
+    }
+    async autostart(gameID) {
         switch (configData.watcherMode) {
             case (WATCHER_MODES.auto):
             case (WATCHER_MODES.autoStart):
-                this.start();
+                this.start(gameID);
                 break;
 
             default:
-                this.updateGameData();
+                this.updateGameData(gameID);
                 break;
         }
     }
-    start() {
+    start(gameID) {
         const increasePlayTime = () => {
             if (!this.isOnline && configData.pauseIfOffline) return;
             this.playTime.totalGameTime++;

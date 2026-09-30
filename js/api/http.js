@@ -8,7 +8,7 @@ const requestQueue = [];
 let isProcessingQueue = false;
 let lastRequestTime = 0;
 
-const CACHE_TTL = 3000; // 3 seconds in milliseconds
+const CACHE_TTL = 4000; // 3 seconds in milliseconds
 const THROTTLE_MS = 600; // 0.6 seconds between requests
 
 function getCacheKey(endpoint, params) {

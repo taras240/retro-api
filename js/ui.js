@@ -75,7 +75,8 @@ export class UI {
     configData.bgVisibility = configData.bgVisibility;
 
     if (config.identConfirmed) {
-      watcher.autostart();
+      watcher.init();
+      // watcher.autostart();
     }
     else {
       this.showLogin();
