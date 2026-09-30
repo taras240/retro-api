@@ -162,7 +162,8 @@ const addSavedData = (gameData, savedData = {}) => {
     Object.assign(
         gameData,
         { TimePlayed: 0 },
-        savedData
+        savedData,
+        // { cheevoTags: ["razor"] }
     )
 }
 export const normalizeGameData = (gameData, gamesDB = {}) => {

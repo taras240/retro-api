@@ -30,6 +30,7 @@ export class Target extends Widget {
     };
     filters = {};
     genreFilters = [];
+    tagFilters = [];
     levelFilters = [];
 
     get contextMenuItems() {
@@ -256,20 +257,75 @@ export class Target extends Widget {
             },
         ],
     })
-    getTargetFilterGenres() {
-        return [...new Set(Object.values(watcher.CHEEVOS ?? {})
+    genreFiltersMenu() {
+        const genres = [...new Set(Object.values(watcher.CHEEVOS ?? {})
             .flatMap(({ genres = [] }) => genres.map(String)))].sort();
+        if (!genres.length) return null;
+        const menu = {
+            label: lang.genre,
+            elements: genres.map(genre => ({
+                type: inputTypes.CHECKBOX,
+                id: `${this.sectionID}-context-genre-${genre}`,
+                label: `#${genre.replace(/^./, char => char.toUpperCase())}`,
+                checked: this.genreFilters.includes(genre),
+                dataset: [{ name: "genre", value: genre }],
+                onChange: event => {
+                    this.genreFilters = event.currentTarget.checked
+                        ? [...this.genreFilters, genre]
+                        : this.genreFilters.filter(item => item !== genre);
+                    this.applyFilter();
+                },
+            })),
+        };
+        return menu;
     }
-    getTargetFilterLevels() {
-        return [...new Set(Object.values(watcher.CHEEVOS ?? {})
+    levelFiltersMenu() {
+        const getTargetLevelLabel = (level) => {
+            const zone = watcher.GAME_DATA?.zones?.[level - 1];
+            return `${lang.level}: ${zone ?? level}`;
+        }
+        const levels = [...new Set(Object.values(watcher.CHEEVOS ?? {})
             .map(({ level }) => level)
             .filter(level => level !== undefined && level !== null && level !== "")
             .map(level => Math.floor(Number(level)))
             .filter(level => Number.isFinite(level)))].sort((a, b) => a - b);
+        if (!levels?.length) return null;
+        const menu = {
+            label: lang.level,
+            elements: levels.map(level => ({
+                type: inputTypes.CHECKBOX,
+                id: `${this.sectionID}-context-level-${level}`,
+                label: getTargetLevelLabel(level),
+                checked: this.isTargetLevelSelected(level),
+                onChange: event => {
+                    this.setTargetLevelSelected(level, event.currentTarget.checked);
+                    this.applyFilter();
+                },
+            })),
+        };
+        return menu;
+
     }
-    getTargetLevelLabel(level) {
-        const zone = watcher.GAME_DATA?.zones?.[level - 1];
-        return `${lang.level}: ${zone ?? level}`;
+    tagFiltersMenu() {
+        const tags = watcher.GAME_DATA?.cheevoTags ?? [];
+        if (!tags?.length) return null;
+        const menu = {
+            label: lang.tags,
+            elements: tags?.map(tag => ({
+                type: inputTypes.CHECKBOX,
+                id: `${this.sectionID}-context-tag-${tag}`,
+                label: `#${tag.replace(/^./, char => char.toUpperCase())}`,
+                checked: this.tagFilters.includes(tag),
+                dataset: [{ name: "tag", value: tag }],
+                onChange: event => {
+                    this.tagFilters = event.currentTarget.checked
+                        ? [...this.tagFilters, tag]
+                        : this.tagFilters.filter(item => item !== tag);
+                    this.applyFilter();
+                },
+            })) ?? [],
+        };
+        return menu;
     }
     isTargetLevelSelected(level) {
         return this.levelFilters.some(selectedLevel => Number(selectedLevel) === Number(level));
@@ -290,45 +346,19 @@ export class Target extends Widget {
                 label: lang[filterName],
                 value: filterName,
                 property: "filterName",
-                state: `${this.uiProps.filters[filterName]?.state ?? 0}`,
+                state: this.uiProps.filters[filterName]?.state ?? 0,
                 onChange: (stateData) => this.uiProps.filters = (stateData),
             })),
-            {
-                label: lang.genre,
-                elements: this.getTargetFilterGenres().map(genre => ({
-                    type: inputTypes.CHECKBOX,
-                    id: `${this.sectionID}-context-genre-${genre}`,
-                    label: `#${genre.replace(/^./, char => char.toUpperCase())}`,
-                    checked: this.genreFilters.includes(genre),
-                    dataset: [{ name: "genre", value: genre }],
-                    onChange: event => {
-                        this.genreFilters = event.currentTarget.checked
-                            ? [...this.genreFilters, genre]
-                            : this.genreFilters.filter(item => item !== genre);
-                        this.applyFilter();
-                    },
-                })),
-            },
-            {
-                label: lang.level,
-                elements: this.getTargetFilterLevels().map(level => ({
-                    type: inputTypes.CHECKBOX,
-                    id: `${this.sectionID}-context-level-${level}`,
-                    label: this.getTargetLevelLabel(level),
-                    checked: this.isTargetLevelSelected(level),
-                    onChange: event => {
-                        this.setTargetLevelSelected(level, event.currentTarget.checked);
-                        this.applyFilter();
-                    },
-                })),
-            },
+            this.genreFiltersMenu(),
+            this.levelFiltersMenu(),
+            this.tagFiltersMenu(),
             {
                 type: inputTypes.CHECKBOX,
                 label: lang.hideFiltered,
                 checked: this.uiProps.hideFiltered,
                 onChange: (event) => this.uiProps.hideFiltered = event.currentTarget.checked,
             },
-        ],
+        ].filter(Boolean),
     })
     contextMultiGameMenu = () => watcher.GAME_DATA?.groups?.length > 1 ? {
         label: lang.multigame,
@@ -580,6 +610,7 @@ export class Target extends Widget {
         const filterMenu = this.contextFilterMenu();
 
         const genreMenu = filterMenu.elements.find(filter => filter.label === lang.genre);
+        const tagMenu = filterMenu.elements.find(filter => filter.label === lang.tags);
         const levelMenu = filterMenu.elements.find(filter => filter.label === lang.level);
         const hasLevelFilters = Boolean(levelMenu?.elements?.length);
 
@@ -587,9 +618,10 @@ export class Target extends Widget {
             .filter(filter => filter.type === inputTypes.STATEBOX)
             .map(item => ({ ...item, id: "filters-row__" + item.id }));
         const genreFilters = genreMenu?.elements?.map(props => inputElement({ ...props, classList: ["compact"] })) ?? [];
-
+        const tagFilters = tagMenu?.elements?.map(props => inputElement({ ...props, classList: ["compact"] })) ?? [];
         const filterElements = [
             ...mainFilters.map(inputElement),
+            ...tagFilters,
             ...genreFilters,
         ];
 
@@ -638,6 +670,7 @@ export class Target extends Widget {
     hasCustomFilters() {
         return Object.values(this.uiProps.filters ?? {}).some(filter => filter?.state !== 0)
             || this.genreFilters.length > 0
+            || this.tagFilters.length > 0
             || this.levelFilters.length > 0;
     }
     syncFilterControls() {
@@ -649,8 +682,15 @@ export class Target extends Widget {
         });
         this.filterPanel?.querySelectorAll(".target__filter-scrollable input[type=checkbox]").forEach(input => {
             const genre = input.dataset.genre;
-            const isChecked = this.genreFilters.includes(genre);
-            input.checked = isChecked;
+            if (genre) {
+                const isChecked = this.genreFilters.includes(genre);
+                input.checked = isChecked;
+            }
+            const tag = input.dataset.tag;
+            if (tag) {
+                const isChecked = this.tagFilters.includes(tag);
+                input.checked = isChecked;
+            }
         });
 
         this.filterPanel?.querySelector(`#${this.sectionID}_filters-row__levels-button`)?.classList.toggle("active", this.levelFilters?.length);
@@ -669,6 +709,7 @@ export class Target extends Widget {
             this.uiProps.filters = { filterName, state: 0 };
         });
         this.genreFilters = [];
+        this.tagFilters = [];
         this.levelFilters = [];
         this.applyFilter();
     }
@@ -937,6 +978,7 @@ export class Target extends Widget {
         //     this.filters = this.uiProps.filters
         // }
         this.genreFilters = [];
+        this.tagFilters = [];
         this.levelFilters = [];
         this.isDisplayOrderChanged = false;
         this.fillItems();
@@ -1054,15 +1096,18 @@ export class Target extends Widget {
         });
 
         const hasGenreFilter = this.genreFilters.length > 0;
+        const hasTagFilter = this.tagFilters.length > 0;
         const hasLevelFilter = this.levelFilters.length > 0;
-        if (!hasGenreFilter && !hasLevelFilter) return;
+        if (!hasGenreFilter && !hasLevelFilter && !hasTagFilter) return;
 
         this.container.querySelectorAll(".target-achiv").forEach(cheevo => {
             const genres = cheevo.dataset.genres?.split(",") ?? [];
             const hasSelectedGenre = !hasGenreFilter || this.genreFilters.some(genre => genres.includes(genre));
+            const hasSelectedTag = !hasTagFilter || this.tagFilters.some(tag => new RegExp(`${tag}`, "i").test(cheevo.innerHTML));
+
             const cheevoLevel = Math.floor(Number(cheevo.dataset.level));
             const hasSelectedLevel = !hasLevelFilter || this.isTargetLevelSelected(cheevoLevel);
-            if (!hasSelectedGenre || !hasSelectedLevel) {
+            if (!hasSelectedGenre || !hasSelectedLevel || !hasSelectedTag) {
                 cheevo.classList.add("hidden");
                 this.uiProps.hideFiltered && cheevo.classList.add("removed");
             }

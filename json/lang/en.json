@@ -374,5 +374,6 @@
     "saveAsCustomOrderHint": "This will replace the saved achievement order with the new one. This action can't be undone.",
     "userLevel": "User Level",
     "resetFilters": "Clear Filters",
-    "iconScale": "Icon Size"
+    "iconScale": "Icon Size",
+    "tags": "Tags"
 }

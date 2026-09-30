@@ -1074,6 +1074,9 @@ input:checked+.checkbox-input:not(.checkbox-icon-input)::before {
 
 .context-submenu,
 .context-menu {
+    --max-height: 100vh;
+    max-width: 100vw;
+    max-height: var(--max-height);
     font-family: system-ui, sans-serif;
     display: flex;
     flex-direction: column;
@@ -1086,11 +1089,17 @@ input:checked+.checkbox-input:not(.checkbox-icon-input)::before {
     user-select: none;
     z-index: 1000;
     padding: 0.35em;
-    background-color: transparent;
-    --font-color: white;
+
+    background: var(--main-color);
 }
 
-.context-menu::before,
+:where(.context-menu, .context-submenu):not(:has(.context-submenu)) {
+    overflow-y: scroll;
+}
+
+.context-list {}
+
+/* .context-menu::before,
 .context-submenu::before {
     content: "";
     position: absolute;
@@ -1101,7 +1110,7 @@ input:checked+.checkbox-input:not(.checkbox-icon-input)::before {
     background: rgba(27, 27, 27, 0.6);
     backdrop-filter: blur(5px);
     border-radius: inherit;
-}
+} */
 
 .context-menu_item {
     --context-font-color: var(--font-color);

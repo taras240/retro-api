@@ -40,7 +40,7 @@ export class UI {
   STICK_MARGIN = 1;
   STICK_TOLERANCE = 7;
   hltb = {};
-  // isTest = true;
+  isTest = true;
   constructor() {
     this.toggleLoading(false);
     this.initUI();
@@ -246,9 +246,15 @@ export class UI {
       if (dimensions.right > window.innerWidth) {
         contextMenu.classList.add("to-left");
       }
-
-      if (dimensions.bottom > window.innerHeight) {
+      if ((dimensions.top > window.innerHeight / 2) && (dimensions.bottom > window.innerHeight)) {
         contextMenu.classList.add("to-top");
+        const maxHeight = dimensions.top;
+        console.log({ contextMenu, dimensions })
+        contextMenu.style.setProperty("--max-height", `${maxHeight + 20}px`);
+      }
+      else {
+        const maxHeight = window.innerHeight - dimensions.top;
+        contextMenu.style.setProperty("--max-height", `${maxHeight - 5}px`);
       }
     }
     const setSubmenuPositions = (contextMenu) => {
@@ -257,6 +263,10 @@ export class UI {
         submenu.style.visibility = "hidden";
         submenu.style.display = "block";
         setContextPosition(submenu, true);
+      })
+      // submenus.forEach(submenu => {
+      // })
+      submenus.forEach(submenu => {
         submenu.style.visibility = "";
         submenu.style.display = "";
       })
