@@ -945,7 +945,7 @@ export class AchievementsBlock extends Widget {
                     <h2.widget-header-text.achivs-header-text>
                         ${lang.cheevosSectionName}
                     </h2>
-                    ${buttonsHtml.filter(this.SECTION_ID)}
+                    ${buttonsHtml.filter({ sectionID: this.SECTION_ID })}
                     ${buttonsHtml.sort(this.SECTION_ID)}
                     ${buttonsHtml.tweek()}
                     ${buttonsHtml.close()}

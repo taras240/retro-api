@@ -575,7 +575,7 @@ export class Target extends Widget {
         const widgetID = "target_section" + this.ID;
         const headerElementsHtml = `
             ${buttonsHtml.togglePins()}
-            ${buttonsHtml.filter(widgetID)}
+            ${buttonsHtml.filter({ sectionID: widgetID, hint: lang.toggleFilterPanel })}
             ${buttonsHtml.sort(widgetID)}
             ${buttonsHtml.saveData({ className: "save-order-button", hint: lang.saveAsCustomOrder, id: `${widgetID}-save-order` })}
             ${buttonsHtml.tweek()}
@@ -779,7 +779,8 @@ export class Target extends Widget {
             this.saveAsCustomOrder();
         });
         this.section.querySelector(`#${this.sectionID}-filter-button`)?.addEventListener("click", event => {
-            ui.showContextmenu({ event, menuItems: this.contextFilterMenu().elements, sectionCode: this.SECTION_NAME })
+            this.uiProps.showFilterPanel = !this.uiProps.showFilterPanel;
+            // ui.showContextmenu({ event, menuItems: this.contextFilterMenu().elements, sectionCode: this.SECTION_NAME })
         });
         this.section.querySelector(`#${this.sectionID}-sort-button`)?.addEventListener("click", event => {
             ui.showContextmenu({ event, menuItems: this.contextSortMenu().elements, sectionCode: this.SECTION_NAME })

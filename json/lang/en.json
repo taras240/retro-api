@@ -375,5 +375,6 @@
     "userLevel": "User Level",
     "resetFilters": "Clear Filters",
     "iconScale": "Icon Size",
-    "tags": "Tags"
+    "tags": "Tags",
+    "toggleFilterPanel": "Show/hide filter panel"
 }

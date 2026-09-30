@@ -32,7 +32,7 @@ export const buttonsHtml = {
 
     sort: (sectionID, onClick) => `<button class="header-button header-icon sort-icon" id="${sectionID}-sort-button" data-title="${lang.sort}"/>`,
 
-    filter: (sectionID, onClick) => `<button class="header-button header-icon filter-icon" id="${sectionID}-filter-button" data-title="${lang.filter}"/>`,
+    filter: ({ sectionID, onClick, hint }) => `<button class="header-button header-icon filter-icon" id="${sectionID}-filter-button" data-title="${hint || lang.filter}"/>`,
 
     external: (sectionID, onclick) => `<button class="header-button header-icon external-icon" id="${sectionID}-external_window-button" data-title="Open in external window"/>`,
 
