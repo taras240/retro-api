@@ -125,8 +125,8 @@ const addSessions = (gameData) => {
         .reduce((groups, cheevo) => {
             const findGroup = (date, groups) => {
                 const group = groups.find(g => {
-                    return date - g.date < 12 * 60 * 60 * 1000
-                }); //*12 hours
+                    return date - g.date < 4 * 60 * 60 * 1000
+                }); //*4 hours
                 return group;
             }
             const unlockDate = new Date(cheevo.DateEarnedHardcore || cheevo.DateEarned);
