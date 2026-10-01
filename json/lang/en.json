@@ -376,5 +376,6 @@
     "resetFilters": "Clear Filters",
     "iconScale": "Icon Size",
     "tags": "Tags",
-    "toggleFilterPanel": "Show/hide filter panel"
+    "toggleFilterPanel": "Show/hide filter panel",
+    "highlightCurrentLevel": "Highlight Current Level"
 }

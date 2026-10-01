@@ -72,7 +72,7 @@
   margin: 1px;
 }
 
-.achiv-block.highlight::after {
+/* .achiv-block.highlight::after {
   content: "";
   position: absolute;
   bottom: 0;
@@ -81,11 +81,10 @@
   max-height: 25%;
   width: 0.75em;
   height: 0.75em;
-  /* border-radius: 50%; */
   background-color: greenyellow;
   border: 1px solid black;
   z-index: 10;
-}
+} */
 
 .achiv-block.mario-dumb {
   animation: mario-dumb 0.25s forwards cubic-bezier(0, .52, .96, 1.7);
@@ -124,6 +123,10 @@
 
 .achiv-block.removed {
   display: none;
+}
+
+.section.highlight-level .achiv-block.highlight:not(.earned.hardcore) .preview-container {
+  border: 2px solid var(--green-color);
 }
 
 .achiv-block.earned.hardcore .preview-container {

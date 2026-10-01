@@ -46,6 +46,12 @@ export class AchievementsBlock extends Widget {
                     },
                     {
                         type: inputTypes.CHECKBOX,
+                        label: lang.highlightCurrentLevel,
+                        checked: this.uiProps.highlightCurrentLevel,
+                        onChange: (event) => this.uiProps.highlightCurrentLevel = event.currentTarget.checked,
+                    },
+                    {
+                        type: inputTypes.CHECKBOX,
                         label: lang.stretch,
                         checked: this.uiProps.stretchAchievements,
                         onChange: (event) => this.uiProps.stretchAchievements = event.currentTarget.checked,
@@ -91,13 +97,11 @@ export class AchievementsBlock extends Widget {
                         onChange: (event) => this.uiProps.showBorders = event.currentTarget.checked,
                     },
                     {
-                        prefix: lang.cropBorder,
-                        postfix: "px",
-                        type: inputTypes.NUM_INPUT,
-                        id: "crop-offset",
+                        type: inputTypes.STEPPER,
                         label: lang.cropBorder,
-                        value: this.uiProps.cropOffset,
-                        onInput: (event) => this.uiProps.cropOffset = event.currentTarget.value,
+                        step: 1,
+                        initValue: this.uiProps.cropOffset,
+                        onChange: (value) => this.uiProps.cropOffset = value,
                     },
 
                 ]
@@ -321,6 +325,7 @@ export class AchievementsBlock extends Widget {
         cheevosMargin: 1,
         cropOffset: 0,
         horizontalScroll: false,
+        highlightCurrentLevel: true,
     }
     uiSetCallbacks = {
         ACHIV_MIN_SIZE(value) {
@@ -510,6 +515,7 @@ export class AchievementsBlock extends Widget {
         });
     }
     setElementsValues() {
+        this.section.classList.toggle("highlight-level", this.uiProps.highlightCurrentLevel);
         this.section.classList.toggle("hide-bg", !this.uiProps.bgVisibility);
         this.section.classList.toggle("compact", !this.uiProps.showHeader);
         this.section.dataset.previewFilter = this.uiProps.lockedPreviewFilter;

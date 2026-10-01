@@ -84,13 +84,11 @@ export class Target extends Widget {
                         onChange: (value) => this.uiProps.iconScale = value,
                     },
                     {
-                        prefix: lang.cropBorder,
-                        postfix: "px",
-                        type: inputTypes.NUM_INPUT,
-                        id: "crop-offset",
+                        type: inputTypes.STEPPER,
                         label: lang.cropBorder,
-                        value: this.uiProps.cropOffset,
-                        onInput: (event) => this.uiProps.cropOffset = event.currentTarget.value,
+                        step: 1,
+                        initValue: this.uiProps.cropOffset,
+                        onChange: (value) => this.uiProps.cropOffset = value,
                     },
                 ]
             },
