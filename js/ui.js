@@ -250,7 +250,6 @@ export class UI {
       if ((dimensions.top > window.innerHeight / 2) && (dimensions.bottom > window.innerHeight)) {
         contextMenu.classList.add("to-top");
         const maxHeight = dimensions.top;
-        console.log({ contextMenu, dimensions })
         contextMenu.style.setProperty("--max-height", `${maxHeight + 20}px`);
       }
       else {

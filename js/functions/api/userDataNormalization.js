@@ -5,7 +5,9 @@ export function normalizeUserData({ userSummary, raProfileInfo, isInit }) {
         userData = isInit ? {
             ...userData,
             rank: userSummary.Rank,
+            rankCasual: userSummary.RankCasual,
             percentile: +(100 * userSummary.Rank / userSummary.TotalRanked).toFixed(2),
+            percentileCasual: +(100 * userSummary.RankCasual / userSummary.TotalRankedCasual).toFixed(2),
             userName: userSummary.User,
             richPresence: userSummary.RichPresenceMsg,
             points: userSummary.TotalPoints,
@@ -16,7 +18,9 @@ export function normalizeUserData({ userSummary, raProfileInfo, isInit }) {
             {
                 ...userData,
                 rank: userSummary.Rank,
+                rankCasual: userSummary.RankCasual,
                 percentile: +(100 * userSummary.Rank / userSummary.TotalRanked).toFixed(2),
+                percentileCasual: +(100 * userSummary.RankCasual / userSummary.TotalRankedCasual).toFixed(2),
             }
     }
     if (raProfileInfo) {

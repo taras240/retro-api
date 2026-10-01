@@ -44,9 +44,21 @@ export class UserStatistic extends Widget {
                     },
                     {
                         type: inputTypes.CHECKBOX,
+                        label: lang.rank + lang.casual_,
+                        checked: this.uiProps.showRankCasual,
+                        onChange: (event) => this.uiProps.showRankCasual = event.currentTarget.checked,
+                    },
+                    {
+                        type: inputTypes.CHECKBOX,
                         label: lang.percentile,
                         checked: this.uiProps.showPercentile,
                         onChange: (event) => this.uiProps.showPercentile = event.currentTarget.checked,
+                    },
+                    {
+                        type: inputTypes.CHECKBOX,
+                        label: lang.percentile + lang.casual_,
+                        checked: this.uiProps.showPercentileCasual,
+                        onChange: (event) => this.uiProps.showPercentileCasual = event.currentTarget.checked,
                     },
                     {
                         type: inputTypes.CHECKBOX,
@@ -168,7 +180,9 @@ export class UserStatistic extends Widget {
         showSessionProgress: true,
         showTrueRatio: true,
         showPercentile: true,
+        showPercentileCasual: false,
         showRank: true,
+        showRankCasual: false,
         showSP: false,
         showRP: true,
         showHP: true,
@@ -283,7 +297,9 @@ export class UserStatistic extends Widget {
         this.generateStatsElements();
 
         this.rankRateElement = this.section.querySelector('#stats_rank-rate');
+        this.rankRateCasualElement = this.section.querySelector('#stats_rank-rate-casual');
         this.rankElement = this.section.querySelector('#stats_rank');
+        this.rankCasualElement = this.section.querySelector('#stats_rank-casual');
         this.pointsElement = this.section.querySelector('#stats_points');
         this.retropointsElement = this.section.querySelector('#stats_retropoints');
         this.softcoreUnlocksElement = this.section.querySelector('#stats_cheevos-softcore');
@@ -313,6 +329,8 @@ export class UserStatistic extends Widget {
             [this.softpointsElement, this.uiProps.showSP],
             [this.rankElement, this.uiProps.showRank],
             [this.rankRateElement, this.uiProps.showPercentile],
+            [this.rankCasualElement, this.uiProps.showRankCasual],
+            [this.rankRateCasualElement, this.uiProps.showPercentileCasual],
             [this.trueRatioElement, this.uiProps.showTrueRatio],
             [this.softcoreUnlocksElement, this.uiProps.showUnlocksSoftcore],
             [this.hardcoreUnlocksElement, this.uiProps.showUnlocksHardcore],
@@ -547,6 +565,14 @@ export class UserStatistic extends Widget {
                     animationProps.decimals = 2;
                     animationProps.suffix = "%";
                     break;
+                case "percentileCasual":
+                    value = userData.percentileCasual;
+                    oldValue = this.userData.percentileCasual;
+                    delta = +(value - oldValue).toFixed(2);
+                    sessionDelta = -(value - this.initialData.percentileCasual).toFixed(2);
+                    animationProps.decimals = 2;
+                    animationProps.suffix = "%";
+                    break;
                 case "trueRatio":
                     value = userData.trueRatio.toFixed(2);
                     oldValue = this.userData.trueRatio.toFixed(2);
@@ -559,6 +585,12 @@ export class UserStatistic extends Widget {
                     delta = userData.rank - oldValue;
                     sessionDelta = this.initialData.rank - userData.rank;
                     value = userData.rank;
+                    break;
+                case "rankCasual":
+                    oldValue = this.userData.rankCasual;
+                    delta = userData.rankCasual - oldValue;
+                    sessionDelta = this.initialData.rankCasual - userData.rankCasual;
+                    value = userData.rankCasual;
                     break;
                 default:
                     oldValue = this.userData[property]
@@ -579,7 +611,9 @@ export class UserStatistic extends Widget {
             deltaElement?.classList.toggle("hidden", sessionDelta == 0);
         }
         setValue(this.rankRateElement, "percentile");
+        setValue(this.rankRateCasualElement, "percentileCasual");
         setValue(this.rankElement, "rank");
+        setValue(this.rankCasualElement, "rankCasual");
         setValue(this.userLevelElement, "userLevel");
         setValue(this.hardcoreUnlocksElement, "hardcoreUnlocks");
         setValue(this.softcoreUnlocksElement, "softcoreUnlocks");
@@ -628,7 +662,9 @@ export class UserStatistic extends Widget {
     }
     statusProperties = {
         percentile: { label: lang.top, id: "stats_rank-rate", class: 'stats__rank-value' },
+        percentileCasual: { label: lang.top, id: "stats_rank-rate-casual", class: 'stats__rank-value' },
         rank: { label: lang.rank, id: "stats_rank", class: 'stats__rank-value' },
+        rankCasual: { label: lang.rank, id: "stats_rank-casual", class: 'stats__rank-value' },
         userLevel: { label: lang.userLevel, id: "stats_user-level", },
         unlocks: { label: lang.cheevos, id: "stats_cheevos-hardcore", },
         unlocksSoftcore: { label: lang.cheevos, id: "stats_cheevos-softcore", },
