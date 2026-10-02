@@ -492,11 +492,11 @@ export class Status extends Widget {
     generateWidget() {
         const isLegacy = this.theme === Status.themes.legacy;
         const widgetID = isLegacy ? "update-section" : "rp__section";
-        const headerElementsHtml = `
-            ${buttonsHtml.reload({ hint: lang.update })}
-            ${buttonsHtml.comments()}
-            ${buttonsHtml.tweek()}
-        `;
+        const headerElementsHtml = [
+            buttonsHtml.reload({ hint: lang.update }),
+            buttonsHtml.comments(),
+            buttonsHtml.tweek(),
+        ];
 
         const widgetData = {
             classList: isLegacy ? ["status__section", "section"] : ["rp__section", "section"],
@@ -515,7 +515,7 @@ export class Status extends Widget {
         `);
         const header = fromHtml(`
             <.hidden-header-buttons>
-                ${headerElementsHtml || ""}
+                ${headerElementsHtml?.join("") ?? ""}
                 ${buttonsHtml.close()}
             </>
         `)

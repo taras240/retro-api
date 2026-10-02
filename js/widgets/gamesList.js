@@ -4,6 +4,7 @@ import { generateBadges } from "../components/badges.js";
 import { gameImageUrl, gameImageUrlByID, gameUrl } from "../functions/raLinks.js";
 import { gamesFromJson } from "../functions/gamesJson.js";
 import { raapi } from "../api/index.js";
+import { buttonsHtml } from "../components/htmlElements.js";
 
 
 export class GameList extends Widget {
@@ -43,15 +44,15 @@ export class GameList extends Widget {
         this.section.querySelector(".update-icon")?.addEventListener("click", () => this.generateGamesSet());
     }
     generateWidget() {
-        const headerElementsHtml = `
-            <div class="header-button header-icon update-icon" title="${lang.forceReloadHint}"></div>
-        `;
+        const headerElementsHtml = [
+            buttonsHtml.reload(),
+        ];
 
         const widgetData = {
             classList: ["game-list__section", "section"],
             id: "game-list",
             title: lang.gameSeriesSectionName,
-            headerElementsHtml: headerElementsHtml,
+            headerElementsHtml,
         };
         const widget = this.generateWidgetElement(widgetData);
         ui.app.appendChild(widget);

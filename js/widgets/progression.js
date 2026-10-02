@@ -102,7 +102,7 @@ export class Progression extends Widget {
             classList: ["progression_section", "section", "compact-header"],
             id: "progression_section",
             title: lang.progressionSectionName,
-            contentClasses: ["progression__list", "content-container"],
+            contentClassList: ["progression__list", "content-container"],
         }
         const widget = this.generateWidgetElement(widgetData);
         ui.app.appendChild(widget);

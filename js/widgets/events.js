@@ -24,13 +24,13 @@ export class EventAchievements extends Widget {
         // this.generateContent();
     }
     generateWidget() {
-        const headerElementsHtml = buttonsHtml.reload();
+        const headerElementsHtml = [buttonsHtml.reload()];
         const widgetData = {
             classList: ["wii-event_section", "section"],
             id: "cheevo-events_section",
             title: `Achievement Events`,
             headerElementsHtml,
-            contentClasses: ["wii-event-container", "content-container"],
+            contentClassList: ["wii-event-container", "content-container"],
         };
 
         const widget = this.generateWidgetElement(widgetData);

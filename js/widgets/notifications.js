@@ -113,13 +113,13 @@ export class Notifications extends Widget {
         this.resizer = this.section.querySelector(".resizer");
     }
     generateWidget() {
-        const headerElementsHtml = buttonsHtml.tweek();
+        const headerElementsHtml = [buttonsHtml.tweek()];
         const widgetData = {
             classList: ["notification_section", "bg-visible", "section", "compact-header"],
             id: "notification_section",
             title: lang.alertsSectionName,
             headerElementsHtml,
-            contentClasses: ["notification-container", "content-container"],
+            contentClassList: ["notification-container", "content-container"],
         };
 
         const widget = this.generateWidgetElement(widgetData);

@@ -15,17 +15,17 @@ export class Completion extends Widget {
             <ul class="platform-list" id="completion-list"></ul>
         `
         const widgetID = "completion_section";
-        const headerElementsHtml = `
-            ${buttonsHtml.reload()}
-            ${buttonsHtml.fulscreen()}
-        `;
+        const headerElementsHtml = [
+            buttonsHtml.reload(),
+            buttonsHtml.fulscreen()
+        ];
 
         const widgetData = {
             classList: ["games_setion", "section"],
             id: widgetID,
             title: `Completion Progress`,
-            headerElementsHtml: headerElementsHtml,
-            contentClasses: ["games_container", "content-container"],
+            headerElementsHtml,
+            contentClassList: ["games_container", "content-container"],
         };
 
         const widget = this.generateWidgetElement(widgetData);

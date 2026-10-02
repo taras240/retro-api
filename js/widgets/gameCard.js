@@ -161,17 +161,17 @@ export class GameCard extends Widget {
                 <.game-card__info.game-card__progress-container.game-card__progress-retropoints/>
             </>
         `, true)
-        const headerElementsHtml = `
-            ${buttonsHtml.comments()}
-            ${buttonsHtml.tweek()}
-        `;
+        const headerElementsHtml = [
+            buttonsHtml.comments(),
+            buttonsHtml.tweek()
+        ];
 
         const widgetData = {
             classList: ["game-card_section", "section"],
             id: "game_section",
             title: lang.gameCard,
-            headerElementsHtml: headerElementsHtml,
-            contentClasses: ["game-card_container", "content-container"],
+            headerElementsHtml,
+            contentClassList: ["game-card_container", "content-container"],
         };
 
         const widget = this.generateWidgetElement(widgetData);

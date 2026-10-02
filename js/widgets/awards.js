@@ -19,14 +19,14 @@ export class Awards extends Widget {
         this.applyPosition();
     }
     generateWidget() {
-        const headerElementsHtml = buttonsHtml.reload();
+        const headerElementsHtml = [buttonsHtml.reload()];
 
         const widgetData = {
             classList: ["awards_section", "section"],
             id: "awards_section",
             title: lang.awardsSectionName,
-            headerElementsHtml: headerElementsHtml,
-            contentClasses: ["awards-content_container", "content-container"],
+            headerElementsHtml,
+            contentClassList: ["awards-content_container", "content-container"],
         };
 
         const widget = this.generateWidgetElement(widgetData);

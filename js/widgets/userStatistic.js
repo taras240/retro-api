@@ -272,17 +272,17 @@ export class UserStatistic extends Widget {
         this.applyDisplayOrder();
     }
     generateWidget() {
-        const headerElementsHtml = `
-            ${buttonsHtml.tweek()}
-            ${buttonsHtml.reload({ hint: lang.update })}
-        `;
+        const headerElementsHtml = [
+            buttonsHtml.tweek(),
+            buttonsHtml.reload({ hint: lang.update }),
+        ];
 
         const widgetData = {
             classList: ["section", "stats_section", "compact-header"],
             id: "stats_section",
             title: lang.statisticsSectionName,
-            headerElementsHtml: headerElementsHtml,
-            contentClasses: ["stats-container", "content-container"],
+            headerElementsHtml,
+            contentClassList: ["stats-container", "content-container"],
         };
 
         const widget = this.generateWidgetElement(widgetData);

@@ -600,17 +600,17 @@ export class Games extends Widget {
         gameListWrapper.append(activeFiltersRow, gameList);
         const playlistsContainer = PlaylistsContainer({});
         const widgetID = "games_section";
-        const headerElementsHtml = `
-            ${buttonsHtml.reload()}
-            ${buttonsHtml.fulscreen()}
-        `;
+        const headerElementsHtml = [
+            buttonsHtml.reload(),
+            buttonsHtml.fulscreen()
+        ];
 
         const widgetData = {
             classList: ["games_setion", "section"],
             id: widgetID,
             title: lang.gamesLibrary,
-            headerElementsHtml: headerElementsHtml,
-            contentClasses: ["games_container", "content-container"],
+            headerElementsHtml,
+            contentClassList: ["games_container", "content-container"],
         };
 
         const widget = this.generateWidgetElement(widgetData);

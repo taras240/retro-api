@@ -133,7 +133,7 @@ export class Constructor extends Widget {
             classList: ["constructor_widget", "section"],
             id: "constructor_widget",
             title: lang.constructorWidget,
-            contentClasses: ["constructor-elements"]
+            contentClassList: ["constructor-elements"]
         });
         ui.app.append(this.section);
         this.sectionID = this.section.id;

@@ -571,20 +571,20 @@ export class Target extends Widget {
     }
     generateWidget() {
         const widgetID = "target_section" + this.ID;
-        const headerElementsHtml = `
-            ${buttonsHtml.togglePins()}
-            ${buttonsHtml.filter({ sectionID: widgetID, hint: lang.toggleFilterPanel })}
-            ${buttonsHtml.sort(widgetID)}
-            ${buttonsHtml.saveData({ className: "save-order-button", hint: lang.saveAsCustomOrder, id: `${widgetID}-save-order` })}
-            ${buttonsHtml.tweek()}
-            ${input({
-            type: inputTypes.SEARCH_INPUT,
-            id: "target__searchbar",
-            classList: ["target__search-bar"],
-            title: lang.targetSearchHint,
-            label: lang.search,
-        })}
-        `;
+        const headerElementsHtml = [
+            buttonsHtml.togglePins(),
+            buttonsHtml.filter({ sectionID: widgetID, hint: lang.toggleFilterPanel }),
+            buttonsHtml.sort(widgetID),
+            buttonsHtml.saveData({ className: "save-order-button", hint: lang.saveAsCustomOrder, id: `${widgetID}-save-order` }),
+            buttonsHtml.tweek(),
+            input({
+                type: inputTypes.SEARCH_INPUT,
+                id: "target__searchbar",
+                classList: ["target__search-bar"],
+                title: lang.targetSearchHint,
+                label: lang.search,
+            })
+        ];
         const contentHtml = `
             ${divHtml(["target__filter-panel"])}
             ${divHtml(["target__pinned-list"])}

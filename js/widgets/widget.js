@@ -180,15 +180,15 @@ export class Widget {
         const iconID = getRandomID();
         const widgetsContainer = document.querySelector(".buttons-block__shortcuts");
         const widgetIcon = fromHtml(`
-                <div class="setting-radio-group">
-                    <input type="checkbox" name="${iconID}" id="${iconID}" ${isChecked ? "checked" : ""}></input>
-                        <label class="side-panel_input" data-title="${description}" for="${iconID}">
-                            <i class="side-panel__icon ${iconClass}"></i>
-                        </label>
-                        <div class="side-panel__badge">
-                            ${badgeLabel ? badgeElements.black(badgeLabel) : ""}
-                        </div>
-                </div>
+                <.setting-radio-group>
+                    <input type="checkbox" name="${iconID}" id="${iconID}" ${isChecked ? "checked" : ""}>
+                    <label class="side-panel_input" data-title="${description}" for="${iconID}">
+                        <i class="side-panel__icon ${iconClass}"/>
+                    </label>
+                    <.side-panel__badge>
+                        ${badgeLabel ? badgeElements.black(badgeLabel) : ""}
+                    </>
+                </>
         `);
         const input = widgetIcon.querySelector("input");
         input?.addEventListener("change", event => {
@@ -207,20 +207,21 @@ export class Widget {
         id,
         title,
         headerElementsHtml,
-        contentClasses = ["widget-content__container"],
+        contentClassList = ["widget-content__container"],
         contentHtml,
     }) {
-        contentHtml ??= divHtml(contentClasses);
+        contentHtml ??= divHtml(contentClassList);
         const widget = document.createElement("section");
         widget.classList.add(...classList);
         widget.id = id;
         const header = fromHtml(`
-            <div class="header-container">
-                <h2 class="widget-header-text">${title}</h2>
-                ${headerElementsHtml ?? ""}
+            <.header-container>
+                <h2.widget-header-text>${title}</h2>
+                ${headerElementsHtml?.join("") ?? ""}
                 ${buttonsHtml.close()}
-            </div>
+            </>
         `);
+
         const content = fromHtml(contentHtml, true);
         const resizer = fromHtml(resizerHtml);
         widget.append(header, ...content, resizer);
