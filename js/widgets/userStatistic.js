@@ -394,7 +394,7 @@ export class UserStatistic extends Widget {
             showTotalGames,
             showUserLevel,
         } = this.uiProps;
-        return completionChart || showUnlocksHardcore || showUnlocksSoftcore || showMastered || showCompleted || showBeaten || showBeatenSoftcore || showTotalGames || showUserLevel;
+        return true;// completionChart || showUnlocksHardcore || showUnlocksSoftcore || showMastered || showCompleted || showBeaten || showBeatenSoftcore || showTotalGames || showUserLevel;
     }
     async updateCompletionStats() {
         if (!this.hasCompletionPropery()) return;
