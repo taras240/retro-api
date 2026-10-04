@@ -11,6 +11,7 @@ import { normalizeUserData } from "./functions/api/userDataNormalization.js";
 import { delay } from "./functions/delay.js";
 import { sendDiscordAlert } from "./functions/discord.js";
 import { calcEtaTimeToBeat } from "./functions/estimatedTime.js";
+import { gamesDataFromJson } from "./functions/gamesJson.js";
 import { readLog } from "./functions/logParser.js";
 import { parseTimeParts } from "./functions/time.js";
 import { getAwardAlerts } from "./functions/watcher/awardsAlerts.js";
@@ -472,6 +473,7 @@ export class Watcher {
         this.updateGameData();
     }
     async init() {
+        this.gamesData = await gamesDataFromJson();
         const userSummary = await raapi.getUserProfileV2({});
         this.updateUserData({ userSummary, isInit: true });
         const lastGameID = userSummary.LastGameID;

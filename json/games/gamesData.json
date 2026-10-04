@@ -1,0 +1,126 @@
+{
+    "2825": {
+        "zones": [
+            "Autopolis",
+            "Ebisu",
+            "Mondello Park",
+            "Nevada",
+            "Portland International Raceway",
+            "Infineon Raceway",
+            "Texas World Speedway",
+            "Willow Springs",
+            "Autobahnring",
+            "London",
+            "Tokyo Dockyard",
+            "Chicago Airfield",
+            "Mondenna",
+            "Shuto Expressway"
+        ]
+    },
+    "7788": {
+        "zones": [
+            "Sonny",
+            "Taz",
+            "Vic",
+            "Izzy",
+            "Big Lou",
+            "Baron",
+            "Earl",
+            "Jewels",
+            "Kaze",
+            "Ming",
+            "Webster",
+            "JV",
+            "Ronnie",
+            "Bull",
+            "Razor"
+        ]
+    },
+    "2999": {
+        "zones": [
+            "Ultimate Racer Event",
+            "Championship Event"
+        ]
+    },
+    "19210": {
+        "zones": []
+    },
+    "10": {
+        "zones": [
+            "Emerald Hill",
+            "Chemical Plant",
+            "Aquatic Ruin",
+            "Casino Night",
+            "Hill Top",
+            "Mystic Cave",
+            "Oil Ocean",
+            "Metropolis",
+            "Sky Chase",
+            "Wing Fortress",
+            "Death Egg"
+        ]
+    },
+    "21": {
+        "zones": [
+            "Angel Island",
+            "Hydrocity",
+            "Marble Garden",
+            "Carnival Night",
+            "Ice Cap",
+            "Launch Base",
+            "Competition Mode"
+        ]
+    },
+    "1463": {
+        "zones": [
+            "Zone 0",
+            "Zone A",
+            "Zone B",
+            "Zone C",
+            "Zone D",
+            "Zone E",
+            "Zone F",
+            "Zone G",
+            "Zone H",
+            "Zone I",
+            "Zone J"
+        ]
+    },
+    "228": {
+        "zones": [
+            "Yoshi's Island",
+            "Donut Plains",
+            "Vanilla Dome",
+            "Butter Bridge",
+            "Forest of Illusion",
+            "Chocolate Island",
+            "Valley of Bowser",
+            "Bowser's Valley",
+            "Star World",
+            "Special Zone"
+        ]
+    },
+    "11": {
+        "zones": [
+            "New Junk City",
+            "What the Heck",
+            "Down the Tubes",
+            "Snot a Problem",
+            "Level 5",
+            "For Pete's Sake",
+            "Buttville"
+        ]
+    },
+    "1803": {
+        "zones": [
+            "Dream 1",
+            "Dream 2",
+            "Dream 3",
+            "Dream 4",
+            "Dream 5",
+            "Dream 6",
+            "Dream 7",
+            "Dream 8"
+        ]
+    }
+}

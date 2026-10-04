@@ -1,6 +1,7 @@
 import { gameKeysMap, gamesExtMap } from "../enums/gamesExtMap.js";
 
 const gamesJsonUrl = `./json/games/all_min.json`;
+const gamesDataUrl = `./json/games/gamesData.json`;
 const unpackMinJson = (gamesMinJson) => {
     const gamesJson = gamesMinJson.map(game => {
         let fullObject = {};
@@ -37,4 +38,9 @@ export const gamesFromJson = async (path = gamesJsonUrl) => {
     const gamesMinJson = await gamesResponse.json();
     const gamesJson = unpackMinJson(gamesMinJson);
     return gamesJson;
+}
+export const gamesDataFromJson = async () => {
+    const gamesDataResponse = await fetch(gamesDataUrl);
+    const gamesData = await gamesDataResponse.json();
+    return gamesData;
 }

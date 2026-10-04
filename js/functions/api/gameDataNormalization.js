@@ -159,9 +159,11 @@ const addSessions = (gameData) => {
     Object.assign(gameData, { sessions })
 }
 const addSavedData = (gameData, savedData = {}) => {
+    const retrocheevosData = watcher?.gamesData?.[gameData.ID];
     Object.assign(
         gameData,
         { TimePlayed: 0 },
+        retrocheevosData,
         savedData,
         // { cheevoTags: ["razor"] }
     )
@@ -169,6 +171,7 @@ const addSavedData = (gameData, savedData = {}) => {
 export const normalizeGameData = (gameData, gamesDB = {}) => {
     if (!gameData) return;
     const savedGameData = gamesDB[gameData.ID] ?? {};
+    addSavedData(gameData, savedGameData);
     normalizeCheevos(gameData, savedGameData);
     cheevosArray = Object.values(gameData?.Achievements ?? []);
     gameData.ParentGameID ??= gameData.ID;
@@ -176,7 +179,6 @@ export const normalizeGameData = (gameData, gamesDB = {}) => {
     addPointsData(gameData);
     addCompletionData(gameData);
     addSessions(gameData);
-    addSavedData(gameData, savedGameData);
     if (/0{5}2\.png/.test(gameData.ImageBoxArt)) {
         gameData.ImageBoxArt = gameData.ImageIngame;
     }
