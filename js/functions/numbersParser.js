@@ -10,5 +10,6 @@ export function replaceNumberWords(text) {
             .join("|"), 'gi');
 
     text = text.replace(regex, match => numberMapping[match.toLowerCase().trim()]);
+    console.log(text)
     return text;
 }

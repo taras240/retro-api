@@ -18,5 +18,6 @@ export const numberMapping = {
     'seventeen': '17', 'seventeenth': '17',
     'eighteen': '18', 'eighteenth': '18',
     'nineteen': '19', 'nineteenth': '19',
-    'twenty': '20', 'twentieth': '20'
+    'twenty': '20', 'twentieth': '20',
+    "i": "1", "ii": "2", "iii": "3", "iv": "4", "v": "5", "vi": "6", "vii": "7", "viii": "8", "ix": "9", "x": "10"
 };
