@@ -247,8 +247,8 @@
 }
 
 .target-achiv:not(.earned) .prev {
-
   --mark-color: var(--accent-color);
+  border-color: black;
 }
 
 .target-achiv.earned {
