@@ -1,6 +1,6 @@
 export function animateValue(element, to, duration, options = {}) {
     if (!element) return;
-    const from = parseFloat(element.innerText?.replaceAll(",", "")) || 0;
+    const from = parseFloat(element.innerText?.replaceAll(/[^\d.]/g, "")) || 0;
     to = parseFloat(to) || 0;
     const decimals = options.decimals ?? getDecimals(from, to);
     const { suffix = "", prefix = "", separator = ",", absoluteValues = true } = options;
