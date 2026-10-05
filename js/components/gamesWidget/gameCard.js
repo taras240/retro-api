@@ -2,49 +2,68 @@ import { fromHtml } from "../../functions/html.js";
 import { gameImageUrl, gameUrl } from "../../functions/raLinks.js";
 import { generateBadges } from "../badges.js";
 import { buttonsHtml } from "../htmlElements.js";
-
+const formatStatsLine = (stats = [], sufix = "") => [...new Set(stats.filter(v => v))].map(v => v + sufix).join(" / ");
 export function GameCardElement(gameData) {
     const properyLine = (label, value) => `
-            <div class="game-description__property">
+            <.game-description__property>
                 ${label}: <span>${value}</span>
-            </div>
+            </>
         `;
     const gamePreviewImage = (linkEndpoint) => `<img class="game__image" src="${gameImageUrl(linkEndpoint)}">`
 
     const gameHeader = fromHtml(`
-        <div class="game-popup__header-container header-container">
+        <.game-popup__header-container.header-container>
             <h2 class="widget-header-text">
                 <a href="${gameUrl(gameData.ID)}" target="_blank">${gameData.Title} ${generateBadges(gameData.badges)}</a>
             </h2>
             ${buttonsHtml.close("this.closest('section').remove();")}
-        </div>
+        </>
     `);
     const gameInfoContainer = fromHtml(`
-        <div class="game-info__container"/>
+        <.game-info__container/>
     `);
     const previewList = fromHtml(`
-        <div class="game-info__images-container scrollable">
+        <.game-info__images-container.scrollable>
             ${gamePreviewImage(gameData.ImageBoxArt)}
             ${gamePreviewImage(gameData.ImageIngame)}
             ${gamePreviewImage(gameData.ImageTitle)}
-        </div>
+        </>
     `);
     const descriptionsContainer = fromHtml(`
-        <div class="game-info__descriptions-container">
-            ${properyLine(lang.platform, gameData?.ConsoleName)}
-            ${properyLine(lang.developer, gameData?.Developer)}
-            ${properyLine(lang.genre, gameData?.Genre)}
-            ${properyLine(lang.publisher, gameData?.Publisher)}
-            ${properyLine(lang.released, gameData?.Released)}
-            ${properyLine(lang.cheevosCount, `${gameData?.NumAwardedToUserHardcore} / ${gameData?.NumAwardedToUser} / ${gameData?.NumAchievements}`)}
-            ${properyLine(lang.retropoints, `${gameData?.unlockData.hardcore.retropoints} / ${gameData?.totalRetropoints}`)}
-            ${properyLine(lang.points, `${gameData?.unlockData.hardcore.points} / ${gameData?.unlockData.softcore.points} / ${gameData?.totalPoints}`)}
-            ${properyLine(lang.retroRatio, gameData?.retroRatio)}
-            ${properyLine(lang.players, `${gameData?.masteredCount} / ${gameData?.beatenCount} / ${gameData?.players_total}`)}
-            ${properyLine(lang.completion, `${gameData?.masteryRate}% / ${gameData?.beatenRate}%`)}
-        </div>
+        <.game-info__descriptions-container/>
     `);
-
+    const descriptions = fromHtml([
+        properyLine(lang.platform, gameData?.ConsoleName),
+        properyLine(lang.developer, gameData?.Developer),
+        properyLine(lang.genre, gameData?.Genre),
+        properyLine(lang.publisher, gameData?.Publisher),
+        properyLine(lang.released, gameData?.Released),
+        properyLine(lang.cheevosCount, formatStatsLine([
+            gameData?.NumAwardedToUserHardcore,
+            gameData?.NumAwardedToUser,
+            gameData?.NumAchievements,
+        ])),
+        properyLine(lang.retropoints, formatStatsLine([
+            gameData?.unlockData.hardcore.retropoints,
+            gameData?.totalRetropoints,
+        ])),
+        properyLine(lang.points, formatStatsLine([
+            gameData?.unlockData.hardcore.points,
+            gameData?.unlockData.softcore.points,
+            gameData?.totalPoints
+        ])),
+        properyLine(lang.retroRatio, gameData?.retroRatio),
+        properyLine(lang.players, formatStatsLine([
+            gameData?.masteredCount,
+            gameData?.beatenCount,
+            gameData?.NumDistinctPlayers,
+        ])),
+        properyLine(lang.completion, formatStatsLine([
+            gameData?.masteryRate,
+            gameData?.beatenRate
+        ], "%")),
+    ]);
+    descriptionsContainer.append(...descriptions);
     gameInfoContainer.append(previewList, descriptionsContainer);
     const gamePopupElement = fromHtml(`<section class="section game-popup__section"/>`);
     gamePopupElement.append(gameHeader, gameInfoContainer);
