@@ -31,14 +31,22 @@ export const raapi = {
             apiKey: API_KEY
         });
     },
-    async getWantToPlayGamesList({ username, count = 50, offset = 0 }) {
-        const wtpList = await call('getWantToPlayGamesList', {
-            apiKey: API_KEY,
-            username: USER_NAME,// getUsername(username),
-            count,
-            offset,
-        });
-        return wtpList || [];
+    async getWantToPlayGamesList({ count = 500, offset = 0 }) {
+        let pageCount = 500;
+        const wtpList = [];
+        while (pageCount === 500) {
+            const pageList = await call('getWantToPlayGamesList', {
+                apiKey: API_KEY,
+                username: USER_NAME,
+                count,
+                offset,
+            }) || [];
+            wtpList.push(...pageList);
+            pageCount = pageList?.length ?? 0;
+            offset += 500;
+        }
+
+        return wtpList;
     },
 
     getRecentlyPlayedGames({ username, count = 50 }) {
