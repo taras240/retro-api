@@ -511,11 +511,11 @@ export class UserStatistic extends Widget {
             this.updateStats({ userData: completionData });
         }
     }
-    onAwardsEarned({ awardsData }) {
-        if (!awardsData?.length || !Object.hasOwn(this.userData, "mastered")) return;
+    onAwardsEarned({ awardsArray }) {
+        if (!awardsArray?.length || !Object.hasOwn(this.userData, "mastered")) return;
         const completionData = { ...this.userData };
 
-        awardsData.forEach(({ award }) => {
+        awardsArray.forEach(({ award }) => {
             switch (award) {
                 case GAME_AWARD_TYPES.MASTERED:
                     completionData.mastered++;
