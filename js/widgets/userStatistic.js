@@ -661,22 +661,22 @@ export class UserStatistic extends Widget {
 
     }
     statusProperties = {
-        percentile: { label: lang.top, id: "stats_rank-rate", class: 'stats__rank-value' },
-        percentileCasual: { label: lang.top, id: "stats_rank-rate-casual", class: 'stats__rank-value' },
-        rank: { label: lang.rank, id: "stats_rank", class: 'stats__rank-value' },
-        rankCasual: { label: lang.rank, id: "stats_rank-casual", class: 'stats__rank-value' },
-        userLevel: { label: lang.userLevel, id: "stats_user-level", },
-        unlocks: { label: lang.cheevos, id: "stats_cheevos-hardcore", },
-        unlocksSoftcore: { label: lang.cheevos, id: "stats_cheevos-softcore", },
-        points: { label: lang.points, id: "stats_points", },
-        retropoints: { label: lang.retropoints, id: "stats_retropoints", },
-        trueRatio: { label: lang.trueRatio, id: "stats_true-ratio", },
-        softpoints: { label: lang.softpoints, id: "stats_softpoints", },
-        mastered: { label: lang.mastered, id: "stats_mastered" },
-        completed: { label: lang.completed, id: "stats_completed" },
-        beaten: { label: lang.beaten, id: "stats_beaten" },
-        beatenSoftcore: { label: lang.beatenSoftcore, id: "stats_beaten-softcore" },
-        played: { label: lang.played, id: "stats_played" },
+        percentile: { label: lang.top, id: "stats_rank-rate", class: 'stats__rank-value', property: "percentile" },
+        percentileCasual: { label: lang.top, id: "stats_rank-rate-casual", class: 'stats__rank-value', property: "percentile" },
+        rank: { label: lang.rank, id: "stats_rank", class: 'stats__rank-value', property: "rank" },
+        rankCasual: { label: lang.rank, id: "stats_rank-casual", class: 'stats__rank-value', property: "rank" },
+        userLevel: { label: lang.userLevel, id: "stats_user-level", property: "" },
+        unlocks: { label: lang.cheevos, id: "stats_cheevos-hardcore", property: "unlocks" },
+        unlocksSoftcore: { label: lang.cheevos, id: "stats_cheevos-softcore", property: "unlocks" },
+        points: { label: lang.points, id: "stats_points", property: "points" },
+        retropoints: { label: lang.retropoints, id: "stats_retropoints", property: "retropoints" },
+        trueRatio: { label: lang.trueRatio, id: "stats_true-ratio", property: "trueRatio" },
+        softpoints: { label: lang.softpoints, id: "stats_softpoints", property: "points" },
+        mastered: { label: lang.mastered, id: "stats_mastered", property: "mastered" },
+        completed: { label: lang.completed, id: "stats_completed", property: "mastered" },
+        beaten: { label: lang.beaten, id: "stats_beaten", property: "beaten" },
+        beatenSoftcore: { label: lang.beatenSoftcore, id: "stats_beaten-softcore", property: "beaten" },
+        played: { label: lang.played, id: "stats_played", property: "played" },
     }
     generateStatsElements() {
         const order = this.uiProps.displayOrder ?? {};
@@ -686,6 +686,7 @@ export class UserStatistic extends Widget {
                     <li 
                         class="stats__stat-container" 
                         id="${stat.id}-container" 
+                        data-property="${stat.property}"
                         data--display-order="${order[`${stat.id}-container`] ?? 0}">
                             <h2 class="stats__title">${stat.label}</h2>
                             <p id="${stat.id}" class="stats__value ${stat.class}"></p>

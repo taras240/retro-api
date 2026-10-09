@@ -33,6 +33,7 @@
 }
 
 .stats__stat-container {
+    --icon-mask: url();
     flex-basis: 8em;
     height: 6.5em;
     overflow: hidden;
@@ -40,18 +41,56 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
-    gap: 0;
-    padding: 0.25em;
+    align-items: start;
+    justify-content: start;
+    gap: 0.1em;
+    padding: 0.25em 0.5em;
     border-radius: var(--border-radius);
     background-color: var(--secondary-color);
+    z-index: 1;
+}
+
+.stats__stat-container[data-property="trueRatio"] {
+    --icon-mask: url(../assets/img/diamond.svg);
+}
+
+.stats__stat-container[data-property="rank"] {
+    --icon-mask: url(../assets/img/leaderboard.svg);
+}
+
+.stats__stat-container[data-property="percentile"] {
+    --icon-mask: url(../assets/img/percentage.svg);
+}
+
+.stats__stat-container[data-property="points"] {
+    --icon-mask: url(../assets/img/points.svg);
+}
+
+.stats__stat-container[data-property="retropoints"] {
+    --icon-mask: url(../assets/img/points-2.svg);
+}
+
+.stats__stat-container[data-property="unlocks"] {
+    --icon-mask: url(../assets/img/trophy.svg);
+}
+
+.stats__stat-container[data-property="played"] {
+    --icon-mask: url(../assets/img/gamepad.svg);
+}
+
+.stats__stat-container[data-property="beaten"] {
+    --icon-mask: url(../assets/img/award-beaten.svg);
+}
+
+.stats__stat-container[data-property="mastered"] {
+    --icon-mask: url(../assets/img/award-mastered.svg);
 }
 
 .stats-container.list-mode .stats__stat-container {
     flex-basis: auto;
     height: auto;
     flex-direction: row;
+    align-items: center;
     justify-content: space-between;
     padding: 0.2em 1em;
     border-radius: 2px;
@@ -62,18 +101,27 @@
     display: none;
 }
 
-/* 
-.stats__stat-container::after {
+
+.stats-container .stats__stat-container::after {
     position: absolute;
     content: "";
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 1px;
+    bottom: 0.05em;
+    right: 0.05em;
+    width: 6em;
+    height: 6em;
     opacity: 0.2;
-    background: linear-gradient(to right, transparent, var(--font-color), transparent);
+    background: var(--accent-color);
+    mask-image: var(--icon-mask);
+    mask-position: bottom center;
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    z-index: -1;
+    transform: translate(30%, 30%);
+}
 
-} */
+.stats-container.list-mode .stats__stat-container::after {
+    display: none;
+}
 
 .stats__title {
     font-size: 1.1em;
