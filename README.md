@@ -28,3 +28,7 @@
 ### Feedback
 
 If you have any questions, comments, or suggestions, please contact me *https://discord.gg/apzc6kCAbH* | *khomyn@outlook.com*  or open a new issue in the Issues section on GitHub.
+
+### Support
+
+  [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/C1T625DJRG)
