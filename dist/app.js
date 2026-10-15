@@ -505,7 +505,7 @@
                 data-title="${n}"
                 style="--percentage:${c}%"
             />
-        `)})},Cr=(s,e)=>{let t=0,o=0;return[s,...Object.values(s.subsetsData)].forEach(n=>{o+=n?.unlockData?.hardcore?.count??0,t+=n?.unlockData?.softcore?.count??0}),e?o:t},_r=(s,e)=>{let t=0,o=0;return[s,...Object.values(s.subsetsData)].forEach(n=>{o+=n?.unlockData?.hardcore?.points??0,t+=n?.unlockData?.softcore?.points??0}),e?o:t},Tr=s=>{let e=0;return[s,...Object.values(s.subsetsData)].forEach(o=>{e+=o?.unlockData?.hardcore?.retropoints??0}),e},_t=(s,e,t)=>{let o,i,n;switch(t){case Y.points:o=_r(s,e),i=dt(s),n=Math.round(100*o/i)+"%";break;case Y.retropoints:o=Tr(s,e),i=ct(s),n=Math.round(100*o/i)+"%";break;default:o=Cr(s,e),i=lt(s),n=Math.round(100*o/i)+"%";break}return{unlocked:o,total:i,unlockedRate:n}},ht=(s=Y.cheevos)=>`
+        `)})},Cr=(s,e)=>{let t=0,o=0;return[s,...Object.values(s.subsetsData)].forEach(n=>{o+=n?.unlockData?.hardcore?.count??0,t+=n?.unlockData?.softcore?.count??0}),e?o:t},_r=(s,e)=>{let t=0,o=0;return[s,...Object.values(s.subsetsData)].forEach(n=>{o+=n?.unlockData?.hardcore?.points??0,t+=n?.unlockData?.softcore?.points??0}),e?o:t},Tr=s=>{let e=0;return[s,...Object.values(s.subsetsData)].forEach(o=>{e+=o?.unlockData?.hardcore?.retropoints??0}),e},_t=(s,e,t)=>{let o,i,n;switch(t){case Y.points:o=_r(s,e),i=dt(s),n=Math.floor(100*o/i)+"%";break;case Y.retropoints:o=Tr(s,e),i=ct(s),n=Math.floor(100*o/i)+"%";break;default:o=Cr(s,e),i=lt(s),n=Math.floor(100*o/i)+"%";break}return{unlocked:o,total:i,unlockedRate:n}},ht=(s=Y.cheevos)=>`
         <.${fe}-container data-type="${s}">
             <.${fe}-header>
                 <.${fe}-title/>

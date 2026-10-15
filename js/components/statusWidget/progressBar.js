@@ -125,17 +125,17 @@ const getStats = (gameData, isHardMode, progressType) => {
         case PROGRESS_TYPES.points:
             unlocked = getUnlockedPoints(gameData, isHardMode);
             total = getPointsCount(gameData);
-            unlockedRate = Math.round(100 * unlocked / total) + "%";
+            unlockedRate = Math.floor(100 * unlocked / total) + "%";
             break;
         case PROGRESS_TYPES.retropoints:
             unlocked = getUnlockedRetroPoints(gameData, isHardMode);
             total = getRetropointsCount(gameData);
-            unlockedRate = Math.round(100 * unlocked / total) + "%";
+            unlockedRate = Math.floor(100 * unlocked / total) + "%";
             break;
         default:
             unlocked = getUnlockedCount(gameData, isHardMode);
             total = getCheevosCount(gameData);
-            unlockedRate = Math.round(100 * unlocked / total) + "%";
+            unlockedRate = Math.floor(100 * unlocked / total) + "%";
             break;
     }
     return { unlocked, total, unlockedRate }
