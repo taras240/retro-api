@@ -24,4 +24,5 @@ export const raEdpoints = Object.freeze({
 export const raEdpointsV2 = {
     eventAchievements: "event-achievements",
     user: "users/{{username}}",
+    achievements: "achievements?include=achievementSet,games&filter[gameId]={{gameID}}&page[size]={{count}}",
 }

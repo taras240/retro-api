@@ -12,6 +12,7 @@ import { getConsolesList } from './handlers/systems/consolesList.js';
 import { getConsoleGameList } from './handlers/systems/consoleGameList.js';
 import { getEventAchievements } from './handlers/v2/eventAchievements.js';
 import { getUserProfileV2 } from './handlers/v2/user.js';
+import { getGameData } from './handlers/v2/gameData.js';
 const handlers = {
     getRecentlyPlayedGames,
     getUserProfile,
@@ -26,7 +27,8 @@ const handlers = {
     ...comments,
     ...game,
     ...achievement,
-    getEventAchievements
+    getEventAchievements,
+    getGameData,
 };
 
 export async function call(method, ...params) {

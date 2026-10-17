@@ -261,5 +261,12 @@ export const raapi = {
             username: getUsername(username)
         });
         return response;
+    },
+    async getGameData({ gameID, username }) {
+        const response = await call("getGameData", {
+            username: getUsername(username),
+            gameID,
+        });
+        return response;
     }
 };
