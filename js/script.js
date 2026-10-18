@@ -3,7 +3,7 @@ import { UI } from "./ui.js";
 import { Watcher } from "./watcher.js";
 import { isSupported } from "./functions/main/isSupported.js";
 import { fromHtml } from "./functions/html.js";
-import { initRaapi } from "./api/index.js";
+import { initRaapi, raapi } from "./api/index.js";
 let config, ui, watcher, APIEvents, UIEvents, userAuthData;
 const userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
@@ -28,6 +28,7 @@ else {
   window.configData = config.configData;
 
   initRaapi(config);
+  window.raapi = raapi;
 
   ui = new UI();
   window.ui = ui;
