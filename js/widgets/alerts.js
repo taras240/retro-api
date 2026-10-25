@@ -1,329 +1,201 @@
 import { Widget } from "./widget.js";
 import { icons } from "../components/icons.js";
-import { ALERT_TYPES } from "../enums/alerts.js";
-import { cheevoImageUrl, cheevoUrl, gameImageUrl, gameUrl } from "../functions/raLinks.js";
 import { inputTypes } from "../components/inputElements.js";
 import { alertHtml } from "../components/notifications/alertElement.js";
-import { buttonsHtml } from "../components/htmlElements.js";
+import { ALERT_TYPES } from "../enums/alerts.js";
+import { cheevoImageUrl, cheevoUrl, gameImageUrl, gameUrl } from "../functions/raLinks.js";
 import { fromHtml } from "../functions/html.js";
 
+const DEFAULT_ALERT_DURATION = 8;
+const ALERT_EXIT_DURATION = 200;
 
 export class Alerts extends Widget {
     widgetIcon = {
         description: "alerts widget",
         iconClass: "alert-icon",
+        onChangeEvent: () => {
+            this.widgetIcon.element.checked = false;
+            ui.settings.openSettings(this.contextMenuItems);
+        },
     };
+
     get contextMenuItems() {
         return [
+            {
+                label: lang.alertPosition,
+                elements: [
+                    ...["top-left", "top-right", "bottom-left", "bottom-right"].map(position => ({
+                        type: inputTypes.RADIO,
+                        name: "alerts-position",
+                        label: lang[`alertPosition_${position.replace("-", "_")}`],
+                        checked: this.uiProps.position === position,
+                        onChange: () => this.uiProps.position = position,
+                    })),
+                ],
+            },
             {
                 label: lang.alertTypes,
                 elements: [
                     {
                         label: lang.showGameAlerts,
                         type: inputTypes.CHECKBOX,
-                        id: "show-notification-game",
                         checked: this.uiProps.showGameAlerts,
                         onChange: (event) => this.uiProps.showGameAlerts = event.currentTarget.checked,
                     },
                     {
                         label: lang.showAwardAlerts,
                         type: inputTypes.CHECKBOX,
-                        id: "show-notification-award",
                         checked: this.uiProps.showAwardAlerts,
                         onChange: (event) => this.uiProps.showAwardAlerts = event.currentTarget.checked,
                     },
                     {
                         label: lang.showCheevoAlerts,
                         type: inputTypes.CHECKBOX,
-                        id: "show-notification-cheevo",
                         checked: this.uiProps.showCheevoAlerts,
                         onChange: (event) => this.uiProps.showCheevoAlerts = event.currentTarget.checked,
-                    }
-                ]
+                    },
+                ],
             },
             {
-                label: lang.showHeader,
-                type: inputTypes.CHECKBOX,
-                id: "hide-notification-header",
-                checked: this.uiProps.showHeader,
-                onChange: (event) => this.uiProps.showHeader = event.currentTarget.checked,
+                prefix: lang.alertDuration,
+                postfix: lang.sec,
+                type: inputTypes.NUM_INPUT,
+                value: this.uiProps.duration,
+                onInput: (event) => this.uiProps.duration = event.currentTarget.value,
             },
             {
-                label: lang.transparentBg,
+                label: lang.disableAlerts,
                 type: inputTypes.CHECKBOX,
-                id: "hide-notification-bg",
-                checked: this.uiProps.hideBg,
-                onChange: (event) => this.uiProps.hideBg = event.currentTarget.checked,
+                checked: this.uiProps.disabled,
+                onChange: (event) => this.uiProps.disabled = event.currentTarget.checked,
             },
-            {
-                label: lang.showTimestamps,
-                type: inputTypes.CHECKBOX,
-                id: "show-notification-time",
-                checked: this.uiProps.showTimestamp,
-                onChange: (event) => this.uiProps.showTimestamp = event.currentTarget.checked,
-            },
-            {
-                label: lang.showSavedAlerts,
-                type: inputTypes.CHECKBOX,
-                id: "show-showSaved-alerts",
-                checked: this.uiProps.showSavedAlerts,
-                onChange: (event) => this.uiProps.showSavedAlerts = event.currentTarget.checked,
-            }
         ];
     }
 
     uiDefaultValues = {
-        showTimestamp: true,
-        showHeader: false,
-        hideBg: false,
+        duration: DEFAULT_ALERT_DURATION,
+        position: "top-right",
+        disabled: false,
         showCheevoAlerts: true,
         showAwardAlerts: true,
         showGameAlerts: true,
-        showSavedAlerts: true,
-    }
+    };
+
     uiSetCallbacks = {
-        showCheevoAlerts: () => this.showSavedAlert(),
-        showAwardAlerts: () => this.showSavedAlert(),
-        showGameAlerts: () => this.showSavedAlert(),
+        disabled: (disabled) => {
+            if (disabled) this.container.replaceChildren();
+        },
     };
+
     uiValuePreprocessors = {
+        duration: (value) => {
+            const seconds = Number(value);
+            return Number.isFinite(seconds)
+                ? Math.min(60, Math.max(1, Math.round(seconds)))
+                : DEFAULT_ALERT_DURATION;
+        },
+        position: (value) => ["top-left", "top-right", "bottom-left", "bottom-right"].includes(value)
+            ? value
+            : "top-right",
     };
-    alertsCacheName = "raApiAlertsCache";
 
     constructor() {
         super();
         this.generateWidget();
         this.addWidgetIcon();
+        this.widgetIcon.element.checked = false;
         this.initializeElements();
-        this.addEvents();
         this.setElementsValues();
-        this.applyPosition();
-        this.updateInterval = setInterval(() => {
-            this.container.querySelectorAll(".notification_timestamp").forEach(timeStamp => {
-                timeStamp.innerText = this.getDeltaTime(timeStamp.dataset.time);
-            })
-        }, 1 * 1000 * 60);
-        this.showSavedAlert();
     }
 
     initializeElements() {
-        this.section = document.querySelector("#alerts_section");
         this.sectionID = this.section.id;
         this.container = this.section.querySelector(".alerts-container");
-        this.resizer = this.section.querySelector(".resizer");
     }
-    generateWidget() {
-        const headerElementsHtml = [buttonsHtml.tweek()];
-        const widgetData = {
-            classList: ["alerts_section", "bg-visible", "section", "compact-header"],
-            id: "alerts_section",
-            title: lang.alertsSectionName,
-            headerElementsHtml,
-            contentClassList: ["alerts-container", "content-container"],
-        };
 
-        const widget = this.generateWidgetElement(widgetData);
-        ui.app.appendChild(widget);
+    generateWidget() {
+        this.section = document.createElement("section");
+        this.section.classList.add("alerts_section", "section");
+        this.section.id = "alerts_section";
+        this.container = document.createElement("ul");
+        this.container.className = "alerts-container";
+        this.section.append(this.container);
+        ui.app.appendChild(this.section);
     }
-    addEvents() {
-        super.addEvents();
-    }
+
     setElementsValues() {
-        this.section.classList.toggle("compact-timestamp", !this.uiProps.showTimestamp);
-        this.section.classList.toggle("compact-header", !this.uiProps.showHeader);
-        this.section.classList.toggle("hide-bg", this.uiProps.hideBg);
+        if (!this.section) return;
+        this.section.dataset.position = this.uiProps.position;
     }
+
     onGameChange({ gameData, isNewGame, isWatching }) {
-        if (!isNewGame || !isWatching) return;
-        const gameAlert = [{ type: ALERT_TYPES.GAME, value: gameData }];
-        this.addAlertsToQuery(gameAlert);
+        if (!isNewGame || !isWatching || !gameData) return;
+        this.showAlerts([{ type: ALERT_TYPES.GAME, value: gameData }]);
     }
+
     onStartSession({ gameData }) {
-        const gameAlert = [{ type: ALERT_TYPES.GAME, value: gameData }];
-        this.addAlertsToQuery(gameAlert);
+        if (!gameData) return;
+        this.showAlerts([{ type: ALERT_TYPES.GAME, value: gameData }]);
     }
+
     onCheevoUnlocks({ cheevos }) {
-        const alerts = cheevos.map(cheevo => ({ type: ALERT_TYPES.CHEEVO, value: cheevo }));
-        this.addAlertsToQuery(alerts);
+        if (!Array.isArray(cheevos) || cheevos.length === 0) return;
+        this.showAlerts(cheevos.map(cheevo => ({ type: ALERT_TYPES.CHEEVO, value: cheevo })));
     }
 
     onAwardsEarned({ awardsArray }) {
-        if (!awardsArray?.length) return;
-        this.addAlertsToQuery(awardsArray);
+        if (!Array.isArray(awardsArray) || awardsArray.length === 0) return;
+        this.showAlerts(awardsArray);
     }
-    saveAlerts(alerts) {
-        const timeStamp = Date.now();
-        const normalizedAlerts = alerts.map(alert => {
-            if ([ALERT_TYPES.GAME, ALERT_TYPES.AWARD].includes(alert.type)) {
-                const {
-                    Title,
-                    ImageIcon,
-                    totalPoints,
-                    NumDistinctPlayers,
-                    retroRatio,
-                    NumAchievements,
-                    ConsoleName,
-                    ID
-                } = alert.value;
 
-                const normalizedGameData = {
-                    Title,
-                    ImageIcon,
-                    totalPoints,
-                    NumDistinctPlayers,
-                    retroRatio,
-                    NumAchievements,
-                    ConsoleName,
-                    ID
-                };
-                return { ...alert, value: normalizedGameData }
-            }
-            else if (alert.type === ALERT_TYPES.CHEEVO) {
-                const {
-                    Title,
-                    BadgeName,
-                    Points,
-                    Description,
-                    TrueRatio,
-                    retroRatio,
-                    rateEarnedHardcore,
-                    ID,
-                } = alert.value;
+    showAlerts(alerts) {
+        if (!Array.isArray(alerts) || this.uiProps.disabled) return;
 
-                const normalizedGameData = {
-                    Title,
-                    BadgeName,
-                    Points,
-                    Description,
-                    TrueRatio,
-                    retroRatio,
-                    rateEarnedHardcore,
-                    ID,
-                };
-                return { ...alert, value: normalizedGameData }
-            }
-            else {
-                console.log(`alert type doesn't exist`);
+        const alertElements = alerts.flatMap(alert => {
+            switch (alert?.type) {
+                case ALERT_TYPES.GAME:
+                    return this.uiProps.showGameAlerts ? [this.gameAlertElement(alert.value)] : [];
+                case ALERT_TYPES.CHEEVO:
+                    return this.uiProps.showCheevoAlerts ? [this.cheevoAlertElement(alert.value)] : [];
+                case ALERT_TYPES.AWARD:
+                    return this.uiProps.showAwardAlerts ? [this.awardAlertElement(alert)] : [];
+                default:
+                    console.warn("Unknown alert type:", alert?.type);
+                    return [];
             }
         });
-        const savedData = this.getSavedAlerts();
-        savedData.length >= 20 && savedData.shift();
-        savedData.push({ timeStamp, alerts: normalizedAlerts });
-        localStorage.setItem(this.alertsCacheName, JSON.stringify(savedData));
-    }
-    getSavedAlerts() {
-        return JSON.parse(localStorage.getItem(this.alertsCacheName)) ?? [];
-    }
-    showSavedAlert() {
-        if (!this.uiProps.showSavedAlerts) return;
-        this.container.replaceChildren();
-        const savedAlerts = this.getSavedAlerts();
-        savedAlerts.forEach(({ timeStamp, alerts }) => {
-            this.showAlerts(alerts, new Date(timeStamp).getTime());
-        })
 
-    }
-    addAlertsToQuery(alerts = []) {
-        if (this.alertsQueryArray?.length > 0) {
-            this.alertsQueryArray.unshift(...alerts);
-        }
-        else {
-            this.alertsQueryArray = [...alerts];
+        alertElements.reverse().forEach(element => {
+            this.container.prepend(element);
+            const duration = this.uiProps.duration * 1000;
             setTimeout(() => {
-                this.saveAlerts([...this.alertsQueryArray]);
-                this.showAlerts(this.alertsQueryArray);
-            }, 2000);
-        }
-
+                element.classList.add("alerts-popup--leaving");
+                setTimeout(() => element.remove(), ALERT_EXIT_DURATION);
+            }, Math.max(0, duration - ALERT_EXIT_DURATION));
+        });
     }
-    showAlerts(alerts, time) {
-        if (!alerts) return;
-        const generateAlertsBlock = (alertElements, time) => {
-            const timeStamp = this.generatePopupTime(time);
-            const alertsBlockElement = document.createElement("ul");
-            alertsBlockElement.classList.add("notification_timeblock-list");
-            alertsBlockElement.appendChild(timeStamp);
-            alertElements.forEach(element => {
-                alertsBlockElement.appendChild(element);
-            })
-            return alertsBlockElement;
-        }
-        let alertElements = [];
-        while (alerts.length > 0) {
-            const alert = alerts.shift();
-            if (!alert) continue;
-            switch (alert.type) {
-                case ALERT_TYPES.GAME:
-                    this.uiProps.showGameAlerts && alertElements.push(this.gameAlertElement(alert.value))
-                    break;
-                case ALERT_TYPES.CHEEVO:
-                    this.uiProps.showCheevoAlerts && alertElements.push(this.cheevoAlertElement(alert.value));
-                    break;
-                case ALERT_TYPES.AWARD:
-                    this.uiProps.showAwardAlerts && alertElements.push(this.awardAlertElement(alert))
-                    break;
-                default:
-                    console.log(`notification type doesn't exist`);
-                    break;
-            }
-        }
-
-        if (alertElements.length > 0) {
-            const alertsBlockElement = generateAlertsBlock(alertElements, time);
-            this.container.prepend(alertsBlockElement);
-            const elementHeight = alertsBlockElement.getBoundingClientRect().height;
-            this.container.style.setProperty("--offset-height", `${elementHeight}px`);
-            alertsBlockElement.classList.add("notification_popup");
-        }
-    }
-    generatePopupTime(popupTime) {
-        popupTime ??= new Date().getTime();
-
-        const timestampElement = fromHtml(`
-            <li.notification_timestamp data-time="${popupTime}">
-                ${this.getDeltaTime(popupTime)}
-            </li>
-        `);
-        return timestampElement;
-    }
-
 
     gameAlertElement(game) {
-        const gameMessage = fromHtml(`<li.notification-game.new-game/>`);
-        const html = alertHtml({
+        const alertElement = fromHtml(`<li.notification-game.new-game.alerts-popup/>`);
+        alertElement.append(fromHtml(alertHtml({
             alertType: ALERT_TYPES.GAME,
             imageUrl: gameImageUrl(game.ImageIcon),
             title: game.Title,
             titleUrl: gameUrl(game.ID ?? game.GameID),
             meta: game.ConsoleName,
             icons: [
-                {
-                    type: "players",
-                    value: game.NumDistinctPlayers
-                },
-                {
-                    type: "cheevos",
-                    value: game.NumAchievements
-                },
-                {
-                    type: "points",
-                    value: game.totalPoints
-                },
-                {
-                    type: "retroRatio",
-                    value: game.retroRatio
-                },
-            ]
-        });
-        gameMessage.append(
-            fromHtml(html)
-        );
-        return gameMessage;
+                { type: "players", value: game.NumDistinctPlayers },
+                { type: "cheevos", value: game.NumAchievements },
+                { type: "points", value: game.totalPoints },
+                { type: "retroRatio", value: game.retroRatio },
+            ],
+        })));
+        return alertElement;
     }
 
     cheevoAlertElement(cheevo) {
-        const cheevoAlert = fromHtml(`<li.notification-achiv.new-achiv/>`);
-        const html = alertHtml({
+        const alertElement = fromHtml(`<li.notification-achiv.new-achiv.alerts-popup/>`);
+        alertElement.append(fromHtml(alertHtml({
             alertType: ALERT_TYPES.CHEEVO,
             imageUrl: cheevoImageUrl(cheevo),
             title: cheevo.Title,
@@ -331,95 +203,31 @@ export class Alerts extends Widget {
             titleUrl: cheevoUrl(cheevo),
             meta: cheevo.Description,
             icons: [
-                {
-                    type: "points",
-                    value: cheevo.Points
-                },
-                {
-                    type: "retropoints",
-                    value: cheevo.TrueRatio
-                },
-                {
-                    type: "retroRatio",
-                    value: cheevo.retroRatio
-                },
-                {
-                    type: "rarity",
-                    value: cheevo.rateEarnedHardcore
-                },
-            ]
-        });
-        cheevoAlert.append(
-            fromHtml(html)
-        );
-        return cheevoAlert;
+                { type: "points", value: cheevo.Points },
+                { type: "retropoints", value: cheevo.TrueRatio },
+                { type: "retroRatio", value: cheevo.retroRatio },
+                { type: "rarity", value: cheevo.rateEarnedHardcore },
+            ],
+        })));
+        return alertElement;
     }
 
     awardAlertElement({ award, value: game }) {
-        // {
-        // type: ALERT_TYPES.AWARD,
-        // award: "beaten-softcore",
-        // value: this.GAME_DATA
-        // }
-        const gameMessage = fromHtml(`<li.notification-game.new-game/>`);
-        const html = alertHtml({
+        const alertElement = fromHtml(`<li.notification-game.new-game.alerts-popup/>`);
+        alertElement.append(fromHtml(alertHtml({
             alertType: award,
             imageUrl: gameImageUrl(game.ImageIcon),
             badge: icons.masteryAward,
             title: game.Title,
             titleUrl: gameUrl(game.ID ?? game.GameID),
-            meta: `${game.ConsoleName}`,
+            meta: game.ConsoleName,
             icons: [
-                {
-                    type: "players",
-                    value: game.NumDistinctPlayers
-                },
-                {
-                    type: "cheevos",
-                    value: game.NumAchievements
-                },
-                {
-                    type: "points",
-                    value: game.totalPoints
-                },
-                {
-                    type: "retroRatio",
-                    value: game.retroRatio
-                },
-            ]
-        });
-        gameMessage.append(
-            fromHtml(html)
-        );
-        return gameMessage;
-    }
-    getDeltaTime(timeStamp) {
-        const MS = 1000;
-        const MIN = 60 * MS;
-        const HOUR = 60 * MIN;
-
-        const date = +timeStamp;
-        const delta = Date.now() - date;
-
-        const minutes = Math.round(delta / MIN);
-        if (minutes < 1) return "just now";
-        if (minutes < 5) return "a few minutes ago";
-        if (minutes < 50) {
-            const roundedMins = Math.round(delta / (MIN * 5)) * 5;
-            return `${roundedMins} minutes ago`;
-        }
-
-        const hours = Math.round(delta / HOUR);
-        if (hours === 1) return `an hour ago`;
-        if (hours < 8) return `${hours} hours ago`;
-
-        if (hours < 18) {
-            return new Date(date).toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-        }
-
-        return new Date(date).toLocaleString();
+                { type: "players", value: game.NumDistinctPlayers },
+                { type: "cheevos", value: game.NumAchievements },
+                { type: "points", value: game.totalPoints },
+                { type: "retroRatio", value: game.retroRatio },
+            ],
+        })));
+        return alertElement;
     }
 }

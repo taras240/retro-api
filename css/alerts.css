@@ -1,0 +1,100 @@
+.alerts_section.section {
+    top: 24px;
+    right: 24px;
+    left: auto;
+    bottom: auto;
+    width: 26rem;
+    height: fit-content;
+    min-width: 0;
+    min-height: 0;
+    overflow: visible;
+    background: transparent;
+    pointer-events: none;
+    box-shadow: none;
+    border: 0;
+    border-radius: 0;
+    z-index: 1000;
+}
+
+.alerts_section.section:hover {
+    box-shadow: none;
+}
+
+.alerts_section .alerts-container {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    gap: 0.5rem;
+    height: auto;
+    min-height: 0;
+    max-height: calc(100vh - 2rem);
+    overflow: hidden;
+    padding: 0.5rem;
+    pointer-events: none;
+    background: transparent;
+    border-radius: 0;
+}
+
+.alerts_section[data-position^="bottom"] .alerts-container {
+    flex-direction: column-reverse;
+}
+
+.alerts_section[data-position="top-left"].section,
+.alerts_section[data-position="bottom-left"].section {
+    right: auto;
+    left: 24px;
+}
+
+.alerts_section[data-position^="bottom"].section {
+    top: auto;
+    bottom: 24px;
+}
+
+.alerts-popup {
+    list-style: none;
+    pointer-events: auto;
+    animation: alerts-popup-enter 180ms ease-out both;
+}
+
+.alerts-popup--leaving {
+    animation: alerts-popup-dismiss 200ms ease-in both;
+    pointer-events: none;
+}
+
+@keyframes alerts-popup-enter {
+    from {
+        opacity: 0;
+        transform: translateX(1rem);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes alerts-popup-dismiss {
+    to {
+        opacity: 0;
+        transform: translateX(1rem);
+    }
+}
+
+@media (max-width: 480px) {
+    .alerts_section.section {
+        top: 8px;
+        right: 8px;
+        width: calc(100vw - 16px);
+    }
+
+    .alerts_section[data-position="top-left"].section,
+    .alerts_section[data-position="bottom-left"].section {
+        right: auto;
+        left: 8px;
+    }
+
+    .alerts_section[data-position^="bottom"].section {
+        top: auto;
+        bottom: 8px;
+    }
+}

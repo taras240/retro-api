@@ -103,7 +103,7 @@ export class UI {
     this.note = new Note();
     this.awards = new Awards();
     this.notifications = new Activity();
-    // new Alerts();
+    this.alerts = new Alerts();
     this.games = new Games();
     this.settings = new Settings();
     new Links();
