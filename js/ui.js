@@ -13,7 +13,7 @@ import { Awards } from "./widgets/awards.js";
 import { GameCard } from "./widgets/gameCard.js";
 import { Progression } from "./widgets/progression.js";
 import { UserStatistic } from "./widgets/userStatistic.js";
-import { Notifications } from "./widgets/notifications.js";
+import { Activity } from "./widgets/notifications.js";
 import { Games } from "./widgets/games.js";
 import { Status } from "./widgets/statusV2.js";
 // import { GameList } from "./widgets/gamesList.js";
@@ -29,6 +29,7 @@ import { blendColors, hexToRgba } from "./functions/ui/generateColors.js";
 import { fromHtml } from "./functions/html.js";
 import { EventAchievements } from "./widgets/events.js";
 import { raapi } from "./api/index.js";
+import { Alerts } from "./widgets/alerts.js";
 
 
 export class UI {
@@ -101,7 +102,8 @@ export class UI {
     this.progression = new Progression();
     this.note = new Note();
     this.awards = new Awards();
-    this.notifications = new Notifications();
+    this.notifications = new Activity();
+    // new Alerts();
     this.games = new Games();
     this.settings = new Settings();
     new Links();

@@ -8,10 +8,10 @@ import { buttonsHtml } from "../components/htmlElements.js";
 import { fromHtml } from "../functions/html.js";
 
 
-export class Notifications extends Widget {
+export class Activity extends Widget {
     widgetIcon = {
-        description: "notifications widget",
-        iconClass: "notification-icon",
+        description: "activity widget",
+        iconClass: "activity-icon",
     };
     get contextMenuItems() {
         return [
@@ -117,7 +117,7 @@ export class Notifications extends Widget {
         const widgetData = {
             classList: ["notification_section", "bg-visible", "section", "compact-header"],
             id: "notification_section",
-            title: lang.alertsSectionName,
+            title: lang.activitySectionName,
             headerElementsHtml,
             contentClassList: ["notification-container", "content-container"],
         };

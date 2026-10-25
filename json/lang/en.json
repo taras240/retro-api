@@ -377,5 +377,6 @@
     "iconScale": "Icon Size",
     "tags": "Tags",
     "toggleFilterPanel": "Show/hide filter panel",
-    "highlightCurrentLevel": "Highlight Current Level"
+    "highlightCurrentLevel": "Highlight Current Level",
+    "activitySectionName": "Activity"
 }

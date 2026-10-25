@@ -628,7 +628,11 @@ svg.icon {
     mask-size: 85%;
 }
 
-.notification-icon {
+.activity-icon {
+    mask-image: url(../assets/img/browse_activity.svg)
+}
+
+.alert-icon {
     mask-image: url(../assets/img/notifications.svg)
 }
 
