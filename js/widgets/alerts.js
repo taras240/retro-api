@@ -1,13 +1,22 @@
 import { Widget } from "./widget.js";
-import { icons } from "../components/icons.js";
 import { inputTypes } from "../components/inputElements.js";
-import { alertHtml } from "../components/notifications/alertElement.js";
 import { ALERT_TYPES } from "../enums/alerts.js";
-import { cheevoImageUrl, cheevoUrl, gameImageUrl, gameUrl } from "../functions/raLinks.js";
-import { fromHtml } from "../functions/html.js";
+import { GAME_AWARD_TYPES } from "../enums/gameAwards.js";
+import { createAlertData } from "../components/notifications/alertData.js";
+import { classicAlert } from "../components/notifications/skins/classic.js";
+import { neonAlert } from "../components/notifications/skins/neon.js";
+import { minimalAlert } from "../components/notifications/skins/minimal.js";
+import { xboxToastAlert } from "../components/notifications/skins/xboxToast.js";
 
 const DEFAULT_ALERT_DURATION = 8;
 const ALERT_EXIT_DURATION = 200;
+const ALERT_SKINS = ["classic", "neon", "minimal", "xbox-toast"];
+const ALERT_SKIN_RENDERERS = {
+    classic: classicAlert,
+    neon: neonAlert,
+    minimal: minimalAlert,
+    "xbox-toast": xboxToastAlert,
+};
 const ALERT_SOUNDS = Object.freeze({
     off: null,
     arc: "arc.m4a",
@@ -42,6 +51,16 @@ export class Alerts extends Widget {
                         onChange: () => this.uiProps.position = position,
                     })),
                 ],
+            },
+            {
+                label: lang.alertSkin,
+                elements: ALERT_SKINS.map(skin => ({
+                    type: inputTypes.RADIO,
+                    name: "alerts-skin",
+                    label: lang[`alertSkin_${skin}`],
+                    checked: this.uiProps.skin === skin,
+                    onChange: () => this.uiProps.skin = skin,
+                })),
             },
             {
                 label: lang.alertTypes,
@@ -95,6 +114,7 @@ export class Alerts extends Widget {
     uiDefaultValues = {
         duration: DEFAULT_ALERT_DURATION,
         position: "top-right",
+        skin: "classic",
         disabled: false,
         sound: "coin",
         showCheevoAlerts: true,
@@ -105,6 +125,10 @@ export class Alerts extends Widget {
     uiSetCallbacks = {
         disabled: (disabled) => {
             if (disabled) this.container.replaceChildren();
+        },
+        skin: () => {
+            this.setElementsValues();
+            this.showSkinPreview();
         },
         sound: (sound) => this.playAlertSound(sound),
     };
@@ -119,6 +143,7 @@ export class Alerts extends Widget {
         position: (value) => ["top-left", "top-right", "bottom-left", "bottom-right"].includes(value)
             ? value
             : "top-right",
+        skin: (value) => ALERT_SKINS.includes(value) ? value : "classic",
         sound: (value) => Object.hasOwn(ALERT_SOUNDS, value) ? value : "coin",
     };
 
@@ -149,6 +174,7 @@ export class Alerts extends Widget {
     setElementsValues() {
         if (!this.section) return;
         this.section.dataset.position = this.uiProps.position;
+        this.section.dataset.skin = this.uiProps.skin;
     }
 
     onGameChange({ gameData, isNewGame, isWatching }) {
@@ -177,17 +203,42 @@ export class Alerts extends Widget {
         const alertElements = alerts.flatMap(alert => {
             switch (alert?.type) {
                 case ALERT_TYPES.GAME:
-                    return this.uiProps.showGameAlerts ? [this.gameAlertElement(alert.value)] : [];
+                    return this.uiProps.showGameAlerts ? [this.createAlertElement(alert)] : [];
                 case ALERT_TYPES.CHEEVO:
-                    return this.uiProps.showCheevoAlerts ? [this.cheevoAlertElement(alert.value)] : [];
+                    return this.uiProps.showCheevoAlerts ? [this.createAlertElement(alert)] : [];
                 case ALERT_TYPES.AWARD:
-                    return this.uiProps.showAwardAlerts ? [this.awardAlertElement(alert)] : [];
+                    return this.uiProps.showAwardAlerts ? [this.createAlertElement(alert)] : [];
                 default:
                     console.warn("Unknown alert type:", alert?.type);
                     return [];
             }
         });
 
+        this.displayAlertElements(alertElements);
+        if (alertElements.length > 0) this.playAlertSound();
+    }
+
+    showSkinPreview() {
+        const game = watcher.GAME_DATA;
+        if (!game) return;
+
+        this.container.querySelectorAll(".alerts-popup--preview").forEach(element => element.remove());
+
+        const cheevo = Object.values(game.AllAchievements ?? {}).find(achievement => achievement?.BadgeName);
+        const previewAlerts = [
+            { type: ALERT_TYPES.GAME, value: game },
+            cheevo && { type: ALERT_TYPES.CHEEVO, value: cheevo },
+            { type: ALERT_TYPES.AWARD, award: GAME_AWARD_TYPES.MASTERED, value: game },
+        ].filter(Boolean);
+        const elements = previewAlerts.map(alert => {
+            const element = this.createAlertElement(alert);
+            element.classList.add("alerts-popup--preview");
+            return element;
+        });
+        this.displayAlertElements(elements);
+    }
+
+    displayAlertElements(alertElements) {
         alertElements.reverse().forEach(element => {
             this.container.prepend(element);
             const duration = this.uiProps.duration * 1000;
@@ -196,7 +247,15 @@ export class Alerts extends Widget {
                 setTimeout(() => element.remove(), ALERT_EXIT_DURATION);
             }, Math.max(0, duration - ALERT_EXIT_DURATION));
         });
-        if (alertElements.length > 0) this.playAlertSound();
+    }
+
+    createAlertElement(alert) {
+        const renderer = ALERT_SKIN_RENDERERS[this.uiProps.skin];
+        if (!renderer) {
+            throw new Error(`Unknown alert skin: ${this.uiProps.skin}`);
+        }
+
+        return renderer(createAlertData(alert, watcher.GAME_DATA), lang);
     }
 
     playAlertSound(soundName = this.uiProps.sound) {
@@ -210,59 +269,4 @@ export class Alerts extends Widget {
         });
     }
 
-    gameAlertElement(game) {
-        const alertElement = fromHtml(`<li.notification-game.new-game.alerts-popup/>`);
-        alertElement.append(fromHtml(alertHtml({
-            alertType: ALERT_TYPES.GAME,
-            imageUrl: gameImageUrl(game.ImageIcon),
-            title: game.Title,
-            titleUrl: gameUrl(game.ID ?? game.GameID),
-            meta: game.ConsoleName,
-            icons: [
-                { type: "players", value: game.NumDistinctPlayers },
-                { type: "cheevos", value: game.NumAchievements },
-                { type: "points", value: game.totalPoints },
-                { type: "retroRatio", value: game.retroRatio },
-            ],
-        })));
-        return alertElement;
-    }
-
-    cheevoAlertElement(cheevo) {
-        const alertElement = fromHtml(`<li.notification-achiv.new-achiv.alerts-popup/>`);
-        alertElement.append(fromHtml(alertHtml({
-            alertType: ALERT_TYPES.CHEEVO,
-            imageUrl: cheevoImageUrl(cheevo),
-            title: cheevo.Title,
-            badge: icons.progressionAward,
-            titleUrl: cheevoUrl(cheevo),
-            meta: cheevo.Description,
-            icons: [
-                { type: "points", value: cheevo.Points },
-                { type: "retropoints", value: cheevo.TrueRatio },
-                { type: "retroRatio", value: cheevo.retroRatio },
-                { type: "rarity", value: cheevo.rateEarnedHardcore },
-            ],
-        })));
-        return alertElement;
-    }
-
-    awardAlertElement({ award, value: game }) {
-        const alertElement = fromHtml(`<li.notification-game.new-game.alerts-popup/>`);
-        alertElement.append(fromHtml(alertHtml({
-            alertType: award,
-            imageUrl: gameImageUrl(game.ImageIcon),
-            badge: icons.masteryAward,
-            title: game.Title,
-            titleUrl: gameUrl(game.ID ?? game.GameID),
-            meta: game.ConsoleName,
-            icons: [
-                { type: "players", value: game.NumDistinctPlayers },
-                { type: "cheevos", value: game.NumAchievements },
-                { type: "points", value: game.totalPoints },
-                { type: "retroRatio", value: game.retroRatio },
-            ],
-        })));
-        return alertElement;
-    }
 }

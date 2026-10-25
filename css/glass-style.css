@@ -1,4 +1,4 @@
-.wrapper[style="glass"] :is(.section,
+.wrapper[style="glass"] :is(.section:not(.alerts_section),
     .section:not(.contrast-highlight) .target-achiv,
     .stats__stat-container,
     .notification_timeblock-list,
