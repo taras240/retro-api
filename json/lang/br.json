@@ -118,6 +118,8 @@
     "alertPosition_top_right": "Superior direito",
     "alertPosition_bottom_left": "Inferior esquerdo",
     "alertPosition_bottom_right": "Inferior direito",
+    "alertSound": "Som do alerta",
+    "alertSound_off": "Desativado",
     "showTitleBadges": "Emblemas",
     "developer": "Desenvolvedor",
     "publisher": "Publisher",

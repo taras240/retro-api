@@ -8,6 +8,16 @@ import { fromHtml } from "../functions/html.js";
 
 const DEFAULT_ALERT_DURATION = 8;
 const ALERT_EXIT_DURATION = 200;
+const ALERT_SOUNDS = Object.freeze({
+    off: null,
+    arc: "arc.m4a",
+    coin: "smb-coin.m4a",
+    ps: "pstrophies.mp3",
+    ring: "son-ring.m4a",
+    steam: "steam.mp3",
+    switch: "switch.mp3",
+    x360: "360-unlock.mp3",
+});
 
 export class Alerts extends Widget {
     widgetIcon = {
@@ -57,6 +67,16 @@ export class Alerts extends Widget {
                 ],
             },
             {
+                label: lang.alertSound,
+                elements: Object.keys(ALERT_SOUNDS).map(sound => ({
+                    type: inputTypes.RADIO,
+                    name: "alerts-sound",
+                    label: lang[`alertSound_${sound}`],
+                    checked: this.uiProps.sound === sound,
+                    onChange: () => this.uiProps.sound = sound,
+                })),
+            },
+            {
                 prefix: lang.alertDuration,
                 postfix: lang.sec,
                 type: inputTypes.NUM_INPUT,
@@ -76,6 +96,7 @@ export class Alerts extends Widget {
         duration: DEFAULT_ALERT_DURATION,
         position: "top-right",
         disabled: false,
+        sound: "coin",
         showCheevoAlerts: true,
         showAwardAlerts: true,
         showGameAlerts: true,
@@ -85,6 +106,7 @@ export class Alerts extends Widget {
         disabled: (disabled) => {
             if (disabled) this.container.replaceChildren();
         },
+        sound: (sound) => this.playAlertSound(sound),
     };
 
     uiValuePreprocessors = {
@@ -97,6 +119,7 @@ export class Alerts extends Widget {
         position: (value) => ["top-left", "top-right", "bottom-left", "bottom-right"].includes(value)
             ? value
             : "top-right",
+        sound: (value) => Object.hasOwn(ALERT_SOUNDS, value) ? value : "coin",
     };
 
     constructor() {
@@ -172,6 +195,18 @@ export class Alerts extends Widget {
                 element.classList.add("alerts-popup--leaving");
                 setTimeout(() => element.remove(), ALERT_EXIT_DURATION);
             }, Math.max(0, duration - ALERT_EXIT_DURATION));
+        });
+        if (alertElements.length > 0) this.playAlertSound();
+    }
+
+    playAlertSound(soundName = this.uiProps.sound) {
+        const soundFile = ALERT_SOUNDS[soundName];
+        if (!soundFile) return;
+
+        const audio = new Audio(new URL(`./assets/sounds/${soundFile}`, document.baseURI));
+        audio.volume = 0.9;
+        audio.play().catch(error => {
+            console.warn(`Unable to play alert sound "${soundName}":`, error);
         });
     }
 

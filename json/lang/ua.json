@@ -74,6 +74,8 @@
     "alertPosition_top_right": "Зверху праворуч",
     "alertPosition_bottom_left": "Знизу ліворуч",
     "alertPosition_bottom_right": "Знизу праворуч",
+    "alertSound": "Звук сповіщення",
+    "alertSound_off": "Вимкнено",
     "showTitleBadges": "Показувати наліпки",
     "developer": "Розробник",
     "publisher": "Видавець",
