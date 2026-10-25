@@ -4,17 +4,17 @@ import { ALERT_TYPES } from "../enums/alerts.js";
 import { GAME_AWARD_TYPES } from "../enums/gameAwards.js";
 import { createAlertData } from "../components/notifications/alertData.js";
 import { classicAlert } from "../components/notifications/skins/classic.js";
-import { neonAlert } from "../components/notifications/skins/neon.js";
 import { minimalAlert } from "../components/notifications/skins/minimal.js";
+import { retroBannerAlert } from "../components/notifications/skins/retroBanner.js";
 import { xboxToastAlert } from "../components/notifications/skins/xboxToast.js";
 
 const DEFAULT_ALERT_DURATION = 8;
 const ALERT_EXIT_DURATION = 200;
-const ALERT_SKINS = ["classic", "neon", "minimal", "xbox-toast"];
+const ALERT_SKINS = ["classic", "minimal", "banner", "xbox-toast"];
 const ALERT_SKIN_RENDERERS = {
     classic: classicAlert,
-    neon: neonAlert,
     minimal: minimalAlert,
+    banner: retroBannerAlert,
     "xbox-toast": xboxToastAlert,
 };
 const ALERT_SOUNDS = Object.freeze({
@@ -114,8 +114,8 @@ export class Alerts extends Widget {
     uiDefaultValues = {
         duration: DEFAULT_ALERT_DURATION,
         position: "top-right",
-        skin: "classic",
-        disabled: false,
+        skin: "banner",
+        disabled: true,
         sound: "coin",
         showCheevoAlerts: true,
         showAwardAlerts: true,
@@ -143,7 +143,7 @@ export class Alerts extends Widget {
         position: (value) => ["top-left", "top-right", "bottom-left", "bottom-right"].includes(value)
             ? value
             : "top-right",
-        skin: (value) => ALERT_SKINS.includes(value) ? value : "classic",
+        skin: (value) => ALERT_SKINS.includes(value) ? value : "banner",
         sound: (value) => Object.hasOwn(ALERT_SOUNDS, value) ? value : "coin",
     };
 

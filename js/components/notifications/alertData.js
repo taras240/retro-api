@@ -25,12 +25,18 @@ export function createAlertData(alert, currentGame) {
     const game = value.ImageIngame || value.ImageBoxArt ? value : currentGame;
     const badgeType = type === ALERT_TYPES.AWARD ? award : type;
     const badge = awardBadges[badgeType];
+    const platform = value.Platform ?? value.ConsoleName ?? value.PlatformName ?? game?.ConsoleName ?? null;
+    const genre = value.Genre ?? game?.Genre ?? null;
+    const players = value.NumDistinctPlayers ?? value.totalRealPlayers ?? value.players ?? null;
     let details = {};
     let meta = value.ConsoleName;
 
     if (isCheevo) {
         meta = value.Description;
         details = {
+            platform,
+            genre,
+            players,
             unlockRate: value.rateEarnedHardcore,
             points: value.Points,
         };
@@ -42,6 +48,9 @@ export function createAlertData(alert, currentGame) {
             (award === GAME_AWARD_TYPES.MASTERED ? value.totalPoints : null);
 
         details = {
+            platform,
+            genre,
+            players,
             unlockedCount: value[awardCountProperties[award]],
             playerCount: value.totalRealPlayers ?? value.NumDistinctPlayers,
             pointsEarned,
@@ -52,6 +61,9 @@ export function createAlertData(alert, currentGame) {
             released: value.Released,
             developer: value.Developer,
             publisher: value.Publisher,
+            platform,
+            genre,
+            players,
         };
     }
 
@@ -59,6 +71,7 @@ export function createAlertData(alert, currentGame) {
         imageUrl: isCheevo ? cheevoImageUrl(value) : gameImageUrl(value.ImageIcon),
         titleUrl: isCheevo ? cheevoUrl(value) : gameUrl(value.ID ?? value.GameID),
         title: value.Title,
+        gameTitle: game?.Title ?? value?.Title ?? value?.ConsoleName ?? null,
         meta,
         backgroundImageUrl: game?.ImageIngame
             ? gameImageUrl(game.ImageIngame)
