@@ -13,6 +13,7 @@ import { getConsoleGameList } from './handlers/systems/consoleGameList.js';
 import { getEventAchievements } from './handlers/v2/eventAchievements.js';
 import { getUserProfileV2 } from './handlers/v2/user.js';
 import { getGameData } from './handlers/v2/gameData.js';
+import { getGameHashes } from './handlers/v2/gameHashes.js';
 const handlers = {
     getRecentlyPlayedGames,
     getUserProfile,
@@ -29,6 +30,7 @@ const handlers = {
     ...achievement,
     getEventAchievements,
     getGameData,
+    getGameHashes,
 };
 
 export async function call(method, ...params) {

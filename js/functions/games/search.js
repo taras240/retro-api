@@ -1,3 +1,4 @@
+import { raapi } from "../../api/index.js";
 import { RA_PLATFORM_CODES } from "../../enums/RAPlatforms.js";
 import { gameUrl } from "../raLinks.js";
 
@@ -7,6 +8,13 @@ export function searchByTitle({ Title, ConsoleName, ConsoleID }) {
     ConsoleName = ConsoleName?.split("/")?.[0] ?? "";
     const query = encodeURIComponent(
         `"${Title}" "${ConsoleName}" (${romSearchQuery})`
+    );
+    searchQuery(query);
+}
+export async function searchByFilename({ ID, ConsoleName }) {
+    const compatibleFiles = await raapi.getGameHashes({ gameID: ID });
+    const query = encodeURIComponent(
+        `"${compatibleFiles?.[0]?.name}" (${romSearchQuery})`
     );
     searchQuery(query);
 }
@@ -28,9 +36,9 @@ function searchQuery(query) {
     window.open(`https://www.google.com/search?q=${query}`, '_blank');
 }
 const romSearchQuery = [
-    "site:www.romhacking.net",
     "site:wowroms.com/en/roms",
     "site:cdromance.org",
+    "site:www.romhacking.net",
     "site:coolrom.com.au/roms",
     "site:planetemu.net",
     "site:emulatorgames.net",

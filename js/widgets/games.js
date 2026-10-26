@@ -22,7 +22,6 @@ import { lazyLoad } from "../functions/lazyLoad.js";
 import { downloadJSON } from "../functions/exportData.js";
 import { highestAwardMap } from "../enums/gameAwards.js";
 import { raapi } from "../api/index.js";
-import { openGameInRA, searchByTitle, searchFaqByGame } from "../functions/games/search.js";
 import { gameLinksMenu } from "../functions/settings/gameLinks.js";
 
 export class Games extends Widget {

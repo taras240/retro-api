@@ -268,5 +268,12 @@ export const raapi = {
             gameID,
         });
         return response;
+    },
+    async getGameHashes({ gameID }) {
+        console.log("hashes");
+        const response = await call("getGameHashes", {
+            gameID,
+        });
+        return response;
     }
 };

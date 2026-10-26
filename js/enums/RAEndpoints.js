@@ -25,4 +25,5 @@ export const raEdpointsV2 = {
     eventAchievements: "event-achievements",
     user: "users/{{username}}",
     achievements: "achievements?include=achievementSet,games&filter[gameId]={{gameID}}&page[size]={{count}}&page[number]={{page}}",
+    gameHashes: "games/{{gameID}}/hashes?filter[compatibility]=compatible"
 }

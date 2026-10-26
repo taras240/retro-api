@@ -1,5 +1,5 @@
 import { inputTypes } from "../../components/inputElements.js";
-import { openGameInRA, searchByTitle, searchFaqByGame } from "../games/search.js";
+import { openGameInRA, searchByFilename, searchByTitle, searchFaqByGame } from "../games/search.js";
 
 
 export function gameLinksMenu(gameData) {
@@ -14,7 +14,7 @@ export function gameLinksMenu(gameData) {
             type: inputTypes.CONTEXT_BUTTON,
             id: "search-game",
             label: lang.searchRom,
-            onClick: () => searchByTitle(gameData)
+            onClick: () => searchByFilename(gameData)
         },
         {
             type: inputTypes.CONTEXT_BUTTON,
