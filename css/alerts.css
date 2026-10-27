@@ -1,6 +1,8 @@
 .alerts_section.section {
-    top: 0;
-    right: 0;
+    --spacing-x: 25px;
+    --spacing-y: 25px;
+    top: var(--spacing-y);
+    right: var(--spacing-x);
     left: auto;
     bottom: auto;
     width: fit-content;
@@ -18,6 +20,21 @@
     z-index: 1000;
 }
 
+.alerts_section[data-position^="bottom"] .alerts-container {
+    flex-direction: column-reverse;
+}
+
+.alerts_section[data-position="top-left"].section,
+.alerts_section[data-position="bottom-left"].section {
+    right: auto;
+    left: var(--spacing-x);
+}
+
+.alerts_section[data-position^="bottom"].section {
+    top: auto;
+    bottom: var(--spacing-y);
+}
+
 .alerts_section.section:hover {
     box-shadow: none;
 }
@@ -30,27 +47,13 @@
     height: auto;
     min-height: 0;
     max-height: calc(100vh - 2rem);
-    overflow: hidden;
-    padding: 3rem;
+    overflow: visible;
+    padding: 0;
     pointer-events: none;
     background: transparent;
     border-radius: 0;
 }
 
-.alerts_section[data-position^="bottom"] .alerts-container {
-    flex-direction: column-reverse;
-}
-
-.alerts_section[data-position="top-left"].section,
-.alerts_section[data-position="bottom-left"].section {
-    right: auto;
-    left: 0;
-}
-
-.alerts_section[data-position^="bottom"].section {
-    top: auto;
-    bottom: 0;
-}
 
 .alerts-popup {
     list-style: none;

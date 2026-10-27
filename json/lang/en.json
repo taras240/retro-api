@@ -84,6 +84,8 @@
     "alertPosition_top_right": "Top Right",
     "alertPosition_bottom_left": "Bottom Left",
     "alertPosition_bottom_right": "Bottom Right",
+    "alertSpacingX": "Alert Horizontal Offset",
+    "alertSpacingY": "Alert Vertical Offset",
     "alertSkin": "Alert Style",
     "alertSkin_classic": "Classic",
     "alertSkin_minimal": "Minimal",

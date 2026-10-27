@@ -50,6 +50,20 @@ export class Alerts extends Widget {
                         checked: this.uiProps.position === position,
                         onChange: () => this.uiProps.position = position,
                     })),
+                    {
+                        prefix: lang.alertSpacingX,
+                        postfix: "px",
+                        type: inputTypes.NUM_INPUT,
+                        value: this.uiProps.spacingX,
+                        onInput: (event) => this.uiProps.spacingX = event.currentTarget.value,
+                    },
+                    {
+                        prefix: lang.alertSpacingY,
+                        postfix: "px",
+                        type: inputTypes.NUM_INPUT,
+                        value: this.uiProps.spacingY,
+                        onInput: (event) => this.uiProps.spacingY = event.currentTarget.value,
+                    },
                 ],
             },
             {
@@ -113,6 +127,8 @@ export class Alerts extends Widget {
 
     uiDefaultValues = {
         duration: DEFAULT_ALERT_DURATION,
+        spacingX: 25,
+        spacingY: 25,
         position: "top-right",
         skin: "banner",
         disabled: true,
@@ -139,6 +155,14 @@ export class Alerts extends Widget {
             return Number.isFinite(seconds)
                 ? Math.min(60, Math.max(1, Math.round(seconds)))
                 : DEFAULT_ALERT_DURATION;
+        },
+        spacingX: (value) => {
+            const spacing = Number(value);
+            return Number.isFinite(spacing) ? Math.max(0, spacing) : 25;
+        },
+        spacingY: (value) => {
+            const spacing = Number(value);
+            return Number.isFinite(spacing) ? Math.max(0, spacing) : 25;
         },
         position: (value) => ["top-left", "top-right", "bottom-left", "bottom-right"].includes(value)
             ? value
@@ -175,6 +199,8 @@ export class Alerts extends Widget {
         if (!this.section) return;
         this.section.dataset.position = this.uiProps.position;
         this.section.dataset.skin = this.uiProps.skin;
+        this.section.style.setProperty("--spacing-x", `${this.uiProps.spacingX}px`);
+        this.section.style.setProperty("--spacing-y", `${this.uiProps.spacingY}px`);
     }
 
     onGameChange({ gameData, isNewGame, isWatching }) {

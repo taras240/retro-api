@@ -119,6 +119,8 @@
     "alertPosition_top_right": "Superior direito",
     "alertPosition_bottom_left": "Inferior esquerdo",
     "alertPosition_bottom_right": "Inferior direito",
+    "alertSpacingX": "Deslocamento horizontal do alerta",
+    "alertSpacingY": "Deslocamento vertical do alerta",
     "alertSkin": "Estilo dos alertas",
     "alertSkin_classic": "Clássico",
     "alertSkin_minimal": "Minimalista",

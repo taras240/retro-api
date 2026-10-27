@@ -74,6 +74,8 @@
     "alertPosition_top_right": "Зверху праворуч",
     "alertPosition_bottom_left": "Знизу ліворуч",
     "alertPosition_bottom_right": "Знизу праворуч",
+    "alertSpacingX": "Горизонтальний відступ сповіщень",
+    "alertSpacingY": "Вертикальний відступ сповіщень",
     "alertSkin": "Стиль сповіщень",
     "alertSkin_classic": "Класичний",
     "alertSkin_minimal": "Мінімалістичний",
