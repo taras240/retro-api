@@ -39,6 +39,7 @@ import { contextSetsMenu, contextSwitchSetsMenu } from "../functions/settings/su
 import { gameLinksMenu } from "../functions/settings/gameLinks.js";
 import { UI_EVENTS_LIST } from "../enums/UIEvents.js";
 import { fromHtml } from "../functions/html.js";
+import { heatmapBarHtml, updateHeatmapBar } from "../components/statusWidget/heatmapBar.js";
 
 export class Status extends Widget {
     widgetIcon = {
@@ -107,6 +108,12 @@ export class Status extends Widget {
                         label: lang.ticker,
                         checked: this.uiProps.showTicker,
                         onChange: (event) => this.uiProps.showTicker = event.currentTarget.checked,
+                    },
+                    {
+                        type: inputTypes.CHECKBOX,
+                        label: lang.heatmap,
+                        checked: this.uiProps.showHeatmap,
+                        onChange: (event) => this.uiProps.showHeatmap = event.currentTarget.checked,
                     },
                 ],
             } : "",
@@ -335,6 +342,7 @@ export class Status extends Widget {
         showPointsProgress: false,
         showRetropointsProgress: false,
         showProgression: true,
+        showHeatmap: false,
         progressType: PROGRESS_TYPES.cheevos,
         statusTheme: statusStyles.DEFAULT,
         timePosition: timePosition.normal,
@@ -410,6 +418,7 @@ export class Status extends Widget {
         },
         isHardMode() {
             this.updateProgressionBar();
+            this.updateHeatmapBar();
             this.updateFocusPreview();
             this.updateProgressBar();
             this.updateFocusCheevo();
@@ -444,6 +453,7 @@ export class Status extends Widget {
         this.applyPosition();
         this.setElementsValues();
         this.addEvents();
+        this.heatmapInterval = setInterval(() => this.updateHeatmapBar(), 60 * 1000);
     }
     setWidgetData(widgetName, isLegacy) {
         this.widgetName = widgetName;
@@ -542,6 +552,7 @@ export class Status extends Widget {
                     focusCheevoHtml(),
                     progressionBarHtml(),
                     progressBarHtml(PROGRESS_TYPES.cheevos),
+                    heatmapBarHtml(),
                     progressBarHtml(PROGRESS_TYPES.points),
                     progressBarHtml(PROGRESS_TYPES.retropoints)
                 ]),
@@ -733,6 +744,7 @@ export class Status extends Widget {
             this.addAlertsToQuery(cheevoAlerts);
         }
         this.uiProps.isHardMode = cheevos[0].isEarnedHardcore;
+        this.updateHeatmapBar();
         if (cheevos.some(c => filterBy.progression(c))) {
             this.updateProgressionBar();
         }
@@ -777,6 +789,7 @@ export class Status extends Widget {
         this.section.classList.toggle("hide-game-info", !this.uiProps.showGameInfo)
         this.section.classList.toggle("show-ticker", this.uiProps.showTicker);
         this.section.classList.toggle("show-progression", this.uiProps.showProgression);
+        this.section.classList.toggle("show-heatmap", this.uiProps.showHeatmap);
         this.section.classList.toggle("show-progressbar", this.uiProps.showProgressbar);
         this.section.classList.toggle("show-points-progress", this.uiProps.showPointsProgress);
         this.section.classList.toggle("show-retropoints-progress", this.uiProps.showRetropointsProgress);
@@ -846,6 +859,15 @@ export class Status extends Widget {
             }
             )
 
+    }
+    updateHeatmapBar() {
+        this.section
+            .querySelectorAll(".rp__heatmapbar-container")
+            .forEach(container => updateHeatmapBar(
+                container,
+                watcher?.GAME_DATA,
+                this.uiProps.isHardMode,
+            ));
     }
     updateProgressBar() {
         this.section.querySelectorAll(".rp__progressbar-container")?.forEach(
@@ -977,6 +999,7 @@ export class Status extends Widget {
         this.updateRichPresence();
         this.updateGameInfo();
         this.updateProgressionBar();
+        this.updateHeatmapBar();
         this.updateFocusPreview();
         this.updateProgressBar();
     }

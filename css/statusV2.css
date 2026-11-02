@@ -20,6 +20,8 @@
     --progression-unlock-color: var(--accent-color);
     --progression-unlock-win-color: goldenrod;
     --alert-heigth: 5.5em;
+    --heatmap-unlock-color: var(--accent-color);
+    --heatmap-bg: var(--selection-color);
 }
 
 .status__section {
@@ -140,6 +142,9 @@
     --progression-unlock-win-color: gold;
     /* --font-family: Verdana, system-ui;
     --main-color: #161616; */
+
+    --heatmap-unlock-color: gold;
+    --heatmap-bg: black;
 }
 
 .section:where(.rp__section, .status__section)[data-theme="RA"] :nth-last-child(1 of .rp__progression-point:not(.win)) {
@@ -567,6 +572,46 @@
     --color: gold;
 } */
 
+/**--------ACHIEVEMENT HEATMAP--------*/
+:is(.section.show-heatmap) .rp__heatmapbar-container {
+    display: block;
+}
+
+.rp__heatmapbar-container {
+    width: 100%;
+    display: none;
+}
+
+.rp__heatmapbar {
+    position: relative;
+    width: 100%;
+    height: var(--progress-height);
+    overflow: hidden;
+    border-radius: var(--progress-border-radius);
+}
+
+.rp__heatmapbar-bg {
+    position: absolute;
+    background: var(--heatmap-bg);
+}
+
+.rp__heatmapbar-unlocks {
+    position: absolute;
+    width: 100%;
+    height: var(--progress-height);
+    filter: blur(4px);
+}
+
+.rp__heatmapbar-unlock {
+    position: absolute;
+    top: 50%;
+    left: var(--unlock-position);
+    width: 5%;
+    height: 500%;
+    background: var(--heatmap-unlock-color);
+    transform: translate(-50%, -50%);
+    opacity: 0.5;
+}
 
 /**-----------PROGRESSBAR------------------  */
 .rp__progressbar-container {

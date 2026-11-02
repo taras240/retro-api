@@ -408,5 +408,6 @@
     "tags": "Tags",
     "toggleFilterPanel": "Show/hide filter panel",
     "highlightCurrentLevel": "Highlight Current Level",
-    "activitySectionName": "Activity"
+    "activitySectionName": "Activity",
+    "heatmap": "Unlock heatmap"
 }

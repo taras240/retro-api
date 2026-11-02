@@ -381,5 +381,6 @@
     "saveAsCustomOrderHint": "Isso substituirá a ordem de conquistas salva pela nova. Essa ação não pode ser desfeita.",
     "userLevel": "Nível do usuário",
     "resetFilters": "Limpar filtros",
-    "iconScale": "Tamanho do ícone"
+    "iconScale": "Tamanho do ícone",
+    "heatmap": "Mapa de desbloqueios"
 }
