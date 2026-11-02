@@ -583,6 +583,7 @@
 }
 
 .rp__heatmapbar {
+    --unlock-width: 1%;
     position: relative;
     width: 100%;
     height: var(--progress-height);
@@ -606,7 +607,7 @@
     position: absolute;
     top: 50%;
     left: var(--unlock-position);
-    width: 5%;
+    width: var(--unlock-width);
     height: 500%;
     background: var(--heatmap-unlock-color);
     transform: translate(-50%, -50%);
