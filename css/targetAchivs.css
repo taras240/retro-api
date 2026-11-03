@@ -242,7 +242,6 @@
 
   border: 1px solid var(--mark-color);
   border-radius: 2px;
-  box-shadow: var(--border-shadow);
 
 }
 
@@ -266,6 +265,60 @@
   --border-shadow: var(--rare-shadow);
 }
 
+.target-achiv.earned.hardcore.uncommon .prev {
+  box-shadow: var(--border-shadow);
+}
+
+.achievement_glow_container_root {
+  position: absolute;
+  inset: -20%;
+  mask-image: url('https://community.fastly.steamstatic.com/public/images/profile/achievement_square_mask.png');
+  mask-repeat: repeat;
+  mask-size: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.target-achiv:not(.earned.hardcore.uncommon) .achievement_glow_container_root {
+  display: none;
+}
+
+.achievement_glow_container {
+  position: absolute;
+  inset: -20%;
+  /* mask-image: url( 'https://community.fastly.steamstatic.com/public/images/profile/achievement_square_mask.png' ); */
+  mask-repeat: repeat;
+  mask-size: 100%;
+  overflow: hidden;
+  pointer-events: none;
+
+  animation: achievement_glow_rotate 18s linear infinite reverse;
+  mask-image: url('https://community.fastly.steamstatic.com/public/images/profile/achievement_star_mask.png');
+}
+
+.achievement_glow {
+  position: absolute;
+  inset: -10px;
+  animation: achievement_glow_rotate 6s linear infinite;
+  mix-blend-mode: overlay;
+  background: repeating-conic-gradient(color-mix(in srgb, var(--mark-color) 40%, transparent) 0%,
+      transparent 6%,
+      color-mix(in srgb, var(--mark-color) 40%, transparent) 10%,
+      var(--mark-color) 26%,
+      color-mix(in srgb, var(--mark-color) 40%, transparent) 35%,
+      var(--mark-color) 40%,
+      color-mix(in srgb, var(--mark-color) 40%, transparent) 60%,
+      var(--mark-color) 82%,
+      color-mix(in srgb, var(--mark-color) 40%, transparent) 100%);
+  overflow: hidden;
+}
+
+@keyframes achievement_glow_rotate {
+  100% {
+    transform: rotate(1turn);
+  }
+}
 
 .prev-lock-overlay {
   display: none;

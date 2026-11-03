@@ -33,6 +33,7 @@ const applyClasses = (element, achievement, uiProps) => {
     element.classList.toggle("show-genre", uiProps.showGenre);
     element.classList.toggle("earned", achievement.isEarned);
     element.classList.toggle("hardcore", achievement.isEarnedHardcore);
+    element.classList.toggle("uncommon", achievement.trend <= 10);
     element.classList.toggle("rare", achievement.trend <= 3);
 };
 
@@ -78,7 +79,13 @@ export function CheevoElement(achievement, uiProps) {
     const level = getLevelLabel(achievement);
     const levelBadgeHtml = level ? badgeElements.cheevoLevel(level, true) : "";
     const genresBadgesHtml = buildGenresBadges(achievement.genres);
-
+    const glowEffect = `
+        <.achievement_glow_container_root>
+            <.achievement_glow_container>
+                <.achievement_glow/>
+            </>
+        </>
+    `;
     const cheevoElement = fromHtml(`
         <li class="target-achiv main-column-item right-bg-icon">
             <div class="target__cheevo-bg"></div>
@@ -89,6 +96,7 @@ export function CheevoElement(achievement, uiProps) {
             <div class="prev">
                 <div class="prev-bg"></div>
                 <img class="prev-img" src="${cheevoImageUrl(achievement)}" />
+                ${glowEffect}
                 <div class="prev-lock-overlay"></div>
                 <div class="box-inner-shadow"></div>
                 <div class="target__cheevo-progression-container">

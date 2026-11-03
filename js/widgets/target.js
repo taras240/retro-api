@@ -439,7 +439,7 @@ export class Target extends Widget {
         scrollSpeed: 20,
         scrollPauseDuration: 15,
         fontScale: 1.0,
-        iconScale: 1.0,
+        iconScale: 0.85,
         cropOffset: 0,
     }
     uiSetCallbacks = {
