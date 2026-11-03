@@ -382,5 +382,7 @@
     "userLevel": "Nível do usuário",
     "resetFilters": "Limpar filtros",
     "iconScale": "Tamanho do ícone",
-    "heatmap": "Mapa de desbloqueios"
+    "heatmap": "Mapa de desbloqueios",
+    "rareUnlock": "{{rareCount}} Raro",
+    "rareCountHint": "Conquistas desbloqueadas por menos de 3% dos jogadores no mundo todo"
 }

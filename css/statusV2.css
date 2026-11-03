@@ -44,6 +44,7 @@
     flex-direction: column;
     cursor: grab;
     container-type: inline-size;
+    container-name: rp-widget;
 }
 
 .status__section.offline::after,
@@ -67,7 +68,7 @@
     display: none;
 }
 
-@container (max-width: 299px) {
+@container rp-widget (max-width: 299px) {
     .rp__preview-container {
         display: none !important;
     }
@@ -77,11 +78,6 @@
     }
 }
 
-@container (max-width: 349px) {
-    .rp__last-cheevos {
-        display: none !important;
-    }
-}
 
 .section.status__section {
     position: absolute;
@@ -625,10 +621,9 @@
     /* height: 2.5em; */
     justify-content: space-between;
     min-width: 5em;
-}
 
-.rp__progressbar-container:not([data-type="cheevos"]) .rp__last-cheevos {
-    display: none !important;
+    container-type: inline-size;
+    container-name: rp-progressbar;
 }
 
 :is(.show-progressbar, .rp__game-info) .rp__progressbar-container[data-type="cheevos"] {
@@ -651,6 +646,22 @@
     align-items: end;
     margin-bottom: 0.5em;
     /* container-type: inline-size; */
+}
+
+.rp__progressbar-rare-stats {
+    color: goldenrod;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+@container rp-progressbar (max-width: 25em) {
+    .rp__progressbar-rare-stats {
+        display: none !important;
+    }
+}
+
+.rp__progressbar-container:not([data-type="cheevos"]) .rp__progressbar-rare-stats {
+    display: none !important;
 }
 
 .rp__last-cheevos {

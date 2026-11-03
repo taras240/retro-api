@@ -409,5 +409,7 @@
     "toggleFilterPanel": "Show/hide filter panel",
     "highlightCurrentLevel": "Highlight Current Level",
     "activitySectionName": "Activity",
-    "heatmap": "Unlock heatmap"
+    "heatmap": "Unlock heatmap",
+    "rareUnlock": "{{rareCount}} Rare",
+    "rareCountHint": "Achievements unlocked by less than 3% of players"
 }

@@ -7,6 +7,7 @@ import { badgeElements } from "../badges.js";
 import { recentCheevoHtml } from "./recentCheevo.js";
 import { fromHtml } from "../../functions/html.js";
 
+const RARE_RATE = 3;
 const baseClass = "rp__progressbar";
 export const CompletionMsg = (gameData, progressType, isHardMode = true) => {
 
@@ -101,6 +102,12 @@ const getUnlockedCount = (gameData, isHardMode) => {
     })
     return isHardMode ? hardCount : softCount;
 }
+const getRareCount = (gameData, isHardMode) => {
+    const isUnlocked = (cheevo) => Boolean(isHardMode ?
+        cheevo.DateEarnedHardcore : cheevo.DateEarned)
+    const rareUnlocks = Object.values(gameData?.AllAchievements ?? {}).filter(cheevo => cheevo.trend <= RARE_RATE && isUnlocked(cheevo)).length;
+    return rareUnlocks;
+}
 const getUnlockedPoints = (gameData, isHardMode) => {
     let softPoints = 0;
     let hardPoints = 0;
@@ -120,7 +127,7 @@ const getUnlockedRetroPoints = (gameData) => {
     return retropoints;
 }
 const getStats = (gameData, isHardMode, progressType) => {
-    let unlocked, total, unlockedRate;
+    let unlocked, total, unlockedRate, rareCount;
     switch (progressType) {
         case PROGRESS_TYPES.points:
             unlocked = getUnlockedPoints(gameData, isHardMode);
@@ -134,18 +141,19 @@ const getStats = (gameData, isHardMode, progressType) => {
             break;
         default:
             unlocked = getUnlockedCount(gameData, isHardMode);
+            rareCount = getRareCount(gameData, isHardMode);
             total = getCheevosCount(gameData);
             unlockedRate = Math.floor(100 * unlocked / total) + "%";
             break;
     }
-    return { unlocked, total, unlockedRate }
+    return { unlocked, total, unlockedRate, rareCount }
 }
 export const progressBarHtml = (type = PROGRESS_TYPES.cheevos) => {
     return `
         <.${baseClass}-container data-type="${type}">
             <.${baseClass}-header>
                 <.${baseClass}-title/>
-                <ul.rp__last-cheevos/>
+                <span.${baseClass}-rare-stats data-title="${lang.rareCountHint}"/>
             </>
             <.${baseClass}>
                 <.${baseClass}-bg/>
@@ -181,15 +189,16 @@ export const updateProgressBarData = (container, gameData, isHardMode, progressT
     if (!container) return;
 
     const progressMsgContainer = container.querySelector(`.${baseClass}-title`);
+    const rareUnlocksElement = container.querySelector(`.${baseClass}-rare-stats`);
     const progressBarElement = container.querySelector(`.${baseClass}`);
     const progressSessionsElement = container.querySelector(`.${baseClass}-sessions`)
     progressType = container.dataset.type ?? PROGRESS_TYPES.cheevos;
-    const { unlocked, total } = getStats(gameData, isHardMode, progressType);
+    const { unlocked, total, rareCount } = getStats(gameData, isHardMode, progressType);
 
     progressMsgContainer.replaceChildren(
         ...CompletionMsg(gameData, progressType, isHardMode)
     );
-
+    rareUnlocksElement.textContent = rareCount ? formatText(lang.rareUnlock, { rareCount }) : "";
     progressBarElement.style.setProperty("--unlockRate", `${100 * unlocked / total}%`);
 
     progressSessionsElement.replaceChildren(
