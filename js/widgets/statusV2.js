@@ -370,7 +370,7 @@ export class Status extends Widget {
         showProgressbar: false,
         showProgression: false,
         statusTheme: statusStyles.THICK,
-        timePosition: timePosition.background,
+        timePosition: timePosition.normal,
         gameInfoType: GAME_INFO_TYPES.progression,
         showTargetPreview: false,
         showGameBg: false,
