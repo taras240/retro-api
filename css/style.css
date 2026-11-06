@@ -83,11 +83,17 @@ img {
   --gold-color: rgb(255 184 78);
   --green-color: #16a34a;
   --ra-progress-color: #16a34a;
-  --gold-shadow: 0 0 2px 1px rgb(255 184 78 / 60%), 0 0 16px 1px rgb(255 184 78 / 40%);
+  --gold-shadow:
+    0 0 2px 1px color-mix(in srgb, var(--gold-color) 60%, transparent),
+    0 0 16px 1px color-mix(in srgb, var(--gold-color) 40%, transparent);
   --silver-color: rgb(192, 192, 192);
-  --silver-shadow: 0 0 2px 1px rgb(192 192 192 / 60%), 0 0 16px 1px rgb(192 192 192 / 40%);
-  --rare-color: rgb(255, 0, 255);
-  --rare-shadow: 0 0 2px 1px rgb(255 0 255 / 60%), 0 0 16px 1px rgb(255 0 255 / 40%);
+  --silver-shadow:
+    0 0 2px 1px color-mix(in srgb, var(--silver-color) 60%, transparent),
+    0 0 16px 1px color-mix(in srgb, var(--silver-color) 40%, transparent);
+  --rare-color: rgb(231, 7, 165);
+  --rare-shadow:
+    0 0 2px 1px color-mix(in srgb, var(--rare-color) 60%, transparent),
+    0 0 16px 1px color-mix(in srgb, var(--rare-color) 40%, transparent);
   --orange-gradient: linear-gradient(to right,
       #ee0979,
       #ff6a00);
@@ -106,6 +112,8 @@ body {
   max-height: 100vh;
   max-width: 100vw;
   font-size: var(--font-size);
+  --selection-color: color-mix(in srgb, var(--accent-color) 10%, transparent);
+  --secondary-font-color: color-mix(in srgb, var(--font-color) 80%, var(--main-color));
 }
 
 a {

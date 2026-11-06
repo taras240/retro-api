@@ -86,24 +86,25 @@ export function CheevoElement(achievement, uiProps) {
             </>
         </>
     `;
+    // right-bg-icon
     const cheevoElement = fromHtml(`
-        <li class="target-achiv main-column-item right-bg-icon">
-            <div class="target__cheevo-bg"></div>
-            <div class="target__buttons-container">
+        <li class="target-achiv main-column-item">
+            <.target__cheevo-bg/>
+            <.target__buttons-container>
                 ${buttonsHtml.comments()}
                 ${buttonsHtml.pin()}
-            </div>
-            <div class="prev">
-                <div class="prev-bg"></div>
-                <img class="prev-img" src="${cheevoImageUrl(achievement)}" />
+            </>
+            <.prev>
+                <.prev-bg/>
+                <img.prev-img src="${cheevoImageUrl(achievement)}"/>
                 ${glowEffect}
-                <div class="prev-lock-overlay"></div>
-                <div class="box-inner-shadow"></div>
-                <div class="target__cheevo-progression-container">
-                    <div class="target__cheevo-progression"></div>
-                </div>
-            </div>
-            <div class="target__cheevo-details">
+                <.prev-lock-overlay/>
+                <.box-inner-shadow/>
+                <.target__cheevo-progression-container>
+                    <.target__cheevo-progression/>
+                </>
+            </>
+            <.target__cheevo-details>
                 <h3 class="target__cheevo-header">
                     <a target="_blanc" data-title="${lang.goToRAHint}" href="${cheevoUrl(achievement)}">
                         ${achievement.Title}
@@ -111,10 +112,10 @@ export function CheevoElement(achievement, uiProps) {
                     ${levelBadgeHtml}${genresBadgesHtml}
                 </h3>
                 <p class="list-item__text">${achievement.Description}</p>
-                <div class="icons-row-list">
+                <.icons-row-list>
                     ${buildIconsRow(achievement)}
-                </div>
-            </div>
+                </>
+            </>
         </li>
     `);
 

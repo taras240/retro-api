@@ -300,8 +300,6 @@ export class UI {
       else {
         preset = colorPresets[presetName] || colorPresets.default;
       }
-      preset.selectionColor = hexToRgba(preset.accentColor, 0.1);
-      preset.secondaryFontColor = blendColors(preset.fontColor, preset.mainColor, 0.8);
       return preset;
     }
     const { style } = document.body;
@@ -310,8 +308,6 @@ export class UI {
       secondaryColor,
       accentColor,
       fontColor,
-      secondaryFontColor,
-      selectionColor,
       windowsStyle,
       bgColor
     } = getColors(configData.preset);
@@ -320,8 +316,6 @@ export class UI {
     style.setProperty("--secondary-color", secondaryColor);
     style.setProperty("--accent-color", accentColor);
     style.setProperty("--font-color", fontColor);
-    style.setProperty("--secondary-font-color", secondaryFontColor);
-    style.setProperty("--selection-color", selectionColor);
     style.setProperty("--page-bg", bgColor || configData.bgColor);
     this.app.setAttribute("style", windowsStyle || "normal");
 

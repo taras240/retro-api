@@ -1,5 +1,4 @@
 .wrapper[style="glass"] :is(.section:not(.alerts_section),
-    .section:not(.contrast-highlight) .target-achiv,
     .stats__stat-container,
     .notification_timeblock-list,
     .notification-game,
@@ -10,8 +9,13 @@
     .console-awards,
     .event-item__container,
     .event-cheevos__cheevo) {
+
     background: rgba(17, 17, 17, 0.2);
     backdrop-filter: blur(5px);
+}
+
+.wrapper[style="glass"] .section:not(.contrast-highlight) .target-achiv {
+    --secondary-color: rgba(17, 17, 17, 0.2);
 }
 
 .wrapper[style="glass"] :is(.header-container,

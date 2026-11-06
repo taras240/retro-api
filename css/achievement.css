@@ -167,7 +167,7 @@
   left: 0;
   background-color: var(--main-color);
   width: 100%;
-  height: 30%;
+  height: 100%;
   border-radius: 2px;
   font-size: var(--font-size);
   font-weight: bold;
@@ -175,6 +175,7 @@
   justify-content: center;
   align-items: center;
   gap: 0.2em;
+  opacity: 0.8;
 }
 
 .achiv-block.earned .prev-lock-overlay {
@@ -183,9 +184,9 @@
 
 .achiv-block .prev-lock-overlay::before {
   content: "";
-  height: var(--font-size);
+  height: 60%;
   aspect-ratio: 1;
-  mask-image: url(../assets/img/lock.svg);
+  mask-image: url(../assets/img/trophy-lock.svg);
   mask-repeat: no-repeat;
   mask-size: contain;
   background-color: var(--font-color);
