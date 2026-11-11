@@ -33,8 +33,8 @@ const applyClasses = (element, achievement, uiProps) => {
     element.classList.toggle("show-genre", uiProps.showGenre);
     element.classList.toggle("earned", achievement.isEarned);
     element.classList.toggle("hardcore", achievement.isEarnedHardcore);
-    element.classList.toggle("uncommon", achievement.trend <= 10);
-    element.classList.toggle("rare", achievement.trend <= 3);
+    element.classList.toggle("uncommon", achievement.trend <= config.UNCOMMON_RATE);
+    element.classList.toggle("rare", achievement.trend <= config.RARE_RATE);
 };
 
 const applyDataAttributes = (element, achievement) => {

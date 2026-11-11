@@ -17,6 +17,7 @@ else if (/android/i.test(userAgent) || (/iPhone/.test(userAgent) && !window.MSSt
   window.location.href = "./mobile/index.html";
 }
 else {
+
   APIEvents = new EventTarget();
   window.APIEvents = APIEvents;
 

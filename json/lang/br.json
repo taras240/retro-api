@@ -383,6 +383,6 @@
     "resetFilters": "Limpar filtros",
     "iconScale": "Tamanho do ícone",
     "heatmap": "Mapa de desbloqueios",
-    "rareUnlock": "{{rareCount}} Raro",
-    "rareCountHint": "Conquistas desbloqueadas por menos de 3% dos jogadores no mundo todo"
+    "rareUnlock": "{{rareCount}} raro",
+    "rareCountHint": "Conquistas desbloqueadas por menos de {{rareRate}}% dos jogadores no mundo todo"
 }

@@ -13,6 +13,8 @@ let CONFIG_FILE_NAME = "retroApiConfig";
 const CACHE_FILE_NAME = "raApiCache";
 const CONFIG_VERSION = 3.14;
 export class Config {
+  RARE_RATE = 3;
+  UNCOMMON_RATE = 10;
   cache = dbCacheWorker();
   //! ----------[ Login information ]------------------
   get version() {
@@ -90,7 +92,7 @@ export class Config {
     gameID: 1,
     updateDelaySec: 15,
     customColors: colorPresets.default,
-    preset: "default",
+    preset: "glass",
     fsAlertDuration: 15,
     fsNewCheevo: false,
     fsNewAward: false,

@@ -267,10 +267,11 @@
   overflow: hidden;
   pointer-events: none;
   z-index: -1;
+  display: none;
 }
 
-.target-achiv:not(.earned.hardcore.uncommon) .achievement_glow_container_root {
-  display: none;
+.target-achiv.earned.hardcore:is(.uncommon, .rare) .achievement_glow_container_root {
+  display: block;
 }
 
 .achievement_glow_container {
@@ -318,7 +319,7 @@
   position: absolute;
   bottom: 0;
   left: 0;
-  background-color: var(--main-color);
+  background-color: color-mix(in srgb, var(--main-color) 80%, transparent);
   width: 100%;
   height: 100%;
   border-radius: 2px;
@@ -327,7 +328,6 @@
   justify-content: center;
   align-items: center;
   gap: 0.2em;
-  opacity: 0.8;
 }
 
 .target-achiv.earned .prev-lock-overlay {

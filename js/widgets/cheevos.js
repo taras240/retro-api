@@ -663,15 +663,12 @@ export class AchievementsBlock extends Widget {
             cheevoElement.classList.toggle("overlay", widget.uiProps.showPrevOverlay);
             cheevoElement.classList.toggle("earned", cheevo.isEarned);
             cheevoElement.classList.toggle("hardcore", cheevo.isEarnedHardcore);
-            cheevoElement.classList.toggle("rare", cheevo.trend <= 3);
+            cheevoElement.classList.toggle("rare", cheevo.trend <= config.RARE_RATE);
         }
         function setData() {
             cheevoElement.dataset.achivId = cheevo.ID;
             cheevoElement.dataset.Points = cheevo.Points;
             cheevoElement.dataset.TrueRatio = cheevo.TrueRatio;
-            cheevo.TrueRatio > 50 && (cheevoElement.dataset.rarity = "normal");
-            cheevo.TrueRatio > 150 && (cheevoElement.dataset.rarity = "rare");
-            cheevo.TrueRatio > 300 && (cheevoElement.dataset.rarity = "mythycal");
             cheevoElement.dataset.DisplayOrder = cheevo.DisplayOrder;
             cheevoElement.dataset.customOrder = cheevo.customOrder;
             cheevoElement.dataset.Type = cheevo.Type;

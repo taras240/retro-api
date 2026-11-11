@@ -7,7 +7,6 @@ import { badgeElements } from "../badges.js";
 import { recentCheevoHtml } from "./recentCheevo.js";
 import { fromHtml } from "../../functions/html.js";
 
-const RARE_RATE = 3;
 const baseClass = "rp__progressbar";
 export const CompletionMsg = (gameData, progressType, isHardMode = true) => {
 
@@ -105,7 +104,7 @@ const getUnlockedCount = (gameData, isHardMode) => {
 const getRareCount = (gameData, isHardMode) => {
     const isUnlocked = (cheevo) => Boolean(isHardMode ?
         cheevo.DateEarnedHardcore : cheevo.DateEarned)
-    const rareUnlocks = Object.values(gameData?.AllAchievements ?? {}).filter(cheevo => cheevo.trend <= RARE_RATE && isUnlocked(cheevo)).length;
+    const rareUnlocks = Object.values(gameData?.AllAchievements ?? {}).filter(cheevo => cheevo.trend <= config.RARE_RATE && isUnlocked(cheevo)).length;
     return rareUnlocks;
 }
 const getUnlockedPoints = (gameData, isHardMode) => {
@@ -153,7 +152,7 @@ export const progressBarHtml = (type = PROGRESS_TYPES.cheevos) => {
         <.${baseClass}-container data-type="${type}">
             <.${baseClass}-header>
                 <.${baseClass}-title/>
-                <span.${baseClass}-rare-stats data-title="${lang.rareCountHint}"/>
+                <span.${baseClass}-rare-stats data-title="${formatText(lang.rareCountHint, { rareRate: config.RARE_RATE })}"/>
             </>
             <.${baseClass}>
                 <.${baseClass}-bg/>
