@@ -342,33 +342,33 @@ export class Settings extends Widget {
                     },
                 ]
             },
-            {
-                label: lang.fsAlerts,
-                elements: [
-                    {
-                        type: inputTypes.CHECKBOX,
-                        label: lang.earnCheevoAlert,
-                        id: "settings_fsalert-cheevo",
-                        checked: configData.fsNewCheevo,
-                        onChange: (event) => configData.fsNewCheevo = event.currentTarget.checked,
-                    },
-                    {
-                        type: inputTypes.CHECKBOX,
-                        label: lang.earnAwardAlert,
-                        id: "settings_fsalert-award",
-                        checked: configData.fsNewAward,
-                        onChange: (event) => configData.fsNewAward = event.currentTarget.checked,
-                    },
-                    {
-                        type: inputTypes.NUM_INPUT,
-                        label: lang.duration,
-                        id: "settings_fsakert-duration-input",
-                        value: configData.fsAlertDuration,
-                        title: lang.fsAlertDurationInputHint,
-                        onChange: (event) => configData.fsAlertDuration = event.currentTarget.value,
-                    }
-                ]
-            },
+            // {
+            //     label: lang.fsAlerts,
+            //     elements: [
+            //         {
+            //             type: inputTypes.CHECKBOX,
+            //             label: lang.earnCheevoAlert,
+            //             id: "settings_fsalert-cheevo",
+            //             checked: configData.fsNewCheevo,
+            //             onChange: (event) => configData.fsNewCheevo = event.currentTarget.checked,
+            //         },
+            //         {
+            //             type: inputTypes.CHECKBOX,
+            //             label: lang.earnAwardAlert,
+            //             id: "settings_fsalert-award",
+            //             checked: configData.fsNewAward,
+            //             onChange: (event) => configData.fsNewAward = event.currentTarget.checked,
+            //         },
+            //         {
+            //             type: inputTypes.NUM_INPUT,
+            //             label: lang.duration,
+            //             id: "settings_fsakert-duration-input",
+            //             value: configData.fsAlertDuration,
+            //             title: lang.fsAlertDurationInputHint,
+            //             onChange: (event) => configData.fsAlertDuration = event.currentTarget.value,
+            //         }
+            //     ]
+            // },
             {
                 label: lang.dsAlerts,
                 elements: [

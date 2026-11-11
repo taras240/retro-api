@@ -7,15 +7,17 @@ import { classicAlert } from "../components/notifications/skins/classic.js";
 import { minimalAlert } from "../components/notifications/skins/minimal.js";
 import { retroBannerAlert } from "../components/notifications/skins/retroBanner.js";
 import { xboxToastAlert } from "../components/notifications/skins/xboxToast.js";
+import { fullscreenAlert } from "../components/notifications/skins/fullscreen.js";
 
 const DEFAULT_ALERT_DURATION = 8;
 const ALERT_EXIT_DURATION = 200;
-const ALERT_SKINS = ["classic", "minimal", "banner", "xbox-toast"];
+const ALERT_SKINS = ["classic", "minimal", "banner", "xbox-toast", "fullscreen"];
 const ALERT_SKIN_RENDERERS = {
     classic: classicAlert,
     minimal: minimalAlert,
     banner: retroBannerAlert,
     "xbox-toast": xboxToastAlert,
+    fullscreen: fullscreenAlert,
 };
 const ALERT_SOUNDS = Object.freeze({
     off: null,
@@ -138,11 +140,20 @@ export class Alerts extends Widget {
         showGameAlerts: true,
     };
 
+    fullscreenAlertQueue = [];
+    fullscreenAlertTimer = null;
+    fullscreenAlertExitTimer = null;
+    isDisplayingFullscreenAlert = false;
+
     uiSetCallbacks = {
         disabled: (disabled) => {
-            if (disabled) this.container.replaceChildren();
+            if (disabled) {
+                this.clearFullscreenAlertQueue();
+                this.container.replaceChildren();
+            }
         },
         skin: () => {
+            this.clearFullscreenAlertQueue();
             this.setElementsValues();
             this.showSkinPreview();
         },
@@ -265,6 +276,12 @@ export class Alerts extends Widget {
     }
 
     displayAlertElements(alertElements) {
+        if (this.uiProps.skin === "fullscreen") {
+            this.fullscreenAlertQueue.push(...alertElements);
+            this.displayNextFullscreenAlert();
+            return;
+        }
+
         alertElements.reverse().forEach(element => {
             this.container.prepend(element);
             const duration = this.uiProps.duration * 1000;
@@ -273,6 +290,35 @@ export class Alerts extends Widget {
                 setTimeout(() => element.remove(), ALERT_EXIT_DURATION);
             }, Math.max(0, duration - ALERT_EXIT_DURATION));
         });
+    }
+
+    displayNextFullscreenAlert() {
+        if (this.isDisplayingFullscreenAlert || this.fullscreenAlertQueue.length === 0) return;
+
+        this.isDisplayingFullscreenAlert = true;
+        const element = this.fullscreenAlertQueue.shift();
+        this.container.prepend(element);
+
+        const duration = this.uiProps.duration * 1000;
+        this.fullscreenAlertTimer = setTimeout(() => {
+            this.fullscreenAlertTimer = null;
+            element.classList.add("alerts-popup--leaving");
+            this.fullscreenAlertExitTimer = setTimeout(() => {
+                this.fullscreenAlertExitTimer = null;
+                element.remove();
+                this.isDisplayingFullscreenAlert = false;
+                this.displayNextFullscreenAlert();
+            }, ALERT_EXIT_DURATION);
+        }, Math.max(0, duration - ALERT_EXIT_DURATION));
+    }
+
+    clearFullscreenAlertQueue() {
+        this.fullscreenAlertQueue = [];
+        clearTimeout(this.fullscreenAlertTimer);
+        clearTimeout(this.fullscreenAlertExitTimer);
+        this.fullscreenAlertTimer = null;
+        this.fullscreenAlertExitTimer = null;
+        this.isDisplayingFullscreenAlert = false;
     }
 
     createAlertElement(alert) {

@@ -1,7 +1,6 @@
 import { cheevoPopupElement } from "./components/cheevoPopup.js";
 import { hintElement } from "./components/hint.js";
 import { generateContextMenu } from "./components/contextMenu.js";
-import { pushFSAlerts } from "./components/fsAlerts.js";
 import { sendDiscordAlert } from "./functions/discord.js";
 import { setPopupPosition } from "./functions/popupPosition.js";
 import { AchievementsBlock } from "./widgets/cheevos.js";
@@ -41,7 +40,7 @@ export class UI {
   STICK_MARGIN = 1;
   STICK_TOLERANCE = 7;
   hltb = {};
-  // isTest = true;
+  isTest = true;
   constructor() {
     this.toggleLoading(false);
     this.initUI();
@@ -200,7 +199,6 @@ export class UI {
 
   }
   showAwardsAlerts(awardsArray = []) {
-    pushFSAlerts(awardsArray);
     const hardcoreAwards = [GAME_AWARD_TYPES.BEATEN, GAME_AWARD_TYPES.MASTERED];
     if (configData.discordNewAward) {
       awardsArray.forEach(awardObject => {
@@ -236,7 +234,6 @@ export class UI {
         sendDiscordAlert(alert);
       }
     })
-    pushFSAlerts(cheevoAlerts);
   }
   showContextmenu({ event, menuItems, sectionCode = "" }) {
     const setContextPosition = (contextMenu, isSubmenu) => {
