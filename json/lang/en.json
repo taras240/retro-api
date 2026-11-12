@@ -412,5 +412,6 @@
     "activitySectionName": "Activity",
     "heatmap": "Unlock heatmap",
     "rareUnlock": "{{rareCount}} rare",
-    "rareCountHint": "Achievements unlocked by less than {{rareRate}}% of players"
+    "rareCountHint": "Achievements unlocked by less than {{rareRate}}% of players",
+    "legendGamesCount": "{{count}} games"
 }

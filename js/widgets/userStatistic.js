@@ -6,6 +6,7 @@ import { applySort, sortBy } from "../functions/sortFilter.js";
 import { GAME_AWARD_TYPES } from "../enums/gameAwards.js";
 import { animateValue } from "../functions/animations/valueAnimation.js";
 import { raapi } from "../api/index.js";
+import { formatText } from "../functions/formatText.js";
 
 
 export class UserStatistic extends Widget {
@@ -60,12 +61,12 @@ export class UserStatistic extends Widget {
                         checked: this.uiProps.showPercentileCasual,
                         onChange: (event) => this.uiProps.showPercentileCasual = event.currentTarget.checked,
                     },
-                    {
-                        type: inputTypes.CHECKBOX,
-                        label: lang.userLevel,
-                        checked: this.uiProps.showUserLevel,
-                        onChange: (event) => this.uiProps.showUserLevel = event.currentTarget.checked,
-                    },
+                    // {
+                    //     type: inputTypes.CHECKBOX,
+                    //     label: lang.userLevel,
+                    //     checked: this.uiProps.showUserLevel,
+                    //     onChange: (event) => this.uiProps.showUserLevel = event.currentTarget.checked,
+                    // },
                     {
                         type: inputTypes.CHECKBOX,
                         label: lang.unlocks,
@@ -635,6 +636,7 @@ export class UserStatistic extends Widget {
             { kind: 'completed', cssVar: '--c', legendClass: 'completed' },
             { kind: 'beaten-hardcore', cssVar: '--b', legendClass: 'beaten' },
             { kind: 'beaten-softcore', cssVar: '--b-s', legendClass: 'beaten-soft' },
+            { kind: null, cssVar: '--s', legendClass: 'started' },
         ];
         const allGames = completionData?.Results ?? [];
         const allGamesCount = allGames.length;
@@ -642,22 +644,26 @@ export class UserStatistic extends Widget {
         if (!allGamesCount) return;
 
         const rates = AWARD_KINDS.reduce((acc, { kind, cssVar, legendClass }) => {
-            const rate = allGames.filter(g => g.HighestAwardKind === kind).length / allGamesCount * 100;
-            acc[legendClass] = { rate, cssVar };
+            const awarderGamesCount = allGames.filter(g => g.HighestAwardKind == kind).length;
+            const rate = awarderGamesCount / allGamesCount * 100;
+            acc[legendClass] = { rate, cssVar, awarderGamesCount };
             return acc;
         }, {});
+        const unfinishedCount = allGames.filter(g => !g.HighestAwardKind).length;
 
         const chartContainer = this.section.querySelector(".stats__chart-container");
         const totalRated = Object.values(rates).reduce((sum, { rate }) => sum + rate, 0);
 
-        Object.entries(rates).forEach(([legendClass, { cssVar, rate }]) => {
+        Object.entries(rates).forEach(([legendClass, { cssVar, rate, awarderGamesCount }]) => {
             chartContainer.style.setProperty(cssVar, rate + '%');
-            chartContainer.querySelector(`.legend__${legendClass}`)?.classList.toggle("hidden", !rate);
-            chartContainer.querySelector(`.legend__value-${legendClass}`).innerText = rate.toFixed(2) + '%';
-        });
+            const legendContainer = chartContainer.querySelector(`.legend__${legendClass}`);
 
-        this.section.querySelector('.legend__value-progress').innerText =
-            (100 - totalRated).toFixed(2) + '%';
+            legendContainer.classList.toggle("hidden", !rate);
+            legendContainer.setAttribute("count", awarderGamesCount);
+            legendContainer.setAttribute("rate", rate.toFixed(2) + "%");
+            legendContainer.querySelector(`.legend__value-${legendClass}`).innerText = `${rate.toFixed(2)}%`;
+            legendContainer.dataset.title = formatText(lang.legendGamesCount, { count: awarderGamesCount })
+        });
 
     }
     statusProperties = {
@@ -708,7 +714,7 @@ export class UserStatistic extends Widget {
                     <div class="legend__award legend__completed">${lang.completed}: <span class="legend__value-completed"></div>
                     <div class="legend__award legend__beaten">${lang.beaten}: <span class="legend__value-beaten"></div>
                     <div class="legend__award legend__beaten-soft">${lang.beatenSoftcore}: <span class="legend__value-beaten-soft"></div>
-                    <div class="legend__award legend__started">${lang.inProgress}: <span class="legend__value-progress"></div>
+                    <div class="legend__award legend__started">${lang.inProgress}: <span class="legend__value-started"></div>
                 </div>
             </div>
             </li>
