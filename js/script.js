@@ -17,53 +17,65 @@ else if (/android/i.test(userAgent) || (/iPhone/.test(userAgent) && !window.MSSt
   window.location.href = "./mobile/index.html";
 }
 else {
-
-  APIEvents = new EventTarget();
-  window.APIEvents = APIEvents;
-
-  UIEvents = new EventTarget();
-  window.UIEvents = UIEvents;
-
-  config = new Config();
-  window.config = config;
-  window.configData = config.configData;
-
-  initRaapi(config);
-  window.raapi = raapi;
-
-  ui = new UI();
-  window.ui = ui;
-
-
-  watcher = new Watcher();
-  window.watcher = watcher;
-
-  if (window.__TAURI__) {
-    let requestId = 0;
-    window.invokeRust = (method, ...args) => {
-      return new Promise((resolve, reject) => {
-        const id = ++requestId;
-
-        function listener(event) {
-          if (event.data.id !== id) return;
-
-          window.removeEventListener("message", listener);
-
-          if (event.data.error)
-            reject(event.data.error);
-          else
-            resolve(event.data.result);
-        }
-
-        window.addEventListener("message", listener);
-
-        parent.postMessage({
-          id,
-          method,
-          args
-        }, "*");
-      });
+  const initialize = async () => {
+    config = new Config();
+    try {
+      await config.ready;
+    }
+    catch (error) {
+      console.error("Failed to initialize configuration", error);
+      const loading = document.querySelector(".loading-section");
+      if (loading) {
+        loading.dataset.message = "Failed to load UI layout settings";
+      }
+      return;
     }
 
-  }
+    APIEvents = new EventTarget();
+    window.APIEvents = APIEvents;
+
+    UIEvents = new EventTarget();
+    window.UIEvents = UIEvents;
+
+    window.config = config;
+    window.configData = config.configData;
+
+    initRaapi(config);
+    window.raapi = raapi;
+
+    ui = new UI();
+    window.ui = ui;
+
+    watcher = new Watcher();
+    window.watcher = watcher;
+
+    if (window.__TAURI__) {
+      let requestId = 0;
+      window.invokeRust = (method, ...args) => {
+        return new Promise((resolve, reject) => {
+          const id = ++requestId;
+
+          function listener(event) {
+            if (event.data.id !== id) return;
+
+            window.removeEventListener("message", listener);
+
+            if (event.data.error)
+              reject(event.data.error);
+            else
+              resolve(event.data.result);
+          }
+
+          window.addEventListener("message", listener);
+
+          parent.postMessage({
+            id,
+            method,
+            args
+          }, "*");
+        });
+      }
+    }
+  };
+  initialize();
 }

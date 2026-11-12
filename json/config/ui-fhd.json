@@ -1,0 +1,62 @@
+{
+    "rp__section": {
+        "hidden": false,
+        "id": "rp__section",
+        "x": "0px",
+        "y": "0px",
+        "width": "397px",
+        "height": "207px"
+    },
+    "target_section": {
+        "hidden": false,
+        "showEvents": false,
+        "id": "target_section",
+        "x": "1394px",
+        "y": "0px",
+        "width": "526px",
+        "height": "889px"
+    },
+    "achievements_section": {
+        "hidden": false,
+        "id": "achievements_section",
+        "x": "0px",
+        "y": "208px",
+        "width": "397px",
+        "height": "477px"
+    },
+    "stats_section": {
+        "hidden": false,
+        "id": "stats_section",
+        "x": "0px",
+        "y": "686px",
+        "width": "397px",
+        "height": "203px",
+        "displayOrder": {
+            "stats_rank-rate-container": 0,
+            "stats_rank-rate-casual-container": 1,
+            "stats_rank-container": 2,
+            "stats_rank-casual-container": 3,
+            "stats_user-level-container": 4,
+            "stats_cheevos-softcore-container": 5,
+            "stats_true-ratio-container": 6,
+            "stats_points-container": 7,
+            "stats_retropoints-container": 8,
+            "stats_cheevos-hardcore-container": 9,
+            "stats_softpoints-container": 10,
+            "stats_mastered-container": 11,
+            "stats_completed-container": 12,
+            "stats_beaten-container": 13,
+            "stats_beaten-softcore-container": 14,
+            "stats_played-container": 15,
+            "stats_completion-chart": 16
+        },
+        "showRP": false,
+        "showUnlocksHardcore": true
+    },
+    "alerts_section": {
+        "skin": "classic",
+        "disabled": false,
+        "position": "bottom-right",
+        "sound": "coin"
+    }
+}

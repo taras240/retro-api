@@ -233,9 +233,12 @@ export class Config {
     return fileHandle;
   }
   constructor() {
+    this.ready = this.initialize();
+  }
+  async initialize() {
     this.readLocationParams();
     CONFIG_FILE_NAME += this.urlConfig.id ?? "";
-    this.readConfiguration();
+    await this.readConfiguration();
     this.fixConfig();
     console.warn(`Config size: ~${JSON.stringify(this._cfg).length * 2 / 1e6}Mb`);
 
@@ -326,6 +329,20 @@ export class Config {
       config = loadDefaults();
     }
     this._cfg = config;
+
+    const layoutName = this.urlConfig.uiLayout || config.uiLayoutName || "default";
+    const layoutID = uiLayouts[layoutName] ?? "";
+    const uiConfigKey = `ui${layoutID}`;
+    const hasUISettings = config[uiConfigKey] && Object.keys(config[uiConfigKey]).length > 0;
+    const isFhdScreen = window.screen.width >= 1900;
+    if (!hasUISettings && isFhdScreen) {
+      const response = await fetch("./json/config/ui-fhd.json");
+      if (!response.ok) {
+        throw new Error(`Failed to load UI layout settings: HTTP ${response.status}`);
+      }
+      config[uiConfigKey] = await response.json();
+      this.writeConfiguration(0);
+    }
 
 
   }
