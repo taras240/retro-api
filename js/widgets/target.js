@@ -1218,6 +1218,8 @@ export class Target extends Widget {
     }
 
     async showAotwEvent() {
+        if (!config.identConfirmed) return;
+
         const cheevo = await raapi.getAotW({});
 
         if (!cheevo || cheevo.wasShown) return;
