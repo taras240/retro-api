@@ -2,6 +2,7 @@ import { Widget } from "./widget.js";
 import { inputTypes } from "../components/inputElements.js";
 import { ALERT_TYPES } from "../enums/alerts.js";
 import { GAME_AWARD_TYPES } from "../enums/gameAwards.js";
+import { sendDiscordAlert } from "../functions/discord.js";
 import { createAlertData } from "../components/notifications/alertData.js";
 import { classicAlert } from "../components/notifications/skins/classic.js";
 import { minimalAlert } from "../components/notifications/skins/minimal.js";
@@ -42,6 +43,24 @@ export class Alerts extends Widget {
 
     get contextMenuItems() {
         return [
+            {
+                label: lang.alerts,
+                elements: [
+                    {
+                        prefix: lang.alertDuration,
+                        postfix: lang.sec,
+                        type: inputTypes.NUM_INPUT,
+                        value: this.uiProps.duration,
+                        onInput: (event) => this.uiProps.duration = event.currentTarget.value,
+                    },
+                    {
+                        label: lang.disableAlerts,
+                        type: inputTypes.CHECKBOX,
+                        checked: this.uiProps.disabled,
+                        onChange: (event) => this.uiProps.disabled = event.currentTarget.checked,
+                    },
+                ]
+            },
             {
                 label: lang.alertPosition,
                 elements: [
@@ -112,18 +131,62 @@ export class Alerts extends Widget {
                 })),
             },
             {
-                prefix: lang.alertDuration,
-                postfix: lang.sec,
-                type: inputTypes.NUM_INPUT,
-                value: this.uiProps.duration,
-                onInput: (event) => this.uiProps.duration = event.currentTarget.value,
+                label: lang.dsAlerts,
+                elements: [
+                    {
+                        type: inputTypes.TEXT_INPUT,
+                        label: lang.pasteWebhook,
+                        value: configData.discordWebhook ?? "",
+                        onChange: (event) => configData.discordWebhook = event.currentTarget.value,
+                    },
+                    {
+                        type: inputTypes.CHECKBOX,
+                        label: lang.startGameAlert,
+                        checked: configData.discordNewGame,
+                        onChange: (event) => configData.discordNewGame = event.currentTarget.checked,
+                    },
+                    {
+                        type: inputTypes.CHECKBOX,
+                        label: lang.startSession,
+                        checked: configData.discordStartSession,
+                        onChange: (event) => configData.discordStartSession = event.currentTarget.checked,
+                    },
+                    {
+                        type: inputTypes.CHECKBOX,
+                        label: lang.showCheevoAlerts,
+                        checked: configData.discordNewCheevo,
+                        onChange: (event) => configData.discordNewCheevo = event.currentTarget.checked,
+                    },
+                    {
+                        type: inputTypes.NUM_INPUT,
+                        label: lang.points,
+                        title: lang.DSAlertMinPointsInputHint,
+                        value: configData.minPointsDiscordAlert,
+                        onChange: (event) => configData.minPointsDiscordAlert = event.currentTarget.value,
+                    },
+                    {
+                        type: inputTypes.NUM_INPUT,
+                        label: lang.retropoints,
+                        title: lang.DSAlertMinTruePointsInputHint,
+                        value: configData.minRetroPointsDiscordAlert,
+                        onChange: (event) => configData.minRetroPointsDiscordAlert = event.currentTarget.value,
+                    },
+                    {
+                        type: inputTypes.CHECKBOX,
+                        label: lang.dsHardOnly,
+                        hint: lang.dsHardOnlyHint,
+                        checked: configData.hardOnlyDiscordAlert,
+                        onChange: (event) => configData.hardOnlyDiscordAlert = event.currentTarget.checked,
+                    },
+                    {
+                        type: inputTypes.CHECKBOX,
+                        label: lang.showAwardAlerts,
+                        checked: configData.discordNewAward,
+                        onChange: (event) => configData.discordNewAward = event.currentTarget.checked,
+                    },
+                ],
             },
-            {
-                label: lang.disableAlerts,
-                type: inputTypes.CHECKBOX,
-                checked: this.uiProps.disabled,
-                onChange: (event) => this.uiProps.disabled = event.currentTarget.checked,
-            },
+
         ];
     }
 
@@ -215,11 +278,17 @@ export class Alerts extends Widget {
     }
 
     onGameChange({ gameData, isNewGame, isWatching }) {
+        if (configData.discordNewGame && isWatching && isNewGame) {
+            sendDiscordAlert({ type: ALERT_TYPES.GAME });
+        }
         if (!isNewGame || !isWatching || !gameData) return;
         this.showAlerts([{ type: ALERT_TYPES.GAME, value: gameData }]);
     }
 
     onStartSession({ gameData }) {
+        if (!configData.discordNewGame && configData.discordStartSession) {
+            sendDiscordAlert({ type: ALERT_TYPES.GAME });
+        }
         if (!gameData) return;
         this.showAlerts([{ type: ALERT_TYPES.GAME, value: gameData }]);
     }
@@ -227,11 +296,37 @@ export class Alerts extends Widget {
     onCheevoUnlocks({ cheevos }) {
         if (!Array.isArray(cheevos) || cheevos.length === 0) return;
         this.showAlerts(cheevos.map(cheevo => ({ type: ALERT_TYPES.CHEEVO, value: cheevo })));
+        this.showDiscordCheevoAlerts(cheevos);
     }
 
     onAwardsEarned({ awardsArray }) {
         if (!Array.isArray(awardsArray) || awardsArray.length === 0) return;
         this.showAlerts(awardsArray);
+        this.showDiscordAwardAlerts(awardsArray);
+    }
+
+    showDiscordCheevoAlerts(cheevos) {
+        cheevos.forEach(cheevo => {
+            const isMinPointsMatch = cheevo.Points >= configData.minPointsDiscordAlert
+                || cheevo.TrueRatio >= configData.minRetroPointsDiscordAlert;
+            const isTypeMatch = configData.hardOnlyDiscordAlert ? cheevo.isEarnedHardcore : true;
+
+            if (configData.discordNewCheevo && isMinPointsMatch && isTypeMatch) {
+                sendDiscordAlert({ type: ALERT_TYPES.CHEEVO, value: cheevo });
+            }
+        });
+    }
+
+    showDiscordAwardAlerts(awardsArray) {
+        const hardcoreAwards = [GAME_AWARD_TYPES.BEATEN, GAME_AWARD_TYPES.MASTERED];
+        if (!configData.discordNewAward) return;
+
+        awardsArray.forEach(awardObject => {
+            if (configData.hardOnlyDiscordAlert && !hardcoreAwards.includes(awardObject.award)) {
+                return;
+            }
+            sendDiscordAlert(awardObject);
+        });
     }
 
     showAlerts(alerts) {

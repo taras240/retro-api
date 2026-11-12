@@ -1,7 +1,6 @@
 import { cheevoPopupElement } from "./components/cheevoPopup.js";
 import { hintElement } from "./components/hint.js";
 import { generateContextMenu } from "./components/contextMenu.js";
-import { sendDiscordAlert } from "./functions/discord.js";
 import { setPopupPosition } from "./functions/popupPosition.js";
 import { AchievementsBlock } from "./widgets/cheevos.js";
 import { Target } from "./widgets/target.js";
@@ -17,13 +16,11 @@ import { Games } from "./widgets/games.js";
 import { Status } from "./widgets/statusV2.js";
 // import { GameList } from "./widgets/gamesList.js";
 import { Links } from "./widgets/links.js";
-import { ALERT_TYPES } from "./enums/alerts.js";
 import { langPackUrl, local } from "./enums/locals.js";
 import { colorPresets } from "./enums/colorPresets.js";
 import { initBgAnimation } from "./functions/bgAnimations.js";
 import { LoginWindowElement } from "./widgets/login.js";
 import { Constructor } from "./widgets/constructor.js";
-import { GAME_AWARD_TYPES } from "./enums/gameAwards.js";
 import { blendColors, hexToRgba } from "./functions/ui/generateColors.js";
 import { fromHtml } from "./functions/html.js";
 import { EventAchievements } from "./widgets/events.js";
@@ -197,43 +194,6 @@ export class UI {
     loading.classList.toggle("hidden", !isLoading);
     loading.dataset.message = message ?? "Loading...";
 
-  }
-  showAwardsAlerts(awardsArray = []) {
-    const hardcoreAwards = [GAME_AWARD_TYPES.BEATEN, GAME_AWARD_TYPES.MASTERED];
-    if (configData.discordNewAward) {
-      awardsArray.forEach(awardObject => {
-        if (configData.hardOnlyDiscordAlert && !hardcoreAwards.includes(awardObject.award)) {
-          return;
-        }
-        sendDiscordAlert(awardObject);
-      });
-    }
-
-    //! awardsArray.length && setTimeout(() => this.stats.updateChart(), 4000);
-  }
-  showCheevoAlerts(cheevos = []) {
-    const cheevoAlerts = cheevos
-      .map(cheevo => ({
-        type: ALERT_TYPES.CHEEVO,
-        value: cheevo
-      }));
-
-    cheevoAlerts.forEach(alert => {
-      const cheevo = alert.value;
-      const {
-        minPointsDiscordAlert,
-        minRetroPointsDiscordAlert,
-        hardOnlyDiscordAlert,
-        discordNewCheevo
-      } = configData;
-
-      const isMinPointsMatch = cheevo.Points >= minPointsDiscordAlert || cheevo.TrueRatio >= minRetroPointsDiscordAlert;
-      const isTypeMatch = hardOnlyDiscordAlert ? cheevo.isEarnedHardcore : true;
-
-      if (discordNewCheevo && isMinPointsMatch && isTypeMatch) {
-        sendDiscordAlert(alert);
-      }
-    })
   }
   showContextmenu({ event, menuItems, sectionCode = "" }) {
     const setContextPosition = (contextMenu, isSubmenu) => {

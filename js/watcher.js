@@ -1,15 +1,12 @@
 import { raapi } from "./api/index.js";
 import { dialogWindow } from "./components/dialogWindow.js";
-import { ALERT_TYPES } from "./enums/alerts.js";
 import { CACHE_TYPES } from "./enums/cacheDataTypes.js";
 import { CHEEVO_TYPES } from "./enums/cheevoTypes.js";
-import { GAME_AWARD_TYPES } from "./enums/gameAwards.js";
 import { ONLINE_STATUS } from "./enums/onlineStatus.js";
 import { WATCHER_MODES } from "./enums/watcherModes.js";
 import { getSubsets } from "./functions/api/subsets.js";
 import { normalizeUserData } from "./functions/api/userDataNormalization.js";
 import { delay } from "./functions/delay.js";
-import { sendDiscordAlert } from "./functions/discord.js";
 import { calcEtaTimeToBeat } from "./functions/estimatedTime.js";
 import { gamesDataFromJson } from "./functions/gamesJson.js";
 import { readLog } from "./functions/logParser.js";
@@ -95,24 +92,16 @@ export class Watcher {
     }
     onGameChange(gameData, isNewGame) {
         const { isWatching } = this;
-        const { discordNewGame } = configData;
         APIEvents.dispatchEvent(new CustomEvent("gameChange", {
             detail: { gameData, isNewGame, isWatching }
         }));
 
-        if (discordNewGame && isWatching && isNewGame) {
-            sendDiscordAlert({ type: ALERT_TYPES.GAME });
-        }
         this.updateUserData({ delay: 2e3, isInit: true });
     }
     onStartSession() {
         APIEvents.dispatchEvent(new CustomEvent("startSession", {
             detail: { gameData: this.GAME_DATA }
         }));
-        const { discordNewGame, discordStartSession } = configData;
-        if (!discordNewGame && discordStartSession) {
-            sendDiscordAlert({ type: ALERT_TYPES.GAME });
-        }
 
     }
     onStopSession() {
@@ -126,12 +115,6 @@ export class Watcher {
             detail: { cheevos }
         }));
         this.updateEtaTTB();
-        try {
-            ui.showCheevoAlerts(cheevos);
-        }
-        catch (err) {
-            console.error("Cheevo Alerts error:", err);
-        }
 
     }
     onAwardsEarned(cheevos = []) {
@@ -141,12 +124,6 @@ export class Watcher {
         if (awardsArray) APIEvents.dispatchEvent(new CustomEvent("awardsEarned", {
             detail: { awardsArray }
         }));
-        try {
-            ui.showAwardsAlerts(awardsArray);
-        }
-        catch (err) {
-            console.error("Award Alerts error:", err);
-        }
     }
     onStatsUpdate() {
         APIEvents.dispatchEvent(new CustomEvent("statsUpdate", {
