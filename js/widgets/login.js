@@ -44,7 +44,7 @@ export function LoginWindowElement(config) {
         <.login-screen>
             <section.login__section>
                 <.login__container>
-                    <.login-form__container>
+                    <form.login-form__container>
                         <.login__header-container>
                             <.ra-img__container>
                                 <img.ra-img src="./assets/img/tr_logo.png">
@@ -63,11 +63,11 @@ export function LoginWindowElement(config) {
                                 href="${getRaKeyUrl}" target="_blank">${lang.getAPIKey}</a>
                         </>
                         <.login__buttons-container">
-                            <button class="login__input login__button-input" id="submit-login">Submit</button>
-                            <button class="login__input login__button-input login__import-settings" id="login-import-settings">Import Settings</button>
+                            <button type="submit" class="login__input login__button-input" id="submit-login">Submit</button>
+                            <button type="button" class="login__input login__button-input login__import-settings" id="login-import-settings">Import Settings</button>
                         </>
                     </>
-                </>
+                </form>
             </section>
         </>
     `);
@@ -76,10 +76,14 @@ export function LoginWindowElement(config) {
     const apiKeyInput = loginWindow.querySelector("#login__ra-api");
     const submitButton = loginWindow.querySelector("#submit-login");
     const importSettingsButton = loginWindow.querySelector("#login-import-settings");
+    const loginForm = loginWindow.querySelector(".login-form__container");
 
     importSettingsButton.addEventListener("click", () => config.importSettingsFromJson());
 
-    submitButton.addEventListener('click', () => submitLogin());
+    loginForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        submitLogin();
+    });
     userNameInput.value = config.USER_NAME ?? "";
     apiKeyInput.value = config.API_KEY ?? "";
     return loginWindow;
