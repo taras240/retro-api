@@ -1,5 +1,5 @@
 
-# RetroAPI Tracker
+# RetroCheevos Tracker
 
 *This web application is designed to track achievements obtained in retro games using the open API from retroachievements.org.*
 
