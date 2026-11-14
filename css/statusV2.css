@@ -1309,7 +1309,7 @@
 
 .game_glow_container_root {
     position: absolute;
-    inset: -20%;
+    inset: -15%;
     mask-image: url('https://community.fastly.steamstatic.com/public/images/profile/achievement_square_mask.png');
     mask-repeat: repeat;
     mask-size: 100%;
@@ -1325,21 +1325,21 @@
 
 .game_glow_container {
     position: absolute;
-    inset: -20%;
+    inset: -15%;
     /* mask-image: url( 'https://community.fastly.steamstatic.com/public/images/profile/achievement_square_mask.png' ); */
     mask-repeat: repeat;
     mask-size: 100%;
     overflow: hidden;
     pointer-events: none;
 
-    animation: game_glow_rotate 18s linear infinite reverse;
+    animation: game_glow_rotate 40s linear infinite reverse;
     mask-image: url('https://community.fastly.steamstatic.com/public/images/profile/achievement_star_mask.png');
 }
 
 .game_glow {
     position: absolute;
     inset: -10px;
-    animation: game_glow_rotate 6s linear infinite;
+    animation: game_glow_rotate 20s linear infinite;
     mix-blend-mode: overlay;
     background: repeating-conic-gradient(color-mix(in srgb, var(--glow-color) 40%, transparent) 0%,
             transparent 6%,
