@@ -623,6 +623,10 @@ svg.icon {
     mask-image: url(../assets/img/note.svg)
 }
 
+.console-icon {
+    mask-image: url(../assets/img/terminal.svg)
+}
+
 .save-icon {
     mask-image: url(../assets/img/save.svg);
     mask-size: 85%;

@@ -1,0 +1,73 @@
+.section.console_section {
+    display: flex;
+    flex-direction: column;
+    top: 100px;
+    left: 200px;
+    width: 500px;
+    height: 350px;
+    min-width: 300px;
+    min-height: 200px;
+}
+
+.console-header {
+    gap: 0.5em;
+}
+
+.console-header .widget-header-text {
+    flex: 1;
+}
+
+.console__clear {
+    width: 1.25em;
+    aspect-ratio: 1;
+    background-color: var(--font-color);
+    mask-image: url(../assets/img/clear_all.svg);
+    mask-size: contain;
+    mask-position: center;
+    mask-repeat: no-repeat;
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.console__clear:hover {
+    opacity: 1;
+}
+
+.console-container {
+    flex: 1;
+    min-height: 0;
+    padding: 0.5em;
+}
+
+.console__output {
+    width: 100%;
+    height: 100%;
+    padding: 0.5em;
+    border-radius: var(--border-radius);
+    background-color: black;
+    overflow: auto;
+    user-select: text;
+}
+
+.console__entry {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    user-select: text;
+    font-family: consolas, monospace;
+    margin-bottom: 0.25em;
+    border-radius: 3px;
+    padding: 0.25em;
+    background: #77777750;
+}
+
+.console__entry--error {
+    color: #ff4d4f;
+}
+
+.console__entry--warn {
+    color: #ffa940;
+}
+
+.console__entry--log {
+    color: #c9c9c9;
+}

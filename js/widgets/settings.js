@@ -321,7 +321,12 @@ export class Settings extends Widget {
                         onChange: (event) => configData.ignoreOnlineStatus = event.currentTarget.checked,
                         hint: lang.ignoreOnlineStatusHint,
                     },
-
+                    {
+                        type: inputTypes.CHECKBOX,
+                        label: lang.showErrors,
+                        checked: configData.showErrors,
+                        onChange: (event) => configData.showErrors = event.currentTarget.checked,
+                    },
                 ]
             },
             {

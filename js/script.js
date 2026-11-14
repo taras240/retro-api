@@ -4,9 +4,9 @@ import { Watcher } from "./watcher.js";
 import { isSupported } from "./functions/main/isSupported.js";
 import { fromHtml } from "./functions/html.js";
 import { initRaapi, raapi } from "./api/index.js";
+import { installConsoleCapture } from "./functions/consoleCapture.js";
 let config, ui, watcher, APIEvents, UIEvents, userAuthData;
 const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
 if (false && !isSupported()) {
   document.body.replaceChildren();
   document.body.append(fromHtml(`
@@ -77,5 +77,6 @@ else {
       }
     }
   };
+  installConsoleCapture();
   initialize();
 }

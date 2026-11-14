@@ -115,6 +115,7 @@ export class Config {
     preventSubsetBug: true,
     ignoreSubsets: true,
     ignoreOnlineStatus: false,
+    showErrors: false
 
   }
   configValuePreprocessors = {

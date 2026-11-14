@@ -41,7 +41,7 @@ export async function call(method, ...params) {
         ui?.showAPIError?.(false);
         return result;
     } catch (error) {
-        console.error(error.message);
+        console.error(`RA API [${method}] ${error}`);
         ui?.showAPIError?.(true, `RA API [${method}] ${error}`);
     }
 }

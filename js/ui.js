@@ -7,6 +7,7 @@ import { Target } from "./widgets/target.js";
 import { SidePanel } from "./widgets/sidePanel.js";
 import { Settings } from "./widgets/settings.js";
 import { Note } from "./widgets/note.js";
+import { ConsoleWidget } from "./widgets/console.js";
 import { Awards } from "./widgets/awards.js";
 import { GameCard } from "./widgets/gameCard.js";
 import { Progression } from "./widgets/progression.js";
@@ -104,6 +105,7 @@ export class UI {
     this.settings = new Settings();
     new Links();
     this.constr = new Constructor();
+    this.consoleWidget = new ConsoleWidget();
     // new Completion();
 
   }
@@ -280,6 +282,7 @@ export class UI {
   hasApiError = false;
   errorTimeout = null;
   showAPIError(isError, message) {
+    if (!configData.showErrors) return;
     if (!isError && !this.hasApiError) return;
     if (isError && this.hasApiError) return;
     if (isError && !this.hasApiError) {

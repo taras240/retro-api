@@ -415,5 +415,7 @@
     "rareCountHint": "Achievements unlocked by less than {{rareRate}}% of players",
     "legendGamesCount": "{{count}} games",
     "statusSectionName": "Status",
-    "notesSectionName": "Notes"
+    "notesSectionName": "Notes",
+    "consoleSectionName": "Console",
+    "showErrors": "Show Errors"
 }
