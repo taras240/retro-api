@@ -9,6 +9,7 @@ import { fromHtml } from "../functions/html.js";
 
 
 export class Activity extends Widget {
+    widgetTitle = lang.activitySectionName;
     widgetIcon = {
         description: "activity widget",
         iconClass: "activity-icon",

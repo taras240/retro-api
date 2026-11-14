@@ -12,6 +12,7 @@ import { getRandomID } from "../functions/randomID.js";
 import { UI_EVENTS_LIST } from "../enums/UIEvents.js";
 
 export class Widget {
+    widgetTitle = lang.targetSectionName;
     widgetIcon = {
         imageSource: "../assets/img/gamepad.svg",
         iconID: "widget-id",
@@ -86,7 +87,10 @@ export class Widget {
                 this.close();
             }
             else if (event.target.matches(".tweak-button")) {
-                this.contextMenuItems && ui.settings.openSettings(this.contextMenuItems);
+                this.contextMenuItems && ui.settings.openSettings({
+                    settings: this.contextMenuItems,
+                    widgetTitle: this.widgetTitle,
+                })
             }
             else if (event.target.matches(".resizer") || hoveredEdge) {
                 this.section.classList.add("resized");

@@ -23,6 +23,7 @@ import { formatText } from "../functions/formatText.js";
 import { sweepEffect } from "../components/windowEffects.js";
 
 export class Target extends Widget {
+    widgetTitle = lang.targetSectionName;
     sectionCode = "-target";
     widgetIcon = {
         description: `${lang.targetSectionName}`,

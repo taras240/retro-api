@@ -18,6 +18,7 @@ const PREVIEW_SIZE = {
     contain: "contain"
 }
 export class GameCard extends Widget {
+    widgetTitle = lang.gameCard;
     widgetIcon = {
         description: "game info widget",
         iconClass: "game-info-icon",

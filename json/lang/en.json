@@ -413,5 +413,7 @@
     "heatmap": "Unlock heatmap",
     "rareUnlock": "{{rareCount}} rare",
     "rareCountHint": "Achievements unlocked by less than {{rareRate}}% of players",
-    "legendGamesCount": "{{count}} games"
+    "legendGamesCount": "{{count}} games",
+    "statusSectionName": "Status",
+    "notesSectionName": "Notes"
 }

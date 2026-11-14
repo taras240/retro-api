@@ -18,6 +18,7 @@ import { contextSetsMenu } from "../functions/settings/subsetSettings.js";
 import { cheevoImageUrl } from "../functions/raLinks.js";
 import { fromHtml } from "../functions/html.js";
 export class AchievementsBlock extends Widget {
+    widgetTitle = lang.cheevosSectionName;
     widgetIcon = {
         description: "cheevos widget",
         iconClass: "achievements-icon",

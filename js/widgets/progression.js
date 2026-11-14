@@ -7,6 +7,7 @@ import { inputTypes } from "../components/inputElements.js";
 import { filterBy, sortBy } from "../functions/sortFilter.js";
 import { fromHtml } from "../functions/html.js";
 export class Progression extends Widget {
+    widgetTitle = lang.progressionSectionName;
     widgetIcon = {
         description: "progression widget",
         iconClass: "progression",

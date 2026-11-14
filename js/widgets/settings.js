@@ -543,11 +543,12 @@ export class Settings extends Widget {
             this.section.querySelectorAll(".extended").forEach(el => el.classList.remove("extended"));
         });
     }
-    generateWidget(settingsItems) {
+    generateWidget(settingsItems, widgetTitle) {
+        const title = `${widgetTitle || ""} ${lang.settingsSectionName}`;
         const widgetData = {
             classList: ["prefs_section", "section"],
             id: "settings_section",
-            title: lang.settingsSectionName,
+            title,
             contentClassList: ["settings_container", "content-container"]
         };
 
@@ -594,9 +595,9 @@ export class Settings extends Widget {
         generateSettingsContainer(settingsItems);
     }
 
-    openSettings(settingsItems = this.settingsItems) {
+    openSettings({ settings = this.settingsItems, widgetTitle }) {
         this.close();
-        this.generateWidget(settingsItems);
+        this.generateWidget(settings, widgetTitle);
         this.addEvents();
         config.ui.settings_section && (
             config.ui.settings_section.x && (this.section.style.left = config.ui.settings_section.x),

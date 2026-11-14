@@ -37,7 +37,7 @@ export class SidePanel {
         document.addEventListener("touchstart", (e) => this.touchVisibilityHandler(e));
         this.settings.addEventListener("click", (e) => {
             const settingsWidget = document.querySelector("#settings_section");
-            settingsWidget ? settingsWidget.remove() : ui.settings.openSettings();
+            settingsWidget ? settingsWidget.remove() : ui.settings.openSettings({});
         });
     }
     setValues() {

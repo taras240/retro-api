@@ -4,6 +4,7 @@ import { resizeEvent } from "../functions/resizingWidget.js";
 import { fromHtml } from "../functions/html.js";
 import { buttonsHtml } from "../components/htmlElements.js";
 export class Note extends Widget {
+    widgetTitle = lang.notesSectionName;
     widgetIcon = {
         description: "notes widget",
         iconClass: "note-icon",

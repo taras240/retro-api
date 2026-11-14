@@ -10,6 +10,7 @@ import { formatText } from "../functions/formatText.js";
 
 
 export class UserStatistic extends Widget {
+    widgetTitle = lang.statisticsSectionName;
     widgetIcon = {
         description: "user statistics widget",
         iconClass: "stats-icon",

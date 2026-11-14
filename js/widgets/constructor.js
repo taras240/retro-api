@@ -310,7 +310,7 @@ export class Constructor extends Widget {
             <.editor-container"/>
         `);
 
-        ui.settings.openSettings(editorItems)
+        ui.settings.openSettings({ settings: editorItems })
     }
 
     open() {

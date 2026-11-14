@@ -42,6 +42,7 @@ import { fromHtml } from "../functions/html.js";
 import { heatmapBarHtml, updateHeatmapBar } from "../components/statusWidget/heatmapBar.js";
 
 export class Status extends Widget {
+    widgetTitle = lang.statusSectionName;
     widgetIcon = {
         description: "status widget",
         iconClass: "status-icon",
@@ -591,7 +592,10 @@ export class Status extends Widget {
                 showComments(watcher.GAME_DATA?.ID, 1);
             }
             else if (event.target.matches(".tweak-button")) {
-                this.contextMenuItems && ui.settings.openSettings(this.contextMenuItems);
+                ui.settings.openSettings({
+                    settings: this.contextMenuItems,
+                    widgetTitle: this.widgetTitle,
+                });
             }
             else if (event.target.matches(".close-icon")) {
                 event.stopPropagation();

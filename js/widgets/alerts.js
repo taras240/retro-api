@@ -32,14 +32,15 @@ const ALERT_SOUNDS = Object.freeze({
 });
 
 export class Alerts extends Widget {
+    widgetTitle = lang.alertsSectionName;
     widgetIcon = {
         description: "alerts widget",
         iconClass: "alert-icon",
         onChangeEvent: () => {
             this.widgetIcon.element.checked = false;
-            ui.settings.openSettings(this.contextMenuItems);
+            ui.settings.openSettings({ settings: this.contextMenuItems, widgetTitle: this.widgetTitle });
         },
-    };
+    }
 
     get contextMenuItems() {
         return [
