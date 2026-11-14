@@ -766,6 +766,9 @@ export class Status extends Widget {
         this.addAlertsToQuery(awardsArray);
         this.updateProgressionBar();
         this.updateProgressBar();
+
+        this.section.classList.toggle("mastered", watcher?.GAME_DATA?.award);
+        this.section.classList.toggle("beaten", watcher?.GAME_DATA?.progressionAward);
     }
     onStartSession({ }) {
         this.timeWatcher().start();
@@ -984,7 +987,7 @@ export class Status extends Widget {
     }
     fillGameData() {
         const fillGameInfoData = () => {
-            const { ImageIcon, ImageIngame, Title, badges, ConsoleName, ConsoleID, ID, NumAchievements, totalPoints, retroRatio } = watcher.GAME_DATA;
+            const { ImageIcon, ImageIngame, Title, badges, ConsoleName, ConsoleID, ID, NumAchievements, totalPoints, retroRatio, award, progressionAward } = watcher.GAME_DATA;
 
             this.gameElements.icon.src = gameImageUrl(ImageIcon);
 
@@ -996,8 +999,9 @@ export class Status extends Widget {
                 ])
             );
             this.gameElements.title.href = gameUrl(ID);
+            this.section.classList.toggle("mastered", award);
+            this.section.classList.toggle("beaten", progressionAward);
         }
-
         fillGameInfoData();
         this.updateTime();
         this.updateRichPresence();
@@ -1006,6 +1010,7 @@ export class Status extends Widget {
         this.updateHeatmapBar();
         this.updateFocusPreview();
         this.updateProgressBar();
+
     }
     updateRichPresence(richPresenceText) {
         this.section.querySelectorAll(".rp__rich-presence")?.forEach(el => {

@@ -22,11 +22,22 @@
     --alert-heigth: 5.5em;
     --heatmap-unlock-color: var(--accent-color);
     --heatmap-bg: var(--selection-color);
+
+    --glow-color: transparent;
 }
 
 .status__section {
     --alert-heigth: 100%;
 }
+
+.section.beaten {
+    --glow-color: var(--silver-color);
+}
+
+.section.mastered {
+    --glow-color: var(--gold-color);
+}
+
 
 .rp__section {
     /* --bg-image:url(); */
@@ -294,8 +305,8 @@
     height: 100%;
     aspect-ratio: 1;
     flex-shrink: 0;
-    overflow: hidden;
     border-radius: 2px;
+    background: var(--main-color);
 }
 
 
@@ -307,6 +318,7 @@
 .rp__game-image {
     height: 100%;
     aspect-ratio: 1;
+    border: 1px solid var(--glow-color);
 }
 
 .rp__game-info {
@@ -1293,4 +1305,56 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.game_glow_container_root {
+    position: absolute;
+    inset: -20%;
+    mask-image: url('https://community.fastly.steamstatic.com/public/images/profile/achievement_square_mask.png');
+    mask-repeat: repeat;
+    mask-size: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: -1;
+    display: none;
+}
+
+.section:is(.beaten, .mastered) .game_glow_container_root {
+    display: block;
+}
+
+.game_glow_container {
+    position: absolute;
+    inset: -20%;
+    /* mask-image: url( 'https://community.fastly.steamstatic.com/public/images/profile/achievement_square_mask.png' ); */
+    mask-repeat: repeat;
+    mask-size: 100%;
+    overflow: hidden;
+    pointer-events: none;
+
+    animation: game_glow_rotate 18s linear infinite reverse;
+    mask-image: url('https://community.fastly.steamstatic.com/public/images/profile/achievement_star_mask.png');
+}
+
+.game_glow {
+    position: absolute;
+    inset: -10px;
+    animation: game_glow_rotate 6s linear infinite;
+    mix-blend-mode: overlay;
+    background: repeating-conic-gradient(color-mix(in srgb, var(--glow-color) 40%, transparent) 0%,
+            transparent 6%,
+            color-mix(in srgb, var(--glow-color) 40%, transparent) 10%,
+            var(--glow-color) 26%,
+            color-mix(in srgb, var(--glow-color) 40%, transparent) 35%,
+            var(--glow-color) 40%,
+            color-mix(in srgb, var(--glow-color) 40%, transparent) 60%,
+            var(--glow-color) 82%,
+            color-mix(in srgb, var(--glow-color) 40%, transparent) 100%);
+    overflow: hidden;
+}
+
+@keyframes game_glow_rotate {
+    100% {
+        transform: rotate(1turn);
+    }
 }

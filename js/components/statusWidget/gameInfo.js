@@ -8,8 +8,13 @@ const gameInfoContent = (game, theme) => {
     return `
         <.rp__game-container>
             <.rp__preview-container>
-                <img.rp__game-image src="" alt="GAME" srcset="">
+                <img.rp__game-image src="">
                 <button#rp__watch-button.status__watch-button/>
+                <.game_glow_container_root>
+                    <.game_glow_container>
+                        <.game_glow/>
+                    </>
+                </>
             </>
             <.rp__game-info>
                 <a.rp__game-title target="_blank"/>
