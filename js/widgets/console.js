@@ -7,7 +7,7 @@ export class ConsoleWidget extends Widget {
     widgetTitle = lang.consoleSectionName;
     widgetIcon = {
         description: "Console",
-        iconClass: "console-icon",
+        iconClass: "terminal-icon",
     };
 
     constructor() {
@@ -24,7 +24,7 @@ export class ConsoleWidget extends Widget {
         const widget = fromHtml(`
             <section#console_section.console_section.section>
                 <.header-container.console-header>
-                    <.header-icon.console-icon/>
+                    <.header-icon.terminal-icon/>
                     <h2.widget-header-text>${this.widgetTitle}</h2>
                     <button.console__clear.clear-icon data-title="${lang.clearAll}"/>
                     ${buttonsHtml.close()}
