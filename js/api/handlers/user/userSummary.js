@@ -16,8 +16,8 @@ export async function getUserSummary({ apiKey, username, games, cheevos, }) {
             .flatMap(achievements => Object.values(achievements))
             .map(cheevo => ({
                 ...cheevo,
-                DateAwarded: formatDateTime(cheevo.DateAwarded),
-                isEarned: !!cheevo.DateAwarded,
+                DateAwarded: formatDateTime(cheevo?.DateAwarded),
+                isEarned: !!cheevo?.DateAwarded,
             }));
     }
 

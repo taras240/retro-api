@@ -260,6 +260,7 @@ export const raapi = {
         const response = await call("getUserProfileV2", {
             username: getUsername(username)
         });
+        if (!response) return this.getUserSummary({})
         return response;
     },
     async getGameData({ gameID, username }) {
