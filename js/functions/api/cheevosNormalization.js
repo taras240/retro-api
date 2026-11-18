@@ -5,7 +5,7 @@ import { getCheevoDifficulty } from "./cheevoDifficulty.js";
 import { generateCheevosDisplayOrder } from "./displayOrder.js";
 import { parseCheevosGenres } from "./genreParser.js";
 import { parseCheevoLevels } from "./levelParser.js";
-import { isTranslationAvailable, translateCheevo } from "../translator/translator.js";
+import { isTranslationAvailable, translateCheevo, withTranslationLoading } from "../translator/translator.js";
 
 const normalizeAchievement = (achievement, gameData, savedGameData) => {
     const gameID = gameData.ID;
@@ -106,22 +106,24 @@ export const addCheevoTranslations = async (gameData, targetLanguage) => {
     const available = await isTranslationAvailable("en", targetLanguage);
     if (!available) return;
 
-    await Promise.all(cheevos.map(async (cheevo) => {
-        try {
-            const translations = await translateCheevo({
-                Title: cheevo.Title,
-                Description: cheevo.Description,
-                targetLanguage
-            });
+    await withTranslationLoading(async () => {
+        await Promise.all(cheevos.map(async (cheevo) => {
+            try {
+                const translations = await translateCheevo({
+                    Title: cheevo.Title,
+                    Description: cheevo.Description,
+                    targetLanguage
+                });
 
-            if (translations) {
-                cheevo.titleTr = translations.titleTr;
-                cheevo.descriptionTr = translations.descriptionTr;
+                if (translations) {
+                    cheevo.titleTr = translations.titleTr;
+                    cheevo.descriptionTr = translations.descriptionTr;
+                }
+            } catch (error) {
+                console.warn(`Не вдалося перекласти досягнення ${cheevo.ID}.`, error);
             }
-        } catch (error) {
-            console.warn(`Не вдалося перекласти досягнення ${cheevo.ID}.`, error);
-        }
-    }));
+        }));
+    }, "Translating achievements....");
 }
 
 export const normalizeCheevos = async (gameData, savedGameData = {}) => {
