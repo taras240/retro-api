@@ -406,6 +406,7 @@ export class Settings extends Widget {
                         label: lang.translateCheevos,
                         checked: configData.translateCheevos,
                         onChange: (event) => configData.translateCheevos = event.currentTarget.checked,
+                        hint: lang.translateCheevosHint,
                     },
                 ]
             },

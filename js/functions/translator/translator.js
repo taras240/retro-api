@@ -51,7 +51,7 @@ async function createTranslator(sourceLanguage, targetLanguage) {
         monitor(monitor) {
             monitor.addEventListener("downloadprogress", (event) => {
                 const progress = Math.max(0, Math.min(100, Math.round(event.loaded * 100)));
-                setLoadingScreen(true, `Loading translation language model: ${progress}%`);
+                setLoadingScreen(true, `Loading translation model: ${progress}%`);
             });
         }
     });
@@ -85,7 +85,7 @@ export async function isTranslationAvailable(
         if (availability === "downloadable" || availability === "downloading") {
             await withTranslationLoading(
                 () => createTranslator(sourceLanguage, targetLanguage),
-                "Loading translation language model..."
+                "Loading translation model..."
             );
             return true;
         }

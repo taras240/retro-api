@@ -419,5 +419,5 @@
     "consoleSectionName": "Console",
     "showErrors": "Show Errors",
     "translateCheevos": "Translate Cheevos",
-    "translateCheevosHint": "Use the browser's built-in AI model to translate achievements."
+    "translateCheevosHint": "Use the browser's built-in tanslation model to translate achievements.(Chrome only)"
 }
