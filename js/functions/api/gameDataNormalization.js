@@ -168,11 +168,11 @@ const addSavedData = (gameData, savedData = {}) => {
         // { cheevoTags: ["razor"] }
     )
 }
-export const normalizeGameData = (gameData, gamesDB = {}) => {
+export const normalizeGameData = async (gameData, gamesDB = {}) => {
     if (!gameData) return;
     const savedGameData = gamesDB[gameData.ID] ?? {};
     addSavedData(gameData, savedGameData);
-    normalizeCheevos(gameData, savedGameData);
+    await normalizeCheevos(gameData, savedGameData);
     cheevosArray = Object.values(gameData?.Achievements ?? []);
     gameData.ParentGameID ??= gameData.ID;
     addReleaseBadges(gameData);
