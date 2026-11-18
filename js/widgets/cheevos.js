@@ -926,7 +926,19 @@ export class AchievementsBlock extends Widget {
         }
 
         function showAnimation() {
+            const containerRect = container.getBoundingClientRect();
+
             [...cheevos].forEach((cheevo) => {
+                const cheevoRect = cheevo.getBoundingClientRect();
+                const isInVisibleScrollArea =
+                    cheevoRect.width > 0 &&
+                    cheevoRect.height > 0 &&
+                    cheevoRect.left < containerRect.right &&
+                    cheevoRect.right > containerRect.left &&
+                    cheevoRect.top < containerRect.bottom &&
+                    cheevoRect.bottom > containerRect.top;
+
+                if (!isInVisibleScrollArea) return;
 
                 const { tx, ty } = getRandomOffscreenTransform(cheevo);
 
@@ -934,7 +946,7 @@ export class AchievementsBlock extends Widget {
                 cheevo.style.setProperty("--translate-y", `${ty}px`);
                 isUnload ? cheevo.classList.add("show-unload-anim") : cheevo.classList.add("show-load-anim");
                 setTimeout(() =>
-                    cheevo?.classList.remove("show-load-anim", "opacity-0"),
+                    cheevo?.classList.remove("show-load-anim", "show-unload-anim", "opacity-0"),
                     2e3
                 )
             });
