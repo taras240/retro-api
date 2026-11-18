@@ -417,5 +417,7 @@
     "statusSectionName": "Status",
     "notesSectionName": "Notes",
     "consoleSectionName": "Console",
-    "showErrors": "Show Errors"
+    "showErrors": "Show Errors",
+    "translateCheevos": "Translate Cheevos",
+    "translateCheevosHint": "Use the browser's built-in AI model to translate achievements."
 }

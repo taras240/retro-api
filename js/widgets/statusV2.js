@@ -709,11 +709,11 @@ export class Status extends Widget {
             titleElements.forEach(el => el.replaceChildren(
                 ...fromHtml([
                     badgeElements.gold("focus"),
-                    `<span> ${focusCheevo.Title}</span>`
+                    `<span> ${focusCheevo.titleTr || focusCheevo.Title}</span>`
                 ])
             ));
             descriptionElements.forEach(el => {
-                el.innerText = focusCheevo.Description;
+                el.innerText = focusCheevo.descriptionTr || focusCheevo.Description;
                 el.dataset.title = focusCheevo.Description;
             });
         }

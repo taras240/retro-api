@@ -327,6 +327,12 @@ export class Settings extends Widget {
                         checked: configData.showErrors,
                         onChange: (event) => configData.showErrors = event.currentTarget.checked,
                     },
+                    {
+                        type: inputTypes.CHECKBOX,
+                        label: lang.translateCheevos,
+                        checked: configData.translateCheevos,
+                        onChange: (event) => configData.translateCheevos = event.currentTarget.checked,
+                    },
                 ]
             },
             {

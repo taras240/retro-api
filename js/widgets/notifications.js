@@ -182,9 +182,11 @@ export class Activity extends Widget {
             else if (alert.type === ALERT_TYPES.CHEEVO) {
                 const {
                     Title,
+                    titleTr,
                     BadgeName,
                     Points,
                     Description,
+                    descriptionTr,
                     TrueRatio,
                     retroRatio,
                     rateEarnedHardcore,
@@ -192,10 +194,10 @@ export class Activity extends Widget {
                 } = alert.value;
 
                 const normalizedGameData = {
-                    Title,
+                    Title: titleTr || Title,
                     BadgeName,
                     Points,
-                    Description,
+                    Description: descriptionTr || Description,
                     TrueRatio,
                     retroRatio,
                     rateEarnedHardcore,

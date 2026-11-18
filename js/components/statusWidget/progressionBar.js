@@ -38,7 +38,7 @@ export const updateProgressionBar = (container, gameData, isHardMode = true) => 
     const progressionMessage = (focusCheevo, focusIndex, cheevos, winCount) => {
         let message;
         if (focusIndex >= 0) {
-            message = `${badgeElements.gold(`${focusIndex + 1}/${cheevos.length}`)} ${focusCheevo.Description}`;
+            message = `${badgeElements.gold(`${focusIndex + 1}/${cheevos.length}`)} ${focusCheevo.descriptionTr || focusCheevo.Description}`;
         } else if (gameData?.progressionAward || gameData.subsetsData?.[mainSetID]?.progressionAward) {
             message = winCount > 1 ? lang.gameBeatenAllEndingsMsg : lang.gameBeatenMsg;
         } else {

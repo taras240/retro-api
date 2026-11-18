@@ -107,11 +107,11 @@ export function CheevoElement(achievement, uiProps) {
             <.target__cheevo-details>
                 <h3 class="target__cheevo-header">
                     <a target="_blanc" data-title="${lang.goToRAHint}" href="${cheevoUrl(achievement)}">
-                        ${achievement.Title}
+                        ${achievement.titleTr || achievement.Title}
                     </a>
                     ${levelBadgeHtml}${genresBadgesHtml}
                 </h3>
-                <p class="list-item__text">${achievement.Description}</p>
+                <p class="list-item__text">${achievement.descriptionTr || achievement.Description}</p>
                 <.icons-row-list>
                     ${buildIconsRow(achievement)}
                 </>
