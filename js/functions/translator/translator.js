@@ -37,6 +37,7 @@ export async function withTranslationLoading(task, message) {
 }
 
 const translatorCache = new Map();
+const cheevoTranslationCache = new Map();
 
 async function createTranslator(sourceLanguage, targetLanguage) {
     const cacheKey = `${sourceLanguage}:${targetLanguage}`;
@@ -77,7 +78,6 @@ export async function isTranslationAvailable(
             sourceLanguage,
             targetLanguage
         });
-        console.log({ availability, targetLanguage, sourceLanguage })
         if (availability === "available") {
             return true;
         }
@@ -108,7 +108,12 @@ export async function translateCheevo({
         throw new Error("Переклад у браузері недоступний.");
     }
 
-    return withTranslationLoading(async () => {
+    const cacheKey = JSON.stringify([sourceLanguage, targetLanguage, Title, Description]);
+    if (cheevoTranslationCache.has(cacheKey)) {
+        return cheevoTranslationCache.get(cacheKey);
+    }
+
+    const translationPromise = withTranslationLoading(async () => {
         const translator = await createTranslator(sourceLanguage, targetLanguage);
         const [titleTr, descriptionTr] = await Promise.all([
             Title ? translator.translate(Title) : "",
@@ -120,6 +125,14 @@ export async function translateCheevo({
             descriptionTr: normalizeDescription(descriptionTr),
         };
     }, "Translating achievements...");
+
+    cheevoTranslationCache.set(cacheKey, translationPromise);
+    try {
+        return await translationPromise;
+    } catch (error) {
+        cheevoTranslationCache.delete(cacheKey);
+        throw error;
+    }
 }
 function capitalizeText(text) {
     return text.charAt(0).toUpperCase() + text.slice(1);
