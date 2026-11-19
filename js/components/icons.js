@@ -2,14 +2,23 @@
 import { CHEEVO_GENRES } from "../enums/cheevoGenres.js"
 import { RA_PLATFORM_CODES } from "../enums/RAPlatforms.js"
 
-const signedIconTemplate = ({ icon, label = "", hint = "", }) => {
-    return `<p class="signed-icon" data-title="${hint}">${icon}${label}</p>`
+const signedIconTemplate = ({ icon, label = "", hint = "", classList = [] }) => {
+    return `<p class="signed-icon ${classList.join(" ")}" data-title="${hint}">${icon}${label}</p>`
 }
 export const signedIcons = {
     cheevos: (count) => signedIconTemplate({ icon: icons.cheevos, label: count, hint: lang.cheevosCount }),
     points: (points) => signedIconTemplate({ icon: icons.points, label: points, hint: lang.points }),
     retropoints: (retropoints) => signedIconTemplate({ icon: icons.retropoints, label: retropoints, hint: lang.retropoints }),
-    rarity: (rateEarned) => signedIconTemplate({ icon: icons.rarity, label: rateEarned, hint: lang.unlockRate }),
+    rarity: (rateEarned) => {
+        const unlockRate = parseFloat(rateEarned) || 0;
+        const rarity = unlockRate <= config.RARE_RATE ? "rare" : unlockRate <= config.UNCOMMON_RATE ? "uncommon" : ""
+        return signedIconTemplate({
+            icon: icons.rarity,
+            label: rateEarned,
+            hint: lang.unlockRate,
+            classList: [rarity]
+        })
+    },
     retroRatio: (retroRatio) => signedIconTemplate({ icon: icons.retroRatio, label: retroRatio, hint: lang.trueRatio }),
     level: (level) => signedIconTemplate({ icon: icons.level, label: level, hint: lang.level }),
 

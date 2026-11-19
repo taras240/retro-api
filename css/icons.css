@@ -239,6 +239,14 @@ svg.icon {
     white-space: nowrap;
 }
 
+.signed-icon.uncommon {
+    color: var(--gold-color);
+}
+
+.signed-icon.rare {
+    color: var(--rare-color);
+}
+
 .icon-button,
 .icon-button:hover {
     display: grid;
