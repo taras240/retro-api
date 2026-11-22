@@ -1,0 +1,76 @@
+.progressbar-pixel__container {
+    --progress-rate: 0%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65em;
+    min-width: 17em;
+    padding: 0.9em;
+    color: #f9f0cf;
+    background: #27233b;
+    border: 4px solid #f4c95d;
+    box-shadow: 4px 4px 0 #11101a, inset 0 0 0 2px #11101a;
+    font-family: "Courier New", monospace;
+    text-align: start;
+    text-transform: uppercase;
+}
+
+.progressbar-pixel__header,
+.progressbar-pixel__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75em;
+}
+
+.progressbar-pixel__eyebrow {
+    color: #a9ff70;
+    font-size: 0.75em;
+    font-weight: bold;
+    letter-spacing: 0.08em;
+}
+
+.progressbar-pixel__percentage {
+    color: #ffe47a;
+    font-size: 1.15em;
+    font-weight: bold;
+}
+
+.progressbar-pixel__title {
+    overflow: hidden;
+    color: #ff8cda;
+    font-size: 1.05em;
+    font-weight: bold;
+    text-overflow: ellipsis;
+    text-shadow: 2px 2px 0 #7b356f;
+    white-space: nowrap;
+}
+
+.progressbar-pixel__track {
+    height: 1.15em;
+    padding: 3px;
+    overflow: hidden;
+    background: repeating-linear-gradient(90deg, #48435d 0 12px, #27233b 12px 16px);
+    border: 2px solid #12111b;
+    box-shadow: inset 0 0 0 1px #706889;
+}
+
+.progressbar-pixel__value {
+    width: var(--progress-rate);
+    height: 100%;
+    background: repeating-linear-gradient(90deg, #a9ff70 0 12px, #27233b 12px 16px);
+    transition: width 180ms steps(8, end);
+}
+
+.progressbar-pixel__platform {
+    overflow: hidden;
+    color: #b8b2cb;
+    font-size: 0.75em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.progressbar-pixel__count {
+    flex-shrink: 0;
+    color: #ffe47a;
+    font-size: 0.85em;
+}

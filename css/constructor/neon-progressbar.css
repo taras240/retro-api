@@ -1,0 +1,69 @@
+.progressbar-neon__container {
+    --progress-rate: 0%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6em;
+    width: 23em;
+    padding: 1em;
+    overflow: hidden;
+    color: #f8f2ff;
+    background:
+        radial-gradient(ellipse at 100% 0%, rgb(255 42 207 / 22%), transparent 55%),
+        #100d25;
+    border: 1px solid #fc48d7;
+    border-radius: 0.65em;
+    box-shadow: 0 0 8px #fc48d766, inset 0 0 18px #50248d55;
+    text-align: start;
+}
+
+.progressbar-neon__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75em;
+}
+
+.progressbar-neon__title {
+    overflow: hidden;
+    color: #72f6ff;
+    font-weight: bold;
+    text-shadow: 0 0 8px #20dfff99;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.progressbar-neon__percentage {
+    flex-shrink: 0;
+    color: #ffe66d;
+    font-weight: bold;
+    text-shadow: 0 0 8px #ffae42aa;
+}
+
+.progressbar-neon__presence {
+    overflow: hidden;
+    color: #e6b9ff;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.progressbar-neon__track {
+    height: 0.7em;
+    padding: 2px;
+    overflow: hidden;
+    background: #080713;
+    border: 1px solid #4f3d71;
+}
+
+.progressbar-neon__value {
+    width: var(--progress-rate);
+    height: 100%;
+    background: linear-gradient(90deg, #19e8ff, #a54bff 60%, #ff3ebf);
+    box-shadow: 0 0 8px #25eaff;
+    transition: width 180ms ease-out;
+}
+
+.progressbar-neon__count {
+    color: #b7a9cd;
+    font-size: 0.85em;
+    text-align: end;
+}

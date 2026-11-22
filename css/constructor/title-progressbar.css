@@ -1,0 +1,51 @@
+.progressbar-title__container {
+    --progress-rate: 0%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6em;
+    min-width: 16em;
+    padding: 0.8em 1em;
+    color: var(--font-color);
+    background: var(--main-color);
+    border-radius: 0.5em;
+}
+
+.progressbar-title__heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1em;
+}
+
+.progressbar-title__title {
+    overflow: hidden;
+    font-weight: bold;
+    text-align: start;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.progressbar-title__platform,
+.progressbar-title__percentage {
+    flex-shrink: 0;
+    opacity: 0.7;
+}
+
+.progressbar-title__track {
+    height: 0.45em;
+    overflow: hidden;
+    background: var(--selection-color);
+    border-radius: 1em;
+}
+
+.progressbar-title__value {
+    width: var(--progress-rate);
+    height: 100%;
+    background: var(--accent-color);
+    border-radius: inherit;
+}
+
+.progressbar-title__percentage {
+    align-self: flex-end;
+    font-size: 0.85em;
+}

@@ -1,0 +1,58 @@
+.progressbar-achievements__container {
+    --progress-rate: 0%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6em;
+    min-width: 14em;
+    padding: 1em;
+    color: var(--font-color);
+    background: var(--secondary-color);
+    border: 1px solid var(--selection-color);
+    border-radius: 0.5em;
+}
+
+.progressbar-achievements__title {
+    overflow: hidden;
+    font-size: 1.05em;
+    font-weight: bold;
+    text-align: start;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.progressbar-achievements__stats {
+    display: flex;
+    align-items: baseline;
+    gap: 0.35em;
+}
+
+.progressbar-achievements__unlocked {
+    color: var(--accent-color);
+    font-size: 1.8em;
+}
+
+.progressbar-achievements__separator,
+.progressbar-achievements__total,
+.progressbar-achievements__label {
+    opacity: 0.65;
+}
+
+.progressbar-achievements__track {
+    height: 0.7em;
+    overflow: hidden;
+    background: var(--selection-color);
+    border-radius: 0.2em;
+}
+
+.progressbar-achievements__value {
+    width: var(--progress-rate);
+    height: 100%;
+    background: var(--accent-color);
+}
+
+.progressbar-achievements__footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85em;
+    opacity: 0.7;
+}

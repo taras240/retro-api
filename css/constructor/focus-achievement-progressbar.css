@@ -1,0 +1,99 @@
+.progressbar-focus-achievement__container {
+    --progress-rate: 0%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65em;
+    width: 23em;
+    padding: 1em;
+    color: #e5e9ff;
+    background:
+        repeating-linear-gradient(0deg, rgb(255 255 255 / 3%) 0 1px, transparent 1px 4px),
+        #17162d;
+    border: 4px solid #63e9ff;
+    box-shadow: 5px 5px 0 #090a17, inset 0 0 0 2px #383858;
+    font-family: "Courier New", monospace;
+    text-align: start;
+}
+
+.progressbar-focus-achievement__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75em;
+}
+
+.progressbar-focus-achievement__label {
+    color: #a7ff83;
+    font-size: 0.8em;
+    font-weight: bold;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.progressbar-focus-achievement__percentage {
+    color: #ffe66d;
+    font-weight: bold;
+}
+
+.progressbar-focus-achievement__game-title {
+    overflow: hidden;
+    color: #63e9ff;
+    font-size: 0.95em;
+    font-weight: bold;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.progressbar-focus-achievement__target {
+    padding: 0.65em;
+    background: #22213b;
+    border: 2px solid #ca70ff;
+    box-shadow: 3px 3px 0 #090a17;
+}
+
+.progressbar-focus-achievement__target-label {
+    color: #ffe66d;
+}
+
+.progressbar-focus-achievement__target-title {
+    display: inline;
+    color: #ff8cda;
+    font-size: 1em;
+    font-weight: bold;
+    text-shadow: 2px 2px 0 #653b83;
+}
+
+.progressbar-focus-achievement__description {
+    display: -webkit-box;
+    max-height: 3.2em;
+    margin-top: 0.4em;
+    overflow: hidden;
+    color: #c9c6df;
+    font-family: Arial, sans-serif;
+    font-size: 0.85em;
+    line-height: 1.5;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.progressbar-focus-achievement__track {
+    height: 1em;
+    padding: 3px;
+    overflow: hidden;
+    background: repeating-linear-gradient(90deg, #454260 0 10px, #17162d 10px 14px);
+    border: 2px solid #090a17;
+}
+
+.progressbar-focus-achievement__value {
+    width: var(--progress-rate);
+    height: 100%;
+    background: repeating-linear-gradient(90deg, #a7ff83 0 10px, #17162d 10px 14px);
+    transition: width 180ms steps(8, end);
+}
+
+.progressbar-focus-achievement__count {
+    color: #c9c6df;
+    font-size: 0.8em;
+    text-align: end;
+}
