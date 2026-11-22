@@ -107,13 +107,10 @@
 }
 
 .progressbar-neon__achievement-description {
-    display: -webkit-box;
-    max-height: 2.8em;
-    overflow: hidden;
     color: #d8cde9;
-    font-size: 0.85em;
+    font-size: .85em;
     line-height: 1.4;
-    text-transform: none;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
