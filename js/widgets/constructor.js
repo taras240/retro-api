@@ -3,6 +3,12 @@ import { gameCard, gameCardConfig } from "../components/constructor/gameCard.js"
 import { gameProgressbar, gameProgressbarConfig } from "../components/constructor/gameProgressbar.js";
 import { simpleProgressbar, simpleProgressbarConfig } from "../components/constructor/simpleProgressbar.js";
 import { steamProgress, steamProgressConfig } from "../components/constructor/steamProgress.js";
+import { achievementProgressbar, achievementProgressbarConfig } from "../components/constructor/achievementProgressbar.js";
+import { richPresenceProgressbar, richPresenceProgressbarConfig } from "../components/constructor/richPresenceProgressbar.js";
+import { titleProgressbar, titleProgressbarConfig } from "../components/constructor/titleProgressbar.js";
+import { neonProgressbar, neonProgressbarConfig } from "../components/constructor/neonProgressbar.js";
+import { pixelProgressbar, pixelProgressbarConfig } from "../components/constructor/pixelProgressbar.js";
+import { pixelArtProgressbar, pixelArtProgressbarConfig } from "../components/constructor/pixelArtProgressbar.js";
 import { text, textConfig } from "../components/constructor/textElement.js";
 import { divHtml } from "../components/divContainer.js";
 import { buttonsHtml } from "../components/htmlElements.js";
@@ -188,12 +194,24 @@ export class Constructor extends Widget {
         text: (props) => textConfig(props, this.keys),
         gameProgressbar: (props) => gameProgressbarConfig(props),
         simpleProgressbar: (props) => simpleProgressbarConfig(props),
+        titleProgressbar: (props) => titleProgressbarConfig(props),
+        richPresenceProgressbar: (props) => richPresenceProgressbarConfig(props),
+        achievementProgressbar: (props) => achievementProgressbarConfig(props),
+        neonProgressbar: (props) => neonProgressbarConfig(props),
+        pixelProgressbar: (props) => pixelProgressbarConfig(props),
+        pixelProgressbar2: (props) => pixelArtProgressbarConfig(props),
         steamProgress: (props) => steamProgressConfig(props),
         gameCard: (props) => gameCardConfig(props),
     }
     components = {
         text: (props) => text(props, this),
         gameProgressbar: (props) => gameProgressbar({ props, gameData: watcher.GAME_DATA, parent: this }),
+        titleProgressbar: (props) => titleProgressbar({ props, parent: this }),
+        richPresenceProgressbar: (props) => richPresenceProgressbar({ props, parent: this }),
+        achievementProgressbar: (props) => achievementProgressbar({ props, parent: this }),
+        neonProgressbar: (props) => neonProgressbar({ props, parent: this }),
+        pixelProgressbar: (props) => pixelProgressbar({ props, parent: this }),
+        pixelProgressbar2: (props) => pixelArtProgressbar({ props, gameData: watcher.GAME_DATA, parent: this }),
         steamProgress: (props) => steamProgress({ props, gameData: watcher.GAME_DATA }),
         gameCard: (props) => gameCard({ props, gameData: watcher.GAME_DATA, parent: this }),
         simpleProgressbar: (props) => simpleProgressbar({ props, parent: this })

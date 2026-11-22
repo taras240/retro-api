@@ -61,6 +61,54 @@
     transition: width 180ms steps(8, end);
 }
 
+.progressbar-pixel__achievement[hidden] {
+    display: none !important;
+}
+
+.progressbar-pixel__achievement {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3em;
+    padding: 0.55em 0.65em;
+    background: #353047;
+    border: 2px solid #a9ff70;
+    box-shadow: 3px 3px 0 #11101a;
+}
+
+.progressbar-pixel__last-achievement {
+    border-color: #ff8cda;
+}
+
+.progressbar-pixel__achievement-label {
+    color: #a9ff70;
+    font-size: 0.7em;
+    font-weight: bold;
+    letter-spacing: 0.06em;
+}
+
+.progressbar-pixel__last-achievement .progressbar-pixel__achievement-label {
+    color: #ff8cda;
+}
+
+.progressbar-pixel__achievement-title {
+    overflow: hidden;
+    color: #ffe47a;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.progressbar-pixel__achievement-description {
+    max-height: 2.8em;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: #d3cee4;
+    font-family: Arial, sans-serif;
+    font-size: 0.8em;
+    line-height: 1.4;
+    text-transform: none;
+}
+
 .progressbar-pixel__platform {
     overflow: hidden;
     color: #b8b2cb;

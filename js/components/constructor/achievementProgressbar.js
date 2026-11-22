@@ -20,12 +20,9 @@ export const achievementProgressbar = ({ props, parent }) => {
                 <span class="${baseClass}__separator">/</span>
                 <span class="${baseClass}__total">${total}</span>
                 <span class="${baseClass}__label">${lang.cheevos}</span>
-            </div>
-            <div class="${baseClass}__track"><div class="${baseClass}__value"></div></div>
-            <div class="${baseClass}__footer">
-                <span>${lang.unlocked}</span>
                 <strong class="${baseClass}__percentage">${rate}%</strong>
             </div>
+            <div class="${baseClass}__track"><div class="${baseClass}__value"></div></div>
         </div>
     `);
     const element = generateWidget({ ...props, element: innerElement });

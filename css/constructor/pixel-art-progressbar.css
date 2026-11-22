@@ -3,7 +3,7 @@
     display: flex;
     flex-direction: column;
     gap: 0.8em;
-    width: 23em;
+    width: 100%;
     padding: 0.8em;
     color: #e4f4dc;
     background:

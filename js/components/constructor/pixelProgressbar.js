@@ -15,26 +15,58 @@ export const pixelProgressbar = ({ props, parent }) => {
     const innerElement = fromHtml(`
         <div class="${baseClass}__container" style="--progress-rate:${rate}%">
             <div class="${baseClass}__header">
-                <span class="${baseClass}__eyebrow">PLAYER STATUS</span>
+                <h2 class="${baseClass}__title"></h2>
                 <span class="${baseClass}__percentage">${rate}%</span>
             </div>
-            <h2 class="${baseClass}__title"></h2>
             <div class="${baseClass}__track"><div class="${baseClass}__value"></div></div>
             <div class="${baseClass}__footer">
                 <span class="${baseClass}__platform"></span>
                 <strong class="${baseClass}__count">${unlocked} / ${total}</strong>
+            </div>
+            <div class="${baseClass}__achievement ${baseClass}__focus-achievement" hidden>
+                <span class="${baseClass}__achievement-label">${lang.focusCheevo}</span>
+                <strong class="${baseClass}__achievement-title"></strong>
+                <p class="${baseClass}__achievement-description"></p>
+            </div>
+            <div class="${baseClass}__achievement ${baseClass}__last-achievement" hidden>
+                <span class="${baseClass}__achievement-label">${lang.lastUnlocked}</span>
+                <strong class="${baseClass}__achievement-title"></strong>
+                <p class="${baseClass}__achievement-description"></p>
             </div>
         </div>
     `);
     const element = generateWidget({ ...props, element: innerElement });
     element.querySelector(`.${baseClass}__title`).textContent = parent.keys.gameTitle ?? "";
     element.querySelector(`.${baseClass}__platform`).textContent = parent.keys.consoleName ?? "";
+    const focusAchievement = element.querySelector(`.${baseClass}__focus-achievement`);
+    const lastAchievement = element.querySelector(`.${baseClass}__last-achievement`);
+    const updateAchievement = (container, title, description, isVisible) => {
+        container.hidden = !isVisible;
+        container.querySelector(`.${baseClass}__achievement-title`).textContent = title || lang.noCheevoToShow;
+        container.querySelector(`.${baseClass}__achievement-description`).textContent = description ?? "";
+    };
+    const updateAchievements = () => {
+        updateAchievement(
+            focusAchievement,
+            parent.keys.focusCheevoTitle,
+            parent.keys.focusCheevoDescription,
+            props.showFocusAchievement
+        );
+        updateAchievement(
+            lastAchievement,
+            parent.keys.lastUnlockedTitle,
+            parent.keys.lastUnlockedDescription,
+            props.showLastUnlockedAchievement
+        );
+    };
+    updateAchievements();
 
     const update = () => {
         const { rate, unlocked, total } = getProgress();
         element.querySelector(`.${baseClass}__container`).style.setProperty("--progress-rate", `${rate}%`);
         element.querySelector(`.${baseClass}__percentage`).textContent = `${rate}%`;
         element.querySelector(`.${baseClass}__count`).textContent = `${unlocked} / ${total}`;
+        updateAchievements();
     };
     const remove = () => element?.remove();
     return { element, update, remove };
@@ -54,14 +86,24 @@ export const pixelProgressbarConfig = (props) => [
             {
                 type: inputTypes.CHECKBOX,
                 label: lang.hardcoreMode,
-                id: "constr-is-soft",
                 checked: !props.isSoftcore,
                 onChange: (event) => props.isSoftcore = !event.currentTarget.checked,
             },
             {
                 type: inputTypes.CHECKBOX,
+                label: lang.focusCheevoPreview,
+                checked: props.showFocusAchievement ?? false,
+                onChange: (event) => props.showFocusAchievement = event.currentTarget.checked,
+            },
+            {
+                type: inputTypes.CHECKBOX,
+                label: lang.lastUnlocked,
+                checked: props.showLastUnlockedAchievement ?? false,
+                onChange: (event) => props.showLastUnlockedAchievement = event.currentTarget.checked,
+            },
+            {
+                type: inputTypes.CHECKBOX,
                 label: lang.isVisible,
-                id: "constr-is-visible",
                 checked: props.isVisible ?? true,
                 onChange: (event) => props.isVisible = event.currentTarget.checked,
             },

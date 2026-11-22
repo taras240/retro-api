@@ -1,5 +1,11 @@
 @import url(./constructor/text.css);
 @import url(./constructor/progressbar-1.css);
+@import url(./constructor/title-progressbar.css);
+@import url(./constructor/rich-presence-progressbar.css);
+@import url(./constructor/achievement-progressbar.css);
+@import url(./constructor/neon-progressbar.css);
+@import url(./constructor/pixel-progressbar.css);
+@import url(./constructor/pixel-art-progressbar.css);
 @import url(./constructor/progresbar-smpl.css);
 @import url(./constructor/steam-progress.css);
 @import url(./constructor/game-card.css);

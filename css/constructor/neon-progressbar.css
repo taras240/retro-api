@@ -3,7 +3,7 @@
     display: flex;
     flex-direction: column;
     gap: 0.6em;
-    width: 23em;
+    width: 100%;
     padding: 1em;
     overflow: hidden;
     color: #f8f2ff;
@@ -65,5 +65,55 @@
 .progressbar-neon__count {
     color: #b7a9cd;
     font-size: 0.85em;
-    text-align: end;
+}
+
+.progressbar-neon__achievement[hidden] {
+    display: none !important;
+}
+
+.progressbar-neon__achievement {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3em;
+    padding: 0.65em;
+    background: #1c1534;
+    border: 1px solid #45eaff;
+    box-shadow: 0 0 8px #25eaff44, inset 0 0 10px #25eaff22;
+}
+
+.progressbar-neon__last-achievement {
+    border-color: #ff48c8;
+    box-shadow: 0 0 8px #ff48c844, inset 0 0 10px #ff48c822;
+}
+
+.progressbar-neon__achievement-label {
+    color: #72f6ff;
+    font-size: 0.75em;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    text-shadow: 0 0 6px #20dfff99;
+}
+
+.progressbar-neon__last-achievement .progressbar-neon__achievement-label {
+    color: #ff8cda;
+    text-shadow: 0 0 6px #ff3ebf99;
+}
+
+.progressbar-neon__achievement-title {
+    overflow: hidden;
+    color: #ffe66d;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.progressbar-neon__achievement-description {
+    display: -webkit-box;
+    max-height: 2.8em;
+    overflow: hidden;
+    color: #d8cde9;
+    font-size: 0.85em;
+    line-height: 1.4;
+    text-transform: none;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
 }

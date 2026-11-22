@@ -419,5 +419,6 @@
     "consoleSectionName": "Console",
     "showErrors": "Show Errors",
     "translateCheevos": "Translate Cheevos",
-    "translateCheevosHint": "Use the browser's built-in tanslation model to translate achievements.(Chrome only)"
+    "translateCheevosHint": "Use the browser's built-in tanslation model to translate achievements.(Chrome only)",
+    "lastUnlocked": "Last Unlocked"
 }

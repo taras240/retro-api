@@ -21,13 +21,46 @@ export const neonProgressbar = ({ props, parent }) => {
             <p class="${baseClass}__presence"></p>
             <div class="${baseClass}__track"><div class="${baseClass}__value"></div></div>
             <p class="${baseClass}__count">${unlocked} / ${total} ${lang.cheevos}</p>
+            <div class="${baseClass}__achievement ${baseClass}__focus-achievement" hidden>
+                <span class="${baseClass}__achievement-label">${lang.focusCheevo}</span>
+                <strong class="${baseClass}__achievement-title"></strong>
+                <p class="${baseClass}__achievement-description"></p>
+            </div>
+            <div class="${baseClass}__achievement ${baseClass}__last-achievement" hidden>
+                <span class="${baseClass}__achievement-label">${lang.lastUnlocked ?? lang.lastUnlockedCheevoPreview}</span>
+                <strong class="${baseClass}__achievement-title"></strong>
+                <p class="${baseClass}__achievement-description"></p>
+            </div>
         </div>
     `);
     const element = generateWidget({ ...props, element: innerElement });
     const title = element.querySelector(`.${baseClass}__title`);
     const presence = element.querySelector(`.${baseClass}__presence`);
+    const focusAchievement = element.querySelector(`.${baseClass}__focus-achievement`);
+    const lastAchievement = element.querySelector(`.${baseClass}__last-achievement`);
     title.textContent = parent.keys.gameTitle ?? "";
     presence.textContent = parent.keys.richPresence || lang.richPresence;
+
+    const updateAchievement = (container, achievementTitle, description, isVisible) => {
+        container.hidden = !isVisible;
+        container.querySelector(`.${baseClass}__achievement-title`).textContent = achievementTitle || lang.noCheevoToShow;
+        container.querySelector(`.${baseClass}__achievement-description`).textContent = description ?? "";
+    };
+    const updateAchievements = () => {
+        updateAchievement(
+            focusAchievement,
+            parent.keys.focusCheevoTitle,
+            parent.keys.focusCheevoDescription,
+            props.showFocusAchievement
+        );
+        updateAchievement(
+            lastAchievement,
+            parent.keys.lastUnlockedTitle,
+            parent.keys.lastUnlockedDescription,
+            props.showLastUnlockedAchievement
+        );
+    };
+    updateAchievements();
 
     const update = () => {
         const { rate, unlocked, total } = getProgress();
@@ -35,6 +68,7 @@ export const neonProgressbar = ({ props, parent }) => {
         element.querySelector(`.${baseClass}__percentage`).textContent = `${rate}%`;
         element.querySelector(`.${baseClass}__count`).textContent = `${unlocked} / ${total} ${lang.cheevos}`;
         presence.textContent = parent.keys.richPresence || lang.richPresence;
+        updateAchievements();
     };
     const remove = () => element?.remove();
     return { element, update, remove };
@@ -57,6 +91,18 @@ export const neonProgressbarConfig = (props) => [
                 id: "constr-is-soft",
                 checked: !props.isSoftcore,
                 onChange: (event) => props.isSoftcore = !event.currentTarget.checked,
+            },
+            {
+                type: inputTypes.CHECKBOX,
+                label: lang.focusCheevoPreview,
+                checked: props.showFocusAchievement ?? false,
+                onChange: (event) => props.showFocusAchievement = event.currentTarget.checked,
+            },
+            {
+                type: inputTypes.CHECKBOX,
+                label: lang.lastUnlocked ?? lang.lastUnlockedCheevoPreview,
+                checked: props.showLastUnlockedAchievement ?? false,
+                onChange: (event) => props.showLastUnlockedAchievement = event.currentTarget.checked,
             },
             {
                 type: inputTypes.CHECKBOX,
