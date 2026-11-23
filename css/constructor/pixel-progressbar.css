@@ -22,6 +22,20 @@
     gap: 0.75em;
 }
 
+.progressbar-pixel__game-icon[hidden] {
+    display: none !important;
+}
+
+.progressbar-pixel__game-icon {
+    width: 3em;
+    height: 3em;
+    flex-shrink: 0;
+    object-fit: cover;
+    border: 2px solid #a9ff70;
+    box-shadow: 2px 2px 0 #11101a;
+    image-rendering: pixelated;
+}
+
 .progressbar-pixel__eyebrow {
     color: #a9ff70;
     font-size: 0.75em;
@@ -36,6 +50,8 @@
 }
 
 .progressbar-pixel__title {
+    flex: 1;
+    min-width: 0;
     overflow: hidden;
     color: #ff8cda;
     font-size: 1.05em;
@@ -68,11 +84,39 @@
 .progressbar-pixel__achievement {
     display: flex;
     flex-direction: column;
-    gap: 0.3em;
+    gap: 0.5em;
     padding: 0.55em 0.65em;
     background: #353047;
     border: 2px solid #a9ff70;
     box-shadow: 3px 3px 0 #11101a;
+}
+
+.progressbar-pixel__achievement-icon[hidden] {
+    display: none !important;
+}
+
+.progressbar-pixel__achievement-icon {
+    width: 3em;
+    height: 3em;
+    object-fit: cover;
+    image-rendering: pixelated;
+    border: 2px solid #a9ff70;
+    box-shadow: 2px 2px 0 #11101a;
+    flex-shrink: 0;
+}
+
+.progressbar-pixel__achievement-body {
+    display: flex;
+    align-items: center;
+    gap: 0.65em;
+}
+
+.progressbar-pixel__achievement-info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.3em;
+    min-width: 0;
 }
 
 .progressbar-pixel__last-achievement {
@@ -107,6 +151,7 @@
     font-size: 0.8em;
     line-height: 1.4;
     text-transform: none;
+    margin: 0;
 }
 
 .progressbar-pixel__platform {

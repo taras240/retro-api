@@ -173,8 +173,10 @@ export class Constructor extends Widget {
             playersCount: gameData.totalRealPlayers,
             focusCheevoTitle: focusCheevo.Title,
             focusCheevoDescription: focusCheevo.Description,
+            focusCheevoBadgeName: focusCheevo.BadgeName,
             lastUnlockedTitle: lastUnlocked.Title,
             lastUnlockedDescription: lastUnlocked.Description,
+            lastUnlockedBadgeName: lastUnlocked.BadgeName,
             userRATop: userData.percentile,
             userRank: userData.rank,
             userPoints: userData.points,
@@ -190,6 +192,13 @@ export class Constructor extends Widget {
             sessionRetropoints: sessionData.retropoints,
         }
     }
+    updateProgressbarOption(props, key, value) {
+        const elementProps = this.uiProps.elements[props.index];
+        if (!elementProps) return;
+        elementProps[key] = value;
+        this.uiProps.elements = this.uiProps.elements;
+        this.widgets[props.index]?.update();
+    }
     componentsInputProperties = {
         text: (props) => textConfig(props, this.keys),
         gameProgressbar: (props) => gameProgressbarConfig(props),
@@ -197,8 +206,14 @@ export class Constructor extends Widget {
         titleProgressbar: (props) => titleProgressbarConfig(props),
         richPresenceProgressbar: (props) => richPresenceProgressbarConfig(props),
         achievementProgressbar: (props) => achievementProgressbarConfig(props),
-        neonProgressbar: (props) => neonProgressbarConfig(props),
-        pixelProgressbar: (props) => pixelProgressbarConfig(props),
+        neonProgressbar: (props) => neonProgressbarConfig(
+            props,
+            (key, value) => this.updateProgressbarOption(props, key, value)
+        ),
+        pixelProgressbar: (props) => pixelProgressbarConfig(
+            props,
+            (key, value) => this.updateProgressbarOption(props, key, value)
+        ),
         pixelProgressbar2: (props) => pixelArtProgressbarConfig(props),
         steamProgress: (props) => steamProgressConfig(props),
         gameCard: (props) => gameCardConfig(props),
@@ -211,8 +226,8 @@ export class Constructor extends Widget {
         titleProgressbar: (props) => titleProgressbar({ props, parent: this }),
         richPresenceProgressbar: (props) => richPresenceProgressbar({ props, parent: this }),
         achievementProgressbar: (props) => achievementProgressbar({ props, parent: this }),
-        neonProgressbar: (props) => neonProgressbar({ props, parent: this }),
-        pixelProgressbar: (props) => pixelProgressbar({ props, parent: this }),
+        neonProgressbar: (props) => neonProgressbar({ props, gameData: watcher.GAME_DATA, parent: this }),
+        pixelProgressbar: (props) => pixelProgressbar({ props, gameData: watcher.GAME_DATA, parent: this }),
         pixelProgressbar2: (props) => pixelArtProgressbar({ props, gameData: watcher.GAME_DATA, parent: this }),
         steamProgress: (props) => steamProgress({ props, gameData: watcher.GAME_DATA }),
         gameCard: (props) => gameCard({ props, gameData: watcher.GAME_DATA, parent: this }),

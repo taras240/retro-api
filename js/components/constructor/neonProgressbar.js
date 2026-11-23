@@ -1,9 +1,11 @@
 import { fromHtml } from "../../functions/html.js";
+import { cheevoImageUrl, gameImageUrl } from "../../functions/raLinks.js";
 import { inputTypes } from "../inputElements.js";
 import { generateWidget } from "./widgetContainer.js";
 
-export const neonProgressbar = ({ props, parent }) => {
+export const neonProgressbar = ({ props, gameData, parent }) => {
     const baseClass = "progressbar-neon";
+    const showIcons = () => props.showIcons ?? props.showGameIcon ?? false;
     const getProgress = () => {
         const { unlockedCheevos, unlockedCheevosTotal, totalCheevos } = parent.keys;
         const total = Number(totalCheevos) || 0;
@@ -15,48 +17,74 @@ export const neonProgressbar = ({ props, parent }) => {
     const innerElement = fromHtml(`
         <div class="${baseClass}__container" style="--progress-rate:${rate}%">
             <div class="${baseClass}__header">
-                <h2 class="${baseClass}__title"></h2>
+                <img class="${baseClass}__game-icon">
+                <div class="${baseClass}__game-info">
+                    <h2 class="${baseClass}__title"></h2>
+                    <p class="${baseClass}__presence"></p>
+                </div>
                 <span class="${baseClass}__percentage">${rate}%</span>
             </div>
-            <p class="${baseClass}__presence"></p>
             <div class="${baseClass}__track"><div class="${baseClass}__value"></div></div>
             <p class="${baseClass}__count">${unlocked} / ${total} ${lang.cheevos}</p>
             <div class="${baseClass}__achievement ${baseClass}__focus-achievement" hidden>
                 <span class="${baseClass}__achievement-label">${lang.focusCheevo}</span>
-                <strong class="${baseClass}__achievement-title"></strong>
-                <p class="${baseClass}__achievement-description"></p>
+                <div class="${baseClass}__achievement-body">
+                    <img class="${baseClass}__achievement-icon" hidden>
+                    <div class="${baseClass}__achievement-info">
+                    <strong class="${baseClass}__achievement-title"></strong>
+                    <p class="${baseClass}__achievement-description"></p>
+                    </div>
+                </div>
             </div>
             <div class="${baseClass}__achievement ${baseClass}__last-achievement" hidden>
                 <span class="${baseClass}__achievement-label">${lang.lastUnlocked ?? lang.lastUnlockedCheevoPreview}</span>
-                <strong class="${baseClass}__achievement-title"></strong>
-                <p class="${baseClass}__achievement-description"></p>
+                <div class="${baseClass}__achievement-body">
+                    <img class="${baseClass}__achievement-icon" hidden>
+                    <div class="${baseClass}__achievement-info">
+                    <strong class="${baseClass}__achievement-title"></strong>
+                    <p class="${baseClass}__achievement-description"></p>
+                    </div>
+                </div>
             </div>
         </div>
     `);
     const element = generateWidget({ ...props, element: innerElement });
     const title = element.querySelector(`.${baseClass}__title`);
     const presence = element.querySelector(`.${baseClass}__presence`);
+    const gameIcon = element.querySelector(`.${baseClass}__game-icon`);
     const focusAchievement = element.querySelector(`.${baseClass}__focus-achievement`);
     const lastAchievement = element.querySelector(`.${baseClass}__last-achievement`);
+    gameIcon.src = gameImageUrl(gameData.ImageIcon);
+    gameIcon.alt = parent.keys.gameTitle ?? "";
+    gameIcon.hidden = !showIcons();
     title.textContent = parent.keys.gameTitle ?? "";
     presence.textContent = parent.keys.richPresence || lang.richPresence;
 
-    const updateAchievement = (container, achievementTitle, description, isVisible) => {
+    const updateAchievement = (container, achievementTitle, description, badgeName, isVisible) => {
         container.hidden = !isVisible;
         container.querySelector(`.${baseClass}__achievement-title`).textContent = achievementTitle || lang.noCheevoToShow;
         container.querySelector(`.${baseClass}__achievement-description`).textContent = description ?? "";
+        const icon = container.querySelector(`.${baseClass}__achievement-icon`);
+        icon.hidden = !showIcons() || !isVisible || !badgeName;
+        if (showIcons() && isVisible && badgeName) {
+            icon.src = cheevoImageUrl({ BadgeName: badgeName });
+        } else {
+            icon.removeAttribute("src");
+        }
     };
     const updateAchievements = () => {
         updateAchievement(
             focusAchievement,
             parent.keys.focusCheevoTitle,
             parent.keys.focusCheevoDescription,
+            parent.keys.focusCheevoBadgeName,
             props.showFocusAchievement
         );
         updateAchievement(
             lastAchievement,
             parent.keys.lastUnlockedTitle,
             parent.keys.lastUnlockedDescription,
+            parent.keys.lastUnlockedBadgeName,
             props.showLastUnlockedAchievement
         );
     };
@@ -67,6 +95,7 @@ export const neonProgressbar = ({ props, parent }) => {
         element.querySelector(`.${baseClass}__container`).style.setProperty("--progress-rate", `${rate}%`);
         element.querySelector(`.${baseClass}__percentage`).textContent = `${rate}%`;
         element.querySelector(`.${baseClass}__count`).textContent = `${unlocked} / ${total} ${lang.cheevos}`;
+        gameIcon.hidden = !showIcons();
         presence.textContent = parent.keys.richPresence || lang.richPresence;
         updateAchievements();
     };
@@ -74,7 +103,7 @@ export const neonProgressbar = ({ props, parent }) => {
     return { element, update, remove };
 };
 
-export const neonProgressbarConfig = (props) => [
+export const neonProgressbarConfig = (props, onOptionChange = () => { }) => [
     {
         label: lang.props,
         elements: [
@@ -94,15 +123,30 @@ export const neonProgressbarConfig = (props) => [
             },
             {
                 type: inputTypes.CHECKBOX,
+                label: lang.showIcons,
+                checked: props.showIcons ?? props.showGameIcon ?? false,
+                onChange: (event) => {
+                    props.showIcons = event.currentTarget.checked;
+                    onOptionChange("showIcons", props.showIcons);
+                },
+            },
+            {
+                type: inputTypes.CHECKBOX,
                 label: lang.focusCheevoPreview,
                 checked: props.showFocusAchievement ?? false,
-                onChange: (event) => props.showFocusAchievement = event.currentTarget.checked,
+                onChange: (event) => {
+                    props.showFocusAchievement = event.currentTarget.checked;
+                    onOptionChange("showFocusAchievement", props.showFocusAchievement);
+                },
             },
             {
                 type: inputTypes.CHECKBOX,
                 label: lang.lastUnlocked ?? lang.lastUnlockedCheevoPreview,
                 checked: props.showLastUnlockedAchievement ?? false,
-                onChange: (event) => props.showLastUnlockedAchievement = event.currentTarget.checked,
+                onChange: (event) => {
+                    props.showLastUnlockedAchievement = event.currentTarget.checked;
+                    onOptionChange("showLastUnlockedAchievement", props.showLastUnlockedAchievement);
+                },
             },
             {
                 type: inputTypes.CHECKBOX,

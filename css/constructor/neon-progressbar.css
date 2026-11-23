@@ -19,8 +19,26 @@
 .progressbar-neon__header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 0.75em;
+}
+
+.progressbar-neon__game-icon[hidden] {
+    display: none !important;
+}
+
+.progressbar-neon__game-icon {
+    width: 3em;
+    height: 3em;
+    flex-shrink: 0;
+    object-fit: cover;
+    border: 1px solid #72f6ff;
+    box-shadow: 0 0 8px #20dfff99;
+    image-rendering: pixelated;
+}
+
+.progressbar-neon__game-info {
+    flex: 1;
+    min-width: 0;
 }
 
 .progressbar-neon__title {
@@ -41,6 +59,7 @@
 
 .progressbar-neon__presence {
     overflow: hidden;
+    margin-top: 0.25em;
     color: #e6b9ff;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -74,11 +93,39 @@
 .progressbar-neon__achievement {
     display: flex;
     flex-direction: column;
-    gap: 0.3em;
+    gap: 0.5em;
     padding: 0.65em;
     background: #1c1534;
     border: 1px solid #45eaff;
     box-shadow: 0 0 8px #25eaff44, inset 0 0 10px #25eaff22;
+}
+
+.progressbar-neon__achievement-icon[hidden] {
+    display: none !important;
+}
+
+.progressbar-neon__achievement-icon {
+    width: 3em;
+    height: 3em;
+    object-fit: cover;
+    image-rendering: pixelated;
+    border: 1px solid #45eaff;
+    box-shadow: 0 0 6px #25eaff88;
+    flex-shrink: 0;
+}
+
+.progressbar-neon__achievement-body {
+    display: flex;
+    align-items: center;
+    gap: 0.65em;
+}
+
+.progressbar-neon__achievement-info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.3em;
+    min-width: 0;
 }
 
 .progressbar-neon__last-achievement {
@@ -92,6 +139,7 @@
     font-weight: bold;
     letter-spacing: 0.05em;
     text-shadow: 0 0 6px #20dfff99;
+    text-align: start;
 }
 
 .progressbar-neon__last-achievement .progressbar-neon__achievement-label {
@@ -113,4 +161,5 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    margin: 0;
 }
