@@ -9,6 +9,8 @@
 @import url(./constructor/progresbar-smpl.css);
 @import url(./constructor/steam-progress.css);
 @import url(./constructor/game-card.css);
+@import url(./constructor/neon-game-card.css);
+@import url(./constructor/pixel-game-card.css);
 
 .constructor {
     position: fixed;

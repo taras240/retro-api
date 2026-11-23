@@ -53,3 +53,8 @@
 .constr-game-card--neon .progress-foot {
     color: #b7a9cd;
 }
+
+.constr-game-card--neon .progress-section[hidden],
+.constr-game-card--neon .progress-divider[hidden] {
+    display: none !important;
+}

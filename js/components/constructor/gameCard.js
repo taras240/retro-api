@@ -11,6 +11,7 @@ export function gameCard({ props, gameData, parent, variant = "" }) {
     const baseClass = "constr-game-card";
     const { ImageIcon, Title, ConsoleName, TimePlayed, Achievements: cheevos } = gameData;
     const unlockRate = Math.floor(unlockedCheevos / totalCheevos * 100);
+    const showProgress = !variant || props.showProgress === true;
     const InnerElement = () => fromHtml(`
         <div class="${baseClass}${variant ? ` ${baseClass}--${variant}` : ""}">
         <div class="boxart">
@@ -50,9 +51,9 @@ export function gameCard({ props, gameData, parent, variant = "" }) {
             </div>
         </div>
 
-        <div class="divider"></div>
+        <div class="divider progress-divider" ${showProgress ? "" : "hidden"}></div>
 
-        <div class="progress-section" style="--unlock-rate: ${unlockRate}%">
+        <div class="progress-section" style="--unlock-rate: ${unlockRate}%" ${showProgress ? "" : "hidden"}>
             <div class="progress-meta">
             ${lang.cheevos}
             <span>${unlockedCheevos} / ${totalCheevos}</span>
@@ -79,7 +80,7 @@ export function gameCard({ props, gameData, parent, variant = "" }) {
 export const neonGameCard = (params) => gameCard({ ...params, variant: "neon" });
 export const pixelGameCard = (params) => gameCard({ ...params, variant: "pixel" });
 
-export const gameCardConfig = (props) => [
+export const gameCardConfig = (props, { showProgressToggle = false } = {}) => [
     {
         label: lang.props,
         elements: [
@@ -112,6 +113,12 @@ export const gameCardConfig = (props) => [
             //     onChange: (event) => props.isSoftcore = !event.currentTarget.checked,
             //     // hint: lang.ignoreSubsetsHint,
             // },
+            ...(showProgressToggle ? [{
+                type: inputTypes.CHECKBOX,
+                label: lang.showCheevosProgress,
+                checked: props.showProgress ?? false,
+                onChange: (event) => props.showProgress = event.currentTarget.checked,
+            }] : []),
             {
                 type: inputTypes.CHECKBOX,
                 label: lang.isVisible,

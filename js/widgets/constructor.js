@@ -1,5 +1,5 @@
 import { badgeElements } from "../components/badges.js";
-import { gameCard, gameCardConfig } from "../components/constructor/gameCard.js";
+import { gameCard, gameCardConfig, neonGameCard, pixelGameCard } from "../components/constructor/gameCard.js";
 import { gameProgressbar, gameProgressbarConfig } from "../components/constructor/gameProgressbar.js";
 import { simpleProgressbar, simpleProgressbarConfig } from "../components/constructor/simpleProgressbar.js";
 import { steamProgress, steamProgressConfig } from "../components/constructor/steamProgress.js";
@@ -202,6 +202,8 @@ export class Constructor extends Widget {
         pixelProgressbar2: (props) => pixelArtProgressbarConfig(props),
         steamProgress: (props) => steamProgressConfig(props),
         gameCard: (props) => gameCardConfig(props),
+        neonGameCard: (props) => gameCardConfig(props, { showProgressToggle: true }),
+        pixelGameCard: (props) => gameCardConfig(props, { showProgressToggle: true }),
     }
     components = {
         text: (props) => text(props, this),
@@ -214,6 +216,8 @@ export class Constructor extends Widget {
         pixelProgressbar2: (props) => pixelArtProgressbar({ props, gameData: watcher.GAME_DATA, parent: this }),
         steamProgress: (props) => steamProgress({ props, gameData: watcher.GAME_DATA }),
         gameCard: (props) => gameCard({ props, gameData: watcher.GAME_DATA, parent: this }),
+        neonGameCard: (props) => neonGameCard({ props, gameData: watcher.GAME_DATA, parent: this }),
+        pixelGameCard: (props) => pixelGameCard({ props, gameData: watcher.GAME_DATA, parent: this }),
         simpleProgressbar: (props) => simpleProgressbar({ props, parent: this })
     }
     showWidgets() {

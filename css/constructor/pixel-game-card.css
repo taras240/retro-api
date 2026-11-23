@@ -68,3 +68,8 @@
     font-size: 0.75em;
     text-transform: uppercase;
 }
+
+.constr-game-card--pixel .progress-section[hidden],
+.constr-game-card--pixel .progress-divider[hidden] {
+    display: none !important;
+}
