@@ -1,0 +1,55 @@
+.constr-game-card--neon {
+    color: #f8f2ff;
+    background:
+        radial-gradient(ellipse at 100% 0%, rgb(255 42 207 / 20%), transparent 55%),
+        #100d25;
+    border: 1px solid #fc48d7;
+    border-radius: 0.65em;
+    box-shadow: 0 0 10px #fc48d755, inset 0 0 20px #50248d44;
+}
+
+.constr-game-card--neon .boxart {
+    background: #080713;
+}
+
+.constr-game-card--neon .boxart .game__image.game__image_bg {
+    filter: blur(12px) saturate(1.4);
+    opacity: 0.6;
+}
+
+.constr-game-card--neon .card-header .game-title {
+    color: #72f6ff;
+    text-shadow: 0 0 8px #20dfff99;
+}
+
+.constr-game-card--neon .divider {
+    background: #fc48d7;
+    opacity: 0.45;
+}
+
+.constr-game-card--neon .info-table .label {
+    color: #c9b8de;
+}
+
+.constr-game-card--neon .info-table .value,
+.constr-game-card--neon .progress-meta span {
+    color: #ffe66d;
+    text-shadow: 0 0 6px #ffae4266;
+}
+
+.constr-game-card--neon .progress-track {
+    height: 0.7em;
+    background: #080713;
+    border: 1px solid #4f3d71;
+    border-radius: 0;
+}
+
+.constr-game-card--neon .progress-fill {
+    background: linear-gradient(90deg, #19e8ff, #a54bff 60%, #ff3ebf);
+    border-radius: 0;
+    box-shadow: 0 0 8px #25eaff;
+}
+
+.constr-game-card--neon .progress-foot {
+    color: #b7a9cd;
+}
